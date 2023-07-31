@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<info>
+    <id>textprocessing_assistant</id>
+    <name>Nextcloud assistant</name>
+    <summary>Process and transform text</summary>
+    <description><![CDATA[
+This app brings text processing features to Nextcloud.
+]]></description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author>Julien Veyssier</author>
+    <namespace>TPAssistant</namespace>
+    <documentation>
+        <developer>https://github.com/julien-nc/textprocessing_assistant</developer>
+    </documentation>
+    <category>integration</category>
+    <website>https://github.com/julien-nc/textprocessing_assistant</website>
+    <bugs>https://github.com/julien-nc/textprocessing_assistant/issues</bugs>
+    <screenshot>https://github.com/julien-nc/textprocessing_assistant/raw/main/img/screenshot1.jpg</screenshot>
+    <screenshot>https://github.com/julien-nc/textprocessing_assistant/raw/main/img/screenshot2.jpg</screenshot>
+    <screenshot>https://github.com/julien-nc/textprocessing_assistant/raw/main/img/screenshot3.jpg</screenshot>
+    <dependencies>
+        <nextcloud min-version="27.1.0" max-version="28"/>
+    </dependencies>
+    <settings>
+        <admin>OCA\TPAssistant\Settings\Admin</admin>
+        <personal>OCA\TPAssistant\Settings\Personal</personal>
+        <personal-section>OCA\TPAssistant\Settings\PersonalSection</personal-section>
+    </settings>
+</info>

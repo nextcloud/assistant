@@ -1,0 +1,12 @@
+{
+    "name": "nextcloud/textprocessing_assistant",
+    "authors": [
+        {
+            "name": "Julien Veyssier",
+            "email": "julien-nc@posteo.net"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    }
+}
