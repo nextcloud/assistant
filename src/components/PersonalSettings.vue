@@ -22,7 +22,6 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadi
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import { delay } from '../utils.js'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
 export default {
@@ -30,8 +29,6 @@ export default {
 
 	components: {
 		AssistantIcon,
-		KeyIcon,
-		InformationOutlineIcon,
 		NcCheckboxRadioSwitch,
 	},
 

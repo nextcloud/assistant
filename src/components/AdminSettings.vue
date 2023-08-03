@@ -20,17 +20,12 @@
 </template>
 
 <script>
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
-import EarthIcon from 'vue-material-design-icons/Earth.vue'
-import KeyIcon from 'vue-material-design-icons/Key.vue'
-import HelpCircleIcon from 'vue-material-design-icons/HelpCircle.vue'
-
 import AssistantIcon from './icons/AssistantIcon.vue'
 
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 
-import {   loadState  } from '@nextcloud/initial-state'
-import {  generateUrl  } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
