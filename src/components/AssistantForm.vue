@@ -24,14 +24,17 @@
 			:placeholder="t('textprocessing_assistant', 'Type some text')"
 			:link-autocomplete="false" />
 		<NcRichContenteditable
+			v-if="myOutput"
 			:value.sync="myOutput"
 			class="editable-output"
 			:multiline="true"
 			:disabled="loading"
 			:placeholder="t('textprocessing_assistant', 'Result')"
 			:link-autocomplete="false" />
-		<NcButton v-if="selectedTaskType"
+		<NcButton
+			v-if="showSubmit"
 			class="submit-button"
+			:disabled="!canSubmit"
 			:aria-label="t('textprocessing_assistant', 'Submit assistant task')"
 			:title="t('textprocessing_assistant', 'Submit')"
 			@click="onSubmit">
@@ -95,6 +98,12 @@ export default {
 			}
 			return this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 		},
+		showSubmit() {
+			return this.selectedTaskType && this.myOutput.trim() === ''
+		},
+		canSubmit() {
+			return this.selectedTaskType && !!this.myInput.trim()
+		},
 	},
 	mounted() {
 		this.getTaskTypes()
@@ -138,7 +147,8 @@ export default {
 	.editable-input,
 	.editable-output {
 		width: 100%;
-		min-height: 150px;
+		min-height: unset !important;
+		max-height: 200px !important;
 	}
 
 	.assistant-bubble {

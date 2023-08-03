@@ -170,7 +170,7 @@ async function addAssistantMenuEntry() {
 	view.$on('click', () => {
 		openAssistantForm('textprocessing_assistant')
 			.then(r => {
-				console.debug('scheduled task', r.data.ocs.data.task)
+				console.debug('scheduled task', r)
 			})
 	})
 }
