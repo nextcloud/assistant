@@ -18,7 +18,7 @@ class AssistantService {
 	) {
 	}
 
-	public function sendNotification(Task $task): void {
+	public function sendNotification(Task $task, ?string $target): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
@@ -26,15 +26,19 @@ class AssistantService {
 			'appId' => $task->getAppId(),
 			'id' => $task->getId(),
 			'input' => $task->getInput(),
+			'target' => $target,
 		];
 		$status = $task->getStatus();
 		$subject = $status === Task::STATUS_SUCCESSFUL
 			? 'success'
 			: 'failure';
+		$objectType = ($task->getAppId() === Application::APP_ID || $target === null)
+			? 'task'
+			: 'task-with-custom-target';
 		$notification->setApp(Application::APP_ID)
 			->setUser($task->getUserId())
 			->setDateTime(new DateTime())
-			->setObject('task', $task->getId())
+			->setObject($objectType, $task->getId())
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);

@@ -59,12 +59,16 @@ async function scheduleTask({ appId, identifier, taskType, input }) {
 }
 
 function handleNotification(event) {
-	console.debug('aaaaaa -------- handle notification', event)
 	if (event.notification.app !== 'textprocessing_assistant' || event.action.type !== 'WEB') {
 		return
 	}
-	event.cancelAction = true
-	showResults(event.notification.objectId)
+	// Handle the action click only if the task was scheduled by the assistant
+	// or if the scheduling app didn't give any notification target
+	// We use the object type to know
+	if (event.notification.objectType === 'task') {
+		event.cancelAction = true
+		showResults(event.notification.objectId)
+	}
 }
 
 async function subscribeToNotifications() {

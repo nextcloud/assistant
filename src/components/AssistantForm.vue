@@ -11,6 +11,10 @@
 			label="name"
 			input-id="task-select"
 			@input="onTaskInput" />
+		<span v-if="selectedTaskType"
+			class="task-description">
+			{{ selectedTaskType.description }}
+		</span>
 		<NcRichContenteditable
 			:value.sync="myInput"
 			class="editable-input"
@@ -25,11 +29,12 @@
 			:disabled="loading"
 			:placeholder="t('textprocessing_assistant', 'Result')"
 			:link-autocomplete="false" />
-		<NcButton
+		<NcButton v-if="selectedTaskType"
 			class="submit-button"
-			aria-label="plop"
-			title="Send"
+			:aria-label="t('textprocessing_assistant', 'Submit assistant task')"
+			:title="t('textprocessing_assistant', 'Submit')"
 			@click="onSubmit">
+			{{ selectedTaskType.name }}
 			<template #icon>
 				<CreationIcon />
 			</template>
@@ -150,6 +155,10 @@ export default {
 	.task-select {
 		align-self: start;
 		width: 250px;
+	}
+
+	.task-description {
+		align-self: start;
 	}
 
 	.submit-button {

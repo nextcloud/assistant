@@ -62,10 +62,9 @@ class Notifier implements INotifier {
 
 		switch ($notification->getSubject()) {
 			case 'success':
-
 				$subject = $l->t('Assistant Task for app %1$s has finished', [$params['appId']]);
 				$content = $l->t('The input was: %1$s', [$params['input']]);
-				$link = $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
 
 				$notification
 					->setParsedSubject($subject)
