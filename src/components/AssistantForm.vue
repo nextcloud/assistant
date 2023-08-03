@@ -9,6 +9,7 @@
 			class="task-select"
 			:options="taskTypes"
 			label="name"
+			:placeholder="t('textprocessing_assistant', 'Choose a task')"
 			input-id="task-select"
 			@input="onTaskInput" />
 		<span v-if="selectedTaskType"

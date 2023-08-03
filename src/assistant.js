@@ -3,10 +3,19 @@ import { getRequestToken } from '@nextcloud/auth'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('textprocessing_assistant', 'js/') // eslint-disable-line
 
-// Creates an assistant modal and return a promise which provides the result
-// TODO jsdoc
-// OCA.TPAssistant.openTextProcessingModal('app1', 'IDID', 'OCP\\TextProcessing\\SummaryTaskType', 'megainput').then(r => {console.debug('yeyeyeyeyeye', r)})
-export async function openTextProcessingModal(appId, identifier = '', taskType = null, inputText = '', isInsideViewer = undefined) {
+/**
+ * Creates an assistant modal and return a promise which provides the result
+ *
+ * OCA.TPAssistant.openAssistantForm('my_app_id', 'my task identifier', 'OCP\\TextProcessing\\FreePromptTaskType', 'count to 3').then(r => {console.debug('scheduled task', r.data.ocs.data.task)})
+ *
+ * @param {string} appId the scheduling app id
+ * @param {string} identifier the task identifier
+ * @param {string} taskType the task type class
+ * @param {string} inputText optional initial input text
+ * @param {boolean} isInsideViewer Should be true if this function is called while the Viewer is displayed
+ * @return {Promise<unknown>}
+ */
+export async function openAssistantForm(appId, identifier = '', taskType = null, inputText = '', isInsideViewer = undefined) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -32,20 +41,28 @@ export async function openTextProcessingModal(appId, identifier = '', taskType =
 		})
 		view.$on('submit', (data) => {
 			view.$destroy()
-			scheduleTask({ appId, identifier, taskType: data.taskTypeId, input: data.input })
+			scheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
-					console.debug('aaaa ASSISTANT schedule success', response)
 					resolve(response.data?.ocs?.data?.task)
 				})
 				.catch(error => {
-					console.error('aaaaa ASSISTANT schedule error', error)
+					console.error('Assistant scheduling error', error)
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
 	})
 }
 
-async function scheduleTask({ appId, identifier, taskType, input }) {
+/**
+ * Send a request to schedule a task
+ *
+ * @param {string} appId the scheduling app id
+ * @param {string} identifier the task identifier
+ * @param {string} taskType the task type class
+ * @param {string} input the task input text
+ * @return {Promise<*>}
+ */
+async function scheduleTask(appId, identifier, taskType, input) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const url = generateOcsUrl('textprocessing/schedule', 2)
@@ -58,6 +75,11 @@ async function scheduleTask({ appId, identifier, taskType, input }) {
 	return axios.post(url, params)
 }
 
+/**
+ * Check if we want to cancel a notification action click and handle it ourselves
+ *
+ * @param {event} event the notification event
+ */
 function handleNotification(event) {
 	if (event.notification.app !== 'textprocessing_assistant' || event.action.type !== 'WEB') {
 		return
@@ -71,25 +93,40 @@ function handleNotification(event) {
 	}
 }
 
+/**
+ * Listen to an event emitted on the event-bus when a notification action or a browser notification is clicked
+ *
+ * @return {Promise<void>}
+ */
 async function subscribeToNotifications() {
 	const { subscribe } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/event-bus')
 	subscribe('notifications:action:execute', handleNotification)
-	console.debug('aaaaa i subscribed', subscribe)
 }
 
+/**
+ * Show the result of a task
+ *
+ * @param {number} taskId the task id to show the result of
+ * @return {Promise<void>}
+ */
 async function showResults(taskId) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
-		console.debug('aaaaaa result of task', response.data)
-		openResultModal(response.data.ocs.data.task)
+		openAssistantResult(response.data.ocs.data.task)
 	}).catch(error => {
 		console.error(error)
 	})
 }
 
-async function openResultModal(task) {
+/**
+ * Open an assistant modal to show  the result of a task
+ *
+ * @param {object} task the task we want to see the result of
+ * @return {Promise<void>}
+ */
+async function openAssistantResult(task) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -115,15 +152,42 @@ async function openResultModal(task) {
 	})
 }
 
+async function addAssistantMenuEntry() {
+	const headerRight = document.querySelector('#header .header-right')
+	const menuEntry = document.createElement('div')
+	menuEntry.id = 'assistant'
+	headerRight.prepend(menuEntry)
+
+	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
+	const { default: AssistantHeaderMenuEntry } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantHeaderMenuEntry.vue')
+	Vue.mixin({ methods: { t, n } })
+
+	const View = Vue.extend(AssistantHeaderMenuEntry)
+	const view = new View({
+		propsData: {},
+	}).$mount(menuEntry)
+
+	view.$on('click', () => {
+		openAssistantForm('textprocessing_assistant')
+			.then(r => {
+				console.debug('scheduled task', r.data.ocs.data.task)
+			})
+	})
+}
+
+/**
+ * Expose OCA.TPAssistant.openTextProcessingModal to let apps use the assistant
+ */
 function init() {
 	if (!OCA.TPAssistant) {
 		/**
 		 * @namespace
 		 */
 		OCA.TPAssistant = {
-			openTextProcessingModal,
+			openAssistantForm,
 		}
 	}
+	addAssistantMenuEntry()
 }
 
 init()
