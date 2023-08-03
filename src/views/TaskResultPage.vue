@@ -1,7 +1,14 @@
 <template>
 	<NcContent app-name="textprocessing_assistant">
 		<NcAppContent>
-			PLOP
+			<div v-if="task?.id"
+				class="assistant-wrapper">
+				<AssistantForm
+					class="form"
+					:input="task.input"
+					:output="task.output"
+					:selected-task-type-id="task.type" />
+			</div>
 		</NcAppContent>
 	</NcContent>
 </template>
@@ -10,12 +17,15 @@
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
+import AssistantForm from '../components/AssistantForm.vue'
+
 import { loadState } from '@nextcloud/initial-state'
 
 export default {
 	name: 'TaskResultPage',
 
 	components: {
+		AssistantForm,
 		NcContent,
 		NcAppContent,
 	},
@@ -25,7 +35,7 @@ export default {
 
 	data() {
 		return {
-			generation: loadState('textprocessing_assistant', 'generation'),
+			task: loadState('textprocessing_assistant', 'task'),
 		}
 	},
 
@@ -33,6 +43,7 @@ export default {
 	},
 
 	mounted() {
+		console.debug('aaaaa MOUNTED', this.task)
 	},
 
 	methods: {
@@ -41,5 +52,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// nothing yet
+.assistant-wrapper {
+	display: flex;
+	justify-content: center;
+	margin: 16px 0;
+	.form {
+		width: 400px;
+	}
+}
 </style>

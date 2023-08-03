@@ -31,7 +31,7 @@
 			title="Send"
 			@click="onSubmit">
 			<template #icon>
-				<CloseIcon />
+				<CreationIcon />
 			</template>
 		</NcButton>
 	</div>
@@ -39,7 +39,6 @@
 
 <script>
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
-import CloseIcon from 'vue-material-design-icons/Close.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
@@ -54,7 +53,6 @@ export default {
 		NcButton,
 		NcRichContenteditable,
 		NcSelect,
-		CloseIcon,
 		CreationIcon,
 	},
 	props: {

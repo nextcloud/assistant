@@ -4,6 +4,8 @@ namespace OCA\TPAssistant\Service;
 
 use DateTime;
 use OCA\TPAssistant\AppInfo\Application;
+use OCP\Common\Exception\NotFoundException;
+use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task;
 use OCP\Notification\IManager as INotificationManager;
 
@@ -12,6 +14,7 @@ class AssistantService {
 	public function __construct(
 		string $appName,
 		private INotificationManager $notificationManager,
+		private ITextProcessingManager $textProcessingManager,
 	) {
 	}
 
@@ -37,4 +40,20 @@ class AssistantService {
 		$manager->notify($notification);
 	}
 
+	/**
+	 * @param string|null $userId
+	 * @param int $taskId
+	 * @return Task
+	 */
+	public function getTask(?string $userId, int $taskId): ?Task {
+		try {
+			$task = $this->textProcessingManager->getTask($taskId);
+		} catch (NotFoundException | \RuntimeException $e) {
+			return null;
+		}
+		if ($task->getUserId() !== $userId) {
+			return null;
+		}
+		return $task;
+	}
 }

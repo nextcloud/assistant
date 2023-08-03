@@ -4,16 +4,12 @@ namespace OCA\TPAssistant\Controller;
 
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
-use OCP\AppFramework\Http\DataDisplayResponse;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\DB\Exception;
 use OCP\IRequest;
 
 use OCA\TPAssistant\Service\AssistantService;
@@ -31,15 +27,26 @@ class AssistantController extends Controller {
 	}
 
 	/**
-	 * @param string $hash
+	 * @param int $taskId
 	 * @return TemplateResponse
-	 * @throws Exception
-	 * @throws MultipleObjectsReturnedException
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
+	#[BruteForceProtection(action: 'taskResultPage')]
 	public function getTaskResultPage(int $taskId): TemplateResponse {
-		$this->initialStateService->provideInitialState('taskId', $taskId);
+		$task = $this->assistantService->getTask($this->userId, $taskId);
+		if ($task === null) {
+			$response = new TemplateResponse(
+				'',
+				'403',
+				[],
+				TemplateResponse::RENDER_AS_ERROR
+			);
+			$response->setStatus(Http::STATUS_NOT_FOUND);
+			$response->throttle(['userId' => $this->userId, 'taskId' => $taskId]);
+			return $response;
+		}
+		$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
 		return new TemplateResponse(Application::APP_ID, 'taskResultPage');
 	}
 }
