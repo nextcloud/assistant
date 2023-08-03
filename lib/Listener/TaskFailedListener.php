@@ -2,6 +2,7 @@
 
 namespace OCA\TPAssistant\Listener;
 
+use OCA\TPAssistant\Service\AssistantService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TextProcessing\Events\TaskFailedEvent;
@@ -9,6 +10,7 @@ use OCP\TextProcessing\Events\TaskFailedEvent;
 class TaskFailedListener implements IEventListener {
 
 	public function __construct(
+		private AssistantService $assistantService,
 	) {
 	}
 
@@ -17,6 +19,8 @@ class TaskFailedListener implements IEventListener {
 			return;
 		}
 
+		$task = $event->getTask();
+		$this->assistantService->sendNotification($task);
 		error_log('Task failed');
 	}
 }

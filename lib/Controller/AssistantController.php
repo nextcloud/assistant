@@ -38,9 +38,8 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function getImageGenerationPage(string $hash): TemplateResponse {
-		$generationData = $this->assistantService->getGenerationInfo($hash);
-		$this->initialStateService->provideInitialState('generation', $generationData);
+	public function getTaskResultPage(int $taskId): TemplateResponse {
+		$this->initialStateService->provideInitialState('taskId', $taskId);
 		return new TemplateResponse(Application::APP_ID, 'taskResultPage');
 	}
 }
