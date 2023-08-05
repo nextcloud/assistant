@@ -6,7 +6,7 @@
 				<AssistantForm
 					class="form"
 					:input="task.input"
-					:output="task.output"
+					:output="task.output ?? ''"
 					:selected-task-type-id="task.type"
 					@submit="onSubmit" />
 			</div>
@@ -65,7 +65,7 @@ export default {
 .assistant-wrapper {
 	display: flex;
 	justify-content: center;
-	margin: 16px 0;
+	margin: 24px 0 16px 0;
 	.form {
 		width: 400px;
 	}

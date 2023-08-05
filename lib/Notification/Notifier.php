@@ -58,13 +58,13 @@ class Notifier implements INotifier {
 		$l = $this->factory->get(Application::APP_ID, $languageCode);
 
 		$params = $notification->getSubjectParameters();
-		$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 		switch ($notification->getSubject()) {
 			case 'success':
 				$subject = $l->t('Assistant Task for app %1$s has finished', [$params['appId']]);
 				$content = $l->t('The input was: %1$s', [$params['input']]);
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 				$notification
 					->setParsedSubject($subject)
@@ -84,6 +84,26 @@ class Notifier implements INotifier {
 				return $notification;
 
 			case 'failure':
+				$subject = $l->t('Assistant Task for app %1$s has failed', [$params['appId']]);
+				$content = $l->t('The input was: %1$s', [$params['input']]);
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
+
+				$notification
+					->setParsedSubject($subject)
+					->setParsedMessage($content)
+					->setLink($link)
+					->setIcon($iconUrl);
+
+				$actionLabel = $l->t('View task');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($notification->getLink(), IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
 				return $notification;
 
 			default:

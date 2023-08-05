@@ -110,6 +110,7 @@ async function showResults(taskId) {
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
+		console.debug('showing results for task', response.data.ocs.data.task)
 		openAssistantResult(response.data.ocs.data.task)
 	}).catch(error => {
 		console.error(error)
@@ -137,7 +138,7 @@ async function openAssistantResult(task) {
 		propsData: {
 			// isInsideViewer,
 			input: task.input,
-			output: task.output,
+			output: task.output ?? '',
 			selectedTaskTypeId: task.type,
 		},
 	}).$mount(modalElement)

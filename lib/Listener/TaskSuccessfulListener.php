@@ -24,6 +24,11 @@ class TaskSuccessfulListener implements IEventListener {
 		}
 
 		$task = $event->getTask();
+		error_log('Task successful ' . $task->getId());
+		if ($task->getUserId() === null) {
+			return;
+		}
+
 		$notificationTarget = null;
 
 		// we dispatch an event to ask the app that scheduled the task if it wants a notification
@@ -38,6 +43,5 @@ class TaskSuccessfulListener implements IEventListener {
 		}
 
 		$this->assistantService->sendNotification($task, $notificationTarget);
-		error_log('Task successful');
 	}
 }
