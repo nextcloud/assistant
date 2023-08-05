@@ -68,7 +68,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
  * @param {string} input the task input text
  * @return {Promise<*>}
  */
-async function scheduleTask(appId, identifier, taskType, input) {
+export async function scheduleTask(appId, identifier, taskType, input) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const url = generateOcsUrl('textprocessing/schedule', 2)
@@ -86,7 +86,7 @@ async function scheduleTask(appId, identifier, taskType, input) {
  *
  * @param {event} event the notification event
  */
-function handleNotification(event) {
+export function handleNotification(event) {
 	if (event.notification.app !== 'textprocessing_assistant' || event.action.type !== 'WEB') {
 		return
 	}
@@ -97,16 +97,6 @@ function handleNotification(event) {
 		event.cancelAction = true
 		showResults(event.notification.objectId)
 	}
-}
-
-/**
- * Listen to an event emitted on the event-bus when a notification action or a browser notification is clicked
- *
- * @return {Promise<void>}
- */
-async function subscribeToNotifications() {
-	const { subscribe } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/event-bus')
-	subscribe('notifications:action:execute', handleNotification)
 }
 
 /**
@@ -167,14 +157,14 @@ async function openAssistantResult(task) {
 	})
 }
 
-async function addAssistantMenuEntry() {
+export async function addAssistantMenuEntry() {
 	const headerRight = document.querySelector('#header .header-right')
 	const menuEntry = document.createElement('div')
 	menuEntry.id = 'assistant'
 	headerRight.prepend(menuEntry)
 
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
-	const { default: AssistantHeaderMenuEntry } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantHeaderMenuEntry.vue')
+	const { default: AssistantHeaderMenuEntry } = await import(/* webpackChunkName: "assistant-header-lazy" */'./components/AssistantHeaderMenuEntry.vue')
 	Vue.mixin({ methods: { t, n } })
 
 	const View = Vue.extend(AssistantHeaderMenuEntry)
@@ -189,22 +179,3 @@ async function addAssistantMenuEntry() {
 			})
 	})
 }
-
-/**
- * Expose OCA.TPAssistant.openTextProcessingModal to let apps use the assistant
- * and add a header right menu entry
- */
-function init() {
-	if (!OCA.TPAssistant) {
-		/**
-		 * @namespace
-		 */
-		OCA.TPAssistant = {
-			openAssistantForm,
-		}
-	}
-	addAssistantMenuEntry()
-}
-
-init()
-subscribeToNotifications()

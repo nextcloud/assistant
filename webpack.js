@@ -17,7 +17,7 @@ const appId = 'textprocessing_assistant'
 webpackConfig.entry = {
 	personalSettings: { import: path.join(__dirname, 'src', 'personalSettings.js'), filename: appId + '-personalSettings.js' },
 	adminSettings: { import: path.join(__dirname, 'src', 'adminSettings.js'), filename: appId + '-adminSettings.js' },
-	assistant: { import: path.join(__dirname, 'src', 'assistant.js'), filename: appId + '-assistant.js' },
+	main: { import: path.join(__dirname, 'src', 'main.js'), filename: appId + '-main.js' },
 	taskResultPage: { import: path.join(__dirname, 'src', 'taskResultPage.js'), filename: appId + '-taskResultPage.js' },
 }
 

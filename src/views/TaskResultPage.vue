@@ -7,7 +7,8 @@
 					class="form"
 					:input="task.input"
 					:output="task.output"
-					:selected-task-type-id="task.type" />
+					:selected-task-type-id="task.type"
+					@submit="onSubmit" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -20,6 +21,7 @@ import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import AssistantForm from '../components/AssistantForm.vue'
 
 import { loadState } from '@nextcloud/initial-state'
+import { scheduleTask } from '../assistant.js'
 
 export default {
 	name: 'TaskResultPage',
@@ -43,10 +45,18 @@ export default {
 	},
 
 	mounted() {
-		console.debug('aaaaa MOUNTED', this.task)
 	},
 
 	methods: {
+		onSubmit(data) {
+			scheduleTask(this.task.appId, this.task.identifier, data.taskTypeId, data.input)
+				.then((response) => {
+					console.debug('scheduled task', response.data?.ocs?.data?.task)
+				})
+				.catch(error => {
+					console.error('Assistant scheduling error', error)
+				})
+		},
 	},
 }
 </script>
