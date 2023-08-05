@@ -15,7 +15,26 @@
 						<CloseIcon />
 					</template>
 				</NcButton>
+				<NcEmptyContent
+					v-if="showScheduleConfirmation"
+					:title="t('textprocessing_assistant', 'Your task has been scheduled')"
+					:name="t('textprocessing_assistant', 'Your task has been scheduled')"
+					:description="t('textprocessing_assistant', 'You will receive a notification when it has finished')">
+					<template #action>
+						<NcButton
+							@click="onCancel">
+							<template #icon>
+								<CloseIcon />
+							</template>
+							{{ t('textprocessing_assistant', 'Close') }}
+						</NcButton>
+					</template>
+					<template #icon>
+						<AssistantIcon />
+					</template>
+				</NcEmptyContent>
 				<AssistantForm
+					v-else
 					class="form"
 					:input="input"
 					:output="output"
@@ -30,8 +49,11 @@
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 
+import AssistantIcon from './icons/AssistantIcon.vue'
+
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 import AssistantForm from './AssistantForm.vue'
 
@@ -40,9 +62,11 @@ import { emit } from '@nextcloud/event-bus'
 export default {
 	name: 'AssistantModal',
 	components: {
+		AssistantIcon,
 		AssistantForm,
 		NcModal,
 		NcButton,
+		NcEmptyContent,
 		CloseIcon,
 	},
 	props: {
@@ -64,6 +88,10 @@ export default {
 		selectedTaskTypeId: {
 			type: [String, null],
 			default: null,
+		},
+		showScheduleConfirmation: {
+			type: Boolean,
+			required: true,
 		},
 	},
 	emits: [
@@ -92,7 +120,7 @@ export default {
 			this.$emit('cancel')
 		},
 		onSubmit(params) {
-			this.show = false
+			// this.show = false
 			this.$emit('submit', params)
 		},
 	},

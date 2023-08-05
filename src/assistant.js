@@ -38,6 +38,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				isInsideViewer,
 				input,
 				selectedTaskTypeId: taskType,
+				showScheduleConfirmation: false,
 			},
 		}).$mount(modalElement)
 
@@ -46,12 +47,13 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 			reject(new Error('User cancellation'))
 		})
 		view.$on('submit', (data) => {
-			view.$destroy()
 			scheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
+					view.showScheduleConfirmation = true
 					resolve(response.data?.ocs?.data?.task)
 				})
 				.catch(error => {
+					view.$destroy()
 					console.error('Assistant scheduling error', error)
 					reject(new Error('Assistant scheduling error'))
 				})
@@ -140,6 +142,7 @@ async function openAssistantResult(task) {
 			input: task.input,
 			output: task.output ?? '',
 			selectedTaskTypeId: task.type,
+			showScheduleConfirmation: false,
 		},
 	}).$mount(modalElement)
 
@@ -147,12 +150,13 @@ async function openAssistantResult(task) {
 		view.$destroy()
 	})
 	view.$on('submit', (data) => {
-		view.$destroy()
 		scheduleTask(task.appId, task.identifier, data.taskTypeId, data.input)
 			.then((response) => {
+				view.showScheduleConfirmation = true
 				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
+				view.$destroy()
 				console.error('Assistant scheduling error', error)
 			})
 	})
