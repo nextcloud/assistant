@@ -25,28 +25,48 @@
 			:link-autocomplete="false" />
 		<NcRichContenteditable
 			v-if="myOutput"
+			ref="output"
 			:value.sync="myOutput"
 			class="editable-output"
 			:multiline="true"
 			:disabled="loading"
 			:placeholder="t('textprocessing_assistant', 'Result')"
 			:link-autocomplete="false" />
-		<NcButton
-			v-if="showSubmit"
-			class="submit-button"
-			:disabled="!canSubmit"
-			:aria-label="t('textprocessing_assistant', 'Submit assistant task')"
-			:title="t('textprocessing_assistant', 'Submit')"
-			@click="onSubmit">
-			{{ selectedTaskType.name }}
-			<template #icon>
-				<CreationIcon />
-			</template>
-		</NcButton>
+		<div class="footer">
+			<NcButton
+				v-if="showSubmit"
+				:type="submitButtonType"
+				class="submit-button"
+				:disabled="!canSubmit"
+				:aria-label="t('textprocessing_assistant', 'Submit assistant task')"
+				:title="t('textprocessing_assistant', 'Submit')"
+				@click="onSubmit">
+				{{ submitButtonLabel }}
+				<template #icon>
+					<CreationIcon />
+				</template>
+			</NcButton>
+			<NcButton
+				v-if="showCopy"
+				type="primary"
+				class="copy-button"
+				:aria-label="t('textprocessing_assistant', 'Copy task output')"
+				:title="t('textprocessing_assistant', 'Copy')"
+				@click="onCopy">
+				{{ t('textprocessing_assistant', 'Copy') }}
+				<template #icon>
+					<ClipboardCheckOutlineIcon v-if="copied"
+						class="success-icon" />
+					<ContentCopyIcon v-else />
+				</template>
+			</NcButton>
+		</div>
 	</div>
 </template>
 
 <script>
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
+import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -55,6 +75,11 @@ import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
+import { showError } from '@nextcloud/dialogs'
+import VueClipboard from 'vue-clipboard2'
+import Vue from 'vue'
+
+Vue.use(VueClipboard)
 
 export default {
 	name: 'AssistantForm',
@@ -63,6 +88,8 @@ export default {
 		NcRichContenteditable,
 		NcSelect,
 		CreationIcon,
+		ContentCopyIcon,
+		ClipboardCheckOutlineIcon,
 	},
 	props: {
 		input: {
@@ -89,6 +116,7 @@ export default {
 			loading: false,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId,
+			copied: false,
 		}
 	},
 	computed: {
@@ -98,11 +126,20 @@ export default {
 			}
 			return this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 		},
+		submitButtonType() {
+			return this.myOutput.trim() ? 'secondary' : 'primary'
+		},
 		showSubmit() {
-			return this.selectedTaskType && this.myOutput.trim() === ''
+			return this.selectedTaskType
 		},
 		canSubmit() {
 			return this.selectedTaskType && !!this.myInput.trim()
+		},
+		submitButtonLabel() {
+			return this.myOutput.trim() ? t('textprocessing_assistant', 'Try again') : this.selectedTaskType.name
+		},
+		showCopy() {
+			return !!this.myOutput.trim()
 		},
 	},
 	mounted() {
@@ -128,7 +165,20 @@ export default {
 			this.$emit('cancel')
 		},
 		onSubmit() {
-			this.$emit('submit', { input: this.myInput, taskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('submit', { input: this.myInput.trim(), taskTypeId: this.mySelectedTaskTypeId })
+		},
+		async onCopy() {
+			try {
+				const container = this.$refs.output.$el
+				await this.$copyText(this.myOutput.trim(), container)
+				this.copied = true
+				setTimeout(() => {
+					this.copied = false
+				}, 5000)
+			} catch (error) {
+				console.error(error)
+				showError(t('textprocessing_assistant', 'Result could not be copied to clipboard'))
+			}
 		},
 	},
 }
@@ -172,8 +222,15 @@ export default {
 		align-self: start;
 	}
 
-	.submit-button {
-		align-self: end;
+	.footer {
+		width: 100%;
+		display: flex;
+		justify-content: end;
+		gap: 4px;
+	}
+
+	.success-icon {
+		color: var(--color-success);
 	}
 }
 </style>

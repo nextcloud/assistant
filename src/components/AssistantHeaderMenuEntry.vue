@@ -1,6 +1,7 @@
 <template>
 	<div id="assistant"
-		class="header-menu">
+		class="header-menu"
+		:title="t('textprocessing_assistant', 'Nextcloud assistant')">
 		<a
 			href="#"
 			@click="$emit('click')">

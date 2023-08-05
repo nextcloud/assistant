@@ -6,16 +6,22 @@ __webpack_public_path__ = linkTo('textprocessing_assistant', 'js/') // eslint-di
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
- * OCA.TPAssistant.openAssistantForm('my_app_id', 'my task identifier', 'OCP\\TextProcessing\\FreePromptTaskType', 'count to 3').then(r => {console.debug('scheduled task', r.data.ocs.data.task)})
+ * OCA.TPAssistant.openAssistantForm({
+ *  appId: 'my_app_id',
+ *  identifier: 'my task identifier',
+ *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
+ *  input: 'count to 3'
+ * }).then(r => {console.debug('scheduled task', r.data.ocs.data.task)})
  *
- * @param {string} appId the scheduling app id
- * @param {string} identifier the task identifier
- * @param {string} taskType the task type class
- * @param {string} inputText optional initial input text
- * @param {boolean} isInsideViewer Should be true if this function is called while the Viewer is displayed
+ * @param {object} params parameters for the assistant
+ * @param {string} params.appId the scheduling app id
+ * @param {string} params.identifier the task identifier
+ * @param {string} params.taskType the task type class
+ * @param {string} params.input optional initial input text
+ * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
  * @return {Promise<unknown>}
  */
-export async function openAssistantForm(appId, identifier = '', taskType = null, inputText = '', isInsideViewer = undefined) {
+export async function openAssistantForm({ appId, identifier = '', taskType = null, input = '', isInsideViewer = undefined }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -30,7 +36,7 @@ export async function openAssistantForm(appId, identifier = '', taskType = null,
 		const view = new View({
 			propsData: {
 				isInsideViewer,
-				input: inputText,
+				input,
 				selectedTaskTypeId: taskType,
 			},
 		}).$mount(modalElement)
@@ -143,12 +149,21 @@ async function openAssistantResult(task) {
 			input: task.input,
 			output: task.output,
 			selectedTaskTypeId: task.type,
-			readonly: true,
 		},
 	}).$mount(modalElement)
 
 	view.$on('cancel', () => {
 		view.$destroy()
+	})
+	view.$on('submit', (data) => {
+		view.$destroy()
+		scheduleTask(task.appId, task.identifier, data.taskTypeId, data.input)
+			.then((response) => {
+				console.debug('scheduled task', response.data?.ocs?.data?.task)
+			})
+			.catch(error => {
+				console.error('Assistant scheduling error', error)
+			})
 	})
 }
 
@@ -168,7 +183,7 @@ async function addAssistantMenuEntry() {
 	}).$mount(menuEntry)
 
 	view.$on('click', () => {
-		openAssistantForm('textprocessing_assistant')
+		openAssistantForm({ appId: 'textprocessing_assistant' })
 			.then(r => {
 				console.debug('scheduled task', r)
 			})
@@ -177,6 +192,7 @@ async function addAssistantMenuEntry() {
 
 /**
  * Expose OCA.TPAssistant.openTextProcessingModal to let apps use the assistant
+ * and add a header right menu entry
  */
 function init() {
 	if (!OCA.TPAssistant) {
