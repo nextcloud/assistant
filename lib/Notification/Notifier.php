@@ -4,9 +4,8 @@ namespace OCA\TPAssistant\Notification;
 
 use InvalidArgumentException;
 use OCA\TPAssistant\AppInfo\Application;
+use OCP\App\IAppManager;
 use OCP\IURLGenerator;
-use OCP\IUser;
-use OCP\IUserManager;
 use OCP\L10N\IFactory;
 use OCP\Notification\IAction;
 use OCP\Notification\INotification;
@@ -17,8 +16,8 @@ class Notifier implements INotifier {
 
 	public function __construct(
 		private IFactory $factory,
-		private IUserManager $userManager,
 		private IURLGenerator $url,
+		private IAppManager $appManager,
 		private ?string $userId,
 	) {
 	}
@@ -58,10 +57,16 @@ class Notifier implements INotifier {
 		$l = $this->factory->get(Application::APP_ID, $languageCode);
 
 		$params = $notification->getSubjectParameters();
+		$schedulingAppId = $params['appId'];
+		$schedulingAppInfo = $this->appManager->getAppInfo($schedulingAppId);
+		if ($schedulingAppInfo === null) {
+			throw new InvalidArgumentException();
+		}
+		$schedulingAppName = $schedulingAppInfo['name'];
 
 		switch ($notification->getSubject()) {
 			case 'success':
-				$subject = $l->t('Assistant Task for app %1$s has finished', [$params['appId']]);
+				$subject = $l->t('Assistant Task for %1$s has finished', [$schedulingAppName]);
 				$content = $l->t('The input was: %1$s', [$params['input']]);
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
@@ -84,7 +89,7 @@ class Notifier implements INotifier {
 				return $notification;
 
 			case 'failure':
-				$subject = $l->t('Assistant Task for app %1$s has failed', [$params['appId']]);
+				$subject = $l->t('Assistant Task for %1$s has failed', [$schedulingAppName]);
 				$content = $l->t('The input was: %1$s', [$params['input']]);
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
