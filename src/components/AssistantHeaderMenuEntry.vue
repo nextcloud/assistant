@@ -5,7 +5,7 @@
 		<a
 			href="#"
 			@click="$emit('click')">
-			<AssistantIcon :size="20" />
+			<AssistantIcon class="menu-icon" :size="20" />
 		</a>
 	</div>
 </template>
@@ -46,5 +46,9 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	.menu-icon {
+		color: var(--color-primary-text) !important;
+	}
 }
 </style>
