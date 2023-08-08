@@ -7,8 +7,10 @@ namespace OCA\TPAssistant\Listener;
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IConfig;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Util;
@@ -17,6 +19,9 @@ class BeforeTemplateRenderedListener implements IEventListener {
 
 	public function __construct(
 		private IUserSession $userSession,
+		private IConfig $config,
+		private IInitialState $initialStateService,
+		private ?string $userId,
 	) {
 	}
 
@@ -34,6 +39,10 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			return;
 		}
 
+		$adminAssistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
+		$userAssistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
+		$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
+		$this->initialStateService->provideInitialState('assistant-enabled', $assistantEnabled);
 		Util::addScript(Application::APP_ID, Application::APP_ID . '-main');
 	}
 }
