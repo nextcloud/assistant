@@ -49,6 +49,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 		view.$on('submit', (data) => {
 			scheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
+					view.input = data.input
 					view.showScheduleConfirmation = true
 					resolve(response.data?.ocs?.data?.task)
 				})

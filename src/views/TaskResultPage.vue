@@ -5,9 +5,9 @@
 				class="assistant-wrapper">
 				<NcEmptyContent
 					v-if="showScheduleConfirmation"
-					:title="t('textprocessing_assistant', 'Your task has been scheduled')"
-					:name="t('textprocessing_assistant', 'Your task has been scheduled')"
-					:description="t('textprocessing_assistant', 'You will receive a notification when it has finished')">
+					:title="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:name="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:description="shortInput">
 					<template #icon>
 						<AssistantIcon />
 					</template>
@@ -59,6 +59,12 @@ export default {
 	},
 
 	computed: {
+		shortInput() {
+			if (this.task.input.length <= 200) {
+				return this.task.input
+			}
+			return this.task.input.slice(0, 200) + '…'
+		},
 	},
 
 	mounted() {
@@ -68,6 +74,7 @@ export default {
 		onSubmit(data) {
 			scheduleTask(this.task.appId, this.task.identifier, data.taskTypeId, data.input)
 				.then((response) => {
+					this.task.input = data.input
 					this.showScheduleConfirmation = true
 					console.debug('scheduled task', response.data?.ocs?.data?.task)
 				})
@@ -84,7 +91,7 @@ export default {
 .assistant-wrapper {
 	display: flex;
 	justify-content: center;
-	margin: 24px 0 16px 0;
+	margin: 24px 16px 16px 16px;
 	.form {
 		width: 400px;
 	}

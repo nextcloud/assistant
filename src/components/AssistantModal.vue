@@ -18,9 +18,9 @@
 				</NcButton>
 				<NcEmptyContent
 					v-if="showScheduleConfirmation"
-					:title="t('textprocessing_assistant', 'Your task has been scheduled')"
-					:name="t('textprocessing_assistant', 'Your task has been scheduled')"
-					:description="t('textprocessing_assistant', 'You will receive a notification when it has finished')">
+					:title="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:name="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:description="shortInput">
 					<template #action>
 						<NcButton
 							@click="onCancel">
@@ -108,6 +108,12 @@ export default {
 		}
 	},
 	computed: {
+		shortInput() {
+			if (this.input.length <= 200) {
+				return this.input
+			}
+			return this.input.slice(0, 200) + '…'
+		},
 	},
 	mounted() {
 		if (this.isInsideViewer) {
