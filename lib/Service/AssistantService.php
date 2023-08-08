@@ -27,6 +27,7 @@ class AssistantService {
 			'id' => $task->getId(),
 			'input' => $task->getInput(),
 			'target' => $target,
+			'taskTypeClass' => $task->getType(),
 		];
 		$status = $task->getStatus();
 		$subject = $status === Task::STATUS_SUCCESSFUL

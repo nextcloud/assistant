@@ -11,6 +11,9 @@ use OCP\Notification\IAction;
 use OCP\Notification\INotification;
 
 use OCP\Notification\INotifier;
+use OCP\TextProcessing\ITaskType;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class Notifier implements INotifier {
 
@@ -18,6 +21,8 @@ class Notifier implements INotifier {
 		private IFactory $factory,
 		private IURLGenerator $url,
 		private IAppManager $appManager,
+		private ContainerInterface $container,
+		private LoggerInterface $logger,
 		private ?string $userId,
 	) {
 	}
@@ -64,10 +69,23 @@ class Notifier implements INotifier {
 		}
 		$schedulingAppName = $schedulingAppInfo['name'];
 
+		$taskTypeName = null;
+		if (isset($params['taskTypeClass']) && $params['taskTypeClass']) {
+			try {
+				/** @var ITaskType $taskType */
+				$taskType = $this->container->get($params['taskTypeClass']);
+				$taskTypeName = $taskType->getName();
+			} catch (\Exception | \Throwable $e) {
+				$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
+			}
+		}
+
 		switch ($notification->getSubject()) {
 			case 'success':
-				$subject = $l->t('Assistant Task for %1$s has finished', [$schedulingAppName]);
-				$content = $l->t('The input was: %1$s', [$params['input']]);
+				$subject = $taskTypeName === null
+					? $l->t('Task for "%1$s" has finished', [$schedulingAppName])
+					: $l->t('"%1$s" task for "%2$s" has finished', [$taskTypeName, $schedulingAppName]);
+				$content = $l->t('Input: %1$s', [$params['input']]);
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
@@ -89,8 +107,10 @@ class Notifier implements INotifier {
 				return $notification;
 
 			case 'failure':
-				$subject = $l->t('Assistant Task for %1$s has failed', [$schedulingAppName]);
-				$content = $l->t('The input was: %1$s', [$params['input']]);
+				$subject = $taskTypeName === null
+					? $l->t('Task for "%1$s" has failed', [$schedulingAppName])
+					: $l->t('"%1$s" task for "%2$s" has failed', [$taskTypeName, $schedulingAppName]);
+				$content = $l->t('Input: %1$s', [$params['input']]);
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
 
