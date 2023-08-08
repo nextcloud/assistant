@@ -26,6 +26,9 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
 
+	// fallback to the last used one
+	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
+
 	return new Promise((resolve, reject) => {
 		const modalId = 'assistantModal'
 		const modalElement = document.createElement('div')
@@ -37,7 +40,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 			propsData: {
 				isInsideViewer,
 				input,
-				selectedTaskTypeId: taskType,
+				selectedTaskTypeId,
 				showScheduleConfirmation: false,
 			},
 		}).$mount(modalElement)
@@ -73,7 +76,8 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
  */
 export async function scheduleTask(appId, identifier, taskType, input) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-genocs-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType(taskType)
 	const url = generateOcsUrl('textprocessing/schedule', 2)
 	const params = {
 		input,
@@ -82,6 +86,32 @@ export async function scheduleTask(appId, identifier, taskType, input) {
 		identifier,
 	}
 	return axios.post(url, params)
+}
+
+async function saveLastSelectedTaskType(taskType) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+
+	const req = {
+		values: {
+			last_task_type: taskType,
+		},
+	}
+	const url = generateUrl('/apps/textprocessing_assistant/config')
+	return axios.put(url, req)
+}
+
+async function getLastSelectedTaskType() {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+
+	const req = {
+		params: {
+			key: 'last_task_type',
+		},
+	}
+	const url = generateUrl('/apps/textprocessing_assistant/config')
+	return axios.get(url, req)
 }
 
 /**

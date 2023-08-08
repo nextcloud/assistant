@@ -2,6 +2,7 @@
 
 namespace OCA\TPAssistant\Controller;
 
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
@@ -22,19 +23,28 @@ class ConfigController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * Set config values
 	 *
 	 * @param array $values key/value pairs to store in config
 	 * @return DataResponse
 	 * @throws PreConditionNotMetException
 	 */
+	#[NoAdminRequired]
 	public function setConfig(array $values): DataResponse {
 		foreach ($values as $key => $value) {
 			$this->config->setUserValue($this->userId, Application::APP_ID, $key, $value);
 		}
 		return new DataResponse(1);
+	}
+
+	/**
+	 * @param string $key
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function getConfigValue(string $key): DataResponse {
+		$value = $this->config->getUserValue($this->userId, Application::APP_ID, $key);
+		return new DataResponse($value);
 	}
 
 	/**
