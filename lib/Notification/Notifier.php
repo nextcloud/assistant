@@ -95,7 +95,7 @@ class Notifier implements INotifier {
 					->setLink($link)
 					->setIcon($iconUrl);
 
-				$actionLabel = $l->t('View results');
+				$actionLabel = $params['actionLabel'] ?? $l->t('View results');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)
@@ -120,7 +120,7 @@ class Notifier implements INotifier {
 					->setLink($link)
 					->setIcon($iconUrl);
 
-				$actionLabel = $l->t('View task');
+				$actionLabel = $params['actionLabel'] ?? $l->t('View task');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)

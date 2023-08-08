@@ -18,7 +18,7 @@ class AssistantService {
 	) {
 	}
 
-	public function sendNotification(Task $task, ?string $target): void {
+	public function sendNotification(Task $task, ?string $target, ?string $actionLabel): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
@@ -27,6 +27,7 @@ class AssistantService {
 			'id' => $task->getId(),
 			'input' => $task->getInput(),
 			'target' => $target,
+			'actionLabel' => $actionLabel,
 			'taskTypeClass' => $task->getType(),
 		];
 		$status = $task->getStatus();

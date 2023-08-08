@@ -16,6 +16,7 @@ class BeforeAssistantNotificationEvent extends Event {
 
 	private bool $wantsNotification = false;
 	private ?string $notificationTarget = null;
+	private ?string $notificationActionLabel = null;
 
 	public function __construct(
 		private Task $task,
@@ -63,5 +64,21 @@ class BeforeAssistantNotificationEvent extends Event {
 	 */
 	public function setNotificationTarget(?string $notificationTarget): void {
 		$this->notificationTarget = $notificationTarget;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getNotificationActionLabel(): ?string {
+		return $this->notificationActionLabel;
+	}
+
+	/**
+	 * @param string|null $notificationActionLabel Label of the main notification action
+	 * null will not change the default action label
+	 * @return void
+	 */
+	public function setNotificationActionLabel(?string $notificationActionLabel): void {
+		$this->notificationActionLabel = $notificationActionLabel;
 	}
 }

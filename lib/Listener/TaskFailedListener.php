@@ -40,8 +40,9 @@ class TaskFailedListener implements IEventListener {
 				return;
 			}
 			$notificationTarget = $beforeAssistantNotificationEvent->getNotificationTarget();
+			$notificationActionLabel = $beforeAssistantNotificationEvent->getNotificationActionLabel();
 		}
 
-		$this->assistantService->sendNotification($task, $notificationTarget);
+		$this->assistantService->sendNotification($task, $notificationTarget, $notificationActionLabel);
 	}
 }
