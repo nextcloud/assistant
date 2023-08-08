@@ -12,6 +12,10 @@
 			:placeholder="t('textprocessing_assistant', 'Choose a task')"
 			input-id="task-select"
 			@input="onTaskInput" />
+		<h2 v-if="selectedTaskType"
+			class="task-name">
+			{{ selectedTaskType.name }}
+		</h2>
 		<span v-if="selectedTaskType"
 			class="task-description">
 			{{ selectedTaskType.description }}
@@ -218,6 +222,11 @@ export default {
 		width: 250px;
 	}
 
+	.task-name {
+		margin-bottom: 0px;
+	}
+
+	.task-name,
 	.task-description {
 		align-self: start;
 	}
