@@ -8,6 +8,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
@@ -48,5 +49,22 @@ class AssistantController extends Controller {
 		}
 		$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
 		return new TemplateResponse(Application::APP_ID, 'taskResultPage');
+	}
+
+	/**
+	 * @param string $input
+	 * @param string $type
+	 * @param string $appId
+	 * @param string $identifier
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function runTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+		try {
+			$output = $this->assistantService->runTask($type, $input, $appId, $this->userId, $identifier);
+		} catch (\Exception | \Throwable $e) {
+			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse($output);
 	}
 }

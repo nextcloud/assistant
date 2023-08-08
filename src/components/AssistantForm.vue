@@ -57,8 +57,22 @@
 				:type="submitButtonType"
 				class="submit-button"
 				:disabled="!canSubmit"
-				:aria-label="t('assistant', 'Submit assistant task')"
-				:title="t('assistant', 'Submit')"
+				:aria-label="t('textprocessing_assistant', 'Run an assistant task')"
+				:title="t('textprocessing_assistant', 'Run')"
+				@click="onSyncSubmit">
+				{{ syncSubmitButtonLabel }}
+				<template #icon>
+					<NcLoadingIcon v-if="loading" />
+					<CreationIcon v-else />
+				</template>
+			</NcButton>
+			<NcButton
+				v-if="showSubmit"
+				:type="submitButtonType"
+				class="submit-button"
+				:disabled="!canSubmit"
+				:aria-label="t('textprocessing_assistant', 'Schedule an assistant task')"
+				:title="t('textprocessing_assistant', 'Schedule')"
 				@click="onSubmit">
 				{{ submitButtonLabel }}
 				<template #icon>
@@ -87,6 +101,7 @@ import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
 
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
@@ -107,12 +122,17 @@ export default {
 		TaskTypeSelect,
 		NcButton,
 		NcRichContenteditable,
+		NcLoadingIcon,
 		CreationIcon,
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
 		NcNoteCard,
 	},
 	props: {
+		loading: {
+			type: Boolean,
+			default: false,
+		},
 		input: {
 			type: String,
 			default: '',
@@ -134,7 +154,6 @@ export default {
 		return {
 			myInput: this.input,
 			myOutput: this.output,
-			loading: false,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId,
 			copied: false,
@@ -163,8 +182,16 @@ export default {
 					? t('assistant', 'Send request')
 					: this.selectedTaskType.name
 		},
+		syncSubmitButtonLabel() {
+			return this.myOutput.trim() ? t('textprocessing_assistant', 'Try again') : this.selectedTaskType.name
+		},
 		showCopy() {
 			return !!this.myOutput.trim()
+		},
+	},
+	watch: {
+		output(newVal) {
+			this.myOutput = newVal
 		},
 	},
 	mounted() {
@@ -179,15 +206,15 @@ export default {
 				.catch((error) => {
 					console.error(error)
 				})
-				.then(() => {
-					this.loading = false
-				})
 		},
 		onCancel() {
 			this.$emit('cancel')
 		},
 		onSubmit() {
 			this.$emit('submit', { input: this.myInput.trim(), taskTypeId: this.mySelectedTaskTypeId })
+		},
+		onSyncSubmit() {
+			this.$emit('sync-submit', { input: this.myInput.trim(), taskTypeId: this.mySelectedTaskTypeId })
 		},
 		async onCopy() {
 			try {

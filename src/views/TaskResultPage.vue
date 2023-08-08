@@ -18,7 +18,9 @@
 					:input="task.input"
 					:output="task.output ?? ''"
 					:selected-task-type-id="task.type"
-					@submit="onSubmit" />
+					:loading="loading"
+					@submit="onSubmit"
+					@sync-submit="onSyncSubmit" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -35,7 +37,7 @@ import AssistantForm from '../components/AssistantForm.vue'
 
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { scheduleTask } from '../assistant.js'
+import { scheduleTask, runTask } from '../assistant.js'
 
 export default {
 	name: 'TaskResultPage',
@@ -55,6 +57,7 @@ export default {
 		return {
 			task: loadState('assistant', 'task'),
 			showScheduleConfirmation: false,
+			loading: false,
 		}
 	},
 
@@ -81,6 +84,19 @@ export default {
 				.catch(error => {
 					console.error('Assistant scheduling error', error)
 					showError(t('assistant', 'Failed to schedule your task'))
+				})
+		},
+		onSyncSubmit(data) {
+			this.loading = true
+			runTask(this.task.appId, this.task.identifier, data.taskTypeId, data.input)
+				.then((response) => {
+					this.task.output = response.data
+				})
+				.catch(error => {
+					console.error('Assistant scheduling error', error)
+				})
+				.then(() => {
+					this.loading = false
 				})
 		},
 	},

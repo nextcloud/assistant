@@ -40,8 +40,10 @@
 					:input="input"
 					:output="output"
 					:selected-task-type-id="selectedTaskTypeId"
+					:loading="loading"
 					@cancel="onCancel"
-					@submit="onSubmit" />
+					@submit="onSubmit"
+					@sync-submit="onSyncSubmit" />
 			</div>
 		</div>
 	</NcModal>
@@ -75,6 +77,10 @@ export default {
 		 * If true, add the modal content to the Viewer trap elements via the event-bus
 		 */
 		isInsideViewer: {
+			type: Boolean,
+			default: false,
+		},
+		loading: {
 			type: Boolean,
 			default: false,
 		},
@@ -129,6 +135,9 @@ export default {
 		onSubmit(params) {
 			// this.show = false
 			this.$emit('submit', params)
+		},
+		onSyncSubmit(params) {
+			this.$emit('sync-submit', params)
 		},
 	},
 }

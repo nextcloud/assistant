@@ -62,7 +62,36 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
+		view.$on('sync-submit', (data) => {
+			view.loading = true
+			runTask(appId, identifier, data.taskTypeId, data.input)
+				.then((response) => {
+					resolve({ output: response.data })
+					view.output = response.data
+				})
+				.catch(error => {
+					view.$destroy()
+					console.error('Assistant scheduling error', error)
+					reject(new Error('Assistant scheduling error'))
+				})
+				.then(() => {
+					view.loading = false
+				})
+		})
 	})
+}
+
+export async function runTask(appId, identifier, taskType, input) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const url = generateUrl('/apps/textprocessing_assistant/run')
+	const params = {
+		input,
+		type: taskType,
+		appId,
+		identifier,
+	}
+	return axios.post(url, params)
 }
 
 /**
