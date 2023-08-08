@@ -156,7 +156,7 @@ async function showResults(taskId) {
  * @param {object} task the task we want to see the result of
  * @return {Promise<void>}
  */
-async function openAssistantResult(task) {
+export async function openAssistantResult(task) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
