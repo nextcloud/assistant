@@ -70,11 +70,12 @@ class AssistantService {
 	 * @param string $appId
 	 * @param string|null $userId
 	 * @param string $identifier
-	 * @return string
+	 * @return Task
 	 * @throws PreConditionNotMetException
 	 */
-	public function runTask(string $type, string $input, string $appId, ?string $userId, string $identifier): string {
+	public function runTask(string $type, string $input, string $appId, ?string $userId, string $identifier): Task {
 		$task = new Task($type, $input, $appId, $userId, $identifier);
-		return $this->textProcessingManager->runTask($task);
+		$this->textProcessingManager->runTask($task);
+		return $task;
 	}
 }

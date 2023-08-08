@@ -61,10 +61,12 @@ class AssistantController extends Controller {
 	#[NoAdminRequired]
 	public function runTask(string $type, string $input, string $appId, string $identifier): DataResponse {
 		try {
-			$output = $this->assistantService->runTask($type, $input, $appId, $this->userId, $identifier);
+			$task = $this->assistantService->runTask($type, $input, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
 			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}
-		return new DataResponse($output);
+		return new DataResponse([
+			'task' => $task->jsonSerialize(),
+		]);
 	}
 }

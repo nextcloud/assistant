@@ -66,8 +66,8 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 			view.loading = true
 			runTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
-					resolve({ output: response.data })
-					view.output = response.data
+					resolve(response.data?.task)
+					view.output = response.data?.task?.output
 				})
 				.catch(error => {
 					view.$destroy()
