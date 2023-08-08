@@ -9,6 +9,7 @@
 			<div class="assistant-modal--content">
 				<NcButton :aria-label="closeButtonLabel"
 					:title="closeButtonTitle"
+					type="tertiary"
 					class="close-button"
 					@click="onCancel">
 					<template #icon>
