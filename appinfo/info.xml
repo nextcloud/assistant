@@ -4,7 +4,23 @@
     <name>Nextcloud assistant</name>
     <summary>Process and transform text</summary>
     <description><![CDATA[
-This app brings text processing features to Nextcloud.
+This app brings a user interface to use the Nextcloud text processing feature.
+
+It allows users to launch text processing tasks, be notified when they finish and see the results.
+The assistant also appears in others apps like Text to easily process parts of a document.
+
+In the assistant, the list of available tasks depends on the available providers installed via other apps.
+So far, the [Large language model](https://github.com/nextcloud/llm#readme)
+and the [OpenAi/LocalAI integration](https://apps.nextcloud.com/apps/integration_openai) apps
+include such providers to:
+* Summarize
+* Extract topics
+* Generate a headline
+* Get an answer from a free prompt
+* Reformulate
+
+Once a task is scheduled, it will run as a background job. When it is finished, the user receives a notification
+from which the results can be displayed.
 ]]></description>
     <version>1.0.0</version>
     <licence>agpl</licence>
