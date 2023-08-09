@@ -141,12 +141,14 @@ export function handleNotification(event) {
 async function showResults(taskId) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
 	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
 		console.debug('showing results for task', response.data.ocs.data.task)
 		openAssistantResult(response.data.ocs.data.task)
 	}).catch(error => {
 		console.error(error)
+		showError(t('textprocessing_assistant', 'This task does not exist or has been cleaned up'))
 	})
 }
 
@@ -157,6 +159,7 @@ async function showResults(taskId) {
  * @return {Promise<void>}
  */
 export async function openAssistantResult(task) {
+	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -189,6 +192,7 @@ export async function openAssistantResult(task) {
 			.catch(error => {
 				view.$destroy()
 				console.error('Assistant scheduling error', error)
+				showError(t('textprocessing_assistant', 'Failed to schedule the task'))
 			})
 	})
 }
