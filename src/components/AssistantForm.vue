@@ -59,8 +59,7 @@
 				@click="onCopy">
 				{{ t('textprocessing_assistant', 'Copy') }}
 				<template #icon>
-					<ClipboardCheckOutlineIcon v-if="copied"
-						class="success-icon" />
+					<ClipboardCheckOutlineIcon v-if="copied" />
 					<ContentCopyIcon v-else />
 				</template>
 			</NcButton>
