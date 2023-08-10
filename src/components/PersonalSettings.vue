@@ -1,14 +1,14 @@
 <template>
-	<div id="textprocessing_assistant_prefs" class="section">
+	<div id="assistant_prefs" class="section">
 		<h2>
 			<AssistantIcon class="icon" />
-			{{ t('textprocessing_assistant', 'Nextcloud assistant') }}
+			{{ t('assistant', 'Nextcloud assistant') }}
 		</h2>
 		<div id="assistant-content">
 			<NcCheckboxRadioSwitch
 				:checked="state.assistant_enabled"
 				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
-				{{ t('textprocessing_assistant', 'Top-right assistant') }}
+				{{ t('assistant', 'Top-right assistant') }}
 			</NcCheckboxRadioSwitch>
 		</div>
 	</div>
@@ -36,7 +36,7 @@ export default {
 
 	data() {
 		return {
-			state: loadState('textprocessing_assistant', 'config'),
+			state: loadState('assistant', 'config'),
 		}
 	},
 
@@ -58,14 +58,14 @@ export default {
 			const req = {
 				values,
 			}
-			const url = generateUrl('/apps/textprocessing_assistant/config')
+			const url = generateUrl('/apps/assistant/config')
 			return axios.put(url, req)
 				.then((response) => {
-					showSuccess(t('textprocessing_assistant', 'Assistant options saved'))
+					showSuccess(t('assistant', 'Assistant options saved'))
 				})
 				.catch((error) => {
 					showError(
-						t('textprocessing_assistant', 'Failed to save assistant options')
+						t('assistant', 'Failed to save assistant options')
 						+ ': ' + error.response?.request?.responseText
 					)
 				})
@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#textprocessing_assistant_prefs {
+#assistant_prefs {
 	#assistant-content {
 		margin-left: 40px;
 	}

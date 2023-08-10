@@ -17,7 +17,7 @@ function init() {
 			openAssistantResult,
 		}
 		subscribe('notifications:action:execute', handleNotification)
-		if (loadState('textprocessing_assistant', 'assistant-enabled')) {
+		if (loadState('assistant', 'assistant-enabled')) {
 			addAssistantMenuEntry()
 		}
 	}

@@ -1,7 +1,7 @@
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
-__webpack_public_path__ = linkTo('textprocessing_assistant', 'js/') // eslint-disable-line
+__webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
 /**
  * Creates an assistant modal and return a promise which provides the result
@@ -97,7 +97,7 @@ async function saveLastSelectedTaskType(taskType) {
 			last_task_type: taskType,
 		},
 	}
-	const url = generateUrl('/apps/textprocessing_assistant/config')
+	const url = generateUrl('/apps/assistant/config')
 	return axios.put(url, req)
 }
 
@@ -110,7 +110,7 @@ async function getLastSelectedTaskType() {
 			key: 'last_task_type',
 		},
 	}
-	const url = generateUrl('/apps/textprocessing_assistant/config')
+	const url = generateUrl('/apps/assistant/config')
 	return axios.get(url, req)
 }
 
@@ -120,7 +120,7 @@ async function getLastSelectedTaskType() {
  * @param {event} event the notification event
  */
 export function handleNotification(event) {
-	if (event.notification.app !== 'textprocessing_assistant' || event.action.type !== 'WEB') {
+	if (event.notification.app !== 'assistant' || event.action.type !== 'WEB') {
 		return
 	}
 	// Handle the action click only if the task was scheduled by the assistant
@@ -148,7 +148,7 @@ async function showResults(taskId) {
 		openAssistantResult(response.data.ocs.data.task)
 	}).catch(error => {
 		console.error(error)
-		showError(t('textprocessing_assistant', 'This task does not exist or has been cleaned up'))
+		showError(t('assistant', 'This task does not exist or has been cleaned up'))
 	})
 }
 
@@ -192,7 +192,7 @@ export async function openAssistantResult(task) {
 			.catch(error => {
 				view.$destroy()
 				console.error('Assistant scheduling error', error)
-				showError(t('textprocessing_assistant', 'Failed to schedule the task'))
+				showError(t('assistant', 'Failed to schedule the task'))
 			})
 	})
 }
@@ -213,7 +213,7 @@ export async function addAssistantMenuEntry() {
 	}).$mount(menuEntry)
 
 	view.$on('click', () => {
-		openAssistantForm({ appId: 'textprocessing_assistant' })
+		openAssistantForm({ appId: 'assistant' })
 			.then(r => {
 				console.debug('scheduled task', r)
 			})

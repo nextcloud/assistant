@@ -18,8 +18,8 @@
 				</NcButton>
 				<NcEmptyContent
 					v-if="showScheduleConfirmation"
-					:title="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
-					:name="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:title="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:name="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
 					:description="shortInput">
 					<template #action>
 						<NcButton
@@ -27,7 +27,7 @@
 							<template #icon>
 								<CloseIcon />
 							</template>
-							{{ t('textprocessing_assistant', 'Close') }}
+							{{ t('assistant', 'Close') }}
 						</NcButton>
 					</template>
 					<template #icon>
@@ -102,8 +102,8 @@ export default {
 	data() {
 		return {
 			show: true,
-			closeButtonTitle: t('textprocessing_assistant', 'Close'),
-			closeButtonLabel: t('textprocessing_assistant', 'Close Nextcloud assistant'),
+			closeButtonTitle: t('assistant', 'Close'),
+			closeButtonLabel: t('assistant', 'Close Nextcloud assistant'),
 			modalSize: 'normal',
 		}
 	},

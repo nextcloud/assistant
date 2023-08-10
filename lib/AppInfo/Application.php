@@ -18,7 +18,7 @@ use OCP\TextProcessing\Events\TaskSuccessfulEvent;
 
 class Application extends App implements IBootstrap {
 
-	public const APP_ID = 'textprocessing_assistant';
+	public const APP_ID = 'assistant';
 
 	private IConfig $config;
 

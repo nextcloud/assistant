@@ -2,14 +2,14 @@
 	<div class="assistant-form">
 		<span class="assistant-bubble">
 			<CreationIcon :size="16" class="icon" />
-			<span>{{ t('textprocessing_assistant', 'Nextcloud assistant') }}</span>
+			<span>{{ t('assistant', 'Nextcloud assistant') }}</span>
 		</span>
 		<NcSelect
 			:value="selectedTaskType"
 			class="task-select"
 			:options="taskTypes"
 			label="name"
-			:placeholder="t('textprocessing_assistant', 'Choose a task')"
+			:placeholder="t('assistant', 'Choose a task')"
 			input-id="task-select"
 			@input="onTaskInput" />
 		<h2 v-if="selectedTaskType"
@@ -25,7 +25,7 @@
 			class="editable-input"
 			:multiline="true"
 			:disabled="loading"
-			:placeholder="t('textprocessing_assistant', 'Type some text')"
+			:placeholder="t('assistant', 'Type some text')"
 			:link-autocomplete="false" />
 		<NcRichContenteditable
 			v-if="myOutput"
@@ -34,7 +34,7 @@
 			class="editable-output"
 			:multiline="true"
 			:disabled="loading"
-			:placeholder="t('textprocessing_assistant', 'Result')"
+			:placeholder="t('assistant', 'Result')"
 			:link-autocomplete="false" />
 		<div class="footer">
 			<NcButton
@@ -42,8 +42,8 @@
 				:type="submitButtonType"
 				class="submit-button"
 				:disabled="!canSubmit"
-				:aria-label="t('textprocessing_assistant', 'Submit assistant task')"
-				:title="t('textprocessing_assistant', 'Submit')"
+				:aria-label="t('assistant', 'Submit assistant task')"
+				:title="t('assistant', 'Submit')"
 				@click="onSubmit">
 				{{ submitButtonLabel }}
 				<template #icon>
@@ -54,10 +54,10 @@
 				v-if="showCopy"
 				type="primary"
 				class="copy-button"
-				:aria-label="t('textprocessing_assistant', 'Copy task output')"
-				:title="t('textprocessing_assistant', 'Copy')"
+				:aria-label="t('assistant', 'Copy task output')"
+				:title="t('assistant', 'Copy')"
 				@click="onCopy">
-				{{ t('textprocessing_assistant', 'Copy') }}
+				{{ t('assistant', 'Copy') }}
 				<template #icon>
 					<ClipboardCheckOutlineIcon v-if="copied" />
 					<ContentCopyIcon v-else />
@@ -139,7 +139,7 @@ export default {
 			return this.selectedTaskType && !!this.myInput.trim()
 		},
 		submitButtonLabel() {
-			return this.myOutput.trim() ? t('textprocessing_assistant', 'Try again') : this.selectedTaskType.name
+			return this.myOutput.trim() ? t('assistant', 'Try again') : this.selectedTaskType.name
 		},
 		showCopy() {
 			return !!this.myOutput.trim()
@@ -180,7 +180,7 @@ export default {
 				}, 5000)
 			} catch (error) {
 				console.error(error)
-				showError(t('textprocessing_assistant', 'Result could not be copied to clipboard'))
+				showError(t('assistant', 'Result could not be copied to clipboard'))
 			}
 		},
 	},

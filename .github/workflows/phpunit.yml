@@ -23,7 +23,7 @@ on:
       - tests/**
 
 env:
-  APP_NAME: textprocessing_assistant
+  APP_NAME: assistant
 
 jobs:
   php:

@@ -1,4 +1,4 @@
-app_name=textprocessing_assistant
+app_name=assistant
 app_version=$(version)
 project_dir=.
 build_dir=/tmp/build

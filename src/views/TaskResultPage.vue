@@ -1,12 +1,12 @@
 <template>
-	<NcContent app-name="textprocessing_assistant">
+	<NcContent app-name="assistant">
 		<NcAppContent>
 			<div v-if="task?.id"
 				class="assistant-wrapper">
 				<NcEmptyContent
 					v-if="showScheduleConfirmation"
-					:title="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
-					:name="t('textprocessing_assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:title="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
+					:name="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
 					:description="shortInput">
 					<template #icon>
 						<AssistantIcon />
@@ -53,7 +53,7 @@ export default {
 
 	data() {
 		return {
-			task: loadState('textprocessing_assistant', 'task'),
+			task: loadState('assistant', 'task'),
 			showScheduleConfirmation: false,
 		}
 	},
@@ -80,7 +80,7 @@ export default {
 				})
 				.catch(error => {
 					console.error('Assistant scheduling error', error)
-					showError(t('textprocessing_assistant', 'Failed to schedule your task'))
+					showError(t('assistant', 'Failed to schedule your task'))
 				})
 		},
 	},
