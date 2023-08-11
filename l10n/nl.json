@@ -1,0 +1,9 @@
+{ "translations": {
+    "View results" : "Bekijk resultaten",
+    "Result" : "Resultaat",
+    "Submit" : "Verwerken",
+    "Copy" : "Kopiëren",
+    "Try again" : "Probeer opnieuw",
+    "Close" : "Sluit"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

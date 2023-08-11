@@ -1,0 +1,10 @@
+{ "translations": {
+    "View results" : "Ver resultados",
+    "Artificial Intelligence" : "Inteligência artificial",
+    "Select which features you want to enable" : "Selecione quais recursos você deseja ativar",
+    "Result" : "Resultado",
+    "Submit" : "Enviar",
+    "Copy" : "Copiar",
+    "Close" : "Fechar"
+},"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
+}
