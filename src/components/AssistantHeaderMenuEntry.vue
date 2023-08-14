@@ -1,7 +1,7 @@
 <template>
 	<div id="assistant"
 		class="header-menu"
-		:title="t('assistant', 'Nextcloud assistant')">
+		:title="t('assistant', 'Nextcloud Assistant')">
 		<a
 			href="#"
 			@click="$emit('click')">

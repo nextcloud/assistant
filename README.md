@@ -1,4 +1,4 @@
-# Nextcloud assistant
+# Nextcloud Assistant
 
 This app brings a user interface to use the Nextcloud text processing feature.
 

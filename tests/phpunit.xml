@@ -9,7 +9,7 @@
       <clover outputFile="./clover.xml"/>
     </report>
   </coverage>
-  <testsuite name="Nextcloud assistant integration App Tests">
+  <testsuite name="Nextcloud Assistant integration App Tests">
     <directory suffix="Test.php">.</directory>
   </testsuite>
   <!-- filters for code coverage -->

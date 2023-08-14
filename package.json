@@ -1,7 +1,7 @@
 {
 	"name": "assistant",
 	"version": "0.0.1",
-	"description": "Nextcloud assistant",
+	"description": "Nextcloud Assistant",
 	"main": "index.js",
 	"directories": {
 		"test": "tests"

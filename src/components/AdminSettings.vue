@@ -2,7 +2,7 @@
 	<div id="assistant_prefs" class="section">
 		<h2>
 			<AssistantIcon class="icon" />
-			{{ t('assistant', 'Nextcloud assistant') }}
+			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
 			<div>

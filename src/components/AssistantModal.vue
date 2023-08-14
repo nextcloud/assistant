@@ -103,7 +103,7 @@ export default {
 		return {
 			show: true,
 			closeButtonTitle: t('assistant', 'Close'),
-			closeButtonLabel: t('assistant', 'Close Nextcloud assistant'),
+			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
 			modalSize: 'normal',
 		}
 	},
