@@ -43,7 +43,7 @@ class Notifier implements INotifier {
 	 * @since 17.0.0
 	 */
 	public function getName(): string {
-		return $this->factory->get(Application::APP_ID)->t('Nextcloud assistant');
+		return $this->factory->get(Application::APP_ID)->t('Nextcloud Assistant');
 	}
 
 	/**
