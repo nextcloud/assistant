@@ -1,0 +1,8 @@
+{ "translations": {
+    "Result" : "Резултат",
+    "Submit" : "Изпращане",
+    "Copy" : "Копие",
+    "Try again" : "Опитай отново",
+    "Close" : "Затваряне"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

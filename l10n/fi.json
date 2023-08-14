@@ -1,4 +1,8 @@
 { "translations": {
-    "View results" : "Näytä tulokset"
+    "View results" : "Näytä tulokset",
+    "Result" : "Tulos",
+    "Submit" : "Lähetä",
+    "Copy" : "Kopioi",
+    "Close" : "Sulje"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

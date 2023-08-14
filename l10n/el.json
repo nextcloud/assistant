@@ -1,0 +1,9 @@
+{ "translations": {
+    "View results" : "Εμφάνιση αποτελεσμάτων",
+    "Result" : "Αποτέλεσμα",
+    "Submit" : "Υποβολή",
+    "Copy" : "Αντιγραφή",
+    "Try again" : "Δοκιμάστε ξανά",
+    "Close" : "Κλείσιμο"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

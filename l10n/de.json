@@ -1,0 +1,9 @@
+{ "translations": {
+    "View results" : "Ergebnisse anzeigen",
+    "Result" : "Ergebnis",
+    "Submit" : "Übermitteln",
+    "Copy" : "Kopieren",
+    "Try again" : "Nochmals versuchen",
+    "Close" : "Schließen"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

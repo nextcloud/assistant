@@ -1,0 +1,10 @@
+{ "translations": {
+    "View results" : "Emaitzak ikusi",
+    "Artificial Intelligence" : "Adimen artifiziala",
+    "Result" : "Emaitza",
+    "Submit" : "Bidali",
+    "Copy" : "Kopiatu",
+    "Try again" : "Saiatu berriz",
+    "Close" : "Itxi"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

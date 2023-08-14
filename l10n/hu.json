@@ -1,4 +1,8 @@
 { "translations": {
-    "Try again" : "Próbálja újra"
+    "Result" : "Eredmény",
+    "Submit" : "Beküldés",
+    "Copy" : "Másolás",
+    "Try again" : "Próbálja újra",
+    "Close" : "Bezárás"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
