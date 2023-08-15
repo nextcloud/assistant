@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Nextcloud assistant" : "Nextcloud ассистент",
     "Task for \"%1$s\" has finished" : "Задача для \"%1$s\" завершена",
     "\"%1$s\" task for \"%2$s\" has finished" : "\"%1$s\" задача для \"%2$s\" завершена",
     "Input: %1$s" : "Ввод: %1$s",
@@ -27,7 +26,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Результат не может быть скопирован в буфер обмена",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Ваша задача запланирована, вы получите уведомление, когда она будет завершена",
     "Close" : "Закрыть",
-    "Close Nextcloud assistant" : "Закрыть Nextcloud ассистент",
     "Assistant options saved" : "Опции ассистента сохранены",
     "Failed to save assistant options" : "Сбой сохранения опций ассистента",
     "Failed to schedule your task" : "Сбой планирования задачи",

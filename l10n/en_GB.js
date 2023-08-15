@@ -1,7 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
-    "Nextcloud assistant" : "Nextcloud assistant",
+    "Nextcloud Assistant" : "Nextcloud Assistant",
     "Task for \"%1$s\" has finished" : "Task for \"%1$s\" has finished",
     "\"%1$s\" task for \"%2$s\" has finished" : "\"%1$s\" task for \"%2$s\" has finished",
     "Input: %1$s" : "Input: %1$s",
@@ -27,7 +27,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Result could not be copied to clipboard",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Your task has been scheduled, you will receive a notification when it has finished",
     "Close" : "Close",
-    "Close Nextcloud assistant" : "Close Nextcloud assistant",
     "Assistant options saved" : "Assistant options saved",
     "Failed to save assistant options" : "Failed to save assistant options",
     "Failed to schedule your task" : "Failed to schedule your task",

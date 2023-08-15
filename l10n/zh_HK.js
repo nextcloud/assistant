@@ -1,7 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
-    "Nextcloud assistant" : "Nextcloud 小幫手",
+    "Nextcloud Assistant" : "Nextcloud 小幫手",
     "Task for \"%1$s\" has finished" : "「%1$s」任務已結束",
     "\"%1$s\" task for \"%2$s\" has finished" : "「%2$s」的「%1$s」任務已結束",
     "Input: %1$s" : "輸入：%1$s",
@@ -27,7 +27,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "結果無法複製到剪貼板。",
     "Your task has been scheduled, you will receive a notification when it has finished" : "已安排您的任務，您將會在結束後收到通知",
     "Close" : "關閉",
-    "Close Nextcloud assistant" : "關閉 Nextcloud Assistant",
     "Assistant options saved" : "已儲存 Assistant 選項",
     "Failed to save assistant options" : "儲存 Assistant 選項失敗",
     "Failed to schedule your task" : "無法安排您的任務",

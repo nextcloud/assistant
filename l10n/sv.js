@@ -1,7 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
-    "Nextcloud assistant" : "Nextcloud Assistant",
+    "Nextcloud Assistant" : "Nextcloud Assistant",
     "View results" : "Visa resultat",
     "Artificial Intelligence" : "Artificiell intelligens",
     "Select which features you want to enable" : "Välj vilka funktioner du vill aktivera",

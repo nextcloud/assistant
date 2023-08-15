@@ -1,5 +1,5 @@
 { "translations": {
-    "Nextcloud assistant" : "Assistent de Nextcloud",
+    "Nextcloud Assistant" : "Assistent de Nextcloud",
     "Task for \"%1$s\" has finished" : "La tasca de \"%1$s\" ha finalitzat",
     "\"%1$s\" task for \"%2$s\" has finished" : "La tasca \"%1$s\" per a \"%2$s\" ha finalitzat",
     "Input: %1$s" : "Entrada: %1$s",
@@ -25,7 +25,6 @@
     "Result could not be copied to clipboard" : "No s'ha pogut copiar el resultat al porta-retalls",
     "Your task has been scheduled, you will receive a notification when it has finished" : "La vostra tasca s'ha programat, rebreu una notificació quan hagi acabat",
     "Close" : "Tanca",
-    "Close Nextcloud assistant" : "Tanca l'assistent de Nextcloud",
     "Assistant options saved" : "S'han desat les opcions de l'Assistent",
     "Failed to save assistant options" : "No s'han pogut desar les opcions de l'assistent",
     "Failed to schedule your task" : "No s'ha pogut programar la vostra tasca",

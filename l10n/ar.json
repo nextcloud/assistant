@@ -1,5 +1,5 @@
 { "translations": {
-    "Nextcloud assistant" : "مُساعد نكست كلاود Nextcloud assistant",
+    "Nextcloud Assistant" : "مُساعِد نكست كلاود Nextcloud Assistant",
     "Task for \"%1$s\" has finished" : "مُهِمَّة لـ \"%1$s\" تمّ إنجازها",
     "\"%1$s\" task for \"%2$s\" has finished" : "\"%1$s\" مُهِمَة لـ \"%2$s\" تمّ إنجازها",
     "Input: %1$s" : "مُدخلات: %1$s",
@@ -25,7 +25,6 @@
     "Result could not be copied to clipboard" : "يتعذّر نسخ النتيجة إلى الحافظة",
     "Your task has been scheduled, you will receive a notification when it has finished" : "تمّت جدولة مُهِمّتك. سوف تستلم إشعاراً عند إنجازها",
     "Close" : "إغلاق",
-    "Close Nextcloud assistant" : "أغلِق مُساعد نكست كلاود",
     "Assistant options saved" : "تمّ حفظ خيارات المُساعِد",
     "Failed to save assistant options" : "تعذّر حفظ خيارات المُساعِد",
     "Failed to schedule your task" : "تعذّرت جدولة مُهِمّتك",
