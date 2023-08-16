@@ -27,6 +27,7 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Result could not be copied to clipboard",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Your task has been scheduled, you will receive a notification when it has finished",
     "Close" : "Close",
+    "Close Nextcloud Assistant" : "Close Nextcloud Assistant",
     "Assistant options saved" : "Assistant options saved",
     "Failed to save assistant options" : "Failed to save assistant options",
     "Failed to schedule your task" : "Failed to schedule your task",

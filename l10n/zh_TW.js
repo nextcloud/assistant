@@ -27,6 +27,7 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "結果無法複製到剪貼簿",
     "Your task has been scheduled, you will receive a notification when it has finished" : "已安排您的任務，您將會在結束後收到通知",
     "Close" : "關閉",
+    "Close Nextcloud Assistant" : "關閉 Nextcloud 小幫手",
     "Assistant options saved" : "已儲存小幫手選項",
     "Failed to save assistant options" : "儲存小幫手選項失敗",
     "Failed to schedule your task" : "無法安排您的任務",
