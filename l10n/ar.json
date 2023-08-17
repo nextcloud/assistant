@@ -25,6 +25,7 @@
     "Result could not be copied to clipboard" : "يتعذّر نسخ النتيجة إلى الحافظة",
     "Your task has been scheduled, you will receive a notification when it has finished" : "تمّت جدولة مُهِمّتك. سوف تستلم إشعاراً عند إنجازها",
     "Close" : "إغلاق",
+    "Close Nextcloud Assistant" : "أغلِق مُساعِد نكست كلاود Nextcloud Assistant",
     "Assistant options saved" : "تمّ حفظ خيارات المُساعِد",
     "Failed to save assistant options" : "تعذّر حفظ خيارات المُساعِد",
     "Failed to schedule your task" : "تعذّرت جدولة مُهِمّتك",
