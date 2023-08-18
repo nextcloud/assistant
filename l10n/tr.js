@@ -27,6 +27,7 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Sonuç panoya kopyalanamadı",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Göreviniz zamanlandı. Tamamlandığında bir bildirim alacaksınız",
     "Close" : "Kapat",
+    "Close Nextcloud Assistant" : "Nextcloud yardımcısını kapat",
     "Assistant options saved" : "Yardımcı ayarları kaydedildi",
     "Failed to save assistant options" : "Yardımcı ayarları kaydedilemedi",
     "Failed to schedule your task" : "Göreviniz zamanlanamadı",
