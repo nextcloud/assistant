@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Nextcloud Assistant" : "Assistente di Nextcloud",
     "View results" : "Mostra risultati",
     "Artificial Intelligence" : "Intelligenza artificiale",
     "Result" : "Risultato",
