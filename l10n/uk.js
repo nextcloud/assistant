@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Artificial Intelligence" : "Штучний інтелект",
     "Result" : "Результат",
-    "Submit" : "Відправити",
+    "Submit" : "Продовжити",
     "Try again" : "Спробуйте ще раз",
     "Close" : "Закрити"
 },
