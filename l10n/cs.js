@@ -21,7 +21,7 @@ OC.L10N.register(
     "Submit assistant task" : "Odeslat úkol pro asistenta",
     "Submit" : "Odeslat",
     "Copy task output" : "Zkopírovat výstup úkolu",
-    "Copy" : "Kopírovat",
+    "Copy" : "Zkopírovat",
     "Try again" : "Zkusit znovu",
     "Result could not be copied to clipboard" : "Výsledek se nepodařilo zkopírovat do schránky",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Váš úkol byl naplánován – až bude dokončen, obdržíte upozornění",
