@@ -4,14 +4,10 @@
 			<CreationIcon :size="16" class="icon" />
 			<span>{{ t('assistant', 'Nextcloud Assistant') }}</span>
 		</span>
-		<NcSelect
-			:value="selectedTaskType"
-			class="task-select"
-			:options="taskTypes"
-			label="name"
-			:placeholder="t('assistant', 'Choose a task')"
-			input-id="task-select"
-			@input="onTaskInput" />
+		<TaskTypeSelect
+			:value.sync="mySelectedTaskTypeId"
+			class="task-custom-select"
+			:options="taskTypes" />
 		<h2 v-if="selectedTaskType"
 			class="task-name">
 			{{ selectedTaskType.name }}
@@ -74,7 +70,8 @@ import CreationIcon from 'vue-material-design-icons/Creation.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+
+import TaskTypeSelect from './TaskTypeSelect.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -87,9 +84,9 @@ Vue.use(VueClipboard)
 export default {
 	name: 'AssistantForm',
 	components: {
+		TaskTypeSelect,
 		NcButton,
 		NcRichContenteditable,
-		NcSelect,
 		CreationIcon,
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
@@ -161,9 +158,6 @@ export default {
 					this.loading = false
 				})
 		},
-		onTaskInput(taskType) {
-			this.mySelectedTaskTypeId = taskType?.id ?? null
-		},
 		onCancel() {
 			this.$emit('cancel')
 		},
@@ -216,9 +210,8 @@ export default {
 		}
 	}
 
-	.task-select {
-		align-self: start;
-		width: 250px;
+	.task-custom-select {
+		width: 100%;
 	}
 
 	.task-name {
