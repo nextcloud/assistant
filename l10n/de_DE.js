@@ -17,7 +17,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "Assistenten-Adiminstrations-Einstellungen gespeichert",
     "Failed to save assistant admin options" : "Fehler beim Speichern der Assistenten-Adiminstrations-Einstellungen",
     "Choose a task" : "Eine Aufgabe auswählen",
-    "Type some text" : "Geben Sie Text ein",
+    "Type some text" : "Bitte einen Text eingeben",
     "Result" : "Ergebnis",
     "Submit assistant task" : "Assistentenaufgabe senden",
     "Submit" : "Übermitteln",
