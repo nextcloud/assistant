@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Nextcloud Assistant" : "Asystent Nextcloud",
     "View results" : "Pokaż wyniki",
     "Result" : "Wynik",
     "Submit" : "Wyślij",
