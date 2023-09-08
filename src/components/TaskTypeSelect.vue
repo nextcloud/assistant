@@ -12,7 +12,7 @@
 				class="no-icon-action"
 				:aria-label="t.name"
 				:close-after-click="true"
-				@click="onTaskSelected(t)">
+				@click="onMenuTaskSelected(t)">
 				<template #icon>
 					<div style="width: 16px" />
 				</template>
@@ -55,6 +55,7 @@ export default {
 
 	data() {
 		return {
+			extraButtonType: null,
 		}
 	},
 
@@ -76,11 +77,8 @@ export default {
 					name: 'DummyTask3',
 				},
 			])
-			if (this.value !== null && types.find(t => t.id === this.value) === undefined) {
-				const buttonToAdd = this.options.find(t => t.id === this.value)
-				if (buttonToAdd) {
-					types.push(buttonToAdd)
-				}
+			if (this.extraButtonType !== null) {
+				types.push(this.extraButtonType)
 			}
 			return types
 		},
@@ -100,6 +98,10 @@ export default {
 		},
 		onTaskSelected(taskType) {
 			this.$emit('update:value', taskType.id)
+		},
+		onMenuTaskSelected(taskType) {
+			this.extraButtonType = taskType
+			this.onTaskSelected(taskType)
 		},
 	},
 }
