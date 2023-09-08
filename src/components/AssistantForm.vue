@@ -198,6 +198,10 @@ export default {
 		max-height: 200px !important;
 	}
 
+	.editable-input {
+		min-height: 92px !important;
+	}
+
 	.assistant-bubble {
 		align-self: start;
 		display: flex;
