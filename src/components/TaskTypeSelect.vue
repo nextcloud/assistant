@@ -1,19 +1,20 @@
 <template>
 	<div class="task-type-select">
-		<NcButton v-for="t in buttonTypes"
-			:key="t.id"
+		<NcButton v-for="(t, i) in buttonTypes"
+			:key="i + t.id"
 			:type="getButtonType(t)"
 			@click="onTaskSelected(t)">
 			{{ t.name }}
 		</NcButton>
 		<NcActions>
-			<NcActionButton v-for="t in actionTypes"
-				:key="t.id"
+			<NcActionButton v-for="(t, i) in actionTypes"
+				:key="i + t.id"
+				class="no-icon-action"
 				:aria-label="t.name"
 				:close-after-click="true"
 				@click="onTaskSelected(t)">
 				<template #icon>
-					<CircleSmallIcon />
+					<div style="width: 16px" />
 				</template>
 				{{ t.name }}
 			</NcActionButton>
@@ -22,8 +23,6 @@
 </template>
 
 <script>
-import CircleSmallIcon from 'vue-material-design-icons/CircleSmall.vue'
-
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
@@ -37,7 +36,6 @@ export default {
 		NcButton,
 		NcActions,
 		NcActionButton,
-		CircleSmallIcon,
 	},
 
 	props: {
@@ -63,6 +61,21 @@ export default {
 	computed: {
 		buttonTypes() {
 			const types = this.options.slice(0, BUTTON_COUNT)
+			// TODO delete next line
+			types.push(...[
+				{
+					id: 'plop1',
+					name: 'DummyTask1',
+				},
+				{
+					id: 'plop2',
+					name: 'DummyTask2',
+				},
+				{
+					id: 'plop3',
+					name: 'DummyTask3',
+				},
+			])
 			if (this.value !== null && types.find(t => t.id === this.value) === undefined) {
 				const buttonToAdd = this.options.find(t => t.id === this.value)
 				if (buttonToAdd) {
