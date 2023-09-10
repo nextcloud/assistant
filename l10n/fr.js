@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Afficher les résultats",
+    "Artificial Intelligence" : "Intelligence artificielle",
     "Select which features you want to enable" : "Sélectionnez quelles fonctionnalités vous souhaitez activer",
     "Result" : "Résultat",
     "Submit" : "Soumettre",
