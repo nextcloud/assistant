@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Nextcloud Assistant" : "Nextcloud-avustaja",
     "View results" : "Näytä tulokset",
+    "Artificial Intelligence" : "Tekoäly",
     "Result" : "Tulos",
     "Submit" : "Lähetä",
     "Copy" : "Kopioi",
