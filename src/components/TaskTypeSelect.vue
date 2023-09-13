@@ -6,7 +6,8 @@
 			@click="onTaskSelected(t)">
 			{{ t.name }}
 		</NcButton>
-		<NcActions>
+		<NcActions v-if="actionTypes.length > 0"
+			:force-menu="true">
 			<NcActionButton v-for="(t, i) in actionTypes"
 				:key="i + t.id"
 				class="no-icon-action"
@@ -27,8 +28,6 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 
-const BUTTON_COUNT = 2
-
 export default {
 	name: 'TaskTypeSelect',
 
@@ -47,6 +46,10 @@ export default {
 			type: Array,
 			required: true,
 		},
+		inline: {
+			type: Number,
+			default: 3,
+		},
 	},
 
 	emits: [
@@ -61,7 +64,8 @@ export default {
 
 	computed: {
 		buttonTypes() {
-			const types = this.options.slice(0, BUTTON_COUNT)
+			const types = this.options.slice(0, this.inline)
+			/*
 			// TODO delete next line
 			types.push(...[
 				{
@@ -77,13 +81,14 @@ export default {
 					name: 'DummyTask3',
 				},
 			])
+			*/
 			if (this.extraButtonType !== null) {
 				types.push(this.extraButtonType)
 			}
 			return types
 		},
 		actionTypes() {
-			return this.options.slice(BUTTON_COUNT)
+			return this.options.slice(this.inline)
 		},
 	},
 

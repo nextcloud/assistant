@@ -10,7 +10,7 @@
 			:options="taskTypes" />
 		<TaskTypeSelectActions
 			:value.sync="mySelectedTaskTypeId"
-			class="task-custom-select"
+			class="task-action-select"
 			:options="taskTypes" />
 		<h2 v-if="selectedTaskType"
 			class="task-name">
@@ -221,6 +221,10 @@ export default {
 	}
 
 	.task-custom-select {
+		width: 100%;
+	}
+
+	.task-action-select {
 		width: 100%;
 	}
 
