@@ -8,6 +8,10 @@
 			:value.sync="mySelectedTaskTypeId"
 			class="task-custom-select"
 			:options="taskTypes" />
+		<TaskTypeSelectActions
+			:value.sync="mySelectedTaskTypeId"
+			class="task-custom-select"
+			:options="taskTypes" />
 		<h2 v-if="selectedTaskType"
 			class="task-name">
 			{{ selectedTaskType.name }}
@@ -72,6 +76,7 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 
 import TaskTypeSelect from './TaskTypeSelect.vue'
+import TaskTypeSelectActions from './TaskTypeSelectActions.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -84,6 +89,7 @@ Vue.use(VueClipboard)
 export default {
 	name: 'AssistantForm',
 	components: {
+		TaskTypeSelectActions,
 		TaskTypeSelect,
 		NcButton,
 		NcRichContenteditable,
