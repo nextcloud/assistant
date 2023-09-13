@@ -7,10 +7,12 @@
 		<TaskTypeSelect
 			:value.sync="mySelectedTaskTypeId"
 			class="task-custom-select"
+			:inline="3"
 			:options="taskTypes" />
 		<TaskTypeSelectActions
 			:value.sync="mySelectedTaskTypeId"
 			class="task-action-select"
+			:inline="3"
 			:options="taskTypes" />
 		<h2 v-if="selectedTaskType"
 			class="task-name">

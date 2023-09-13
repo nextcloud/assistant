@@ -2,7 +2,7 @@
 	<div class="task-type-select">
 		<NcActions
 			:force-name="true"
-			:inline="2">
+			:inline="inline">
 			<NcActionButton v-for="(t, i) in options"
 				:key="i + t.id"
 				class="no-icon-action"
@@ -39,6 +39,10 @@ export default {
 		options: {
 			type: Array,
 			required: true,
+		},
+		inline: {
+			type: Number,
+			default: 3,
 		},
 	},
 
