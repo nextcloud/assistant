@@ -138,6 +138,10 @@ export default {
 // this is to avoid scroll on the container and leave it to the result block
 .assistant-modal .modal-container {
 	display: flex !important;
+
+	&__content {
+		padding: 16px;
+	}
 }
 </style>
 
@@ -150,7 +154,7 @@ export default {
 
 .assistant-modal--wrapper {
 	width: 100%;
-	padding: 16px;
+	// padding: 16px;
 	overflow-y: auto;
 }
 
