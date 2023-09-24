@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Rezultati",
+    "Artificial Intelligence" : "Umetna inteligenca",
     "Result" : "Rezultat",
     "Submit" : "Pošlji",
     "Copy" : "Kopiraj",
