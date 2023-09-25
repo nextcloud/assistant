@@ -27,6 +27,7 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "نتیجه را نمی توان در کلیپ بورد کپی کرد",
     "Your task has been scheduled, you will receive a notification when it has finished" : "کار شما برنامه ریزی شده است، پس از اتمام آن یک اعلان دریافت خواهید کرد",
     "Close" : "بسته",
+    "Close Nextcloud Assistant" : "دستیار Nextcloud را ببندید",
     "Assistant options saved" : "گزینه های دستیار ذخیره شد",
     "Failed to save assistant options" : "گزینه های دستیار ذخیره نشد",
     "Failed to schedule your task" : "برنامه ریزی کار شما انجام نشد",

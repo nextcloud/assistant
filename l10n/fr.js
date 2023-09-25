@@ -1,12 +1,30 @@
 OC.L10N.register(
     "assistant",
     {
+    "Nextcloud Assistant" : "Assistant Nextcloud",
     "View results" : "Afficher les résultats",
+    "View task" : "Voir la tâche",
+    "Artificial Intelligence" : "Intelligence Artificielle",
+    "Process and transform text" : "Traiter et transformer le texte",
     "Select which features you want to enable" : "Sélectionnez quelles fonctionnalités vous souhaitez activer",
+    "Top-right assistant" : "Assistant en haut à droite",
+    "Assistant admin options saved" : "Options d'administration de l'assistant sauvegardées",
+    "Failed to save assistant admin options" : "Échec de l'enregistrement des options d'administration de l'assistant",
+    "Choose a task" : "Choisir une tâche",
+    "Type some text" : "Tapez du texte",
     "Result" : "Résultat",
     "Submit" : "Soumettre",
+    "Copy task output" : "Copier le résultat de la tâche",
     "Copy" : "Copier",
     "Try again" : "Réessayez",
-    "Close" : "Fermer"
+    "Result could not be copied to clipboard" : "Le résultat n'a pas pu être copié dans le presse-papiers",
+    "Your task has been scheduled, you will receive a notification when it has finished" : "Votre tâche a été programmée, vous recevrez une notification lorsqu'elle sera terminée.",
+    "Close" : "Fermer",
+    "Close Nextcloud Assistant" : "Fermer l'assistant Nextcloud",
+    "Assistant options saved" : "Options de l'assistant sauvegardées",
+    "Failed to save assistant options" : "Échec de l'enregistrement des options de l'assistant",
+    "Failed to schedule your task" : "Échec de la planification de votre tâche",
+    "This task does not exist or has been cleaned up" : "Cette tâche n'existe pas ou a été supprimée",
+    "Failed to schedule the task" : "Échec de la planification de la tâche"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
