@@ -64,31 +64,28 @@ export default {
 
 	computed: {
 		buttonTypes() {
-			const types = this.options.slice(0, this.inline)
-			/*
-			// TODO delete next line
-			types.push(...[
-				{
-					id: 'plop1',
-					name: 'DummyTask1',
-				},
-				{
-					id: 'plop2',
-					name: 'DummyTask2',
-				},
-				{
-					id: 'plop3',
-					name: 'DummyTask3',
-				},
-			])
-			*/
+			// extra button replaces the last one
 			if (this.extraButtonType !== null) {
+				const types = this.options.slice(0, this.inline - 1)
 				types.push(this.extraButtonType)
+				return types
+			} else {
+				return this.options.slice(0, this.inline)
 			}
-			return types
 		},
 		actionTypes() {
-			return this.options.slice(this.inline)
+			if (this.extraButtonType !== null) {
+				// the extra button replaces the last one so we need the last one as an action
+				// take all non-inline options that are not selected and that are not the extra button
+				const types = this.options.slice(this.inline).filter(t => t.id !== this.value && t.id !== this.extraButtonType.id)
+				// add the one that was a button and that has been replaced
+				if (this.extraButtonType.id !== this.options[this.inline - 1].id) {
+					types.unshift(this.options[this.inline - 1])
+				}
+				return types
+			} else {
+				return this.options.slice(this.inline)
+			}
 		},
 	},
 
