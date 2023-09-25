@@ -17,7 +17,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/julien-nc/assistant"
+		"url": "https://github.com/nextcloud/assistant"
 	},
 	"keywords": [
 		"artificial intelligence",
@@ -26,9 +26,9 @@
 	"author": "Julien Veyssier",
 	"license": "AGPL-3.0",
 	"bugs": {
-		"url": "https://github.com/julien-nc/assistant/issues"
+		"url": "https://github.com/nextcloud/assistant/issues"
 	},
-	"homepage": "https://github.com/julien-nc/assistant",
+	"homepage": "https://github.com/nextcloud/assistant",
 	"browserslist": [
 		"extends @nextcloud/browserslist-config"
 	],
@@ -45,7 +45,7 @@
 		"@nextcloud/l10n": "^2.0.1",
 		"@nextcloud/moment": "^1.1.1",
 		"@nextcloud/router": "^2.0.0",
-		"@nextcloud/vue": "^8.0.0-beta.5",
+		"@nextcloud/vue": "^7.8.2",
 		"v-click-outside": "^3.2.0",
 		"vue": "^2.7.12",
 		"vue-clipboard2": "^0.3.3",
