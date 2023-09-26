@@ -84,7 +84,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 export async function runTask(appId, identifier, taskType, input) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
-	const url = generateUrl('/apps/textprocessing_assistant/run')
+	const url = generateUrl('/apps/assistant/run')
 	const params = {
 		input,
 		type: taskType,

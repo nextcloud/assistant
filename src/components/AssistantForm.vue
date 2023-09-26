@@ -57,8 +57,8 @@
 				:type="submitButtonType"
 				class="submit-button"
 				:disabled="!canSubmit"
-				:aria-label="t('textprocessing_assistant', 'Run an assistant task')"
-				:title="t('textprocessing_assistant', 'Run')"
+				:aria-label="t('assistant', 'Run an assistant task')"
+				:title="t('assistant', 'Run')"
 				@click="onSyncSubmit">
 				{{ syncSubmitButtonLabel }}
 				<template #icon>
@@ -71,8 +71,8 @@
 				:type="submitButtonType"
 				class="submit-button"
 				:disabled="!canSubmit"
-				:aria-label="t('textprocessing_assistant', 'Schedule an assistant task')"
-				:title="t('textprocessing_assistant', 'Schedule')"
+				:aria-label="t('assistant', 'Schedule an assistant task')"
+				:title="t('assistant', 'Schedule')"
 				@click="onSubmit">
 				{{ submitButtonLabel }}
 				<template #icon>
@@ -183,7 +183,7 @@ export default {
 					: this.selectedTaskType.name
 		},
 		syncSubmitButtonLabel() {
-			return this.myOutput.trim() ? t('textprocessing_assistant', 'Try again') : this.selectedTaskType.name
+			return this.myOutput.trim() ? t('assistant', 'Try again') : this.selectedTaskType.name
 		},
 		showCopy() {
 			return !!this.myOutput.trim()
