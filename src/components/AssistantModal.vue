@@ -17,7 +17,25 @@
 					</template>
 				</NcButton>
 				<NcEmptyContent
-					v-if="showScheduleConfirmation"
+					v-if="showSyncTaskRunning"
+					:title="t('assistant', 'Your task is running')"
+					:name="t('assistant', 'Your task is running')"
+					:description="t('assistant', 'If it takes too long...')">
+					<template #action>
+						<NcButton
+							@click="onCancelNSchedule">
+							<template #icon>
+								<CloseIcon />
+							</template>
+							{{ t('assistant', 'Run in the background') }}
+						</NcButton>
+					</template>
+					<template #icon>
+						<NcLoadingIcon />
+					</template>
+				</NcEmptyContent>
+				<NcEmptyContent
+					v-else-if="showScheduleConfirmation"
 					:title="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
 					:name="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
 					:description="shortInput">
@@ -54,6 +72,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 
 import AssistantIcon from './icons/AssistantIcon.vue'
 
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
@@ -71,6 +90,7 @@ export default {
 		NcButton,
 		NcEmptyContent,
 		CloseIcon,
+		NcLoadingIcon,
 	},
 	props: {
 		/**
@@ -95,6 +115,10 @@ export default {
 		selectedTaskTypeId: {
 			type: [String, null],
 			default: null,
+		},
+		showSyncTaskRunning: {
+			type: Boolean,
+			required: true,
 		},
 		showScheduleConfirmation: {
 			type: Boolean,
@@ -138,6 +162,9 @@ export default {
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
+		},
+		onCancelNSchedule() {
+			this.$emit('cancel-sync-n-schedule')
 		},
 	},
 }

@@ -66,7 +66,7 @@
 					<CreationIcon v-else />
 				</template>
 			</NcButton>
-			<NcButton
+			<!--NcButton
 				v-if="showSubmit"
 				:type="submitButtonType"
 				class="submit-button"
@@ -78,7 +78,7 @@
 				<template #icon>
 					<CreationIcon />
 				</template>
-			</NcButton>
+			</NcButton-->
 			<NcButton
 				v-if="showCopy"
 				type="primary"
