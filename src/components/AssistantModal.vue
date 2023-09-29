@@ -16,42 +16,14 @@
 						<CloseIcon />
 					</template>
 				</NcButton>
-				<NcEmptyContent
+				<RunningEmptyContent
 					v-if="showSyncTaskRunning"
-					:title="t('assistant', 'Your task is running')"
-					:name="t('assistant', 'Your task is running')"
-					:description="t('assistant', 'If it takes too long...')">
-					<template #action>
-						<NcButton
-							@click="onCancelNSchedule">
-							<template #icon>
-								<CloseIcon />
-							</template>
-							{{ t('assistant', 'Run in the background') }}
-						</NcButton>
-					</template>
-					<template #icon>
-						<NcLoadingIcon />
-					</template>
-				</NcEmptyContent>
-				<NcEmptyContent
+					@cancel="onCancelNSchedule" />
+				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
-					:title="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
-					:name="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
-					:description="shortInput">
-					<template #action>
-						<NcButton
-							@click="onCancel">
-							<template #icon>
-								<CloseIcon />
-							</template>
-							{{ t('assistant', 'Close') }}
-						</NcButton>
-					</template>
-					<template #icon>
-						<AssistantIcon />
-					</template>
-				</NcEmptyContent>
+					:description="shortInput"
+					:show-close-button="true"
+					@close="onCancel" />
 				<AssistantForm
 					v-else
 					class="form"
@@ -59,7 +31,6 @@
 					:output="output"
 					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
-					@cancel="onCancel"
 					@submit="onSubmit"
 					@sync-submit="onSyncSubmit" />
 			</div>
@@ -70,27 +41,24 @@
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 
-import AssistantIcon from './icons/AssistantIcon.vue'
-
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 import AssistantForm from './AssistantForm.vue'
+import RunningEmptyContent from './RunningEmptyContent.vue'
+import ScheduledEmptyContent from './ScheduledEmptyContent.vue'
 
 import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AssistantModal',
 	components: {
-		AssistantIcon,
+		ScheduledEmptyContent,
+		RunningEmptyContent,
 		AssistantForm,
 		NcModal,
 		NcButton,
-		NcEmptyContent,
 		CloseIcon,
-		NcLoadingIcon,
 	},
 	props: {
 		/**
@@ -118,7 +86,7 @@ export default {
 		},
 		showSyncTaskRunning: {
 			type: Boolean,
-			required: true,
+			default: false,
 		},
 		showScheduleConfirmation: {
 			type: Boolean,

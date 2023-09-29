@@ -147,7 +147,7 @@ export default {
 		},
 	},
 	emits: [
-		'cancel',
+		'sync-submit',
 		'submit',
 	],
 	data() {
@@ -206,9 +206,6 @@ export default {
 				.catch((error) => {
 					console.error(error)
 				})
-		},
-		onCancel() {
-			this.$emit('cancel')
 		},
 		onSubmit() {
 			this.$emit('submit', { input: this.myInput.trim(), taskTypeId: this.mySelectedTaskTypeId })

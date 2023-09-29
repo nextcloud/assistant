@@ -88,7 +88,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				})
 		})
 		view.$on('cancel-sync-n-schedule', () => {
-			window.assistantAbortController.abort()
+			cancelCurrentSyncTask()
 			scheduleTask(appId, identifier, view.selectedTaskTypeId, view.input)
 				.then((response) => {
 					view.showSyncTaskRunning = false
@@ -102,6 +102,10 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				})
 		})
 	})
+}
+
+export async function cancelCurrentSyncTask() {
+	window.assistantAbortController?.abort()
 }
 
 export async function runTask(appId, identifier, taskType, input) {
