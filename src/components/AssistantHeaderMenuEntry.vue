@@ -4,6 +4,7 @@
 		:title="t('assistant', 'Nextcloud Assistant')">
 		<a
 			href="#"
+			class="trigger"
 			@click="$emit('click')">
 			<AssistantIcon class="menu-icon" :size="20" />
 		</a>
@@ -46,9 +47,20 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	opacity: .85;
+	&:hover {
+		opacity: 1;
+	}
 
-	.menu-icon {
-		color: var(--color-primary-text) !important;
+	.trigger {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.menu-icon {
+			color: var(--color-primary-text) !important;
+		}
 	}
 }
 </style>
