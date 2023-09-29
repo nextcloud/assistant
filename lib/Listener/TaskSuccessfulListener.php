@@ -30,6 +30,7 @@ class TaskSuccessfulListener implements IEventListener {
 		}
 
 		$notificationTarget = null;
+		$notificationActionLabel = null;
 
 		// we dispatch an event to ask the app that scheduled the task if it wants a notification
 		// and what the target should be

@@ -1,0 +1,120 @@
+<template>
+	<div class="task-type-select">
+		<NcButton v-for="(t, i) in buttonTypes"
+			:key="i + t.id"
+			:type="getButtonType(t)"
+			@click="onTaskSelected(t)">
+			{{ t.name }}
+		</NcButton>
+		<NcActions v-if="actionTypes.length > 0"
+			:force-menu="true">
+			<NcActionButton v-for="(t, i) in actionTypes"
+				:key="i + t.id"
+				class="no-icon-action"
+				:aria-label="t.name"
+				:close-after-click="true"
+				@click="onMenuTaskSelected(t)">
+				<template #icon>
+					<div style="width: 16px" />
+				</template>
+				{{ t.name }}
+			</NcActionButton>
+		</NcActions>
+	</div>
+</template>
+
+<script>
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+
+export default {
+	name: 'TaskTypeSelect',
+
+	components: {
+		NcButton,
+		NcActions,
+		NcActionButton,
+	},
+
+	props: {
+		value: {
+			type: [String, null],
+			default: null,
+		},
+		options: {
+			type: Array,
+			required: true,
+		},
+		inline: {
+			type: Number,
+			default: 3,
+		},
+	},
+
+	emits: [
+		'update:value',
+	],
+
+	data() {
+		return {
+			extraButtonType: null,
+		}
+	},
+
+	computed: {
+		buttonTypes() {
+			// extra button replaces the last one
+			if (this.extraButtonType !== null) {
+				const types = this.options.slice(0, this.inline - 1)
+				types.push(this.extraButtonType)
+				return types
+			} else {
+				return this.options.slice(0, this.inline)
+			}
+		},
+		actionTypes() {
+			if (this.extraButtonType !== null) {
+				// the extra button replaces the last one so we need the last one as an action
+				// take all non-inline options that are not selected and that are not the extra button
+				const types = this.options.slice(this.inline).filter(t => t.id !== this.value && t.id !== this.extraButtonType.id)
+				// add the one that was a button and that has been replaced
+				if (this.extraButtonType.id !== this.options[this.inline - 1].id) {
+					types.unshift(this.options[this.inline - 1])
+				}
+				return types
+			} else {
+				return this.options.slice(this.inline)
+			}
+		},
+	},
+
+	mounted() {
+	},
+
+	methods: {
+		getButtonType(taskType) {
+			return taskType.id === this.value
+				? 'primary'
+				: 'secondary'
+		},
+		onTaskSelected(taskType) {
+			this.$emit('update:value', taskType.id)
+		},
+		onMenuTaskSelected(taskType) {
+			this.extraButtonType = taskType
+			this.onTaskSelected(taskType)
+		},
+	},
+}
+</script>
+
+<style lang="scss">
+.task-type-select {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	row-gap: 8px;
+	column-gap: 6px;
+}
+</style>
