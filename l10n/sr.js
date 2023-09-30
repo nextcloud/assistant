@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Асистент у горњем десном углу",
     "Assistant admin options saved" : "Сачуване су админ опције асистента",
     "Failed to save assistant admin options" : "Није успело чување админ опција асистента",
-    "Choose a task" : "Изаберите задатак",
     "Type some text" : "Откуцајте неки текст",
     "Result" : "Резултат",
     "Submit assistant task" : "Предајте задатак асистенту",

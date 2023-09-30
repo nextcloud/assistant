@@ -15,7 +15,6 @@ OC.L10N.register(
     "Top-right assistant" : "Asistent nahoře vpravo",
     "Assistant admin options saved" : "Předvolby správy pro Asistenta uloženy",
     "Failed to save assistant admin options" : "Předvolby správy pro asistenta se nepodařilo uložit",
-    "Choose a task" : "Zvolte úkol",
     "Type some text" : "Zadejte nějaký text",
     "Result" : "Výsledek",
     "Submit assistant task" : "Odeslat úkol pro asistenta",

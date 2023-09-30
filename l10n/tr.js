@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Sağ üst yardımcı",
     "Assistant admin options saved" : "Yardımcı yönetici ayarları kaydedildi",
     "Failed to save assistant admin options" : "Yardımcı yönetici ayarları kaydedilemedi",
-    "Choose a task" : "Bir görev seçin",
     "Type some text" : "Bir şeyler yazın",
     "Result" : "Sonuç",
     "Submit assistant task" : "Yardımcı görevi gönder",

@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Assistente superior direito",
     "Assistant admin options saved" : "Opções de administração do assistente salvas",
     "Failed to save assistant admin options" : "Falha ao salvar as opções de administração do assistente",
-    "Choose a task" : "Escolha uma tarefa",
     "Type some text" : "Digite algum texto",
     "Result" : "Resultado",
     "Submit assistant task" : "Enviar tarefa do assistente",

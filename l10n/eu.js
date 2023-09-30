@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Goiko eskuineko laguntzailea",
     "Assistant admin options saved" : "Laguntzailearen administratzailearen aukerak gorde dira",
     "Failed to save assistant admin options" : "Ezin izan dira gorde laguntzailearen administratzaile aukerak",
-    "Choose a task" : "Aukeratu zeregin bat",
     "Type some text" : "Idatzi testu bat",
     "Result" : "Emaitza",
     "Submit assistant task" : "Bidali laguntzailearen zeregina",

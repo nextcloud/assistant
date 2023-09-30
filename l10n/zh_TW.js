@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "右上角的小幫手",
     "Assistant admin options saved" : "已儲存小幫手管理選項",
     "Failed to save assistant admin options" : "儲存小幫手管理選項失敗",
-    "Choose a task" : "選擇任務",
     "Type some text" : "輸入一些文字",
     "Result" : "結果",
     "Submit assistant task" : "遞交小幫手任務",

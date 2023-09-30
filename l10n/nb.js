@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Øverst til høyre assistent",
     "Assistant admin options saved" : "Assistent-administratoralternativer lagret",
     "Failed to save assistant admin options" : "Kunne ikke lagre alternativer for assistentadministrator",
-    "Choose a task" : "Velg en oppgave",
     "Type some text" : "Skriv inn litt tekst",
     "Result" : "Resultat",
     "Submit assistant task" : "Send inn assistentoppgave",

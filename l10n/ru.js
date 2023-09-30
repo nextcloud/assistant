@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Ассистент в правом верхнем углу",
     "Assistant admin options saved" : "Администраторские опции ассистента сохранены",
     "Failed to save assistant admin options" : "Сбой сохранения администраторских опций ассистента",
-    "Choose a task" : "Выберите задачу",
     "Type some text" : "Наберите какой-то текст",
     "Result" : "Результат",
     "Submit assistant task" : "Подтвердите задание для ассистента",

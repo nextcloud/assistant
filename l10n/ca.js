@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "Assistent superior dret",
     "Assistant admin options saved" : "S'han desat les opcions d'administració de l'Assistent",
     "Failed to save assistant admin options" : "No s'han pogut desar les opcions d'administrador de l'assistent",
-    "Choose a task" : "Trieu una tasca",
     "Type some text" : "Escriu una mica de text",
     "Result" : "Resultat",
     "Submit assistant task" : "Envia la tasca a l’assistent",

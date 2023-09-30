@@ -16,7 +16,6 @@ OC.L10N.register(
     "Top-right assistant" : "المساعد في الأعلى على الجانب",
     "Assistant admin options saved" : "تمّ حفظ خيارات المشرف للمُساعد  ",
     "Failed to save assistant admin options" : "تعذّر حفظ خيارات المشرف للمُساعد ",
-    "Choose a task" : "إختَر مُهِمّةً",
     "Type some text" : "أكتُب أيَّ نص",
     "Result" : "النتيجة",
     "Submit assistant task" : "أرسِل مُهِمّةً للمُساعِد",

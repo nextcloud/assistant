@@ -12,7 +12,6 @@ OC.L10N.register(
     "Artificial Intelligence" : "Artificiell intelligens",
     "Process and transform text" : "Bearbeta och transformera text",
     "Select which features you want to enable" : "Välj vilka funktioner du vill aktivera",
-    "Choose a task" : "Välj en uppgift",
     "Type some text" : "Skriv någon text",
     "Result" : "Resultat",
     "Submit assistant task" : "Skicka in assistentuppgift",
