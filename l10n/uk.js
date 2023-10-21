@@ -5,6 +5,7 @@ OC.L10N.register(
     "Artificial Intelligence" : "Штучний інтелект",
     "Result" : "Результат",
     "Submit" : "Продовжити",
+    "Copy" : "Копія",
     "Try again" : "Спробуйте ще раз",
     "Close" : "Закрити"
 },
