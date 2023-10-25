@@ -2,7 +2,12 @@ OC.L10N.register(
     "assistant",
     {
     "Nextcloud Assistant" : "Assistant Nextcloud",
+    "Task for \"%1$s\" has finished" : "La tâche pour « %1$s » est terminée",
+    "\"%1$s\" task for \"%2$s\" has finished" : "La tâche « %1$s » pour « %2$s » est terminée",
+    "Input: %1$s" : "Entrée : %1$s",
     "View results" : "Afficher les résultats",
+    "Task for \"%1$s\" has failed" : "La tâche pour « %1$s » a échoué",
+    "\"%1$s\" task for \"%2$s\" has failed" : "La tâche « %1$s » pour « %2$s » a échoué.",
     "View task" : "Voir la tâche",
     "Artificial Intelligence" : "Intelligence Artificielle",
     "Process and transform text" : "Traiter et transformer le texte",
