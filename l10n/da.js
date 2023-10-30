@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Artificial Intelligence" : "Kunstig Intelligens",
     "Result" : "Resultat",
     "Submit" : "Tilføj",
     "Copy" : "Kopiér",
