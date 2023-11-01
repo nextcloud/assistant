@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Nextcloud Assistant" : "Trợ lý Nextcloud",
     "Artificial Intelligence" : "Trí tuệ nhân tạo",
     "Submit" : "Gửi đi",
     "Try again" : "Thử lại",
