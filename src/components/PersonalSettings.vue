@@ -66,7 +66,7 @@ export default {
 				.catch((error) => {
 					showError(
 						t('assistant', 'Failed to save assistant options')
-						+ ': ' + error.response?.request?.responseText
+						+ ': ' + error.response?.request?.responseText,
 					)
 				})
 		},
