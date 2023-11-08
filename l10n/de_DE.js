@@ -23,6 +23,7 @@ OC.L10N.register(
     "Copy task output" : "Aufgabenausgabe kopieren",
     "Copy" : "Kopieren",
     "Try again" : "Nochmals versuchen",
+    "Send request" : "Anfrage senden",
     "Result could not be copied to clipboard" : "Ergebnis konnte nicht in die Zwischenablage kopiert werden",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Ihre Aufgabe wurde geplant. Sie erhalten eine Benachrichtigung, wenn sie abgeschlossen ist",
     "Close" : "Schließen",

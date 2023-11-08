@@ -23,6 +23,7 @@ OC.L10N.register(
     "Copy task output" : "Copiar a saída da tarefa",
     "Copy" : "Copiar",
     "Try again" : "Ténteo de novo",
+    "Send request" : "Enviar a solicitude",
     "Result could not be copied to clipboard" : "Non foi posíbel copiar o resultado no portapapeis",
     "Your task has been scheduled, you will receive a notification when it has finished" : "A súa tarefa foi programada, recibirá unha notificación cando remate",
     "Close" : "Pechar",
