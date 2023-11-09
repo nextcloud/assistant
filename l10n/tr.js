@@ -23,6 +23,7 @@ OC.L10N.register(
     "Copy task output" : "Görev çıktısını kopyala",
     "Copy" : "Kopyala",
     "Try again" : "Yeniden dene",
+    "Send request" : "İstek gönder",
     "Result could not be copied to clipboard" : "Sonuç panoya kopyalanamadı",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Göreviniz zamanlandı. Tamamlandığında bir bildirim alacaksınız",
     "Close" : "Kapat",
