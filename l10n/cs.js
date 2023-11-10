@@ -22,6 +22,7 @@ OC.L10N.register(
     "Copy task output" : "Zkopírovat výstup úkolu",
     "Copy" : "Zkopírovat",
     "Try again" : "Zkusit znovu",
+    "Send request" : "Odeslat požadavek",
     "Result could not be copied to clipboard" : "Výsledek se nepodařilo zkopírovat do schránky",
     "Your task has been scheduled, you will receive a notification when it has finished" : "Váš úkol byl naplánován – až bude dokončen, obdržíte upozornění",
     "Close" : "Zavřít",
