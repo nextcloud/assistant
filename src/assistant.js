@@ -253,6 +253,44 @@ export async function openAssistantResult(task) {
 				showError(t('assistant', 'Failed to schedule the task'))
 			})
 	})
+	view.$on('sync-submit', (data) => {
+		view.loading = true
+		view.showSyncTaskRunning = true
+		view.input = data.input
+		view.selectedTaskTypeId = data.taskTypeId
+		runTask(task.appId, task.identifier, data.taskTypeId, data.input)
+			.then((response) => {
+				// resolve(response.data?.task)
+				view.output = response.data?.task?.output
+				view.loading = false
+				view.showSyncTaskRunning = false
+			})
+			.catch(error => {
+				if (error?.code === 'ERR_CANCELED') {
+					view.output = ''
+				} else {
+					view.$destroy()
+					console.error('Assistant sync run error', error)
+					// reject(new Error('Assistant sync run error'))
+				}
+			})
+			.then(() => {
+			})
+	})
+	view.$on('cancel-sync-n-schedule', () => {
+		cancelCurrentSyncTask()
+		scheduleTask(task.appId, task.identifier, view.selectedTaskTypeId, view.input)
+			.then((response) => {
+				view.showSyncTaskRunning = false
+				view.showScheduleConfirmation = true
+				// resolve(response.data?.ocs?.data?.task)
+			})
+			.catch(error => {
+				view.$destroy()
+				console.error('Assistant scheduling error', error)
+				// reject(new Error('Assistant scheduling error'))
+			})
+	})
 }
 
 export async function addAssistantMenuEntry() {
