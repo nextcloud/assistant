@@ -18,6 +18,7 @@
 				</NcButton>
 				<RunningEmptyContent
 					v-if="showSyncTaskRunning"
+					:description="shortInput"
 					@cancel="onCancelNSchedule" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"

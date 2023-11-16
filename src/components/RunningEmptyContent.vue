@@ -1,14 +1,11 @@
 <template>
 	<NcEmptyContent
-		:title="t('assistant', 'Your task is running')"
-		:name="t('assistant', 'Your task is running')"
-		:description="t('assistant', 'If it takes too long...')">
+		:title="t('assistant', 'Getting results…')"
+		:name="t('assistant', 'Getting results…')"
+		:description="description">
 		<template #action>
 			<NcButton
 				@click="$emit('cancel')">
-				<template #icon>
-					<CloseIcon />
-				</template>
 				{{ t('assistant', 'Run in the background') }}
 			</NcButton>
 		</template>
@@ -19,8 +16,6 @@
 </template>
 
 <script>
-import CloseIcon from 'vue-material-design-icons/Close.vue'
-
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
@@ -31,11 +26,14 @@ export default {
 	components: {
 		NcButton,
 		NcEmptyContent,
-		CloseIcon,
 		NcLoadingIcon,
 	},
 
 	props: {
+		description: {
+			type: String,
+			required: true,
+		},
 	},
 
 	emits: [

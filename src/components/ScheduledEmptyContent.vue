@@ -2,9 +2,10 @@
 	<NcEmptyContent
 		:title="title"
 		:name="title"
-		:description="description">
+		:description="t('assistant', 'You will receive a notification when it has finished')">
 		<template v-if="showCloseButton" #action>
 			<NcButton
+				type="tertiary"
 				@click="$emit('close')">
 				<template #icon>
 					<CloseIcon />
@@ -53,7 +54,7 @@ export default {
 
 	data() {
 		return {
-			title: t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished'),
+			title: t('assistant', 'Your task has been scheduled'),
 		}
 	},
 
