@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Nextcloud Assistant" : "Nextcloud-Assistent",
     "View results" : "Ergebnisse anzeigen",
-    "Artificial Intelligence" : "Künstiche Intelligenz",
+    "Artificial Intelligence" : "Künstliche Intelligenz",
     "Result" : "Ergebnis",
     "Submit" : "Übermitteln",
     "Copy" : "Kopieren",
