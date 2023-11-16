@@ -261,6 +261,7 @@ export default {
 	}
 
 	.output {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: start;
@@ -307,7 +308,7 @@ export default {
 	}
 
 	.warning-note {
-		width: 100%;
+		align-self: normal;
 	}
 }
 </style>
