@@ -16,32 +16,24 @@
 						<CloseIcon />
 					</template>
 				</NcButton>
-				<NcEmptyContent
-					v-if="showScheduleConfirmation"
-					:title="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
-					:name="t('assistant', 'Your task has been scheduled, you will receive a notification when it has finished')"
-					:description="shortInput">
-					<template #action>
-						<NcButton
-							@click="onCancel">
-							<template #icon>
-								<CloseIcon />
-							</template>
-							{{ t('assistant', 'Close') }}
-						</NcButton>
-					</template>
-					<template #icon>
-						<AssistantIcon />
-					</template>
-				</NcEmptyContent>
+				<RunningEmptyContent
+					v-if="showSyncTaskRunning"
+					:description="shortInput"
+					@cancel="onCancelNSchedule" />
+				<ScheduledEmptyContent
+					v-else-if="showScheduleConfirmation"
+					:description="shortInput"
+					:show-close-button="true"
+					@close="onCancel" />
 				<AssistantForm
 					v-else
 					class="form"
 					:input="input"
 					:output="output"
 					:selected-task-type-id="selectedTaskTypeId"
-					@cancel="onCancel"
-					@submit="onSubmit" />
+					:loading="loading"
+					@submit="onSubmit"
+					@sync-submit="onSyncSubmit" />
 			</div>
 		</div>
 	</NcModal>
@@ -50,24 +42,23 @@
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 
-import AssistantIcon from './icons/AssistantIcon.vue'
-
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 import AssistantForm from './AssistantForm.vue'
+import RunningEmptyContent from './RunningEmptyContent.vue'
+import ScheduledEmptyContent from './ScheduledEmptyContent.vue'
 
 import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AssistantModal',
 	components: {
-		AssistantIcon,
+		ScheduledEmptyContent,
+		RunningEmptyContent,
 		AssistantForm,
 		NcModal,
 		NcButton,
-		NcEmptyContent,
 		CloseIcon,
 	},
 	props: {
@@ -75,6 +66,10 @@ export default {
 		 * If true, add the modal content to the Viewer trap elements via the event-bus
 		 */
 		isInsideViewer: {
+			type: Boolean,
+			default: false,
+		},
+		loading: {
 			type: Boolean,
 			default: false,
 		},
@@ -89,6 +84,10 @@ export default {
 		selectedTaskTypeId: {
 			type: [String, null],
 			default: null,
+		},
+		showSyncTaskRunning: {
+			type: Boolean,
+			default: false,
 		},
 		showScheduleConfirmation: {
 			type: Boolean,
@@ -129,6 +128,12 @@ export default {
 		onSubmit(params) {
 			// this.show = false
 			this.$emit('submit', params)
+		},
+		onSyncSubmit(params) {
+			this.$emit('sync-submit', params)
+		},
+		onCancelNSchedule() {
+			this.$emit('cancel-sync-n-schedule')
 		},
 	},
 }

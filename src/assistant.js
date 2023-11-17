@@ -42,6 +42,7 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				input,
 				selectedTaskTypeId,
 				showScheduleConfirmation: false,
+				showSyncTaskRunning: false,
 			},
 		}).$mount(modalElement)
 
@@ -62,7 +63,64 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
+		view.$on('sync-submit', (data) => {
+			view.loading = true
+			view.showSyncTaskRunning = true
+			view.input = data.input
+			view.selectedTaskTypeId = data.taskTypeId
+			runTask(appId, identifier, data.taskTypeId, data.input)
+				.then((response) => {
+					resolve(response.data?.task)
+					view.output = response.data?.task?.output
+					view.loading = false
+					view.showSyncTaskRunning = false
+				})
+				.catch(error => {
+					if (error?.code === 'ERR_CANCELED') {
+						view.output = ''
+					} else {
+						view.$destroy()
+						console.error('Assistant sync run error', error)
+						reject(new Error('Assistant sync run error'))
+					}
+				})
+				.then(() => {
+				})
+		})
+		view.$on('cancel-sync-n-schedule', () => {
+			cancelCurrentSyncTask()
+			scheduleTask(appId, identifier, view.selectedTaskTypeId, view.input)
+				.then((response) => {
+					view.showSyncTaskRunning = false
+					view.showScheduleConfirmation = true
+					resolve(response.data?.ocs?.data?.task)
+				})
+				.catch(error => {
+					view.$destroy()
+					console.error('Assistant scheduling error', error)
+					reject(new Error('Assistant scheduling error'))
+				})
+		})
 	})
+}
+
+export async function cancelCurrentSyncTask() {
+	window.assistantAbortController?.abort()
+}
+
+export async function runTask(appId, identifier, taskType, input) {
+	window.assistantAbortController = new AbortController()
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType(taskType)
+	const url = generateUrl('/apps/assistant/run')
+	const params = {
+		input,
+		type: taskType,
+		appId,
+		identifier,
+	}
+	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
 
 /**
@@ -193,6 +251,44 @@ export async function openAssistantResult(task) {
 				view.$destroy()
 				console.error('Assistant scheduling error', error)
 				showError(t('assistant', 'Failed to schedule the task'))
+			})
+	})
+	view.$on('sync-submit', (data) => {
+		view.loading = true
+		view.showSyncTaskRunning = true
+		view.input = data.input
+		view.selectedTaskTypeId = data.taskTypeId
+		runTask(task.appId, task.identifier, data.taskTypeId, data.input)
+			.then((response) => {
+				// resolve(response.data?.task)
+				view.output = response.data?.task?.output
+				view.loading = false
+				view.showSyncTaskRunning = false
+			})
+			.catch(error => {
+				if (error?.code === 'ERR_CANCELED') {
+					view.output = ''
+				} else {
+					view.$destroy()
+					console.error('Assistant sync run error', error)
+					// reject(new Error('Assistant sync run error'))
+				}
+			})
+			.then(() => {
+			})
+	})
+	view.$on('cancel-sync-n-schedule', () => {
+		cancelCurrentSyncTask()
+		scheduleTask(task.appId, task.identifier, view.selectedTaskTypeId, view.input)
+			.then((response) => {
+				view.showSyncTaskRunning = false
+				view.showScheduleConfirmation = true
+				// resolve(response.data?.ocs?.data?.task)
+			})
+			.catch(error => {
+				view.$destroy()
+				console.error('Assistant scheduling error', error)
+				// reject(new Error('Assistant scheduling error'))
 			})
 	})
 }

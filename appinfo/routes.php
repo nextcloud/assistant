@@ -7,5 +7,6 @@ return [
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 
 		['name' => 'assistant#getTaskResultPage', 'url' => '/t/{taskId}', 'verb' => 'GET'],
+		['name' => 'assistant#runTask', 'url' => '/run', 'verb' => 'POST'],
 	],
 ];

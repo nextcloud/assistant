@@ -5,6 +5,7 @@ namespace OCA\TPAssistant\Service;
 use DateTime;
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\Common\Exception\NotFoundException;
+use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task;
 use OCP\Notification\IManager as INotificationManager;
@@ -60,6 +61,21 @@ class AssistantService {
 		if ($task->getUserId() !== $userId) {
 			return null;
 		}
+		return $task;
+	}
+
+	/**
+	 * @param string $type
+	 * @param string $input
+	 * @param string $appId
+	 * @param string|null $userId
+	 * @param string $identifier
+	 * @return Task
+	 * @throws PreConditionNotMetException
+	 */
+	public function runTask(string $type, string $input, string $appId, ?string $userId, string $identifier): Task {
+		$task = new Task($type, $input, $appId, $userId, $identifier);
+		$this->textProcessingManager->runTask($task);
 		return $task;
 	}
 }
