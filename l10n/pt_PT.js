@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Submit" : "Submeter",
     "Copy" : "copiar",
     "Close" : "Fechar"
 },

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Artificial Intelligence" : "Kunstig Intelligens",
     "Result" : "Resultat",
-    "Submit" : "Tilføj",
     "Copy" : "Kopiér",
     "Close" : "Luk"
 },

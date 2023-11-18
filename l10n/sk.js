@@ -4,7 +4,6 @@ OC.L10N.register(
     "View results" : "Zobraziť výsledky",
     "Artificial Intelligence" : "Umelá inteligencia",
     "Result" : "Výsledok",
-    "Submit" : "Odoslať",
     "Try again" : "Skúste znovu",
     "Close" : "Zatvoriť"
 },

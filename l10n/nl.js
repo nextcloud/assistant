@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "View results" : "Bekijk resultaten",
     "Result" : "Resultaat",
-    "Submit" : "Verwerken",
     "Copy" : "Kopiëren",
     "Try again" : "Probeer opnieuw",
     "Close" : "Sluit"

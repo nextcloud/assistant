@@ -5,7 +5,6 @@ OC.L10N.register(
     "View results" : "Pokaż wyniki",
     "Artificial Intelligence" : "Sztuczna inteligencja",
     "Result" : "Wynik",
-    "Submit" : "Wyślij",
     "Copy" : "Skopiuj",
     "Close" : "Zamknij"
 },

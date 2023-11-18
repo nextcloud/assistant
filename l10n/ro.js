@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Submit" : "Trimite",
     "Copy" : "Copiază",
     "Close" : "Închide"
 },

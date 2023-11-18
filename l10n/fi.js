@@ -5,7 +5,6 @@ OC.L10N.register(
     "View results" : "Näytä tulokset",
     "Artificial Intelligence" : "Tekoäly",
     "Result" : "Tulos",
-    "Submit" : "Lähetä",
     "Copy" : "Kopioi",
     "Close" : "Sulje"
 },

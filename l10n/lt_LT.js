@@ -2,7 +2,6 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Rodyti rezultatus",
-    "Submit" : "Pateikti",
     "Copy" : "Kopija",
     "Try again" : "Bandykite dar kartą",
     "Close" : "Užverti"

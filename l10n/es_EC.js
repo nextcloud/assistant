@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
     "Result" : "Resultado",
-    "Submit" : "Enviar",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",
     "Close" : "Cerrar"

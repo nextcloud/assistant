@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "View results" : "Pregledaj rezultate",
     "Result" : "Rezultat",
-    "Submit" : "Šalji",
     "Copy" : "Kopirajte",
     "Close" : "Zatvori"
 },

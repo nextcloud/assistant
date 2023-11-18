@@ -4,7 +4,6 @@ OC.L10N.register(
     "Nextcloud Assistant" : "Асистент Nextcloud",
     "Artificial Intelligence" : "Штучний інтелект",
     "Result" : "Результат",
-    "Submit" : "Продовжити",
     "Copy" : "Копія",
     "Try again" : "Спробуйте ще раз",
     "Close" : "Закрити"

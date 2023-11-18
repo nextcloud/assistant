@@ -2,7 +2,6 @@ OC.L10N.register(
     "assistant",
     {
     "Result" : "תוצאה",
-    "Submit" : "שליחה",
     "Copy" : "העתקה",
     "Try again" : "ניסיון חוזר",
     "Close" : "סגירה"
