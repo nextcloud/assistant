@@ -183,7 +183,11 @@ export default {
 					: this.selectedTaskType.name
 		},
 		syncSubmitButtonLabel() {
-			return this.myOutput.trim() ? t('assistant', 'Try again') : this.selectedTaskType.name
+			return this.myOutput.trim()
+				? t('assistant', 'Try again')
+				: this.selectedTaskType.id === 'OCP\\TextProcessing\\FreePromptTaskType'
+					? t('assistant', 'Send request')
+					: this.selectedTaskType.name
 		},
 		showCopy() {
 			return !!this.myOutput.trim()
