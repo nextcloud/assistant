@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Nextcloud Assistant" : "Nextcloud Aðstoð",
+    "Artificial Intelligence" : "Gervigreind",
     "Result" : "Niðurstöður",
     "Close" : "Loka"
 },
