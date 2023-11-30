@@ -1,10 +1,11 @@
 <?php
 
-namespace OCA\TPAssistant\Tests;
+namespace OCA\Assistant\Tests;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
+use Test\TestCase;
 
-class TextProcessingServiceTest extends \PHPUnit\Framework\TestCase {
+class TextProcessingServiceTest extends TestCase {
 
 	public function testDummy() {
 		$app = new Application();

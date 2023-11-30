@@ -1,9 +1,9 @@
 <?php
 
-namespace OCA\TPAssistant\Service;
+namespace OCA\Assistant\Service;
 
 use DateTime;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\Common\Exception\NotFoundException;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;

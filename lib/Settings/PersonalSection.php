@@ -1,5 +1,5 @@
 <?php
-namespace OCA\TPAssistant\Settings;
+namespace OCA\Assistant\Settings;
 
 use OCP\IURLGenerator;
 use OCP\IL10N;

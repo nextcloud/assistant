@@ -37,7 +37,7 @@ include text processing providers to:
     <version>1.0.2</version>
     <licence>agpl</licence>
     <author>Julien Veyssier</author>
-    <namespace>TPAssistant</namespace>
+    <namespace>Assistant</namespace>
     <documentation>
         <developer>https://github.com/nextcloud/assistant</developer>
     </documentation>
@@ -51,8 +51,8 @@ include text processing providers to:
         <nextcloud min-version="27.1.0" max-version="28"/>
     </dependencies>
     <settings>
-        <admin>OCA\TPAssistant\Settings\Admin</admin>
-        <personal>OCA\TPAssistant\Settings\Personal</personal>
-        <personal-section>OCA\TPAssistant\Settings\PersonalSection</personal-section>
+        <admin>OCA\Assistant\Settings\Admin</admin>
+        <personal>OCA\Assistant\Settings\Personal</personal>
+        <personal-section>OCA\Assistant\Settings\PersonalSection</personal-section>
     </settings>
 </info>

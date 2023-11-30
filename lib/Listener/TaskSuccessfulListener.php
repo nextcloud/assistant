@@ -1,10 +1,10 @@
 <?php
 
-namespace OCA\TPAssistant\Listener;
+namespace OCA\Assistant\Listener;
 
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Event\BeforeAssistantNotificationEvent;
-use OCA\TPAssistant\Service\AssistantService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Event\BeforeAssistantNotificationEvent;
+use OCA\Assistant\Service\AssistantService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;

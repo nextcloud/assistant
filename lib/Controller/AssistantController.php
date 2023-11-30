@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
@@ -13,7 +13,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 
-use OCA\TPAssistant\Service\AssistantService;
+use OCA\Assistant\Service\AssistantService;
 
 class AssistantController extends Controller {
 

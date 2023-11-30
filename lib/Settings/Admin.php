@@ -1,11 +1,11 @@
 <?php
-namespace OCA\TPAssistant\Settings;
+namespace OCA\Assistant\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 
 class Admin implements ISettings {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\IConfig;
@@ -8,7 +8,7 @@ use OCP\IRequest;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\PreConditionNotMetException;
 
 class ConfigController extends Controller {
