@@ -7,7 +7,6 @@ use OCA\TPAssistant\Listener\TaskFailedListener;
 use OCA\TPAssistant\Listener\TaskSuccessfulListener;
 use OCA\TPAssistant\Notification\Notifier;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
-use OCP\IConfig;
 
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
@@ -20,13 +19,8 @@ class Application extends App implements IBootstrap {
 
 	public const APP_ID = 'assistant';
 
-	private IConfig $config;
-
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
-
-		$container = $this->getContainer();
-		$this->config = $container->query(IConfig::class);
 	}
 
 	public function register(IRegistrationContext $context): void {

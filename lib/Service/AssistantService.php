@@ -19,7 +19,15 @@ class AssistantService {
 	) {
 	}
 
-	public function sendNotification(Task $task, ?string $target, ?string $actionLabel): void {
+	/**
+	 * Send a success or failure task result notification
+	 *
+	 * @param Task $task
+	 * @param string|null $target optional notification link target
+	 * @param string|null $actionLabel optional label for the notification action button
+	 * @return void
+	 */
+	public function sendNotification(Task $task, ?string $target = null, ?string $actionLabel = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 

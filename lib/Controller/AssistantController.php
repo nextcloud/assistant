@@ -18,11 +18,11 @@ use OCA\TPAssistant\Service\AssistantService;
 class AssistantController extends Controller {
 
 	public function __construct(
-		string                   $appName,
-		IRequest                 $request,
+		string $appName,
+		IRequest $request,
 		private AssistantService $assistantService,
-		private IInitialState    $initialStateService,
-		private ?string          $userId
+		private IInitialState $initialStateService,
+		private ?string $userId
 	) {
 		parent::__construct($appName, $request);
 	}
