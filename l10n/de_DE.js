@@ -33,7 +33,7 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Nextcloud-Assistent schließen",
     "Assistant options saved" : "Assistenteneinstellungen gespeichert",
     "Failed to save assistant options" : "Fehler beim Speichern der Assistenteneinstellungen",
-    "Getting results…" : "Ergebnisse erhalten…",
+    "Getting results…" : "Ergebnisse holen…",
     "Run in the background" : "Im Hintergrund ausführen",
     "You will receive a notification when it has finished" : "Sie erhalten eine Benachrichtigung, wenn der Vorgang abgeschlossen ist",
     "Your task has been scheduled" : "Ihre Aufgabe wurde geplant",
