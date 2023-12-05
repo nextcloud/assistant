@@ -86,4 +86,19 @@ class AssistantService {
 		$this->textProcessingManager->runTask($task);
 		return $task;
 	}
+
+	/**
+	 * @param string $type
+	 * @param string $input
+	 * @param string $appId
+	 * @param string|null $userId
+	 * @param string $identifier
+	 * @return Task
+	 * @throws PreConditionNotMetException
+	 */
+	public function runOrScheduleTask(string $type, string $input, string $appId, ?string $userId, string $identifier): Task {
+		$task = new Task($type, $input, $appId, $userId, $identifier);
+		$this->textProcessingManager->runOrScheduleTask($task);
+		return $task;
+	}
 }

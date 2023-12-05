@@ -69,4 +69,23 @@ class AssistantController extends Controller {
 			'task' => $task->jsonSerialize(),
 		]);
 	}
+
+	/**
+	 * @param string $input
+	 * @param string $type
+	 * @param string $appId
+	 * @param string $identifier
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function runOrScheduleTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+		try {
+			$task = $this->assistantService->runOrScheduleTask($type, $input, $appId, $this->userId, $identifier);
+		} catch (\Exception | \Throwable $e) {
+			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse([
+			'task' => $task->jsonSerialize(),
+		]);
+	}
 }
