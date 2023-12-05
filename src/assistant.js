@@ -1,3 +1,4 @@
+import { STATUS } from './constants.js'
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
@@ -68,12 +69,18 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 			view.showSyncTaskRunning = true
 			view.input = data.input
 			view.selectedTaskTypeId = data.taskTypeId
-			runTask(appId, identifier, data.taskTypeId, data.input)
+			runOrScheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
-					resolve(response.data?.task)
-					view.output = response.data?.task?.output
+					const task = response.data?.task
+					if (task.status === STATUS.successfull) {
+						view.output = task?.output
+					} else if (task.status === STATUS.scheduled) {
+						view.input = task.input
+						view.showScheduleConfirmation = true
+					}
 					view.loading = false
 					view.showSyncTaskRunning = false
+					resolve(task)
 				})
 				.catch(error => {
 					if (error?.code === 'ERR_CANCELED') {
@@ -114,6 +121,21 @@ export async function runTask(appId, identifier, taskType, input) {
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
 	const url = generateUrl('/apps/assistant/run')
+	const params = {
+		input,
+		type: taskType,
+		appId,
+		identifier,
+	}
+	return axios.post(url, params, { signal: window.assistantAbortController.signal })
+}
+
+export async function runOrScheduleTask(appId, identifier, taskType, input) {
+	window.assistantAbortController = new AbortController()
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType(taskType)
+	const url = generateUrl('/apps/assistant/run-or-schedule')
 	const params = {
 		input,
 		type: taskType,
@@ -261,7 +283,13 @@ export async function openAssistantResult(task) {
 		runTask(task.appId, task.identifier, data.taskTypeId, data.input)
 			.then((response) => {
 				// resolve(response.data?.task)
-				view.output = response.data?.task?.output
+				const task = response.data?.task
+				if (task.status === STATUS.successfull) {
+					view.output = task?.output
+				} else if (task.status === STATUS.scheduled) {
+					view.input = task?.input
+					view.showScheduleConfirmation = true
+				}
 				view.loading = false
 				view.showSyncTaskRunning = false
 			})

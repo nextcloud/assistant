@@ -8,5 +8,6 @@ return [
 
 		['name' => 'assistant#getTaskResultPage', 'url' => '/t/{taskId}', 'verb' => 'GET'],
 		['name' => 'assistant#runTask', 'url' => '/run', 'verb' => 'POST'],
+		['name' => 'assistant#runOrScheduleTask', 'url' => '/run-or-schedule', 'verb' => 'POST'],
 	],
 ];
