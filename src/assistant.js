@@ -20,9 +20,13 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
  * @param {string} params.taskType the task type class
  * @param {string} params.input optional initial input text
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
+ * @param {boolean} params.closeOnResult If true, the modal will be closed when getting a sync result
  * @return {Promise<unknown>}
  */
-export async function openAssistantForm({ appId, identifier = '', taskType = null, input = '', isInsideViewer = undefined }) {
+export async function openAssistantForm({
+	appId, identifier = '', taskType = null, input = '',
+	isInsideViewer = undefined, closeOnResult = false,
+}) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -72,15 +76,19 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 			runOrScheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
 					const task = response.data?.task
+					resolve(task)
 					if (task.status === STATUS.successfull) {
-						view.output = task?.output
+						if (closeOnResult) {
+							view.$destroy()
+						} else {
+							view.output = task?.output
+						}
 					} else if (task.status === STATUS.scheduled) {
 						view.input = task.input
 						view.showScheduleConfirmation = true
 					}
 					view.loading = false
 					view.showSyncTaskRunning = false
-					resolve(task)
 				})
 				.catch(error => {
 					if (error?.code === 'ERR_CANCELED') {
