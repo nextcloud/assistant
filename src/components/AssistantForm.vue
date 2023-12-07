@@ -79,7 +79,7 @@
 				</template>
 			</NcButton-->
 			<NcButton
-				v-if="showCopy"
+				v-if="hasOutput"
 				type="primary"
 				class="copy-button"
 				:title="t('assistant', 'Copy output')"
@@ -90,7 +90,7 @@
 					<ContentCopyIcon v-else />
 				</template>
 			</NcButton>
-			<div v-if="showCopy"
+			<div v-if="hasOutput"
 				class="action-buttons">
 				<NcButton
 					v-for="(b, i) in actionButtons"
@@ -208,7 +208,7 @@ export default {
 					? t('assistant', 'Send request')
 					: this.selectedTaskType.name
 		},
-		showCopy() {
+		hasOutput() {
 			return !!this.myOutput.trim()
 		},
 	},
