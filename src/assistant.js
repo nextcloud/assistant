@@ -66,6 +66,7 @@ export async function openAssistantForm({
 				actionButtons,
 			},
 		}).$mount(modalElement)
+		let lastTask = null
 
 		view.$on('cancel', () => {
 			view.$destroy()
@@ -76,7 +77,9 @@ export async function openAssistantForm({
 				.then((response) => {
 					view.input = data.input
 					view.showScheduleConfirmation = true
-					resolve(response.data?.ocs?.data?.task)
+					const task = response.data?.ocs?.data?.task
+					lastTask = task
+					resolve(task)
 				})
 				.catch(error => {
 					view.$destroy()
@@ -92,7 +95,9 @@ export async function openAssistantForm({
 			runOrScheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
 					const task = response.data?.task
+					lastTask = task
 					resolve(task)
+					view.input = task.input
 					if (task.status === STATUS.successfull) {
 						if (closeOnResult) {
 							view.$destroy()
@@ -100,7 +105,6 @@ export async function openAssistantForm({
 							view.output = task?.output
 						}
 					} else if (task.status === STATUS.scheduled) {
-						view.input = task.input
 						view.showScheduleConfirmation = true
 					}
 					view.loading = false
@@ -124,7 +128,9 @@ export async function openAssistantForm({
 				.then((response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
-					resolve(response.data?.ocs?.data?.task)
+					const task = response.data?.ocs?.data?.task
+					lastTask = task
+					resolve(task)
 				})
 				.catch(error => {
 					view.$destroy()
@@ -134,7 +140,8 @@ export async function openAssistantForm({
 		})
 		view.$on('action-button-clicked', (data) => {
 			if (data.button?.onClick) {
-				data.button.onClick(data.output)
+				lastTask.output = data.output
+				data.button.onClick(lastTask)
 			}
 			view.$destroy()
 		})
