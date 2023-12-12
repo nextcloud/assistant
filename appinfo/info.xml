@@ -34,7 +34,7 @@ include text processing providers to:
 * Get an answer from a free prompt
 * Reformulate (OpenAi/LocalAi only)
 ]]></description>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <licence>agpl</licence>
     <author>Julien Veyssier</author>
     <namespace>TPAssistant</namespace>
