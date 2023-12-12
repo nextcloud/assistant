@@ -116,6 +116,8 @@ import Vue from 'vue'
 
 Vue.use(VueClipboard)
 
+const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
+
 export default {
 	name: 'AssistantForm',
 	components: {
@@ -155,7 +157,7 @@ export default {
 			myInput: this.input,
 			myOutput: this.output,
 			taskTypes: [],
-			mySelectedTaskTypeId: this.selectedTaskTypeId,
+			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
 			copied: false,
 		}
 	},
@@ -178,14 +180,14 @@ export default {
 		submitButtonLabel() {
 			return this.myOutput.trim()
 				? t('assistant', 'Try again')
-				: this.selectedTaskType.id === 'OCP\\TextProcessing\\FreePromptTaskType'
+				: this.selectedTaskType.id === FREE_PROMPT_TASK_TYPE_ID
 					? t('assistant', 'Send request')
 					: this.selectedTaskType.name
 		},
 		syncSubmitButtonLabel() {
 			return this.myOutput.trim()
 				? t('assistant', 'Try again')
-				: this.selectedTaskType.id === 'OCP\\TextProcessing\\FreePromptTaskType'
+				: this.selectedTaskType.id === FREE_PROMPT_TASK_TYPE_ID
 					? t('assistant', 'Send request')
 					: this.selectedTaskType.name
 		},
