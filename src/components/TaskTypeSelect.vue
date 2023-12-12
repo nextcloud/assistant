@@ -89,10 +89,24 @@ export default {
 		},
 	},
 
+	watch: {
+		options() {
+			this.moveSelectedIfInMenu()
+		},
+	},
+
 	mounted() {
+		this.moveSelectedIfInMenu()
 	},
 
 	methods: {
+		moveSelectedIfInMenu() {
+			// if the initially selected value is in the dropdown, get it out
+			const selectedAction = this.actionTypes.find(a => a.id === this.value)
+			if (this.actionTypes.find(a => a.id === this.value)) {
+				this.onMenuTaskSelected(selectedAction)
+			}
+		},
 		getButtonType(taskType) {
 			return taskType.id === this.value
 				? 'primary'
