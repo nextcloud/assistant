@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.3 – 2023-12-12
+
+### Changed
+
+- Use new runOrSchedule when trying to run a sync task
+
+### Fixed
+
+- Avoid initially selected task to be hidden in the menu
+- Set default selected task on first use: free prompt
+
 ## 1.0.2 – 2023-11-20
 
 ### Added
