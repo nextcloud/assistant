@@ -8,6 +8,7 @@ use OCP\Common\Exception\NotFoundException;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task;
+use OCP\TextToImage\Task as TextToImageTask;
 use OCP\Notification\IManager as INotificationManager;
 
 class AssistantService {
@@ -22,12 +23,12 @@ class AssistantService {
 	/**
 	 * Send a success or failure task result notification
 	 *
-	 * @param Task $task
+	 * @param Task|TextToImageTask $task
 	 * @param string|null $target optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @return void
 	 */
-	public function sendNotification(Task $task, ?string $target = null, ?string $actionLabel = null): void {
+	public function sendNotification(Task|TextToImageTask $task, ?string $target = null, ?string $actionLabel = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
@@ -36,14 +37,20 @@ class AssistantService {
 			'id' => $task->getId(),
 			'input' => $task->getInput(),
 			'target' => $target,
-			'actionLabel' => $actionLabel,
-			'taskTypeClass' => $task->getType(),
+			'actionLabel' => $actionLabel,			
 		];
+		if ($task instanceof TextToImageTask) {
+			$params['taskType'] = Application::TASK_TYPE_TEXT_TO_IMAGE;
+		} else {
+			$params['taskType'] = Application::TASK_TYPE_TEXT_GEN;
+			$params['textTaskTypeClass'] = $task->getType();
+		}
+
 		$status = $task->getStatus();
 		$subject = $status === Task::STATUS_SUCCESSFUL
 			? 'success'
 			: 'failure';
-		$objectType = ($task->getAppId() === Application::APP_ID || $target === null)
+		$objectType = ($task->getAppId() === Application::APP_ID && $target === null)
 			? 'task'
 			: 'task-with-custom-target';
 		$notification->setApp(Application::APP_ID)

@@ -70,7 +70,8 @@ class Notifier implements INotifier {
 		$schedulingAppName = $schedulingAppInfo['name'];
 
 		$taskTypeName = null;
-		if (isset($params['taskTypeClass']) && $params['taskTypeClass']) {
+		if ($params['taskType'] === Application::TASK_TYPE_TEXT_GEN &&
+			isset($params['taskTypeClass']) && $params['taskTypeClass']) {
 			try {
 				/** @var ITaskType $taskType */
 				$taskType = $this->container->get($params['taskTypeClass']);
@@ -78,6 +79,8 @@ class Notifier implements INotifier {
 			} catch (\Exception | \Throwable $e) {
 				$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
 			}
+		} elseif  ($params['taskType'] === Application::TASK_TYPE_TEXT_TO_IMAGE) {
+			$taskTypeName = $l->t('Text to image');
 		}
 
 		switch ($notification->getSubject()) {
