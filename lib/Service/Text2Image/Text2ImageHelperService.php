@@ -85,7 +85,13 @@ class Text2ImageHelperService {
 			throw new BaseException($this->l10n->t('No text to image processing provider available'));
 		}
 
-		$imageGenId = bin2hex(random_bytes(32));
+		$imageGenId = bin2hex(random_bytes(16));
+
+		// In the exceedingly unlikely case of a collision:
+		while ($this->genIdExists($imageGenId)) {
+			$imageGenId = bin2hex(random_bytes(16));
+		}
+
 		$promptTask = new Task($prompt, Application::APP_ID, $nResults, $this->userId, $imageGenId);
 
 		$this->textToImageManager->runOrScheduleTask($promptTask);
@@ -131,6 +137,31 @@ class Text2ImageHelperService {
 		}
 
 		return ['url' => $infoUrl, 'reference_url' => $referenceUrl, 'image_gen_id' => $imageGenId, 'prompt' => $prompt];
+	}
+
+	/*
+	 * Check whether the image generation id exists in the database (stale or otherwise)
+	 * @param string $imageGenId
+	 * @return bool
+	 */
+	private function genIdExists(string $imageGenId): bool {
+		try {
+			$this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
+			return true;
+		} catch (DoesNotExistException $e) {
+			// Also check the stale generation table:
+			try {
+				if ($this->staleGenerationMapper->genIdExists($imageGenId)) {
+					return true;
+				}
+			} catch (Exception | RuntimeException $e) {
+				// Ignore
+			}
+			return false;
+		} catch (Exception | MultipleObjectsReturnedException $e) {
+			$this->logger->debug('Image request error : ' . $e->getMessage(), ['app' => Application::APP_ID]);
+			throw new BaseException($this->l10n->t('Image request error'), Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
