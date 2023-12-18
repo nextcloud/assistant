@@ -30,7 +30,8 @@
 						:src="result.url"
 						:prompt="result.prompt"
 						@failed="imageGenerationFailed"
-						@ready="imageGenerationReady" />
+						@ready="imageGenerationReady"
+						@processing="imageGenerationIsProcessing" />
 				</div>
 			</div>
 			<div class="footer">
@@ -255,7 +256,6 @@ export default {
 				return
 			}
 
-			this.isGenerating = true
 			this.loading = true
 
 			const params = {
@@ -317,6 +317,9 @@ export default {
 		},
 		imageGenerationReady() {
 			this.isGenerating = false
+		},
+		imageGenerationIsProcessing() {
+			this.isGenerating = true
 		},
 	},
 }

@@ -55,7 +55,7 @@
 				<div v-for="(imageUrl, index) in imageUrls"
 					:key="index"
 					class="image-container">
-					<div v-if="!isOwner || fileVisStatusArray[index].visible" class="image-wrapper">
+					<div v-show="!isOwner || fileVisStatusArray[index].visible" class="image-wrapper">
 						<img
 							class="image-non-editable"
 							:src="imageUrl"
@@ -140,7 +140,7 @@ export default {
 	computed: {
 		loading() {
 			// Will turn to false once all images have loaded or if something fails
-			return this.loadingImages && !this.failed
+			return this.loadingImages && !this.failed && this.imageUrls.length > 0
 		},
 		hasVisibleImages() {
 			if (this.isOwner) {
@@ -198,6 +198,7 @@ export default {
 							}
 						} else if (response.data?.processing !== undefined) {
 							this.waitingInBg = true
+							this.$emit('processing')
 							this.updateTimeUntilCompletion(response.data.processing)
 						} else {
 							this.errorMsg = t('assistant', 'Unexpected server response')
@@ -394,7 +395,7 @@ export default {
 		.icon {
 			display: inline;
 			position: relative;
-			top: 4px;
+			margin-right: 8px;
 		}
 	}
 
