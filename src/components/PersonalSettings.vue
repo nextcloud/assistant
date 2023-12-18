@@ -7,6 +7,7 @@
 		<div id="assistant-content">
 			<NcCheckboxRadioSwitch v-if="state.text_processing_available"
 				:checked="state.assistant_enabled"
+				:disabled="!state.assistant_available"
 				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Top-right assistant') }}
