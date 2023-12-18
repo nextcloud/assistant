@@ -225,7 +225,7 @@ export default {
 			const timeDifference = new Date(completionTimeStamp * 1000) - new Date()
 			// If the time difference is less than 5 minutes, don't show the time left
 			// (as we don't know when the scheduled job will start exactly)
-			if (timeDifference < 5*60000) {
+			if (timeDifference < 5 * 60000) {
 				this.timeUntilCompletion = null
 				return
 			}
