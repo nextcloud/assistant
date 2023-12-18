@@ -283,16 +283,21 @@ class Text2ImageHelperService {
 		// Check whether the task has completed:
 		try {
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
-		} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
-			if ($e instanceof DoesNotExistException) {
+		} catch (DoesNotExistException $e) {
+			try {
 				if ($this->staleGenerationMapper->genIdExists($imageGenId)) {
-					throw new BaseException($this->l10n->t('Image generation has been deleted.'), Http::STATUS_NOT_FOUND);
+					throw new BaseException('Image generation has been deleted.', Http::STATUS_NOT_FOUND);
 				}
+			} catch (Exception | RuntimeException $e) {
+				// Ignore
 			}
-
 			$this->logger->debug('Image request error : ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			// Set error code to BAD_REQUEST to limit brute force attempts
 			throw new BaseException($this->l10n->t('Image generation not found.'), Http::STATUS_BAD_REQUEST);
+		}
+		catch (Exception | MultipleObjectsReturnedException $e) {
+			$this->logger->debug('Image request error : ' . $e->getMessage(), ['app' => Application::APP_ID]);
+			throw new BaseException($this->l10n->t('Retrieving the image generation failed.'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
 		$isOwner = ($imageGeneration->getUserId() === $this->userId);
@@ -500,6 +505,15 @@ class Text2ImageHelperService {
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);			
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());
+			// Check if the generation has been deleted before this notify request was made:
+			try {
+				if ($this->staleGenerationMapper->genIdExists($imageGenId)) {
+					throw new BaseException('Image generation has been deleted.', Http::STATUS_NOT_FOUND);
+				}
+			} catch (Exception | RuntimeException $e) {
+				// Ignore
+			}
+			// Error out with BAD_REQUEST to limit brute force attempts
 			throw new BaseException('Image generation not found; it may have been cleaned up due to not being viewed for a long time.', Http::STATUS_BAD_REQUEST);
 		} catch (Exception | MultipleObjectsReturnedException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());

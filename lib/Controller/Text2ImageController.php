@@ -18,6 +18,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 use OCP\TextToImage\Exception\TaskFailureException;
+use OCP\AppFramework\Http\Attribute\AnonRateLimit;
 
 
 class Text2ImageController extends Controller {
@@ -154,20 +155,20 @@ class Text2ImageController extends Controller {
 
 	/**
 	 * Notify when image generation is ready
+	 * 
+	 * Does not need bruteforce protection since we respond with success anyways 
+	 * as we don't want to keep the front-end waiting.
+	 * However, we still use rate limiting to prevent timing attacks.
+	 * 
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	#[BruteForceProtection(action: 'imageGenId')]
+	#[AnonRateLimit(limit: 10, period: 60)]
 	public function notifyWhenReady(string $imageGenId): DataResponse {
 		try {
 			$this->text2ImageHelperService->notifyWhenReady($imageGenId);
 		} catch (Exception $e) {
-			$response = new DataResponse(['error' => $e->getMessage()], $e->getCode());
-			if($e->getCode() === Http::STATUS_BAD_REQUEST | Http::STATUS_UNAUTHORIZED) {
-				// Throttle brute force attempts				
-				$response->throttle(['action' => 'imageGenId']);				
-			}
-			return $response;
+			// Ignore
 		}
 		return new DataResponse('success', Http::STATUS_OK);
 	}
@@ -183,6 +184,7 @@ class Text2ImageController extends Controller {
 	 * @param string $imageGenId
 	 * @return DataResponse
 	 */
+	#[AnonRateLimit(limit: 10, period: 60)]
 	public function cancelGeneration(string $imageGenId): DataResponse {
 		$this->text2ImageHelperService->cancelGeneration($imageGenId);
 		return new DataResponse('success', Http::STATUS_OK);
