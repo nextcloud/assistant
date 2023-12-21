@@ -24,7 +24,7 @@ class Personal implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$assistantAvailable = $this->textProcessingManager->hasProviders() ?
+		$textProcessingAvailable = $this->textProcessingManager->hasProviders() ?
 			$this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1' :
 			false;
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
@@ -35,7 +35,7 @@ class Personal implements ISettings {
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		
 		$userConfig = [
-			'assistant_available' => $assistantAvailable,
+			'text_processing_available' => $textProcessingAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,

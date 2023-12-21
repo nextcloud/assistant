@@ -8,6 +8,7 @@
 				<NcTextField ref="text2image-search-input"
 					:value.sync="query"
 					:label="inputPlaceholder"
+					placeholder=""
 					:disabled="loading"
 					:show-trailing-button="!!query"
 					@keydown.enter="generate"

@@ -33,7 +33,7 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 	 * @inheritDoc
 	 */
 	public function getId(): string {
-		return 'assistant';
+		return 'assistant_image_generation';
 	}
 
 	/**

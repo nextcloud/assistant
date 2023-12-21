@@ -5,9 +5,8 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
-			<NcCheckboxRadioSwitch v-if="state.assistant_available"
+			<NcCheckboxRadioSwitch v-if="state.text_processing_available"
 				:checked="state.assistant_enabled"
-				:disabled="!state.assistant_available"
 				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Top-right assistant') }}
@@ -15,7 +14,6 @@
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
 				:checked="state.text_to_image_picker_enabled"
-				:disabled="!state.text_to_image_picker_available"
 				@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Text-to-image smart picker') }}
@@ -62,7 +60,7 @@ export default {
 	computed: {
 		noProvidersAvailable() {
 			return this.state.text_to_image_picker_available === false
-				&& this.state.assistant_available === false
+				&& this.state.text_processing_available === false
 		},
 	},
 

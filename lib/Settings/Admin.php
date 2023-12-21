@@ -23,14 +23,14 @@ class Admin implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$assistantAvailable = $this->textProcessingManager->hasProviders();
+		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
 		$assistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders();
 		$textToImagePickerEnabled = $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$maxImageGenerationIdleTime = $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
 
 		$adminConfig = [
-			'assistant_available' => $assistantAvailable,
+			'text_processing_available' => $textProcessingAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,

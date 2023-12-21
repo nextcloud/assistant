@@ -7,7 +7,7 @@ use OCA\TPAssistant\AppInfo\Application;
 use OCP\Common\Exception\NotFoundException;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
-use OCP\TextProcessing\Task;
+use OCP\TextProcessing\Task as TextProcessingTask;
 use OCP\TextToImage\Task as TextToImageTask;
 use OCP\Notification\IManager as INotificationManager;
 
@@ -23,12 +23,12 @@ class AssistantService {
 	/**
 	 * Send a success or failure task result notification
 	 *
-	 * @param Task|TextToImageTask $task
+	 * @param TextProcessingTask|TextToImageTask $task
 	 * @param string|null $target optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @return void
 	 */
-	public function sendNotification(Task|TextToImageTask $task, ?string $target = null, ?string $actionLabel = null): void {
+	public function sendNotification(TextProcessingTask|TextToImageTask $task, ?string $target = null, ?string $actionLabel = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
@@ -41,16 +41,18 @@ class AssistantService {
 		];
 		if ($task instanceof TextToImageTask) {
 			$params['taskType'] = Application::TASK_TYPE_TEXT_TO_IMAGE;
+			$subject = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL
+				? 'success'
+				: 'failure';
 		} else {
 			$params['taskType'] = Application::TASK_TYPE_TEXT_GEN;
 			$params['textTaskTypeClass'] = $task->getType();
+			$subject = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL
+				? 'success'
+				: 'failure';
 		}
 
-		$status = $task->getStatus();
-		$subject = $status === Task::STATUS_SUCCESSFUL
-			? 'success'
-			: 'failure';
-		$objectType = ($task->getAppId() === Application::APP_ID && $target === null)
+		$objectType = $target === null
 			? 'task'
 			: 'task-with-custom-target';
 		$notification->setApp(Application::APP_ID)
@@ -65,9 +67,9 @@ class AssistantService {
 	/**
 	 * @param string|null $userId
 	 * @param int $taskId
-	 * @return Task
+	 * @return TextProcessingTask
 	 */
-	public function getTask(?string $userId, int $taskId): ?Task {
+	public function getTextProcessingTask(?string $userId, int $taskId): ?TextProcessingTask {
 		try {
 			$task = $this->textProcessingManager->getTask($taskId);
 		} catch (NotFoundException | \RuntimeException $e) {
@@ -85,11 +87,11 @@ class AssistantService {
 	 * @param string $appId
 	 * @param string|null $userId
 	 * @param string $identifier
-	 * @return Task
+	 * @return TextProcessingTask
 	 * @throws PreConditionNotMetException
 	 */
-	public function runTask(string $type, string $input, string $appId, ?string $userId, string $identifier): Task {
-		$task = new Task($type, $input, $appId, $userId, $identifier);
+	public function runTextProcessingTask(string $type, string $input, string $appId, ?string $userId, string $identifier): TextProcessingTask {
+		$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
 		$this->textProcessingManager->runTask($task);
 		return $task;
 	}
@@ -100,11 +102,11 @@ class AssistantService {
 	 * @param string $appId
 	 * @param string|null $userId
 	 * @param string $identifier
-	 * @return Task
+	 * @return TextProcessingTask
 	 * @throws PreConditionNotMetException
 	 */
-	public function runOrScheduleTask(string $type, string $input, string $appId, ?string $userId, string $identifier): Task {
-		$task = new Task($type, $input, $appId, $userId, $identifier);
+	public function runOrScheduleTextProcessingTask(string $type, string $input, string $appId, ?string $userId, string $identifier): TextProcessingTask {
+		$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
 		$this->textProcessingManager->runOrScheduleTask($task);
 		return $task;
 	}

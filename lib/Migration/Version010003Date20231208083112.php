@@ -32,26 +32,6 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		// For development: delete all tables:
-		if($schema->hasTable('assistant_i_gens')) {
-			$schema->getTable('assistant_i_gens')->dropIndex('assistant_i_gens_id');
-			$schema->dropTable('assistant_i_gens');
-		}
-		if($schema->hasTable('assistant_i_prompts')) {
-			$schema->getTable('assistant_i_prompts')->dropIndex('assistant_i_prompt_uid');
-			$schema->dropTable('assistant_i_prompts');
-		}
-		if($schema->hasTable('assistant_i_files')) {
-			$schema->getTable('assistant_i_files')->dropIndex('assistant_gen_id');
-			$schema->dropTable('assistant_i_files');
-		}
-		if($schema->hasTable('assistant_stale_gens')) {
-			$schema->getTable('assistant_stale_gens')->dropIndex('assistant_i_stale_gens_id');
-			$schema->dropTable('assistant_stale_gens');
-		}
-
-
-
 		if (!$schema->hasTable('assistant_i_prompts')) {
 			$table = $schema->createTable('assistant_i_prompts');
 			$table->addColumn('id', Types::BIGINT, [
@@ -66,7 +46,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 1000,
 			]);
-			$table->addColumn('timestamp', Types::INTEGER, [
+			$table->addColumn('timestamp', Types::BIGINT, [
 				'notnull' => true,
 			]);
 			$table->setPrimaryKey(['id']);
@@ -97,10 +77,10 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
 			]);
-			$table->addColumn('timestamp', Types::INTEGER, [
+			$table->addColumn('timestamp', Types::BIGINT, [
 				'notnull' => true,
 			]);
-			$table->addColumn('exp_gen_time', Types::INTEGER, [
+			$table->addColumn('exp_gen_time', Types::BIGINT, [
 				'notnull' => true,
 			]);
 			$table->setPrimaryKey(['id']);

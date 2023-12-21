@@ -332,6 +332,7 @@ export default {
 		z-index: 1;
 		opacity: 0.2;
 		transition: opacity 0.2s ease-in-out;
+		cursor: pointer;
 	}
 
 	.checkbox-container.hovering {
@@ -345,7 +346,7 @@ export default {
 		max-width: 100%;
 		height: 100%;
 		margin-top: 12px;
-		filter: grayscale(100%);
+		filter: none;
 		transition: filter 0.2s ease-in-out;
 	}
 

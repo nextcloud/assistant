@@ -34,7 +34,7 @@ class Text2ImageReferenceListener implements IEventListener {
 
 			// Double check that atleast one provider is registered
 			if ($this->manager->hasProviders()) {
-				Util::addScript(Application::APP_ID, Application::APP_ID . '-reference');
+				Util::addScript(Application::APP_ID, Application::APP_ID . '-imageGenerationReference');
 			}
 		} 
 		
