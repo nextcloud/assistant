@@ -17,6 +17,7 @@ const appId = 'assistant'
 webpackConfig.entry = {
 	imageGenerationPage: { import: path.join(__dirname, 'src', 'imageGenerationPage.js'), filename: appId + '-imageGenerationPage.js' },
 	imageGenerationReference: { import: path.join(__dirname, 'src', 'imageGenerationReference.js'), filename: appId + '-imageGenerationReference.js' },
+	textReference: { import: path.join(__dirname, 'src', 'textReference.js'), filename: appId + '-textReference.js' },
 	personalSettings: { import: path.join(__dirname, 'src', 'personalSettings.js'), filename: appId + '-personalSettings.js' },
 	adminSettings: { import: path.join(__dirname, 'src', 'adminSettings.js'), filename: appId + '-adminSettings.js' },
 	main: { import: path.join(__dirname, 'src', 'main.js'), filename: appId + '-main.js' },

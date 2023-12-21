@@ -18,5 +18,10 @@ return [
 		['name' => 'Text2Image#cancelGeneration', 'url' => '/i/cancel_generation', 'verb' => 'POST'],
 		['name' => 'Text2Image#setVisibilityOfImageFiles', 'url' => '/i/visibility/{imageGenId}', 'verb' => 'POST'],
 		['name' => 'Text2Image#notifyWhenReady', 'url' => '/i/notify/{imageGenId}', 'verb' => 'POST'],
+
+		['name' => 'FreePrompt#processPrompt', 'url' => '/f/process_prompt', 'verb' => 'POST'],
+		['name' => 'FreePrompt#getPromptHistory', 'url' => '/f/prompt_history', 'verb' => 'GET'],
+		['name' => 'FreePrompt#getOutputs', 'url' => '/f/get_outputs', 'verb' => 'GET'],
+		['name' => 'FreePrompt#cancelGeneration', 'url' => '/f/cancel_generation', 'verb' => 'POST'],
 	],
 ];

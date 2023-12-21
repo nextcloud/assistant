@@ -28,7 +28,6 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 		private ?string $userId
 	) {
 	}
-
 	/**
 	 * @inheritDoc
 	 */

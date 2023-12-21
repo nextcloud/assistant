@@ -9,7 +9,7 @@ import { getRequestToken } from '@nextcloud/auth'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
-registerCustomPickerElement('assistant', async (el, { providerId, accessible }) => {
+registerCustomPickerElement('assistant_image', async (el, { providerId, accessible }) => {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	Vue.mixin({ methods: { t, n } })
 	const { default: Text2ImageCustomPickerElement } = await import(/* webpackChunkName: "reference-picker-lazy" */'./views/Text2Image/Text2ImageCustomPickerElement.vue')

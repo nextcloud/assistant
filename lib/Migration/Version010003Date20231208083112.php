@@ -122,6 +122,28 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 			$table->addIndex(['image_gen_id'], 'assistant_i_stale_gens_id');
 		}
 
+		if (!$schema->hasTable('assistant_t_prompts')) {
+			$table = $schema->createTable('assistant_t_prompts');
+			$table->addColumn('id', Types::BIGINT, [
+				'autoincrement' => true,
+				'notnull' => true,
+			]);
+			$table->addColumn('user_id', Types::STRING, [
+				'notnull' => true,
+				'length' => 64,
+			]);
+			$table->addColumn('value', Types::STRING, [
+				'notnull' => true,
+				'length' => 1000,
+			]);
+			$table->addColumn('timestamp', Types::INTEGER, [
+				'notnull' => true,
+			]);
+			$table->setPrimaryKey(['id']);
+			$table->addIndex(['user_id'], 'assistant_t_prompts_uid');
+			$table->addIndex(['user_id', 'timestamp'], 'assistant_t_prompts_uid_ts');
+		}
+
 		return $schema;
 	}
 
