@@ -332,12 +332,17 @@ export default {
 		z-index: 1;
 		opacity: 0.2;
 		transition: opacity 0.2s ease-in-out;
-		cursor: pointer;
+		> input {
+			cursor: pointer;
+		}
 	}
-
 	.checkbox-container.hovering {
 		opacity: 1;
 	}
+
+	/*.checkbox {
+		cursor: pointer;
+	}*/
 
 	.image-wrapper {
 		display: flex;
