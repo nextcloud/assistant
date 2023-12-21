@@ -89,7 +89,7 @@ class Notifier implements INotifier {
 					? $l->t('Task for "%1$s" has finished', [$schedulingAppName])
 					: $l->t('"%1$s" task for "%2$s" has finished', [$taskTypeName, $schedulingAppName]);
 				$content = $l->t('Input: %1$s', [$params['input']]);
-				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTextProcessingTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 				$notification
@@ -114,7 +114,7 @@ class Notifier implements INotifier {
 					? $l->t('Task for "%1$s" has failed', [$schedulingAppName])
 					: $l->t('"%1$s" task for "%2$s" has failed', [$taskTypeName, $schedulingAppName]);
 				$content = $l->t('Input: %1$s', [$params['input']]);
-				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTaskResultPage', ['taskId' => $params['id']]);
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTextProcessingTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
 
 				$notification

@@ -6,9 +6,9 @@ return [
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 
-		['name' => 'assistant#getTaskResultPage', 'url' => '/t/{taskId}', 'verb' => 'GET'],
-		['name' => 'assistant#runTask', 'url' => '/run', 'verb' => 'POST'],
-		['name' => 'assistant#runOrScheduleTask', 'url' => '/run-or-schedule', 'verb' => 'POST'],
+		['name' => 'assistant#getTextProcessingTaskResultPage', 'url' => '/t/{taskId}', 'verb' => 'GET'],
+		['name' => 'assistant#runTextProcessingTask', 'url' => '/run', 'verb' => 'POST'],
+		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/run-or-schedule', 'verb' => 'POST'],
 
 		['name' => 'Text2Image#processPrompt', 'url' => '/i/process_prompt', 'verb' => 'POST'],
 		['name' => 'Text2Image#getPromptHistory', 'url' => '/i/prompt_history', 'verb' => 'GET'],

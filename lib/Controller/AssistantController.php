@@ -34,7 +34,7 @@ class AssistantController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[BruteForceProtection(action: 'taskResultPage')]
-	public function getTaskResultPage(int $taskId): TemplateResponse {
+	public function getTextProcessingTaskResultPage(int $taskId): TemplateResponse {
 		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
 		if ($task === null) {
 			$response = new TemplateResponse(
@@ -59,7 +59,7 @@ class AssistantController extends Controller {
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function runTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+	public function runTextProcessingTask(string $type, string $input, string $appId, string $identifier): DataResponse {
 		try {
 			$task = $this->assistantService->runTextProcessingTask($type, $input, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
@@ -78,7 +78,7 @@ class AssistantController extends Controller {
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function runOrScheduleTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+	public function runOrScheduleTextProcessingTask(string $type, string $input, string $appId, string $identifier): DataResponse {
 		try {
 			$task = $this->assistantService->runOrScheduleTextProcessingTask($type, $input, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
