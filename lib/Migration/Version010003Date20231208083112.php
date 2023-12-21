@@ -48,6 +48,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 			]);
 			$table->addColumn('timestamp', Types::BIGINT, [
 				'notnull' => true,
+				'unsigned' => true,
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['user_id'], 'assistant_i_prompt_uid');
@@ -79,9 +80,11 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 			]);
 			$table->addColumn('timestamp', Types::BIGINT, [
 				'notnull' => true,
+				'unsigned' => true,
 			]);
 			$table->addColumn('exp_gen_time', Types::BIGINT, [
 				'notnull' => true,
+				'unsigned' => true,
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['image_gen_id'], 'assistant_i_gens_id');
