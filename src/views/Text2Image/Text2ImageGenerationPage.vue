@@ -13,8 +13,14 @@
 				<div class="button-wrapper">
 					<NcButton
 						type="primary"
-						@click="copyToClipboard">
+						:aria-label="t('assistant', 'Copy the link to this generation to clipboard')"
+						:title="t('assistant', 'Copy link to clipboard')"
+						@click="onCopy">
 						{{ t('assistant', 'Copy link to clipboard') }}
+						<template #icon>
+							<ClipboardCheckOutlineIcon v-if="copied" />
+							<ContentCopyIcon v-else />
+						</template>
 					</NcButton>
 				</div>
 			</div>
@@ -25,8 +31,17 @@
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
+import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+
 import Text2ImageDisplay from '../../components/Text2Image/Text2ImageDisplay.vue'
 import { generateUrl } from '@nextcloud/router'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import VueClipboard from 'vue-clipboard2'
+import Vue from 'vue'
+
+Vue.use(VueClipboard)
 
 export default {
 	name: 'Text2ImageGenerationPage',
@@ -35,6 +50,8 @@ export default {
 		NcAppContent,
 		NcButton,
 		Text2ImageDisplay,
+		ContentCopyIcon,
+		ClipboardCheckOutlineIcon,
 	},
 	props: {
 		imageGenId: {
@@ -49,6 +66,8 @@ export default {
 	data() {
 		return {
 			generationUrl: null,
+			generationRemoteUrl: null,
+			copied: false,
 		}
 	},
 	mounted() {
@@ -61,8 +80,18 @@ export default {
 		generateUrl() {
 			this.generationUrl = generateUrl('/apps/assistant/i/info/' + this.imageGenId)
 		},
-		copyToClipboard() {
-			navigator.clipboard.writeText(this.generationUrl)
+		async onCopy() {
+			try {
+				await this.$copyText(this.generationUrl)
+				this.copied = true
+				showSuccess(t('assistant', 'Url copied to clipboard'))
+				setTimeout(() => {
+					this.copied = false
+				}, 5000)
+			} catch (error) {
+				console.error(error)
+				showError(t('assistant', 'Url could not be copied to clipboard'))
+			}
 		},
 	},
 }
