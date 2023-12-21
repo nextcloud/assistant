@@ -24,6 +24,20 @@
 					</div>
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
+					:checked="state.free_prompt_picker_enabled"
+					:disabled="!state.text_processing_available"
+					@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+					<div class="checkbox-text">
+						{{ t('assistant', 'Free prompt smart picker') }}
+						<div v-if="!state.text_processing_available" class="checkbox-text">
+							<InformationOutlineIcon class="icon" />
+							<span>
+								{{ t('assistant', 'To enable this feature, please install an AI text processing provider.') }}
+							</span>
+						</div>
+					</div>
+				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
 					:checked="state.text_to_image_picker_enabled"
 					:disabled="!state.text_to_image_picker_available"
 					@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">

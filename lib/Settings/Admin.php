@@ -28,6 +28,7 @@ class Admin implements ISettings {
 		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders();
 		$textToImagePickerEnabled = $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$maxImageGenerationIdleTime = $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
+		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 
 		$adminConfig = [
 			'text_processing_available' => $textProcessingAvailable,
@@ -35,6 +36,7 @@ class Admin implements ISettings {
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
 			'max_image_generation_idle_time' => $maxImageGenerationIdleTime,
+			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

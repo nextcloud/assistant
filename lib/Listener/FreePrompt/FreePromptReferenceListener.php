@@ -38,26 +38,13 @@ class FreePromptReferenceListener implements IEventListener {
 			return;
 		}
 
-		$pickerEnabled = true;
-		
-		$taskTypes = $this->textProcessingManager->getAvailableTaskTypes();
-		if (!in_array(FreePromptTaskType::class, $taskTypes)) {
-			$this->logger->debug('FreePromptTaskType not available');
-			$pickerEnabled = false;
+		if ($this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1' &&
+			$this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1') {
+				
+			// Double check that atleast one provider is registered
+			if ($this->textProcessingManager->hasProviders()) {
+				Util::addScript(Application::APP_ID, Application::APP_ID . '-textGenerationReference');
+			}
 		}
-
-		if ($this->userId === null) {
-			$isAdmin = false;
-		} else {
-			$isAdmin = $this->iGroupManager->isAdmin($this->userId);
-		}
-
-		$features = [
-			'picker_enabled' => $pickerEnabled,
-			'is_admin' => $isAdmin,
-		];
-
-		$this->initialState->provideInitialState('text-features', $features);
-		Util::addScript(Application::APP_ID, Application::APP_ID . '-textReference');
 	}
 }

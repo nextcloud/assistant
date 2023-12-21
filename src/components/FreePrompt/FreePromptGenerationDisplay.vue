@@ -4,6 +4,8 @@
 <template>
 	<div class="display-container">
 		<NcRichContenteditable v-if="result !== null && result !== ''"
+			id="free-prompt-output"
+			ref="output"
 			:value.sync="result"
 			class="editable-preview"
 			:multiline="true"
@@ -32,10 +34,22 @@
 			</div>
 		</div>
 		<div v-if="!loading" class="button-wrapper">
-			<NcButton :disabled="result === null || loading" type="secondary" @click="copyToClipboard">
-				{{ t('assistant', 'Copy text to clipboard') }}
+			<NcButton :disabled="result === null || loading"
+				type="secondary"
+				:aria-label="t('assistant', 'Copy text output to clipboard')"
+				:title="t('assistant', 'Copy text')"
+				@click="onCopy">
+				{{ t('assistant', 'Copy text') }}
+				<template #icon>
+					<ClipboardCheckOutlineIcon v-if="copied" />
+					<ContentCopyIcon v-else />
+				</template>
 			</NcButton>
-			<NcButton :disabled="result === originalResult || loading" type="secondary" @click="delayedReset">
+			<NcButton :disabled="result === originalResult || loading"
+				type="secondary"
+				:aria-label="t('assistant', 'Reset manual edits to text output')"
+				:title="t('assistant', 'Reset')"
+				@click="delayedReset">
 				{{ t('assistant', 'Reset') }}
 			</NcButton>
 			<NcCheckboxRadioSwitch
@@ -49,6 +63,8 @@
 </template>
 
 <script>
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
+import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
@@ -57,6 +73,10 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import humanizeDuration from 'humanize-duration'
+import VueClipboard from 'vue-clipboard2'
+import Vue from 'vue'
+
+Vue.use(VueClipboard)
 
 export default {
 	name: 'FreePromptGenerationDisplay',
@@ -66,6 +86,8 @@ export default {
 		NcRichContenteditable,
 		NcButton,
 		NcCheckboxRadioSwitch,
+		ContentCopyIcon,
+		ClipboardCheckOutlineIcon,
 	},
 
 	props: {
@@ -80,6 +102,7 @@ export default {
 			originalResponse: null,
 			originalResult: null,
 			result: null,
+			copied: false,
 			loading: true,
 			processing: false,
 			bgProcessingScheduled: false,
@@ -198,8 +221,18 @@ export default {
 			}, 0)
 		},
 
-		copyToClipboard() {
-			navigator.clipboard.writeText(this.result)
+		async onCopy() {
+			try {
+				const container = this.$refs.output.$el
+				await this.$copyText(this.result.trim(), container)
+				this.copied = true
+				setTimeout(() => {
+					this.copied = false
+				}, 5000)
+			} catch (error) {
+				console.error(error)
+				showError(t('assistant', 'Result could not be copied to clipboard'))
+			}
 		},
 
 		processCompletion(response) {

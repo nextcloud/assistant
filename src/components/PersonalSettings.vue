@@ -5,12 +5,18 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
-			<NcCheckboxRadioSwitch v-if="state.text_processing_available"
+			<NcCheckboxRadioSwitch v-if="state.assistant_available"
 				:checked="state.assistant_enabled"
-				:disabled="!state.assistant_available"
 				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Top-right assistant') }}
+				</div>
+			</NcCheckboxRadioSwitch>
+			<NcCheckboxRadioSwitch v-if="state.free_prompt_picker_available"
+				:checked="state.free_prompt_picker_enabled"
+				@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+				<div class="checkbox-text">
+					{{ t('assistant', 'Free prompt smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"

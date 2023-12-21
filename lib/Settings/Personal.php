@@ -24,7 +24,9 @@ class Personal implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$textProcessingAvailable = $this->textProcessingManager->hasProviders() ?
+		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
+
+		$assistantAvailable = $textProcessingAvailable ?
 			$this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1' :
 			false;
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
@@ -33,12 +35,19 @@ class Personal implements ISettings {
 			$this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1' :
 			false;
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+
+		$freePromptPickerAvailable = $textProcessingAvailable ?
+			$this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1' :
+			false;
+		$freePromptPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		
 		$userConfig = [
-			'text_processing_available' => $textProcessingAvailable,
+			'assistant_available' => $assistantAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
+			'free_prompt_picker_available' => $freePromptPickerAvailable,
+			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 		];
 		$this->initialStateService->provideInitialState('config', $userConfig);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
