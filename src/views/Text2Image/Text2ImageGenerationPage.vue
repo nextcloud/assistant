@@ -7,8 +7,8 @@
 				<h2>
 					{{ t('assistant', 'Image generation') }}
 				</h2>
-				<div v-if="generationUrl !== null" class="image">
-					<Text2ImageDisplay :src="generationUrl" :force-edit-mode="forceEditMode" />
+				<div v-if="generationInfoUrl !== null" class="image">
+					<Text2ImageDisplay :src="generationInfoUrl" :force-edit-mode="forceEditMode" />
 				</div>
 				<div class="button-wrapper">
 					<NcButton
@@ -65,7 +65,7 @@ export default {
 	},
 	data() {
 		return {
-			generationUrl: null,
+			generationInfoUrl: null,
 			generationRemoteUrl: null,
 			copied: false,
 		}
@@ -78,19 +78,19 @@ export default {
 			this.$emit('close')
 		},
 		generateUrl() {
-			this.generationUrl = generateUrl('/apps/assistant/i/info/' + this.imageGenId)
+			this.generationInfoUrl = generateUrl('/apps/assistant/i/info/' + this.imageGenId)
 		},
 		async onCopy() {
 			try {
-				await this.$copyText(this.generationUrl)
+				await this.$copyText(window.location.href)
 				this.copied = true
-				showSuccess(t('assistant', 'Url copied to clipboard'))
+				showSuccess(t('assistant', 'Image link copied to clipboard'))
 				setTimeout(() => {
 					this.copied = false
 				}, 5000)
 			} catch (error) {
 				console.error(error)
-				showError(t('assistant', 'Url could not be copied to clipboard'))
+				showError(t('assistant', 'Image link could not be copied to clipboard'))
 			}
 		},
 	},
