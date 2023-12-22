@@ -125,6 +125,7 @@ export default {
 			completionNumber: 1,
 			prompts: null,
 			notify: false,
+			submitted: false,
 			result: null,
 			scheduled: false,
 		}
@@ -150,7 +151,7 @@ export default {
 	},
 
 	beforeDestroy() {
-		if (this.genId !== null && !this.notify) {
+		if (!this.notify && !this.submitted) {
 			this.cancelGeneration()
 		}
 	},
@@ -176,6 +177,7 @@ export default {
 				})
 		},
 		submit() {
+			this.submitted = true
 			this.$emit('submit', this.result.trim())
 		},
 		onError() {
@@ -233,6 +235,9 @@ export default {
 				})
 		},
 		cancelGeneration() {
+			if (this.genId === null) {
+				return
+			}
 			const params = {
 				genId: this.genId,
 			}
