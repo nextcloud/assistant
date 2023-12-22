@@ -18,21 +18,21 @@
 						<div v-if="!state.text_processing_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>
-								{{ t('assistant', 'To enable this feature, please install an AI text processing provider.') }}
+								{{ t('assistant', 'To enable this feature, please install any AI text processing provider.') }}
 							</span>
 						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					:checked="state.free_prompt_picker_enabled"
-					:disabled="!state.text_processing_available"
+					:disabled="!state.free_prompt_task_type_available"
 					@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Free prompt smart picker') }}
-						<div v-if="!state.text_processing_available" class="checkbox-text">
+						<div v-if="!state.free_prompt_task_type_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>
-								{{ t('assistant', 'To enable this feature, please install an AI text processing provider.') }}
+								{{ t('assistant', 'To enable this feature, please install an AI text processing provider for the free prompt task type.') }}
 							</span>
 						</div>
 					</div>

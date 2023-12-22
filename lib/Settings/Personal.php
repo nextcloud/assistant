@@ -8,6 +8,7 @@ use OCP\Settings\ISettings;
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\TextToImage\IManager;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
+use OCP\TextProcessing\FreePromptTaskType;
 
 class Personal implements ISettings {
 
@@ -25,6 +26,7 @@ class Personal implements ISettings {
 	 */
 	public function getForm(): TemplateResponse {
 		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
+		$freePromptTaskTypeAvailable = in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes());
 
 		$assistantAvailable = $textProcessingAvailable ?
 			$this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1' :
@@ -36,7 +38,7 @@ class Personal implements ISettings {
 			false;
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
-		$freePromptPickerAvailable = $textProcessingAvailable ?
+		$freePromptPickerAvailable = $freePromptTaskTypeAvailable ?
 			$this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1' :
 			false;
 		$freePromptPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';

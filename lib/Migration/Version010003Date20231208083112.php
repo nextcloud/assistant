@@ -136,8 +136,9 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 1000,
 			]);
-			$table->addColumn('timestamp', Types::INTEGER, [
+			$table->addColumn('timestamp', Types::BIGINT, [
 				'notnull' => true,
+				'unsigned' => true,
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['user_id'], 'assistant_t_prompts_uid');
