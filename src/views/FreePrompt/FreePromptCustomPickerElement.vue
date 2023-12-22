@@ -13,6 +13,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 					ref="assistant-search-input"
 					:value.sync="query"
 					:label="inputPlaceholder"
+					placeholder=""
 					:disabled="loading"
 					:show-trailing-button="!!query"
 					@keydown.enter="generate"
@@ -121,7 +122,7 @@ export default {
 			loading: false,
 			error: false,
 			models: [],
-			inputPlaceholder: t('assistant', 'What is the matter with putting pineapple on pizza?'),
+			inputPlaceholder: t('assistant', 'Enter your question or task here:'),
 			completionNumber: 1,
 			prompts: null,
 			notify: false,
