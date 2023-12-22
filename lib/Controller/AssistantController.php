@@ -34,8 +34,8 @@ class AssistantController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[BruteForceProtection(action: 'taskResultPage')]
-	public function getTaskResultPage(int $taskId): TemplateResponse {
-		$task = $this->assistantService->getTask($this->userId, $taskId);
+	public function getTextProcessingTaskResultPage(int $taskId): TemplateResponse {
+		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
 		if ($task === null) {
 			$response = new TemplateResponse(
 				'',
@@ -59,9 +59,9 @@ class AssistantController extends Controller {
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function runTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+	public function runTextProcessingTask(string $type, string $input, string $appId, string $identifier): DataResponse {
 		try {
-			$task = $this->assistantService->runTask($type, $input, $appId, $this->userId, $identifier);
+			$task = $this->assistantService->runTextProcessingTask($type, $input, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
 			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}
@@ -78,9 +78,9 @@ class AssistantController extends Controller {
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function runOrScheduleTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+	public function runOrScheduleTextProcessingTask(string $type, string $input, string $appId, string $identifier): DataResponse {
 		try {
-			$task = $this->assistantService->runOrScheduleTask($type, $input, $appId, $this->userId, $identifier);
+			$task = $this->assistantService->runOrScheduleTextProcessingTask($type, $input, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
 			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}

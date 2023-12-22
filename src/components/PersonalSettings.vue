@@ -5,17 +5,33 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
-			<NcCheckboxRadioSwitch
+			<NcCheckboxRadioSwitch v-if="state.text_processing_available"
 				:checked="state.assistant_enabled"
 				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
-				{{ t('assistant', 'Top-right assistant') }}
+				<div class="checkbox-text">
+					{{ t('assistant', 'Top-right assistant') }}
+				</div>
 			</NcCheckboxRadioSwitch>
+			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
+				:checked="state.text_to_image_picker_enabled"
+				@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+				<div class="checkbox-text">
+					{{ t('assistant', 'Text-to-image smart picker') }}
+				</div>
+			</NcCheckboxRadioSwitch>
+			<div v-if="noProvidersAvailable" class="settings-hint">
+				<InformationOutlineIcon class="icon" />
+				<span>
+					{{ t('assistant', 'No suitable providers are available. They must first be enabled by your administrator.') }}
+				</span>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 
@@ -30,6 +46,7 @@ export default {
 	components: {
 		AssistantIcon,
 		NcCheckboxRadioSwitch,
+		InformationOutlineIcon,
 	},
 
 	props: [],
@@ -41,6 +58,10 @@ export default {
 	},
 
 	computed: {
+		noProvidersAvailable() {
+			return this.state.text_to_image_picker_available === false
+				&& this.state.text_processing_available === false
+		},
 	},
 
 	watch: {
@@ -87,6 +108,16 @@ export default {
 		margin-top: 12px;
 		.icon {
 			margin-right: 4px;
+		}
+	}
+
+	.checkbox-text {
+		display: flex;
+		flex-direction: row;
+
+		.icon {
+			margin-right: 8px;
+			margin-left: 24px;
 		}
 	}
 
