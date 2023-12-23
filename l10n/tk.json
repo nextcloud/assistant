@@ -1,5 +1,6 @@
 { "translations": {
     "Copy" : "Göçüriň",
-    "Close" : "Ýap"
+    "Close" : "Ýap",
+    "Send" : "Iber"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

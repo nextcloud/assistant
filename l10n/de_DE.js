@@ -38,6 +38,8 @@ OC.L10N.register(
     "You will receive a notification when it has finished" : "Sie erhalten eine Benachrichtigung, wenn der Vorgang abgeschlossen ist",
     "Your task has been scheduled" : "Ihre Aufgabe wurde geplant",
     "Failed to schedule your task" : "Die Planung Ihrer Aufgabe ist fehlgeschlagen",
+    "Number of results" : "Anzahl der Ergebnisse",
+    "Image generation cancel error" : "Fehler beim Abbrechen der Bilderstellung",
     "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt",
     "Failed to schedule the task" : "Die Planung der Aufgabe ist fehlgeschlagen"
 },

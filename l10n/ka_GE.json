@@ -1,6 +1,8 @@
 { "translations": {
     "Result" : "შედეგი",
     "Try again" : "სცადეთ ახლიდან",
-    "Close" : "დახურვა"
+    "Close" : "დახურვა",
+    "Preview" : "წინასწარი ჩვენება",
+    "Send" : "გაგზავნა"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

@@ -1,5 +1,9 @@
 { "translations": {
+    "View" : "มุมมอง",
     "Copy" : "คัดลอก",
-    "Close" : "ปิด"
+    "Close" : "ปิด",
+    "Preview" : "ตัวอย่าง",
+    "Advanced options" : "ตัวเลือกขั้นสูง",
+    "Send" : "ส่ง"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

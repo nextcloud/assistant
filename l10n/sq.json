@@ -1,7 +1,11 @@
 { "translations": {
+    "View" : "Shiko",
     "Result" : "Rezultatet",
     "Copy" : "Kopjoni",
     "Try again" : "Provo përsëri",
-    "Close" : "Mbylleni"
+    "Close" : "Mbylleni",
+    "Preview" : "Parapamje ",
+    "Advanced options" : "Opsione të avancuara",
+    "Send" : "Dërgo"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

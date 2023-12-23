@@ -3,6 +3,9 @@
     "Result" : "Resultado",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",
-    "Close" : "Cerrar"
+    "Close" : "Cerrar",
+    "Preview" : "Previsualizar",
+    "Show/hide advanced options" : "Mostrar/ocultar opciones avanzadas",
+    "Send" : "Enviar"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

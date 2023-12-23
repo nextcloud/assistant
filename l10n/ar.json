@@ -36,6 +36,7 @@
     "You will receive a notification when it has finished" : "سوف تستلم إشعاراً عند الانتهاء",
     "Your task has been scheduled" : "مُهمَّتك تمّت جدولتها",
     "Failed to schedule your task" : "تعذّرت جدولة مُهِمّتك",
+    "Number of results" : "عدد النتائج",
     "This task does not exist or has been cleaned up" : "هذه المهمة غير موجودة أو تمّ محوُها",
     "Failed to schedule the task" : "تعذّرت جدولة المُهِمّة"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"

@@ -38,6 +38,7 @@ OC.L10N.register(
     "You will receive a notification when it has finished" : "سوف تستلم إشعاراً عند الانتهاء",
     "Your task has been scheduled" : "مُهمَّتك تمّت جدولتها",
     "Failed to schedule your task" : "تعذّرت جدولة مُهِمّتك",
+    "Number of results" : "عدد النتائج",
     "This task does not exist or has been cleaned up" : "هذه المهمة غير موجودة أو تمّ محوُها",
     "Failed to schedule the task" : "تعذّرت جدولة المُهِمّة"
 },

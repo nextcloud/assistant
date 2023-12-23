@@ -38,6 +38,8 @@ OC.L10N.register(
     "You will receive a notification when it has finished" : "You will receive a notification when it has finished",
     "Your task has been scheduled" : "Your task has been scheduled",
     "Failed to schedule your task" : "Failed to schedule your task",
+    "Number of results" : "Number of results",
+    "Image generation cancel error" : "Image generation cancel error",
     "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
     "Failed to schedule the task" : "Failed to schedule the task"
 },

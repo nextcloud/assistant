@@ -1,5 +1,6 @@
 { "translations": {
     "Copy" : "Kopier",
-    "Close" : "Lat att"
+    "Close" : "Lat att",
+    "Send" : "Send"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
