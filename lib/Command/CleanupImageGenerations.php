@@ -23,7 +23,7 @@ class CleanupImageGenerations extends Command {
 	}
 
 	protected function configure() {
-		$maxIdleTimeSetting = intval($this->config->getUserValue(
+		$maxIdleTimeSetting = intval($this->config->getAppValue(
 			Application::APP_ID,
 			'max_generation_idle_time',
 			strval(Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME)

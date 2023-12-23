@@ -8,6 +8,7 @@ use OCP\Settings\ISettings;
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\TextToImage\IManager as ITextToImageManager;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
+use OCP\TextProcessing\FreePromptTaskType;
 
 class Admin implements ISettings {
 
@@ -24,10 +25,12 @@ class Admin implements ISettings {
 	 */
 	public function getForm(): TemplateResponse {
 		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
+		$freePromptTaskTypeAvailable = in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes());
 		$assistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders();
 		$textToImagePickerEnabled = $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$maxImageGenerationIdleTime = $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
+		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 
 		$adminConfig = [
 			'text_processing_available' => $textProcessingAvailable,
@@ -35,6 +38,8 @@ class Admin implements ISettings {
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
 			'max_image_generation_idle_time' => $maxImageGenerationIdleTime,
+			'free_prompt_task_type_available' => $freePromptTaskTypeAvailable,
+			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

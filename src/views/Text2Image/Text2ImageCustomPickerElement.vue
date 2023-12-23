@@ -233,6 +233,9 @@ export default {
 			}
 		},
 		cancelGeneration() {
+			if (this.result === null) {
+				return
+			}
 			const url = generateUrl('/apps/assistant/i/cancel_generation')
 			axios.post(url, { imageGenId: this.result.image_gen_id })
 				.catch((error) => {
@@ -246,6 +249,7 @@ export default {
 						),
 					)
 				})
+			this.result = null
 		},
 		generate() {
 

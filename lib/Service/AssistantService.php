@@ -37,7 +37,7 @@ class AssistantService {
 			'id' => $task->getId(),
 			'input' => $task->getInput(),
 			'target' => $target,
-			'actionLabel' => $actionLabel,			
+			'actionLabel' => $actionLabel,
 		];
 		if ($task instanceof TextToImageTask) {
 			$params['taskType'] = Application::TASK_TYPE_TEXT_TO_IMAGE;
