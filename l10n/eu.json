@@ -7,6 +7,7 @@
     "Task for \"%1$s\" has failed" : "\"%1$s\"-rako zereginak huts egin du",
     "\"%1$s\" task for \"%2$s\" has failed" : "\"%2$s\" -rako \"%1$s\" zereginak huts egin du",
     "View task" : "Ikusi zeregina",
+    "AI image generation" : "IA irudi sorpena",
     "View" : "Ikusi",
     "Artificial Intelligence" : "Adimen artifiziala",
     "Process and transform text" : "Testua prozesatu eta eraldatu",
@@ -25,10 +26,14 @@
     "Close Nextcloud Assistant" : "Itxi Nextcloud Assistant",
     "Assistant options saved" : "Laguntzailearen aukerak gorde dira",
     "Failed to save assistant options" : "Ezin izan dira gorde laguntzailearen aukerak",
+    "Generated image" : "Sortutako irudia",
     "Failed to schedule your task" : "Ezin izan da zure zeregina programatu",
     "Preview" : "Aurrebista",
     "Show/hide advanced options" : "Erakutsi/ezkutatu aukera aurreratuak",
+    "Advanced options" : "Ezarpen aurreratuak",
     "Send" : "Bidali",
+    "Regenerate" : "Berriro sortu",
+    "Copy link to clipboard" : "Kopiatu esteka arbelera",
     "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da",
     "Failed to schedule the task" : "Ezin izan da zeregina programatu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

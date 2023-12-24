@@ -1,0 +1,9 @@
+{ "translations": {
+    "View" : "Tampilan",
+    "Copy" : "Salin",
+    "Close" : "Tutup",
+    "Preview" : "Pratinjau",
+    "Advanced options" : "Opsi lanjutan",
+    "Send" : "Kirim"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

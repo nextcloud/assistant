@@ -9,6 +9,7 @@ OC.L10N.register(
     "Close" : "Loka",
     "Image generation" : "Gerð mynda",
     "Preview" : "Forskoðun",
+    "Advanced options" : "Ítarlegir valkostir",
     "Send" : "Senda",
     "Copy link to clipboard" : "Afrita tengil á klippispjald"
 },

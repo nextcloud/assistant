@@ -10,6 +10,7 @@ OC.L10N.register(
     "Close" : "Chiudi",
     "Image generation" : "Generazione di immagini",
     "Preview" : "Anteprima",
+    "Advanced options" : "Opzioni avanzate",
     "Send" : "Invia",
     "Copy link to clipboard" : "Copia collegamento negli appunti"
 },

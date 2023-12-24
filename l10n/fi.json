@@ -8,6 +8,8 @@
     "Close" : "Sulje",
     "Preview" : "Esikatselu",
     "Show/hide advanced options" : "Näytä/piilota lisäasetukset",
-    "Send" : "Lähetä"
+    "Advanced options" : "Lisävalinnat",
+    "Send" : "Lähetä",
+    "Copy link to clipboard" : "Kopioi linkki leikepöydälle"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

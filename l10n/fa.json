@@ -7,6 +7,7 @@
     "Task for \"%1$s\" has failed" : "کار برای \"%1$s\" ناموفق بود",
     "\"%1$s\" task for \"%2$s\" has failed" : "%1$s\"وظیفه برای \"%2$s\" ناموفق بود",
     "View task" : "مشاهده کار",
+    "AI image generation" : "AI image generation",
     "View" : "نمایش",
     "Artificial Intelligence" : "Artificial Intelligence",
     "Process and transform text" : "پردازش و تبدیل متن",
@@ -26,11 +27,15 @@
     "Assistant options saved" : "گزینه های دستیار ذخیره شد",
     "Failed to save assistant options" : "گزینه های دستیار ذخیره نشد",
     "Image generation" : "Image generation",
+    "Generated image" : "Generated image",
     "Failed to schedule your task" : "برنامه ریزی کار شما انجام نشد",
     "Preview" : "پیش‌نمایش",
     "Show/hide advanced options" : "Show/hide advanced options",
+    "Advanced options" : "گزینه‌های پیش‌رفته",
     "Send" : "ارسال",
     "Include the prompt in the result" : "Include the prompt in the result",
+    "Regenerate" : "Regenerate",
+    "Copy link to clipboard" : "Copy link to clipboard",
     "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است",
     "Failed to schedule the task" : "زمان‌بندی کار انجام نشد"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"

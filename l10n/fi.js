@@ -10,6 +10,8 @@ OC.L10N.register(
     "Close" : "Sulje",
     "Preview" : "Esikatselu",
     "Show/hide advanced options" : "Näytä/piilota lisäasetukset",
-    "Send" : "Lähetä"
+    "Advanced options" : "Lisävalinnat",
+    "Send" : "Lähetä",
+    "Copy link to clipboard" : "Kopioi linkki leikepöydälle"
 },
 "nplurals=2; plural=(n != 1);");
