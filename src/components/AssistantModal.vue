@@ -32,8 +32,10 @@
 					:output="output"
 					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
+					:action-buttons="actionButtons"
 					@submit="onSubmit"
-					@sync-submit="onSyncSubmit" />
+					@sync-submit="onSyncSubmit"
+					@action-button-clicked="onActionButtonClicked" />
 			</div>
 		</div>
 	</NcModal>
@@ -93,6 +95,10 @@ export default {
 			type: Boolean,
 			required: true,
 		},
+		actionButtons: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	emits: [
 		'cancel',
@@ -134,6 +140,9 @@ export default {
 		},
 		onCancelNSchedule() {
 			this.$emit('cancel-sync-n-schedule')
+		},
+		onActionButtonClicked(data) {
+			this.$emit('action-button-clicked', data)
 		},
 	},
 }

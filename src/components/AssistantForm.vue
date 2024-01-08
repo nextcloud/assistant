@@ -57,8 +57,7 @@
 				:type="submitButtonType"
 				class="submit-button"
 				:disabled="!canSubmit"
-				:aria-label="t('assistant', 'Run an assistant task')"
-				:title="t('assistant', 'Run')"
+				:title="t('assistant', 'Run a task')"
 				@click="onSyncSubmit">
 				{{ syncSubmitButtonLabel }}
 				<template #icon>
@@ -83,8 +82,7 @@
 				v-if="showCopy"
 				type="primary"
 				class="copy-button"
-				:aria-label="t('assistant', 'Copy task output')"
-				:title="t('assistant', 'Copy')"
+				:title="t('assistant', 'Copy output')"
 				@click="onCopy">
 				{{ t('assistant', 'Copy') }}
 				<template #icon>
@@ -92,6 +90,20 @@
 					<ContentCopyIcon v-else />
 				</template>
 			</NcButton>
+			<div v-if="showCopy"
+				class="action-buttons">
+				<NcButton
+					v-for="(b, i) in actionButtons"
+					:key="i"
+					:type="b.type ?? 'secondary'"
+					:title="b.title"
+					@click="onActionButtonClick(b)">
+					{{ b.label }}
+					<template v-if="b.iconSvg" #icon>
+						<NcIconSvgWrapper :svg="b.iconSvg" />
+					</template>
+				</NcButton>
+			</div>
 		</div>
 	</div>
 </template>
@@ -105,6 +117,7 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
+import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 
 import TaskTypeSelect from './TaskTypeSelect.vue'
 
@@ -125,6 +138,7 @@ export default {
 		NcButton,
 		NcRichContenteditable,
 		NcLoadingIcon,
+		NcIconSvgWrapper,
 		CreationIcon,
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
@@ -147,10 +161,15 @@ export default {
 			type: [String, null],
 			default: null,
 		},
+		actionButtons: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	emits: [
 		'sync-submit',
 		'submit',
+		'action-button-clicked',
 	],
 	data() {
 		return {
@@ -232,6 +251,9 @@ export default {
 				showError(t('assistant', 'Result could not be copied to clipboard'))
 			}
 		},
+		onActionButtonClick(button) {
+			this.$emit('action-button-clicked', { button, output: this.myOutput.trim() })
+		},
 	},
 }
 </script>
@@ -305,8 +327,15 @@ export default {
 	.footer {
 		width: 100%;
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: end;
 		gap: 4px;
+		.action-buttons {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: end;
+			gap: 4px;
+		}
 	}
 
 	.success-icon {
