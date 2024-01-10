@@ -11,7 +11,21 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
  *  appId: 'my_app_id',
  *  identifier: 'my task identifier',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
- *  input: 'count to 3'
+ *  input: 'count to 3',
+ *  actionButtons: [
+ *    {
+ *      label: 'Label 1',
+ *      title: 'Title 1',
+ *      type: 'warning',
+ *      iconSvg: cogSvg,
+ *      onClick: (output) => { console.debug('first button clicked', output) },
+ *    },
+ *    {
+ *      label: 'Label 2',
+ *      title: 'Title 2',
+ *      onClick: (output) => { console.debug('second button clicked', output) },
+ *    },
+ *  ],
  * }).then(r => {console.debug('scheduled task', r.data.ocs.data.task)})
  *
  * @param {object} params parameters for the assistant
@@ -20,9 +34,14 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
  * @param {string} params.taskType the task type class
  * @param {string} params.input optional initial input text
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
+ * @param {boolean} params.closeOnResult If true, the modal will be closed when getting a sync result
+ * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form (only if closeOnResult is false)
  * @return {Promise<unknown>}
  */
-export async function openAssistantForm({ appId, identifier = '', taskType = null, input = '', isInsideViewer = undefined }) {
+export async function openAssistantForm({
+	appId, identifier = '', taskType = null, input = '',
+	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
+}) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -44,8 +63,10 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				selectedTaskTypeId,
 				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
+				actionButtons,
 			},
 		}).$mount(modalElement)
+		let lastTask = null
 
 		view.$on('cancel', () => {
 			view.$destroy()
@@ -56,7 +77,9 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				.then((response) => {
 					view.input = data.input
 					view.showScheduleConfirmation = true
-					resolve(response.data?.ocs?.data?.task)
+					const task = response.data?.ocs?.data?.task
+					lastTask = task
+					resolve(task)
 				})
 				.catch(error => {
 					view.$destroy()
@@ -72,15 +95,20 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 			runOrScheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
 					const task = response.data?.task
+					lastTask = task
+					resolve(task)
+					view.input = task.input
 					if (task.status === STATUS.successfull) {
-						view.output = task?.output
+						if (closeOnResult) {
+							view.$destroy()
+						} else {
+							view.output = task?.output
+						}
 					} else if (task.status === STATUS.scheduled) {
-						view.input = task.input
 						view.showScheduleConfirmation = true
 					}
 					view.loading = false
 					view.showSyncTaskRunning = false
-					resolve(task)
 				})
 				.catch(error => {
 					if (error?.code === 'ERR_CANCELED') {
@@ -100,13 +128,22 @@ export async function openAssistantForm({ appId, identifier = '', taskType = nul
 				.then((response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
-					resolve(response.data?.ocs?.data?.task)
+					const task = response.data?.ocs?.data?.task
+					lastTask = task
+					resolve(task)
 				})
 				.catch(error => {
 					view.$destroy()
 					console.error('Assistant scheduling error', error)
 					reject(new Error('Assistant scheduling error'))
 				})
+		})
+		view.$on('action-button-clicked', (data) => {
+			if (data.button?.onClick) {
+				lastTask.output = data.output
+				data.button.onClick(lastTask)
+			}
+			view.$destroy()
 		})
 	})
 }
