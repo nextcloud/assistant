@@ -28,19 +28,13 @@ class Personal implements ISettings {
 		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
 		$freePromptTaskTypeAvailable = in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes());
 
-		$assistantAvailable = $textProcessingAvailable ?
-			$this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1' :
-			false;
+		$assistantAvailable = $textProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 		
-		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders() ?
-			$this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1' :
-			false;
+		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders() && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';			false;
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
-		$freePromptPickerAvailable = $freePromptTaskTypeAvailable ?
-			$this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1' :
-			false;
+		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$freePromptPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		
 		$userConfig = [

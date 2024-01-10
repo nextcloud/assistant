@@ -31,8 +31,10 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
+		$schemaChanged = false;
 
 		if (!$schema->hasTable('assistant_i_prompts')) {
+			$schemaChanged = true;
 			$table = $schema->createTable('assistant_i_prompts');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
@@ -55,6 +57,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 		}
 
 		if (!$schema->hasTable('assistant_i_gens')) {
+			$schemaChanged = true;
 			$table = $schema->createTable('assistant_i_gens');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
@@ -91,6 +94,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 		}
 
 		if (!$schema->hasTable('assistant_i_files')) {
+			$schemaChanged = true;
 			$table = $schema->createTable('assistant_i_files');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
@@ -110,6 +114,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 		}
 
 		if (!$schema->hasTable('assistant_stale_gens')) {
+			$schemaChanged = true;
 			$table = $schema->createTable('assistant_stale_gens');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
@@ -123,6 +128,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 		}
 
 		if (!$schema->hasTable('assistant_t_prompts')) {
+			$schemaChanged = true;
 			$table = $schema->createTable('assistant_t_prompts');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
@@ -145,7 +151,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 			$table->addIndex(['user_id', 'timestamp'], 'assistant_t_prompts_uid_ts');
 		}
 
-		return $schema;
+		return $schemaChanged ? $schema : null;
 	}
 
 	/**
