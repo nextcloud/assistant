@@ -8,6 +8,7 @@ use OCP\Settings\ISettings;
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\TextToImage\IManager;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
+use OCP\TextProcessing\FreePromptTaskType;
 
 class Personal implements ISettings {
 
@@ -24,21 +25,25 @@ class Personal implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$textProcessingAvailable = $this->textProcessingManager->hasProviders() ?
-			$this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1' :
-			false;
+		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
+		$freePromptTaskTypeAvailable = in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes());
+
+		$assistantAvailable = $textProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 		
-		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders() ?
-			$this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1' :
-			false;
+		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders() && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';			false;
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+
+		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
+		$freePromptPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		
 		$userConfig = [
-			'text_processing_available' => $textProcessingAvailable,
+			'assistant_available' => $assistantAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
+			'free_prompt_picker_available' => $freePromptPickerAvailable,
+			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 		];
 		$this->initialStateService->provideInitialState('config', $userConfig);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');

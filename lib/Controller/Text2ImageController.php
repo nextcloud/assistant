@@ -20,7 +20,9 @@ use OCP\IRequest;
 use OCP\TextToImage\Exception\TaskFailureException;
 use OCP\AppFramework\Http\Attribute\AnonRateLimit;
 
-
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
 class Text2ImageController extends Controller {
 	public function __construct(
 		string $appName,
@@ -33,14 +35,13 @@ class Text2ImageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $prompt
 	 * @param int $nResults
 	 * @param bool $displayPrompt
 	 * @return DataResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function processPrompt(string $prompt, int $nResults = 1, bool $displayPrompt = false): DataResponse {
 		$nResults = min(10, max(1, $nResults));
 		try {
@@ -53,11 +54,10 @@ class Text2ImageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @return DataResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	public function getPromptHistory(): DataResponse {
 		try {
 			$response = $this->text2ImageHelperService->getPromptHistory();
@@ -69,14 +69,13 @@ class Text2ImageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @PublicPage
-	 *
 	 * @param string $imageGenId
 	 * @param int $fileNameId
 	 * @return DataDisplayResponse | DataResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[PublicPage]
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function getImage(string $imageGenId, int $fileNameId): DataDisplayResponse | DataResponse {
 
@@ -103,13 +102,12 @@ class Text2ImageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @PublicPage
-	 *
 	 * @param string $imageGenId
 	 * @return DataResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[PublicPage]
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function getGenerationInfo(string $imageGenId): DataResponse {
 		try {
@@ -127,12 +125,11 @@ class Text2ImageController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
 	 * @param string $imageGenId
 	 * @param array $fileVisStatusArray
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisStatusArray): DataResponse {
 		if (count($fileVisStatusArray) < 1) {
@@ -159,10 +156,9 @@ class Text2ImageController extends Controller {
 	 * Does not need bruteforce protection since we respond with success anyways 
 	 * as we don't want to keep the front-end waiting.
 	 * However, we still use rate limiting to prevent timing attacks.
-	 * 
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function notifyWhenReady(string $imageGenId): DataResponse {
 		try {
@@ -179,11 +175,11 @@ class Text2ImageController extends Controller {
 	 * (In theory bruteforce may be possible by a response timing attack but the attacker
 	 * won't gain access to the generation since its deleted during the attack.)
 	 * 
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param string $imageGenId
 	 * @return DataResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function cancelGeneration(string $imageGenId): DataResponse {
 		$this->text2ImageHelperService->cancelGeneration($imageGenId);
@@ -192,15 +188,15 @@ class Text2ImageController extends Controller {
 
 	/**
 	 * Show visibility dialog
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @PublicPage
 	 *
 	 * Does not need bruteforce protection
 	 *
 	 * @param string|null $imageGenId
 	 * @return TemplateResponse
 	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[PublicPage]
 	public function showGenerationPage(?string $imageGenId, ?bool $forceEditMode = false): TemplateResponse {
 		if ($forceEditMode === null) {
 			$forceEditMode = false;

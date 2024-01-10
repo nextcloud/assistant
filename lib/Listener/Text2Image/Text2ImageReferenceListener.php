@@ -37,6 +37,5 @@ class Text2ImageReferenceListener implements IEventListener {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-imageGenerationReference');
 			}
 		} 
-		
 	}
 }
