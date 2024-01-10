@@ -56,7 +56,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: phpunit
           extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, gd, zip
 
       - name: Set up PHPUnit
@@ -71,4 +70,4 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: phpunit -c tests/phpunit.xml
+        run: composer run test:unit
