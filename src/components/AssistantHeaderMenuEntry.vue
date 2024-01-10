@@ -1,10 +1,10 @@
 <template>
 	<div id="assistant"
-		class="header-menu"
-		:title="t('assistant', 'Nextcloud Assistant')">
+		class="header-menu">
 		<a
 			href="#"
 			class="trigger"
+			:title="t('assistant', 'Nextcloud Assistant')"
 			@click="$emit('click')">
 			<AssistantIcon class="menu-icon" :size="20" />
 		</a>
