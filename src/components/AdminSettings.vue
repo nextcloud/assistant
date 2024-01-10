@@ -28,7 +28,7 @@
 					:disabled="!state.free_prompt_task_type_available"
 					@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 					<div class="checkbox-text">
-						{{ t('assistant', 'Free prompt smart picker') }}
+						{{ t('assistant', 'AI text generation smart picker') }}
 						<div v-if="!state.free_prompt_task_type_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>

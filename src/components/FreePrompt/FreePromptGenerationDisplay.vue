@@ -36,10 +36,9 @@
 		<div v-if="!loading" class="button-wrapper">
 			<NcButton :disabled="result === null || loading"
 				type="secondary"
-				:aria-label="t('assistant', 'Copy text output to clipboard')"
-				:title="t('assistant', 'Copy text')"
+				:title="t('assistant', 'Copy output text to clipboard')"
 				@click="onCopy">
-				{{ t('assistant', 'Copy text') }}
+				{{ t('assistant', 'Copy output') }}
 				<template #icon>
 					<ClipboardCheckOutlineIcon v-if="copied" />
 					<ContentCopyIcon v-else />
@@ -47,8 +46,7 @@
 			</NcButton>
 			<NcButton :disabled="result === originalResult || loading"
 				type="secondary"
-				:aria-label="t('assistant', 'Reset manual edits to text output')"
-				:title="t('assistant', 'Reset')"
+				:title="t('assistant', 'Reset the output value to the originally generated one')"
 				@click="delayedReset">
 				{{ t('assistant', 'Reset') }}
 			</NcButton>
@@ -56,7 +54,7 @@
 				:checked.sync="includePrompt"
 				:disabled="loading || result === ''"
 				@update:checked="onIncludePromptToggle">
-				{{ t('assistant', 'Include prompt') }}
+				{{ t('assistant', 'Include prompt in the final result') }}
 			</NcCheckboxRadioSwitch>
 		</div>
 	</div>
