@@ -13,8 +13,8 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\IUser;
 use OCP\IUserSession;
-use OCP\Util;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
+use OCP\Util;
 
 class BeforeTemplateRenderedListener implements IEventListener {
 

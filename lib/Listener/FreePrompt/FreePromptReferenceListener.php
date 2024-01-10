@@ -12,11 +12,11 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\IGroupManager;
-use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\Util;
 
 use Psr\Log\LoggerInterface;
+
 /**
  * @implements IEventListener<RenderReferenceEvent>
  */

@@ -51,7 +51,7 @@ class Text2ImageHelperService {
 	 * @param IAppData $appData
 	 * @param IURLGenerator $urlGenerator
 	 * @param IL10N $l10n
-	 * @param AssistantService $assistantService 
+	 * @param AssistantService $assistantService
 	 */
 	public function __construct(
 		private IConfig $config,
@@ -325,8 +325,7 @@ class Text2ImageHelperService {
 			$this->logger->debug('Image request error : ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			// Set error code to BAD_REQUEST to limit brute force attempts
 			throw new BaseException($this->l10n->t('Image generation not found.'), Http::STATUS_BAD_REQUEST);
-		}
-		catch (Exception | MultipleObjectsReturnedException $e) {
+		} catch (Exception | MultipleObjectsReturnedException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			throw new BaseException($this->l10n->t('Retrieving the image generation failed.'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -476,7 +475,7 @@ class Text2ImageHelperService {
 						}
 					}
 				}
-			}			
+			}
 		}
 
 		// Remove the image generation from the database:
@@ -533,7 +532,7 @@ class Text2ImageHelperService {
 	 */
 	public function notifyWhenReady(string $imageGenId): void {
 		try {
-			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);			
+			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());
 			// Check if the generation has been deleted before this notify request was made:

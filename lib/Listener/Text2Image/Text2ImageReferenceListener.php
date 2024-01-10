@@ -10,8 +10,8 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\TextToImage\IManager;
 use OCP\IConfig;
+use OCP\TextToImage\IManager;
 use OCP\Util;
 
 class Text2ImageReferenceListener implements IEventListener {
@@ -36,6 +36,6 @@ class Text2ImageReferenceListener implements IEventListener {
 			if ($this->manager->hasProviders()) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-imageGenerationReference');
 			}
-		} 
+		}
 	}
 }

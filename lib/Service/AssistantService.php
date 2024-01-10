@@ -5,11 +5,11 @@ namespace OCA\TPAssistant\Service;
 use DateTime;
 use OCA\TPAssistant\AppInfo\Application;
 use OCP\Common\Exception\NotFoundException;
+use OCP\Notification\IManager as INotificationManager;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task as TextProcessingTask;
 use OCP\TextToImage\Task as TextToImageTask;
-use OCP\Notification\IManager as INotificationManager;
 
 class AssistantService {
 

@@ -4,17 +4,17 @@ namespace OCA\TPAssistant\Listener\Text2Image;
 
 use OCA\TPassistant\AppInfo\Application;
 use OCA\TPAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TPAssistant\Service\Text2Image\Text2ImageHelperService;
 use OCA\TPAssistant\Service\AssistantService;
+use OCA\TPAssistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IImage;
+use OCP\IURLGenerator;
 use OCP\TextToImage\Events\AbstractTextToImageEvent;
 use OCP\TextToImage\Events\TaskFailedEvent;
 use OCP\TextToImage\Events\TaskSuccessfulEvent;
-use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
 
 class Text2ImageResultListener implements IEventListener {
