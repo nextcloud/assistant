@@ -38,7 +38,10 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form (only if closeOnResult is false)
  * @return {Promise<unknown>}
  */
-export async function openAssistantTextProcessingForm({ appId, identifier = '', taskType = null, input = '', isInsideViewer = undefined }) {
+export async function openAssistantTextProcessingForm({
+	appId, identifier = '', taskType = null, input = '',
+	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
+}) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
 	Vue.mixin({ methods: { t, n } })
