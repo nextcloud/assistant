@@ -51,6 +51,20 @@
 						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					:checked="state.speech_to_text_picker_enabled"
+					:disabled="!state.speech_to_text_picker_available"
+					@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+					<div class="checkbox-text">
+						{{ t('assistant', 'Speech-to-text smart picker') }}
+						<div v-if="!state.speech_to_text_picker_available" class="checkbox-text">
+							<InformationOutlineIcon class="icon" />
+							<span>
+								{{ t('assistant', 'To enable this feature, please install a speech-to-text provider.') }}
+							</span>
+						</div>
+					</div>
+				</NcCheckboxRadioSwitch>
 			</div>
 			<div>
 				<h2>

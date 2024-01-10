@@ -1,4 +1,4 @@
-import { STATUS } from './constants.js'
+import { STATUS, TASK_TYPES } from './constants.js'
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
@@ -7,7 +7,7 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
- * OCA.TpAssistant.openAssistantForm({
+ * OCA.TPAssistant.openAssistantTextProcessingForm({
  *  appId: 'my_app_id',
  *  identifier: 'my task identifier',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
@@ -31,36 +31,34 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
  * @param {object} params parameters for the assistant
  * @param {string} params.appId the scheduling app id
  * @param {string} params.identifier the task identifier
- * @param {string} params.taskType the task type class
+ * @param {string} params.taskType the text processing task type class
  * @param {string} params.input optional initial input text
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
  * @param {boolean} params.closeOnResult If true, the modal will be closed when getting a sync result
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form (only if closeOnResult is false)
  * @return {Promise<unknown>}
  */
-export async function openAssistantForm({
-	appId, identifier = '', taskType = null, input = '',
-	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
-}) {
+export async function openAssistantTextProcessingForm({ appId, identifier = '', taskType = null, input = '', isInsideViewer = undefined }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
-	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
+	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
 	Vue.mixin({ methods: { t, n } })
 
 	// fallback to the last used one
-	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
+	const textProcessingTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
 
 	return new Promise((resolve, reject) => {
-		const modalId = 'assistantModal'
+		const modalId = 'assistantTextProcessingModal'
 		const modalElement = document.createElement('div')
 		modalElement.id = modalId
 		document.body.append(modalElement)
 
-		const View = Vue.extend(AssistantModal)
+		const View = Vue.extend(AssistantTextProcessingModal)
 		const view = new View({
 			propsData: {
 				isInsideViewer,
 				input,
-				selectedTaskTypeId,
+				taskType: TASK_TYPES.text_generation,
+				textProcessingTaskTypeId,
 				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
 				actionButtons,
@@ -91,7 +89,7 @@ export async function openAssistantForm({
 			view.loading = true
 			view.showSyncTaskRunning = true
 			view.input = data.input
-			view.selectedTaskTypeId = data.taskTypeId
+			view.textProcessingTaskTypeId = data.taskTypeId
 			runOrScheduleTask(appId, identifier, data.taskTypeId, data.input)
 				.then((response) => {
 					const task = response.data?.task
@@ -124,7 +122,7 @@ export async function openAssistantForm({
 		})
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
-			scheduleTask(appId, identifier, view.selectedTaskTypeId, view.input)
+			scheduleTask(appId, identifier, view.textProcessingTaskTypeId, view.input)
 				.then((response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
@@ -245,7 +243,10 @@ export function handleNotification(event) {
 	// We use the object type to know
 	if (event.notification.objectType === 'task') {
 		event.cancelAction = true
-		showResults(event.notification.objectId)
+		showTextProcessingTaskResult(event.notification.objectId)
+	} else if (event.notification.objectType === 'speech-to-text-result') {
+		event.cancelAction = true
+		showSpeechToTextResult(event.notification)
 	}
 }
 
@@ -255,14 +256,14 @@ export function handleNotification(event) {
  * @param {number} taskId the task id to show the result of
  * @return {Promise<void>}
  */
-async function showResults(taskId) {
+async function showTextProcessingTaskResult(taskId) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
 	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
 		console.debug('showing results for task', response.data.ocs.data.task)
-		openAssistantResult(response.data.ocs.data.task)
+		openAssistantTaskResult(response.data.ocs.data.task)
 	}).catch(error => {
 		console.error(error)
 		showError(t('assistant', 'This task does not exist or has been cleaned up'))
@@ -270,29 +271,88 @@ async function showResults(taskId) {
 }
 
 /**
- * Open an assistant modal to show  the result of a task
- *
- * @param {object} task the task we want to see the result of
+ * Show the result of a speech to text transcription
+ * @param {object} notification the notification object
  * @return {Promise<void>}
  */
-export async function openAssistantResult(task) {
-	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
+async function showSpeechToTextResult(notification) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
-	const { default: AssistantModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantModal.vue')
+	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
 	Vue.mixin({ methods: { t, n } })
 
-	const modalId = 'assistantModal'
+	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+
+	const params = {
+		params: {
+			id: notification.objectId,
+		},
+	}
+
+	const url = generateUrl('apps/assistant/stt/transcript')
+
+	axios.get(url, params).then(response => {
+		console.debug('showing results for stt', response.data)
+		openAssistantPlainTextResult(response.data, TASK_TYPES.speech_to_text)
+	}).catch(error => {
+		console.error(error)
+		showError(t('assistant', 'This transcript does not exist or has been cleaned up'))
+	})
+}
+
+/**
+ * Open an assistant modal to show a plain text result
+ * @param {string} result the plain text result to show
+ * @param {number} taskType the task type
+ * @return {Promise<void>}
+ */
+export async function openAssistantPlainTextResult(result, taskType) {
+	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
+	const { default: AssistantPlainTextModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantPlainTextModal.vue')
+	Vue.mixin({ methods: { t, n } })
+
+	const modalId = 'assistantPlainTextModal'
 	const modalElement = document.createElement('div')
 	modalElement.id = modalId
 	document.body.append(modalElement)
 
-	const View = Vue.extend(AssistantModal)
+	const View = Vue.extend(AssistantPlainTextModal)
+	const view = new View({
+		propsData: {
+			output: result,
+			taskType,
+		},
+	}).$mount(modalElement)
+
+	view.$on('cancel', () => {
+		view.$destroy()
+	})
+}
+
+/**
+ * Open an assistant modal to show the result of a task
+ *
+ * @param {object} task the task we want to see the result of
+ * @return {Promise<void>}
+ */
+export async function openAssistantTaskResult(task) {
+	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
+	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
+	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
+	Vue.mixin({ methods: { t, n } })
+
+	const modalId = 'assistantTextProcessingModal'
+	const modalElement = document.createElement('div')
+	modalElement.id = modalId
+	document.body.append(modalElement)
+
+	const View = Vue.extend(AssistantTextProcessingModal)
 	const view = new View({
 		propsData: {
 			// isInsideViewer,
 			input: task.input,
 			output: task.output ?? '',
-			selectedTaskTypeId: task.type,
+			textProcessingTaskTypeId: task.type,
 			showScheduleConfirmation: false,
 		},
 	}).$mount(modalElement)
@@ -316,7 +376,7 @@ export async function openAssistantResult(task) {
 		view.loading = true
 		view.showSyncTaskRunning = true
 		view.input = data.input
-		view.selectedTaskTypeId = data.taskTypeId
+		view.textProcessingTaskTypeId = data.taskTypeId
 		runTask(task.appId, task.identifier, data.taskTypeId, data.input)
 			.then((response) => {
 				// resolve(response.data?.task)
@@ -344,7 +404,7 @@ export async function openAssistantResult(task) {
 	})
 	view.$on('cancel-sync-n-schedule', () => {
 		cancelCurrentSyncTask()
-		scheduleTask(task.appId, task.identifier, view.selectedTaskTypeId, view.input)
+		scheduleTask(task.appId, task.identifier, view.textProcessingTaskTypeId, view.input)
 			.then((response) => {
 				view.showSyncTaskRunning = false
 				view.showScheduleConfirmation = true
@@ -374,7 +434,7 @@ export async function addAssistantMenuEntry() {
 	}).$mount(menuEntry)
 
 	view.$on('click', () => {
-		openAssistantForm({ appId: 'assistant' })
+		openAssistantTextProcessingForm({ appId: 'assistant' })
 			.then(r => {
 				console.debug('scheduled task', r)
 			})

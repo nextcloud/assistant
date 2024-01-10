@@ -25,12 +25,12 @@
 					:description="shortInput"
 					:show-close-button="true"
 					@close="onCancel" />
-				<AssistantForm
+				<AssistantTextProcessingForm
 					v-else
 					class="form"
 					:input="input"
 					:output="output"
-					:selected-task-type-id="selectedTaskTypeId"
+					:selected-task-type-id="textProcessingTaskTypeId"
 					:loading="loading"
 					:action-buttons="actionButtons"
 					@submit="onSubmit"
@@ -47,18 +47,18 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
-import AssistantForm from './AssistantForm.vue'
+import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
 import RunningEmptyContent from './RunningEmptyContent.vue'
 import ScheduledEmptyContent from './ScheduledEmptyContent.vue'
 
 import { emit } from '@nextcloud/event-bus'
 
 export default {
-	name: 'AssistantModal',
+	name: 'AssistantTextProcessingModal',
 	components: {
 		ScheduledEmptyContent,
 		RunningEmptyContent,
-		AssistantForm,
+		AssistantTextProcessingForm,
 		NcModal,
 		NcButton,
 		CloseIcon,
@@ -83,7 +83,7 @@ export default {
 			type: String,
 			default: '',
 		},
-		selectedTaskTypeId: {
+		textProcessingTaskTypeId: {
 			type: [String, null],
 			default: null,
 		},

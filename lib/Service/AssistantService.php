@@ -10,6 +10,8 @@ use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task as TextProcessingTask;
 use OCP\TextToImage\Task as TextToImageTask;
+use OCP\Notification\IManager as INotificationManager;
+use OCP\IURLGenerator;
 
 class AssistantService {
 
@@ -17,6 +19,7 @@ class AssistantService {
 		string $appName,
 		private INotificationManager $notificationManager,
 		private ITextProcessingManager $textProcessingManager,
+		private IURLGenerator $url,
 	) {
 	}
 
@@ -27,6 +30,7 @@ class AssistantService {
 	 * @param string|null $target optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @return void
+	 * @throws \InvalidArgumentException
 	 */
 	public function sendNotification(TextProcessingTask|TextToImageTask $task, ?string $target = null, ?string $actionLabel = null): void {
 		$manager = $this->notificationManager;

@@ -26,6 +26,13 @@
 					{{ t('assistant', 'Text-to-image smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
+			<NcCheckboxRadioSwitch v-if="state.speech_to_text_picker_available"
+				:checked="state.speech_to_text_picker_enabled"
+				@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+				<div class="checkbox-text">
+					{{ t('assistant', 'Speech-to-text smart picker') }}
+				</div>
+			</NcCheckboxRadioSwitch>
 			<div v-if="noProvidersAvailable" class="settings-hint">
 				<InformationOutlineIcon class="icon" />
 				<span>
@@ -68,6 +75,7 @@ export default {
 		noProvidersAvailable() {
 			return this.state.text_to_image_picker_available === false
 				&& this.state.text_processing_available === false
+				&& this.state.speech_to_text_picker_available === false
 		},
 	},
 
