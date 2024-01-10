@@ -3,6 +3,7 @@
 namespace OCA\TPAssistant\Controller;
 
 use OCA\TPAssistant\AppInfo\Application;
+use OCA\TPAssistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
@@ -11,9 +12,8 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\IRequest;
 
-use OCA\TPAssistant\Service\AssistantService;
+use OCP\IRequest;
 
 class AssistantController extends Controller {
 

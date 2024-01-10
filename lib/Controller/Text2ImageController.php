@@ -6,23 +6,24 @@
 namespace OCA\TPAssistant\Controller;
 
 use Exception;
-use OCP\Db\Exception as DbException;
 use OCA\TPAssistant\AppInfo\Application;
 use OCA\TPAssistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\AnonRateLimit;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+
+use OCP\Db\Exception as DbException;
 use OCP\IRequest;
 use OCP\TextToImage\Exception\TaskFailureException;
-use OCP\AppFramework\Http\Attribute\AnonRateLimit;
 
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
-use OCP\AppFramework\Http\Attribute\PublicPage;
 class Text2ImageController extends Controller {
 	public function __construct(
 		string $appName,
@@ -141,8 +142,8 @@ class Text2ImageController extends Controller {
 		} catch (Exception $e) {
 			$response = new DataResponse(['error' => $e->getMessage()], $e->getCode());
 			if($e->getCode() === Http::STATUS_BAD_REQUEST | Http::STATUS_UNAUTHORIZED) {
-				// Throttle brute force attempts				
-				$response->throttle(['action' => 'imageGenId']);				
+				// Throttle brute force attempts
+				$response->throttle(['action' => 'imageGenId']);
 			}
 			return $response;
 		}
@@ -152,8 +153,8 @@ class Text2ImageController extends Controller {
 
 	/**
 	 * Notify when image generation is ready
-	 * 
-	 * Does not need bruteforce protection since we respond with success anyways 
+	 *
+	 * Does not need bruteforce protection since we respond with success anyways
 	 * as we don't want to keep the front-end waiting.
 	 * However, we still use rate limiting to prevent timing attacks.
 	 */
@@ -170,11 +171,11 @@ class Text2ImageController extends Controller {
 	}
 	/**
 	 * Cancel image generation
-	 * 
+	 *
 	 * Does not need bruteforce protection since we respond with success anyways
 	 * (In theory bruteforce may be possible by a response timing attack but the attacker
 	 * won't gain access to the generation since its deleted during the attack.)
-	 * 
+	 *
 	 * @param string $imageGenId
 	 * @return DataResponse
 	 */
@@ -205,7 +206,7 @@ class Text2ImageController extends Controller {
 			$this->initialStateService->provideInitialState('generation-page-inputs', ['image_gen_id' => $imageGenId, 'force_edit_mode' => $forceEditMode]);
 		} else {
 			$this->initialStateService->provideInitialState('generation-page-inputs', ['image_gen_id' => $imageGenId, 'force_edit_mode' => $forceEditMode]);
-		}		
+		}
 
 		return new TemplateResponse(Application::APP_ID, 'imageGenerationPage');
 	}

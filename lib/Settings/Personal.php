@@ -1,14 +1,15 @@
 <?php
+
 namespace OCA\TPAssistant\Settings;
 
+use OCA\TPAssistant\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
-use OCA\TPAssistant\AppInfo\Application;
-use OCP\TextToImage\IManager;
-use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\FreePromptTaskType;
+use OCP\TextProcessing\IManager as ITextProcessingManager;
+use OCP\TextToImage\IManager;
 
 class Personal implements ISettings {
 
@@ -18,7 +19,7 @@ class Personal implements ISettings {
 		private ?string $userId,
 		private IManager $textToImageManager,
 		private ITextProcessingManager $textProcessingManager
-		) {
+	) {
 	}
 
 	/**
@@ -31,7 +32,8 @@ class Personal implements ISettings {
 		$assistantAvailable = $textProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 		
-		$textToImagePickerAvailable =  $this->textToImageManager->hasProviders() && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';			false;
+		$textToImagePickerAvailable = $this->textToImageManager->hasProviders() && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+		false;
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
 		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';

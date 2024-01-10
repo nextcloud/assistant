@@ -53,7 +53,7 @@ class FreePromptService {
 		while (true) {
 			$genId = bin2hex(random_bytes(32));
 			// Exceedingly unlikely that this will ever happen, but just in case:
-			if(count($this->textProcessingManager->getUserTasksByApp($this->userId,Application::APP_ID,$genId)) === 0) {
+			if(count($this->textProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID, $genId)) === 0) {
 				break;
 			} else {
 				continue;
