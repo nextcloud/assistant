@@ -4,15 +4,15 @@ namespace OCA\TpAssistant\AppInfo;
 
 use OCA\TPAssistant\Listener\BeforeTemplateRenderedListener;
 use OCA\TPAssistant\Listener\FreePrompt\FreePromptReferenceListener;
+use OCA\TPAssistant\Listener\SpeechToText\SpeechToTextReferenceListener;
+use OCA\TPAssistant\Listener\SpeechToText\SpeechToTextResultListener;
 use OCA\TPAssistant\Listener\TaskFailedListener;
 use OCA\TPAssistant\Listener\TaskSuccessfulListener;
 use OCA\TPAssistant\Listener\Text2Image\Text2ImageReferenceListener;
-use OCA\TPAssistant\Listener\SpeechToText\SpeechToTextResultListener;
-use OCA\TPAssistant\Listener\SpeechToText\SpeechToTextReferenceListener;
-use OCA\TPAssistant\Reference\SpeechToTextReferenceProvider;
 use OCA\TPAssistant\Listener\Text2Image\Text2ImageResultListener;
 use OCA\TPAssistant\Notification\Notifier;
 use OCA\TPAssistant\Reference\FreePromptReferenceProvider;
+use OCA\TPAssistant\Reference\SpeechToTextReferenceProvider;
 use OCA\TPAssistant\Reference\Text2ImageReferenceProvider;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -21,13 +21,12 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
+use OCP\SpeechToText\Events\TranscriptionFailedEvent;
+use OCP\SpeechToText\Events\TranscriptionSuccessfulEvent;
 use OCP\TextProcessing\Events\TaskFailedEvent as TextTaskFailedEvent;
 use OCP\TextProcessing\Events\TaskSuccessfulEvent as TextTaskSuccessfulEvent;
 use OCP\TextToImage\Events\TaskFailedEvent as TextToImageTaskFailedEvent;
 use OCP\TextToImage\Events\TaskSuccessfulEvent as TextToImageTaskSuccessfulEvent;
-use OCP\SpeechToText\Events\TranscriptionFailedEvent;
-use OCP\SpeechToText\Events\TranscriptionSuccessfulEvent;
-
 
 class Application extends App implements IBootstrap {
 

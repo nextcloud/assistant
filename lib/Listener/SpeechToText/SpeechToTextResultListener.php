@@ -22,7 +22,6 @@
 
 namespace OCA\TPAssistant\Listener\SpeechToText;
 
-use DateTime;
 use OCA\TPAssistant\AppInfo\Application;
 use OCA\TPAssistant\Service\SpeechToText\SpeechToTextService;
 use OCP\EventDispatcher\Event;
@@ -52,7 +51,7 @@ class SpeechToTextResultListener implements IEventListener {
 			$userId = $event->getUserId();
 
 			try {
-				$this->sttService->sendSpeechToTextNotification($userId, $transcript,true);
+				$this->sttService->sendSpeechToTextNotification($userId, $transcript, true);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for successful transcription: ' . $e->getMessage());
 			}
@@ -63,7 +62,7 @@ class SpeechToTextResultListener implements IEventListener {
 			$this->logger->error('Transcript generation failed: ' . $event->getErrorMessage());
 			
 			try {
-				$this->sttService->sendSpeechToTextNotification($userId, '',false);
+				$this->sttService->sendSpeechToTextNotification($userId, '', false);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for failed transcription: ' . $e->getMessage());
 			}

@@ -27,9 +27,9 @@ use OCA\TPAssistant\AppInfo\Application;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\Util;
 use OCP\IConfig;
 use OCP\SpeechToText\ISpeechToTextManager;
+use OCP\Util;
 
 /**
  * @template-implements IEventListener<Event>

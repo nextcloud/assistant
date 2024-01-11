@@ -7,9 +7,9 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
+use OCP\SpeechToText\ISpeechToTextManager;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
-use OCP\SpeechToText\ISpeechToTextManager;
 
 use OCP\TextToImage\IManager;
 
@@ -22,7 +22,7 @@ class Personal implements ISettings {
 		private IManager $textToImageManager,
 		private ITextProcessingManager $textProcessingManager,
 		private ISpeechToTextManager $speechToTextManager,
-		) {
+	) {
 	}
 
 	/**
