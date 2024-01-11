@@ -3,13 +3,12 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Reference;
+namespace OCA\TpAssistant\Reference;
 
-use OC\Collaboration\Reference\ReferenceManager;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Service\FreePrompt\FreePromptService;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;
+use OCP\Collaboration\Reference\IReferenceManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 
@@ -17,8 +16,7 @@ class FreePromptReferenceProvider extends ADiscoverableReferenceProvider {
 	public function __construct(
 		private IL10N $l10n,
 		private IURLGenerator $urlGenerator,
-		private ReferenceManager $referenceManager,
-		private FreePromptService $freePromptService,
+		private IReferenceManager $referenceManager,
 		private ?string $userId
 	) {
 	}

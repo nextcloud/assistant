@@ -4,11 +4,12 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Db\Text2Image;
+namespace OCA\TpAssistant\Db\Text2Image;
 
 use DateTime;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
@@ -16,7 +17,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @implements QBMapper<ImageGeneration>
+ * @extends QBMapper<ImageGeneration>
  */
 class ImageGenerationMapper extends QBMapper {
 	public function __construct(
@@ -29,13 +30,12 @@ class ImageGenerationMapper extends QBMapper {
 
 	/**
 	 * @param string $imageGenId
-	 * @param int $fileNameId
-	 * @return ImageGeneration
-	 * @throws Exception
+	 * @return ImageGeneration|Entity
 	 * @throws DoesNotExistException
+	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getImageGenerationOfImageGenId(string $imageGenId): ImageGeneration {
+	public function getImageGenerationOfImageGenId(string $imageGenId): ImageGeneration|Entity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -52,10 +52,10 @@ class ImageGenerationMapper extends QBMapper {
 	 * @param string $prompt
 	 * @param string $userId
 	 * @param int|null $expCompletionTime
-	 * @return ImageGeneration
+	 * @return ImageGeneration|Entity
 	 * @throws Exception
 	 */
-	public function createImageGeneration(string $imageGenId, string $prompt = '', string $userId = '', ?int $expCompletionTime = null): ImageGeneration {
+	public function createImageGeneration(string $imageGenId, string $prompt = '', string $userId = '', ?int $expCompletionTime = null): ImageGeneration|Entity {
 		$imageGeneration = new ImageGeneration();
 		$imageGeneration->setImageGenId($imageGenId);
 		$imageGeneration->setTimestamp((new DateTime())->getTimestamp());
@@ -171,7 +171,7 @@ class ImageGenerationMapper extends QBMapper {
 
 	/**
 	 * @param int $maxAge
-	 * @return array('deleted_generations' => int, 'file_names' => string[])
+	 * @return array ('deleted_generations' => int, 'file_names' => string[])
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */

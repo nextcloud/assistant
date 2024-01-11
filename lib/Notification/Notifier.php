@@ -1,9 +1,9 @@
 <?php
 
-namespace OCA\TPAssistant\Notification;
+namespace OCA\TpAssistant\Notification;
 
 use InvalidArgumentException;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\App\IAppManager;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;

@@ -1,9 +1,9 @@
 <?php
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\TpAssistant\Controller;
 
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Service\AssistantService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\BruteForceProtection;

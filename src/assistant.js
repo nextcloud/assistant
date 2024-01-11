@@ -7,7 +7,7 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
- * OCA.TPAssistant.openAssistantForm({
+ * OCA.TpAssistant.openAssistantForm({
  *  appId: 'my_app_id',
  *  identifier: 'my task identifier',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',

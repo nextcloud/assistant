@@ -4,11 +4,11 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Cron;
+namespace OCA\TpAssistant\Cron;
 
 use Exception;
-use OCA\TPAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TPAssistant\Service\Text2Image\CleanUpService;
+use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\TpAssistant\Service\Text2Image\CleanUpService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;

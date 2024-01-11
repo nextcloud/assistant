@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\TPAssistant\Settings;
+namespace OCA\TpAssistant\Settings;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;

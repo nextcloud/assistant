@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\TPAssistant\Settings;
+namespace OCA\TpAssistant\Settings;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
@@ -30,7 +30,7 @@ class Admin implements ISettings {
 		$assistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$textToImagePickerAvailable = $this->textToImageManager->hasProviders();
 		$textToImagePickerEnabled = $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
-		$maxImageGenerationIdleTime = $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
+		$maxImageGenerationIdleTime = (int) $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', (string) Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
 		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 
 		$adminConfig = [

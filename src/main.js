@@ -3,16 +3,16 @@ import { subscribe } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
 
 /**
- * - Expose OCA.TPAssistant.openTextProcessingModal to let apps use the assistant
+ * - Expose OCA.TpAssistant.openTextProcessingModal to let apps use the assistant
  * - Add a header right menu entry
  * - Listen to notification event
  */
 function init() {
-	if (!OCA.TPAssistant) {
+	if (!OCA.TpAssistant) {
 		/**
 		 * @namespace
 		 */
-		OCA.TPAssistant = {
+		OCA.TpAssistant = {
 			openAssistantForm,
 			openAssistantResult,
 		}

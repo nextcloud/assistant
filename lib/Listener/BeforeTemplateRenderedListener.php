@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\TPAssistant\Listener;
+namespace OCA\TpAssistant\Listener;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -16,6 +16,9 @@ use OCP\IUserSession;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\Util;
 
+/**
+ * @template-implements IEventListener<Event>
+ */
 class BeforeTemplateRenderedListener implements IEventListener {
 
 	public function __construct(

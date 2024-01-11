@@ -3,18 +3,18 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Command;
+namespace OCA\TpAssistant\Command;
 
 use Exception;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Service\Text2Image\CleanUpService;
+use OC\Core\Command\Base;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Service\Text2Image\CleanUpService;
 use OCP\IConfig;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanupImageGenerations extends Command {
+class CleanupImageGenerations extends Base {
 	public function __construct(
 		private CleanUpService $cleanUpService,
 		private IConfig $config

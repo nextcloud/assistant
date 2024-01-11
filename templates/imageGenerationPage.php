@@ -1,5 +1,5 @@
 <?php
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\Util;
 
 // Load the dialog javascript

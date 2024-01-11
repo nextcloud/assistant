@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../../tests/bootstrap.php';
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\App\IAppManager;
 
 \OC::$server->get(IAppManager::class)->loadApp(Application::APP_ID);

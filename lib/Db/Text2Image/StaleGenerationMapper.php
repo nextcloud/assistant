@@ -5,9 +5,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\TPAssistant\Db\Text2Image;
+namespace OCA\TpAssistant\Db\Text2Image;
 
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
@@ -16,7 +17,7 @@ use OCP\IDBConnection;
 use RuntimeException;
 
 /**
- * @implements QBMapper<StaleGeneration>
+ * @extends QBMapper<StaleGeneration>
  */
 class StaleGenerationMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
@@ -25,12 +26,12 @@ class StaleGenerationMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @return StaleGeneration
+	 * @return StaleGeneration|Entity
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getStaleGeneration(int $id): StaleGeneration {
+	public function getStaleGeneration(int $id): StaleGeneration|Entity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -84,15 +85,13 @@ class StaleGenerationMapper extends QBMapper {
 
 	/**
 	 * @param string $imageGenId
-	 * @return StaleGeneration
+	 * @return StaleGeneration|Entity inserted StaleGeneration
 	 * @throws Exception
 	 */
-	public function createStaleGeneration(string $imageGenId): StaleGeneration {
+	public function createStaleGeneration(string $imageGenId): StaleGeneration|Entity {
 		$staleGen = new StaleGeneration();
 		$staleGen->setImageGenId($imageGenId);
 
-		$insertedStaleGeneration = $this->insert($staleGen);
-
-		return $insertedStaleGeneration;
+		return $this->insert($staleGen);
 	}
 }

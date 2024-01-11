@@ -4,9 +4,10 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Db\Text2Image;
+namespace OCA\TpAssistant\Db\Text2Image;
 
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
@@ -14,7 +15,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @implements QBMapper<ImageFileName>
+ * @extends QBMapper<ImageFileName>
  */
 class ImageFileNameMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
@@ -81,11 +82,9 @@ class ImageFileNameMapper extends QBMapper {
 	/**
 	 * @param int $generationId
 	 * @param int $fileNameId
-	 * @return ImageFileName|null
-	 *
+	 * @return ImageFileName|Entity|null
 	 */
-
-	public function getImageFileNameOfGenerationId(int $generationId, int $fileNameId): ImageFileName | null {
+	public function getImageFileNameOfGenerationId(int $generationId, int $fileNameId): ImageFileName|Entity|null {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('file_name')
@@ -106,20 +105,15 @@ class ImageFileNameMapper extends QBMapper {
 	/**
 	 * @param int $generationId
 	 * @param string $fileName
-	 * @param string $prompt
-	 * @return ImageFileName
+	 * @return ImageFileName|Entity
 	 * @throws Exception
 	 */
-	public function createImageFileName(int $generationId, string $fileName): ImageFileName {
+	public function createImageFileName(int $generationId, string $fileName): ImageFileName|Entity {
 		$imageFile = new ImageFileName();
 		$imageFile->setGenerationId($generationId);
 		$imageFile->setFileName($fileName);
 		return $this->insert($imageFile);
 	}
-
-	/**
-	 *
-	 */
 
 	/**
 	 * @param int $generationId

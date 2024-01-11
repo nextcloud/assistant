@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\TPAssistant\Migration;
+namespace OCA\TpAssistant\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;

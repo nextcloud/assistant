@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\TpAssistant\Controller;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
