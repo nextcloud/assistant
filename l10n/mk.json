@@ -3,6 +3,8 @@
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",
+    "Reset" : "Ресетирање",
+    "Submit" : "Испрати",
     "Advanced options" : "Напредни опции",
     "Send" : "Прати"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"

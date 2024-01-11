@@ -5,6 +5,8 @@ OC.L10N.register(
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",
+    "Reset" : "Ресетирање",
+    "Submit" : "Испрати",
     "Advanced options" : "Напредни опции",
     "Send" : "Прати"
 },

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "View" : "Skats",
     "Close" : "Aizvērt",
+    "Reset" : "Atiestatīt",
+    "Submit" : "Iesniegt",
     "Preview" : "Priekšskatīt",
     "Advanced options" : "Papildu opcijas",
     "Send" : "Sūtīt"

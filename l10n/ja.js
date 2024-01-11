@@ -10,12 +10,15 @@ OC.L10N.register(
     "Copy" : "コピー",
     "Try again" : "もう一度やり直してください",
     "Close" : "閉じる",
+    "Reset" : "リセット",
+    "Prompt" : "プロンプト",
     "Image generation" : "画像の生成",
     "Generated image" : "生成された画像",
+    "Submit" : "送信",
+    "Regenerate" : "再生成する",
     "Preview" : "プレビュー",
     "Advanced options" : "詳細オプション",
     "Send" : "送信",
-    "Regenerate" : "再生成する",
     "Copy link to clipboard" : "リンクをクリップボードにコピーする"
 },
 "nplurals=1; plural=0;");

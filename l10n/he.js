@@ -6,6 +6,8 @@ OC.L10N.register(
     "Copy" : "העתקה",
     "Try again" : "ניסיון חוזר",
     "Close" : "סגירה",
+    "Reset" : "איפוס",
+    "Submit" : "שליחה",
     "Preview" : "תצוגה מקדימה",
     "Advanced options" : "אפשרויות מתקדמות",
     "Send" : "שליחה",

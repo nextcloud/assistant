@@ -6,6 +6,8 @@ OC.L10N.register(
     "Copy" : "Kopjoni",
     "Try again" : "Provo përsëri",
     "Close" : "Mbylleni",
+    "Reset" : "Rivendos",
+    "Submit" : "Dërgo",
     "Preview" : "Parapamje ",
     "Advanced options" : "Opsione të avancuara",
     "Send" : "Dërgo"

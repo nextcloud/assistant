@@ -4,6 +4,7 @@ OC.L10N.register(
     "View" : "Tampilan",
     "Copy" : "Salin",
     "Close" : "Tutup",
+    "Reset" : "Setel ulang",
     "Preview" : "Pratinjau",
     "Advanced options" : "Opsi lanjutan",
     "Send" : "Kirim"

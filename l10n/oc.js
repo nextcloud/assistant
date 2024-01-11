@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "View" : "Veire",
     "Close" : "Tampar",
+    "Reset" : "Reïnicializar",
+    "Submit" : "Transmetre",
     "Preview" : "Apercebut",
     "Advanced options" : "Opcions avançadas",
     "Send" : "Enviar"

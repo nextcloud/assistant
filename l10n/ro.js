@@ -4,6 +4,8 @@ OC.L10N.register(
     "View" : "Vizualizare",
     "Copy" : "Copiază",
     "Close" : "Închide",
+    "Reset" : "Resetare",
+    "Submit" : "Trimite",
     "Preview" : "Previzualizare",
     "Advanced options" : "Opțiuni avansate",
     "Send" : "Trimite"

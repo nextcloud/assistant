@@ -4,6 +4,8 @@ OC.L10N.register(
     "View" : "Ver",
     "Copy" : "copiar",
     "Close" : "Fechar",
+    "Reset" : "Reiniciar",
+    "Submit" : "Submeter",
     "Preview" : "Pré-visualizar",
     "Advanced options" : "Opções avançadas",
     "Send" : "Enviar"

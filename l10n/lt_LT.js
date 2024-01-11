@@ -6,8 +6,11 @@ OC.L10N.register(
     "Copy" : "Kopija",
     "Try again" : "Bandykite dar kartą",
     "Close" : "Užverti",
+    "Reset" : "Atstatyti",
+    "Submit" : "Pateikti",
     "Preview" : "Peržiūra",
     "Show/hide advanced options" : "Rodyti/slėpti išplėstines parinktis",
+    "Advanced options" : "Išplėstinės parinktys",
     "Send" : "Siųsti",
     "Copy link to clipboard" : "Kopijuoti nuorodą į iškarpinę"
 },

@@ -6,7 +6,9 @@ OC.L10N.register(
     "Artificial Intelligence" : "Trí tuệ nhân tạo",
     "Try again" : "Thử lại",
     "Close" : "Đóng",
+    "Reset" : "Đặt lại",
     "Image generation" : "Tạo hình ảnh",
+    "Submit" : "Gửi đi",
     "Preview" : "Xem trước",
     "Advanced options" : "Tùy chọn nâng cao",
     "Send" : "Gửi"

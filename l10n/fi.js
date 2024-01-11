@@ -8,6 +8,8 @@ OC.L10N.register(
     "Result" : "Tulos",
     "Copy" : "Kopioi",
     "Close" : "Sulje",
+    "Reset" : "Palauta",
+    "Submit" : "Lähetä",
     "Preview" : "Esikatselu",
     "Show/hide advanced options" : "Näytä/piilota lisäasetukset",
     "Advanced options" : "Lisävalinnat",

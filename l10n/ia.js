@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "View" : "Vider",
     "Close" : "Clauder",
+    "Reset" : "Re-fixar",
     "Preview" : "Previsualisar",
     "Advanced options" : "Optiones avantiate",
     "Send" : "Inviar"

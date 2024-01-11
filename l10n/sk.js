@@ -8,6 +8,8 @@ OC.L10N.register(
     "Copy" : "Kopírovať",
     "Try again" : "Skúste znovu",
     "Close" : "Zatvoriť",
+    "Reset" : "Resetovať",
+    "Submit" : "Odoslať",
     "Preview" : "Náhľad",
     "Advanced options" : "Pokročilé možnosti",
     "Send" : "Odoslať",

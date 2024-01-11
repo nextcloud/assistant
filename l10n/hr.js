@@ -6,6 +6,8 @@ OC.L10N.register(
     "Result" : "Rezultat",
     "Copy" : "Kopirajte",
     "Close" : "Zatvori",
+    "Reset" : "Resetiraj",
+    "Submit" : "Šalji",
     "Advanced options" : "Napredne opcije",
     "Send" : "Pošaljite",
     "Copy link to clipboard" : "Kopiraj poveznicu u međuspremnik"

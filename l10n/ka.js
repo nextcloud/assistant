@@ -6,7 +6,9 @@ OC.L10N.register(
     "Result" : "Result",
     "Copy" : "Copy",
     "Close" : "Close",
+    "Reset" : "Reset",
     "Image generation" : "Image generation",
+    "Submit" : "Submit",
     "Preview" : "Preview",
     "Advanced options" : "Advanced options",
     "Send" : "Send"
