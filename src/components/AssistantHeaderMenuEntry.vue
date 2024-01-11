@@ -1,24 +1,27 @@
 <template>
 	<div id="assistant"
 		class="header-menu">
-		<a
-			href="#"
+		<NcButton
 			class="trigger"
+			type="secondary"
 			:title="t('assistant', 'Nextcloud Assistant')"
 			@click="$emit('click')">
 			<AssistantIcon class="menu-icon" :size="20" />
-		</a>
+		</NcButton>
 	</div>
 </template>
 
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
 
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
 export default {
 	name: 'AssistantHeaderMenuEntry',
 
 	components: {
 		AssistantIcon,
+		NcButton,
 	},
 
 	data() {
@@ -58,6 +61,14 @@ export default {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		cursor: pointer;
+		background-color: rgba(0,0,0,0);
+		border: none;
+		filter: none !important;
+		color: var(--color-primary-text) !important;
+		&:hover {
+			background-color: rgba(0,0,0,0) !important;
+		}
 		.menu-icon {
 			color: var(--color-primary-text) !important;
 		}
