@@ -165,7 +165,7 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('transcript', Types::STRING, [
+			$table->addColumn('transcript', Types::TEXT, [
 				'notnull' => true,
 			]);
 			$table->addColumn('last_accessed', Types::DATETIME, [
