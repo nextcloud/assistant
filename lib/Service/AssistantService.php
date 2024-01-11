@@ -15,7 +15,6 @@ use OCP\TextToImage\Task as TextToImageTask;
 class AssistantService {
 
 	public function __construct(
-		string $appName,
 		private INotificationManager $notificationManager,
 		private ITextProcessingManager $textProcessingManager,
 		private IURLGenerator $url,

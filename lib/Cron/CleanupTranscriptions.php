@@ -24,9 +24,9 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\TPAssistant\Cron;
+namespace OCA\TpAssistant\Cron;
 
-use OCA\TPAssistant\Db\SpeechToText\TranscriptMapper;
+use OCA\TpAssistant\Db\SpeechToText\TranscriptMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 

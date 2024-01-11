@@ -20,9 +20,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TPAssistant\Reference;
+namespace OCA\TpAssistant\Reference;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;
 use OCP\Collaboration\Reference\IReferenceManager;

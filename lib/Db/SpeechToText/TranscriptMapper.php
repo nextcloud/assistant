@@ -25,7 +25,7 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\TPAssistant\Db\SpeechToText;
+namespace OCA\TpAssistant\Db\SpeechToText;
 
 use DateTime;
 use Exception;

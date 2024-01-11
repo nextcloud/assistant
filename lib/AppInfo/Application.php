@@ -2,18 +2,18 @@
 
 namespace OCA\TpAssistant\AppInfo;
 
-use OCA\TPAssistant\Listener\BeforeTemplateRenderedListener;
-use OCA\TPAssistant\Listener\FreePrompt\FreePromptReferenceListener;
-use OCA\TPAssistant\Listener\SpeechToText\SpeechToTextReferenceListener;
-use OCA\TPAssistant\Listener\SpeechToText\SpeechToTextResultListener;
-use OCA\TPAssistant\Listener\TaskFailedListener;
-use OCA\TPAssistant\Listener\TaskSuccessfulListener;
-use OCA\TPAssistant\Listener\Text2Image\Text2ImageReferenceListener;
-use OCA\TPAssistant\Listener\Text2Image\Text2ImageResultListener;
-use OCA\TPAssistant\Notification\Notifier;
-use OCA\TPAssistant\Reference\FreePromptReferenceProvider;
-use OCA\TPAssistant\Reference\SpeechToTextReferenceProvider;
-use OCA\TPAssistant\Reference\Text2ImageReferenceProvider;
+use OCA\TpAssistant\Listener\BeforeTemplateRenderedListener;
+use OCA\TpAssistant\Listener\FreePrompt\FreePromptReferenceListener;
+use OCA\TpAssistant\Listener\SpeechToText\SpeechToTextReferenceListener;
+use OCA\TpAssistant\Listener\SpeechToText\SpeechToTextResultListener;
+use OCA\TpAssistant\Listener\TaskFailedListener;
+use OCA\TpAssistant\Listener\TaskSuccessfulListener;
+use OCA\TpAssistant\Listener\Text2Image\Text2ImageReferenceListener;
+use OCA\TpAssistant\Listener\Text2Image\Text2ImageResultListener;
+use OCA\TpAssistant\Notification\Notifier;
+use OCA\TpAssistant\Reference\FreePromptReferenceProvider;
+use OCA\TpAssistant\Reference\SpeechToTextReferenceProvider;
+use OCA\TpAssistant\Reference\Text2ImageReferenceProvider;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 

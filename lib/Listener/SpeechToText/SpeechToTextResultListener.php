@@ -20,10 +20,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TPAssistant\Listener\SpeechToText;
+namespace OCA\TpAssistant\Listener\SpeechToText;
 
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\SpeechToText\Events\AbstractTranscriptionEvent;

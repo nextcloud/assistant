@@ -20,13 +20,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TPAssistant\Service\SpeechToText;
+namespace OCA\TpAssistant\Service\SpeechToText;
 
 use DateTime;
 use InvalidArgumentException;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Db\SpeechToText\Transcript;
-use OCA\TPAssistant\Db\SpeechToText\TranscriptMapper;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\SpeechToText\Transcript;
+use OCA\TpAssistant\Db\SpeechToText\TranscriptMapper;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
@@ -191,7 +191,7 @@ class SpeechToTextService {
 		$notification->setApp(Application::APP_ID)
 			->setUser($userId)
 			->setDateTime(new DateTime())
-			->setObject('speech-to-text-result', $id)
+			->setObject('speech-to-text-result', (string) $id)
 			->setSubject($subject, $params);
 		
 		$manager->notify($notification);

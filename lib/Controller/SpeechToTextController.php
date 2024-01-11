@@ -20,14 +20,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\TpAssistant\Controller;
 
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Db\SpeechToText\TranscriptMapper;
-use OCA\TPAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\SpeechToText\TranscriptMapper;
+use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
