@@ -3,11 +3,11 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Service\Text2Image;
+namespace OCA\TpAssistant\Service\Text2Image;
 
 use Exception;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -31,7 +31,7 @@ class CleanUpService {
 
 	/**
 	 * @param int|null $maxAge
-	 * @return array('deleted_files' => int, 'file_deletion_errors' => int, 'deleted_generations' => int)
+	 * @return array ('deleted_files' => int, 'file_deletion_errors' => int, 'deleted_generations' => int)
 	 * @throws Exception
 	 */
 	public function cleanupGenerationsAndFiles(?int $maxAge = null): array {

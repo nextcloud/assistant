@@ -1,9 +1,9 @@
 <?php
 
-namespace OCA\TPAssistant\Service;
+namespace OCA\TpAssistant\Service;
 
 use DateTime;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\Common\Exception\NotFoundException;
 use OCP\Notification\IManager as INotificationManager;
 use OCP\PreConditionNotMetException;
@@ -58,7 +58,7 @@ class AssistantService {
 		$notification->setApp(Application::APP_ID)
 			->setUser($task->getUserId())
 			->setDateTime(new DateTime())
-			->setObject($objectType, $task->getId())
+			->setObject($objectType, (string) ($task->getId() ?? 0))
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);

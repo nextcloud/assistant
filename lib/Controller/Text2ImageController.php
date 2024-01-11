@@ -3,11 +3,11 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\TpAssistant\Controller;
 
 use Exception;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Service\Text2Image\Text2ImageHelperService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\AnonRateLimit;
@@ -83,8 +83,8 @@ class Text2ImageController extends Controller {
 		try {
 			$result = $this->text2ImageHelperService->getImage($imageGenId, $fileNameId);
 		} catch (Exception $e) {
-			$response = new DataResponse(['error' => $e->getMessage()], $e->getCode());
-			if ($e->getCode() === Http::STATUS_BAD_REQUEST | Http::STATUS_UNAUTHORIZED) {
+			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
+			if ($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
 				// Throttle brute force attempts
 				$response->throttle(['action' => 'imageGenId']);
 			}
@@ -114,8 +114,8 @@ class Text2ImageController extends Controller {
 		try {
 			$result = $this->text2ImageHelperService->getGenerationInfo($imageGenId, true);
 		} catch (Exception $e) {
-			$response = new DataResponse(['error' => $e->getMessage()], $e->getCode());
-			if ($e->getCode() === Http::STATUS_BAD_REQUEST | Http::STATUS_UNAUTHORIZED) {
+			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
+			if ($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
 				// Throttle brute force attempts
 				$response->throttle(['action' => 'imageGenId']);
 			}
@@ -140,8 +140,8 @@ class Text2ImageController extends Controller {
 		try {
 			$this->text2ImageHelperService->setVisibilityOfImageFiles($imageGenId, $fileVisStatusArray);
 		} catch (Exception $e) {
-			$response = new DataResponse(['error' => $e->getMessage()], $e->getCode());
-			if($e->getCode() === Http::STATUS_BAD_REQUEST | Http::STATUS_UNAUTHORIZED) {
+			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
+			if($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
 				// Throttle brute force attempts
 				$response->throttle(['action' => 'imageGenId']);
 			}

@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\TPAssistant\Tests;
+namespace OCA\TpAssistant\Tests;
 
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 
 class TextProcessingServiceTest extends \PHPUnit\Framework\TestCase {
 

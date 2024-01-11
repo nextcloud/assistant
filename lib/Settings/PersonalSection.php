@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\TPAssistant\Settings;
+namespace OCA\TpAssistant\Settings;
 
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -43,9 +43,9 @@ class PersonalSection implements IIconSection {
 	}
 
 	/**
-	 * @return ?string The relative path to an icon describing the section
+	 * @return string The relative path to an icon describing the section
 	 */
-	public function getIcon(): ?string {
+	public function getIcon(): string {
 		return $this->urlGenerator->imagePath('settings', 'ai.svg');
 	}
 

@@ -3,15 +3,15 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Reference;
+namespace OCA\TpAssistant\Reference;
 
 use Exception;
-use OC\Collaboration\Reference\ReferenceManager;
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TPAssistant\Service\Text2Image\Text2ImageHelperService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
+use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;
+use OCP\Collaboration\Reference\IReferenceManager;
 use OCP\Collaboration\Reference\Reference;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -22,8 +22,7 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 	public function __construct(
 		private IL10N $l10n,
 		private IURLGenerator $urlGenerator,
-		private ReferenceManager $referenceManager,
-		private Text2ImageHelperService $text2ImageHelperService,
+		private IReferenceManager $referenceManager,
 		private ImageGenerationMapper $imageGenerationMapper,
 		private ?string $userId
 	) {
@@ -75,6 +74,7 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 		}
 
 		try {
+			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (Exception $e) {
 			$imageGeneration = null;

@@ -3,10 +3,10 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Controller;
+namespace OCA\TpAssistant\Controller;
 
 use Exception;
-use OCA\TPAssistant\Service\FreePrompt\FreePromptService;
+use OCA\TpAssistant\Service\FreePrompt\FreePromptService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;

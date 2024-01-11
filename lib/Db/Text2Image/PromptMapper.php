@@ -6,10 +6,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\TPAssistant\Db\Text2Image;
+namespace OCA\TpAssistant\Db\Text2Image;
 
 use DateTime;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -19,7 +19,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @implements QBMapper<Prompt>
+ * @extends QBMapper<Prompt>
  */
 class PromptMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
@@ -28,12 +28,12 @@ class PromptMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @return Prompt | Entity
+	 * @return Prompt|Entity
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getPrompt(int $id): Prompt | Entity {
+	public function getPrompt(int $id): Prompt|Entity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -48,12 +48,12 @@ class PromptMapper extends QBMapper {
 	/**
 	 * @param int $id
 	 * @param string $userId
-	 * @return Prompt
+	 * @return Prompt|Entity
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getPromptOfUser(int $id, string $userId): Prompt {
+	public function getPromptOfUser(int $id, string $userId): Prompt|Entity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -71,12 +71,12 @@ class PromptMapper extends QBMapper {
 	/**
 	 * @param string $userId
 	 * @param string $value
-	 * @return Prompt
+	 * @return Prompt|Entity
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getPromptOfUserByValue(string $userId, string $value): Prompt {
+	public function getPromptOfUserByValue(string $userId, string $value): Prompt|Entity {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -115,11 +115,12 @@ class PromptMapper extends QBMapper {
 	 * @param string $userId
 	 * @param string $value
 	 * @param int|null $timestamp
-	 * @return Prompt
+	 * @return Prompt|Entity
 	 * @throws Exception
 	 */
-	public function createPrompt(string $userId, string $value, ?int $timestamp = null): Prompt {
+	public function createPrompt(string $userId, string $value, ?int $timestamp = null): Prompt|Entity {
 		try {
+			/** @var Prompt $prompt */
 			$prompt = $this->getPromptOfUserByValue($userId, $value);
 			$ts = (new DateTime())->getTimestamp();
 			$prompt->setTimestamp($ts);

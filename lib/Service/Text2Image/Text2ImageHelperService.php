@@ -3,18 +3,20 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TPAssistant\Service\Text2Image;
+namespace OCA\TpAssistant\Service\Text2Image;
 
 use DateTime;
 use Exception as BaseException;
 use GdImage;
 
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Db\Text2Image\ImageFileNameMapper;
-use OCA\TPAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TPAssistant\Db\Text2Image\PromptMapper;
-use OCA\TPAssistant\Db\Text2Image\StaleGenerationMapper;
-use OCA\TPAssistant\Service\AssistantService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\Text2Image\ImageFileName;
+use OCA\TpAssistant\Db\Text2Image\ImageFileNameMapper;
+use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
+use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\TpAssistant\Db\Text2Image\PromptMapper;
+use OCA\TpAssistant\Db\Text2Image\StaleGenerationMapper;
+use OCA\TpAssistant\Service\AssistantService;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -24,37 +26,22 @@ use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFolder;
-use OCP\IConfig;
 use OCP\IImage;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\PreConditionNotMetException;
+use OCP\TextToImage\Exception\TaskFailureException;
 use OCP\TextToImage\IManager;
 use OCP\TextToImage\Task;
 use Psr\Log\LoggerInterface;
+use Random\RandomException;
 use RuntimeException;
 
 class Text2ImageHelperService {
-	/**
-	 * @var ISimpleFolder|null
-	 */
+
 	private ?ISimpleFolder $imageDataFolder = null;
 
-	/**
-	 * @param IConfig $config
-	 * @param LoggerInterface $logger
-	 * @param IManager $textToImageManager
-	 * @param string|null $userId
-	 * @param PromptMapper $promptMapper
-	 * @param ImageGenerationMapper $imageGenerationMapper
-	 * @param ImageFileNameMapper $imageFileNameMapper
-	 * @param StaleGenerationMapper $staleGenerationMapper
-	 * @param IAppData $appData
-	 * @param IURLGenerator $urlGenerator
-	 * @param IL10N $l10n
-	 * @param AssistantService $assistantService
-	 */
 	public function __construct(
-		private IConfig $config,
 		private LoggerInterface $logger,
 		private IManager $textToImageManager,
 		private ?string $userId,
@@ -74,10 +61,12 @@ class Text2ImageHelperService {
 	 *
 	 * @param string $prompt
 	 * @param int $nResults
-	 * @param bool $storePrompt
+	 * @param bool $displayPrompt
 	 * @return array
-	 * @throws \Exception
-	 * @throws \OCP\TextToImage\Exception\TaskFailureException;
+	 * @throws Exception
+	 * @throws PreConditionNotMetException
+	 * @throws TaskFailureException ;
+	 * @throws RandomException
 	 */
 	public function processPrompt(string $prompt, int $nResults, bool $displayPrompt): array {
 		if (!$this->textToImageManager->hasProviders()) {
@@ -95,7 +84,7 @@ class Text2ImageHelperService {
 		$promptTask = new Task($prompt, Application::APP_ID, $nResults, $this->userId, $imageGenId);
 
 		$this->textToImageManager->runOrScheduleTask($promptTask);
-		
+
 		$taskExecuted = false;
 
 		/** @var IImage[]|null $images */
@@ -260,7 +249,7 @@ class Text2ImageHelperService {
 			$this->logger->debug('Task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			return;
 		}
-		
+
 		// Generate the link:
 		$link = $this->urlGenerator->linkToRouteAbsolute(
 			Application::APP_ID . '.Text2Image.showGenerationPage',
@@ -295,7 +284,7 @@ class Text2ImageHelperService {
 				} catch (NotPermittedException | RuntimeException $e) {
 					$this->logger->debug('Image data folder could not be created: '
 						. $e->getMessage(), ['app' => Application::APP_ID]);
-					throw new Exception('Image data folder could not be created: ' . $e->getMessage());
+					throw new \Exception('Image data folder could not be created: ' . $e->getMessage());
 				}
 			}
 		}
@@ -313,6 +302,7 @@ class Text2ImageHelperService {
 	public function getGenerationInfo(string $imageGenId, bool $updateTimestamp = true): array {
 		// Check whether the task has completed:
 		try {
+			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			try {
@@ -380,12 +370,13 @@ class Text2ImageHelperService {
 	 * Get image based on imageFileNameId (imageGenId is used to prevent guessing image ids)
 	 * @param string $imageGenId
 	 * @param int $imageFileNameId
-	 * @return array('image' => string, 'content-type' => string)
+	 * @return array ('image' => string, 'content-type' => string)
 	 * @throws BaseException
 	 */
 	public function getImage(string $imageGenId, int $imageFileNameId): ?array {
 		try {
 			$generationId = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId)->getId();
+			/** @var ImageFileName $imageFileName */
 			$imageFileName = $this->imageFileNameMapper->getImageFileNameOfGenerationId($generationId, $imageFileNameId);
 		} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage(), ['app' => Application::APP_ID]);
@@ -425,6 +416,7 @@ class Text2ImageHelperService {
 	 */
 	public function cancelGeneration(string $imageGenId): void {
 		try {
+			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 			$this->logger->warning('Image generation being deleted not in db: ' . $e->getMessage(), ['app' => Application::APP_ID]);
@@ -502,6 +494,7 @@ class Text2ImageHelperService {
 	 */
 	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisSatusArray): void {
 		try {
+			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());
@@ -532,6 +525,7 @@ class Text2ImageHelperService {
 	 */
 	public function notifyWhenReady(string $imageGenId): void {
 		try {
+			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());

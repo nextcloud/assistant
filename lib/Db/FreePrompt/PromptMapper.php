@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\TPAssistant\Db\FreePrompt;
+namespace OCA\TpAssistant\Db\FreePrompt;
 
 use DateTime;
-use OCA\TPAssistant\AppInfo\Application;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
@@ -17,7 +17,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @implements QBMapper<Prompt>
+ * @extends QBMapper<Prompt>
  */
 class PromptMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
@@ -124,7 +124,7 @@ class PromptMapper extends QBMapper {
 		if ($timestamp === null) {
 			$timestamp = (new DateTime())->getTimestamp();
 		}
-		
+
 		try {
 			$prompt = $this->getPromptOfUserByValue($userId, $value);
 			$prompt->setTimestamp($timestamp);

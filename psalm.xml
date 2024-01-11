@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<psalm
+	errorBaseline="tests/psalm-baseline.xml"
+	errorLevel="4"
+	findUnusedBaselineEntry="true"
+	findUnusedCode="false"
+	resolveFromConfigFile="true"
+	phpVersion="8.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://getpsalm.org/schema/config"
+	xsi:schemaLocation="https://getpsalm.org/schema/config vendor-bin/psalm/vendor/vimeo/psalm/config.xsd"
+>
+	<projectFiles>
+		<directory name="lib" />
+		<ignoreFiles>
+			<directory name="vendor" />
+		</ignoreFiles>
+	</projectFiles>
+	<extraFiles>
+		<directory name="vendor" />
+	</extraFiles>
+	<issueHandlers>
+		<LessSpecificReturnStatement errorLevel="error"/>
+		<LessSpecificReturnType errorLevel="error"/>
+		<LessSpecificImplementedReturnType errorLevel="error"/>
+		<MoreSpecificReturnType errorLevel="error"/>
+		<UndefinedClass>
+			<errorLevel type="suppress">
+				<referencedClass name="Doctrine\DBAL\Exception" />
+				<referencedClass name="Doctrine\DBAL\Exception\InvalidFieldNameException" />
+				<referencedClass name="Doctrine\DBAL\Exception\TableNotFoundException" />
+				<referencedClass name="Doctrine\DBAL\Exception\UniqueConstraintViolationException" />
+				<referencedClass name="Doctrine\DBAL\Platforms\PostgreSQLPlatform" />
+				<referencedClass name="GuzzleHttp\Exception\ClientException" />
+				<referencedClass name="GuzzleHttp\Exception\ServerException" />
+				<referencedClass name="GuzzleHttp\Exception\ConnectException" />
+				<referencedClass name="OC" />
+				<referencedClass name="OCA\Circles\Api\v1\Circles" />
+				<referencedClass name="OCA\Circles\CirclesManager" />
+				<referencedClass name="OCA\Circles\Events\AddingCircleMemberEvent" />
+				<referencedClass name="OCA\Circles\Events\CircleDestroyedEvent" />
+				<referencedClass name="OCA\Circles\Events\RemovingCircleMemberEvent" />
+				<referencedClass name="OCA\Circles\Model\Circle" />
+				<referencedClass name="OCA\Circles\Model\Member" />
+				<referencedClass name="OCA\Circles\Model\Membership" />
+				<referencedClass name="OCA\DAV\CardDAV\PhotoCache" />
+				<referencedClass name="OCA\FederatedFileSharing\AddressHandler" />
+				<referencedClass name="OCA\Files_Sharing\SharedStorage" />
+				<referencedClass name="Stecman\Component\Symfony\Console\BashCompletion\CompletionContext" />
+				<referencedClass name="OC\Collaboration\Reference\LinkReferenceProvider" />
+				<referencedClass name="Symfony\Component\Console\Input\InputArgument" />
+				<referencedClass name="Symfony\Component\Console\Input\InputInterface" />
+				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
+			</errorLevel>
+		</UndefinedClass>
+		<UndefinedDocblockClass>
+			<errorLevel type="suppress">
+				<referencedClass name="Doctrine\DBAL\Driver\Statement" />
+				<referencedClass name="Doctrine\DBAL\Exception" />
+				<referencedClass name="Doctrine\DBAL\Exception\UniqueConstraintViolationException" />
+				<referencedClass name="Doctrine\DBAL\Platforms\AbstractPlatform" />
+				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
+				<referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
+				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OC\DB\ConnectionAdapter" />
+				<referencedClass name="OC\User\NoUserException" />
+				<referencedClass name="OCA\Circles\CirclesManager" />
+				<referencedClass name="OCA\Circles\Model\Member" />
+				<referencedClass name="OCA\DAV\CardDAV\PhotoCache" />
+				<referencedClass name="OCA\FederatedFileSharing\AddressHandler" />
+			</errorLevel>
+		</UndefinedDocblockClass>
+		<InvalidClass>
+			<errorLevel type="suppress">
+				<referencedClass name="OCP\Db\Exception" />
+				<referencedClass name="OCP\AppFramework\Db\QBMapper" />
+			</errorLevel>
+		</InvalidClass>
+		<UndefinedInterfaceMethod>
+			<errorLevel type="suppress">
+				<referencedMethod name="OCP\IDBConnection::getInner" />
+			</errorLevel>
+		</UndefinedInterfaceMethod>
+		<InvalidThrow>
+			<errorLevel type="suppress">
+				<referencedClass name="Doctrine\DBAL\Exception\UniqueConstraintViolationException" />
+			</errorLevel>
+		</InvalidThrow>
+	</issueHandlers>
+	<stubs>
+		<file name="tests/stubs/oc_core_command_base.php" />
+	</stubs>
+</psalm>

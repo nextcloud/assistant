@@ -1,15 +1,18 @@
 <?php
 
-namespace OCA\TPAssistant\Listener;
+namespace OCA\TpAssistant\Listener;
 
-use OCA\TPAssistant\AppInfo\Application;
-use OCA\TPAssistant\Event\BeforeAssistantNotificationEvent;
-use OCA\TPAssistant\Service\AssistantService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Event\BeforeAssistantNotificationEvent;
+use OCA\TpAssistant\Service\AssistantService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TextProcessing\Events\TaskFailedEvent;
 
+/**
+ * @template-implements IEventListener<Event>
+ */
 class TaskFailedListener implements IEventListener {
 
 	public function __construct(
