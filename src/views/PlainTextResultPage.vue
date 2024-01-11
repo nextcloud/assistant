@@ -18,6 +18,8 @@ import AssistantPlainTextModal from '../components/AssistantPlainTextModal.vue'
 
 import { loadState } from '@nextcloud/initial-state'
 
+import { showError } from '@nextcloud/dialogs'
+
 export default {
 	name: 'PlainTextResultPage',
 
@@ -40,6 +42,9 @@ export default {
 	},
 
 	mounted() {
+		if (this.state?.status !== 'success') {
+			showError(t('assistant', 'The transcription could not be found. I may have been deleted.'))
+		}
 	},
 
 	methods: {
