@@ -5,6 +5,7 @@ OC.L10N.register(
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
     "Reset" : "Restablecer",
+    "Submit" : "Enviar",
     "Preview" : "Previsualizar",
     "Advanced options" : "Opciones avanzadas",
     "Send" : "Enviar"

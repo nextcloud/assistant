@@ -6,6 +6,8 @@ OC.L10N.register(
     "Result" : "Resultat",
     "Copy" : "Kopiér",
     "Close" : "Luk",
+    "Reset" : "Nulstil",
+    "Submit" : "Tilføj",
     "Preview" : "Forhåndsvisning",
     "Advanced options" : "Avancerede indstillinger",
     "Send" : "Send"

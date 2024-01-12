@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "View" : "Vidi",
     "Close" : "Malfermi",
+    "Reset" : "Restarigi",
+    "Submit" : "Sendi",
     "Preview" : "Antaŭvidi",
     "Advanced options" : "Detalaj agordoj",
     "Send" : "Sendi"

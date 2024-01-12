@@ -27,6 +27,7 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "دستیار Nextcloud را ببندید",
     "Reset" : "بازنشاندن",
     "Prompt" : "Prompt",
+    "Result {index}" : "Result {index}",
     "Assistant options saved" : "گزینه های دستیار ذخیره شد",
     "Failed to save assistant options" : "گزینه های دستیار ذخیره نشد",
     "Image generation" : "Image generation",
