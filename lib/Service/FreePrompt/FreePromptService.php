@@ -46,7 +46,7 @@ class FreePromptService {
 
 		if ($this->userId === null) {
 			$this->logger->warning('User id is null when trying to process prompt');
-			throw new Exception($this->l10n->t('Failed process prompt; unkown user'), Http::STATUS_INTERNAL_SERVER_ERROR);
+			throw new Exception($this->l10n->t('Failed process prompt; unknown user'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 		
 		// Generate a unique id for this generation
