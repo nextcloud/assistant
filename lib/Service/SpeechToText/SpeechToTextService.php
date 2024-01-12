@@ -176,6 +176,7 @@ class SpeechToTextService {
 		} catch (\OCP\Db\Exception $e) {
 			$this->logger->error('Failed to save transcript in DB: ' . $e->getMessage());
 			$success = false;
+			$id = 0;
 		}
 
 		$params = [
