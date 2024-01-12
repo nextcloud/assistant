@@ -216,7 +216,6 @@ export default {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		align-items: start;
 	}
 
 	.assistant-bubble {
