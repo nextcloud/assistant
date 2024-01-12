@@ -152,6 +152,31 @@ class Version010003Date20231208083112 extends SimpleMigrationStep {
 			$table->addIndex(['user_id', 'timestamp'], 'assistant_t_prompts_uid_ts');
 		}
 
+		if (!$schema->hasTable('assistant_stt_transcripts')) {
+			$schemaChanged = true;
+			$table = $schema->createTable('assistant_stt_transcripts');
+
+			$table->addColumn('id', Types::BIGINT, [
+				'autoincrement' => true,
+				'notnull' => true,
+				'length' => 64,
+			]);
+			$table->addColumn('user_id', Types::STRING, [
+				'notnull' => false,
+				'length' => 64,
+			]);
+			$table->addColumn('transcript', Types::TEXT, [
+				'notnull' => true,
+			]);
+			$table->addColumn('last_accessed', Types::DATETIME, [
+				'notnull' => false,
+			]);
+
+			$table->setPrimaryKey(['id'], 'assistant_stt_transcript_id');
+			$table->addIndex(['user_id'], 'assistant_stt_transcript_user');
+			$table->addIndex(['last_accessed'], 'assistant_stt_transcript_la');
+		}
+
 		return $schemaChanged ? $schema : null;
 	}
 

@@ -1,4 +1,4 @@
-import { handleNotification, addAssistantMenuEntry, openAssistantForm, openAssistantResult } from './assistant.js'
+import { handleNotification, addAssistantMenuEntry, openAssistantTextProcessingForm, openAssistantTaskResult } from './assistant.js'
 import { subscribe } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
 
@@ -12,9 +12,9 @@ function init() {
 		/**
 		 * @namespace
 		 */
-		OCA.TpAssistant = {
-			openAssistantForm,
-			openAssistantResult,
+		OCA.TPAssistant = {
+			openAssistantTextProcessingForm,
+			openAssistantTaskResult,
 		}
 		subscribe('notifications:action:execute', handleNotification)
 		if (loadState('assistant', 'assistant-enabled')) {

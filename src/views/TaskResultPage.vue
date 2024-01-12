@@ -11,7 +11,7 @@
 					v-else-if="showScheduleConfirmation"
 					:description="shortInput"
 					:show-close-button="false" />
-				<AssistantForm
+				<AssistantTextProcessingForm
 					v-else
 					class="form"
 					:input="task.input"
@@ -29,7 +29,7 @@
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
-import AssistantForm from '../components/AssistantForm.vue'
+import AssistantTextProcessingForm from '../components/AssistantTextProcessingForm.vue'
 import RunningEmptyContent from '../components/RunningEmptyContent.vue'
 import ScheduledEmptyContent from '../components/ScheduledEmptyContent.vue'
 
@@ -43,7 +43,7 @@ export default {
 	components: {
 		ScheduledEmptyContent,
 		RunningEmptyContent,
-		AssistantForm,
+		AssistantTextProcessingForm,
 		NcContent,
 		NcAppContent,
 	},

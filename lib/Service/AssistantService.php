@@ -5,6 +5,7 @@ namespace OCA\TpAssistant\Service;
 use DateTime;
 use OCA\TpAssistant\AppInfo\Application;
 use OCP\Common\Exception\NotFoundException;
+use OCP\IURLGenerator;
 use OCP\Notification\IManager as INotificationManager;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
@@ -14,9 +15,9 @@ use OCP\TextToImage\Task as TextToImageTask;
 class AssistantService {
 
 	public function __construct(
-		string $appName,
 		private INotificationManager $notificationManager,
 		private ITextProcessingManager $textProcessingManager,
+		private IURLGenerator $url,
 	) {
 	}
 
@@ -27,6 +28,7 @@ class AssistantService {
 	 * @param string|null $target optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @return void
+	 * @throws \InvalidArgumentException
 	 */
 	public function sendNotification(TextProcessingTask|TextToImageTask $task, ?string $target = null, ?string $actionLabel = null): void {
 		$manager = $this->notificationManager;

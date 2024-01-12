@@ -5,3 +5,8 @@ export const STATUS = {
 	scheduled: 1,
 	unknown: 0,
 }
+export const TASK_TYPES = {
+	text_generation: 0,
+	image_generation: 1,
+	speech_to_text: 2,
+}

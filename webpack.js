@@ -18,6 +18,8 @@ webpackConfig.entry = {
 	imageGenerationPage: { import: path.join(__dirname, 'src', 'imageGenerationPage.js'), filename: appId + '-imageGenerationPage.js' },
 	imageGenerationReference: { import: path.join(__dirname, 'src', 'imageGenerationReference.js'), filename: appId + '-imageGenerationReference.js' },
 	textGenerationReference: { import: path.join(__dirname, 'src', 'textGenerationReference.js'), filename: appId + '-textGenerationReference.js' },
+	speechToTextResultPage: { import: path.join(__dirname, 'src', 'speechToTextResultPage.js'), filename: appId + '-speechToTextResultPage.js' },
+	speechToTextReference: { import: path.join(__dirname, 'src', 'speechToTextReference.js'), filename: appId + '-speechToTextReference.js' },
 	personalSettings: { import: path.join(__dirname, 'src', 'personalSettings.js'), filename: appId + '-personalSettings.js' },
 	adminSettings: { import: path.join(__dirname, 'src', 'adminSettings.js'), filename: appId + '-adminSettings.js' },
 	main: { import: path.join(__dirname, 'src', 'main.js'), filename: appId + '-main.js' },

@@ -7,8 +7,10 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
+use OCP\SpeechToText\ISpeechToTextManager;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
+
 use OCP\TextToImage\IManager as ITextToImageManager;
 
 class Admin implements ISettings {
@@ -17,7 +19,8 @@ class Admin implements ISettings {
 		private IConfig $config,
 		private IInitialState $initialStateService,
 		private ITextToImageManager $textToImageManager,
-		private ITextProcessingManager $textProcessingManager
+		private ITextProcessingManager $textProcessingManager,
+		private ISpeechToTextManager $speechToTextManager,
 	) {
 	}
 
@@ -32,6 +35,8 @@ class Admin implements ISettings {
 		$textToImagePickerEnabled = $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$maxImageGenerationIdleTime = (int) $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', (string) Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
 		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
+		$speechToTextAvailable = $this->speechToTextManager->hasProviders();
+		$speechToTextEnabled = $this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 
 		$adminConfig = [
 			'text_processing_available' => $textProcessingAvailable,
@@ -41,6 +46,8 @@ class Admin implements ISettings {
 			'max_image_generation_idle_time' => $maxImageGenerationIdleTime,
 			'free_prompt_task_type_available' => $freePromptTaskTypeAvailable,
 			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
+			'speech_to_text_picker_available' => $speechToTextAvailable,
+			'speech_to_text_picker_enabled' => $speechToTextEnabled,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

@@ -132,7 +132,7 @@ Vue.use(VueClipboard)
 const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
 
 export default {
-	name: 'AssistantForm',
+	name: 'AssistantTextProcessingForm',
 	components: {
 		TaskTypeSelect,
 		NcButton,

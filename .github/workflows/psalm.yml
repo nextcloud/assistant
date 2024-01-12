@@ -46,6 +46,7 @@ jobs:
           php-version: 8.2
           coverage: none
           ini-file: development
+          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, gd, zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
