@@ -43,7 +43,7 @@ export default {
 
 	mounted() {
 		if (this.state?.status !== 'success') {
-			showError(t('assistant', 'The transcription could not be found. I may have been deleted.'))
+			showError(t('assistant', 'The transcription could not be found. It may have been deleted.'))
 		}
 	},
 
