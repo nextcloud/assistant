@@ -2,8 +2,8 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Skats",
-    "Close" : "Aizvērt",
     "Reset" : "Atiestatīt",
+    "Close" : "Aizvērt",
     "Submit" : "Iesniegt",
     "Preview" : "Priekšskatīt",
     "Advanced options" : "Papildu opcijas",

@@ -2,11 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "צפייה",
+    "Reset" : "איפוס",
+    "Close" : "סגירה",
     "Result" : "תוצאה",
     "Copy" : "העתקה",
     "Try again" : "ניסיון חוזר",
-    "Close" : "סגירה",
-    "Reset" : "איפוס",
     "Submit" : "שליחה",
     "Preview" : "תצוגה מקדימה",
     "Advanced options" : "אפשרויות מתקדמות",

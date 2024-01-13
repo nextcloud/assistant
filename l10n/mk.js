@@ -3,9 +3,9 @@ OC.L10N.register(
     {
     "View" : "Погледни",
     "Artificial Intelligence" : "Вештачка интелигенција",
-    "Try again" : "Обиди се повторно",
-    "Close" : "Затвори",
     "Reset" : "Ресетирање",
+    "Close" : "Затвори",
+    "Try again" : "Обиди се повторно",
     "Submit" : "Испрати",
     "Advanced options" : "Напредни опции",
     "Send" : "Прати"

@@ -2,9 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Vizualizare",
-    "Copy" : "Copiază",
-    "Close" : "Închide",
     "Reset" : "Resetare",
+    "Close" : "Închide",
+    "Copy" : "Copiază",
     "Submit" : "Trimite",
     "Preview" : "Previzualizare",
     "Advanced options" : "Opțiuni avansate",

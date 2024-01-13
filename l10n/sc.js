@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Visualiza",
+    "Reset" : "Torra a impostare",
+    "Close" : "Serra",
     "Result" : "Resurtadu",
     "Copy" : "Còpia",
-    "Close" : "Serra",
-    "Reset" : "Torra a impostare",
     "Image generation" : "Generatzione de imàgines",
     "Submit" : "Imbia",
     "Advanced options" : "Sèberos avantzados",

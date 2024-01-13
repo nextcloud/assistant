@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "View" : "Vis",
     "Artificial Intelligence" : "Kunstig Intelligens",
+    "Reset" : "Nulstil",
+    "Close" : "Luk",
     "Result" : "Resultat",
     "Copy" : "Kopiér",
-    "Close" : "Luk",
-    "Reset" : "Nulstil",
     "Submit" : "Tilføj",
     "Preview" : "Forhåndsvisning",
     "Advanced options" : "Avancerede indstillinger",

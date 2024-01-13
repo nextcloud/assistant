@@ -1,10 +1,12 @@
 OC.L10N.register(
     "assistant",
     {
+    "Audio file not found." : "ไม่พบไฟล์เสียง",
+    "Speech to Text" : "คำพูดเป็นข้อความ",
     "View" : "มุมมอง",
-    "Copy" : "คัดลอก",
-    "Close" : "ปิด",
     "Reset" : "รีเซ็ต",
+    "Close" : "ปิด",
+    "Copy" : "คัดลอก",
     "Submit" : "ส่ง",
     "Preview" : "ตัวอย่าง",
     "Advanced options" : "ตัวเลือกขั้นสูง",

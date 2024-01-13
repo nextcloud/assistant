@@ -2,8 +2,8 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Veire",
-    "Close" : "Tampar",
     "Reset" : "Reïnicializar",
+    "Close" : "Tampar",
     "Submit" : "Transmetre",
     "Preview" : "Apercebut",
     "Advanced options" : "Opcions avançadas",

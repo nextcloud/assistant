@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "View" : "View",
     "Artificial Intelligence" : "Artificial Intelligence",
+    "Reset" : "Reset",
+    "Close" : "Close",
     "Result" : "Result",
     "Copy" : "Copy",
-    "Close" : "Close",
-    "Reset" : "Reset",
     "Image generation" : "Image generation",
     "Submit" : "Submit",
     "Preview" : "Preview",

@@ -3,11 +3,11 @@ OC.L10N.register(
     {
     "View results" : "Bekijk resultaten",
     "View" : "Bekijken",
+    "Reset" : "Herstellen",
+    "Close" : "Sluit",
     "Result" : "Resultaat",
     "Copy" : "Kopiëren",
     "Try again" : "Probeer opnieuw",
-    "Close" : "Sluit",
-    "Reset" : "Herstellen",
     "Submit" : "Verwerken",
     "Preview" : "Voorbeeld",
     "Advanced options" : "Geavanceerde opties",

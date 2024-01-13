@@ -2,11 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Shiko",
+    "Reset" : "Rivendos",
+    "Close" : "Mbylleni",
     "Result" : "Rezultatet",
     "Copy" : "Kopjoni",
     "Try again" : "Provo përsëri",
-    "Close" : "Mbylleni",
-    "Reset" : "Rivendos",
     "Submit" : "Dërgo",
     "Preview" : "Parapamje ",
     "Advanced options" : "Opsione të avancuara",

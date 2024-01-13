@@ -2,9 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Ver",
-    "Copy" : "copiar",
-    "Close" : "Fechar",
     "Reset" : "Reiniciar",
+    "Close" : "Fechar",
+    "Copy" : "copiar",
     "Submit" : "Submeter",
     "Preview" : "Pré-visualizar",
     "Advanced options" : "Opções avançadas",

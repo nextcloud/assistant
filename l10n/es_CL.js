@@ -1,9 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Reset" : "Restablecer",
     "Result" : "Resultado",
     "Try again" : "Reintentar",
-    "Reset" : "Restablecer",
     "Submit" : "Enviar",
     "Preview" : "Previsualizar",
     "Advanced options" : "Opciones avanzadas",

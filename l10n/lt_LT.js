@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "View results" : "Rodyti rezultatus",
     "View" : "Rodyti",
+    "Reset" : "Atstatyti",
+    "Close" : "Užverti",
     "Copy" : "Kopija",
     "Try again" : "Bandykite dar kartą",
-    "Close" : "Užverti",
-    "Reset" : "Atstatyti",
     "Submit" : "Pateikti",
     "Preview" : "Peržiūra",
     "Show/hide advanced options" : "Rodyti/slėpti išplėstines parinktis",

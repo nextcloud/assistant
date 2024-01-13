@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "View results" : "Pregledaj rezultate",
     "View" : "Pregledaj",
+    "Reset" : "Resetiraj",
+    "Close" : "Zatvori",
     "Result" : "Rezultat",
     "Copy" : "Kopirajte",
-    "Close" : "Zatvori",
-    "Reset" : "Resetiraj",
     "Submit" : "Šalji",
     "Advanced options" : "Napredne opcije",
     "Send" : "Pošaljite",

@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Ver",
+    "Reset" : "Restablecer",
+    "Close" : "Cerrar",
     "Result" : "Resultado",
     "Try again" : "Inténtalo de nuevo",
-    "Close" : "Cerrar",
-    "Reset" : "Restablecer",
     "Submit" : "Enviar",
     "Preview" : "Vista previa",
     "Advanced options" : "Opciones avanzadas",

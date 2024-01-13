@@ -2,8 +2,8 @@ OC.L10N.register(
     "assistant",
     {
     "View" : "Vidi",
-    "Close" : "Malfermi",
     "Reset" : "Restarigi",
+    "Close" : "Malfermi",
     "Submit" : "Sendi",
     "Preview" : "Antaŭvidi",
     "Advanced options" : "Detalaj agordoj",
