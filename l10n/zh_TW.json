@@ -19,7 +19,6 @@
     "Speech to Text" : "語音轉文字",
     "AI image generation" : "AI 影像產生",
     "FreePromptTaskType not available" : "FreePromptTaskType 不可用",
-    "Failed process prompt; unkown user" : "處理提示失敗；未知的使用者",
     "Failed to run or schedule a task" : "執行或安排任務失敗",
     "Failed to get prompt history" : "取得提示歷史紀錄失敗",
     "Generation not found" : "找不到產生",

@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "No Speech-to-Text provider found, install one from the app store to use this feature." : "Nenalezen žádný poskytovatel převodu řeči na text – aby bylo možné tuto funkci využívat, nainstalujte nějaký z katalogu aplikací.",
+    "Audio file not found." : "Zvukový soubor nenalezen.",
     "Nextcloud Assistant" : "Nextcloud Asistent",
     "Text to image" : "Text na obrázek",
     "Task for \"%1$s\" has finished" : "Úloha pro „%1$s“ dokončena",
@@ -11,6 +13,7 @@ OC.L10N.register(
     "\"%1$s\" task for \"%2$s\" has failed" : "Úkol „%1$s“ pro „%2$s“ se nezdařil",
     "View task" : "Zobrazit úkoly",
     "AI text generation" : "Vytváření textů pomocí AI",
+    "Speech to Text" : "Řeč na text",
     "AI image generation" : "Vytváření obrázků pomocí AI",
     "FreePromptTaskType not available" : "FreePromptTaskType není k dispozici",
     "Failed to run or schedule a task" : "Úlohu se nepodařilo spustit či naplánovat",
@@ -82,6 +85,10 @@ OC.L10N.register(
     "You will be notified when the text generation is ready." : "Až bude vytváření hotové, budete upozorněni.",
     "Notify when ready error" : "Chyba při upozorňování na dokončení",
     "Unknown notify when ready error" : "Neznámá chyba upozornění při dokončení",
+    "Record Audio" : "Nahrát zvuk",
+    "Choose Audio File" : "Zvolit zvukový soubor",
+    "Selected Audio File:" : "Vybraný zvukový soubor:",
+    "Unknown API error" : "Neznámá chyba aplikačního program. rozhraní",
     "Failed to schedule your task" : "Nepodařilo se naplánovat vaši úlohu",
     "AI Image Generation" : "Vytváření obrázků pomocí AI",
     "Show/hide advanced options" : "Zobrazit/skrýt pokročilé předvolby",

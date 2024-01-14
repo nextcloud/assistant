@@ -21,7 +21,6 @@ OC.L10N.register(
     "Speech to Text" : "Говор у текст",
     "AI image generation" : "AI генерисање слике",
     "FreePromptTaskType not available" : "Није доступан FreePromptTaskType",
-    "Failed process prompt; unkown user" : "Није успела обрада захтева; непознати корисник",
     "Failed to run or schedule a task" : "Није успело покретање или заказивање задатка",
     "Failed to get prompt history" : "Није успело преузимање историје одзива",
     "Generation not found" : "Није пронађено генерисање",
