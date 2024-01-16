@@ -9,6 +9,7 @@ OC.L10N.register(
     "Copy" : "복사",
     "Try again" : "다시 시도",
     "Submit" : "제출",
+    "Preview" : "미리 보기",
     "Advanced options" : "고급 설정",
     "Send" : "전송"
 },
