@@ -246,6 +246,10 @@ export default {
 		margin: 8px 0;
 		.radios {
 			display: flex;
+
+			:deep(.checkbox-radio-switch__text) {
+				flex: unset !important;
+			}
 		}
 	}
 
