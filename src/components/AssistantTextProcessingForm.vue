@@ -227,7 +227,14 @@ export default {
 
 					// Check if FREE_PROMPT_TASK_TYPE_ID is available
 					if (this.taskTypes.find(tt => tt.id === FREE_PROMPT_TASK_TYPE_ID)) {
-						// If it is, inject a copywriter task type into the list
+						// change free prompt task type name
+						this.taskTypes = this.taskTypes.map(type => {
+							if (type.id === FREE_PROMPT_TASK_TYPE_ID) {
+								type.name = t('assistant', 'Generate text')
+							}
+							return type
+						})
+						// inject a copywriter task type
 						this.taskTypes.push({
 							id: 'copywriter',
 							name: t('assistant', 'Context write'),
