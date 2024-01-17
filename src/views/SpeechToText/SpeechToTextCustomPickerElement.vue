@@ -31,13 +31,25 @@
 					</div>
 				</div>
 			</div>
-			<audio-recorder v-if="mode === 'record'"
-				class="recorder"
-				:attempts="1"
-				:time="300"
-				:show-download-button="false"
-				:show-upload-button="false"
-				:after-recording="onRecordEnd" />
+			<div v-if="mode === 'record'"
+				class="recorder-wrapper">
+				<NcButton v-if="audioData !== null"
+					@click="onResetRecording">
+					<template #icon>
+						<UndoIcon />
+					</template>
+					{{ t('assistant', 'Reset') }}
+				</NcButton>
+				<audio-recorder
+					class="recorder"
+					:class="{'no-audio': audioData === null, 'with-audio': audioData !== null}"
+					:attempts="1"
+					:time="300"
+					:show-download-button="false"
+					:show-upload-button="false"
+					:after-recording="onRecordEnd"
+					mode="minimal" />
+			</div>
 			<div v-else>
 				<div class="line">
 					{{ audioFilePath == null
@@ -71,6 +83,7 @@
 
 <script>
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
+import UndoIcon from 'vue-material-design-icons/Undo.vue'
 
 import AssistantIcon from '../../components/icons/AssistantIcon.vue'
 
@@ -115,6 +128,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		NcLoadingIcon,
 		AssistantIcon,
+		UndoIcon,
 	},
 
 	props: {
@@ -145,6 +159,15 @@ export default {
 
 		async onChooseButtonClick() {
 			this.audioFilePath = await picker.pick()
+		},
+
+		onResetRecording() {
+			this.audioData = null
+			// trick to remove the recorder and re-render it so the data is gone and its state is fresh
+			this.mode = 'nothing'
+			this.$nextTick(() => {
+				this.mode = 'record'
+			})
 		},
 
 		async onRecordEnd(e) {
@@ -245,9 +268,33 @@ export default {
 		width: 100%;
 	}
 
+	.recorder-wrapper {
+		margin: 12px 0 12px 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
 	:deep(.recorder) {
+		&.no-audio {
+			.ar-player {
+				&-actions {
+					display: none;
+				}
+			}
+		}
+
+		&.with-audio {
+			.ar-recorder {
+				display: none;
+			}
+		}
+		margin-top: 2px;
 		background-color: var(--color-main-background) !important;
 		box-shadow: unset !important;
+		.ar-content {
+			padding: 0;
+		}
 		.ar-content * {
 			color: var(--color-main-text) !important;
 		}
@@ -255,6 +302,9 @@ export default {
 			background-color: var(--color-main-background) !important;
 			fill: var(--color-main-text) !important;
 			border: 1px solid var(--color-border) !important;
+		}
+		.ar-recorder__duration {
+			margin: 16px 0 16px 0;
 		}
 		.ar-recorder__time-limit {
 			position: unset !important;
