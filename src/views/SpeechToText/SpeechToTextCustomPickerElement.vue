@@ -40,14 +40,30 @@
 					</template>
 					{{ t('assistant', 'Reset') }}
 				</NcButton>
+				<NcButton v-if="audioData === null && !isRecording"
+					@click="onStartRecording">
+					<template #icon>
+						<MicrophoneIcon />
+					</template>
+					{{ t('assistant', 'Start recording') }}
+				</NcButton>
+				<NcButton v-if="audioData === null && isRecording"
+					@click="onStopRecording">
+					<template #icon>
+						<StopIcon />
+					</template>
+					{{ t('assistant', 'Stop recording') }}
+				</NcButton>
 				<audio-recorder
+					ref="recorder"
 					class="recorder"
 					:class="{'no-audio': audioData === null, 'with-audio': audioData !== null}"
 					:attempts="1"
 					:time="300"
 					:show-download-button="false"
 					:show-upload-button="false"
-					:after-recording="onRecordEnd"
+					:before-recording="onRecordStarts"
+					:after-recording="onRecordEnds"
 					mode="minimal" />
 			</div>
 			<div v-else>
@@ -84,6 +100,8 @@
 <script>
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import UndoIcon from 'vue-material-design-icons/Undo.vue'
+import StopIcon from 'vue-material-design-icons/Stop.vue'
+import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 
 import AssistantIcon from '../../components/icons/AssistantIcon.vue'
 
@@ -129,6 +147,8 @@ export default {
 		NcLoadingIcon,
 		AssistantIcon,
 		UndoIcon,
+		MicrophoneIcon,
+		StopIcon,
 	},
 
 	props: {
@@ -146,9 +166,16 @@ export default {
 		return {
 			loading: false,
 			mode: 'record',
+			isRecording: false,
 			audioData: null,
 			audioFilePath: null,
 		}
+	},
+
+	watch: {
+		mode() {
+			this.isRecording = false
+		},
 	},
 
 	methods: {
@@ -170,7 +197,20 @@ export default {
 			})
 		},
 
-		async onRecordEnd(e) {
+		onStartRecording() {
+			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
+		},
+
+		onStopRecording() {
+			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
+		},
+
+		async onRecordStarts(e) {
+			this.isRecording = true
+		},
+
+		async onRecordEnds(e) {
+			this.isRecording = false
 			try {
 				this.audioData = e.blob
 			} catch (error) {
@@ -288,10 +328,8 @@ export default {
 			}
 		}
 
-		&.with-audio {
-			.ar-recorder {
-				display: none;
-			}
+		.ar-recorder {
+			display: none;
 		}
 		margin-top: 2px;
 		background-color: var(--color-main-background) !important;
