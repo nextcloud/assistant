@@ -41,6 +41,7 @@
 					{{ t('assistant', 'Reset') }}
 				</NcButton>
 				<NcButton v-if="audioData === null && !isRecording"
+					ref="startRecordingButton"
 					@click="onStartRecording">
 					<template #icon>
 						<MicrophoneIcon />
@@ -48,6 +49,7 @@
 					{{ t('assistant', 'Start recording') }}
 				</NcButton>
 				<NcButton v-if="audioData === null && isRecording"
+					ref="stopRecordingButton"
 					@click="onStopRecording">
 					<template #icon>
 						<StopIcon />
@@ -172,16 +174,16 @@ export default {
 		}
 	},
 
-	watch: {
-		mode() {
-			this.isRecording = false
-		},
+	mounted() {
+		const recordButton = this.$refs.startRecordingButton
+		recordButton?.$el?.focus()
 	},
 
 	methods: {
 		resetAudioState() {
 			this.audioData = null
 			this.audioFilePath = null
+			this.isRecording = false
 		},
 
 		async onChooseButtonClick() {
@@ -194,6 +196,10 @@ export default {
 			this.mode = 'nothing'
 			this.$nextTick(() => {
 				this.mode = 'record'
+				this.$nextTick(() => {
+					const recordButton = this.$refs.startRecordingButton
+					recordButton?.$el?.focus()
+				})
 			})
 		},
 
@@ -207,6 +213,10 @@ export default {
 
 		async onRecordStarts(e) {
 			this.isRecording = true
+			this.$nextTick(() => {
+				const stopButton = this.$refs.stopRecordingButton
+				stopButton?.$el?.focus()
+			})
 		},
 
 		async onRecordEnds(e) {
