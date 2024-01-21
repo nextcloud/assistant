@@ -12,6 +12,7 @@ OC.L10N.register(
     "Image generation" : "Generazione di immagini",
     "Submit" : "Invia",
     "Preview" : "Anteprima",
+    "Successfully scheduled transcription" : "Pianificazione della trascrizione eseguita correttamente",
     "Advanced options" : "Opzioni avanzate",
     "Send" : "Invia",
     "Copy link to clipboard" : "Copia collegamento negli appunti"
