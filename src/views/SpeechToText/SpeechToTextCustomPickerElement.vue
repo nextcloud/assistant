@@ -3,7 +3,7 @@
 		<div class="picker-content">
 			<h2>
 				<AssistantIcon :size="24" class="icon" />
-				{{ t('assistant', 'Speech to Text') }}
+				{{ t('assistant', 'Audio transcription') }}
 			</h2>
 			<div class="form-wrapper">
 				<div class="line justified">

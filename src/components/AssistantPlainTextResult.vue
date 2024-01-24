@@ -98,7 +98,7 @@ export default {
 			case TASK_TYPES.text_generation:
 				return t('assistant', 'Text Generation')
 			case TASK_TYPES.speech_to_text:
-				return t('assistant', 'Speech to Text')
+				return t('assistant', 'Audio transcription')
 			default:
 				return t('assistant', 'Unknown Result Type')
 			}

@@ -89,7 +89,7 @@ class Notifier implements INotifier {
 		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
 			$taskTypeName = $l->t('Text to image');
 		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
-			$taskTypeName = $l->t('Speech to text');
+			$taskTypeName = $l->t('Transcribe');
 		}
 
 		switch ($notification->getSubject()) {
