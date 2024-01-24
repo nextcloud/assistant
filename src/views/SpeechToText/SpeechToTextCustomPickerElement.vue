@@ -34,6 +34,7 @@
 			<div v-show="mode === 'record'"
 				class="recorder-wrapper">
 				<NcButton v-if="audioData !== null"
+					:aria-label="t('assistant', 'Reset recorded audio')"
 					@click="resetRecording">
 					<template #icon>
 						<UndoIcon />
@@ -77,8 +78,9 @@
 				<div class="line justified">
 					<NcButton
 						:disabled="loading"
+						:aria-label="t('assistant', 'Choose audio file in your storage')"
 						@click="onChooseButtonClick">
-						{{ t('assistant', 'Choose Audio File') }}
+						{{ t('assistant', 'Choose audio File') }}
 					</NcButton>
 				</div>
 			</div>
