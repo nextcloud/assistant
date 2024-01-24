@@ -36,17 +36,6 @@
 				</div>
 			</div>
 			<div class="footer">
-				<div>
-					<NcButton class="advanced-button"
-						type="tertiary"
-						:aria-label="t('assistant', 'Show/hide advanced options')"
-						@click="showAdvanced = !showAdvanced">
-						<template #icon>
-							<component :is="showAdvancedIcon" />
-						</template>
-						{{ t('assistant', 'Advanced options') }}
-					</NcButton>
-				</div>
 				<div class="buttons">
 					<NcButton type="secondary"
 						:aria-label="t('assistant', 'Preview image generation by AI')"
@@ -79,6 +68,15 @@
 						</template>
 					</NcButton>
 				</div>
+				<NcButton class="advanced-button"
+					type="tertiary"
+					:aria-label="t('assistant', 'Show/hide advanced options')"
+					@click="showAdvanced = !showAdvanced">
+					<template #icon>
+						<component :is="showAdvancedIcon" />
+					</template>
+					{{ t('assistant', 'Advanced options') }}
+				</NcButton>
 			</div>
 			<div v-show="showAdvanced" class="advanced">
 				<div class="line">
@@ -392,7 +390,7 @@ export default {
 	.footer {
 		width: 100%;
 		display: flex;
-		flex-direction: row;
+		flex-direction: row-reverse;
 		margin-top: 12px;
 		justify-content: space-between;
 
