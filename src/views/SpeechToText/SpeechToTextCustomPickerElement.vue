@@ -15,7 +15,7 @@
 							value="record"
 							button-variant-grouped="horizontal"
 							name="mode"
-							@update:checked="resetAudioState">
+							@update:checked="onModeChanged">
 							{{ t('assistant', 'Record Audio') }}
 						</NcCheckboxRadioSwitch>
 						<NcCheckboxRadioSwitch
@@ -25,16 +25,16 @@
 							value="choose"
 							button-variant-grouped="horizontal"
 							name="mode"
-							@update:checked="resetAudioState">
+							@update:checked="onModeChanged">
 							{{ t('assistant', 'Choose Audio File') }}
 						</NcCheckboxRadioSwitch>
 					</div>
 				</div>
 			</div>
-			<div v-if="mode === 'record'"
+			<div v-show="mode === 'record'"
 				class="recorder-wrapper">
 				<NcButton v-if="audioData !== null"
-					@click="onResetRecording">
+					@click="resetRecording">
 					<template #icon>
 						<UndoIcon />
 					</template>
@@ -42,7 +42,7 @@
 				</NcButton>
 				<NcButton v-if="audioData === null && !isRecording"
 					ref="startRecordingButton"
-					@click="onStartRecording">
+					@click="startRecording">
 					<template #icon>
 						<MicrophoneIcon />
 					</template>
@@ -50,13 +50,13 @@
 				</NcButton>
 				<NcButton v-if="audioData === null && isRecording"
 					ref="stopRecordingButton"
-					@click="onStopRecording">
+					@click="stopRecording">
 					<template #icon>
 						<StopIcon />
 					</template>
 					{{ t('assistant', 'Stop recording') }}
 				</NcButton>
-				<audio-recorder
+				<audio-recorder v-if="!resettingRecorder"
 					ref="recorder"
 					class="recorder"
 					:class="{'no-audio': audioData === null, 'with-audio': audioData !== null}"
@@ -68,7 +68,7 @@
 					:after-recording="onRecordEnds"
 					mode="minimal" />
 			</div>
-			<div v-else>
+			<div v-show="mode === 'choose'">
 				<div class="line">
 					{{ audioFilePath == null
 						? t('assistant', 'No audio file selected')
@@ -169,6 +169,7 @@ export default {
 			loading: false,
 			mode: 'record',
 			isRecording: false,
+			resettingRecorder: false,
 			audioData: null,
 			audioFilePath: null,
 		}
@@ -186,16 +187,22 @@ export default {
 			this.isRecording = false
 		},
 
+		onModeChanged() {
+			if (this.isRecording) {
+				this.stopRecording()
+			}
+		},
+
 		async onChooseButtonClick() {
 			this.audioFilePath = await picker.pick()
 		},
 
-		onResetRecording() {
+		resetRecording() {
 			this.audioData = null
 			// trick to remove the recorder and re-render it so the data is gone and its state is fresh
-			this.mode = 'nothing'
+			this.resettingRecorder = true
 			this.$nextTick(() => {
-				this.mode = 'record'
+				this.resettingRecorder = false
 				this.$nextTick(() => {
 					const recordButton = this.$refs.startRecordingButton
 					recordButton?.$el?.focus()
@@ -203,11 +210,11 @@ export default {
 			})
 		},
 
-		onStartRecording() {
+		startRecording() {
 			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
 		},
 
-		onStopRecording() {
+		stopRecording() {
 			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
 		},
 
