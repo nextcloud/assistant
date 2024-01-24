@@ -83,7 +83,7 @@
 			</div>
 		</div>
 		<span v-if="failed" class="error_msg">
-			{{ t('assistant', errorMsg) }}
+			{{ errorMsg }}
 		</span>
 	</div>
 </template>
