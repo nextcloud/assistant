@@ -2,6 +2,7 @@
 
 namespace OCA\TpAssistant\AppInfo;
 
+use OCA\TpAssistant\Capabilities;
 use OCA\TpAssistant\Listener\BeforeTemplateRenderedListener;
 use OCA\TpAssistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\TpAssistant\Listener\SpeechToText\SpeechToTextReferenceListener;
@@ -48,6 +49,8 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
+		$context->registerCapability(Capabilities::class);
+
 		$context->registerReferenceProvider(Text2ImageReferenceProvider::class);
 		$context->registerReferenceProvider(FreePromptReferenceProvider::class);
 		$context->registerReferenceProvider(SpeechToTextReferenceProvider::class);
