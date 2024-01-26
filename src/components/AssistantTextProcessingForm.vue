@@ -247,6 +247,7 @@ export default {
 						this.taskTypes = this.taskTypes.map(type => {
 							if (type.id === FREE_PROMPT_TASK_TYPE_ID) {
 								type.name = t('assistant', 'Generate text')
+								type.description = t('assistant', 'Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.')
 							}
 							return type
 						})
