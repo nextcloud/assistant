@@ -80,8 +80,8 @@ export default {
 			default: () => {},
 		},
 		output: {
-			type: String,
-			default: '',
+			type: [String, null],
+			default: null,
 		},
 		textProcessingTaskTypeId: {
 			type: [String, null],
