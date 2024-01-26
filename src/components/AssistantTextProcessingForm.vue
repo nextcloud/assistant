@@ -296,7 +296,6 @@ export default {
 	align-items: center;
 	justify-content: center;
 	gap: 12px;
-	overflow-y: auto;
 	overflow-x: hidden;
 
 	.output {
