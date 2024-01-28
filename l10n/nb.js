@@ -40,6 +40,7 @@ OC.L10N.register(
     "Advanced options" : "Avanserte innstillinger",
     "Send" : "Send",
     "Include the prompt in the result" : "Ta med ledeteksten i resultatet",
+    "Copy link to clipboard" : "Kopier lenke til utklippstavlen",
     "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp",
     "Failed to schedule the task" : "Kunne ikke planlegge oppgaven"
 },
