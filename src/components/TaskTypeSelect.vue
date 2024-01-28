@@ -1,5 +1,5 @@
 <template>
-	<div class="task-type-select">
+	<div id="task-type-select" class="task-type-select">
 		<NcButton v-for="(t, i) in buttonTypes"
 			:key="i + t.id"
 			:type="getButtonType(t)"
@@ -7,7 +7,8 @@
 			{{ t.name }}
 		</NcButton>
 		<NcActions v-if="actionTypes.length > 0"
-			:force-menu="true">
+			:force-menu="true"
+			container="#task-type-select">
 			<NcActionButton v-for="(t, i) in actionTypes"
 				:key="i + t.id"
 				class="no-icon-action"
