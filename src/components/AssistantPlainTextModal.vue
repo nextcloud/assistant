@@ -9,7 +9,7 @@
 			<div class="assistant-modal--content">
 				<span class="assistant-bubble">
 					<CreationIcon :size="16" class="icon" />
-					<span>{{ t('assistant', 'Nextcloud Assistant') }}</span>
+					<span>{{ t('assistant', 'Blablador') }}</span>
 				</span>
 				<h2>
 					{{ taskTypeName }}

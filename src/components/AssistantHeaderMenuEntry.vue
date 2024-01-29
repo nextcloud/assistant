@@ -4,10 +4,11 @@
 		<NcButton
 			class="trigger"
 			type="secondary"
-			:title="t('assistant', 'Nextcloud Assistant')"
+			:title="t('assistant', 'Blablador Assistant')"
 			@click="$emit('click')">
 			<AssistantIcon class="menu-icon" :size="20" />
 		</NcButton>
+		<p>Header menu here?</p>
 	</div>
 </template>
 

@@ -1,7 +1,7 @@
 {
-	"name": "assistant",
+	"name": "blassistant",
 	"version": "0.0.1",
-	"description": "Nextcloud Assistant",
+	"description": "Nextcloud Blassistant",
 	"main": "index.js",
 	"directories": {
 		"test": "tests"
@@ -17,18 +17,18 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nextcloud/assistant"
+		"url": "https://github.com/mwinkens/assistant"
 	},
 	"keywords": [
 		"artificial intelligence",
 		"text processing"
 	],
-	"author": "Julien Veyssier",
+	"author": "Julien Veyssier, Marvin Winkens",
 	"license": "AGPL-3.0",
 	"bugs": {
-		"url": "https://github.com/nextcloud/assistant/issues"
+		"url": "https://github.com/mwinkens/assistant/issues"
 	},
-	"homepage": "https://github.com/nextcloud/assistant",
+	"homepage": "https://github.com/mwinkens/assistant",
 	"browserslist": [
 		"extends @nextcloud/browserslist-config"
 	],

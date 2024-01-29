@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <info>
-	<id>assistant</id>
-	<name>Nextcloud Assistant</name>
+	<id>blassistant</id>
+	<name>Nextcloud blablador Assistant</name>
 	<summary>Process and transform text</summary>
 	<description><![CDATA[
+FORK OF NEXTCLOUD ASSISTANT just for theming.
 This app brings a user interface to use the Nextcloud text processing feature.
 
 It allows users to launch text processing tasks, be notified when they finish and see the results.
@@ -39,14 +40,14 @@ include text processing providers to:
 	<author>Julien Veyssier</author>
 	<namespace>TpAssistant</namespace>
 	<documentation>
-		<developer>https://github.com/nextcloud/assistant</developer>
+		<developer>https://github.com/mwinkens/assistant</developer>
 	</documentation>
 	<category>integration</category>
-	<website>https://github.com/nextcloud/assistant</website>
-	<bugs>https://github.com/nextcloud/assistant/issues</bugs>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot1.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot2.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot3.jpg</screenshot>
+	<website>https://github.com/mwinkens/assistant</website>
+	<bugs>https://github.com/mwinkens/assistant/issues</bugs>
+	<screenshot>https://github.com/mwinkens/assistant/raw/main/img/screenshot1.jpg</screenshot>
+	<screenshot>https://github.com/mwinkens/assistant/raw/main/img/screenshot2.jpg</screenshot>
+	<screenshot>https://github.com/mwinkens/assistant/raw/main/img/screenshot3.jpg</screenshot>
 	<background-jobs>
 		<job>OCA\TpAssistant\Cron\CleanupImageGenerations</job>
 		<job>OCA\TpAssistant\Cron\CleanupTranscriptions</job>
