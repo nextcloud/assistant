@@ -70,18 +70,25 @@ class Notifier implements INotifier {
 		$schedulingAppName = $schedulingAppInfo['name'];
 
 		$taskTypeName = null;
-		if ($params['taskType'] === Application::TASK_TYPE_TEXT_GEN &&
-			isset($params['taskTypeClass']) && $params['taskTypeClass']) {
-			try {
-				/** @var ITaskType $taskType */
-				$taskType = $this->container->get($params['taskTypeClass']);
-				$taskTypeName = $taskType->getName();
-			} catch (\Exception | \Throwable $e) {
-				$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
+		$taskInput = $params['inputs']['prompt'] ?? null;
+		if ($params['taskModality'] === Application::TASK_TYPE_TEXT_GEN) {
+
+			if ($params['taskTypeClass'] === 'copywriter') {
+				// Catch the custom copywriter task type built on top of the FreePrompt task type.
+				$taskTypeName = $l->t('Copywriting');
+				$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
+			} else {
+				try {
+					/** @var ITaskType $taskType */
+					$taskType = $this->container->get($params['taskTypeClass']);
+					$taskTypeName = $taskType->getName();
+				} catch (\Exception | \Throwable $e) {
+					$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
+				}
 			}
-		} elseif ($params['taskType'] === Application::TASK_TYPE_TEXT_TO_IMAGE) {
+		} elseif ($params['taskModality'] === Application::TASK_TYPE_TEXT_TO_IMAGE) {
 			$taskTypeName = $l->t('Text to image');
-		} elseif ($params['taskType'] === Application::TASK_TYPE_SPEECH_TO_TEXT) {
+		} elseif ($params['taskModality'] === Application::TASK_TYPE_SPEECH_TO_TEXT) {
 			$taskTypeName = $l->t('Speech to text');
 		}
 
@@ -92,8 +99,9 @@ class Notifier implements INotifier {
 					: $l->t('"%1$s" task for "%2$s" has finished', [$taskTypeName, $schedulingAppName]);
 
 				$content = '';
-				if (isset($params['input'])) {
-					$content .= $l->t('Input: %1$s', [$params['input']]);
+
+				if ($taskInput) {					
+					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
 				
 				if (isset($params['result'])) {

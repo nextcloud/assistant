@@ -17,18 +17,10 @@
 			class="task-description">
 			{{ selectedTaskType.description }}
 		</span>
-		<label for="assistant-input"
-			class="input-label">
-			{{ t('assistant', 'Input') }}
-		</label>
-		<NcRichContenteditable
-			id="assistant-input"
-			:value.sync="myInput"
-			class="editable-input"
-			:multiline="true"
-			:disabled="loading"
-			:placeholder="t('assistant', 'Type some text')"
-			:link-autocomplete="false" />
+		<AssistantFormInputs
+			:inputs="inputs"
+			:selected-task-type-id="mySelectedTaskTypeId"
+			:new-inputs.sync="myInputs" />
 		<div v-if="myOutput"
 			class="output">
 			<label
@@ -120,6 +112,7 @@ import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 
 import TaskTypeSelect from './TaskTypeSelect.vue'
+import AssistantFormInputs from './AssistantFormInputs.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -143,15 +136,16 @@ export default {
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
 		NcNoteCard,
+		AssistantFormInputs,
 	},
 	props: {
 		loading: {
 			type: Boolean,
 			default: false,
 		},
-		input: {
-			type: String,
-			default: '',
+		inputs: {
+			type: Object,
+			default: () => {},
 		},
 		output: {
 			type: String,
@@ -173,7 +167,7 @@ export default {
 	],
 	data() {
 		return {
-			myInput: this.input,
+			myInputs: {},
 			myOutput: this.output,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
@@ -194,7 +188,8 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
-			return this.selectedTaskType && !!this.myInput.trim()
+			// Check that none of the properties of myInputs are empty
+			return Object.values(this.myInputs).every(v => !!v.trim()) && this.selectedTaskType
 		},
 		submitButtonLabel() {
 			return this.myOutput.trim()
@@ -221,22 +216,34 @@ export default {
 	},
 	mounted() {
 		this.getTaskTypes()
+
+		this.myInputs = this.inputs
 	},
 	methods: {
 		getTaskTypes() {
 			axios.get(generateOcsUrl('textprocessing/tasktypes', 2))
 				.then((response) => {
 					this.taskTypes = response.data.ocs.data.types
+
+					// Check if FREE_PROMPT_TASK_TYPE_ID is available
+					if (this.taskTypes.find(tt => tt.id === FREE_PROMPT_TASK_TYPE_ID)) {
+						// If it is, inject a copywriter task type into the list
+						this.taskTypes.push({
+							id: 'copywriter',
+							name: t('assistant', 'Copywriter'),
+							description: t('assistant', 'Writes text in a given style based on the provided source material'),
+						})
+					}
 				})
 				.catch((error) => {
 					console.error(error)
 				})
 		},
 		onSubmit() {
-			this.$emit('submit', { input: this.myInput.trim(), taskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('submit', { inputs: this.myInputs, textProcessingTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		onSyncSubmit() {
-			this.$emit('sync-submit', { input: this.myInput.trim(), taskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('sync-submit', { inputs: this.myInputs, textProcessingTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		async onCopy() {
 			try {
@@ -268,24 +275,11 @@ export default {
 	gap: 12px;
 	overflow-y: auto;
 
-	.editable-input,
 	.editable-output {
 		width: 100%;
 		min-height: unset !important;
 		max-height: 200px !important;
-	}
-
-	.editable-input {
-		min-height: 92px !important;
-	}
-
-	> .input-label {
-		margin-bottom: -12px;
-	}
-
-	.input-label {
-		align-self: start;
-		font-weight: bold;
+		overflow: auto;
 	}
 
 	.output {

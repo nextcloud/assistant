@@ -12,7 +12,9 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
-
+use OCA\TpAssistant\Db\TaskMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IRequest;
 
 class AssistantController extends Controller {
@@ -22,7 +24,8 @@ class AssistantController extends Controller {
 		IRequest $request,
 		private AssistantService $assistantService,
 		private IInitialState $initialStateService,
-		private ?string $userId
+		private ?string $userId,
+		private TaskMapper $taskMapper,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -33,9 +36,10 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	#[BruteForceProtection(action: 'taskResultPage')]
+	#[BruteForceProtection(action: 'taskResults')]
 	public function getTextProcessingTaskResultPage(int $taskId): TemplateResponse {
 		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
+				
 		if ($task === null) {
 			$response = new TemplateResponse(
 				'',
@@ -47,45 +51,105 @@ class AssistantController extends Controller {
 			$response->throttle(['userId' => $this->userId, 'taskId' => $taskId]);
 			return $response;
 		}
-		$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
+		$this->initialStateService->provideInitialState('task', $task->jsonSerializeCc());
 		return new TemplateResponse(Application::APP_ID, 'taskResultPage');
 	}
 
 	/**
-	 * @param string $input
-	 * @param string $type
-	 * @param string $appId
-	 * @param string $identifier
+	 * @param int $taskId
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function runTextProcessingTask(string $type, string $input, string $appId, string $identifier): DataResponse {
-		try {
-			$task = $this->assistantService->runTextProcessingTask($type, $input, $appId, $this->userId, $identifier);
-		} catch (\Exception | \Throwable $e) {
-			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
+	#[NoCSRFRequired]
+	#[BruteForceProtection(action: 'taskResults')]
+	public function getTextProcessingResult(int $taskId): DataResponse {
+		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
+
+		if ($task === null) {
+			$response = new DataResponse(
+				'',
+				Http::STATUS_NOT_FOUND
+			);
+			$response->throttle(['userId' => $this->userId, 'taskId' => $taskId]);
+			return $response;
 		}
 		return new DataResponse([
-			'task' => $task->jsonSerialize(),
+			'task' => $task->jsonSerializeCc(),
 		]);
 	}
 
 	/**
-	 * @param string $input
+	 * @param array $inputs
 	 * @param string $type
 	 * @param string $appId
 	 * @param string $identifier
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function runOrScheduleTextProcessingTask(string $type, string $input, string $appId, string $identifier): DataResponse {
+	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
 		try {
-			$task = $this->assistantService->runOrScheduleTextProcessingTask($type, $input, $appId, $this->userId, $identifier);
+			$task = $this->assistantService->runTextProcessingTask($type, $inputs, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
 			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}
 		return new DataResponse([
-			'task' => $task->jsonSerialize(),
+			'task' => $task->jsonSerializeCc(),
+		]);
+	}
+
+	/**
+	 * @param array $inputs
+	 * @param string $type
+	 * @param string $appId
+	 * @param string $identifier
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
+		try {
+			$task = $this->assistantService->scheduleTextProcessingTask($type, $inputs, $appId, $this->userId, $identifier);
+		} catch (\Exception | \Throwable $e) {
+			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse([
+			'task' => $task->jsonSerializeCc(),
+		]);
+	}
+
+	/**
+	 * @param array $inputs
+	 * @param string $type
+	 * @param string $appId
+	 * @param string $identifier
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
+		try {
+			$task = $this->assistantService->runOrScheduleTextProcessingTask($type, $inputs, $appId, $this->userId, $identifier);
+		} catch (\Exception | \Throwable $e) {
+			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse([
+			'task' => $task->jsonSerializeCc(),
+		]);
+	}
+
+	/**
+	 * Parse text from file (if parsing the file type is supported)
+	 * 
+	 * @param string $filePath
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function parseTextFromFile(string $filePath): DataResponse {
+		try {
+			$text = $this->assistantService->parseTextFromFile($filePath);
+		} catch (\Exception | \Throwable $e) {
+			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse([
+			'parsedText' => $text,
 		]);
 	}
 }

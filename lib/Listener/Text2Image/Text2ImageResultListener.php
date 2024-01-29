@@ -16,6 +16,8 @@ use OCP\IURLGenerator;
 use OCP\TextToImage\Events\AbstractTextToImageEvent;
 use OCP\TextToImage\Events\TaskFailedEvent;
 use OCP\TextToImage\Events\TaskSuccessfulEvent;
+use OCP\TextToImage\Task;
+use OCA\TpAssistant\Db\TaskMapper;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -29,6 +31,7 @@ class Text2ImageResultListener implements IEventListener {
 		private LoggerInterface $logger,
 		private AssistantService $assistantService,
 		private IURLGenerator $urlGenerator,
+		private TaskMapper $taskMapper,
 	) {
 	}
 
@@ -49,6 +52,7 @@ class Text2ImageResultListener implements IEventListener {
 			return;
 		}
 
+		$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndModality($event->getTask()->getId(), Application::TASK_TYPE_TEXT_TO_IMAGE);
 		$link = null; // A link to the image generation page (if the task succeeded)
 
 		if ($event instanceof TaskSuccessfulEvent) {
@@ -59,6 +63,8 @@ class Text2ImageResultListener implements IEventListener {
 
 			$this->text2ImageService->storeImages($images, $imageGenId);
 
+			$assistantTask->setStatus(Task::STATUS_SUCCESSFUL);
+			$assistantTask = $this->taskMapper->update($assistantTask);
 			// Generate the link for the notification
 			$link = $this->urlGenerator->linkToRouteAbsolute(
 				Application::APP_ID . '.Text2Image.showGenerationPage',
@@ -71,8 +77,12 @@ class Text2ImageResultListener implements IEventListener {
 		if ($event instanceof TaskFailedEvent) {
 			$this->logger->warning('Image generation task failed: ' . $imageGenId);
 			$this->imageGenerationMapper->setFailed($imageGenId, true);
+			
+			// Update the assistant meta task status:
+			$assistantTask->setStatus(Task::STATUS_FAILED);
+			$assistantTask = $this->taskMapper->update($assistantTask);
 
-			$this->assistantService->sendNotification($event->getTask());
+			$this->assistantService->sendNotification($assistantTask);
 		}
 
 		// Only send the notification if the user enabled them for this task:
@@ -80,7 +90,7 @@ class Text2ImageResultListener implements IEventListener {
 			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 			if ($imageGeneration->getNotifyReady()) {
-				$this->assistantService->sendNotification($event->getTask(), $link);
+				$this->assistantService->sendNotification($assistantTask, $link);
 			}
 		} catch (\OCP\Db\Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 			$this->logger->warning('Could not notify user of a generation (id:' . $imageGenId . ') being ready: ' . $e->getMessage());

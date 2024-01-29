@@ -40,6 +40,10 @@ class Application extends App implements IBootstrap {
 	public const IMAGE_FOLDER = 'generated_images';
 	public const SPEECH_TO_TEXT_REC_FOLDER = 'stt_recordings';
 
+	public const STT_TASK_SCHEDULED = 0;
+	public const STT_TASK_SUCCESSFUL = 1;
+	public const STT_TASK_FAILED = -1;
+
 	public const TASK_TYPE_TEXT_GEN = 0;
 	public const TASK_TYPE_TEXT_TO_IMAGE = 1;
 	public const TASK_TYPE_SPEECH_TO_TEXT = 2;

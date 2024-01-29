@@ -8,7 +8,10 @@ return [
 
 		['name' => 'assistant#getTextProcessingTaskResultPage', 'url' => '/t/{taskId}', 'verb' => 'GET'],
 		['name' => 'assistant#runTextProcessingTask', 'url' => '/run', 'verb' => 'POST'],
+		['name' => 'assistant#scheduleTextProcessingTask', 'url' => '/schedule', 'verb' => 'POST'],
 		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/run-or-schedule', 'verb' => 'POST'],
+		['name' => 'assistant#getTextProcessingResult', 'url' => '/r/{taskId}', 'verb' => 'GET'],
+		['name' => 'assistant#parseTextFromFile', 'url' => '/p', 'verb' => 'POST'],
 
 		['name' => 'Text2Image#processPrompt', 'url' => '/i/process_prompt', 'verb' => 'POST'],
 		['name' => 'Text2Image#getPromptHistory', 'url' => '/i/prompt_history', 'verb' => 'GET'],
@@ -25,7 +28,6 @@ return [
 		['name' => 'FreePrompt#cancelGeneration', 'url' => '/f/cancel_generation', 'verb' => 'POST'],
 
 		['name' => 'SpeechToText#getResultPage', 'url' => '/stt/resultPage', 'verb' => 'GET'],
-		['name' => 'SpeechToText#getTranscript', 'url' => '/stt/transcript', 'verb' => 'GET'],
 		['name' => 'SpeechToText#transcribeAudio', 'url' => '/stt/transcribeAudio', 'verb' => 'POST'],
 		['name' => 'SpeechToText#transcribeFile', 'url' => '/stt/transcribeFile', 'verb' => 'POST'],
 	],

@@ -122,7 +122,6 @@ export default {
 			loading: false,
 			error: false,
 			models: [],
-			completionNumber: 1,
 			prompts: null,
 			notify: false,
 			submitted: false,
@@ -207,7 +206,6 @@ export default {
 			this.genId = null
 			const params = {
 				prompt: this.query,
-				nResults: this.completionNumber,
 			}
 			const url = generateUrl('/apps/assistant/f/process_prompt')
 			return axios.post(url, params)

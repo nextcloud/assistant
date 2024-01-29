@@ -33,9 +33,9 @@ class FreePromptController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function processPrompt(string $prompt, int $nResults = 1): DataResponse {
+	public function processPrompt(string $prompt): DataResponse {
 		try {
-			$result = $this->freePromptService->processPrompt($prompt, $nResults);
+			$result = $this->freePromptService->processPrompt($prompt);
 		} catch (Exception $e) {
 			return new DataResponse(['error' => $e->getMessage()], (int)$e->getCode());
 		}

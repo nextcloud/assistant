@@ -1,10 +1,10 @@
 <template>
 	<NcContent app-name="assistant">
 		<NcAppContent>
-			<div v-if="state?.result">
+			<div v-if="task.output">
 				<AssistantPlainTextModal
-					:output="state.result"
-					:task-type="state.taskType" />
+					:output="task.output"
+					:task-type="task.modality" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -15,8 +15,6 @@ import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
 import AssistantPlainTextModal from '../components/AssistantPlainTextModal.vue'
-
-import { loadState } from '@nextcloud/initial-state'
 
 import { showError } from '@nextcloud/dialogs'
 
@@ -30,11 +28,14 @@ export default {
 	},
 
 	props: {
+		task: {
+			type: Object,
+			required: true,
+		},
 	},
 
 	data() {
 		return {
-			state: loadState('assistant', 'plain-text-result'),
 		}
 	},
 
@@ -42,8 +43,8 @@ export default {
 	},
 
 	mounted() {
-		if (this.state?.status !== 'success') {
-			showError(t('assistant', 'The transcription could not be found. It may have been deleted.'))
+		if (this.task?.output === undefined) {
+			showError(t('assistant', 'The task could not be found. It may have been deleted.'))
 		}
 	},
 

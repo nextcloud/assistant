@@ -1,6 +1,7 @@
 import { STATUS, TASK_TYPES } from './constants.js'
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
+
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
@@ -36,11 +37,12 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
  * @param {boolean} params.closeOnResult If true, the modal will be closed when getting a sync result
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form (only if closeOnResult is false)
+ * @param {boolean} params.useMetaTasks If true, the promise will resolve with the meta task object instead of the ocp task
  * @return {Promise<unknown>}
  */
 export async function openAssistantTextProcessingForm({
 	appId, identifier = '', taskType = null, input = '',
-	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
+	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined, useMetaTasks = false,
 }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
@@ -59,8 +61,7 @@ export async function openAssistantTextProcessingForm({
 		const view = new View({
 			propsData: {
 				isInsideViewer,
-				input,
-				taskType: TASK_TYPES.text_generation,
+				inputs: { prompt: input },
 				textProcessingTaskTypeId,
 				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
@@ -74,13 +75,13 @@ export async function openAssistantTextProcessingForm({
 			reject(new Error('User cancellation'))
 		})
 		view.$on('submit', (data) => {
-			scheduleTask(appId, identifier, data.taskTypeId, data.input)
+			scheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then((response) => {
-					view.input = data.input
+					view.inputs = data.inputs
 					view.showScheduleConfirmation = true
-					const task = response.data?.ocs?.data?.task
+					const task = response.data?.task
 					lastTask = task
-					resolve(task)
+					useMetaTasks ? resolve(task) : resolve(resolveMetaTaskToOcpTask(task))
 				})
 				.catch(error => {
 					view.$destroy()
@@ -91,14 +92,14 @@ export async function openAssistantTextProcessingForm({
 		view.$on('sync-submit', (data) => {
 			view.loading = true
 			view.showSyncTaskRunning = true
-			view.input = data.input
-			view.textProcessingTaskTypeId = data.taskTypeId
-			runOrScheduleTask(appId, identifier, data.taskTypeId, data.input)
+			view.inputs = data.inputs
+			view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
+			runOrScheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then((response) => {
 					const task = response.data?.task
 					lastTask = task
-					resolve(task)
-					view.input = task.input
+					useMetaTasks ? resolve(task) : resolve(resolveMetaTaskToOcpTask(task))
+					view.inputs = task.inputs
 					if (task.status === STATUS.successfull) {
 						if (closeOnResult) {
 							view.$destroy()
@@ -125,13 +126,13 @@ export async function openAssistantTextProcessingForm({
 		})
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
-			scheduleTask(appId, identifier, view.textProcessingTaskTypeId, view.input)
+			scheduleTask(appId, identifier, view.textProcessingTaskTypeId, view.inputs)
 				.then((response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
-					const task = response.data?.ocs?.data?.task
+					const task = response.data?.task
 					lastTask = task
-					resolve(task)
+					useMetaTasks ? resolve(task) : resolve(resolveMetaTaskToOcpTask(task))
 				})
 				.catch(error => {
 					view.$destroy()
@@ -149,18 +150,36 @@ export async function openAssistantTextProcessingForm({
 	})
 }
 
+async function resolveMetaTaskToOcpTask(metaTask) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	if (metaTask.modality !== TASK_TYPES.text_generation) {
+		// For now we only resolve text generation tasks
+		return null
+	}
+
+	const url = generateOcsUrl('textprocessing/tasks/{taskId}', { taskId: metaTask.ocpTaskId })
+	axios.post(url).then(response => {
+		console.debug('resolved meta task', response.data?.ocs?.data?.task)
+		return response.data?.ocs?.data?.task
+	}).catch(error => {
+		console.error(error)
+		return null
+	})
+}
+
 export async function cancelCurrentSyncTask() {
 	window.assistantAbortController?.abort()
 }
 
-export async function runTask(appId, identifier, taskType, input) {
+export async function runTask(appId, identifier, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
 	const url = generateUrl('/apps/assistant/run')
 	const params = {
-		input,
+		inputs,
 		type: taskType,
 		appId,
 		identifier,
@@ -168,14 +187,14 @@ export async function runTask(appId, identifier, taskType, input) {
 	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
 
-export async function runOrScheduleTask(appId, identifier, taskType, input) {
+export async function runOrScheduleTask(appId, identifier, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
 	const url = generateUrl('/apps/assistant/run-or-schedule')
 	const params = {
-		input,
+		inputs,
 		type: taskType,
 		appId,
 		identifier,
@@ -189,16 +208,16 @@ export async function runOrScheduleTask(appId, identifier, taskType, input) {
  * @param {string} appId the scheduling app id
  * @param {string} identifier the task identifier
  * @param {string} taskType the task type class
- * @param {string} input the task input text
+ * @param {Array} inputs the task input texts as an array
  * @return {Promise<*>}
  */
-export async function scheduleTask(appId, identifier, taskType, input) {
+export async function scheduleTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateOcsUrl } = await import(/* webpackChunkName: "router-genocs-lazy" */'@nextcloud/router')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateOcsUrl('textprocessing/schedule', 2)
+	const url = generateUrl('/apps/assistant/schedule')
 	const params = {
-		input,
+		inputs,
 		type: taskType,
 		appId,
 		identifier,
@@ -246,27 +265,24 @@ export function handleNotification(event) {
 	// We use the object type to know
 	if (event.notification.objectType === 'task') {
 		event.cancelAction = true
-		showTextProcessingTaskResult(event.notification.objectId)
-	} else if (event.notification.objectType === 'speech-to-text-result') {
-		event.cancelAction = true
-		showSpeechToTextResult(event.notification)
+		showAssistantTaskResult(event.notification.objectId)
 	}
 }
 
 /**
- * Show the result of a task
+ * Show the result of a task based on the meta task id
  *
- * @param {number} taskId the task id to show the result of
+ * @param {number} taskId the assistant meta task id to show the result of
  * @return {Promise<void>}
  */
-async function showTextProcessingTaskResult(taskId) {
+async function showAssistantTaskResult(taskId) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
-	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId })
+	const url = generateUrl('apps/assistant/r/{taskId}', { taskId })
 	axios.get(url).then(response => {
-		console.debug('showing results for task', response.data.ocs.data.task)
-		openAssistantTaskResult(response.data.ocs.data.task)
+		console.debug('showing results for task', response.data.task)
+		openAssistantTaskResult(response.data.task, true)
 	}).catch(error => {
 		console.error(error)
 		showError(t('assistant', 'This task does not exist or has been cleaned up'))
@@ -274,42 +290,11 @@ async function showTextProcessingTaskResult(taskId) {
 }
 
 /**
- * Show the result of a speech to text transcription
- * @param {object} notification the notification object
- * @return {Promise<void>}
- */
-async function showSpeechToTextResult(notification) {
-	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
-	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
-	Vue.mixin({ methods: { t, n } })
-
-	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
-	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-
-	const params = {
-		params: {
-			id: notification.objectId,
-		},
-	}
-
-	const url = generateUrl('apps/assistant/stt/transcript')
-
-	axios.get(url, params).then(response => {
-		console.debug('showing results for stt', response.data)
-		openAssistantPlainTextResult(response.data, TASK_TYPES.speech_to_text)
-	}).catch(error => {
-		console.error(error)
-		showError(t('assistant', 'This transcript does not exist or has been cleaned up'))
-	})
-}
-
-/**
  * Open an assistant modal to show a plain text result
- * @param {string} result the plain text result to show
- * @param {number} taskType the task type
+ * @param {object} metaTask assistant meta task object
  * @return {Promise<void>}
  */
-export async function openAssistantPlainTextResult(result, taskType) {
+export async function openAssistantPlainTextResult(metaTask) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantPlainTextModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantPlainTextModal.vue')
 	Vue.mixin({ methods: { t, n } })
@@ -322,8 +307,8 @@ export async function openAssistantPlainTextResult(result, taskType) {
 	const View = Vue.extend(AssistantPlainTextModal)
 	const view = new View({
 		propsData: {
-			output: result,
-			taskType,
+			output: metaTask.output ?? '',
+			taskType: metaTask.modality,
 		},
 	}).$mount(modalElement)
 
@@ -333,16 +318,44 @@ export async function openAssistantPlainTextResult(result, taskType) {
 }
 
 /**
+ * Open an assistant modal to show an image result
+ * @param {object} metaTask assistant meta task object
+ * @return {Promise<void>}
+ */
+export async function openAssistantImageResult(metaTask) {
+	// For now just open the image generation result on a new page:
+	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const url = generateUrl('apps/assistant/i/{genId}', { genId: metaTask.output })
+	window.open(url, '_blank')
+}
+
+/**
  * Open an assistant modal to show the result of a task
  *
  * @param {object} task the task we want to see the result of
+ * @param {boolean} useMetaTasks If false (default), treats the input task as an ocp task, otherwise as an assistant meta task
  * @return {Promise<void>}
  */
-export async function openAssistantTaskResult(task) {
-	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
+export async function openAssistantTaskResult(task, useMetaTasks = false) {
+	// Divert to the right modal/page if we have a meta task with a modality other than text generation:
+	if (useMetaTasks) {
+		switch (task.modality) {
+		case TASK_TYPES.speech_to_text:
+			openAssistantPlainTextResult(task)
+			return
+		case TASK_TYPES.image_generation:
+			openAssistantImageResult(task)
+			return
+		case TASK_TYPES.text_generation:
+		default:
+			break
+		}
+	}
+
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
-	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
 	Vue.mixin({ methods: { t, n } })
+	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
+	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
 
 	const modalId = 'assistantTextProcessingModal'
 	const modalElement = document.createElement('div')
@@ -353,9 +366,9 @@ export async function openAssistantTaskResult(task) {
 	const view = new View({
 		propsData: {
 			// isInsideViewer,
-			input: task.input,
+			inputs: useMetaTasks ? task.inputs : [task.input],
 			output: task.output ?? '',
-			textProcessingTaskTypeId: task.type,
+			textProcessingTaskTypeId: useMetaTasks ? task.taskType : task.type,
 			showScheduleConfirmation: false,
 		},
 	}).$mount(modalElement)
@@ -367,7 +380,7 @@ export async function openAssistantTaskResult(task) {
 		scheduleTask(task.appId, task.identifier, data.taskTypeId, data.input)
 			.then((response) => {
 				view.showScheduleConfirmation = true
-				console.debug('scheduled task', response.data?.ocs?.data?.task)
+				console.debug('scheduled task', response.data?.task)
 			})
 			.catch(error => {
 				view.$destroy()
@@ -437,7 +450,7 @@ export async function addAssistantMenuEntry() {
 	}).$mount(menuEntry)
 
 	view.$on('click', () => {
-		openAssistantTextProcessingForm({ appId: 'assistant' })
+		openAssistantTextProcessingForm({ appId: 'assistant', useMetaTasks: true })
 			.then(r => {
 				console.debug('scheduled task', r)
 			})

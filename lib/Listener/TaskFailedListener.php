@@ -9,6 +9,8 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TextProcessing\Events\TaskFailedEvent;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCA\TpAssistant\Db\TaskMapper;
 
 /**
  * @template-implements IEventListener<Event>
@@ -18,6 +20,7 @@ class TaskFailedListener implements IEventListener {
 	public function __construct(
 		private AssistantService $assistantService,
 		private IEventDispatcher $eventDispatcher,
+		private TaskMapper $taskMapper,
 	) {
 	}
 
@@ -47,6 +50,18 @@ class TaskFailedListener implements IEventListener {
 			$notificationActionLabel = $beforeAssistantNotificationEvent->getNotificationActionLabel();
 		}
 
-		$this->assistantService->sendNotification($task, $notificationTarget, $notificationActionLabel);
+		try {
+			$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndModality($task->getId(), Application::TASK_TYPE_TEXT_GEN);
+		} catch (DoesNotExistException $e) {
+			// Not an assistant task
+			return;
+		}
+
+		// Update task status and output:
+		$assistantTask->setStatus($task->getStatus());
+		$assistantTask->setOutput($task->getOutput());
+		$assistantTask = $this->taskMapper->update($assistantTask);
+
+		$this->assistantService->sendNotification($assistantTask, $notificationTarget, $notificationActionLabel);
 	}
 }

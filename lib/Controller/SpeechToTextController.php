@@ -26,16 +26,15 @@ use DateTime;
 use Exception;
 use InvalidArgumentException;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\SpeechToText\TranscriptMapper;
 use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\Task;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\AnonRateLimit;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
-use OCP\AppFramework\Http\Attribute\UserRateLimit;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -55,9 +54,9 @@ class SpeechToTextController extends Controller {
 		private SpeechToTextService $service,
 		private LoggerInterface $logger,
 		private IL10N $l10n,
-		private TranscriptMapper $transcriptMapper,
 		private IInitialState $initialState,
 		private ?string $userId,
+		private TaskMapper $taskMapper,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -68,19 +67,16 @@ class SpeechToTextController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	#[UserRateLimit(limit: 10, period: 60)]
-	#[AnonRateLimit(limit: 2, period: 60)]
 	public function getResultPage(int $id): TemplateResponse {
 		$response = new TemplateResponse(Application::APP_ID, 'speechToTextResultPage');
 		try {
 			$initData = [
-				'status' => 'success',
-				'result' => $this->internalGetTranscript($id),
-				'taskType' => Application::TASK_TYPE_SPEECH_TO_TEXT,
+				'task' => $this->internalGetTask($id),
 			];
 		} catch (Exception $e) {
 			$initData = [
 				'status' => 'failure',
+				'task' => null,
 				'message' => $e->getMessage(),
 			];
 			$response->setStatus(intval($e->getCode()));
@@ -96,39 +92,30 @@ class SpeechToTextController extends Controller {
 	#[NoAdminRequired]
 	public function getTranscript(int $id): DataResponse {
 		try {
-			return new DataResponse($this->internalGetTranscript($id));
+			return new DataResponse($this->internalGetTask($id)->getOutput());
 		} catch (Exception $e) {
 			return new DataResponse($e->getMessage(), intval($e->getCode()));
 		}
 	}
 
 	/**
-	 * Internal function to get transcript and throw a common exception
+	 * Internal function to get transcription assistant tasks based on the assistant meta task id
 	 *
 	 * @param integer $id
-	 * @return string
+	 * @return Task
 	 */
-	private function internalGetTranscript(int $id): string {
+	private function internalGetTask(int $id): Task {
 		try {
-			$transcriptEntity = $this->transcriptMapper->find($id, $this->userId);
-			$transcript = $transcriptEntity->getTranscript();
+			$task = $this->taskMapper->getTaskOfUser($id, $this->userId);
+			
+			if($task->getModality() !== Application::TASK_TYPE_SPEECH_TO_TEXT) {
+				throw new Exception('Task is not a speech to text task.', Http::STATUS_BAD_REQUEST);
+			}
 
-			$transcriptEntity->setLastAccessed(new DateTime());
-			$this->transcriptMapper->update($transcriptEntity);
-
-			return trim($transcript);
-		} catch (InvalidArgumentException $e) {
-			$this->logger->error(
-				'Invalid argument in transcript access time update call: ' . $e->getMessage(),
-				['app' => Application::APP_ID],
-			);
-			throw new Exception(
-				$this->l10n->t('Error in transcript access time update call'),
-				Http::STATUS_INTERNAL_SERVER_ERROR,
-			);
+			return $task;
 		} catch (MultipleObjectsReturnedException $e) {
-			$this->logger->error('Multiple transcripts found: ' . $e->getMessage(), ['app' => Application::APP_ID]);
-			throw new Exception($this->l10n->t('Multiple transcripts found'), Http::STATUS_BAD_REQUEST);
+			$this->logger->error('Multiple tasks found for one id: ' . $e->getMessage(), ['app' => Application::APP_ID]);
+			throw new Exception($this->l10n->t('Multiple tasks found'), Http::STATUS_BAD_REQUEST);
 		} catch (DoesNotExistException $e) {
 			throw new Exception($this->l10n->t('Transcript not found'), Http::STATUS_NOT_FOUND);
 		} catch (Exception $e) {

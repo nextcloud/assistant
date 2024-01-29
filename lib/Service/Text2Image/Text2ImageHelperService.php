@@ -35,6 +35,7 @@ use OCP\TextToImage\IManager;
 use OCP\TextToImage\Task;
 use Psr\Log\LoggerInterface;
 use Random\RandomException;
+use OCA\TpAssistant\Db\TaskMapper;
 use RuntimeException;
 
 class Text2ImageHelperService {
@@ -52,7 +53,8 @@ class Text2ImageHelperService {
 		private IAppData $appData,
 		private IURLGenerator $urlGenerator,
 		private IL10N $l10n,
-		private AssistantService $assistantService
+		private AssistantService $assistantService,
+		private TaskMapper $taskMapper,
 	) {
 	}
 
@@ -101,6 +103,20 @@ class Text2ImageHelperService {
 
 		// Store the image id to the db:
 		$this->imageGenerationMapper->createImageGeneration($imageGenId, $displayPrompt ? $prompt : '', $this->userId ?? '', $expCompletionTime->getTimestamp());
+
+		// Create an assistant meta task for the image generation task:
+		$this->taskMapper->createTask(
+			$this->userId,
+			['prompt' => $prompt],
+			$imageGenId,
+			time(),
+			$promptTask->getId(),
+			Task::class,
+			Application::APP_ID,
+			$promptTask->getStatus(),
+			Application::TASK_TYPE_TEXT_TO_IMAGE,
+			$promptTask->getIdentifier()
+		);
 
 		if ($taskExecuted) {
 			$this->storeImages($images, $imageGenId);
@@ -231,36 +247,6 @@ class Text2ImageHelperService {
 		$this->imageGenerationMapper->setImagesGenerated($imageGenId, true);
 
 		// For clarity we'll notify the user that the generation is ready in the event listener
-	}
-
-	/**
-	 * Notify user of generation being ready
-	 * @param string $imageGenId
-	 * @return void
-	 */
-	public function notifyUser(string $imageGenId): void {
-		// Get the task associated with the generation:
-		try {
-			$task = $this->textToImageManager->getUserTasksByApp(null, Application::APP_ID, $imageGenId);
-			if (count($task) === 0) {
-				throw new RuntimeException('empty task array');
-			}
-		} catch (RuntimeException $e) {
-			$this->logger->debug('Task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
-			return;
-		}
-
-		// Generate the link:
-		$link = $this->urlGenerator->linkToRouteAbsolute(
-			Application::APP_ID . '.Text2Image.showGenerationPage',
-			[
-				'imageGenId' => $imageGenId,
-			]
-		);
-
-		// Notify the user:
-		$this->assistantService->sendNotification($task[0], $link, $this->l10n->t('View'));
-
 	}
 
 	/**
@@ -553,7 +539,17 @@ class Text2ImageHelperService {
 
 		// Just in case the image generation is already ready, notify the user immediately so that the result is not lost:
 		if ($imageGeneration->getIsGenerated()) {
-			$this->notifyUser($imageGenId);
+			// Get the assistant task
+			try {
+				$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndModality($imageGeneration->getTaskId(), Application::TASK_TYPE_TEXT_TO_IMAGE);
+			} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
+				$this->logger->debug('Assistant meta task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
+				return;
+			}
+			$assistantTask->setStatus($imageGeneration->getFailed() ? Task::STATUS_FAILED : Task::STATUS_SUCCESSFUL);
+			$assistantTask = $this->taskMapper->update($assistantTask);
+
+			$this->assistantService->sendNotification($assistantTask);
 		}
 	}
 

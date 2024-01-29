@@ -49,7 +49,6 @@ include text processing providers to:
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot3.jpg</screenshot>
 	<background-jobs>
 		<job>OCA\TpAssistant\Cron\CleanupImageGenerations</job>
-		<job>OCA\TpAssistant\Cron\CleanupTranscriptions</job>
 	</background-jobs>
 	<commands>
 		<command>OCA\TpAssistant\Command\CleanupImageGenerations</command>

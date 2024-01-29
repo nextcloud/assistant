@@ -18,6 +18,7 @@ use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\Task;
 use Psr\Log\LoggerInterface;
+use OCA\TpAssistant\Db\TaskMapper;
 
 class FreePromptService {
 	public function __construct(
@@ -26,18 +27,17 @@ class FreePromptService {
 		private IManager $textProcessingManager,
 		private ?string $userId,
 		private PromptMapper $promptMapper,
-		private IL10N $l10n
+		private IL10N $l10n,
+		private TaskMapper $taskMapper,
 	) {
 	}
 
 	/*
 	 * @param string $prompt
-	 * @param int $nResults
-	 * @param bool $showPrompt
 	 * @return string
 	 * @throws Exception
 	 */
-	public function processPrompt(string $prompt, int $nResults): string {
+	public function processPrompt(string $prompt): string {
 		$taskTypes = $this->textProcessingManager->getAvailableTaskTypes();
 		if (!in_array(FreePromptTaskType::class, $taskTypes)) {
 			$this->logger->warning('FreePromptTaskType not available');
@@ -60,23 +60,32 @@ class FreePromptService {
 			}
 		}
 
-		// Generate nResults prompts
-		for ($i = 0; $i < $nResults; $i++) {
-			
-			// Create a db entity for the generation
-			$promptTask = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $this->userId, $genId);
+		$promptTask = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $this->userId, $genId);
 
-			// Run or schedule the task:
-			try {
-				$this->textProcessingManager->runOrScheduleTask($promptTask);
-			} catch (DBException | PreConditionNotMetException | TaskFailureException $e) {
-				$this->logger->warning('Failed to run or schedule a task', ['exception' => $e]);
-				throw new Exception($this->l10n->t('Failed to run or schedule a task'), Http::STATUS_INTERNAL_SERVER_ERROR);
-			}
-
-			// If the task was run immediately, we'll skip the notification..
-			// Otherwise we would have to dispatch the notification here.
+		// Run or schedule the task:
+		try {
+			$this->textProcessingManager->runOrScheduleTask($promptTask);
+		} catch (DBException | PreConditionNotMetException | TaskFailureException $e) {
+			$this->logger->warning('Failed to run or schedule a task', ['exception' => $e]);
+			throw new Exception($this->l10n->t('Failed to run or schedule a task'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+
+		// Create an assistant task for the free prompt task:
+		$this->taskMapper->createTask(
+			$this->userId,
+			['prompt' => $prompt],
+			Application::APP_ID,
+			$promptTask->getId(),
+			time(),
+			FreePromptTaskType::class,
+			$promptTask->getStatus(),
+			Application::TASK_TYPE_TEXT_GEN,
+			$promptTask->getInput(),
+			$promptTask->getIdentifier()
+		);
+
+		// If the task was run immediately, we'll skip the notification..
+		// Otherwise we would have to dispatch the notification here.
 
 		// Save prompt to database
 		$this->promptMapper->createPrompt($this->userId, $prompt);
