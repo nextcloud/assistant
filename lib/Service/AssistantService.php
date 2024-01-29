@@ -61,20 +61,20 @@ class AssistantService {
 			'result' => $resultPreview,
 		];
 		$params['taskTypeClass'] = $task->getTaskType();
-		$params['taskModality'] = $task->getModality();
+		$params['taskCategory'] = $task->getCategory();
 
-		switch ($task->getModality()) {
-			case Application::TASK_TYPE_TEXT_TO_IMAGE:
+		switch ($task->getCategory()) {
+			case Application::TASK_GATEGORY_TEXT_TO_IMAGE:
 				{
 					$taskSuccessful = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL;
 					break;
 				}
-			case Application::TASK_TYPE_TEXT_GEN:
+			case Application::TASK_GATEGORY_TEXT_GEN:
 				{
 					$taskSuccessful = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL;
 					break;
 				}
-			case Application::TASK_TYPE_SPEECH_TO_TEXT:
+			case Application::TASK_GATEGORY_SPEECH_TO_TEXT:
 				{
 					$taskSuccessful = $task->getStatus() === Application::STT_TASK_SUCCESSFUL;
 					break;
@@ -206,7 +206,7 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
 		
 		return $assistantTask;
 	}
@@ -241,7 +241,7 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
 		
 		return $assistantTask;
 	}
@@ -277,7 +277,7 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
 		
 		return $assistantTask;
 	}

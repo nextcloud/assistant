@@ -80,7 +80,7 @@ class FreePromptService {
 			FreePromptTaskType::class,
 			Application::APP_ID,
 			$promptTask->getStatus(),
-			Application::TASK_TYPE_TEXT_GEN,
+			Application::TASK_GATEGORY_TEXT_GEN,
 			$genId
 		);
 

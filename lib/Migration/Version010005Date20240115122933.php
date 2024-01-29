@@ -77,7 +77,7 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 				'notnull' => true,
 				'default' => 0, // 0 = Unknown
 			]);
-			$table->addColumn('modality', Types::INTEGER, [
+			$table->addColumn('category', Types::INTEGER, [
 				'notnull' => false,
 			]);
 			$table->addColumn('indentifer', Types::STRING, [
@@ -85,7 +85,7 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['user_id'], 'assistant_t_tasks_uid');
-			$table->addIndex(['ocp_task_id','modality'], 'assistant_t_task_id_modality');
+			$table->addIndex(['ocp_task_id','category'], 'assistant_t_task_id_category');
 		}
 
 		return $schemaChanged ? $schema : null;

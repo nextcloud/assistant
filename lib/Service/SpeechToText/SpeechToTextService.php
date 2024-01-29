@@ -81,7 +81,7 @@ class SpeechToTextService {
 			"Speech-to-text task",
 			Application::APP_ID,
 			Application::STT_TASK_SCHEDULED,
-			Application::TASK_TYPE_SPEECH_TO_TEXT);
+			Application::TASK_GATEGORY_SPEECH_TO_TEXT);
 	}
 
 	/**
@@ -110,7 +110,7 @@ class SpeechToTextService {
 			"Speech-to-text task",
 			Application::APP_ID,
 			Application::STT_TASK_SCHEDULED,
-			Application::TASK_TYPE_SPEECH_TO_TEXT);
+			Application::TASK_GATEGORY_SPEECH_TO_TEXT);
 	}
 
 	/**

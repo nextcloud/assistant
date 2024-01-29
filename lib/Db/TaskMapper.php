@@ -47,13 +47,13 @@ class TaskMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @param int $modality
+	 * @param int $category
 	 * @return Task
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getTaskByOcpTaskIdAndModality(int $ocpTaskId, int $modality): Task {
+	public function getTaskByOcpTaskIdAndCategory(int $ocpTaskId, int $category): Task {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -62,7 +62,7 @@ class TaskMapper extends QBMapper {
 				$qb->expr()->eq('ocp_task_id', $qb->createNamedParameter($ocpTaskId, IQueryBuilder::PARAM_INT))
 			)
 			->andWhere(
-				$qb->expr()->eq('modality', $qb->createNamedParameter($modality, IQueryBuilder::PARAM_INT))
+				$qb->expr()->eq('category', $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT))
 			);
 
 		/** @var Task $retVal */
@@ -72,11 +72,11 @@ class TaskMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @param int $modality
+	 * @param int $category
 	 * @return array<Task>
 	 * @throws Exception
 	 */
-	public function getTasksByOcpTaskIdAndModality(int $ocpTaskId, int $modality): array {
+	public function getTasksByOcpTaskIdAndCategory(int $ocpTaskId, int $category): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -85,7 +85,7 @@ class TaskMapper extends QBMapper {
 				$qb->expr()->eq('ocp_task_id', $qb->createNamedParameter($ocpTaskId, IQueryBuilder::PARAM_INT))
 			)
 			->andWhere(
-				$qb->expr()->eq('modality', $qb->createNamedParameter($modality, IQueryBuilder::PARAM_INT))
+				$qb->expr()->eq('category', $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT))
 			);
 
 		/** @var array<Task> $retVal */
@@ -143,7 +143,7 @@ class TaskMapper extends QBMapper {
 	 * @param string|null $taskType
 	 * @param string|null $appId
 	 * @param int $status
-	 * @param int $modality
+	 * @param int $category
 	 * @param string $identifier
 	 * @return Task
 	 * @throws Exception
@@ -157,7 +157,7 @@ class TaskMapper extends QBMapper {
 		?string $taskType = null,
 		?string $appId = null,
 		int $status = 0,
-		int $modality = 0,
+		int $category = 0,
 		string $identifier = ''): Task {
 		if ($timestamp === null) {
 			$timestamp = (new DateTime())->getTimestamp();
@@ -172,7 +172,7 @@ class TaskMapper extends QBMapper {
 		$task->setTaskType($taskType);
 		$task->setAppId($appId);
 		$task->setStatus($status);
-		$task->setModality($modality);
+		$task->setCategory($category);
 		$task->setIndentifer($identifier);
 		/** @var Task $insertedTask */
 		$insertedTask = $this->insert($task);

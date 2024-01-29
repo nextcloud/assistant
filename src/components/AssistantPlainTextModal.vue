@@ -12,7 +12,7 @@
 					<span>{{ t('assistant', 'Nextcloud Assistant') }}</span>
 				</span>
 				<h2>
-					{{ taskTypeName }}
+					{{ taskCategoryName }}
 				</h2>
 				<NcButton :aria-label="closeButtonLabel"
 					:title="closeButtonTitle"
@@ -103,7 +103,7 @@ export default {
 			type: String,
 			default: '',
 		},
-		taskType: {
+		taskCategory: {
 			type: [Number, null],
 			default: null,
 		},
@@ -122,8 +122,8 @@ export default {
 		}
 	},
 	computed: {
-		taskTypeName() {
-			switch (this.taskType) {
+		taskCategoryName() {
+			switch (this.taskCategory) {
 			case TASK_TYPES.text_generation:
 				return t('assistant', 'Text Generation')
 			case TASK_TYPES.speech_to_text:

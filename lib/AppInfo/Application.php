@@ -44,9 +44,9 @@ class Application extends App implements IBootstrap {
 	public const STT_TASK_SUCCESSFUL = 1;
 	public const STT_TASK_FAILED = -1;
 
-	public const TASK_TYPE_TEXT_GEN = 0;
-	public const TASK_TYPE_TEXT_TO_IMAGE = 1;
-	public const TASK_TYPE_SPEECH_TO_TEXT = 2;
+	public const TASK_GATEGORY_TEXT_GEN = 0;
+	public const TASK_GATEGORY_TEXT_TO_IMAGE = 1;
+	public const TASK_GATEGORY_SPEECH_TO_TEXT = 2;
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);

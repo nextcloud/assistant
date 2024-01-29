@@ -52,7 +52,7 @@ class Text2ImageResultListener implements IEventListener {
 			return;
 		}
 
-		$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndModality($event->getTask()->getId(), Application::TASK_TYPE_TEXT_TO_IMAGE);
+		$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($event->getTask()->getId(), Application::TASK_GATEGORY_TEXT_TO_IMAGE);
 		$link = null; // A link to the image generation page (if the task succeeded)
 
 		if ($event instanceof TaskSuccessfulEvent) {

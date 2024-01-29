@@ -4,7 +4,7 @@
 			<div v-if="task.output">
 				<AssistantPlainTextModal
 					:output="task.output"
-					:task-type="task.modality" />
+					:task-category="task.category" />
 			</div>
 		</NcAppContent>
 	</NcContent>

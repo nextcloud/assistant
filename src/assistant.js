@@ -153,7 +153,7 @@ export async function openAssistantTextProcessingForm({
 async function resolveMetaTaskToOcpTask(metaTask) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
-	if (metaTask.modality !== TASK_TYPES.text_generation) {
+	if (metaTask.category !== TASK_TYPES.text_generation) {
 		// For now we only resolve text generation tasks
 		return null
 	}
@@ -308,7 +308,7 @@ export async function openAssistantPlainTextResult(metaTask) {
 	const view = new View({
 		propsData: {
 			output: metaTask.output ?? '',
-			taskType: metaTask.modality,
+			taskType: metaTask.category,
 		},
 	}).$mount(modalElement)
 
@@ -337,9 +337,9 @@ export async function openAssistantImageResult(metaTask) {
  * @return {Promise<void>}
  */
 export async function openAssistantTaskResult(task, useMetaTasks = false) {
-	// Divert to the right modal/page if we have a meta task with a modality other than text generation:
+	// Divert to the right modal/page if we have a meta task with a category other than text generation:
 	if (useMetaTasks) {
-		switch (task.modality) {
+		switch (task.category) {
 		case TASK_TYPES.speech_to_text:
 			openAssistantPlainTextResult(task)
 			return

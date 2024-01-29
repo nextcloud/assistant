@@ -23,8 +23,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setTaskType(string $taskType)
  * @method void setStatus(int $status)
  * @method int getStatus()
- * @method void setModality(int $modality)
- * @method int getModality()
+ * @method void setCategory(int $category)
+ * @method int getCategory()
  * @method string getInputs()
  * @method void setInputs(string $inputs)
  * @method string getIndentifer()
@@ -48,7 +48,7 @@ class Task extends Entity implements \JsonSerializable {
 	/** @var int */
 	protected $status;
 	/** @var int */
-	protected $modality;
+	protected $category;
 	/** @var string */
 	protected $indentifer;
 
@@ -61,7 +61,7 @@ class Task extends Entity implements \JsonSerializable {
 		$this->addType('timestamp', 'integer');
 		$this->addType('task_type', 'string');
 		$this->addType('status', 'integer');
-		$this->addType('modality', 'integer');
+		$this->addType('category', 'integer');
 		$this->addType('indentifer', 'string');
 	}
 
@@ -77,7 +77,7 @@ class Task extends Entity implements \JsonSerializable {
 			'task_type' => $this->taskType,
 			'timestamp' => $this->timestamp,
 			'status' => $this->status,
-			'modality' => $this->modality,
+			'category' => $this->category,
 			'indentifer' => $this->indentifer,
 		];
 	}
@@ -94,7 +94,7 @@ class Task extends Entity implements \JsonSerializable {
 			'taskType' => $this->taskType,
 			'timestamp' => $this->timestamp,
 			'status' => $this->status,
-			'modality' => $this->modality,
+			'category' => $this->category,
 			'indentifer' => $this->indentifer,
 		];
 	}
