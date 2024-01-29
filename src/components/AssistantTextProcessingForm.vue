@@ -267,26 +267,38 @@ export default {
 
 <style lang="scss" scoped>
 .assistant-form {
-	//width: 100%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	gap: 12px;
 	overflow-y: auto;
-
-	.editable-output {
-		width: 100%;
-		min-height: unset !important;
-		max-height: 200px !important;
-		overflow: auto;
-	}
+	overflow-x: hidden;
 
 	.output {
-		width: 100%;
+		width: 96%;
 		display: flex;
 		flex-direction: column;
-		align-items: start;
+		align-items: center;
+		justify-content: center;
+		margin-right: 16px;
+		margin-left: 16px;
+		.editable-output {
+			width: 100%;
+			min-height: unset !important;
+			max-height: 200px !important;
+			overflow: auto;
+		}
+
+		.warning-note {
+			align-self: normal;
+		}
+
+		.input-label {
+			align-self: start;
+			font-weight: bold;
+		}
 	}
 
 	.assistant-bubble {
@@ -334,10 +346,6 @@ export default {
 
 	.success-icon {
 		color: var(--color-success);
-	}
-
-	.warning-note {
-		align-self: normal;
 	}
 }
 </style>

@@ -303,7 +303,7 @@ class AssistantService {
 		}
 
 		try {
-			$contents = $userFolder->get($filePath)->->getContent();
+			$contents = $userFolder->get($filePath)->getContent();
 		} catch (NotFoundException | LockedException | GenericFileException | NotPermittedException $e) {
 			throw new \Exception('File not found or could not be accessed.');
 		}
@@ -388,7 +388,7 @@ class AssistantService {
 		$sections = $phpWord->getSections();
 		$outText = '';
 		foreach ($sections as $section) {
-			$elements = $section->getElements();			
+			$elements = $section->getElements();
 			foreach ($elements as $element) {
 				$class = get_class($element);
 				if (method_exists($element, 'getText')) {
