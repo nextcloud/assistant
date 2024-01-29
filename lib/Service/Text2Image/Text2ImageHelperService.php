@@ -10,14 +10,15 @@ use Exception as BaseException;
 use GdImage;
 
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageFileName;
 use OCA\TpAssistant\Db\Text2Image\ImageFileNameMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCA\TpAssistant\Db\Text2Image\PromptMapper;
 use OCA\TpAssistant\Db\Text2Image\StaleGenerationMapper;
-use OCA\TpAssistant\Service\AssistantService;
 
+use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
@@ -35,7 +36,6 @@ use OCP\TextToImage\IManager;
 use OCP\TextToImage\Task;
 use Psr\Log\LoggerInterface;
 use Random\RandomException;
-use OCA\TpAssistant\Db\TaskMapper;
 use RuntimeException;
 
 class Text2ImageHelperService {
@@ -537,16 +537,31 @@ class Text2ImageHelperService {
 
 		$this->imageGenerationMapper->setNotifyReady($imageGenId, true);
 
-		// Just in case the image generation is already ready, notify the user immediately so that the result is not lost:
-		if ($imageGeneration->getIsGenerated()) {
+		// Just in case check if the image generation is already ready and, if so, notify the user immediately so that the result is not lost:
+		try {
+			$tasks = $this->textToImageManager->getUserTasksByApp($this->userId, Application::APP_ID, $imageGenId);
+		} catch (RuntimeException $e) {
+			$this->logger->debug('Assistant meta task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
+			return;
+		}
+
+		if (count($tasks) !== 1) {
+			$this->logger->debug('Expecting exactly one image generation task per image generation id, but found ' . count($tasks) . ' tasks.', ['app' => Application::APP_ID]);
+			return;
+		}
+
+		$task = array_pop($tasks);
+
+		if ($task->getStatus() === Task::STATUS_SUCCESSFUL || $task->getStatus() === Task::STATUS_FAILED) {
 			// Get the assistant task
 			try {
-				$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndModality($imageGeneration->getTaskId(), Application::TASK_TYPE_TEXT_TO_IMAGE);
+				$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndModality($task->getId(), Application::TASK_TYPE_TEXT_TO_IMAGE);
 			} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 				$this->logger->debug('Assistant meta task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 				return;
 			}
-			$assistantTask->setStatus($imageGeneration->getFailed() ? Task::STATUS_FAILED : Task::STATUS_SUCCESSFUL);
+			$assistantTask->setStatus($task->getStatus());
+			// No need to update the output since it's already set
 			$assistantTask = $this->taskMapper->update($assistantTask);
 
 			$this->assistantService->sendNotification($assistantTask);

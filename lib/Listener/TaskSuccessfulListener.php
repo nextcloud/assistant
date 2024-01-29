@@ -3,14 +3,14 @@
 namespace OCA\TpAssistant\Listener;
 
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Event\BeforeAssistantNotificationEvent;
 use OCA\TpAssistant\Service\AssistantService;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TextProcessing\Events\TaskSuccessfulEvent;
-use OCA\TpAssistant\Db\TaskMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
 
 /**
  * @template-implements IEventListener<Event>

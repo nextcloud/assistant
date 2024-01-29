@@ -3,6 +3,7 @@
 namespace OCA\TpAssistant\Listener\Text2Image;
 
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCA\TpAssistant\Service\AssistantService;
@@ -17,7 +18,6 @@ use OCP\TextToImage\Events\AbstractTextToImageEvent;
 use OCP\TextToImage\Events\TaskFailedEvent;
 use OCP\TextToImage\Events\TaskSuccessfulEvent;
 use OCP\TextToImage\Task;
-use OCA\TpAssistant\Db\TaskMapper;
 use Psr\Log\LoggerInterface;
 
 /**

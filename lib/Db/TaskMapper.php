@@ -14,7 +14,6 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use OCA\TpAssistant\AppInfo\Application;
 
 /**
  * @extends QBMapper<Task>
@@ -32,7 +31,7 @@ class TaskMapper extends QBMapper {
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getTask(int $id,): Task {
+	public function getTask(int $id): Task {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -137,10 +136,10 @@ class TaskMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
-	 * @param array<string> $inputs
-     * @param string|null $output
+	 * @param array<mixed> $inputs
+	 * @param string|null $output
 	 * @param int|null $timestamp
-     * @param int|null $ocpTaskId
+	 * @param int|null $ocpTaskId
 	 * @param string|null $taskType
 	 * @param string|null $appId
 	 * @param int $status
@@ -150,16 +149,16 @@ class TaskMapper extends QBMapper {
 	 * @throws Exception
 	 */
 	public function createTask(
-			string $userId,
-			array $inputs,
-			?string $output,
-			?int $timestamp = null,
-			?int $ocpTaskId = null,
-			?string $taskType = null,
-			?string $appId = null,
-			int $status = 0,
-			int $modality= 0,
-			string $identifier = ''): Task {
+		string $userId,
+		array $inputs,
+		?string $output,
+		?int $timestamp = null,
+		?int $ocpTaskId = null,
+		?string $taskType = null,
+		?string $appId = null,
+		int $status = 0,
+		int $modality = 0,
+		string $identifier = ''): Task {
 		if ($timestamp === null) {
 			$timestamp = (new DateTime())->getTimestamp();
 		}
@@ -197,17 +196,17 @@ class TaskMapper extends QBMapper {
 	}
 
 	/**
-     * Clean up tasks older than 14 days
-     * @return int number of deleted rows
-     * @throws Exception
-     * @throws \RuntimeException
-     */
-    public function cleanupOldTasks(): int {
-        $qb = $this->db->getQueryBuilder();
-        $qb->delete($this->getTableName())
-            ->where(
-                $qb->expr()->lt('timestamp', $qb->createNamedParameter(time() - 14 * 24 * 60 * 60, IQueryBuilder::PARAM_INT))
-            );
-        return $qb->executeStatement();        
-    }
+	 * Clean up tasks older than 14 days
+	 * @return int number of deleted rows
+	 * @throws Exception
+	 * @throws \RuntimeException
+	 */
+	public function cleanupOldTasks(): int {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where(
+				$qb->expr()->lt('timestamp', $qb->createNamedParameter(time() - 14 * 24 * 60 * 60, IQueryBuilder::PARAM_INT))
+			);
+		return $qb->executeStatement();
+	}
 }

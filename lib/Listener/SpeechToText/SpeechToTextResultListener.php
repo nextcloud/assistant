@@ -23,16 +23,16 @@
 namespace OCA\TpAssistant\Listener\SpeechToText;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
+use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IURLGenerator;
 use OCP\SpeechToText\Events\AbstractTranscriptionEvent;
 use OCP\SpeechToText\Events\TranscriptionFailedEvent;
 use OCP\SpeechToText\Events\TranscriptionSuccessfulEvent;
-use OCA\TpAssistant\Db\TaskMapper;
 use Psr\Log\LoggerInterface;
-use OCP\IURLGenerator;
 
 /**
  * @template-implements IEventListener<Event>
@@ -100,7 +100,8 @@ class SpeechToTextResultListener implements IEventListener {
 			$etag = $file->getEtag();
 			$assistantTask = null;
 			foreach ($tasks as $task) {
-				if ($task->getEtag() === $etag) {
+				$taskEtag = $task->getInputsAsArray()['eTag'];
+				if ($taskEtag === $etag) {
 					$assistantTask = $task;
 					break;
 				}

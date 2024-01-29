@@ -35,12 +35,12 @@ class Task extends Entity implements \JsonSerializable {
 	protected $userId;
 	/** @var string */
 	protected $inputs;
-    /** @var string */
+	/** @var string */
 	protected $output;
 	/** @var string */
 	protected $appId;
-    /** @var int */
-    protected $ocpTaskId;
+	/** @var int */
+	protected $ocpTaskId;
 	/** @var int */
 	protected $timestamp;
 	/** @var string */
@@ -55,9 +55,9 @@ class Task extends Entity implements \JsonSerializable {
 	public function __construct() {
 		$this->addType('user_id', 'string');
 		$this->addType('inputs', 'string');
-        $this->addType('output', 'string');
+		$this->addType('output', 'string');
 		$this->addType('app_id', 'string');
-        $this->addType('ocp_task_id', 'integer');
+		$this->addType('ocp_task_id', 'integer');
 		$this->addType('timestamp', 'integer');
 		$this->addType('task_type', 'string');
 		$this->addType('status', 'integer');
@@ -71,9 +71,9 @@ class Task extends Entity implements \JsonSerializable {
 			'id' => $this->id,
 			'user_id' => $this->userId,
 			'inputs' => $this->getInputsAsArray(),
-            'output' => $this->output,
+			'output' => $this->output,
 			'app_id' => $this->appId,
-            'ocp_task_id' => $this->ocpTaskId,
+			'ocp_task_id' => $this->ocpTaskId,
 			'task_type' => $this->taskType,
 			'timestamp' => $this->timestamp,
 			'status' => $this->status,
@@ -88,9 +88,9 @@ class Task extends Entity implements \JsonSerializable {
 			'id' => $this->id,
 			'userId' => $this->userId,
 			'inputs' => $this->getInputsAsArray(),
-            'output' => $this->output,
+			'output' => $this->output,
 			'appId' => $this->appId,
-            'ocpTaskId' => $this->ocpTaskId,
+			'ocpTaskId' => $this->ocpTaskId,
 			'taskType' => $this->taskType,
 			'timestamp' => $this->timestamp,
 			'status' => $this->status,
@@ -99,10 +99,10 @@ class Task extends Entity implements \JsonSerializable {
 		];
 	}
 
-    /**
-     * @return array
-     */
-    public function getInputsAsArray(): array {
-        return json_decode($this->inputs, true) ?? [];
-    }
+	/**
+	 * @return array
+	 */
+	public function getInputsAsArray(): array {
+		return json_decode($this->inputs, true) ?? [];
+	}
 }

@@ -100,7 +100,7 @@ class Notifier implements INotifier {
 
 				$content = '';
 
-				if ($taskInput) {					
+				if ($taskInput) {
 					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
 				

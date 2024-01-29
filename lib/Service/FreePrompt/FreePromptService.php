@@ -8,6 +8,7 @@ namespace OCA\TpAssistant\Service\FreePrompt;
 use Exception;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\FreePrompt\PromptMapper;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCP\AppFramework\Http;
 use OCP\DB\Exception as DBException;
 use OCP\IConfig;
@@ -18,7 +19,6 @@ use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager;
 use OCP\TextProcessing\Task;
 use Psr\Log\LoggerInterface;
-use OCA\TpAssistant\Db\TaskMapper;
 
 class FreePromptService {
 	public function __construct(
@@ -74,14 +74,14 @@ class FreePromptService {
 		$this->taskMapper->createTask(
 			$this->userId,
 			['prompt' => $prompt],
-			Application::APP_ID,
-			$promptTask->getId(),
+			$promptTask->getOutput(),
 			time(),
+			$promptTask->getId(),
 			FreePromptTaskType::class,
+			Application::APP_ID,
 			$promptTask->getStatus(),
 			Application::TASK_TYPE_TEXT_GEN,
-			$promptTask->getInput(),
-			$promptTask->getIdentifier()
+			$genId
 		);
 
 		// If the task was run immediately, we'll skip the notification..

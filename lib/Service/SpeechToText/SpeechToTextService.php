@@ -25,6 +25,7 @@ namespace OCA\TpAssistant\Service\SpeechToText;
 use DateTime;
 use InvalidArgumentException;
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
@@ -36,7 +37,6 @@ use OCP\Notification\IManager as INotifyManager;
 use OCP\PreConditionNotMetException;
 use OCP\SpeechToText\ISpeechToTextManager;
 use Psr\Log\LoggerInterface;
-use OCA\TpAssistant\Db\TaskMapper;
 use RuntimeException;
 
 class SpeechToTextService {

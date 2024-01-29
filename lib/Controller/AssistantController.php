@@ -3,6 +3,7 @@
 namespace OCA\TpAssistant\Controller;
 
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -12,9 +13,6 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
-use OCA\TpAssistant\Db\TaskMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IRequest;
 
 class AssistantController extends Controller {
@@ -137,7 +135,7 @@ class AssistantController extends Controller {
 
 	/**
 	 * Parse text from file (if parsing the file type is supported)
-	 * 
+	 *
 	 * @param string $filePath
 	 * @return DataResponse
 	 */

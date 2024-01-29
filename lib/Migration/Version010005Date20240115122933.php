@@ -60,12 +60,12 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 			$table->addColumn('inputs', Types::TEXT, [
 				'notnull' => false,
 			]);
-            $table->addColumn('output', Types::TEXT, [
-                'notnull' => false,
-            ]);
-            $table->addColumn('ocp_task_id', Types::BIGINT, [
-                'notnull' => false,
-            ]);
+			$table->addColumn('output', Types::TEXT, [
+				'notnull' => false,
+			]);
+			$table->addColumn('ocp_task_id', Types::BIGINT, [
+				'notnull' => false,
+			]);
 			$table->addColumn('timestamp', Types::BIGINT, [
 				'notnull' => true,
 				'unsigned' => true,

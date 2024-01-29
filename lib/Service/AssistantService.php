@@ -6,25 +6,25 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use DateTime;
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\Task;
+use OCA\TpAssistant\Db\TaskMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Common\Exception\NotFoundException;
 use OCP\Files\GenericFileException;
+use OCP\Files\IRootFolder;
+use OCP\Files\NotPermittedException;
 use OCP\IURLGenerator;
+use OCP\Lock\LockedException;
 use OCP\Notification\IManager as INotificationManager;
 use OCP\PreConditionNotMetException;
+use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task as TextProcessingTask;
 use OCP\TextToImage\Task as TextToImageTask;
-use OCA\TpAssistant\Db\TaskMapper;
-use OCA\TpAssistant\Db\Task;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCP\TextProcessing\FreePromptTaskType;
-use Psr\Log\LoggerInterface;
-use OCP\Files\IRootFolder;
-use OCP\Files\NotPermittedException;
-use OCP\Lock\LockedException;
-use PhpOffice\PhpWord\IOFactory;
 use Parsedown;
+use PhpOffice\PhpWord\IOFactory;
+use Psr\Log\LoggerInterface;
 
 class AssistantService {
 
@@ -65,25 +65,25 @@ class AssistantService {
 
 		switch ($task->getModality()) {
 			case Application::TASK_TYPE_TEXT_TO_IMAGE:
-			{
-				$taskSuccessful = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL;
-				break;
-			}
+				{
+					$taskSuccessful = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL;
+					break;
+				}
 			case Application::TASK_TYPE_TEXT_GEN:
-			{
-				$taskSuccessful = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL;
-				break;
-			}
+				{
+					$taskSuccessful = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL;
+					break;
+				}
 			case Application::TASK_TYPE_SPEECH_TO_TEXT:
-			{
-				$taskSuccessful = $task->getStatus() === Application::STT_TASK_SUCCESSFUL;
-				break;
-			}
+				{
+					$taskSuccessful = $task->getStatus() === Application::STT_TASK_SUCCESSFUL;
+					break;
+				}
 			default:
-			{
-				$taskSuccessful = false;
-				break;
-			}
+				{
+					$taskSuccessful = false;
+					break;
+				}
 		}
 
 		$subject = $taskSuccessful
@@ -122,24 +122,24 @@ class AssistantService {
 	private function sanitizeInputs(string $type, array $inputs): array {
 		switch ($type) {
 			case 'copywriter':
-			{
-				// Sanitize the input array based on the allowed keys and making sure all inputs are strings:
-				$inputs = array_filter($inputs, function($value, $key) {
-					return in_array($key, ['writingStyle', 'sourceMaterial']) && is_string($value);
-				}, ARRAY_FILTER_USE_BOTH);
+				{
+					// Sanitize the input array based on the allowed keys and making sure all inputs are strings:
+					$inputs = array_filter($inputs, function ($value, $key) {
+						return in_array($key, ['writingStyle', 'sourceMaterial']) && is_string($value);
+					}, ARRAY_FILTER_USE_BOTH);
 
-				if (count($inputs) !== 2) {
-					throw new \Exception('Invalid input(s)');
+					if (count($inputs) !== 2) {
+						throw new \Exception('Invalid input(s)');
+					}
+					break;
 				}
-				break;
-			}
 			default:
-			{
-				if (!is_string($inputs['prompt']) || count($inputs) !== 1) {
-					throw new \Exception('Invalid input(s)');
+				{
+					if (!is_string($inputs['prompt']) || count($inputs) !== 1) {
+						throw new \Exception('Invalid input(s)');
+					}
+					break;
 				}
-				break;
-			}
 		}
 		return $inputs;
 	}
@@ -171,7 +171,7 @@ class AssistantService {
 			// Ocp task not found, so we can't update the status
 		} catch (\Exception | \Throwable $e) {
 			// Something else went wrong, so we can't update the status
-		}			
+		}
 
 		return $task;
 	}
@@ -190,23 +190,23 @@ class AssistantService {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
-			{
-				// Format the input prompt
-				$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-				$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-				$this->textProcessingManager->runTask($task);
-				break;
-			}
+				{
+					// Format the input prompt
+					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
+					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
+					$this->textProcessingManager->runTask($task);
+					break;
+				}
 			default:
-			{
-				$input = $inputs['prompt'];
-				$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-				$this->textProcessingManager->runTask($task);
-				break;
-			}
+				{
+					$input = $inputs['prompt'];
+					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
+					$this->textProcessingManager->runTask($task);
+					break;
+				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(),$type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
 		
 		return $assistantTask;
 	}
@@ -225,23 +225,23 @@ class AssistantService {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
-			{
-				// Format the input prompt
-				$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-				$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-				$this->textProcessingManager->scheduleTask($task);
-				break;
-			}	
+				{
+					// Format the input prompt
+					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
+					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
+					$this->textProcessingManager->scheduleTask($task);
+					break;
+				}
 			default:
-			{
-				$input = $inputs['prompt'];
-				$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-				$this->textProcessingManager->scheduleTask($task);
-				break;
-			}
+				{
+					$input = $inputs['prompt'];
+					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
+					$this->textProcessingManager->scheduleTask($task);
+					break;
+				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(),$type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
 		
 		return $assistantTask;
 	}
@@ -261,23 +261,23 @@ class AssistantService {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
-			{
-				// Format the input prompt
-				$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-				$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-				$this->textProcessingManager->runOrScheduleTask($task);
-				break;
-			}	
+				{
+					// Format the input prompt
+					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
+					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
+					$this->textProcessingManager->runOrScheduleTask($task);
+					break;
+				}
 			default:
-			{
-				$input = $inputs['prompt'];
-				$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-				$this->textProcessingManager->runOrScheduleTask($task);
-				break;
-			}
+				{
+					$input = $inputs['prompt'];
+					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
+					$this->textProcessingManager->runOrScheduleTask($task);
+					break;
+				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(),$type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_TYPE_TEXT_GEN, $identifier);
 		
 		return $assistantTask;
 	}
@@ -303,7 +303,7 @@ class AssistantService {
 		}
 
 		try {
-			$contents = $userFolder->get($filePath)->getContent();
+			$contents = $userFolder->get($filePath)->->getContent();
 		} catch (NotFoundException | LockedException | GenericFileException | NotPermittedException $e) {
 			throw new \Exception('File not found or could not be accessed.');
 		}
@@ -311,39 +311,39 @@ class AssistantService {
 		switch ($mimeType) {
 			default:
 			case 'text/plain':
-			{
-				$text = $contents;
+				{
+					$text = $contents;
 				
-				break;
-			}
+					break;
+				}
 			case 'text/markdown':
-			{
-				$parser = new Parsedown();
-				$text = $parser->text($contents);
-				// Remove HTML tags:
-				$text = strip_tags($text);				
-				break;
-			}
+				{
+					$parser = new Parsedown();
+					$text = $parser->text($contents);
+					// Remove HTML tags:
+					$text = strip_tags($text);
+					break;
+				}
 			case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
 			case 'application/msword':
 			case 'application/rtf':
 			case 'application/vnd.oasis.opendocument.text':
-			{
-				// Store the file in a temp dir and provide a path for the doc parser to use
-				$tempFilePath = sys_get_temp_dir() . '/assistant_app/' . uniqid() . '.tmp';
-				// Make sure the temp dir exists
-				if (!file_exists(dirname($tempFilePath))) {
-					mkdir(dirname($tempFilePath), 0600, true);
-				}
-				file_put_contents($tempFilePath, $contents);
+				{
+					// Store the file in a temp dir and provide a path for the doc parser to use
+					$tempFilePath = sys_get_temp_dir() . '/assistant_app/' . uniqid() . '.tmp';
+					// Make sure the temp dir exists
+					if (!file_exists(dirname($tempFilePath))) {
+						mkdir(dirname($tempFilePath), 0600, true);
+					}
+					file_put_contents($tempFilePath, $contents);
 
-				$text = $this->parseDocument($tempFilePath, $mimeType);
+					$text = $this->parseDocument($tempFilePath, $mimeType);
 				
-				// Remove the hardlink to the file (delete it):
-				unlink($tempFilePath);
+					// Remove the hardlink to the file (delete it):
+					unlink($tempFilePath);
 
-				break;
-			}
+					break;
+				}
 		}
 		return $text;
 	}
@@ -357,29 +357,29 @@ class AssistantService {
 	private function parseDocument(string $filePath, string $mimeType): string {
 		switch ($mimeType) {
 			case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-			{
-				$readerType = 'Word2007';
-				break;
-			}
+				{
+					$readerType = 'Word2007';
+					break;
+				}
 			case 'application/msword':
-			{
-				$readerType = 'MsDoc';
-				break;
-			}
+				{
+					$readerType = 'MsDoc';
+					break;
+				}
 			case 'application/rtf':
-			{
-				$readerType = 'RTF';
-				break;
-			}
+				{
+					$readerType = 'RTF';
+					break;
+				}
 			case 'application/vnd.oasis.opendocument.text':
-			{
-				$readerType = 'ODText';
-				break;
-			}
+				{
+					$readerType = 'ODText';
+					break;
+				}
 			default:
-			{
-				throw new \Exception('Unsupported file mimetype');
-			}
+				{
+					throw new \Exception('Unsupported file mimetype');
+				}
 		}
 
 
@@ -388,8 +388,7 @@ class AssistantService {
 		$sections = $phpWord->getSections();
 		$outText = '';
 		foreach ($sections as $section) {
-			$elements = $section->getElements();
-			/** @var ElementTest $element */
+			$elements = $section->getElements();			
 			foreach ($elements as $element) {
 				$class = get_class($element);
 				if (method_exists($element, 'getText')) {
@@ -400,28 +399,4 @@ class AssistantService {
 
 		return $outText;
 	}
-
-	/**
-	 * Parse text from docx file
-	 * @param string $filePath
-	 */
-	private function parseDocx(string $filePath): string {
-		$phpWord = IOFactory::createReader('Word2007');
-		$phpWord = $phpWord->load($filePath);
-		$sections = $phpWord->getSections();
-		$outText = '';
-		foreach ($sections as $section) {
-			$elements = $section->getElements();
-			/** @var ElementTest $element */
-			foreach ($elements as $element) {
-				$class = get_class($element);
-				if (method_exists($element, 'getText')) {
-					$outText .= $element->getText() . "\n";
-				}
-			}
-		}
-
-		return $outText;
-	}
-
 }
