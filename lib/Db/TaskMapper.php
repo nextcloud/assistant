@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Db;
 
 use DateTime;
+use Doctrine\DBAL\Exception\InvalidArgumentException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
@@ -67,6 +68,16 @@ class TaskMapper extends QBMapper {
 
 		/** @var Task $retVal */
 		$retVal = $this->findEntity($qb);
+
+		// Touch the timestamp to prevent the task from being cleaned up:
+		$retVal->setTimestamp((new DateTime())->getTimestamp());
+		try {
+			$retVal = $this->update($retVal);
+		} catch (\InvalidArgumentException $e) {
+			// This should never happen
+			throw new Exception('Failed to touch timestamp of task', 0, $e);
+		}
+		
 		return $retVal;
 	}
 
@@ -90,6 +101,19 @@ class TaskMapper extends QBMapper {
 
 		/** @var array<Task> $retVal */
 		$retVal = $this->findEntities($qb);
+
+		// Touch the timestamps to prevent the task from being cleaned up:
+		foreach ($retVal as &$task) {
+			$task->setTimestamp((new DateTime())->getTimestamp());
+			try {
+				$task = $this->update($task);
+			} catch (\InvalidArgumentException $e) {
+				// This should never happen
+				throw new Exception('Failed to touch timestamp of task', 0 , $e);
+			}
+		}
+		unset($task);
+
 		return $retVal;
 	}
 
@@ -196,16 +220,20 @@ class TaskMapper extends QBMapper {
 	}
 
 	/**
-	 * Clean up tasks older than 14 days
+	 * Clean up tasks older than specified (14 days by default)
+	 * @param ?int $olderThanSeconds
 	 * @return int number of deleted rows
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */
-	public function cleanupOldTasks(): int {
+	public function cleanupOldTasks($olderThanSeconds): int {
+		if ($olderThanSeconds === null) {
+			$olderThanSeconds = 14 * 24 * 60 * 60;
+		}
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
 			->where(
-				$qb->expr()->lt('timestamp', $qb->createNamedParameter(time() - 14 * 24 * 60 * 60, IQueryBuilder::PARAM_INT))
+				$qb->expr()->lt('timestamp', $qb->createNamedParameter((new DateTime())->getTimestamp() - $olderThanSeconds, IQueryBuilder::PARAM_INT))
 			);
 		return $qb->executeStatement();
 	}

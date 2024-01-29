@@ -32,6 +32,7 @@ use OCP\TextToImage\Events\TaskSuccessfulEvent as TextToImageTaskSuccessfulEvent
 class Application extends App implements IBootstrap {
 
 	public const APP_ID = 'assistant';
+	public const DEFAULT_ASSISTANT_TASK_IDLE_TIME = 60 * 60 * 24 * 14; // 14 days
 
 	public const MAX_STORED_IMAGE_PROMPTS_PER_USER = 5;
 	public const MAX_STORED_TEXT_PROMPTS_PER_USER = 5;

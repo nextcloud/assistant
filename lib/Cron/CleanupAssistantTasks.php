@@ -7,32 +7,31 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Cron;
 
 use Exception;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TpAssistant\Service\Text2Image\CleanUpService;
+use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\TaskMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class CleanupImageGenerations extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private ImageGenerationMapper $imageGenerationMapper,
 		private LoggerInterface $logger,
-		private CleanUpService $cleanUpService,
+		private TaskMapper $taskMapper,
 	) {
 		parent::__construct($time);
 		$this->setInterval(60 * 60 * 24);
 	}
 
 	protected function run($argument): void {
-		$this->logger->debug('Run cleanup job for image generations');
+		$this->logger->debug('Run cleanup job for assistant tasks');
 
 		try {
-			$this->cleanUpService->cleanupGenerationsAndFiles();
-		} catch (Exception $e) {
-			$this->logger->debug('Cleanup job for image generations failed: ' . $e->getMessage());
+			$this->taskMapper->cleanupOldTasks(Application::DEFAULT_ASSISTANT_TASK_IDLE_TIME);
+		} catch (\OCP\Db\Exception | RuntimeException | Exception $e) {
+			$this->logger->debug('Cleanup job for assistant tasks failed: ' . $e->getMessage());
 		}
-		
 
 		return;
 	}
