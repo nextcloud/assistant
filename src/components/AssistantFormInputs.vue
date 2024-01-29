@@ -81,7 +81,7 @@ const VALID_MIME_TYPES = [
 	// 'application/pdf', // Not yet supported
 ]
 
-const picker = getFilePickerBuilder(t('assistant', 'Choose Audio File'))
+const picker = getFilePickerBuilder(t('assistant', 'Choose a text file'))
 	.setMimeTypeFilter(VALID_MIME_TYPES)
 	.setMultiSelect(false)
 	.allowDirectories(false)
