@@ -54,7 +54,6 @@ class Text2ImageHelperService {
 		private IL10N $l10n,
 		private AssistantService $assistantService,
 		private TaskMapper $taskMapper,
-		private ?string $userId,
 	) {
 	}
 
@@ -64,13 +63,14 @@ class Text2ImageHelperService {
 	 * @param string $prompt
 	 * @param int $nResults
 	 * @param bool $displayPrompt
+	 * @param string $userId
 	 * @return array
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
 	 * @throws TaskFailureException ;
 	 * @throws RandomException
 	 */
-	public function processPrompt(string $prompt, int $nResults, bool $displayPrompt): array {
+	public function processPrompt(string $prompt, int $nResults, bool $displayPrompt, string $userId): array {
 		if (!$this->textToImageManager->hasProviders()) {
 			$this->logger->error('No text to image processing provider available');
 			throw new BaseException($this->l10n->t('No text to image processing provider available'));
@@ -83,7 +83,7 @@ class Text2ImageHelperService {
 			$imageGenId = bin2hex(random_bytes(16));
 		}
 
-		$promptTask = new Task($prompt, Application::APP_ID, $nResults, $this->userId, $imageGenId);
+		$promptTask = new Task($prompt, Application::APP_ID, $nResults, $userId, $imageGenId);
 
 		$this->textToImageManager->runOrScheduleTask($promptTask);
 
@@ -101,12 +101,12 @@ class Text2ImageHelperService {
 		}
 
 		// Store the image id to the db:
-		$this->imageGenerationMapper->createImageGeneration($imageGenId, $displayPrompt ? $prompt : '', $this->userId ?? '', $expCompletionTime->getTimestamp());
+		$this->imageGenerationMapper->createImageGeneration($imageGenId, $displayPrompt ? $prompt : '', $userId, $expCompletionTime->getTimestamp());
 
 		// Create an assistant meta task for the image generation task:
 		// TODO check if we should create a task if userId is null
 		$this->taskMapper->createTask(
-			$this->userId ?? '',
+			$userId,
 			['prompt' => $prompt],
 			$imageGenId,
 			time(),
@@ -137,8 +137,8 @@ class Text2ImageHelperService {
 		);
 
 		// Save the prompt to database
-		if ($this->userId !== null) {
-			$this->promptMapper->createPrompt($this->userId, $prompt);
+		if ($userId !== null) {
+			$this->promptMapper->createPrompt($userId, $prompt);
 		}
 
 		return ['url' => $infoUrl, 'reference_url' => $referenceUrl, 'image_gen_id' => $imageGenId, 'prompt' => $prompt];
@@ -172,14 +172,15 @@ class Text2ImageHelperService {
 	}
 
 	/**
+	 * @param string $userId
 	 * @return array
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getPromptHistory(): array {
-		if ($this->userId === null) {
+	public function getPromptHistory(string $userId): array {
+		if ($userId === null) {
 			return [];
 		} else {
-			return $this->promptMapper->getPromptsOfUser($this->userId);
+			return $this->promptMapper->getPromptsOfUser($userId);
 		}
 	}
 
@@ -286,11 +287,12 @@ class Text2ImageHelperService {
 	 * Get image generation info
 	 *
 	 * @param string $imageGenId
+	 * @param string $userId
 	 * @param bool $updateTimestamp
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function getGenerationInfo(string $imageGenId, bool $updateTimestamp = true): array {
+	public function getGenerationInfo(string $imageGenId, string $userId, bool $updateTimestamp = true): array {
 		// Check whether the task has completed:
 		try {
 			/** @var ImageGeneration $imageGeneration */
@@ -311,7 +313,7 @@ class Text2ImageHelperService {
 			throw new BaseException($this->l10n->t('Retrieving the image generation failed.'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
-		$isOwner = ($imageGeneration->getUserId() === $this->userId);
+		$isOwner = ($imageGeneration->getUserId() === $userId);
 
 		if ($imageGeneration->getFailed() === true) {
 			throw new BaseException($this->l10n->t('Image generation failed.'), Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -405,10 +407,11 @@ class Text2ImageHelperService {
 	 * Cancel image generation
 	 *
 	 * @param string $imageGenId
+	 * @param string $userId
 	 * @return void
 	 * @throws NotPermittedException
 	 */
-	public function cancelGeneration(string $imageGenId): void {
+	public function cancelGeneration(string $imageGenId, string $userId): void {
 		try {
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
@@ -418,14 +421,14 @@ class Text2ImageHelperService {
 
 		if ($imageGeneration) {
 			// Make sure the user is associated with the image generation
-			if ($imageGeneration->getUserId() !== $this->userId) {
+			if ($imageGeneration->getUserId() !== $userId) {
 				$this->logger->warning('User attempted deleting another user\'s image generation!', ['app' => Application::APP_ID]);
 				return;
 			}
 
 			// Get the generation task if it exists
 			try {
-				$task = $this->textToImageManager->getUserTasksByApp($this->userId, Application::APP_ID, $imageGenId);
+				$task = $this->textToImageManager->getUserTasksByApp($userId, Application::APP_ID, $imageGenId);
 			} catch (RuntimeException $e) {
 				$this->logger->debug('Task cancellation failed or it does not exist: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 				$task = [];
@@ -484,10 +487,11 @@ class Text2ImageHelperService {
 	 *
 	 * @param string $imageGenId
 	 * @param array $fileVisStatusArray
+	 * @param string $userId
 	 * @return void
 	 * @throws BaseException
 	 */
-	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisStatusArray): void {
+	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisStatusArray, string $userId): void {
 		try {
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
@@ -498,7 +502,7 @@ class Text2ImageHelperService {
 			throw new BaseException('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
-		if ($imageGeneration->getUserId() !== $this->userId) {
+		if ($imageGeneration->getUserId() !== $userId) {
 			$this->logger->warning('User attempted deleting another user\'s image generation!');
 			throw new BaseException('Unauthorized.', Http::STATUS_UNAUTHORIZED);
 		}
@@ -517,9 +521,10 @@ class Text2ImageHelperService {
 	 * Notify when image generation is ready
 	 *
 	 * @param string $imageGenId
+	 * @param string $userId
 	 * @throws Exception
 	 */
-	public function notifyWhenReady(string $imageGenId): void {
+	public function notifyWhenReady(string $imageGenId, string $userId): void {
 		try {
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
@@ -539,7 +544,7 @@ class Text2ImageHelperService {
 			throw new BaseException('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
-		if ($imageGeneration->getUserId() !== $this->userId) {
+		if ($imageGeneration->getUserId() !== $userId) {
 			$this->logger->warning('User attempted enabling notifications of another user\'s image generation!');
 			throw new BaseException('Unauthorized.', Http::STATUS_UNAUTHORIZED);
 		}
@@ -548,7 +553,7 @@ class Text2ImageHelperService {
 
 		// Just in case check if the image generation is already ready and, if so, notify the user immediately so that the result is not lost:
 		try {
-			$tasks = $this->textToImageManager->getUserTasksByApp($this->userId, Application::APP_ID, $imageGenId);
+			$tasks = $this->textToImageManager->getUserTasksByApp($userId, Application::APP_ID, $imageGenId);
 		} catch (RuntimeException $e) {
 			$this->logger->debug('Assistant meta task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			return;

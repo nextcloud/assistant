@@ -142,7 +142,7 @@ class AssistantController extends Controller {
 	#[NoAdminRequired]
 	public function parseTextFromFile(string $filePath): DataResponse {
 		try {
-			$text = $this->assistantService->parseTextFromFile($filePath);
+			$text = $this->assistantService->parseTextFromFile($filePath, $this->userId);
 		} catch (\Exception | \Throwable $e) {
 			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}

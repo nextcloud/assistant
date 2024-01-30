@@ -36,7 +36,6 @@ class AssistantService {
 		private TaskMapper $taskMapper,
 		private LoggerInterface $logger,
 		private IRootFolder $storage,
-		private ?string $userId,
 	) {
 	}
 
@@ -286,12 +285,13 @@ class AssistantService {
 	/**
 	 * Parse text from file (if parsing the file type is supported)
 	 * @param string $filePath
+	 * @param string $userId
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function parseTextFromFile(string $filePath): string {
+	public function parseTextFromFile(string $filePath, string $userId): string {
 		try {
-			$userFolder = $this->storage->getUserFolder($this->userId);
+			$userFolder = $this->storage->getUserFolder($userId);
 		} catch (\OC\User\NoUserException | NotPermittedException $e) {
 			throw new \Exception('Could not access user storage.');
 		}

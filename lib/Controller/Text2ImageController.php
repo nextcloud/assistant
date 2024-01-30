@@ -46,7 +46,7 @@ class Text2ImageController extends Controller {
 	public function processPrompt(string $prompt, int $nResults = 1, bool $displayPrompt = false): DataResponse {
 		$nResults = min(10, max(1, $nResults));
 		try {
-			$result = $this->text2ImageHelperService->processPrompt($prompt, $nResults, $displayPrompt);
+			$result = $this->text2ImageHelperService->processPrompt($prompt, $nResults, $displayPrompt, $this->userId);
 		} catch (Exception | TaskFailureException $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
@@ -61,7 +61,7 @@ class Text2ImageController extends Controller {
 	#[NoCSRFRequired]
 	public function getPromptHistory(): DataResponse {
 		try {
-			$response = $this->text2ImageHelperService->getPromptHistory();
+			$response = $this->text2ImageHelperService->getPromptHistory($this->userId);
 		} catch (DbException $e) {
 			return new DataResponse(['error' => 'Unknown error while retrieving prompt history.'], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -113,7 +113,7 @@ class Text2ImageController extends Controller {
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function getGenerationInfo(string $imageGenId): DataResponse {
 		try {
-			$result = $this->text2ImageHelperService->getGenerationInfo($imageGenId, true);
+			$result = $this->text2ImageHelperService->getGenerationInfo($imageGenId, $this->userId, true);
 		} catch (Exception $e) {
 			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
 			if ($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
@@ -139,7 +139,7 @@ class Text2ImageController extends Controller {
 		}
 
 		try {
-			$this->text2ImageHelperService->setVisibilityOfImageFiles($imageGenId, $fileVisStatusArray);
+			$this->text2ImageHelperService->setVisibilityOfImageFiles($imageGenId, $fileVisStatusArray, $this->userId);
 		} catch (Exception $e) {
 			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
 			if($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
@@ -164,7 +164,7 @@ class Text2ImageController extends Controller {
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function notifyWhenReady(string $imageGenId): DataResponse {
 		try {
-			$this->text2ImageHelperService->notifyWhenReady($imageGenId);
+			$this->text2ImageHelperService->notifyWhenReady($imageGenId, $this->userId);
 		} catch (Exception $e) {
 			// Ignore
 		}
@@ -184,7 +184,7 @@ class Text2ImageController extends Controller {
 	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function cancelGeneration(string $imageGenId): DataResponse {
-		$this->text2ImageHelperService->cancelGeneration($imageGenId);
+		$this->text2ImageHelperService->cancelGeneration($imageGenId, $this->userId);
 		return new DataResponse('success', Http::STATUS_OK);
 	}
 
@@ -203,12 +203,8 @@ class Text2ImageController extends Controller {
 		if ($forceEditMode === null) {
 			$forceEditMode = false;
 		}
-		if ($imageGenId === null) {
-			$this->initialStateService->provideInitialState('generation-page-inputs', ['image_gen_id' => $imageGenId, 'force_edit_mode' => $forceEditMode]);
-		} else {
-			$this->initialStateService->provideInitialState('generation-page-inputs', ['image_gen_id' => $imageGenId, 'force_edit_mode' => $forceEditMode]);
-		}
-
+		$this->initialStateService->provideInitialState('generation-page-inputs', ['image_gen_id' => $imageGenId, 'force_edit_mode' => $forceEditMode]);
+		
 		return new TemplateResponse(Application::APP_ID, 'imageGenerationPage');
 	}
 }
