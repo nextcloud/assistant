@@ -26,6 +26,7 @@ use OCP\TextToImage\Task as TextToImageTask;
 use Parsedown;
 use PhpOffice\PhpWord\IOFactory;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class AssistantService {
 
@@ -169,8 +170,10 @@ class AssistantService {
 			}
 		} catch (NotFoundException $e) {
 			// Ocp task not found, so we can't update the status
-		} catch (\Exception | \Throwable $e) {
+			$this->logger->debug('OCP task not found for assistant task ' . $task->getId() . '. Could not update status.');
+		} catch (\InvalidArgumentException | \OCP\Db\Exception | RuntimeException $e) {
 			// Something else went wrong, so we can't update the status
+			$this->logger->warning('Unknown error while trying to retreive an updated status for assistant task: ' . $task->getId() . '.', ['exception' => $e]);
 		}
 
 		return $task;
