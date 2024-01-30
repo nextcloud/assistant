@@ -1,4 +1,4 @@
-js/
+build
 .code-workspace
 .DS_Store
 .idea/
@@ -10,4 +10,3 @@ node_modules
 /composer.lock
 
 /vendor/
-build
