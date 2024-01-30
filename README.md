@@ -6,6 +6,8 @@ This Assistant is a blablador themed version of the nextcloud assistant.
 
 Get in touch with us at [blablador@fz-juelich.de](mailto:blablador@fz-juelich.de.).
 
+![screenshot](img/screenshot-fork1.jpg)
+
 ---
 
 # Nextcloud Assistant
