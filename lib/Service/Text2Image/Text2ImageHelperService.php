@@ -45,7 +45,6 @@ class Text2ImageHelperService {
 	public function __construct(
 		private LoggerInterface $logger,
 		private IManager $textToImageManager,
-		private ?string $userId,
 		private PromptMapper $promptMapper,
 		private ImageGenerationMapper $imageGenerationMapper,
 		private ImageFileNameMapper $imageFileNameMapper,
@@ -55,6 +54,7 @@ class Text2ImageHelperService {
 		private IL10N $l10n,
 		private AssistantService $assistantService,
 		private TaskMapper $taskMapper,
+		private ?string $userId,
 	) {
 	}
 
@@ -281,7 +281,6 @@ class Text2ImageHelperService {
 	 * Get image generation info.
 	 * @param string $imageGenId
 	 * @param bool $updateTimestamp
-	 * @param string|null $userId
 	 * @return array
 	 * @throws \Exception
 	 */
@@ -356,10 +355,10 @@ class Text2ImageHelperService {
 	 * Get image based on imageFileNameId (imageGenId is used to prevent guessing image ids)
 	 * @param string $imageGenId
 	 * @param int $imageFileNameId
-	 * @return array ('image' => string, 'content-type' => string)
+	 * @return array{image: string, 'content-type': array<string>}
 	 * @throws BaseException
 	 */
-	public function getImage(string $imageGenId, int $imageFileNameId): ?array {
+	public function getImage(string $imageGenId, int $imageFileNameId): array {
 		try {
 			$generationId = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId)->getId();
 			/** @var ImageFileName $imageFileName */

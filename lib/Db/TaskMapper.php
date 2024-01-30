@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Db;
 
 use DateTime;
-use Doctrine\DBAL\Exception\InvalidArgumentException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
@@ -109,7 +108,7 @@ class TaskMapper extends QBMapper {
 				$task = $this->update($task);
 			} catch (\InvalidArgumentException $e) {
 				// This should never happen
-				throw new Exception('Failed to touch timestamp of task', 0 , $e);
+				throw new Exception('Failed to touch timestamp of task', 0, $e);
 			}
 		}
 		unset($task);

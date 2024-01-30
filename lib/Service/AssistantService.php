@@ -11,6 +11,7 @@ use OCA\TpAssistant\Db\TaskMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Common\Exception\NotFoundException;
+use OCP\Files\File;
 use OCP\Files\GenericFileException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotPermittedException;
@@ -207,7 +208,7 @@ class AssistantService {
 		}
 
 		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
-		
+
 		return $assistantTask;
 	}
 
@@ -242,7 +243,7 @@ class AssistantService {
 		}
 
 		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
-		
+
 		return $assistantTask;
 	}
 
@@ -278,7 +279,7 @@ class AssistantService {
 		}
 
 		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
-		
+
 		return $assistantTask;
 	}
 
@@ -294,7 +295,7 @@ class AssistantService {
 		} catch (\OC\User\NoUserException | NotPermittedException $e) {
 			throw new \Exception('Could not access user storage.');
 		}
-		
+
 
 		try {
 			$mimeType = $userFolder->get($filePath)->getMimeType();
@@ -303,17 +304,22 @@ class AssistantService {
 		}
 
 		try {
-			$contents = $userFolder->get($filePath)->getContent();
+			$file = $userFolder->get($filePath);
+			if ($file instanceof File) {
+				$contents = $file->getContent();
+			} else {
+				throw new \Exception('File is not a file.');
+			}
 		} catch (NotFoundException | LockedException | GenericFileException | NotPermittedException $e) {
 			throw new \Exception('File not found or could not be accessed.');
 		}
-		
+
 		switch ($mimeType) {
 			default:
 			case 'text/plain':
 				{
 					$text = $contents;
-				
+
 					break;
 				}
 			case 'text/markdown':
@@ -338,7 +344,7 @@ class AssistantService {
 					file_put_contents($tempFilePath, $contents);
 
 					$text = $this->parseDocument($tempFilePath, $mimeType);
-				
+
 					// Remove the hardlink to the file (delete it):
 					unlink($tempFilePath);
 

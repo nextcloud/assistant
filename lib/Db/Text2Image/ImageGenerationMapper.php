@@ -171,7 +171,7 @@ class ImageGenerationMapper extends QBMapper {
 
 	/**
 	 * @param int $maxAge
-	 * @return array ('deleted_generations' => int, 'file_names' => string[])
+	 * @return array{deleted_generations: int, file_names: array<string>}
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */
@@ -188,11 +188,9 @@ class ImageGenerationMapper extends QBMapper {
 				$qb->expr()->lt('timestamp', $qb->createNamedParameter($maxTimestamp, IQueryBuilder::PARAM_INT))
 			);
 
-		/** @var ImageGeneration[] $generations */
 		$generations = $this->findEntities($qb);
 		$qb->resetQueryParts();
 
-		/** @var array[] $fileNames */
 		$fileNames = [];
 		$imageGenIds = [];
 		$generationIds = [];

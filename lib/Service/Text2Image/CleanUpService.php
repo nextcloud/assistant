@@ -8,30 +8,24 @@ namespace OCA\TpAssistant\Service\Text2Image;
 use Exception;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-/**
- * Service to make requests to OpenAI REST API
- */
 class CleanUpService {
 	public function __construct(
 		private LoggerInterface $logger,
 		private ImageGenerationMapper $imageGenerationMapper,
 		private Text2ImageHelperService $text2ImageHelperService,
-		private IAppData $appData,
 		private IConfig $config
 	) {
-
 	}
 
 	/**
 	 * @param int|null $maxAge
-	 * @return array ('deleted_files' => int, 'file_deletion_errors' => int, 'deleted_generations' => int)
+	 * @return array{deleted_files: int, file_deletion_errors: int, deleted_generations: int}
 	 * @throws Exception
 	 */
 	public function cleanupGenerationsAndFiles(?int $maxAge = null): array {
@@ -56,7 +50,6 @@ class CleanUpService {
 			throw new Exception('Image data folder could not be accessed');
 		}
 
-
 		$deletedFiles = 0;
 		$deletionErrors = 0;
 
@@ -75,8 +68,5 @@ class CleanUpService {
 			' idle generations. Failed to delete ' . $deletionErrors . ' files.');
 
 		return ['deleted_files' => $deletedFiles, 'file_deletion_errors' => $deletionErrors, 'deleted_generations' => $cleanedUp['deleted_generations']];
-
 	}
-
-
 }
