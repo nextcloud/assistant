@@ -11,10 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: tgymnich/fork-sync@v1.9
+      - uses: tgymnich/fork-sync@v1.7
         with:
           ignore_fail: false
           auto_approve: true
           token: ${{ secrets.ASSISTANT_TOKEN }}
           base: main
           head: main
+          retry_after: 10
