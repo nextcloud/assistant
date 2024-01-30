@@ -137,9 +137,7 @@ class Text2ImageHelperService {
 		);
 
 		// Save the prompt to database
-		if ($userId !== null) {
-			$this->promptMapper->createPrompt($userId, $prompt);
-		}
+		$this->promptMapper->createPrompt($userId, $prompt);
 
 		return ['url' => $infoUrl, 'reference_url' => $referenceUrl, 'image_gen_id' => $imageGenId, 'prompt' => $prompt];
 	}
@@ -177,11 +175,7 @@ class Text2ImageHelperService {
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getPromptHistory(string $userId): array {
-		if ($userId === null) {
-			return [];
-		} else {
-			return $this->promptMapper->getPromptsOfUser($userId);
-		}
+		return $this->promptMapper->getPromptsOfUser($userId);
 	}
 
 	/**
@@ -580,47 +574,5 @@ class Text2ImageHelperService {
 
 			$this->assistantService->sendNotification($assistantTask);
 		}
-	}
-
-	/**
-	 * Get raw image page
-	 *
-	 * @param string $imageGenId
-	 * @return array
-	 * @throws BaseException
-	 */
-	public function getRawImagePage(string $imageGenId): array {
-		$generationInfo = $this->getGenerationInfo($imageGenId, true);
-
-		/** @var array $imageFiles */
-		$imageFiles = $generationInfo['files'];
-
-		// Generate a HTML link to each image
-		/** @var string[] $links */
-		$links = [];
-		/** @var array $imageFile */
-		foreach ($imageFiles as $imageFile) {
-			$links[] = $this->urlGenerator->linkToRouteAbsolute(
-				Application::APP_ID . '.Text2Image.getImage',
-				[
-					'imageGenId' => $imageGenId,
-					'fileNameId' => intval($imageFile['id']),
-				]
-			);
-		}
-
-		// Create a simple http page in the response:
-		$body = '<html><body>';
-		foreach ($links as $link) {
-			$body .= '<img src="' . $link . '" alt="image">';
-			$body .= '<br>';
-		}
-		$body .= '</body></html>';
-		return [
-			'body' => $body,
-			'headers' => [
-				'Content-Type' => ['text/html'],
-			],
-		];
 	}
 }
