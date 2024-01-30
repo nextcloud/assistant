@@ -8,7 +8,7 @@
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">
 				<span class="assistant-bubble">
-					<CreationIcon :size="16" class="icon" />
+					<DogIcon :size="16" class="icon" />
 					<span>{{ t('assistant', 'Blablador') }}</span>
 				</span>
 				<h2>
@@ -68,7 +68,7 @@
 
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-import CreationIcon from 'vue-material-design-icons/Creation.vue'
+import DogIcon from 'vue-material-design-icons/Dog.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
@@ -94,7 +94,7 @@ export default {
 		CloseIcon,
 		NcRichContenteditable,
 		NcNoteCard,
-		CreationIcon,
+		DogIcon,
 		ClipboardCheckOutlineIcon,
 		ContentCopyIcon,
 	},

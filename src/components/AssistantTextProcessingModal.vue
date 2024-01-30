@@ -108,7 +108,7 @@ export default {
 		return {
 			show: true,
 			closeButtonTitle: t('assistant', 'Close'),
-			closeButtonLabel: t('assistant', 'Close Blablador Assistant'),
+			closeButtonLabel: t('assistant', 'Close Blablador'),
 			modalSize: 'normal',
 		}
 	},

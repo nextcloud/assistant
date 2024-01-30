@@ -1,5 +1,5 @@
 {
-	"name": "blassistant",
+	"name": "assistant",
 	"version": "0.0.1",
 	"description": "Nextcloud Blassistant",
 	"main": "index.js",

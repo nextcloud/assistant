@@ -8,7 +8,6 @@
 			@click="$emit('click')">
 			<AssistantIcon class="menu-icon" :size="20" />
 		</NcButton>
-		<p>Header menu here?</p>
 	</div>
 </template>
 

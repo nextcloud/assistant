@@ -1,8 +1,11 @@
 <template>
 	<div class="assistant-form">
 		<span class="assistant-bubble">
-			<CreationIcon :size="16" class="icon" />
-			<span>{{ t('assistant', 'Blablador Assistant') }}</span>
+			<DogIcon :size="16" class="icon" />
+			<span>{{ t('assistant', 'Blablador') }}</span>
+		</span>
+		<span class="bla-experimental">
+			<p><a class="bla-link" href="https://helmholtz-blablador.fz-juelich.de/">BLABLADOR</a>, our expimental large language model! &#129454;</p>
 		</span>
 		<TaskTypeSelect
 			:value.sync="mySelectedTaskTypeId"
@@ -21,6 +24,9 @@
 			class="input-label">
 			{{ t('assistant', 'Input') }}
 		</label>
+		<p class="blabla blabla-reminder">
+			Remember: I am a BLABLADOR! Not all I say is true or even real
+		</p>
 		<NcRichContenteditable
 			id="assistant-input"
 			:value.sync="myInput"
@@ -62,7 +68,7 @@
 				{{ syncSubmitButtonLabel }}
 				<template #icon>
 					<NcLoadingIcon v-if="loading" />
-					<CreationIcon v-else />
+					<DogIcon v-else />
 				</template>
 			</NcButton>
 			<!--NcButton
@@ -75,7 +81,7 @@
 				@click="onSubmit">
 				{{ submitButtonLabel }}
 				<template #icon>
-					<CreationIcon />
+					<DogIcon />
 				</template>
 			</NcButton-->
 			<NcButton
@@ -105,13 +111,44 @@
 				</NcButton>
 			</div>
 		</div>
+		<div class="blabla">
+			<span>
+				<img src="../../img/blablador.png" width="160" alt="Alex Strube's dog">
+				<h3>License</h3>
+				<p>Made with ❤️ by Helmholtz AI Jülich.<br>
+					Get in touch with us at
+					<a
+						class="bla-link"
+						href="mailto:blablador@fz-juelich.de"
+						target="_blank"
+						rel="noopener noreferrer">blablador@fz-juelich.de
+					</a>.<br>
+					API access (see
+					<a
+						class="bla-link"
+						href="https://sdlaml.pages.jsc.fz-juelich.de/ai/guides/blablador_api_access/"
+						target="_blank"
+						rel="noopener noreferrer">documentation
+					</a>
+					) is available too!<br>
+					You can also subscribe to our
+					<a
+						class="bla-link"
+						href="https://lists.fz-juelich.de/mailman/listinfo/blablador-news"
+						target="_blank"
+						rel="noopener noreferrer">blablador-news
+					</a>
+					mailing list!
+				</p>
+			</span>
+		</div>
 	</div>
 </template>
 
 <script>
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
-import CreationIcon from 'vue-material-design-icons/Creation.vue'
+import DogIcon from 'vue-material-design-icons/Dog.vue'
 
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -122,7 +159,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js
 import TaskTypeSelect from './TaskTypeSelect.vue'
 
 import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
+import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
@@ -139,7 +176,7 @@ export default {
 		NcRichContenteditable,
 		NcLoadingIcon,
 		NcIconSvgWrapper,
-		CreationIcon,
+		DogIcon,
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
 		NcNoteCard,
@@ -178,6 +215,7 @@ export default {
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
 			copied: false,
+			dogUrl: this.getDogUrl(),
 		}
 	},
 	computed: {
@@ -253,6 +291,9 @@ export default {
 		},
 		onActionButtonClick(button) {
 			this.$emit('action-button-clicked', { button, output: this.myOutput.trim() })
+		},
+		getDogUrl() {
+			return generateUrl('apps/assistant/img/blablador.png')
 		},
 	},
 }
@@ -336,6 +377,41 @@ export default {
 			justify-content: end;
 			gap: 4px;
 		}
+	}
+
+	.bla-experimental {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: start;
+		gap: 4px;
+	}
+
+	.blabla {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: start;
+		gap: 4px;
+	}
+
+	.bla-link {
+		color: blue;
+	}
+
+	.bla-link:hover {
+		text-decoration: underline;
+	}
+
+	.bla-link:visited {
+		color: purple;
+	}
+
+	.blabla-reminder {
+		font-size: 10px;
+		color: gray;
+		margin: 0;
+		padding-top: 0;
 	}
 
 	.success-icon {

@@ -1,3 +1,12 @@
+# Blassistant, a Blablador Nextcloud Assistant fork
+
+This Assistant is a blablador themed version of the nextcloud assistant.
+[Blablador](https://helmholtz-blablador.fz-juelich.de/) is an experimental large language model by Helmholtz AI Jülich.
+
+Get in touch with us at [blablador@fz-juelich.de](mailto:blablador@fz-juelich.de.).
+
+---
+
 # Nextcloud Assistant
 
 This app brings a user interface to use the Nextcloud text processing feature.
