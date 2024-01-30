@@ -313,7 +313,7 @@ export default {
 	.editable-output {
 		width: 100%;
 		min-height: unset !important;
-		max-height: 200px !important;
+		//max-height: 200px !important;
 	}
 
 	.editable-input {
