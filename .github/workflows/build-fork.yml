@@ -1,4 +1,4 @@
-name: Run make on push to main or PR
+name: build
 
 on:
   push:

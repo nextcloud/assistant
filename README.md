@@ -1,4 +1,5 @@
 # Blassistant, a Blablador Nextcloud Assistant fork
+[![build](https://github.com/mwinkens/assistant/actions/workflows/build-fork.yml/badge.svg?branch=main)](https://github.com/mwinkens/assistant/actions/workflows/build-fork.yml)
 
 This Assistant is a blablador themed version of the nextcloud assistant.
 [Blablador](https://helmholtz-blablador.fz-juelich.de/) is an experimental large language model by Helmholtz AI Jülich.
