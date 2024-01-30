@@ -110,7 +110,7 @@ class AssistantService {
 	 * @return string
 	 */
 	private function formattedCopywriterPrompt(string $writingStyle, string $sourceMaterial): string {
-		return "You're a professional copywriter tasked with copying an instructed/demonstrated *WRITING STYLE* to write a text on the provided *SOURCE MATERIAL*. \n*WRITING STYLE*:\n$writingStyle\n\n*SOURCE MATERIAL*:\n\n$sourceMaterial\n\nNow write a text in the same style detailed under *WRITING STYLE* on the *SOURCE MATERIAL*. Also, follow any additional instructions detailed under *SOURCE MATERIAL*.\n\n*NOTE*: You can use the *SOURCE MATERIAL* as a reference, but you must not copy it verbatim.";
+		return "You're a professional copywriter tasked with copying an instructed or demonstrated *WRITING STYLE* and writing a text on the provided *SOURCE MATERIAL*. \n*WRITING STYLE*:\n$writingStyle\n\n*SOURCE MATERIAL*:\n\n$sourceMaterial\n\nNow write a text in the same style detailed or demonstrated under *WRITING STYLE* using the *SOURCE MATERIAL* as source of facts and instruction on what to write about. Do not invent any facts or events yourself. Also, use the *WRITING STYLE* as a guide for how to write the text ONLY and not as a source of facts or events.";
 	}
 
 	/**
