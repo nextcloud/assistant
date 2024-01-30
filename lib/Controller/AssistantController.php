@@ -58,7 +58,6 @@ class AssistantController extends Controller {
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	#[NoCSRFRequired]
 	#[BruteForceProtection(action: 'taskResults')]
 	public function getTextProcessingResult(int $taskId): DataResponse {
 		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
