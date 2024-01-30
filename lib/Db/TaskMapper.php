@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Db;
 
 use DateTime;
-use Doctrine\DBAL\Exception\InvalidArgumentException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
@@ -26,7 +25,6 @@ class TaskMapper extends QBMapper {
 
 	/**
 	 * @param int $id
-	 * @param int $taskType
 	 * @return Task
 	 * @throws DoesNotExistException
 	 * @throws Exception
@@ -41,13 +39,11 @@ class TaskMapper extends QBMapper {
 				$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT))
 			);
 
-		/** @var Task $retVal */
-		$retVal = $this->findEntity($qb);
-		return $retVal;
+		return $this->findEntity($qb);
 	}
 
 	/**
-	 * @param int $id
+	 * @param int $ocpTaskId
 	 * @param int $category
 	 * @return Task
 	 * @throws DoesNotExistException
@@ -66,7 +62,6 @@ class TaskMapper extends QBMapper {
 				$qb->expr()->eq('category', $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT))
 			);
 
-		/** @var Task $retVal */
 		$retVal = $this->findEntity($qb);
 
 		// Touch the timestamp to prevent the task from being cleaned up:
@@ -77,12 +72,12 @@ class TaskMapper extends QBMapper {
 			// This should never happen
 			throw new Exception('Failed to touch timestamp of task', 0, $e);
 		}
-		
+
 		return $retVal;
 	}
 
 	/**
-	 * @param int $id
+	 * @param int $ocpTaskId
 	 * @param int $category
 	 * @return array<Task>
 	 * @throws Exception
@@ -99,7 +94,6 @@ class TaskMapper extends QBMapper {
 				$qb->expr()->eq('category', $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT))
 			);
 
-		/** @var array<Task> $retVal */
 		$retVal = $this->findEntities($qb);
 
 		// Touch the timestamps to prevent the task from being cleaned up:
@@ -109,7 +103,7 @@ class TaskMapper extends QBMapper {
 				$task = $this->update($task);
 			} catch (\InvalidArgumentException $e) {
 				// This should never happen
-				throw new Exception('Failed to touch timestamp of task', 0 , $e);
+				throw new Exception('Failed to touch timestamp of task', 0, $e);
 			}
 		}
 		unset($task);
@@ -136,9 +130,7 @@ class TaskMapper extends QBMapper {
 			->andWhere(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
-		/** @var Task $retVal */
-		$retVal = $this->findEntity($qb);
-		return $retVal;
+		return $this->findEntity($qb);
 	}
 
 	/**
@@ -160,7 +152,7 @@ class TaskMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
-	 * @param array<mixed> $inputs
+	 * @param array $inputs
 	 * @param string|null $output
 	 * @param int|null $timestamp
 	 * @param int|null $ocpTaskId
@@ -173,16 +165,9 @@ class TaskMapper extends QBMapper {
 	 * @throws Exception
 	 */
 	public function createTask(
-		string $userId,
-		array $inputs,
-		?string $output,
-		?int $timestamp = null,
-		?int $ocpTaskId = null,
-		?string $taskType = null,
-		?string $appId = null,
-		int $status = 0,
-		int $category = 0,
-		string $identifier = ''): Task {
+		string $userId, array $inputs, ?string $output, ?int $timestamp = null, ?int $ocpTaskId = null,
+		?string $taskType = null, ?string $appId = null, int $status = 0, int $category = 0, string $identifier = ''
+	): Task {
 		if ($timestamp === null) {
 			$timestamp = (new DateTime())->getTimestamp();
 		}
@@ -198,10 +183,7 @@ class TaskMapper extends QBMapper {
 		$task->setStatus($status);
 		$task->setCategory($category);
 		$task->setIndentifer($identifier);
-		/** @var Task $insertedTask */
-		$insertedTask = $this->insert($task);
-
-		return $insertedTask;
+		return $this->insert($task);
 	}
 
 	/**
@@ -221,12 +203,13 @@ class TaskMapper extends QBMapper {
 
 	/**
 	 * Clean up tasks older than specified (14 days by default)
+	 *
 	 * @param ?int $olderThanSeconds
 	 * @return int number of deleted rows
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */
-	public function cleanupOldTasks($olderThanSeconds): int {
+	public function cleanupOldTasks(?int $olderThanSeconds): int {
 		if ($olderThanSeconds === null) {
 			$olderThanSeconds = 14 * 24 * 60 * 60;
 		}

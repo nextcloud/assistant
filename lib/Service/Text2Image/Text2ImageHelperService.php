@@ -45,7 +45,6 @@ class Text2ImageHelperService {
 	public function __construct(
 		private LoggerInterface $logger,
 		private IManager $textToImageManager,
-		private ?string $userId,
 		private PromptMapper $promptMapper,
 		private ImageGenerationMapper $imageGenerationMapper,
 		private ImageFileNameMapper $imageFileNameMapper,
@@ -55,6 +54,7 @@ class Text2ImageHelperService {
 		private IL10N $l10n,
 		private AssistantService $assistantService,
 		private TaskMapper $taskMapper,
+		private ?string $userId,
 	) {
 	}
 
@@ -89,7 +89,6 @@ class Text2ImageHelperService {
 
 		$taskExecuted = false;
 
-		/** @var IImage[]|null $images */
 		$images = [];
 		$expCompletionTime = new DateTime('now');
 
@@ -105,8 +104,9 @@ class Text2ImageHelperService {
 		$this->imageGenerationMapper->createImageGeneration($imageGenId, $displayPrompt ? $prompt : '', $this->userId ?? '', $expCompletionTime->getTimestamp());
 
 		// Create an assistant meta task for the image generation task:
+		// TODO check if we should create a task if userId is null
 		$this->taskMapper->createTask(
-			$this->userId,
+			$this->userId ?? '',
 			['prompt' => $prompt],
 			$imageGenId,
 			time(),
@@ -137,17 +137,19 @@ class Text2ImageHelperService {
 		);
 
 		// Save the prompt to database
-		if($this->userId !== null) {
+		if ($this->userId !== null) {
 			$this->promptMapper->createPrompt($this->userId, $prompt);
 		}
 
 		return ['url' => $infoUrl, 'reference_url' => $referenceUrl, 'image_gen_id' => $imageGenId, 'prompt' => $prompt];
 	}
 
-	/*
+	/**
 	 * Check whether the image generation id exists in the database (stale or otherwise)
+	 *
 	 * @param string $imageGenId
 	 * @return bool
+	 * @throws BaseException
 	 */
 	private function genIdExists(string $imageGenId): bool {
 		try {
@@ -183,9 +185,11 @@ class Text2ImageHelperService {
 
 	/**
 	 * Save image locally as jpg (to save space)
+	 *
 	 * @param array<IImage>|null $iImages
 	 * @param string $imageGenId
 	 * @return void
+	 * @throws Exception
 	 */
 	public function storeImages(?array $iImages, string $imageGenId): void {
 		if ($iImages === null || count($iImages) === 0) {
@@ -251,6 +255,7 @@ class Text2ImageHelperService {
 
 	/**
 	 * Get imageDataFolder
+	 *
 	 * @return ISimpleFolder
 	 * @throws \Exception
 	 */
@@ -278,10 +283,10 @@ class Text2ImageHelperService {
 	}
 
 	/**
-	 * Get image generation info.
+	 * Get image generation info
+	 *
 	 * @param string $imageGenId
 	 * @param bool $updateTimestamp
-	 * @param string|null $userId
 	 * @return array
 	 * @throws \Exception
 	 */
@@ -354,12 +359,13 @@ class Text2ImageHelperService {
 
 	/**
 	 * Get image based on imageFileNameId (imageGenId is used to prevent guessing image ids)
+	 *
 	 * @param string $imageGenId
 	 * @param int $imageFileNameId
-	 * @return array ('image' => string, 'content-type' => string)
+	 * @return array{image: string, 'content-type': array<string>}
 	 * @throws BaseException
 	 */
-	public function getImage(string $imageGenId, int $imageFileNameId): ?array {
+	public function getImage(string $imageGenId, int $imageFileNameId): array {
 		try {
 			$generationId = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId)->getId();
 			/** @var ImageFileName $imageFileName */
@@ -397,12 +403,13 @@ class Text2ImageHelperService {
 
 	/**
 	 * Cancel image generation
+	 *
 	 * @param string $imageGenId
 	 * @return void
+	 * @throws NotPermittedException
 	 */
 	public function cancelGeneration(string $imageGenId): void {
 		try {
-			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 			$this->logger->warning('Image generation being deleted not in db: ' . $e->getMessage(), ['app' => Application::APP_ID]);
@@ -474,13 +481,14 @@ class Text2ImageHelperService {
 
 	/**
 	 * Hide/show image files of a generation. UserId must match the assigned user of the image generation.
+	 *
 	 * @param string $imageGenId
-	 * @param array $fileVisSatusArray
+	 * @param array $fileVisStatusArray
 	 * @return void
+	 * @throws BaseException
 	 */
-	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisSatusArray): void {
+	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisStatusArray): void {
 		try {
-			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());
@@ -495,7 +503,7 @@ class Text2ImageHelperService {
 			throw new BaseException('Unauthorized.', Http::STATUS_UNAUTHORIZED);
 		}
 		/** @var array $fileVisStatus */
-		foreach ($fileVisSatusArray as $fileVisStatus) {
+		foreach ($fileVisStatusArray as $fileVisStatus) {
 			try {
 				$this->imageFileNameMapper->setFileNameHidden(intval($fileVisStatus['id']), !((bool) $fileVisStatus['visible']));
 			} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
@@ -507,11 +515,12 @@ class Text2ImageHelperService {
 
 	/**
 	 * Notify when image generation is ready
+	 *
 	 * @param string $imageGenId
+	 * @throws Exception
 	 */
 	public function notifyWhenReady(string $imageGenId): void {
 		try {
-			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug('Image request error : ' . $e->getMessage());
@@ -570,8 +579,10 @@ class Text2ImageHelperService {
 
 	/**
 	 * Get raw image page
+	 *
 	 * @param string $imageGenId
 	 * @return array
+	 * @throws BaseException
 	 */
 	public function getRawImagePage(string $imageGenId): array {
 		$generationInfo = $this->getGenerationInfo($imageGenId, true);
@@ -600,9 +611,11 @@ class Text2ImageHelperService {
 			$body .= '<br>';
 		}
 		$body .= '</body></html>';
-		return ['body' => $body,
+		return [
+			'body' => $body,
 			'headers' => [
 				'Content-Type' => ['text/html'],
-			],];
+			],
+		];
 	}
 }

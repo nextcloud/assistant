@@ -79,7 +79,6 @@ class Text2ImageController extends Controller {
 	#[PublicPage]
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function getImage(string $imageGenId, int $fileNameId): DataDisplayResponse | DataResponse {
-
 		try {
 			$result = $this->text2ImageHelperService->getImage($imageGenId, $fileNameId);
 		} catch (Exception $e) {
@@ -91,9 +90,11 @@ class Text2ImageController extends Controller {
 			return $response;
 		}
 
+		/*
 		if (isset($result['processing'])) {
 			return new DataResponse($result, Http::STATUS_OK);
 		}
+		*/
 
 		return new DataDisplayResponse(
 			$result['image'] ?? '',

@@ -14,7 +14,7 @@ use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class CleanupImageGenerations extends TimedJob {
+class CleanupAssistantTasks extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
 		private LoggerInterface $logger,
@@ -32,7 +32,5 @@ class CleanupImageGenerations extends TimedJob {
 		} catch (\OCP\Db\Exception | RuntimeException | Exception $e) {
 			$this->logger->debug('Cleanup job for assistant tasks failed: ' . $e->getMessage());
 		}
-
-		return;
 	}
 }
