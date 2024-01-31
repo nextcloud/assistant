@@ -25,30 +25,24 @@ namespace OCA\TpAssistant\Service\SpeechToText;
 use DateTime;
 use InvalidArgumentException;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
-use OCP\IURLGenerator;
-use OCP\Notification\IManager as INotifyManager;
 use OCP\PreConditionNotMetException;
 use OCP\SpeechToText\ISpeechToTextManager;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class SpeechToTextService {
 
 	public function __construct(
 		private ISpeechToTextManager $manager,
-		private IRootFolder $rootFolder,
-		private INotifyManager $notificationManager,
-		private IURLGenerator $urlGenerator,
-		private LoggerInterface $logger,
-		private IConfig $config,
-		private TaskMapper $taskMapper,
+		private IRootFolder          $rootFolder,
+		private IConfig              $config,
+		private MetaTaskMapper       $metaTaskMapper,
 	) {
 	}
 
@@ -71,8 +65,8 @@ class SpeechToTextService {
 		$audioFile = $userFolder->get($path);
 
 		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
-		
-		$this->taskMapper->createTask(
+
+		$this->metaTaskMapper->createMetaTask(
 			$userId,
 			['fileId' => $audioFile->getId(), 'eTag' => $audioFile->getEtag()],
 			'',
@@ -98,10 +92,10 @@ class SpeechToTextService {
 		}
 
 		$audioFile = $this->getFileObject($userId, $tempFileLocation);
-		
+
 		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
-		$this->taskMapper->createTask(
+		$this->metaTaskMapper->createMetaTask(
 			$userId,
 			['fileId' => $audioFile->getId(), 'eTag' => $audioFile->getEtag()],
 			'',

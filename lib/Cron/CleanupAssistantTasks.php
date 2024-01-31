@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Cron;
 
 use Exception;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
@@ -15,9 +15,9 @@ use RuntimeException;
 
 class CleanupAssistantTasks extends TimedJob {
 	public function __construct(
-		ITimeFactory $time,
+		ITimeFactory            $time,
 		private LoggerInterface $logger,
-		private TaskMapper $taskMapper,
+		private MetaTaskMapper  $metaTaskMapper,
 	) {
 		parent::__construct($time);
 		$this->setInterval(60 * 60 * 24);
@@ -27,7 +27,7 @@ class CleanupAssistantTasks extends TimedJob {
 		$this->logger->debug('Run cleanup job for assistant tasks');
 
 		try {
-			$this->taskMapper->cleanupOldTasks();
+			$this->metaTaskMapper->cleanupOldMetaTasks();
 		} catch (\OCP\Db\Exception | RuntimeException | Exception $e) {
 			$this->logger->debug('Cleanup job for assistant tasks failed: ' . $e->getMessage());
 		}

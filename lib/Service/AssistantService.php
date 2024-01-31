@@ -6,12 +6,13 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use DateTime;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\Task;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTask;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Common\Exception\NotFoundException;
+use OCP\DB\Exception;
 use OCP\Files\File;
 use OCP\Files\GenericFileException;
 use OCP\Files\IRootFolder;
@@ -32,26 +33,26 @@ use RuntimeException;
 class AssistantService {
 
 	public function __construct(
-		private INotificationManager $notificationManager,
+		private INotificationManager   $notificationManager,
 		private ITextProcessingManager $textProcessingManager,
-		private TaskMapper $taskMapper,
-		private ImageGenerationMapper $imageGenerationMapper,
-		private LoggerInterface $logger,
-		private IRootFolder $storage,
-		private IURLGenerator $url,
+		private MetaTaskMapper         $metaTaskMapper,
+		private ImageGenerationMapper  $imageGenerationMapper,
+		private LoggerInterface        $logger,
+		private IRootFolder            $storage,
+		private IURLGenerator          $url,
 	) {
 	}
 
 	/**
 	 * Send a success or failure task result notification
 	 *
-	 * @param Task $task
+	 * @param MetaTask $task
 	 * @param string|null $customTarget optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
+	 * @param string|null $resultPreview
 	 * @return void
-	 * @throws \InvalidArgumentException
 	 */
-	public function sendNotification(Task $task, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
+	public function sendNotification(MetaTask $task, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
@@ -106,14 +107,14 @@ class AssistantService {
 		$manager->notify($notification);
 	}
 
-	private function getDefaultTarget(Task $task): string {
+	private function getDefaultTarget(MetaTask $task): string {
 		$category = $task->getCategory();
 		if ($category === Application::TASK_CATEGORY_TEXT_GEN) {
 			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTextProcessingTaskResultPage', ['taskId' => $task->getId()]);
 		} elseif ($category === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.SpeechToText.getResultPage', ['id' => $task->getId()]);
 		} elseif ($category === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
-			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($task->getIndentifer());
+			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($task->getIdentifier());
 			return $this->url->linkToRouteAbsolute(
 				Application::APP_ID . '.Text2Image.showGenerationPage',
 				[
@@ -168,48 +169,48 @@ class AssistantService {
 	/**
 	 * @param string $userId
 	 * @param int $taskId
-	 * @return Task
+	 * @return MetaTask|null
 	 */
-	public function getTextProcessingTask(string $userId, int $taskId): ?Task {
+	public function getTextProcessingTask(string $userId, int $taskId): ?MetaTask {
 		try {
-			$task = $this->taskMapper->getTask($taskId);
+			$metaTask = $this->metaTaskMapper->getMetaTask($taskId);
 		} catch (DoesNotExistException | MultipleObjectsReturnedException | \OCP\Db\Exception $e) {
 			return null;
 		}
-		if ($task->getUserId() !== $userId) {
+		if ($metaTask->getUserId() !== $userId) {
 			return null;
 		}
 		// Check if the task status is up-to-date (if not, update status and output)
 		try {
-			$ocpTask = $this->textProcessingManager->getTask($task->getOcpTaskId());
+			$ocpTask = $this->textProcessingManager->getTask($metaTask->getOcpTaskId());
 
-			if($ocpTask->getStatus() !== $task->getStatus()) {
-				$task->setStatus($ocpTask->getStatus());
-				$task->setOutput($ocpTask->getOutput());
-				$task = $this->taskMapper->update($task);
+			if($ocpTask->getStatus() !== $metaTask->getStatus()) {
+				$metaTask->setStatus($ocpTask->getStatus());
+				$metaTask->setOutput($ocpTask->getOutput());
+				$metaTask = $this->metaTaskMapper->update($metaTask);
 			}
 		} catch (NotFoundException $e) {
 			// Ocp task not found, so we can't update the status
-			$this->logger->debug('OCP task not found for assistant task ' . $task->getId() . '. Could not update status.');
+			$this->logger->debug('OCP task not found for assistant task ' . $metaTask->getId() . '. Could not update status.');
 		} catch (\InvalidArgumentException | \OCP\Db\Exception | RuntimeException $e) {
 			// Something else went wrong, so we can't update the status
-			$this->logger->warning('Unknown error while trying to retreive an updated status for assistant task: ' . $task->getId() . '.', ['exception' => $e]);
+			$this->logger->warning('Unknown error while trying to retreive an updated status for assistant task: ' . $metaTask->getId() . '.', ['exception' => $e]);
 		}
 
-		return $task;
+		return $metaTask;
 	}
 
 	/**
 	 * @param string $type
-	 * @param array $input
+	 * @param array $inputs
 	 * @param string $appId
 	 * @param string $userId
 	 * @param string $identifier
-	 * @return Task
+	 * @return MetaTask
 	 * @throws PreConditionNotMetException
-	 * @throws \Exception
+	 * @throws Exception
 	 */
-	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
+	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
@@ -229,22 +230,23 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier);
-
-		return $assistantTask;
+		return $this->metaTaskMapper->createMetaTask(
+			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
+			$appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier
+		);
 	}
 
 	/**
 	 * @param string $type
-	 * @param array $input
+	 * @param array $inputs
 	 * @param string $appId
 	 * @param string $userId
 	 * @param string $identifier
-	 * @return Task
+	 * @return MetaTask
+	 * @throws Exception
 	 * @throws PreConditionNotMetException
-	 * @throws \Exception
 	 */
-	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
+	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
@@ -264,9 +266,10 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier);
-
-		return $assistantTask;
+		return $this->metaTaskMapper->createMetaTask(
+			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
+			$appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier
+		);
 	}
 
 	/**
@@ -275,12 +278,12 @@ class AssistantService {
 	 * @param string $appId
 	 * @param string $userId
 	 * @param string $identifier
-	 * @return Task
+	 * @return MetaTask
 	 * @throws PreConditionNotMetException
 	 * @throws \OCP\Db\Exception
 	 * @throws \Exception
 	 */
-	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
+	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
@@ -300,9 +303,10 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier);
-
-		return $assistantTask;
+		return $this->metaTaskMapper->createMetaTask(
+			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
+			$appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier
+		);
 	}
 
 	/**
@@ -381,6 +385,7 @@ class AssistantService {
 	/**
 	 * Parse text from doc/docx/odt/rtf file
 	 * @param string $filePath
+	 * @param string $mimeType
 	 * @return string
 	 * @throws \Exception
 	 */

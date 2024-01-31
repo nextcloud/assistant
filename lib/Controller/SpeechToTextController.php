@@ -25,8 +25,8 @@ namespace OCA\TpAssistant\Controller;
 use Exception;
 use InvalidArgumentException;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\Task;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTask;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -48,14 +48,14 @@ use RuntimeException;
 class SpeechToTextController extends Controller {
 
 	public function __construct(
-		string $appName,
-		IRequest $request,
+		string                      $appName,
+		IRequest                    $request,
 		private SpeechToTextService $service,
-		private LoggerInterface $logger,
-		private IL10N $l10n,
-		private IInitialState $initialState,
-		private ?string $userId,
-		private TaskMapper $taskMapper,
+		private LoggerInterface     $logger,
+		private IL10N               $l10n,
+		private IInitialState       $initialState,
+		private ?string             $userId,
+		private MetaTaskMapper      $metaTaskMapper,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -101,17 +101,17 @@ class SpeechToTextController extends Controller {
 	 * Internal function to get transcription assistant tasks based on the assistant meta task id
 	 *
 	 * @param integer $id
-	 * @return Task
+	 * @return MetaTask
 	 */
-	private function internalGetTask(int $id): Task {
+	private function internalGetTask(int $id): MetaTask {
 		try {
-			$task = $this->taskMapper->getTaskOfUser($id, $this->userId);
-			
-			if($task->getCategory() !== Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
+			$metaTask = $this->metaTaskMapper->getMetaTaskOfUser($id, $this->userId);
+
+			if($metaTask->getCategory() !== Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 				throw new Exception('Task is not a speech to text task.', Http::STATUS_BAD_REQUEST);
 			}
 
-			return $task;
+			return $metaTask;
 		} catch (MultipleObjectsReturnedException $e) {
 			$this->logger->error('Multiple tasks found for one id: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			throw new Exception($this->l10n->t('Multiple tasks found'), Http::STATUS_BAD_REQUEST);

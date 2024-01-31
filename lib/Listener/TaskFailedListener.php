@@ -3,7 +3,7 @@
 namespace OCA\TpAssistant\Listener;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Event\BeforeAssistantNotificationEvent;
 use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -20,7 +20,7 @@ class TaskFailedListener implements IEventListener {
 	public function __construct(
 		private AssistantService $assistantService,
 		private IEventDispatcher $eventDispatcher,
-		private TaskMapper $taskMapper,
+		private MetaTaskMapper $metaTaskMapper,
 	) {
 	}
 
@@ -51,7 +51,7 @@ class TaskFailedListener implements IEventListener {
 		}
 
 		try {
-			$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_GEN);
+			$assistantTask = $this->metaTaskMapper->getMetaTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_GEN);
 		} catch (DoesNotExistException $e) {
 			// Not an assistant task
 			return;
@@ -60,7 +60,7 @@ class TaskFailedListener implements IEventListener {
 		// Update task status and output:
 		$assistantTask->setStatus($task->getStatus());
 		$assistantTask->setOutput($task->getOutput());
-		$assistantTask = $this->taskMapper->update($assistantTask);
+		$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 		$this->assistantService->sendNotification($assistantTask, $notificationTarget, $notificationActionLabel);
 	}

@@ -3,7 +3,7 @@
 namespace OCA\TpAssistant\Listener\Text2Image;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCA\TpAssistant\Service\AssistantService;
 use OCA\TpAssistant\Service\Text2Image\Text2ImageHelperService;
@@ -24,10 +24,10 @@ class Text2ImageResultListener implements IEventListener {
 
 	public function __construct(
 		private Text2ImageHelperService $text2ImageService,
-		private ImageGenerationMapper $imageGenerationMapper,
-		private LoggerInterface $logger,
-		private AssistantService $assistantService,
-		private TaskMapper $taskMapper,
+		private ImageGenerationMapper   $imageGenerationMapper,
+		private LoggerInterface         $logger,
+		private AssistantService        $assistantService,
+		private MetaTaskMapper          $metaTaskMapper,
 	) {
 	}
 
@@ -48,7 +48,7 @@ class Text2ImageResultListener implements IEventListener {
 			return;
 		}
 
-		$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($event->getTask()->getId(), Application::TASK_CATEGORY_TEXT_TO_IMAGE);
+		$assistantTask = $this->metaTaskMapper->getMetaTaskByOcpTaskIdAndCategory($event->getTask()->getId(), Application::TASK_CATEGORY_TEXT_TO_IMAGE);
 
 		if ($event instanceof TaskSuccessfulEvent) {
 			$this->logger->debug('TextToImageEvent succeeded');
@@ -58,7 +58,7 @@ class Text2ImageResultListener implements IEventListener {
 			$this->text2ImageService->storeImages($images, $imageGenId);
 
 			$assistantTask->setStatus(Task::STATUS_SUCCESSFUL);
-			$assistantTask = $this->taskMapper->update($assistantTask);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 		}
 
 		if ($event instanceof TaskFailedEvent) {
@@ -67,7 +67,7 @@ class Text2ImageResultListener implements IEventListener {
 
 			// Update the assistant meta task status:
 			$assistantTask->setStatus(Task::STATUS_FAILED);
-			$assistantTask = $this->taskMapper->update($assistantTask);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			$this->assistantService->sendNotification($assistantTask);
 		}

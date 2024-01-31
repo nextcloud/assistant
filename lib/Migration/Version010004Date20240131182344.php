@@ -13,7 +13,7 @@ use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version010005Date20240115122933 extends SimpleMigrationStep {
+class Version010004Date20240131182344 extends SimpleMigrationStep {
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -43,9 +43,17 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 			$schema->dropTable('assistant_stt_transcripts');
 		}
 
-		if (!$schema->hasTable('assistant_text_tasks')) {
+		if ($schema->hasTable('assistant_text_tasks')) {
 			$schemaChanged = true;
-			$table = $schema->createTable('assistant_text_tasks');
+			$table = $schema->getTable('assistant_text_tasks');
+			$table->dropIndex('assistant_t_tasks_uid');
+			$table->dropIndex('assistant_t_task_id_category');
+			$schema->dropTable('assistant_text_tasks');
+		}
+
+		if (!$schema->hasTable('assistant_meta_tasks')) {
+			$schemaChanged = true;
+			$table = $schema->createTable('assistant_meta_tasks');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
 				'notnull' => true,
@@ -56,6 +64,7 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 			]);
 			$table->addColumn('app_id', Types::STRING, [
 				'notnull' => true,
+				'length' => 32,
 			]);
 			$table->addColumn('inputs', Types::TEXT, [
 				'notnull' => false,
@@ -72,6 +81,7 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 			]);
 			$table->addColumn('task_type', Types::STRING, [
 				'notnull' => false,
+				'length' => 255,
 			]);
 			$table->addColumn('status', Types::INTEGER, [
 				'notnull' => true,
@@ -80,12 +90,13 @@ class Version010005Date20240115122933 extends SimpleMigrationStep {
 			$table->addColumn('category', Types::INTEGER, [
 				'notnull' => false,
 			]);
-			$table->addColumn('indentifer', Types::STRING, [
+			$table->addColumn('identifier', Types::STRING, [
 				'notnull' => false,
+				'length' => 255,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['user_id'], 'assistant_t_tasks_uid');
-			$table->addIndex(['ocp_task_id','category'], 'assistant_t_task_id_category');
+			$table->addIndex(['user_id'], 'assistant_meta_task_uid');
+			$table->addIndex(['ocp_task_id','category'], 'assistant_meta_task_id_cat');
 		}
 
 		return $schemaChanged ? $schema : null;

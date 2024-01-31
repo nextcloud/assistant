@@ -10,7 +10,7 @@ use Exception as BaseException;
 use GdImage;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageFileName;
 use OCA\TpAssistant\Db\Text2Image\ImageFileNameMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
@@ -43,17 +43,17 @@ class Text2ImageHelperService {
 	private ?ISimpleFolder $imageDataFolder = null;
 
 	public function __construct(
-		private LoggerInterface $logger,
-		private IManager $textToImageManager,
-		private PromptMapper $promptMapper,
+		private LoggerInterface       $logger,
+		private IManager              $textToImageManager,
+		private PromptMapper          $promptMapper,
 		private ImageGenerationMapper $imageGenerationMapper,
-		private ImageFileNameMapper $imageFileNameMapper,
+		private ImageFileNameMapper   $imageFileNameMapper,
 		private StaleGenerationMapper $staleGenerationMapper,
-		private IAppData $appData,
-		private IURLGenerator $urlGenerator,
-		private IL10N $l10n,
-		private AssistantService $assistantService,
-		private TaskMapper $taskMapper,
+		private IAppData              $appData,
+		private IURLGenerator         $urlGenerator,
+		private IL10N                 $l10n,
+		private AssistantService      $assistantService,
+		private MetaTaskMapper        $metaTaskMapper,
 	) {
 	}
 
@@ -105,7 +105,7 @@ class Text2ImageHelperService {
 
 		// Create an assistant meta task for the image generation task:
 		// TODO check if we should create a task if userId is null
-		$this->taskMapper->createTask(
+		$this->metaTaskMapper->createMetaTask(
 			$userId,
 			['prompt' => $prompt],
 			$imageGenId,
@@ -563,14 +563,14 @@ class Text2ImageHelperService {
 		if ($task->getStatus() === Task::STATUS_SUCCESSFUL || $task->getStatus() === Task::STATUS_FAILED) {
 			// Get the assistant task
 			try {
-				$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_TO_IMAGE);
+				$assistantTask = $this->metaTaskMapper->getMetaTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_TO_IMAGE);
 			} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 				$this->logger->debug('Assistant meta task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 				return;
 			}
 			$assistantTask->setStatus($task->getStatus());
 			// No need to update the output since it's already set
-			$assistantTask = $this->taskMapper->update($assistantTask);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			$this->assistantService->sendNotification($assistantTask);
 		}

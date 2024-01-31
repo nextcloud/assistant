@@ -8,10 +8,9 @@ namespace OCA\TpAssistant\Service\FreePrompt;
 use Exception;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\FreePrompt\PromptMapper;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCP\AppFramework\Http;
 use OCP\DB\Exception as DBException;
-use OCP\IConfig;
 use OCP\IL10N;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\Exception\TaskFailureException;
@@ -22,12 +21,11 @@ use Psr\Log\LoggerInterface;
 
 class FreePromptService {
 	public function __construct(
-		private IConfig $config,
 		private LoggerInterface $logger,
-		private IManager $textProcessingManager,
-		private PromptMapper $promptMapper,
-		private IL10N $l10n,
-		private TaskMapper $taskMapper,
+		private IManager        $textProcessingManager,
+		private PromptMapper    $promptMapper,
+		private IL10N           $l10n,
+		private MetaTaskMapper  $metaTaskMapper,
 	) {
 	}
 
@@ -43,7 +41,7 @@ class FreePromptService {
 			$this->logger->warning('FreePromptTaskType not available');
 			throw new Exception($this->l10n->t('FreePromptTaskType not available'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
-		
+
 		// Generate a unique id for this generation
 		while (true) {
 			$genId = bin2hex(random_bytes(32));
@@ -66,7 +64,7 @@ class FreePromptService {
 		}
 
 		// Create an assistant task for the free prompt task:
-		$this->taskMapper->createTask(
+		$this->metaTaskMapper->createMetaTask(
 			$userId,
 			['prompt' => $prompt],
 			$promptTask->getOutput(),
@@ -84,7 +82,7 @@ class FreePromptService {
 
 		// Save prompt to database
 		$this->promptMapper->createPrompt($userId, $prompt);
-		
+
 		return $genId;
 	}
 
@@ -101,7 +99,7 @@ class FreePromptService {
 			throw new Exception($this->l10n->t('Failed to get prompt history'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * @param string $genId
 	 * @param string $userId
@@ -110,12 +108,12 @@ class FreePromptService {
 	 */
 	public function getOutputs(string $genId, string $userId): array {
 		$tasks = $this->textProcessingManager->getUserTasksByApp($userId, Application::APP_ID, $genId);
-		
+
 		if (count($tasks) === 0) {
 			$this->logger->warning('No tasks found for gen id: ' . $genId);
 			throw new Exception($this->l10n->t('Generation not found'), Http::STATUS_BAD_REQUEST);
 		}
-		
+
 		$outputs = [];
 		/** @var Task $task */
 		foreach ($tasks as $task) {

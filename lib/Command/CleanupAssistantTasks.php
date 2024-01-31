@@ -8,14 +8,14 @@ namespace OCA\TpAssistant\Command;
 use Exception;
 use OC\Core\Command\Base;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanupAssistantTasks extends Base {
 	public function __construct(
-		private TaskMapper $taskMapper,
+		private MetaTaskMapper $metaTaskMapper,
 	) {
 		parent::__construct();
 	}
@@ -42,7 +42,7 @@ class CleanupAssistantTasks extends Base {
 
 		$output->writeln('Cleanning up assistant tasks older than ' . $maxAge . ' seconds.');
 		try {
-			$cleanedUp = $this->taskMapper->cleanupOldTasks($maxAge);
+			$cleanedUp = $this->metaTaskMapper->cleanupOldMetaTasks($maxAge);
 		} catch (Exception $e) {
 			$output->writeln('Error: ' . $e->getMessage());
 			return 1;

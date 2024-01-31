@@ -23,11 +23,10 @@
 namespace OCA\TpAssistant\Listener\SpeechToText;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IURLGenerator;
 use OCP\SpeechToText\Events\AbstractTranscriptionEvent;
 use OCP\SpeechToText\Events\TranscriptionFailedEvent;
 use OCP\SpeechToText\Events\TranscriptionSuccessfulEvent;
@@ -38,10 +37,9 @@ use Psr\Log\LoggerInterface;
  */
 class SpeechToTextResultListener implements IEventListener {
 	public function __construct(
-		private LoggerInterface $logger,
-		private TaskMapper $taskMapper,
+		private LoggerInterface  $logger,
+		private MetaTaskMapper $metaTaskMapper,
 		private AssistantService $assistantService,
-		private IURLGenerator $urlGenerator,
 	) {
 	}
 
@@ -54,28 +52,28 @@ class SpeechToTextResultListener implements IEventListener {
 			$transcript = $event->getTranscript();
 			$file = $event->getFile();
 
-			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
+			$metaTasks = $this->metaTaskMapper->getMetaTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 
 			// Find a matching etag:
 			$etag = $file->getEtag();
 			$assistantTask = null;
-			foreach ($tasks as $task) {
-				$taskEtag = $task->getInputsAsArray()['eTag'];
-				if ($taskEtag === $etag) {
-					$assistantTask = $task;
+			foreach ($metaTasks as $metaTask) {
+				$metaTaskEtag = $metaTask->getInputsAsArray()['eTag'];
+				if ($metaTaskEtag === $etag) {
+					$assistantTask = $metaTask;
 					break;
 				}
 			}
 
 			if ($assistantTask === null) {
-				$this->logger->error('No assistant task found for speech to text result out of ' . count($tasks) . ' tasks for file ' . $file->getId() . ' with etag ' . $etag);
+				$this->logger->error('No assistant task found for speech to text result out of ' . count($metaTasks) . ' tasks for file ' . $file->getId() . ' with etag ' . $etag);
 				return;
 			}
 
 			// Update the meta task with the output and new status
 			$assistantTask->setOutput($transcript);
 			$assistantTask->setStatus(Application::STT_TASK_SUCCESSFUL);
-			$assistantTask = $this->taskMapper->update($assistantTask);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {
 				$this->assistantService->sendNotification($assistantTask, null, null, $transcript);
@@ -87,15 +85,15 @@ class SpeechToTextResultListener implements IEventListener {
 		if ($event instanceof TranscriptionFailedEvent) {
 			$this->logger->error('Transcript generation failed: ' . $event->getErrorMessage());
 
-			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
+			$metaTasks = $this->metaTaskMapper->getMetaTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 
 			// Find a matching etag:
 			$etag = $file->getEtag();
 			$assistantTask = null;
-			foreach ($tasks as $task) {
-				$taskEtag = $task->getInputsAsArray()['eTag'];
-				if ($taskEtag === $etag) {
-					$assistantTask = $task;
+			foreach ($metaTasks as $metaTask) {
+				$metaTaskEtag = $metaTask->getInputsAsArray()['eTag'];
+				if ($metaTaskEtag === $etag) {
+					$assistantTask = $metaTask;
 					break;
 				}
 			}
@@ -107,7 +105,7 @@ class SpeechToTextResultListener implements IEventListener {
 
 			// Update the meta task with the new status
 			$assistantTask->setStatus(Application::STT_TASK_FAILED);
-			$assistantTask = $this->taskMapper->update($assistantTask);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {
 				$this->assistantService->sendNotification($assistantTask);

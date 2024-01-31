@@ -3,7 +3,6 @@
 namespace OCA\TpAssistant\Controller;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -17,12 +16,11 @@ use OCP\IRequest;
 class AssistantController extends Controller {
 
 	public function __construct(
-		string $appName,
-		IRequest $request,
+		string                   $appName,
+		IRequest                 $request,
 		private AssistantService $assistantService,
-		private IInitialState $initialStateService,
-		private ?string $userId,
-		private TaskMapper $taskMapper,
+		private IInitialState    $initialStateService,
+		private ?string          $userId,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -34,7 +32,7 @@ class AssistantController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getTextProcessingTaskResultPage(int $taskId): TemplateResponse {
-		
+
 		if ($this->userId !== null) {
 			$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
 			if ($task !== null) {
@@ -143,7 +141,7 @@ class AssistantController extends Controller {
 		if ($this->userId === null) {
 			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
 		}
-		
+
 		try {
 			$text = $this->assistantService->parseTextFromFile($filePath, $this->userId);
 		} catch (\Exception | \Throwable $e) {

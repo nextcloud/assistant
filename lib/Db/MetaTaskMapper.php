@@ -17,21 +17,21 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @extends QBMapper<Task>
+ * @extends QBMapper<MetaTask>
  */
-class TaskMapper extends QBMapper {
+class MetaTaskMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'assistant_text_tasks', Task::class);
+		parent::__construct($db, 'assistant_meta_tasks', MetaTask::class);
 	}
 
 	/**
 	 * @param int $id
-	 * @return Task
+	 * @return MetaTask
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getTask(int $id): Task {
+	public function getMetaTask(int $id): MetaTask {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -46,12 +46,12 @@ class TaskMapper extends QBMapper {
 	/**
 	 * @param int $ocpTaskId
 	 * @param int $category
-	 * @return Task
+	 * @return MetaTask
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getTaskByOcpTaskIdAndCategory(int $ocpTaskId, int $category): Task {
+	public function getMetaTaskByOcpTaskIdAndCategory(int $ocpTaskId, int $category): MetaTask {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -80,10 +80,10 @@ class TaskMapper extends QBMapper {
 	/**
 	 * @param int $ocpTaskId
 	 * @param int $category
-	 * @return array<Task>
+	 * @return array<MetaTask>
 	 * @throws Exception
 	 */
-	public function getTasksByOcpTaskIdAndCategory(int $ocpTaskId, int $category): array {
+	public function getMetaTasksByOcpTaskIdAndCategory(int $ocpTaskId, int $category): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -115,12 +115,12 @@ class TaskMapper extends QBMapper {
 	/**
 	 * @param int $id
 	 * @param string $userId
-	 * @return Task
+	 * @return MetaTask
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getTaskOfUser(int $id, string $userId): Task {
+	public function getMetaTaskOfUser(int $id, string $userId): MetaTask {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -139,7 +139,7 @@ class TaskMapper extends QBMapper {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getTasksOfUser(string $userId): array {
+	public function getMetaTasksOfUser(string $userId): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -162,18 +162,18 @@ class TaskMapper extends QBMapper {
 	 * @param int $status
 	 * @param int $category
 	 * @param string $identifier
-	 * @return Task
+	 * @return MetaTask
 	 * @throws Exception
 	 */
-	public function createTask(
+	public function createMetaTask(
 		string $userId, array $inputs, ?string $output, ?int $timestamp = null, ?int $ocpTaskId = null,
 		?string $taskType = null, ?string $appId = null, int $status = 0, int $category = 0, string $identifier = ''
-	): Task {
+	): MetaTask {
 		if ($timestamp === null) {
 			$timestamp = (new DateTime())->getTimestamp();
 		}
 
-		$task = new Task();
+		$task = new MetaTask();
 		$task->setUserId($userId);
 		$task->setInputs(json_encode($inputs));
 		$task->setTimestamp($timestamp);
@@ -183,7 +183,7 @@ class TaskMapper extends QBMapper {
 		$task->setAppId($appId);
 		$task->setStatus($status);
 		$task->setCategory($category);
-		$task->setIndentifer($identifier);
+		$task->setIdentifier($identifier);
 		return $this->insert($task);
 	}
 
@@ -192,7 +192,7 @@ class TaskMapper extends QBMapper {
 	 * @return void
 	 * @throws Exception
 	 */
-	public function deleteUserTasks(string $userId): void {
+	public function deleteUserMetaTasks(string $userId): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
 			->where(
@@ -210,7 +210,7 @@ class TaskMapper extends QBMapper {
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */
-	public function cleanupOldTasks(int $olderThanSeconds = Application::DEFAULT_ASSISTANT_TASK_IDLE_TIME): int {
+	public function cleanupOldMetaTasks(int $olderThanSeconds = Application::DEFAULT_ASSISTANT_TASK_IDLE_TIME): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
 			->where(
