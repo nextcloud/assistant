@@ -19,6 +19,7 @@ use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\IL10N;
 
 use OCP\Db\Exception as DbException;
 use OCP\IRequest;
@@ -30,7 +31,8 @@ class Text2ImageController extends Controller {
 		IRequest $request,
 		private Text2ImageHelperService $text2ImageHelperService,
 		private IInitialState $initialStateService,
-		private ?string $userId
+		private ?string $userId,
+		private IL10N $l10n,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -60,10 +62,15 @@ class Text2ImageController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getPromptHistory(): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to get prompt history; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		try {
 			$response = $this->text2ImageHelperService->getPromptHistory($this->userId);
 		} catch (DbException $e) {
-			return new DataResponse(['error' => 'Unknown error while retrieving prompt history.'], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new DataResponse(['error' => $this->l10n->t('Unknown error while retrieving prompt history.')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
 		return new DataResponse($response);
@@ -134,6 +141,11 @@ class Text2ImageController extends Controller {
 	#[NoCSRFRequired]
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisStatusArray): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to set visibility of image files; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		if (count($fileVisStatusArray) < 1) {
 			return new DataResponse('File visibility array empty', Http::STATUS_BAD_REQUEST);
 		}
@@ -163,6 +175,11 @@ class Text2ImageController extends Controller {
 	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function notifyWhenReady(string $imageGenId): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to notify when ready; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		try {
 			$this->text2ImageHelperService->notifyWhenReady($imageGenId, $this->userId);
 		} catch (Exception $e) {
@@ -184,6 +201,11 @@ class Text2ImageController extends Controller {
 	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function cancelGeneration(string $imageGenId): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to cancel generation; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		$this->text2ImageHelperService->cancelGeneration($imageGenId, $this->userId);
 		return new DataResponse('success', Http::STATUS_OK);
 	}

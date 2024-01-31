@@ -25,7 +25,6 @@ class FreePromptService {
 		private IConfig $config,
 		private LoggerInterface $logger,
 		private IManager $textProcessingManager,
-		private ?string $userId,
 		private PromptMapper $promptMapper,
 		private IL10N $l10n,
 		private TaskMapper $taskMapper,
@@ -34,33 +33,29 @@ class FreePromptService {
 
 	/*
 	 * @param string $prompt
+	 * @param string $userId
 	 * @return string
 	 * @throws Exception
 	 */
-	public function processPrompt(string $prompt): string {
+	public function processPrompt(string $prompt, $userId): string {
 		$taskTypes = $this->textProcessingManager->getAvailableTaskTypes();
 		if (!in_array(FreePromptTaskType::class, $taskTypes)) {
 			$this->logger->warning('FreePromptTaskType not available');
 			throw new Exception($this->l10n->t('FreePromptTaskType not available'), Http::STATUS_INTERNAL_SERVER_ERROR);
-		}
-
-		if ($this->userId === null) {
-			$this->logger->warning('User id is null when trying to process prompt');
-			throw new Exception($this->l10n->t('Failed process prompt; unknown user'), Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 		
 		// Generate a unique id for this generation
 		while (true) {
 			$genId = bin2hex(random_bytes(32));
 			// Exceedingly unlikely that this will ever happen, but just in case:
-			if(count($this->textProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID, $genId)) === 0) {
+			if(count($this->textProcessingManager->getUserTasksByApp($userId, Application::APP_ID, $genId)) === 0) {
 				break;
 			} else {
 				continue;
 			}
 		}
 
-		$promptTask = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $this->userId, $genId);
+		$promptTask = new Task(FreePromptTaskType::class, $prompt, Application::APP_ID, $userId, $genId);
 
 		// Run or schedule the task:
 		try {
@@ -72,7 +67,7 @@ class FreePromptService {
 
 		// Create an assistant task for the free prompt task:
 		$this->taskMapper->createTask(
-			$this->userId,
+			$userId,
 			['prompt' => $prompt],
 			$promptTask->getOutput(),
 			time(),
@@ -88,23 +83,19 @@ class FreePromptService {
 		// Otherwise we would have to dispatch the notification here.
 
 		// Save prompt to database
-		$this->promptMapper->createPrompt($this->userId, $prompt);
+		$this->promptMapper->createPrompt($userId, $prompt);
 		
 		return $genId;
 	}
 
 	/**
+	 * @param string $userId
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getPromptHistory(): array {
-		if ($this->userId === null) {
-			$this->logger->warning('User id is null when trying to get prompt history');
-			throw new Exception($this->l10n->t('Failed to get prompt history'), Http::STATUS_INTERNAL_SERVER_ERROR);
-		}
-
+	public function getPromptHistory(string $userId): array {
 		try {
-			return $this->promptMapper->getPromptsOfUser($this->userId);
+			return $this->promptMapper->getPromptsOfUser($userId);
 		} catch (DBException $e) {
 			$this->logger->warning('Failed to get prompts of user', ['exception' => $e]);
 			throw new Exception($this->l10n->t('Failed to get prompt history'), Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -113,11 +104,12 @@ class FreePromptService {
 	
 	/**
 	 * @param string $genId
+	 * @param string $userId
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getOutputs(string $genId): array {
-		$tasks = $this->textProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID, $genId);
+	public function getOutputs(string $genId, string $userId): array {
+		$tasks = $this->textProcessingManager->getUserTasksByApp($userId, Application::APP_ID, $genId);
 		
 		if (count($tasks) === 0) {
 			$this->logger->warning('No tasks found for gen id: ' . $genId);
@@ -139,18 +131,14 @@ class FreePromptService {
 
 	/**
 	 * @param string $genId
+	 * @param string $userId
 	 * @return void
 	 * @throws Exception
 	 */
-	public function cancelGeneration(string $genId): void {
-		if ($this->userId === null) {
-			$this->logger->warning('User id is null when trying to cancel generation');
-			throw new Exception($this->l10n->t('Failed to cancel generation'), Http::STATUS_INTERNAL_SERVER_ERROR);
-		}
-		
+	public function cancelGeneration(string $genId, string $userId): void {
 		// Get all tasks that have this genId as identifier.
 		/** @var Task[] $tasks */
-		$tasks = $this->textProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID, $genId);
+		$tasks = $this->textProcessingManager->getUserTasksByApp($userId, Application::APP_ID, $genId);
 
 		// Cancel all tasks
 		foreach ($tasks as $task) {

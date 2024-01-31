@@ -12,6 +12,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
@@ -22,7 +23,8 @@ class FreePromptController extends Controller {
 		IRequest $request,
 		private FreePromptService $freePromptService,
 		private ?string $userId,
-		private IInitialState $initialStateService
+		private IInitialState $initialStateService,
+		private IL10N $l10n,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -34,8 +36,13 @@ class FreePromptController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function processPrompt(string $prompt): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to process prompt; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		try {
-			$result = $this->freePromptService->processPrompt($prompt);
+			$result = $this->freePromptService->processPrompt($prompt, $this->userId);
 		} catch (Exception $e) {
 			return new DataResponse(['error' => $e->getMessage()], (int)$e->getCode());
 		}
@@ -49,8 +56,13 @@ class FreePromptController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getPromptHistory(): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to get prompt history; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		try {
-			$result = $this->freePromptService->getPromptHistory();
+			$result = $this->freePromptService->getPromptHistory($this->userId);
 		} catch (Exception $e) {
 			return new DataResponse(['error' => $e->getMessage()], (int)$e->getCode());
 		}
@@ -66,8 +78,13 @@ class FreePromptController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function getOutputs(string $genId): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to get outputs; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		try {
-			$result = $this->freePromptService->getOutputs($genId);
+			$result = $this->freePromptService->getOutputs($genId, $this->userId);
 		} catch (Exception $e) {
 			return new DataResponse(['error' => $e->getMessage()], (int)$e->getCode());
 		}
@@ -83,8 +100,13 @@ class FreePromptController extends Controller {
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	public function cancelGeneration(string $genId): DataResponse {
+
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to cancel generation; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
 		try {
-			$this->freePromptService->cancelGeneration($genId);
+			$this->freePromptService->cancelGeneration($genId, $this->userId);
 		} catch (Exception $e) {
 			$response = new DataResponse(['error' => $e->getMessage()], (int)$e->getCode());
 			return $response;
