@@ -7,7 +7,7 @@ import { loadState } from '@nextcloud/initial-state'
 import PlainTextResultPage from './views/PlainTextResultPage.vue'
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
-__webpack_public_path__ = linkTo('stt_helper', 'js/') // eslint-disable-line
+__webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
 Vue.mixin({ methods: { t, n } })
 
@@ -18,4 +18,4 @@ new View({
 	propsData: {
 		task: initialState.task,
 	},
-}).$mount('#assistant-stt-content')
+}).$mount('#content')
