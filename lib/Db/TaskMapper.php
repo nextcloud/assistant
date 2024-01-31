@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Db;
 
 use DateTime;
+use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
@@ -202,17 +203,14 @@ class TaskMapper extends QBMapper {
 	}
 
 	/**
-	 * Clean up tasks older than specified (14 days by default)
+	 * Clean up tasks older than specified seconds
 	 *
-	 * @param ?int $olderThanSeconds
+	 * @param int $olderThanSeconds
 	 * @return int number of deleted rows
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */
-	public function cleanupOldTasks(?int $olderThanSeconds): int {
-		if ($olderThanSeconds === null) {
-			$olderThanSeconds = 14 * 24 * 60 * 60;
-		}
+	public function cleanupOldTasks(int $olderThanSeconds = Application::DEFAULT_ASSISTANT_TASK_IDLE_TIME): int {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
 			->where(

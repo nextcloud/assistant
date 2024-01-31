@@ -28,7 +28,7 @@ class CleanupAssistantTasks extends TimedJob {
 		$this->logger->debug('Run cleanup job for assistant tasks');
 
 		try {
-			$this->taskMapper->cleanupOldTasks(Application::DEFAULT_ASSISTANT_TASK_IDLE_TIME);
+			$this->taskMapper->cleanupOldTasks();
 		} catch (\OCP\Db\Exception | RuntimeException | Exception $e) {
 			$this->logger->debug('Cleanup job for assistant tasks failed: ' . $e->getMessage());
 		}
