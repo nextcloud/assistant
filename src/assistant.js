@@ -308,7 +308,7 @@ export async function openAssistantPlainTextResult(metaTask) {
 	const view = new View({
 		propsData: {
 			output: metaTask.output ?? '',
-			taskType: metaTask.category,
+			taskCategory: metaTask.category,
 		},
 	}).$mount(modalElement)
 
