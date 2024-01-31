@@ -37,7 +37,7 @@ class FreePromptService {
 	 * @return string
 	 * @throws Exception
 	 */
-	public function processPrompt(string $prompt, $userId): string {
+	public function processPrompt(string $prompt, string $userId): string {
 		$taskTypes = $this->textProcessingManager->getAvailableTaskTypes();
 		if (!in_array(FreePromptTaskType::class, $taskTypes)) {
 			$this->logger->warning('FreePromptTaskType not available');
