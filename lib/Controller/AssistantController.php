@@ -42,7 +42,7 @@ class AssistantController extends Controller {
 				return new TemplateResponse(Application::APP_ID, 'taskResultPage');
 			}
 		}
-		return new TemplateResponse('','403',[],TemplateResponse::RENDER_AS_ERROR, Http::STATUS_FORBIDDEN);
+		return new TemplateResponse('', '403', [], TemplateResponse::RENDER_AS_ERROR, Http::STATUS_FORBIDDEN);
 	}
 
 	/**
