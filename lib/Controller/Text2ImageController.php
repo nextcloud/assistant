@@ -19,9 +19,9 @@ use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\IL10N;
-
 use OCP\Db\Exception as DbException;
+
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\TextToImage\Exception\TaskFailureException;
 

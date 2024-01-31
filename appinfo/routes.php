@@ -6,12 +6,12 @@ return [
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 
-		['name' => 'assistant#getTextProcessingTaskResultPage', 'url' => '/t/{taskId}', 'verb' => 'GET'],
-		['name' => 'assistant#runTextProcessingTask', 'url' => '/run', 'verb' => 'POST'],
-		['name' => 'assistant#scheduleTextProcessingTask', 'url' => '/schedule', 'verb' => 'POST'],
-		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/run-or-schedule', 'verb' => 'POST'],
-		['name' => 'assistant#getTextProcessingResult', 'url' => '/r/{taskId}', 'verb' => 'GET'],
-		['name' => 'assistant#parseTextFromFile', 'url' => '/p', 'verb' => 'POST'],
+		['name' => 'assistant#getTextProcessingTaskResultPage', 'url' => '/task/view/{taskId}', 'verb' => 'GET'],
+		['name' => 'assistant#runTextProcessingTask', 'url' => '/task/run', 'verb' => 'POST'],
+		['name' => 'assistant#scheduleTextProcessingTask', 'url' => '/task/schedule', 'verb' => 'POST'],
+		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/task/run-or-schedule', 'verb' => 'POST'],
+		['name' => 'assistant#getTextProcessingResult', 'url' => '/task/{taskId}', 'verb' => 'GET'],
+		['name' => 'assistant#parseTextFromFile', 'url' => '/parse-file', 'verb' => 'POST'],
 
 		['name' => 'Text2Image#processPrompt', 'url' => '/i/process_prompt', 'verb' => 'POST'],
 		['name' => 'Text2Image#getPromptHistory', 'url' => '/i/prompt_history', 'verb' => 'GET'],

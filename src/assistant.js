@@ -177,7 +177,7 @@ export async function runTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateUrl('/apps/assistant/run')
+	const url = generateUrl('/apps/assistant/task/run')
 	const params = {
 		inputs,
 		type: taskType,
@@ -192,7 +192,7 @@ export async function runOrScheduleTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateUrl('/apps/assistant/run-or-schedule')
+	const url = generateUrl('/apps/assistant/task/run-or-schedule')
 	const params = {
 		inputs,
 		type: taskType,
@@ -215,7 +215,7 @@ export async function scheduleTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateUrl('/apps/assistant/schedule')
+	const url = generateUrl('/apps/assistant/task/schedule')
 	const params = {
 		inputs,
 		type: taskType,
@@ -279,7 +279,7 @@ async function showAssistantTaskResult(taskId) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
-	const url = generateUrl('apps/assistant/r/{taskId}', { taskId })
+	const url = generateUrl('apps/assistant/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
 		console.debug('showing results for task', response.data.task)
 		openAssistantTaskResult(response.data.task, true)

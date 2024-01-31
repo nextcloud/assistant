@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Cron;
 
 use Exception;
-use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\TaskMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;

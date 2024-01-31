@@ -12,9 +12,9 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IL10N;
-
 use OCP\AppFramework\Services\IInitialState;
+
+use OCP\IL10N;
 use OCP\IRequest;
 
 class FreePromptController extends Controller {

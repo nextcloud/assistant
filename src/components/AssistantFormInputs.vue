@@ -144,7 +144,7 @@ export default {
 				showError(t('assistant', 'No file selected'))
 				return
 			}
-			const url = generateUrl('apps/assistant/p')
+			const url = generateUrl('apps/assistant/parse-file')
 			axios.post(url, {
 				filePath,
 			}).then((response) => {
