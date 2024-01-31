@@ -146,11 +146,11 @@ class AssistantService {
 	}
 
 	/**
-	 * @param string|null $userId
+	 * @param string $userId
 	 * @param int $taskId
 	 * @return Task
 	 */
-	public function getTextProcessingTask(?string $userId, int $taskId): ?Task {
+	public function getTextProcessingTask(string $userId, int $taskId): ?Task {
 		try {
 			$task = $this->taskMapper->getTask($taskId);
 		} catch (DoesNotExistException | MultipleObjectsReturnedException | \OCP\Db\Exception $e) {
@@ -183,13 +183,13 @@ class AssistantService {
 	 * @param string $type
 	 * @param array $input
 	 * @param string $appId
-	 * @param string|null $userId
+	 * @param string $userId
 	 * @param string $identifier
 	 * @return Task
 	 * @throws PreConditionNotMetException
 	 * @throws \Exception
 	 */
-	public function runTextProcessingTask(string $type, array $inputs, string $appId, ?string $userId, string $identifier): Task {
+	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
@@ -218,13 +218,13 @@ class AssistantService {
 	 * @param string $type
 	 * @param array $input
 	 * @param string $appId
-	 * @param string|null $userId
+	 * @param string $userId
 	 * @param string $identifier
 	 * @return Task
 	 * @throws PreConditionNotMetException
 	 * @throws \Exception
 	 */
-	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, ?string $userId, string $identifier): Task {
+	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
@@ -253,14 +253,14 @@ class AssistantService {
 	 * @param string $type
 	 * @param array<string> $inputs
 	 * @param string $appId
-	 * @param string|null $userId
+	 * @param string $userId
 	 * @param string $identifier
 	 * @return Task
 	 * @throws PreConditionNotMetException
 	 * @throws \OCP\Db\Exception
 	 * @throws \Exception
 	 */
-	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, ?string $userId, string $identifier): Task {
+	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':

@@ -7,7 +7,6 @@ use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
@@ -34,23 +33,16 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	#[BruteForceProtection(action: 'taskResults')]
 	public function getTextProcessingTaskResultPage(int $taskId): TemplateResponse {
-		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
-				
-		if ($task === null) {
-			$response = new TemplateResponse(
-				'',
-				'403',
-				[],
-				TemplateResponse::RENDER_AS_ERROR
-			);
-			$response->setStatus(Http::STATUS_NOT_FOUND);
-			$response->throttle(['userId' => $this->userId, 'taskId' => $taskId]);
-			return $response;
+		
+		if ($this->userId !== null) {
+			$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
+			if ($task !== null) {
+				$this->initialStateService->provideInitialState('task', $task->jsonSerializeCc());
+				return new TemplateResponse(Application::APP_ID, 'taskResultPage');
+			}
 		}
-		$this->initialStateService->provideInitialState('task', $task->jsonSerializeCc());
-		return new TemplateResponse(Application::APP_ID, 'taskResultPage');
+		return new TemplateResponse('','403',[],TemplateResponse::RENDER_AS_ERROR, Http::STATUS_FORBIDDEN);
 	}
 
 	/**
@@ -58,21 +50,17 @@ class AssistantController extends Controller {
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	#[BruteForceProtection(action: 'taskResults')]
 	public function getTextProcessingResult(int $taskId): DataResponse {
-		$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
 
-		if ($task === null) {
-			$response = new DataResponse(
-				'',
-				Http::STATUS_NOT_FOUND
-			);
-			$response->throttle(['userId' => $this->userId, 'taskId' => $taskId]);
-			return $response;
+		if ($this->userId !== null) {
+			$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
+			if ($task !== null) {
+				return new DataResponse([
+					'task' => $task->jsonSerializeCc(),
+				]);
+			}
 		}
-		return new DataResponse([
-			'task' => $task->jsonSerializeCc(),
-		]);
+		return new DataResponse('', Http::STATUS_NOT_FOUND);
 	}
 
 	/**
@@ -84,6 +72,10 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
+		}
+
 		try {
 			$task = $this->assistantService->runTextProcessingTask($type, $inputs, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
@@ -103,6 +95,10 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
+		}
+
 		try {
 			$task = $this->assistantService->scheduleTextProcessingTask($type, $inputs, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
@@ -122,6 +118,10 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
+		}
+
 		try {
 			$task = $this->assistantService->runOrScheduleTextProcessingTask($type, $inputs, $appId, $this->userId, $identifier);
 		} catch (\Exception | \Throwable $e) {
@@ -140,6 +140,10 @@ class AssistantController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function parseTextFromFile(string $filePath): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
+		}
+		
 		try {
 			$text = $this->assistantService->parseTextFromFile($filePath, $this->userId);
 		} catch (\Exception | \Throwable $e) {
