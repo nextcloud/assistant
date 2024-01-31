@@ -65,17 +65,17 @@ class AssistantService {
 		$params['taskCategory'] = $task->getCategory();
 
 		switch ($task->getCategory()) {
-			case Application::TASK_GATEGORY_TEXT_TO_IMAGE:
+			case Application::TASK_CATEGORY_TEXT_TO_IMAGE:
 				{
 					$taskSuccessful = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL;
 					break;
 				}
-			case Application::TASK_GATEGORY_TEXT_GEN:
+			case Application::TASK_CATEGORY_TEXT_GEN:
 				{
 					$taskSuccessful = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL;
 					break;
 				}
-			case Application::TASK_GATEGORY_SPEECH_TO_TEXT:
+			case Application::TASK_CATEGORY_SPEECH_TO_TEXT:
 				{
 					$taskSuccessful = $task->getStatus() === Application::STT_TASK_SUCCESSFUL;
 					break;
@@ -209,7 +209,7 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier);
 
 		return $assistantTask;
 	}
@@ -244,7 +244,7 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier);
 
 		return $assistantTask;
 	}
@@ -280,7 +280,7 @@ class AssistantService {
 				}
 		}
 
-		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_GATEGORY_TEXT_GEN, $identifier);
+		$assistantTask = $this->taskMapper->createTask($userId, $inputs, $task->getOutput(), time(), $task->getId(), $type, $appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier);
 
 		return $assistantTask;
 	}

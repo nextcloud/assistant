@@ -57,7 +57,7 @@ class SpeechToTextResultListener implements IEventListener {
 			$userId = $event->getUserId();
 			$file = $event->getFile();
 
-			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_GATEGORY_SPEECH_TO_TEXT);
+			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 
 			// Find a matching etag:
 			$etag = $file->getEtag();
@@ -94,7 +94,7 @@ class SpeechToTextResultListener implements IEventListener {
 			$this->logger->error('Transcript generation failed: ' . $event->getErrorMessage());
 
 			$userId = $event->getUserId();
-			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_GATEGORY_SPEECH_TO_TEXT);
+			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 
 			// Find a matching etag:
 			$etag = $file->getEtag();

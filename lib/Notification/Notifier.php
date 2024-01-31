@@ -71,7 +71,7 @@ class Notifier implements INotifier {
 
 		$taskTypeName = null;
 		$taskInput = $params['inputs']['prompt'] ?? null;
-		if ($params['taskCategory'] === Application::TASK_GATEGORY_TEXT_GEN) {
+		if ($params['taskCategory'] === Application::TASK_CATEGORY_TEXT_GEN) {
 
 			if ($params['taskTypeClass'] === 'copywriter') {
 				// Catch the custom copywriter task type built on top of the FreePrompt task type.
@@ -86,9 +86,9 @@ class Notifier implements INotifier {
 					$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
 				}
 			}
-		} elseif ($params['taskCategory'] === Application::TASK_GATEGORY_TEXT_TO_IMAGE) {
+		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
 			$taskTypeName = $l->t('Text to image');
-		} elseif ($params['taskCategory'] === Application::TASK_GATEGORY_SPEECH_TO_TEXT) {
+		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 			$taskTypeName = $l->t('Speech to text');
 		}
 

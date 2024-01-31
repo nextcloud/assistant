@@ -51,7 +51,7 @@ class TaskSuccessfulListener implements IEventListener {
 		}
 
 		try {
-			$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_GATEGORY_TEXT_GEN);
+			$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_GEN);
 		} catch (DoesNotExistException $e) {
 			// Not an assistant task
 			return;

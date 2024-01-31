@@ -114,7 +114,7 @@ class Text2ImageHelperService {
 			Task::class,
 			Application::APP_ID,
 			$promptTask->getStatus(),
-			Application::TASK_GATEGORY_TEXT_TO_IMAGE,
+			Application::TASK_CATEGORY_TEXT_TO_IMAGE,
 			$promptTask->getIdentifier()
 		);
 
@@ -563,7 +563,7 @@ class Text2ImageHelperService {
 		if ($task->getStatus() === Task::STATUS_SUCCESSFUL || $task->getStatus() === Task::STATUS_FAILED) {
 			// Get the assistant task
 			try {
-				$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_GATEGORY_TEXT_TO_IMAGE);
+				$assistantTask = $this->taskMapper->getTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_TO_IMAGE);
 			} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
 				$this->logger->debug('Assistant meta task for the given generation id does not exist or could not be retrieved: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 				return;

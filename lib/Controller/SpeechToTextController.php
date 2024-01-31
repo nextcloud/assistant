@@ -107,7 +107,7 @@ class SpeechToTextController extends Controller {
 		try {
 			$task = $this->taskMapper->getTaskOfUser($id, $this->userId);
 			
-			if($task->getCategory() !== Application::TASK_GATEGORY_SPEECH_TO_TEXT) {
+			if($task->getCategory() !== Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 				throw new Exception('Task is not a speech to text task.', Http::STATUS_BAD_REQUEST);
 			}
 
