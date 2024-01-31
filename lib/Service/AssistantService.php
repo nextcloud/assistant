@@ -293,29 +293,30 @@ class AssistantService {
 	 * @throws \Exception
 	 */
 	public function parseTextFromFile(string $filePath, string $userId): string {
+
 		try {
 			$userFolder = $this->storage->getUserFolder($userId);
 		} catch (\OC\User\NoUserException | NotPermittedException $e) {
 			throw new \Exception('Could not access user storage.');
 		}
 
-
 		try {
-			$mimeType = $userFolder->get($filePath)->getMimeType();
+			$file = $userFolder->get($filePath);
 		} catch (NotFoundException $e) {
 			throw new \Exception('File not found.');
 		}
-
+		
 		try {
-			$file = $userFolder->get($filePath);
 			if ($file instanceof File) {
 				$contents = $file->getContent();
 			} else {
-				throw new \Exception('File is not a file.');
+				throw new \Exception('Provided path does not point to a file.');
 			}
-		} catch (NotFoundException | LockedException | GenericFileException | NotPermittedException $e) {
-			throw new \Exception('File not found or could not be accessed.');
+		} catch (LockedException | GenericFileException | NotPermittedException $e) {
+			throw new \Exception('File could not be accessed.');
 		}
+
+		$mimeType = $file->getMimeType();
 
 		switch ($mimeType) {
 			default:
