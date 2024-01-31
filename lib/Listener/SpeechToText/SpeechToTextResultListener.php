@@ -25,7 +25,6 @@ namespace OCA\TpAssistant\Listener\SpeechToText;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\TaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
-use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IURLGenerator;
@@ -39,7 +38,6 @@ use Psr\Log\LoggerInterface;
  */
 class SpeechToTextResultListener implements IEventListener {
 	public function __construct(
-		private SpeechToTextService $sttService,
 		private LoggerInterface $logger,
 		private TaskMapper $taskMapper,
 		private AssistantService $assistantService,
@@ -54,7 +52,6 @@ class SpeechToTextResultListener implements IEventListener {
 
 		if ($event instanceof TranscriptionSuccessfulEvent) {
 			$transcript = $event->getTranscript();
-			$userId = $event->getUserId();
 			$file = $event->getFile();
 
 			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
@@ -80,11 +77,8 @@ class SpeechToTextResultListener implements IEventListener {
 			$assistantTask->setStatus(Application::STT_TASK_SUCCESSFUL);
 			$assistantTask = $this->taskMapper->update($assistantTask);
 
-			// Generate the link to the result page:
-			$link = $this->urlGenerator->linkToRouteAbsolute(Application::APP_ID . '.SpeechToText.getResultPage', ['id' => $task->getId()]);
-			$this->logger->error('Generated link to result page: ' . $link);
 			try {
-				$this->assistantService->sendNotification($assistantTask, $link, null, $transcript);
+				$this->assistantService->sendNotification($assistantTask, null, null, $transcript);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for successful transcription: ' . $e->getMessage());
 			}
@@ -93,7 +87,6 @@ class SpeechToTextResultListener implements IEventListener {
 		if ($event instanceof TranscriptionFailedEvent) {
 			$this->logger->error('Transcript generation failed: ' . $event->getErrorMessage());
 
-			$userId = $event->getUserId();
 			$tasks = $this->taskMapper->getTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 
 			// Find a matching etag:
@@ -115,13 +108,13 @@ class SpeechToTextResultListener implements IEventListener {
 			// Update the meta task with the new status
 			$assistantTask->setStatus(Application::STT_TASK_FAILED);
 			$assistantTask = $this->taskMapper->update($assistantTask);
-			
+
 			try {
 				$this->assistantService->sendNotification($assistantTask);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for failed transcription: ' . $e->getMessage());
 			}
-			
+
 		}
 	}
 }

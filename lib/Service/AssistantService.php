@@ -8,6 +8,7 @@ use DateTime;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\Task;
 use OCA\TpAssistant\Db\TaskMapper;
+use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Common\Exception\NotFoundException;
@@ -33,10 +34,11 @@ class AssistantService {
 	public function __construct(
 		private INotificationManager $notificationManager,
 		private ITextProcessingManager $textProcessingManager,
-		private IURLGenerator $url,
 		private TaskMapper $taskMapper,
+		private ImageGenerationMapper $imageGenerationMapper,
 		private LoggerInterface $logger,
 		private IRootFolder $storage,
+		private IURLGenerator $url,
 	) {
 	}
 
@@ -44,12 +46,12 @@ class AssistantService {
 	 * Send a success or failure task result notification
 	 *
 	 * @param Task $task
-	 * @param string|null $target optional notification link target
+	 * @param string|null $customTarget optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @return void
 	 * @throws \InvalidArgumentException
 	 */
-	public function sendNotification(Task $task, ?string $target = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
+	public function sendNotification(Task $task, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
@@ -57,7 +59,7 @@ class AssistantService {
 			'appId' => $task->getAppId(),
 			'id' => $task->getId(),
 			'inputs' => $task->getInputsAsArray(),
-			'target' => $target,
+			'target' => $customTarget ?? $this->getDefaultTarget($task),
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
@@ -91,7 +93,7 @@ class AssistantService {
 			? 'success'
 			: 'failure';
 
-		$objectType = $target === null
+		$objectType = $customTarget === null
 			? 'task'
 			: 'task-with-custom-target';
 
@@ -102,6 +104,24 @@ class AssistantService {
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);
+	}
+
+	private function getDefaultTarget(Task $task): string {
+		$category = $task->getCategory();
+		if ($category === Application::TASK_CATEGORY_TEXT_GEN) {
+			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTextProcessingTaskResultPage', ['taskId' => $task->getId()]);
+		} elseif ($category === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
+			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.SpeechToText.getResultPage', ['id' => $task->getId()]);
+		} elseif ($category === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
+			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($task->getIndentifer());
+			return $this->url->linkToRouteAbsolute(
+				Application::APP_ID . '.Text2Image.showGenerationPage',
+				[
+					'imageGenId' => $imageGeneration->getImageGenId(),
+				]
+			);
+		}
+		return '';
 	}
 
 	/**
@@ -305,7 +325,7 @@ class AssistantService {
 		} catch (NotFoundException $e) {
 			throw new \Exception('File not found.');
 		}
-		
+
 		try {
 			if ($file instanceof File) {
 				$contents = $file->getContent();

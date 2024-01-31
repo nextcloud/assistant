@@ -103,13 +103,13 @@ class Notifier implements INotifier {
 				if ($taskInput) {
 					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
-				
+
 				if (isset($params['result'])) {
 					$content === '' ?: $content .= '\n';
 					$content .= $l->t('Result: %1$s', [$params['result']]);
 				}
-				
-				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTextProcessingTaskResultPage', ['taskId' => $params['id']]);
+
+				$link = $params['target'];
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 				$notification
