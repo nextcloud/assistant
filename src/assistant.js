@@ -377,7 +377,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		view.$destroy()
 	})
 	view.$on('submit', (data) => {
-		scheduleTask(task.appId, task.identifier, data.taskTypeId, data.input)
+		scheduleTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
 			.then((response) => {
 				view.showScheduleConfirmation = true
 				console.debug('scheduled task', response.data?.task)
@@ -391,16 +391,16 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	view.$on('sync-submit', (data) => {
 		view.loading = true
 		view.showSyncTaskRunning = true
-		view.input = data.input
-		view.textProcessingTaskTypeId = data.taskTypeId
-		runTask(task.appId, task.identifier, data.taskTypeId, data.input)
+		view.inputs = data.inputs
+		view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
+		runTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
 			.then((response) => {
 				// resolve(response.data?.task)
 				const task = response.data?.task
 				if (task.status === STATUS.successfull) {
 					view.output = task?.output
 				} else if (task.status === STATUS.scheduled) {
-					view.input = task?.input
+					view.inputs = task?.inputs
 					view.showScheduleConfirmation = true
 				}
 				view.loading = false
@@ -420,7 +420,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	})
 	view.$on('cancel-sync-n-schedule', () => {
 		cancelCurrentSyncTask()
-		scheduleTask(task.appId, task.identifier, view.textProcessingTaskTypeId, view.input)
+		scheduleTask(task.appId, task.identifier ?? '', view.textProcessingTaskTypeId, view.inputs)
 			.then((response) => {
 				view.showSyncTaskRunning = false
 				view.showScheduleConfirmation = true
