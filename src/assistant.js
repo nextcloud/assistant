@@ -80,12 +80,12 @@ export async function openAssistantTextProcessingForm({
 		})
 		view.$on('submit', (data) => {
 			scheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
-				.then((response) => {
+				.then(async (response) => {
 					view.inputs = data.inputs
 					view.showScheduleConfirmation = true
 					const task = response.data?.task
 					lastTask = task
-					useMetaTasks ? resolve(task) : resolve(resolveMetaTaskToOcpTask(task))
+					useMetaTasks ? resolve(task) : resolve(await resolveMetaTaskToOcpTask(task))
 				})
 				.catch(error => {
 					view.$destroy()
@@ -99,10 +99,10 @@ export async function openAssistantTextProcessingForm({
 			view.inputs = data.inputs
 			view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
 			runOrScheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
-				.then((response) => {
+				.then(async (response) => {
 					const task = response.data?.task
 					lastTask = task
-					useMetaTasks ? resolve(task) : resolve(resolveMetaTaskToOcpTask(task))
+					useMetaTasks ? resolve(task) : resolve(await resolveMetaTaskToOcpTask(task))
 					view.inputs = task.inputs
 					if (task.status === STATUS.successfull) {
 						if (closeOnResult) {
@@ -131,12 +131,12 @@ export async function openAssistantTextProcessingForm({
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
 			scheduleTask(appId, identifier, view.textProcessingTaskTypeId, view.inputs)
-				.then((response) => {
+				.then(async (response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
 					const task = response.data?.task
 					lastTask = task
-					useMetaTasks ? resolve(task) : resolve(resolveMetaTaskToOcpTask(task))
+					useMetaTasks ? resolve(task) : resolve(await resolveMetaTaskToOcpTask(task))
 				})
 				.catch(error => {
 					view.$destroy()
@@ -163,13 +163,14 @@ async function resolveMetaTaskToOcpTask(metaTask) {
 	}
 
 	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId: metaTask.ocpTaskId })
-	axios.get(url).then(response => {
+	try {
+		const response = await axios.get(url)
 		console.debug('resolved meta task', response.data?.ocs?.data?.task)
 		return response.data?.ocs?.data?.task
-	}).catch(error => {
+	} catch (error) {
 		console.error(error)
 		return null
-	})
+	}
 }
 
 export async function cancelCurrentSyncTask() {
