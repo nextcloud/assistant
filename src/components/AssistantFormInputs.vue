@@ -122,7 +122,7 @@ export default {
 	},
 	mounted() {
 		this.writingStyle = this.inputs.writingStyle ?? ''
-		this.sourceMaterial = this.inputs.sourceMaterial ?? ''
+		this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
 		this.prompt = this.inputs.prompt ?? ''
 
 		if (this.selectedTaskTypeId === 'copywriter') {
