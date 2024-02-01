@@ -5,6 +5,10 @@ import { getRequestToken } from '@nextcloud/auth'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
+export async function openAssistantForm(params) {
+	return openAssistantTextProcessingForm(params)
+}
+
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
@@ -158,8 +162,8 @@ async function resolveMetaTaskToOcpTask(metaTask) {
 		return null
 	}
 
-	const url = generateOcsUrl('textprocessing/tasks/{taskId}', { taskId: metaTask.ocpTaskId })
-	axios.post(url).then(response => {
+	const url = generateOcsUrl('textprocessing/task/{taskId}', { taskId: metaTask.ocpTaskId })
+	axios.get(url).then(response => {
 		console.debug('resolved meta task', response.data?.ocs?.data?.task)
 		return response.data?.ocs?.data?.task
 	}).catch(error => {
