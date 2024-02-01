@@ -166,6 +166,7 @@ export default {
 	position: absolute;
 	top: 4px;
 	right: 4px;
+	z-index: 1;
 }
 
 .assistant-modal--wrapper {

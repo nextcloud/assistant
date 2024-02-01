@@ -94,6 +94,7 @@ export default {
 		position: absolute;
 		top: 4px;
 		right: 4px;
+		z-index: 1;
 		// No border on hover
 		&:hover {
 			outline: none;
