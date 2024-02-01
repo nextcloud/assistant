@@ -230,7 +230,7 @@ export default {
 						// If it is, inject a copywriter task type into the list
 						this.taskTypes.push({
 							id: 'copywriter',
-							name: t('assistant', 'Copywriter'),
+							name: t('assistant', 'Context write'),
 							description: t('assistant', 'Writes text in a given style based on the provided source material'),
 						})
 					}
