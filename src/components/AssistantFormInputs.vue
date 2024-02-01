@@ -132,12 +132,6 @@ export default {
 		}
 	},
 	methods: {
-		onUpdateCopywriter() {
-			this.$emit('update:newInputs', {
-				writingStyle: this.writingStyle,
-				sourceMaterial: this.sourceMaterial,
-			})
-		},
 		async onChooseFile(target) {
 			const filePath = await picker.pick()
 			if (!filePath) {
@@ -155,12 +149,15 @@ export default {
 				switch (target) {
 				case 'sourceMaterial':
 					this.sourceMaterial = response.data.parsedText
+					this.onUpdateCopywriter()
 					break
 				case 'writingStyle':
 					this.writingStyle = response.data.parsedText
+					this.onUpdateCopywriter()
 					break
 				default:
 					this.prompt = response.data.parsedText
+					this.onUpdate()
 				}
 			}).catch((error) => {
 				console.error(error)
@@ -170,6 +167,12 @@ export default {
 		onUpdate() {
 			this.$emit('update:newInputs', {
 				prompt: this.prompt,
+			})
+		},
+		onUpdateCopywriter() {
+			this.$emit('update:newInputs', {
+				writingStyle: this.writingStyle,
+				sourceMaterial: this.sourceMaterial,
 			})
 		},
 	},
