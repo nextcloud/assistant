@@ -222,7 +222,7 @@ export default {
 			return !!this.myOutput?.trim()
 		},
 		outputEqualsInput() {
-			return this.hasInitialOutput && this.output?.trim() === this.input.trim()
+			return this.hasInitialOutput && this.output?.trim() === this.inputs.prompt?.trim()
 		},
 	},
 	watch: {
