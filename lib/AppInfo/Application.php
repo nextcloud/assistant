@@ -32,6 +32,7 @@ use OCP\TextToImage\Events\TaskSuccessfulEvent as TextToImageTaskSuccessfulEvent
 class Application extends App implements IBootstrap {
 
 	public const APP_ID = 'assistant';
+	public const DEFAULT_ASSISTANT_TASK_IDLE_TIME = 60 * 60 * 24 * 14; // 14 days
 
 	public const MAX_STORED_IMAGE_PROMPTS_PER_USER = 5;
 	public const MAX_STORED_TEXT_PROMPTS_PER_USER = 5;
@@ -40,9 +41,13 @@ class Application extends App implements IBootstrap {
 	public const IMAGE_FOLDER = 'generated_images';
 	public const SPEECH_TO_TEXT_REC_FOLDER = 'stt_recordings';
 
-	public const TASK_TYPE_TEXT_GEN = 0;
-	public const TASK_TYPE_TEXT_TO_IMAGE = 1;
-	public const TASK_TYPE_SPEECH_TO_TEXT = 2;
+	public const STT_TASK_SCHEDULED = 0;
+	public const STT_TASK_SUCCESSFUL = 1;
+	public const STT_TASK_FAILED = -1;
+
+	public const TASK_CATEGORY_TEXT_GEN = 0;
+	public const TASK_CATEGORY_TEXT_TO_IMAGE = 1;
+	public const TASK_CATEGORY_SPEECH_TO_TEXT = 2;
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);

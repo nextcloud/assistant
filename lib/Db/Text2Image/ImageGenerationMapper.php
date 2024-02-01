@@ -9,7 +9,6 @@ namespace OCA\TpAssistant\Db\Text2Image;
 use DateTime;
 use OCA\TpAssistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
@@ -30,12 +29,12 @@ class ImageGenerationMapper extends QBMapper {
 
 	/**
 	 * @param string $imageGenId
-	 * @return ImageGeneration|Entity
+	 * @return ImageGeneration
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getImageGenerationOfImageGenId(string $imageGenId): ImageGeneration|Entity {
+	public function getImageGenerationOfImageGenId(string $imageGenId): ImageGeneration {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -52,10 +51,10 @@ class ImageGenerationMapper extends QBMapper {
 	 * @param string $prompt
 	 * @param string $userId
 	 * @param int|null $expCompletionTime
-	 * @return ImageGeneration|Entity
+	 * @return ImageGeneration
 	 * @throws Exception
 	 */
-	public function createImageGeneration(string $imageGenId, string $prompt = '', string $userId = '', ?int $expCompletionTime = null): ImageGeneration|Entity {
+	public function createImageGeneration(string $imageGenId, string $prompt = '', string $userId = '', ?int $expCompletionTime = null): ImageGeneration {
 		$imageGeneration = new ImageGeneration();
 		$imageGeneration->setImageGenId($imageGenId);
 		$imageGeneration->setTimestamp((new DateTime())->getTimestamp());
@@ -171,7 +170,7 @@ class ImageGenerationMapper extends QBMapper {
 
 	/**
 	 * @param int $maxAge
-	 * @return array ('deleted_generations' => int, 'file_names' => string[])
+	 * @return array{deleted_generations: int, file_names: array<string>}
 	 * @throws Exception
 	 * @throws \RuntimeException
 	 */
@@ -188,11 +187,9 @@ class ImageGenerationMapper extends QBMapper {
 				$qb->expr()->lt('timestamp', $qb->createNamedParameter($maxTimestamp, IQueryBuilder::PARAM_INT))
 			);
 
-		/** @var ImageGeneration[] $generations */
 		$generations = $this->findEntities($qb);
 		$qb->resetQueryParts();
 
-		/** @var array[] $fileNames */
 		$fileNames = [];
 		$imageGenIds = [];
 		$generationIds = [];

@@ -25,31 +25,24 @@ namespace OCA\TpAssistant\Service\SpeechToText;
 use DateTime;
 use InvalidArgumentException;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\SpeechToText\Transcript;
-use OCA\TpAssistant\Db\SpeechToText\TranscriptMapper;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
-use OCP\IURLGenerator;
-use OCP\Notification\IManager as INotifyManager;
 use OCP\PreConditionNotMetException;
 use OCP\SpeechToText\ISpeechToTextManager;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class SpeechToTextService {
 
 	public function __construct(
 		private ISpeechToTextManager $manager,
-		private IRootFolder $rootFolder,
-		private INotifyManager $notificationManager,
-		private IURLGenerator $urlGenerator,
-		private LoggerInterface $logger,
-		private IConfig $config,
-		private TranscriptMapper $transcriptMapper,
+		private IRootFolder          $rootFolder,
+		private IConfig              $config,
+		private MetaTaskMapper       $metaTaskMapper,
 	) {
 	}
 
@@ -72,6 +65,17 @@ class SpeechToTextService {
 		$audioFile = $userFolder->get($path);
 
 		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
+
+		$this->metaTaskMapper->createMetaTask(
+			$userId,
+			['fileId' => $audioFile->getId(), 'eTag' => $audioFile->getEtag()],
+			'',
+			time(),
+			$audioFile->getId(),
+			"Speech-to-text task",
+			Application::APP_ID,
+			Application::STT_TASK_SCHEDULED,
+			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 	}
 
 	/**
@@ -88,7 +92,19 @@ class SpeechToTextService {
 		}
 
 		$audioFile = $this->getFileObject($userId, $tempFileLocation);
+
 		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
+
+		$this->metaTaskMapper->createMetaTask(
+			$userId,
+			['fileId' => $audioFile->getId(), 'eTag' => $audioFile->getEtag()],
+			'',
+			time(),
+			$audioFile->getId(),
+			"Speech-to-text task",
+			Application::APP_ID,
+			Application::STT_TASK_SCHEDULED,
+			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 	}
 
 	/**
@@ -149,52 +165,5 @@ class SpeechToTextService {
 		}
 
 		return $userFolder->newFolder($sttFolderPath);
-	}
-
-	/**
-	 * Send transcription result notification
-	 * @param string $userId
-	 * @param string $result
-	 * @param boolean $success
-	 * @param int $taskType
-	 * @return void
-	 * @throws \InvalidArgumentException
-	 */
-	public function sendSpeechToTextNotification(string $userId, string $result, bool $success): void {
-		$manager = $this->notificationManager;
-		$notification = $manager->createNotification();
-
-		try {
-			$transcriptEntity = new Transcript();
-			$transcriptEntity->setUserId($userId);
-			$transcriptEntity->setTranscript($result);
-			// never seen transcripts should also be deleted in the cleanup job
-			$transcriptEntity->setLastAccessed(new DateTime());
-			$transcriptEntity = $this->transcriptMapper->insert($transcriptEntity);
-
-			$id = $transcriptEntity->getId();
-		} catch (\OCP\Db\Exception $e) {
-			$this->logger->error('Failed to save transcript in DB: ' . $e->getMessage());
-			$success = false;
-			$id = 0;
-		}
-
-		$params = [
-			'appId' => Application::APP_ID,
-			'taskType' => Application::TASK_TYPE_SPEECH_TO_TEXT,
-			'result' => $result,
-			'target' => $this->urlGenerator->linkToRouteAbsolute(Application::APP_ID . '.SpeechToText.getResultPage', ['id' => $id])
-		];
-		$subject = $success
-			? 'success'
-			: 'failure';
-
-		$notification->setApp(Application::APP_ID)
-			->setUser($userId)
-			->setDateTime(new DateTime())
-			->setObject('speech-to-text-result', (string) $id)
-			->setSubject($subject, $params);
-		
-		$manager->notify($notification);
 	}
 }

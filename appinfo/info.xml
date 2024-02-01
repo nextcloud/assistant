@@ -34,7 +34,7 @@ include text processing providers to:
 * Get an answer from a free prompt
 * Reformulate (OpenAi/LocalAi only)
 ]]>	</description>
-	<version>1.0.3</version>
+	<version>1.0.5</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
 	<namespace>TpAssistant</namespace>
@@ -49,10 +49,11 @@ include text processing providers to:
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot3.jpg</screenshot>
 	<background-jobs>
 		<job>OCA\TpAssistant\Cron\CleanupImageGenerations</job>
-		<job>OCA\TpAssistant\Cron\CleanupTranscriptions</job>
+		<job>OCA\TpAssistant\Cron\CleanupAssistantTasks</job>
 	</background-jobs>
 	<commands>
 		<command>OCA\TpAssistant\Command\CleanupImageGenerations</command>
+		<command>OCA\TpAssistant\Command\CleanupAssistantTasks</command>
 	</commands>
 	<dependencies>
 		<nextcloud min-version="28" max-version="29"/>
