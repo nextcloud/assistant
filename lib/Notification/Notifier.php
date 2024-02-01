@@ -11,6 +11,7 @@ use OCP\Notification\IAction;
 use OCP\Notification\INotification;
 
 use OCP\Notification\INotifier;
+use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\ITaskType;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -75,21 +76,25 @@ class Notifier implements INotifier {
 
 			if ($params['taskTypeClass'] === 'copywriter') {
 				// Catch the custom copywriter task type built on top of the FreePrompt task type.
-				$taskTypeName = $l->t('Copywriting');
+				$taskTypeName = $l->t('AI context writer');
 				$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
 			} else {
 				try {
-					/** @var ITaskType $taskType */
-					$taskType = $this->container->get($params['taskTypeClass']);
-					$taskTypeName = $taskType->getName();
+					if ($params['taskTypeClass'] === FreePromptTaskType::class) {
+						$taskTypeName = $l->t('AI text generation');
+					} else {
+						/** @var ITaskType $taskType */
+						$taskType = $this->container->get($params['taskTypeClass']);
+						$taskTypeName = $taskType->getName();
+					}
 				} catch (\Exception | \Throwable $e) {
 					$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
 				}
 			}
 		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
-			$taskTypeName = $l->t('Text to image');
+			$taskTypeName = $l->t('AI image generation');
 		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
-			$taskTypeName = $l->t('Transcribe');
+			$taskTypeName = $l->t('AI audio transcription');
 		}
 
 		switch ($notification->getSubject()) {

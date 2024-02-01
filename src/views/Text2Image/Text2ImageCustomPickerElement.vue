@@ -2,7 +2,7 @@
 	<div class="text2image-picker-content-wrapper">
 		<div class="text2image-picker-content">
 			<h2>
-				{{ t('assistant', 'AI Image Generation') }}
+				{{ t('assistant', 'AI image generation') }}
 			</h2>
 			<div class="input-wrapper">
 				<NcTextField ref="text2image-search-input"
