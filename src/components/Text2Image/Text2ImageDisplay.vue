@@ -295,8 +295,6 @@ export default {
 .display-container {
 	display: flex;
 	flex-direction: column;
-	max-width: 600px;
-	width: 100%;
 	align-items: center;
 	justify-content: center;
 	.edit-icon {

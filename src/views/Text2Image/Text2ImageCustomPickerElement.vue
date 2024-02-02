@@ -361,7 +361,7 @@ export default {
 	}
 
 	.preview-container {
-		width: 90%;
+		width: 100%;
 
 		.image-preview {
 			display: flex;
@@ -370,6 +370,7 @@ export default {
 			border: 3px solid var(--color-border);
 			border-radius: var(--border-radius-large);
 			padding: 12px;
+			width: 100%;
 		}
 	}
 
