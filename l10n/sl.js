@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Rezultati",
-    "View" : "Pogled",
     "Artificial Intelligence" : "Umetna inteligenca",
-    "Reset" : "Ponastavi",
+    "No file selected" : "Ni izbranih datotek",
     "Close" : "Zapri",
+    "Reset" : "Ponastavi",
     "Result" : "Rezultat",
     "Copy" : "Kopiraj",
     "Image generation" : "Ustvarjanje slik",

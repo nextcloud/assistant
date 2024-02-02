@@ -1,13 +1,14 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown error while retrieving prompt history." : "チャット履歴の取得中に不明なエラーが発生しました",
     "Nextcloud Assistant" : "Nextcloud アシスタント",
     "View results" : "結果を見る",
     "AI image generation" : "AIによる画像生成",
-    "View" : "表示",
     "Artificial Intelligence" : "人工知能",
-    "Reset" : "リセット",
+    "No file selected" : "ファイル未選択",
     "Close" : "閉じる",
+    "Reset" : "リセット",
     "Result" : "結果",
     "Copy" : "コピー",
     "Try again" : "もう一度やり直してください",

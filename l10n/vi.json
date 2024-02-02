@@ -1,9 +1,9 @@
 { "translations": {
     "Nextcloud Assistant" : "Trợ lý Nextcloud",
-    "View" : "Xem",
     "Artificial Intelligence" : "Trí tuệ nhân tạo",
-    "Reset" : "Đặt lại",
+    "No file selected" : "Không có tập tin nào được chọn",
     "Close" : "Đóng",
+    "Reset" : "Đặt lại",
     "Try again" : "Thử lại",
     "Image generation" : "Tạo hình ảnh",
     "Submit" : "Gửi đi",

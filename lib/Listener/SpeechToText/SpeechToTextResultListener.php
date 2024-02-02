@@ -23,7 +23,8 @@
 namespace OCA\TpAssistant\Listener\SpeechToText;
 
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\TpAssistant\Db\MetaTaskMapper;
+use OCA\TpAssistant\Service\AssistantService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\SpeechToText\Events\AbstractTranscriptionEvent;
@@ -36,8 +37,9 @@ use Psr\Log\LoggerInterface;
  */
 class SpeechToTextResultListener implements IEventListener {
 	public function __construct(
-		private SpeechToTextService $sttService,
-		private LoggerInterface $logger,
+		private LoggerInterface  $logger,
+		private MetaTaskMapper $metaTaskMapper,
+		private AssistantService $assistantService,
 	) {
 	}
 
@@ -48,25 +50,69 @@ class SpeechToTextResultListener implements IEventListener {
 
 		if ($event instanceof TranscriptionSuccessfulEvent) {
 			$transcript = $event->getTranscript();
-			$userId = $event->getUserId();
+			$file = $event->getFile();
+
+			$metaTasks = $this->metaTaskMapper->getMetaTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
+
+			// Find a matching etag:
+			$etag = $file->getEtag();
+			$assistantTask = null;
+			foreach ($metaTasks as $metaTask) {
+				$metaTaskEtag = $metaTask->getInputsAsArray()['eTag'];
+				if ($metaTaskEtag === $etag) {
+					$assistantTask = $metaTask;
+					break;
+				}
+			}
+
+			if ($assistantTask === null) {
+				$this->logger->error('No assistant task found for speech to text result out of ' . count($metaTasks) . ' tasks for file ' . $file->getId() . ' with etag ' . $etag);
+				return;
+			}
+
+			// Update the meta task with the output and new status
+			$assistantTask->setOutput($transcript);
+			$assistantTask->setStatus(Application::STT_TASK_SUCCESSFUL);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {
-				$this->sttService->sendSpeechToTextNotification($userId, $transcript, true);
+				$this->assistantService->sendNotification($assistantTask, null, null, $transcript);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for successful transcription: ' . $e->getMessage());
 			}
 		}
 
 		if ($event instanceof TranscriptionFailedEvent) {
-			$userId = $event->getUserId();
 			$this->logger->error('Transcript generation failed: ' . $event->getErrorMessage());
-			
+
+			$metaTasks = $this->metaTaskMapper->getMetaTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
+
+			// Find a matching etag:
+			$etag = $file->getEtag();
+			$assistantTask = null;
+			foreach ($metaTasks as $metaTask) {
+				$metaTaskEtag = $metaTask->getInputsAsArray()['eTag'];
+				if ($metaTaskEtag === $etag) {
+					$assistantTask = $metaTask;
+					break;
+				}
+			}
+
+			if ($assistantTask === null) {
+				$this->logger->error('No assistant task found for speech to text result');
+				return;
+			}
+
+			// Update the meta task with the new status
+			$assistantTask->setStatus(Application::STT_TASK_FAILED);
+			$assistantTask = $this->metaTaskMapper->update($assistantTask);
+
 			try {
-				$this->sttService->sendSpeechToTextNotification($userId, '', false);
+				$this->assistantService->sendNotification($assistantTask);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for failed transcription: ' . $e->getMessage());
 			}
-			
+
 		}
 	}
 }

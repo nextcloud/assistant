@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace OCA\TpAssistant\Cron;
 
 use Exception;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCA\TpAssistant\Service\Text2Image\CleanUpService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
@@ -16,9 +15,8 @@ use Psr\Log\LoggerInterface;
 class CleanupImageGenerations extends TimedJob {
 	public function __construct(
 		ITimeFactory $time,
-		private ImageGenerationMapper $imageGenerationMapper,
+		private CleanUpService $cleanUpService,
 		private LoggerInterface $logger,
-		private CleanUpService $cleanUpService
 	) {
 		parent::__construct($time);
 		$this->setInterval(60 * 60 * 24);
@@ -32,8 +30,5 @@ class CleanupImageGenerations extends TimedJob {
 		} catch (Exception $e) {
 			$this->logger->debug('Cleanup job for image generations failed: ' . $e->getMessage());
 		}
-		
-
-		return;
 	}
 }

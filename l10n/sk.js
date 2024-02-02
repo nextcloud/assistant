@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Zobraziť výsledky",
-    "View" : "Zobraziť",
     "Artificial Intelligence" : "Umelá inteligencia",
-    "Reset" : "Resetovať",
+    "No file selected" : "Nebol vybraný súbor",
     "Close" : "Zatvoriť",
+    "Reset" : "Resetovať",
     "Result" : "Výsledok",
     "Copy" : "Kopírovať",
     "Try again" : "Skúste znovu",

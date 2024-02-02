@@ -11,7 +11,9 @@
 		}
 	],
 	"require": {
-		"php": "^8.0"
+		"php": "^8.0",
+		"erusev/parsedown": "^1.7",
+		"phpoffice/phpword": "^1.2"
 	},
 	"scripts": {
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
@@ -25,5 +27,13 @@
 		"psalm/phar": "^5.16",
 		"nextcloud/ocp": "dev-master",
 		"phpunit/phpunit": "^9.5"
+	},
+	"config": {
+		"sort-packages": true,
+		"optimize-autoloader": true,
+		"platform": {
+			"php": "8.0"
+		},
+		"autoloader-suffix": "TpAssistant"
 	}
 }

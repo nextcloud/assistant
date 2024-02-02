@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "Nextcloud Assistant" : "Nextcloud Aðstoð",
-    "View" : "Skoða",
     "Artificial Intelligence" : "Gervigreind",
-    "Reset" : "Endurstilla",
+    "No file selected" : "Engin skrá valin",
     "Close" : "Loka",
+    "Reset" : "Endurstilla",
     "Result" : "Niðurstöður",
     "Copy" : "Afrita",
     "Image generation" : "Gerð mynda",

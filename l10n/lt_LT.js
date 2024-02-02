@@ -2,9 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Rodyti rezultatus",
-    "View" : "Rodyti",
-    "Reset" : "Atstatyti",
+    "No file selected" : "Neįkeltas joks failas",
     "Close" : "Užverti",
+    "Reset" : "Atstatyti",
     "Copy" : "Kopija",
     "Try again" : "Bandykite dar kartą",
     "Submit" : "Pateikti",

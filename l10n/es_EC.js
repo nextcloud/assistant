@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "AI image generation" : "Generación de imágenes de IA",
-    "View" : "Ver",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
-    "Reset" : "Restablecer",
+    "No file selected" : "No se ha seleccionado algún archivo",
     "Close" : "Cerrar",
+    "Reset" : "Restablecer",
     "Result" : "Resultado",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",

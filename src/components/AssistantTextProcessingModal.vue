@@ -28,7 +28,7 @@
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
-					:input="input"
+					:inputs="inputs"
 					:output="output"
 					:selected-task-type-id="textProcessingTaskTypeId"
 					:loading="loading"
@@ -75,9 +75,9 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		input: {
-			type: String,
-			default: '',
+		inputs: {
+			type: Object,
+			default: () => {},
 		},
 		output: {
 			type: String,
@@ -113,11 +113,13 @@ export default {
 		}
 	},
 	computed: {
+		// TODO: Fix this to support multiple inputs
 		shortInput() {
-			if (this.input.length <= 200) {
-				return this.input
+			const input = this.inputs[0] ?? ''
+			if (input.length <= 200) {
+				return input
 			}
-			return this.input.slice(0, 200) + '…'
+			return input.slice(0, 200) + '…'
 		},
 	},
 	mounted() {

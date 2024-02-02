@@ -9,16 +9,16 @@ namespace OCA\TpAssistant\Db\Text2Image;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method string getImageGenId()
- * @method void setImageGenId(string $imageGenId)
- * @method string getPrompt()
- * @method void setPrompt(string $prompt)
- * @method void setUserId(string $userId)
- * @method string getUserId()
- * @method void setTimestamp(int $timestamp)
- * @method int getTimestamp()
- * @method void setExpGenTime(int $expGenTime)
- * @method int getExpGenTime()
+ * @method \string getImageGenId()
+ * @method \void setImageGenId(string $imageGenId)
+ * @method \string getPrompt()
+ * @method \void setPrompt(string $prompt)
+ * @method \void setUserId(string $userId)
+ * @method \string getUserId()
+ * @method \void setTimestamp(int $timestamp)
+ * @method \int getTimestamp()
+ * @method \void setExpGenTime(int $expGenTime)
+ * @method \int getExpGenTime()
  *
  */
 class ImageGeneration extends Entity implements \JsonSerializable {

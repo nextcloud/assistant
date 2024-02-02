@@ -1,9 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
-    "View" : "Ver",
-    "Reset" : "Reiniciar",
+    "No file selected" : "No se ha seleccionado algún archivo",
     "Close" : "Cerrar",
+    "Reset" : "Reiniciar",
     "Result" : "Resultado",
     "Try again" : "Reintentar",
     "Submit" : "Enviar",

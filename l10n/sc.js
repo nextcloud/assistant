@@ -1,9 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
-    "View" : "Visualiza",
-    "Reset" : "Torra a impostare",
+    "No file selected" : "Perunu documentu seletzionadu",
     "Close" : "Serra",
+    "Reset" : "Torra a impostare",
     "Result" : "Resurtadu",
     "Copy" : "Còpia",
     "Image generation" : "Generatzione de imàgines",

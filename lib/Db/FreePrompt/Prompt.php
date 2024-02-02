@@ -9,12 +9,12 @@ namespace OCA\TpAssistant\Db\FreePrompt;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method string getUserId()
- * @method void setUserId(string $userId)
- * @method string getValue()
- * @method void setValue(string $value)
- * @method int getTimestamp()
- * @method void setTimestamp(int $timestamp)
+ * @method \string getUserId()
+ * @method \void setUserId(string $userId)
+ * @method \string getValue()
+ * @method \void setValue(string $value)
+ * @method \int getTimestamp()
+ * @method \void setTimestamp(int $timestamp)
  */
 class Prompt extends Entity implements \JsonSerializable {
 	/** @var string */

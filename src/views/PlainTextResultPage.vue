@@ -1,10 +1,12 @@
 <template>
 	<NcContent app-name="assistant">
 		<NcAppContent>
-			<div v-if="state?.result">
-				<AssistantPlainTextModal
-					:output="state.result"
-					:task-type="state.taskType" />
+			<div v-if="task.output"
+				class="assistant-wrapper">
+				<AssistantPlainTextResult
+					class="form"
+					:output="task.output"
+					:task-category="task.category" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -14,9 +16,7 @@
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
-import AssistantPlainTextModal from '../components/AssistantPlainTextModal.vue'
-
-import { loadState } from '@nextcloud/initial-state'
+import AssistantPlainTextResult from '../components/AssistantPlainTextResult.vue'
 
 import { showError } from '@nextcloud/dialogs'
 
@@ -24,17 +24,20 @@ export default {
 	name: 'PlainTextResultPage',
 
 	components: {
+		AssistantPlainTextResult,
 		NcContent,
 		NcAppContent,
-		AssistantPlainTextModal,
 	},
 
 	props: {
+		task: {
+			type: Object,
+			required: true,
+		},
 	},
 
 	data() {
 		return {
-			state: loadState('assistant', 'plain-text-result'),
 		}
 	},
 
@@ -42,8 +45,8 @@ export default {
 	},
 
 	mounted() {
-		if (this.state?.status !== 'success') {
-			showError(t('assistant', 'The transcription could not be found. It may have been deleted.'))
+		if (this.task?.output === undefined) {
+			showError(t('assistant', 'The task could not be found. It may have been deleted.'))
 		}
 	},
 

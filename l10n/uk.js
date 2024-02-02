@@ -2,10 +2,10 @@ OC.L10N.register(
     "assistant",
     {
     "Nextcloud Assistant" : "Асистент Nextcloud",
-    "View" : "Перегляд",
     "Artificial Intelligence" : "Штучний інтелект",
-    "Reset" : "Відхилити зміни",
+    "No file selected" : "Жодного файлу обрано",
     "Close" : "Закрити",
+    "Reset" : "Відхилити зміни",
     "Result" : "Результат",
     "Copy" : "Копія",
     "Try again" : "Спробуйте ще раз",
