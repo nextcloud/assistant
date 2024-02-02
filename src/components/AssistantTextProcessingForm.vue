@@ -198,8 +198,12 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
+			console.debug('aaaa inputs', this.myInputs)
 			// Check that none of the properties of myInputs are empty
-			return Object.values(this.myInputs).every(v => !!v.trim()) && this.selectedTaskType
+			return Object.values(this.myInputs).every(v => {
+				return v && (typeof v !== 'string' || !!v?.trim())
+			})
+				&& this.selectedTaskType
 		},
 		submitButtonLabel() {
 			return this.hasOutput
@@ -255,7 +259,13 @@ export default {
 						this.taskTypes.push({
 							id: 'copywriter',
 							name: t('assistant', 'Context write'),
-							description: t('assistant', 'Writes text in a given style based on the provided source material'),
+							description: t('assistant', 'Writes text in a given style based on the provided source material.'),
+						})
+						// inject a STT task type
+						this.taskTypes.push({
+							id: 'speech-to-text',
+							name: t('assistant', 'Transcribe'),
+							description: t('assistant', 'Transcribe audio to text'),
 						})
 					}
 				})

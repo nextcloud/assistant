@@ -1,5 +1,14 @@
 <template>
-	<div v-if="selectedTaskTypeId === 'copywriter'" class="assistant-inputs">
+	<div v-if="selectedTaskTypeId === 'speech-to-text'" class="assistant-inputs">
+		<SpeechToTextInputForm
+			:mode.sync="sttMode"
+			:audio-data.sync="sttAudioData"
+			:audio-file-path.sync="sttAudioFilePath"
+			@update:mode="onUpdateStt"
+			@update:audio-data="onUpdateStt"
+			@update:audio-file-path="onUpdateStt" />
+	</div>
+	<div v-else-if="selectedTaskTypeId === 'copywriter'" class="assistant-inputs">
 		<div class="input-container">
 			<div class="label-row">
 				<label for="writingStyle" class="input-label">
@@ -71,6 +80,7 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
 
 const VALID_MIME_TYPES = [
 	'text/plain',
@@ -91,6 +101,7 @@ const picker = getFilePickerBuilder(t('assistant', 'Choose a text file'))
 export default {
 	name: 'AssistantFormInputs',
 	components: {
+		SpeechToTextInputForm,
 		NcRichContenteditable,
 		NcButton,
 	},
@@ -109,12 +120,17 @@ export default {
 			writingStyle: '',
 			sourceMaterial: '',
 			prompt: '',
+			sttMode: 'record',
+			sttAudioData: null,
+			sttAudioFilePath: null,
 		}
 	},
 	watch: {
 		selectedTaskTypeId() {
 			if (this.selectedTaskTypeId === 'copywriter') {
 				this.onUpdateCopywriter()
+			} else if (this.selectedTaskTypeId === 'speech-to-text') {
+				this.onUpdateStt()
 			} else {
 				this.onUpdate()
 			}
@@ -127,6 +143,8 @@ export default {
 
 		if (this.selectedTaskTypeId === 'copywriter') {
 			this.onUpdateCopywriter()
+		} else if (this.selectedTaskTypeId === 'speech-to-text') {
+			this.onUpdateStt()
 		} else {
 			this.onUpdate()
 		}
@@ -174,6 +192,12 @@ export default {
 				writingStyle: this.writingStyle,
 				sourceMaterial: this.sourceMaterial,
 			})
+		},
+		onUpdateStt() {
+			this.$emit(
+				'update:newInputs',
+				this.sttMode === 'record' ? { audioData: this.sttAudioData } : { audioFilePath: this.sttAudioFilePath },
+			)
 		},
 	},
 }

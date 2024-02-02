@@ -1,4 +1,4 @@
-import { STATUS, TASK_TYPES } from './constants.js'
+import { STATUS, TASK_CATEGORIES } from './constants.js'
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import { showError } from '@nextcloud/dialogs'
@@ -100,6 +100,14 @@ export async function openAssistantTextProcessingForm({
 			view.showSyncTaskRunning = true
 			view.inputs = data.inputs
 			view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
+			if (data.textProcessingTaskTypeId === 'speech-to-text') {
+				runSttTask(data.inputs).then(response => {
+					view.showScheduleConfirmation = true
+					view.loading = false
+					view.showSyncTaskRunning = false
+				})
+				return
+			}
 			runOrScheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then(async (response) => {
 					const task = response.data?.task
@@ -158,10 +166,25 @@ export async function openAssistantTextProcessingForm({
 	})
 }
 
+async function runSttTask(inputs) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	if (inputs.audioData) {
+		const url = generateUrl('/apps/assistant/stt/transcribeAudio')
+		const formData = new FormData()
+		formData.append('audioData', inputs.audioData)
+		return axios.post(url, formData)
+	} else {
+		const url = generateUrl('/apps/assistant/stt/transcribeFile')
+		const params = { path: this.audioFilePath }
+		return axios.post(url, params)
+	}
+}
+
 async function resolveMetaTaskToOcpTask(metaTask) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
-	if (metaTask.category !== TASK_TYPES.text_generation) {
+	if (metaTask.category !== TASK_CATEGORIES.text_generation) {
 		// For now we only resolve text generation tasks
 		return null
 	}
@@ -349,13 +372,13 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	// Divert to the right modal/page if we have a meta task with a category other than text generation:
 	if (useMetaTasks) {
 		switch (task.category) {
-		case TASK_TYPES.speech_to_text:
+		case TASK_CATEGORIES.speech_to_text:
 			openAssistantPlainTextResult(task)
 			return
-		case TASK_TYPES.image_generation:
+		case TASK_CATEGORIES.image_generation:
 			openAssistantImageResult(task)
 			return
-		case TASK_TYPES.text_generation:
+		case TASK_CATEGORIES.text_generation:
 		default:
 			break
 		}
