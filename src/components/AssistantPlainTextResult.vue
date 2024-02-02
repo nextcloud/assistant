@@ -40,7 +40,7 @@
 				<NcButton :disabled="output === myOutput"
 					type="secondary"
 					:title="t('assistant', 'Reset the output value to the originally generated one')"
-					@click="delayedReset">
+					@click="onReset">
 					{{ t('assistant', 'Reset') }}
 				</NcButton>
 			</div>
@@ -125,21 +125,6 @@ export default {
 		},
 		onReset() {
 			this.myOutput = this.output
-		},
-
-		delayedReset() {
-			// This is a hack to ensure the text box is updated
-			// when we reset the text since removing newlines or spaces
-			// from the end of the text does not trigger an update.
-
-			// Delete any trailing newlines
-			this.myOutput = this.myOutput.replace(/\n+$/, '')
-			this.myOutput += '.'
-
-			// Let the ui refresh before resetting the text
-			setTimeout(() => {
-				this.onReset()
-			}, 0)
 		},
 	},
 }
