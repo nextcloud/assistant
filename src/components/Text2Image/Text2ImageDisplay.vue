@@ -5,12 +5,12 @@
 	<div class="display-container">
 		<div class="title">
 			<div class="icon-and-text">
-				<div v-if="loading">
-					<NcLoadingIcon :size="20" class="icon" />
-				</div>
-				<div v-else>
-					<AssistantIcon :size="20" class="icon" />
-				</div>
+				<NcLoadingIcon v-if="loading"
+					:size="20"
+					class="icon" />
+				<AssistantIcon v-else
+					:size="20"
+					class="icon" />
 				<strong class="app-name">
 					{{ t('assistant', 'Image generation') + ':' }}
 				</strong>
@@ -83,7 +83,7 @@
 			</div>
 		</div>
 		<span v-if="failed" class="error_msg">
-			{{ t('assistant', errorMsg) }}
+			{{ errorMsg }}
 		</span>
 	</div>
 </template>
@@ -295,7 +295,6 @@ export default {
 .display-container {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
 	align-items: center;
 	justify-content: center;
 	.edit-icon {
@@ -322,13 +321,12 @@ export default {
 		flex-direction: column;
 		position: relative;
 		justify-content: center;
-		max-width: 90%;
 	}
 
 	.checkbox-container {
 		position: absolute;
-		top: 5%;
-		left: 95%;
+		top: 4%;
+		right: 4%;
 		z-index: 1;
 		opacity: 0.2;
 		transition: opacity 0.2s ease-in-out;
@@ -378,7 +376,6 @@ export default {
 	}
 
 	.title {
-		max-width: 600px;
 		width: 100%;
 		display: flex;
 		flex-direction: row;
@@ -388,7 +385,7 @@ export default {
 			width: 100%;
 			display: flex;
 			flex-direction: row;
-			align-items: top;
+			align-items: center;
 			justify-content: start;
 			margin-right: 8px;
 
@@ -399,8 +396,6 @@ export default {
 		}
 
 		.icon {
-			display: inline;
-			position: relative;
 			margin-right: 8px;
 		}
 	}

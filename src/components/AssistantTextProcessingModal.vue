@@ -80,8 +80,8 @@ export default {
 			default: () => {},
 		},
 		output: {
-			type: String,
-			default: '',
+			type: [String, null],
+			default: null,
 		},
 		textProcessingTaskTypeId: {
 			type: [String, null],
@@ -166,6 +166,7 @@ export default {
 	position: absolute;
 	top: 4px;
 	right: 4px;
+	z-index: 1;
 }
 
 .assistant-modal--wrapper {

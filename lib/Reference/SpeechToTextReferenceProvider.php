@@ -50,7 +50,7 @@ class SpeechToTextReferenceProvider extends ADiscoverableReferenceProvider {
 	 * @inheritDoc
 	 */
 	public function getTitle(): string {
-		return $this->l10n->t('Speech to Text');
+		return $this->l10n->t('AI audio transcription');
 	}
 
 	/**

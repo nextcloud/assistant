@@ -2,7 +2,7 @@
 	<div class="text2image-picker-content-wrapper">
 		<div class="text2image-picker-content">
 			<h2>
-				{{ t('assistant', 'AI Image Generation') }}
+				{{ t('assistant', 'AI image generation') }}
 			</h2>
 			<div class="input-wrapper">
 				<NcTextField ref="text2image-search-input"
@@ -36,17 +36,6 @@
 				</div>
 			</div>
 			<div class="footer">
-				<div>
-					<NcButton class="advanced-button"
-						type="tertiary"
-						:aria-label="t('assistant', 'Show/hide advanced options')"
-						@click="showAdvanced = !showAdvanced">
-						<template #icon>
-							<component :is="showAdvancedIcon" />
-						</template>
-						{{ t('assistant', 'Advanced options') }}
-					</NcButton>
-				</div>
 				<div class="buttons">
 					<NcButton type="secondary"
 						:aria-label="t('assistant', 'Preview image generation by AI')"
@@ -79,6 +68,15 @@
 						</template>
 					</NcButton>
 				</div>
+				<NcButton class="advanced-button"
+					type="tertiary"
+					:aria-label="t('assistant', 'Show/hide advanced options')"
+					@click="showAdvanced = !showAdvanced">
+					<template #icon>
+						<component :is="showAdvancedIcon" />
+					</template>
+					{{ t('assistant', 'Advanced options') }}
+				</NcButton>
 			</div>
 			<div v-show="showAdvanced" class="advanced">
 				<div class="line">
@@ -363,7 +361,7 @@ export default {
 	}
 
 	.preview-container {
-		width: 90%;
+		width: 100%;
 
 		.image-preview {
 			display: flex;
@@ -372,6 +370,7 @@ export default {
 			border: 3px solid var(--color-border);
 			border-radius: var(--border-radius-large);
 			padding: 12px;
+			width: 100%;
 		}
 	}
 
@@ -392,7 +391,7 @@ export default {
 	.footer {
 		width: 100%;
 		display: flex;
-		flex-direction: row;
+		flex-direction: row-reverse;
 		margin-top: 12px;
 		justify-content: space-between;
 

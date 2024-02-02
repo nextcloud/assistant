@@ -58,7 +58,6 @@ export default {
 		flex-direction: column;
 		width: 100%;
 		border-radius: var(--border-radius);
-		margin-top: 8px;
 	}
 }
 </style>

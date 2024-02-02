@@ -16,21 +16,21 @@
 				:checked="state.free_prompt_picker_enabled"
 				@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'Free prompt smart picker') }}
+					{{ t('assistant', 'AI text generation smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
 				:checked="state.text_to_image_picker_enabled"
 				@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'Text-to-image smart picker') }}
+					{{ t('assistant', 'AI image generation smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.speech_to_text_picker_available"
 				:checked="state.speech_to_text_picker_enabled"
 				@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'Speech-to-text smart picker') }}
+					{{ t('assistant', 'AI transcription smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<div v-if="noProvidersAvailable" class="settings-hint">

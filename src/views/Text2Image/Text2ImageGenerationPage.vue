@@ -118,8 +118,11 @@ export default {
 		.image {
 			display: flex;
 			flex-direction: column;
-			border-radius: var(--border-radius);
 			margin-top: 8px;
+			max-width: 600px;
+			border: 3px solid var(--color-border);
+			border-radius: var(--border-radius-large);
+			padding: 12px;
 		}
 
 		.button-wrapper {

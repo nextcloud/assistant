@@ -1,6 +1,7 @@
 import { STATUS, TASK_TYPES } from './constants.js'
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
+import { showError } from '@nextcloud/dialogs'
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
@@ -90,6 +91,7 @@ export async function openAssistantTextProcessingForm({
 				.catch(error => {
 					view.$destroy()
 					console.error('Assistant scheduling error', error)
+					showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
@@ -122,6 +124,7 @@ export async function openAssistantTextProcessingForm({
 					} else {
 						view.$destroy()
 						console.error('Assistant sync run error', error)
+						showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
 						reject(new Error('Assistant sync run error'))
 					}
 				})
@@ -141,6 +144,7 @@ export async function openAssistantTextProcessingForm({
 				.catch(error => {
 					view.$destroy()
 					console.error('Assistant scheduling error', error)
+					showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
