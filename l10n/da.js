@@ -1,10 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
-    "View" : "Vis",
     "Artificial Intelligence" : "Kunstig Intelligens",
-    "Reset" : "Nulstil",
     "Close" : "Luk",
+    "Reset" : "Nulstil",
     "Result" : "Resultat",
     "Copy" : "Kopiér",
     "Submit" : "Tilføj",

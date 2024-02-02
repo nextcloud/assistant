@@ -1,9 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
-    "View" : "צפייה",
-    "Reset" : "איפוס",
+    "No file selected" : "לא נבחר קובץ",
     "Close" : "סגירה",
+    "Reset" : "איפוס",
     "Result" : "תוצאה",
     "Copy" : "העתקה",
     "Try again" : "ניסיון חוזר",

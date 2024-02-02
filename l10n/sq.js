@@ -1,9 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
-    "View" : "Shiko",
-    "Reset" : "Rivendos",
+    "No file selected" : "S’u përzgjodh skedar",
     "Close" : "Mbylleni",
+    "Reset" : "Rivendos",
     "Result" : "Rezultatet",
     "Copy" : "Kopjoni",
     "Try again" : "Provo përsëri",

@@ -1,10 +1,10 @@
 OC.L10N.register(
     "assistant",
     {
-    "View" : "View",
     "Artificial Intelligence" : "Artificial Intelligence",
-    "Reset" : "Reset",
+    "No file selected" : "No file selected",
     "Close" : "Close",
+    "Reset" : "Reset",
     "Result" : "Result",
     "Copy" : "Copy",
     "Image generation" : "Image generation",

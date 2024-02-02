@@ -1,8 +1,8 @@
 { "translations": {
-    "View" : "보기",
     "Artificial Intelligence" : "인공지능",
-    "Reset" : "초기화",
+    "No file selected" : "선택한 파일 없음",
     "Close" : "닫기",
+    "Reset" : "초기화",
     "Result" : "결과",
     "Copy" : "복사",
     "Try again" : "다시 시도",

@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "Nextcloud Assistant" : "Asystent Nextcloud",
     "View results" : "Pokaż wyniki",
-    "View" : "Podgląd",
     "Artificial Intelligence" : "Sztuczna inteligencja",
-    "Reset" : "Resetuj",
+    "No file selected" : "Nie wybrano żadnego pliku",
     "Close" : "Zamknij",
+    "Reset" : "Resetuj",
     "Result" : "Wynik",
     "Copy" : "Skopiuj",
     "Image generation" : "Generowanie obrazu",

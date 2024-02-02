@@ -2,9 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Bekijk resultaten",
-    "View" : "Bekijken",
-    "Reset" : "Herstellen",
+    "No file selected" : "Geen bestand geselecteerd",
     "Close" : "Sluit",
+    "Reset" : "Herstellen",
     "Result" : "Resultaat",
     "Copy" : "Kopiëren",
     "Try again" : "Probeer opnieuw",
