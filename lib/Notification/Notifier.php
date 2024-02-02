@@ -63,6 +63,11 @@ class Notifier implements INotifier {
 		$l = $this->factory->get(Application::APP_ID, $languageCode);
 
 		$params = $notification->getSubjectParameters();
+		// ignore old notifications (before meta tasks were introduced)
+		// isset returns false if null
+		if (!isset($params['target'], $params['taskCategory'], $params['inputs'])) {
+			throw new InvalidArgumentException();
+		}
 		$schedulingAppId = $params['appId'];
 		$schedulingAppInfo = $this->appManager->getAppInfo($schedulingAppId);
 		if ($schedulingAppInfo === null) {
