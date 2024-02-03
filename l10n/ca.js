@@ -17,6 +17,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "S'han desat les opcions d'administració de l'Assistent",
     "Failed to save assistant admin options" : "No s'han pogut desar les opcions d'administrador de l'assistent",
     "Type some text" : "Escriu una mica de text",
+    "No file selected" : "No s'ha seleccionat cap fitxer",
     "Close" : "Tanca",
     "Reset" : "Reinicialitza",
     "Result could not be copied to clipboard" : "No s'ha pogut copiar el resultat al porta-retalls",
@@ -30,8 +31,8 @@ OC.L10N.register(
     "Submit" : "Envia",
     "Preview" : "Previsualitza",
     "Failed to schedule your task" : "No s'ha pogut programar la vostra tasca",
-    "Advanced options" : "Paràmetres avançats",
     "Send" : "Envia",
+    "Advanced options" : "Paràmetres avançats",
     "Copy link to clipboard" : "Copia l'enllaç al porta-retalls",
     "This task does not exist or has been cleaned up" : "Aquesta tasca no existeix o s'ha netejat",
     "Failed to schedule the task" : "No s'ha pogut programar la tasca"

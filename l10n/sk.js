@@ -11,9 +11,11 @@ OC.L10N.register(
     "Try again" : "Skúste znovu",
     "Submit" : "Odoslať",
     "Preview" : "Náhľad",
+    "Start recording" : "Spustiť nahrávanie",
+    "Stop recording" : "Zastaviť nahrávanie",
     "Unknown API error" : "Neznáma chyba API",
-    "Advanced options" : "Pokročilé možnosti",
     "Send" : "Odoslať",
+    "Advanced options" : "Pokročilé možnosti",
     "Copy link to clipboard" : "Skopírovať odkaz do schránky"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

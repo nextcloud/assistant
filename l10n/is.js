@@ -11,8 +11,8 @@ OC.L10N.register(
     "Image generation" : "Gerð mynda",
     "Submit" : "Senda inn",
     "Preview" : "Forskoðun",
-    "Advanced options" : "Ítarlegir valkostir",
     "Send" : "Senda",
+    "Advanced options" : "Ítarlegir valkostir",
     "Copy link to clipboard" : "Afrita tengil á klippispjald"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

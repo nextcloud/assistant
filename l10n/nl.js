@@ -10,8 +10,10 @@ OC.L10N.register(
     "Try again" : "Probeer opnieuw",
     "Submit" : "Verwerken",
     "Preview" : "Voorbeeld",
-    "Advanced options" : "Geavanceerde opties",
+    "Start recording" : "Begin opname",
+    "Stop recording" : "Beëindig opname",
     "Send" : "Verzenden",
+    "Advanced options" : "Geavanceerde opties",
     "Copy link to clipboard" : "Kopieer link naar klembord"
 },
 "nplurals=2; plural=(n != 1);");

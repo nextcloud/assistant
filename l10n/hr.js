@@ -8,8 +8,8 @@ OC.L10N.register(
     "Result" : "Rezultat",
     "Copy" : "Kopirajte",
     "Submit" : "Šalji",
-    "Advanced options" : "Napredne opcije",
     "Send" : "Pošaljite",
+    "Advanced options" : "Napredne opcije",
     "Copy link to clipboard" : "Kopiraj poveznicu u međuspremnik"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

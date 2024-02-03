@@ -1,12 +1,13 @@
 { "translations": {
     "Unknown error while retrieving prompt history." : "チャット履歴の取得中に不明なエラーが発生しました",
     "Nextcloud Assistant" : "Nextcloud アシスタント",
-    "View results" : "結果を見る",
     "AI image generation" : "AIによる画像生成",
+    "View results" : "結果を見る",
     "Artificial Intelligence" : "人工知能",
     "No file selected" : "ファイル未選択",
     "Close" : "閉じる",
     "Reset" : "リセット",
+    "Audio transcription" : "音声の文字起こし",
     "Result" : "結果",
     "Copy" : "コピー",
     "Try again" : "もう一度やり直してください",
@@ -16,8 +17,10 @@
     "Submit" : "送信",
     "Regenerate" : "再生成する",
     "Preview" : "プレビュー",
-    "Advanced options" : "詳細オプション",
+    "Start recording" : "録画を開始",
+    "Stop recording" : "録画を停止",
     "Send" : "送信",
+    "Advanced options" : "詳細オプション",
     "Copy link to clipboard" : "リンクをクリップボードにコピーする"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

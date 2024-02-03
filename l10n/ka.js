@@ -10,7 +10,9 @@ OC.L10N.register(
     "Image generation" : "Image generation",
     "Submit" : "Submit",
     "Preview" : "Preview",
-    "Advanced options" : "Advanced options",
-    "Send" : "Send"
+    "Start recording" : "Start recording",
+    "Stop recording" : "Stop recording",
+    "Send" : "Send",
+    "Advanced options" : "Advanced options"
 },
 "nplurals=2; plural=(n!=1);");

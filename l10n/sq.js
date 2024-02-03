@@ -9,7 +9,7 @@ OC.L10N.register(
     "Try again" : "Provo përsëri",
     "Submit" : "Dërgo",
     "Preview" : "Parapamje ",
-    "Advanced options" : "Opsione të avancuara",
-    "Send" : "Dërgo"
+    "Send" : "Dërgo",
+    "Advanced options" : "Opsione të avancuara"
 },
 "nplurals=2; plural=(n != 1);");

@@ -13,8 +13,8 @@ OC.L10N.register(
     "Submit" : "Invia",
     "Preview" : "Anteprima",
     "Successfully scheduled transcription" : "Pianificazione della trascrizione eseguita correttamente",
-    "Advanced options" : "Opzioni avanzate",
     "Send" : "Invia",
+    "Advanced options" : "Opzioni avanzate",
     "Copy link to clipboard" : "Copia collegamento negli appunti"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

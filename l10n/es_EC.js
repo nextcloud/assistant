@@ -16,9 +16,11 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "Regenerate" : "Regenerar",
     "Preview" : "Previsualizar",
+    "Start recording" : "Iniciar grabación",
+    "Stop recording" : "Detener grabación",
+    "Send" : "Enviar",
     "Show/hide advanced options" : "Mostrar/ocultar opciones avanzadas",
     "Advanced options" : "Opciones avanzadas",
-    "Send" : "Enviar",
     "Include the prompt in the result" : "Incluir el inicio en el resultado",
     "Copy link to clipboard" : "Copiar enlace al portapapeles"
 },

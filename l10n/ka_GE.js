@@ -8,7 +8,7 @@ OC.L10N.register(
     "Try again" : "სცადეთ ახლიდან",
     "Submit" : "გაგზავნა",
     "Preview" : "წინასწარი ჩვენება",
-    "Advanced options" : "დამატებითი ოპციონები",
-    "Send" : "გაგზავნა"
+    "Send" : "გაგზავნა",
+    "Advanced options" : "დამატებითი ოპციონები"
 },
 "nplurals=2; plural=(n!=1);");

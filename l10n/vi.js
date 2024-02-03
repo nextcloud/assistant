@@ -10,7 +10,7 @@ OC.L10N.register(
     "Image generation" : "Tạo hình ảnh",
     "Submit" : "Gửi đi",
     "Preview" : "Xem trước",
-    "Advanced options" : "Tùy chọn nâng cao",
-    "Send" : "Gửi"
+    "Send" : "Gửi",
+    "Advanced options" : "Tùy chọn nâng cao"
 },
 "nplurals=1; plural=0;");
