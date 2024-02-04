@@ -14,6 +14,8 @@ OC.L10N.register(
     "Submit" : "Изпращане",
     "Regenerate" : "Регенериране",
     "Preview" : "Визуализация",
+    "Start recording" : "Започване на запис",
+    "Stop recording" : "Спиране на записването",
     "Send" : "Изпращане",
     "Show/hide advanced options" : "Показване/скриване на разширени опции",
     "Advanced options" : "Допълнителни опции",

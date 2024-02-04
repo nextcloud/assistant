@@ -30,6 +30,8 @@ OC.L10N.register(
     "Generated image" : "Imatge generada",
     "Submit" : "Envia",
     "Preview" : "Previsualitza",
+    "Start recording" : "Iniciar l'enregistrament",
+    "Stop recording" : "Aturar l'enregistrament",
     "Failed to schedule your task" : "No s'ha pogut programar la vostra tasca",
     "Send" : "Envia",
     "Advanced options" : "Paràmetres avançats",
