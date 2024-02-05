@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Some internal error occurred. Contact your sysadmin for more info." : "Une erreur interne est survenue. Contactez votre administrateur système pour en savoir plus.",
     "No Speech-to-Text provider found, install one from the app store to use this feature." : "Aucun fournisseur de reconnaissance vocale trouvé. Installez-en un depuis le magasin d'applications pour utiliser cette fonctionnalité.",
     "Audio file not found." : "Fichier audio introuvable.",
     "Nextcloud Assistant" : "Assistant Nextcloud",
@@ -8,6 +9,7 @@ OC.L10N.register(
     "Task for \"%1$s\" has finished" : "La tâche pour « %1$s » est terminée",
     "\"%1$s\" task for \"%2$s\" has finished" : "La tâche « %1$s » pour « %2$s » est terminée",
     "Input: %1$s" : "Entrée : %1$s",
+    "Result: %1$s" : "Résultat : %1$s",
     "View results" : "Afficher les résultats",
     "Task for \"%1$s\" has failed" : "La tâche pour « %1$s » a échoué",
     "\"%1$s\" task for \"%2$s\" has failed" : "La tâche « %1$s » pour « %2$s » a échoué.",
