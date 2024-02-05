@@ -26,15 +26,14 @@ class AssistantController extends Controller {
 	}
 
 	/**
-	 * @param int $taskId
+	 * @param int $metaTaskId
 	 * @return TemplateResponse
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function getTextProcessingTaskResultPage(int $taskId): TemplateResponse {
-
+	public function getAssistantTaskResultPage(int $metaTaskId): TemplateResponse {
 		if ($this->userId !== null) {
-			$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
+			$task = $this->assistantService->getAssistantTask($this->userId, $metaTaskId);
 			if ($task !== null) {
 				$this->initialStateService->provideInitialState('task', $task->jsonSerializeCc());
 				return new TemplateResponse(Application::APP_ID, 'taskResultPage');
@@ -44,14 +43,13 @@ class AssistantController extends Controller {
 	}
 
 	/**
-	 * @param int $taskId
+	 * @param int $metaTaskId
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
-	public function getTextProcessingResult(int $taskId): DataResponse {
-
+	public function getAssistantTask(int $metaTaskId): DataResponse {
 		if ($this->userId !== null) {
-			$task = $this->assistantService->getTextProcessingTask($this->userId, $taskId);
+			$task = $this->assistantService->getAssistantTask($this->userId, $metaTaskId);
 			if ($task !== null) {
 				return new DataResponse([
 					'task' => $task->jsonSerializeCc(),

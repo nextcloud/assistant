@@ -13,7 +13,6 @@ use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Db\Text2Image\ImageFileName;
 use OCA\TpAssistant\Db\Text2Image\ImageFileNameMapper;
-use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCA\TpAssistant\Db\Text2Image\PromptMapper;
 use OCA\TpAssistant\Db\Text2Image\StaleGenerationMapper;
