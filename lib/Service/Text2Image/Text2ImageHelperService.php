@@ -281,15 +281,14 @@ class Text2ImageHelperService {
 	 * Get image generation info
 	 *
 	 * @param string $imageGenId
-	 * @param string $userId
+	 * @param string|null $userId
 	 * @param bool $updateTimestamp
 	 * @return array
-	 * @throws \Exception
+	 * @throws BaseException
 	 */
-	public function getGenerationInfo(string $imageGenId, string $userId, bool $updateTimestamp = true): array {
+	public function getGenerationInfo(string $imageGenId, ?string $userId, bool $updateTimestamp = true): array {
 		// Check whether the task has completed:
 		try {
-			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (DoesNotExistException $e) {
 			try {
