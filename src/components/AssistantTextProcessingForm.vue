@@ -198,7 +198,6 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
-			console.debug('aaaa inputs', this.myInputs)
 			// Check that none of the properties of myInputs are empty
 			return Object.values(this.myInputs).every(v => {
 				return v && (typeof v !== 'string' || !!v?.trim())

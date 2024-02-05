@@ -63,6 +63,9 @@ class SpeechToTextService {
 
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		$audioFile = $userFolder->get($path);
+		if (!$audioFile instanceof File) {
+			throw new InvalidArgumentException('Cannot transcribe a non-file node');
+		}
 
 		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
@@ -72,7 +75,7 @@ class SpeechToTextService {
 			'',
 			time(),
 			$audioFile->getId(),
-			"Speech-to-text task",
+			'speech-to-text',
 			Application::APP_ID,
 			Application::STT_TASK_SCHEDULED,
 			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
@@ -101,7 +104,7 @@ class SpeechToTextService {
 			'',
 			time(),
 			$audioFile->getId(),
-			'Speech-to-text task',
+			'speech-to-text',
 			Application::APP_ID,
 			Application::STT_TASK_SCHEDULED,
 			Application::TASK_CATEGORY_SPEECH_TO_TEXT);

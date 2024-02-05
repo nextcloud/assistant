@@ -166,7 +166,7 @@ export async function openAssistantTextProcessingForm({
 	})
 }
 
-async function runSttTask(inputs) {
+export async function runSttTask(inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	if (inputs.audioData) {
@@ -372,9 +372,12 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	// Divert to the right modal/page if we have a meta task with a category other than text generation:
 	if (useMetaTasks) {
 		switch (task.category) {
+		/*
 		case TASK_CATEGORIES.speech_to_text:
 			openAssistantPlainTextResult(task)
 			return
+
+		*/
 		case TASK_CATEGORIES.image_generation:
 			openAssistantImageResult(task)
 			return
@@ -425,6 +428,14 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		view.showSyncTaskRunning = true
 		view.inputs = data.inputs
 		view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
+		if (data.textProcessingTaskTypeId === 'speech-to-text') {
+			runSttTask(data.inputs).then(response => {
+				view.showScheduleConfirmation = true
+				view.loading = false
+				view.showSyncTaskRunning = false
+			})
+			return
+		}
 		runTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
 			.then((response) => {
 				// resolve(response.data?.task)
