@@ -61,6 +61,7 @@ OC.L10N.register(
     "Choose File" : "選擇檔案",
     "Describe the writing style you want to use or supply an example document." : "描述您想要使用的寫作風格或提供範例文件。",
     "Source material" : "來源資料",
+    "Describe what you want the document to be written on." : "描述您想要撰寫文件的主題。",
     "Input" : "輸入",
     "Type some text" : "輸入一些文字",
     "Choose a text file" : "選擇文字檔案",
