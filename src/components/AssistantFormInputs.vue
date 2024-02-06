@@ -69,7 +69,14 @@
 				:multiline="true"
 				class="editable-input"
 				:placeholder="t('assistant','Type some text')"
-				@update:value="onUpdate" />
+				@update:value="onUpdateMainInput" />
+		</div>
+		<div v-if="selectedTaskTypeId === 'text-to-image'" class="assistant-inputs">
+			<Text2ImageInputForm
+				:n-results.sync="ttiNResults"
+				:display-prompt.sync="ttiDisplayPrompt"
+				@update:nResults="onUpdateTti"
+				@update:displayPrompt="onUpdateTti" />
 		</div>
 	</div>
 </template>
@@ -77,10 +84,13 @@
 <script>
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
+import Text2ImageInputForm from './Text2Image/Text2ImageInputForm.vue'
+
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
 
 const VALID_MIME_TYPES = [
 	'text/plain',
@@ -101,6 +111,7 @@ const picker = getFilePickerBuilder(t('assistant', 'Choose a text file'))
 export default {
 	name: 'AssistantFormInputs',
 	components: {
+		Text2ImageInputForm,
 		SpeechToTextInputForm,
 		NcRichContenteditable,
 		NcButton,
@@ -123,6 +134,8 @@ export default {
 			sttMode: 'record',
 			sttAudioData: null,
 			sttAudioFilePath: null,
+			ttiNResults: 1,
+			ttiDisplayPrompt: false,
 		}
 	},
 	watch: {
@@ -131,6 +144,8 @@ export default {
 				this.onUpdateCopywriter()
 			} else if (this.selectedTaskTypeId === 'speech-to-text') {
 				this.onUpdateStt()
+			} else if (this.selectedTaskTypeId === 'text-to-image') {
+				this.onUpdateTti()
 			} else {
 				this.onUpdate()
 			}
@@ -145,6 +160,8 @@ export default {
 			this.onUpdateCopywriter()
 		} else if (this.selectedTaskTypeId === 'speech-to-text') {
 			this.onUpdateStt()
+		} else if (this.selectedTaskTypeId === 'text-to-image') {
+			this.onUpdateTti()
 		} else {
 			this.onUpdate()
 		}
@@ -175,12 +192,19 @@ export default {
 					break
 				default:
 					this.prompt = response.data.parsedText
-					this.onUpdate()
+					this.onUpdateMainInput()
 				}
 			}).catch((error) => {
 				console.error(error)
 				showError(t('assistant', 'Could not parse file'))
 			})
+		},
+		onUpdateMainInput() {
+			if (this.selectedTaskTypeId === 'text-to-image') {
+				this.onUpdateTti()
+			} else {
+				this.onUpdate()
+			}
 		},
 		onUpdate() {
 			this.$emit('update:newInputs', {
@@ -196,7 +220,19 @@ export default {
 		onUpdateStt() {
 			this.$emit(
 				'update:newInputs',
-				this.sttMode === 'record' ? { audioData: this.sttAudioData } : { audioFilePath: this.sttAudioFilePath },
+				this.sttMode === 'record'
+					? { audioData: this.sttAudioData }
+					: { audioFilePath: this.sttAudioFilePath },
+			)
+		},
+		onUpdateTti() {
+			this.$emit(
+				'update:newInputs',
+				{
+					prompt: this.prompt,
+					nResults: this.ttiNResults,
+					displayPrompt: this.ttiDisplayPrompt,
+				},
 			)
 		},
 	},

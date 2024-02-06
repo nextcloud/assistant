@@ -28,7 +28,13 @@
 				class="input-label">
 				{{ t('assistant', 'Result') }}
 			</label>
-			<NcRichContenteditable
+			<div v-if="mySelectedTaskTypeId === 'text-to-image'"
+				ref="output">
+				<a :href="formattedOutput">{{ formattedOutput }}</a>
+				<Text2ImageDisplay
+					:image-gen-id="myOutput" />
+			</div>
+			<NcRichContenteditable v-else
 				id="assistant-output"
 				ref="output"
 				:value.sync="myOutput"
@@ -67,19 +73,6 @@
 					<CreationIcon v-else />
 				</template>
 			</NcButton>
-			<!--NcButton
-				v-if="showSubmit"
-				:type="submitButtonType"
-				class="submit-button"
-				:disabled="!canSubmit"
-				:aria-label="t('assistant', 'Schedule an assistant task')"
-				:title="t('assistant', 'Schedule')"
-				@click="onSubmit">
-				{{ submitButtonLabel }}
-				<template #icon>
-					<CreationIcon />
-				</template>
-			</NcButton-->
 			<NcButton
 				v-if="hasOutput"
 				type="primary"
@@ -123,9 +116,10 @@ import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js
 
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import AssistantFormInputs from './AssistantFormInputs.vue'
+import Text2ImageDisplay from './Text2Image/Text2ImageDisplay.vue'
 
 import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
+import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
@@ -137,6 +131,7 @@ const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
 export default {
 	name: 'AssistantTextProcessingForm',
 	components: {
+		Text2ImageDisplay,
 		TaskTypeSelect,
 		NcButton,
 		NcRichContenteditable,
@@ -186,6 +181,7 @@ export default {
 	},
 	computed: {
 		selectedTaskType() {
+			console.debug('aaaaa SELECTED TASK TYPE', this.mySelectedTaskTypeId, this.taskTypes)
 			if (this.mySelectedTaskTypeId === null) {
 				return null
 			}
@@ -200,7 +196,10 @@ export default {
 		canSubmit() {
 			// Check that none of the properties of myInputs are empty
 			return Object.values(this.myInputs).every(v => {
-				return v && (typeof v !== 'string' || !!v?.trim())
+				return (typeof v === 'string' && !!v?.trim())
+					|| (typeof v === 'boolean')
+					|| (typeof v === 'number')
+					|| (typeof v === 'object' && !!v)
 			})
 				&& this.selectedTaskType
 		},
@@ -226,6 +225,12 @@ export default {
 		},
 		outputEqualsInput() {
 			return this.hasInitialOutput && this.output?.trim() === this.inputs.prompt?.trim()
+		},
+		formattedOutput() {
+			if (this.mySelectedTaskTypeId === 'text-to-image') {
+				return window.location.protocol + '//' + window.location.host + generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.myOutput })
+			}
+			return this.myOutput.trim()
 		},
 	},
 	watch: {
@@ -266,6 +271,12 @@ export default {
 							name: t('assistant', 'Transcribe'),
 							description: t('assistant', 'Transcribe audio to text'),
 						})
+						// inject a T2I task type
+						this.taskTypes.push({
+							id: 'text-to-image',
+							name: t('assistant', 'Generate image'),
+							description: t('assistant', 'Generate an image from a text'),
+						})
 					}
 				})
 				.catch((error) => {
@@ -280,8 +291,9 @@ export default {
 		},
 		async onCopy() {
 			try {
-				const container = this.$refs.output.$el
-				await this.$copyText(this.myOutput.trim(), container)
+				const container = this.$refs.output.$el ?? this.$refs.output
+				console.debug('aaaaa output CONTAINER', container)
+				await this.$copyText(this.formattedOutput, container)
 				this.copied = true
 				setTimeout(() => {
 					this.copied = false
@@ -292,7 +304,7 @@ export default {
 			}
 		},
 		onActionButtonClick(button) {
-			this.$emit('action-button-clicked', { button, output: this.myOutput.trim() })
+			this.$emit('action-button-clicked', { button, output: this.formattedOutput })
 		},
 	},
 }

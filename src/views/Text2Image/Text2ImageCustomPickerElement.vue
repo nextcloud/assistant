@@ -28,8 +28,7 @@
 				<h3>{{ t('assistant', 'Preview') }}</h3>
 				<div class="image-preview">
 					<Text2ImageDisplay :key="result.image_gen_id"
-						:src="result.url"
-						:prompt="result.prompt"
+						:image-gen-id="result.image_gen_id"
 						@failed="imageGenerationFailed"
 						@ready="imageGenerationReady"
 						@processing="imageGenerationIsProcessing" />

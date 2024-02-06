@@ -38,6 +38,8 @@ class Text2ImageController extends Controller {
 	}
 
 	/**
+	 * @param string $appId
+	 * @param string $identifier
 	 * @param string $prompt
 	 * @param int $nResults
 	 * @param bool $displayPrompt
@@ -45,10 +47,10 @@ class Text2ImageController extends Controller {
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function processPrompt(string $prompt, int $nResults = 1, bool $displayPrompt = false): DataResponse {
+	public function processPrompt(string $appId, string $identifier, string $prompt, int $nResults = 1, bool $displayPrompt = false): DataResponse {
 		$nResults = min(10, max(1, $nResults));
 		try {
-			$result = $this->text2ImageHelperService->processPrompt($prompt, $nResults, $displayPrompt, $this->userId);
+			$result = $this->text2ImageHelperService->processPrompt($appId, $identifier, $prompt, $nResults, $displayPrompt, $this->userId);
 		} catch (Exception | TaskFailureException $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
@@ -226,7 +228,7 @@ class Text2ImageController extends Controller {
 			$forceEditMode = false;
 		}
 		$this->initialStateService->provideInitialState('generation-page-inputs', ['image_gen_id' => $imageGenId, 'force_edit_mode' => $forceEditMode]);
-		
+
 		return new TemplateResponse(Application::APP_ID, 'imageGenerationPage');
 	}
 }

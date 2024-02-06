@@ -108,7 +108,10 @@ export async function openAssistantTextProcessingForm({
 				})
 				return
 			}
-			runOrScheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
+			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'text-to-image'
+				? runTtiTask
+				: runOrScheduleTask
+			runOrScheduleFunction(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then(async (response) => {
 					const task = response.data?.task
 					lastTask = task
@@ -179,6 +182,20 @@ export async function runSttTask(inputs) {
 		const params = { path: this.audioFilePath }
 		return axios.post(url, params)
 	}
+}
+
+export async function runTtiTask(appId, identifier, taskType, inputs) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const params = {
+		appId,
+		identifier,
+		prompt: inputs.prompt,
+		nResults: inputs.nResults,
+		displayPrompt: inputs.displayPrompt,
+	}
+	const url = generateUrl('/apps/assistant/i/process_prompt')
+	return axios.post(url, params)
 }
 
 async function resolveMetaTaskToOcpTask(metaTask) {

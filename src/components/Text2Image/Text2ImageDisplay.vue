@@ -108,7 +108,7 @@ export default {
 	},
 
 	props: {
-		src: {
+		imageGenId: {
 			type: String,
 			required: true,
 		},
@@ -149,6 +149,12 @@ export default {
 				return this.imageUrls.length > 0
 			}
 		},
+		infoUrl() {
+			return generateUrl('/apps/assistant/i/info/{imageGenId}', { imageGenId: this.imageGenId })
+		},
+		referenceUrl() {
+			return generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.imageGenId })
+		},
 	},
 	mounted() {
 		this.getImageGenInfo()
@@ -173,13 +179,13 @@ export default {
 
 			// Loop through all the fileIds and get the images:
 			fileIds.forEach((fileId) => {
-				this.imageUrls.push(generateUrl('/apps/assistant/i/' + imageGenId + '/' + fileId.id))
+				this.imageUrls.push(generateUrl('/apps/assistant/i/{imageGenId}/{fileId}', { imageGenId, fileId: fileId.id }))
 				this.imgLoadedList.push = false
 			})
 		},
 		getImageGenInfo() {
 			let success = false
-			axios.get(this.src)
+			axios.get(this.infoUrl)
 				.then((response) => {
 					if (response.status === 200) {
 						if (response.data?.files !== undefined) {
@@ -264,7 +270,7 @@ export default {
 			this.$emit('ready')
 		},
 		onCheckboxChange() {
-			const url = generateUrl('/apps/assistant/i/visibility/' + this.src.split('/').pop())
+			const url = generateUrl('/apps/assistant/i/visibility/' + this.imageGenId)
 
 			axios.post(url, {
 				fileVisStatusArray: this.fileVisStatusArray,

@@ -59,6 +59,8 @@ class Text2ImageHelperService {
 	/**
 	 * Process a prompt using ImageProcessingProvider and return a link to the generated image(s)
 	 *
+	 * @param string $appId
+	 * @param string $identifier
 	 * @param string $prompt
 	 * @param int $nResults
 	 * @param bool $displayPrompt
@@ -66,10 +68,10 @@ class Text2ImageHelperService {
 	 * @return array
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
-	 * @throws TaskFailureException ;
 	 * @throws RandomException
+	 * @throws TaskFailureException ;
 	 */
-	public function processPrompt(string $prompt, int $nResults, bool $displayPrompt, string $userId): array {
+	public function processPrompt(string $appId, string $identifier, string $prompt, int $nResults, bool $displayPrompt, string $userId): array {
 		if (!$this->textToImageManager->hasProviders()) {
 			$this->logger->error('No text to image processing provider available');
 			throw new BaseException($this->l10n->t('No text to image processing provider available'));
@@ -82,7 +84,10 @@ class Text2ImageHelperService {
 			$imageGenId = bin2hex(random_bytes(16));
 		}
 
-		$promptTask = new Task($prompt, Application::APP_ID, $nResults, $userId, $imageGenId);
+		// TODO think about clarifying this: the identifier of the OCP task is used to store the imageGenId
+		// maybe there is another way to store this and use the identifier as intended
+		// We now store the imageGenId only as the output of the metatask (used to be duplicated in output and identifier)
+		$promptTask = new Task($prompt, $appId, $nResults, $userId, $imageGenId);
 
 		$this->textToImageManager->runOrScheduleTask($promptTask);
 
@@ -104,9 +109,9 @@ class Text2ImageHelperService {
 
 		// Create an assistant meta task for the image generation task:
 		// TODO check if we should create a task if userId is null
-		$this->metaTaskMapper->createMetaTask(
+		$metaTask = $this->metaTaskMapper->createMetaTask(
 			$userId,
-			['prompt' => $prompt],
+			['prompt' => $prompt, 'nResults' => $nResults, 'displayPrompt' => $displayPrompt],
 			$imageGenId,
 			time(),
 			$promptTask->getId(),
@@ -114,7 +119,7 @@ class Text2ImageHelperService {
 			Application::APP_ID,
 			$promptTask->getStatus(),
 			Application::TASK_CATEGORY_TEXT_TO_IMAGE,
-			$promptTask->getIdentifier()
+			$identifier,
 		);
 
 		if ($taskExecuted) {
@@ -123,22 +128,24 @@ class Text2ImageHelperService {
 
 		$infoUrl = $this->urlGenerator->linkToRouteAbsolute(
 			Application::APP_ID . '.Text2Image.getGenerationInfo',
-			[
-				'imageGenId' => $imageGenId,
-			]
+			['imageGenId' => $imageGenId]
 		);
 
 		$referenceUrl = $this->urlGenerator->linkToRouteAbsolute(
 			Application::APP_ID . '.Text2Image.showGenerationPage',
-			[
-				'imageGenId' => $imageGenId,
-			]
+			['imageGenId' => $imageGenId]
 		);
 
 		// Save the prompt to database
 		$this->promptMapper->createPrompt($userId, $prompt);
 
-		return ['url' => $infoUrl, 'reference_url' => $referenceUrl, 'image_gen_id' => $imageGenId, 'prompt' => $prompt];
+		return [
+			'url' => $infoUrl,
+			'reference_url' => $referenceUrl,
+			'image_gen_id' => $imageGenId,
+			'prompt' => $prompt,
+			'task' => $metaTask->jsonSerializeCc(),
+		];
 	}
 
 	/**

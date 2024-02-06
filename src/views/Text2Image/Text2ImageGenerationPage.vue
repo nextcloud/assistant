@@ -7,8 +7,8 @@
 				<h2>
 					{{ t('assistant', 'Image generation') }}
 				</h2>
-				<div v-if="generationInfoUrl !== null" class="image">
-					<Text2ImageDisplay :src="generationInfoUrl" :force-edit-mode="forceEditMode" />
+				<div class="image">
+					<Text2ImageDisplay :image-gen-id="imageGenId" :force-edit-mode="forceEditMode" />
 				</div>
 				<div class="button-wrapper">
 					<NcButton
@@ -28,14 +28,15 @@
 	</NcContent>
 </template>
 <script>
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
+import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+
 import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
-import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
-import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
-
 import Text2ImageDisplay from '../../components/Text2Image/Text2ImageDisplay.vue'
+
 import { generateUrl } from '@nextcloud/router'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import VueClipboard from 'vue-clipboard2'
@@ -65,20 +66,15 @@ export default {
 	},
 	data() {
 		return {
-			generationInfoUrl: null,
-			generationRemoteUrl: null,
+			generationInfoUrl: generateUrl('/apps/assistant/i/info/' + this.imageGenId),
 			copied: false,
 		}
 	},
 	mounted() {
-		this.generateUrl()
 	},
 	methods: {
 		onClose() {
 			this.$emit('close')
-		},
-		generateUrl() {
-			this.generationInfoUrl = generateUrl('/apps/assistant/i/info/' + this.imageGenId)
 		},
 		async onCopy() {
 			try {
