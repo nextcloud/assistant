@@ -71,7 +71,7 @@
 				:placeholder="t('assistant','Type some text')"
 				@update:value="onUpdateMainInput" />
 		</div>
-		<div v-if="selectedTaskTypeId === 'text-to-image'" class="assistant-inputs">
+		<div v-if="selectedTaskTypeId === 'OCP\\TextToImage\\Task'" class="assistant-inputs">
 			<Text2ImageInputForm
 				:n-results.sync="ttiNResults"
 				:display-prompt.sync="ttiDisplayPrompt"
@@ -144,7 +144,7 @@ export default {
 				this.onUpdateCopywriter()
 			} else if (this.selectedTaskTypeId === 'speech-to-text') {
 				this.onUpdateStt()
-			} else if (this.selectedTaskTypeId === 'text-to-image') {
+			} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
 				this.onUpdateTti()
 			} else {
 				this.onUpdate()
@@ -160,7 +160,7 @@ export default {
 			this.onUpdateCopywriter()
 		} else if (this.selectedTaskTypeId === 'speech-to-text') {
 			this.onUpdateStt()
-		} else if (this.selectedTaskTypeId === 'text-to-image') {
+		} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
 			this.onUpdateTti()
 		} else {
 			this.onUpdate()
@@ -200,7 +200,7 @@ export default {
 			})
 		},
 		onUpdateMainInput() {
-			if (this.selectedTaskTypeId === 'text-to-image') {
+			if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
 				this.onUpdateTti()
 			} else {
 				this.onUpdate()

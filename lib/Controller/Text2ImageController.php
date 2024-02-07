@@ -43,14 +43,20 @@ class Text2ImageController extends Controller {
 	 * @param string $prompt
 	 * @param int $nResults
 	 * @param bool $displayPrompt
+	 * @param bool $notifyReadyIfScheduled
 	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function processPrompt(string $appId, string $identifier, string $prompt, int $nResults = 1, bool $displayPrompt = false): DataResponse {
+	public function processPrompt(
+		string $appId, string $identifier, string $prompt, int $nResults = 1, bool $displayPrompt = false,
+		bool $notifyReadyIfScheduled = false
+	): DataResponse {
 		$nResults = min(10, max(1, $nResults));
 		try {
-			$result = $this->text2ImageHelperService->processPrompt($appId, $identifier, $prompt, $nResults, $displayPrompt, $this->userId);
+			$result = $this->text2ImageHelperService->processPrompt(
+				$appId, $identifier, $prompt, $nResults, $displayPrompt, $this->userId, $notifyReadyIfScheduled
+			);
 		} catch (Exception | TaskFailureException $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}

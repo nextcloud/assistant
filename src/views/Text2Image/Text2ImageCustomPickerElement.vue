@@ -261,6 +261,8 @@ export default {
 			this.loading = true
 
 			const params = {
+				appId: 'assistant',
+				identifier: '',
 				prompt: this.query,
 				nResults: this.nResults,
 				displayPrompt: this.displayPrompt,

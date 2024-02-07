@@ -108,7 +108,7 @@ export async function openAssistantTextProcessingForm({
 				})
 				return
 			}
-			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'text-to-image'
+			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
 				? runTtiTask
 				: runOrScheduleTask
 			runOrScheduleFunction(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
@@ -193,6 +193,7 @@ export async function runTtiTask(appId, identifier, taskType, inputs) {
 		prompt: inputs.prompt,
 		nResults: inputs.nResults,
 		displayPrompt: inputs.displayPrompt,
+		notifyReadyIfScheduled: true,
 	}
 	const url = generateUrl('/apps/assistant/i/process_prompt')
 	return axios.post(url, params)
@@ -394,10 +395,10 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			openAssistantPlainTextResult(task)
 			return
 
-		*/
 		case TASK_CATEGORIES.image_generation:
 			openAssistantImageResult(task)
 			return
+		*/
 		case TASK_CATEGORIES.text_generation:
 		default:
 			break
@@ -453,7 +454,10 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			})
 			return
 		}
-		runTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
+		const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+			? runTtiTask
+			: runOrScheduleTask
+		runOrScheduleFunction(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
 			.then((response) => {
 				// resolve(response.data?.task)
 				const task = response.data?.task

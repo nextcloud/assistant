@@ -28,7 +28,7 @@
 				class="input-label">
 				{{ t('assistant', 'Result') }}
 			</label>
-			<div v-if="mySelectedTaskTypeId === 'text-to-image'"
+			<div v-if="mySelectedTaskTypeId === 'OCP\\TextToImage\\Task'"
 				ref="output">
 				<a :href="formattedOutput">{{ formattedOutput }}</a>
 				<Text2ImageDisplay
@@ -227,7 +227,7 @@ export default {
 			return this.hasInitialOutput && this.output?.trim() === this.inputs.prompt?.trim()
 		},
 		formattedOutput() {
-			if (this.mySelectedTaskTypeId === 'text-to-image') {
+			if (this.mySelectedTaskTypeId === 'OCP\\TextToImage\\Task') {
 				return window.location.protocol + '//' + window.location.host + generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.myOutput })
 			}
 			return this.myOutput.trim()
@@ -273,7 +273,7 @@ export default {
 						})
 						// inject a T2I task type
 						this.taskTypes.push({
-							id: 'text-to-image',
+							id: 'OCP\\TextToImage\\Task',
 							name: t('assistant', 'Generate image'),
 							description: t('assistant', 'Generate an image from a text'),
 						})
@@ -331,9 +331,9 @@ export default {
 		margin-left: 16px;
 		.editable-output {
 			width: 100%;
-			min-height: unset !important;
-			max-height: 200px !important;
-			overflow: auto;
+			:deep(.rich-contenteditable__input) {
+				max-height: 300px !important;
+			}
 		}
 
 		.warning-note {

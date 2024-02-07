@@ -7,7 +7,6 @@ namespace OCA\TpAssistant\Reference;
 
 use Exception;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;

@@ -65,13 +65,17 @@ class Text2ImageHelperService {
 	 * @param int $nResults
 	 * @param bool $displayPrompt
 	 * @param string $userId
+	 * @param bool $notifyReadyIfScheduled
 	 * @return array
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
 	 * @throws RandomException
 	 * @throws TaskFailureException ;
 	 */
-	public function processPrompt(string $appId, string $identifier, string $prompt, int $nResults, bool $displayPrompt, string $userId): array {
+	public function processPrompt(
+		string $appId, string $identifier, string $prompt, int $nResults, bool $displayPrompt, string $userId,
+		bool $notifyReadyIfScheduled
+	): array {
 		if (!$this->textToImageManager->hasProviders()) {
 			$this->logger->error('No text to image processing provider available');
 			throw new BaseException($this->l10n->t('No text to image processing provider available'));
@@ -87,37 +91,39 @@ class Text2ImageHelperService {
 		// TODO think about clarifying this: the identifier of the OCP task is used to store the imageGenId
 		// maybe there is another way to store this and use the identifier as intended
 		// We now store the imageGenId only as the output of the metatask (used to be duplicated in output and identifier)
-		$promptTask = new Task($prompt, $appId, $nResults, $userId, $imageGenId);
+		$ttiTask = new Task($prompt, $appId, $nResults, $userId, $imageGenId);
 
-		$this->textToImageManager->runOrScheduleTask($promptTask);
+		$this->textToImageManager->runOrScheduleTask($ttiTask);
 
 		$taskExecuted = false;
 
 		$images = [];
 		$expCompletionTime = new DateTime('now');
 
-		if ($promptTask->getStatus() === Task::STATUS_SUCCESSFUL || $promptTask->getStatus() === Task::STATUS_FAILED) {
+		if ($ttiTask->getStatus() === Task::STATUS_SUCCESSFUL || $ttiTask->getStatus() === Task::STATUS_FAILED) {
 			$taskExecuted = true;
-			$images = $promptTask->getOutputImages();
+			$images = $ttiTask->getOutputImages();
 		} else {
-			$expCompletionTime = $promptTask->getCompletionExpectedAt() ?? $expCompletionTime;
+			$expCompletionTime = $ttiTask->getCompletionExpectedAt() ?? $expCompletionTime;
 			$this->logger->info('Task scheduled. Expected completion time: ' . $expCompletionTime->format('Y-m-d H:i:s'));
 		}
 
 		// Store the image id to the db:
-		$this->imageGenerationMapper->createImageGeneration($imageGenId, $displayPrompt ? $prompt : '', $userId, $expCompletionTime->getTimestamp());
+		$this->imageGenerationMapper->createImageGeneration(
+			$imageGenId, $displayPrompt ? $prompt : '', $userId, $expCompletionTime->getTimestamp(),
+			$ttiTask->getStatus() === Task::STATUS_SCHEDULED && $notifyReadyIfScheduled
+		);
 
 		// Create an assistant meta task for the image generation task:
-		// TODO check if we should create a task if userId is null
 		$metaTask = $this->metaTaskMapper->createMetaTask(
 			$userId,
 			['prompt' => $prompt, 'nResults' => $nResults, 'displayPrompt' => $displayPrompt],
 			$imageGenId,
 			time(),
-			$promptTask->getId(),
+			$ttiTask->getId(),
 			Task::class,
 			Application::APP_ID,
-			$promptTask->getStatus(),
+			$ttiTask->getStatus(),
 			Application::TASK_CATEGORY_TEXT_TO_IMAGE,
 			$identifier,
 		);
