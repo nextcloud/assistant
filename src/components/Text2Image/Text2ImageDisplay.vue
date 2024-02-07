@@ -74,12 +74,12 @@
 			<div v-if="timeUntilCompletion !== null" class="processing-notification">
 				<InformationOutlineIcon :size="20" class="icon" />
 				{{ t('assistant', 'Estimated generation time left: ') + timeUntilCompletion + '. ' }}
-				{{ t('assistant', 'The generated image is shown once ready.') }}
+				{{ t('assistant', 'The image(s) will be displayed here once generated.') }}
 			</div>
 			<div v-else class="processing-notification">
 				<InformationOutlineIcon :size="20" class="icon" />
 				{{ t('assistant', 'This image generation was scheduled to run in the background.') }}
-				{{ t('assistant', 'The generated image is shown once ready.') }}
+				{{ t('assistant', 'The image(s) will be displayed here once generated.') }}
 			</div>
 		</div>
 		<span v-if="failed" class="error_msg">
@@ -412,12 +412,11 @@ export default {
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		margin-top: 24px;
+		margin-top: 16px;
 
 		.processing-notification {
 			display: flex;
 			flex-direction: row;
-			margin-top: 24px;
 			width: 90%;
 			align-items: center;
 			justify-content: center;

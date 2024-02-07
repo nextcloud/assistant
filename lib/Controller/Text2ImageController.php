@@ -21,6 +21,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Db\Exception as DbException;
 
+use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\TextToImage\Exception\TaskFailureException;
@@ -100,7 +101,7 @@ class Text2ImageController extends Controller {
 			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
 			if ($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
 				// Throttle brute force attempts
-				$response->throttle(['action' => 'imageGenId']);
+				$response->throttle(['imageGenId' => $imageGenId, 'fileId' => $fileNameId, 'status' => $e->getCode()]);
 			}
 			return $response;
 		}
@@ -133,7 +134,7 @@ class Text2ImageController extends Controller {
 			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
 			if ($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
 				// Throttle brute force attempts
-				$response->throttle(['action' => 'imageGenId']);
+				$response->throttle(['imageGenId' => $imageGenId, 'status' => $e->getCode()]);
 			}
 			return $response;
 		}
@@ -144,12 +145,12 @@ class Text2ImageController extends Controller {
 	/**
 	 * @param string $imageGenId
 	 * @param array $fileVisStatusArray
+	 * @return DataResponse
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[BruteForceProtection(action: 'imageGenId')]
 	public function setVisibilityOfImageFiles(string $imageGenId, array $fileVisStatusArray): DataResponse {
-
 		if ($this->userId === null) {
 			return new DataResponse(['error' => $this->l10n->t('Failed to set visibility of image files; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -164,7 +165,7 @@ class Text2ImageController extends Controller {
 			$response = new DataResponse(['error' => $e->getMessage()], (int) $e->getCode());
 			if($e->getCode() === Http::STATUS_BAD_REQUEST || $e->getCode() === Http::STATUS_UNAUTHORIZED) {
 				// Throttle brute force attempts
-				$response->throttle(['action' => 'imageGenId']);
+				$response->throttle(['imageGenId' => $imageGenId, 'status' => $e->getCode()]);
 			}
 			return $response;
 		}
@@ -183,7 +184,6 @@ class Text2ImageController extends Controller {
 	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function notifyWhenReady(string $imageGenId): DataResponse {
-
 		if ($this->userId === null) {
 			return new DataResponse(['error' => $this->l10n->t('Failed to notify when ready; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -195,6 +195,7 @@ class Text2ImageController extends Controller {
 		}
 		return new DataResponse('success', Http::STATUS_OK);
 	}
+
 	/**
 	 * Cancel image generation
 	 *
@@ -204,12 +205,12 @@ class Text2ImageController extends Controller {
 	 *
 	 * @param string $imageGenId
 	 * @return DataResponse
+	 * @throws NotPermittedException
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
 	#[AnonRateLimit(limit: 10, period: 60)]
 	public function cancelGeneration(string $imageGenId): DataResponse {
-
 		if ($this->userId === null) {
 			return new DataResponse(['error' => $this->l10n->t('Failed to cancel generation; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -224,6 +225,7 @@ class Text2ImageController extends Controller {
 	 * Does not need bruteforce protection
 	 *
 	 * @param string|null $imageGenId
+	 * @param bool|null $forceEditMode
 	 * @return TemplateResponse
 	 */
 	#[NoAdminRequired]
