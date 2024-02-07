@@ -334,11 +334,13 @@ export default {
 		width: 100%;
 		overflow-y: auto;
 		overflow-x: hidden;
-		padding: 12px;
 		line-height: 1.5;
 		white-space: pre-wrap;
 		word-break: break-word;
 		margin-bottom: 24px;
+		:deep(.rich-contenteditable__input) {
+			max-height: 300px !important;
+		}
 	}
 }
 </style>
