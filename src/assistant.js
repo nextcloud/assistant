@@ -172,6 +172,7 @@ export async function openAssistantTextProcessingForm({
 export async function runSttTask(inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType('speech-to-text')
 	if (inputs.audioData) {
 		const url = generateUrl('/apps/assistant/stt/transcribeAudio')
 		const formData = new FormData()
@@ -187,6 +188,7 @@ export async function runSttTask(inputs) {
 export async function runTtiTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType('OCP\\TextToImage\\Task')
 	const params = {
 		appId,
 		identifier,

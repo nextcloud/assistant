@@ -35,7 +35,8 @@ import ScheduledEmptyContent from '../components/ScheduledEmptyContent.vue'
 
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { scheduleTask, runTask, runSttTask, cancelCurrentSyncTask } from '../assistant.js'
+import { scheduleTask, runSttTask, cancelCurrentSyncTask, runTtiTask, runOrScheduleTask } from '../assistant.js'
+import { STATUS } from '../constants.js'
 
 export default {
 	name: 'TaskResultPage',
@@ -110,11 +111,21 @@ export default {
 				})
 				return
 			}
-			runTask(this.task.appId, this.task.identifier, data.textProcessingTaskTypeId, data.inputs)
+			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+				? runTtiTask
+				: runOrScheduleTask
+			runOrScheduleFunction(this.task.appId, this.task.identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then((response) => {
-					this.task.output = response.data?.task?.output ?? ''
-					this.showSyncTaskRunning = false
 					console.debug('Assistant SYNC result', response.data)
+					const task = response.data?.task
+					this.task.inputs = task.inputs
+					if (task.status === STATUS.successfull) {
+						this.task.output = task?.output ?? ''
+					} else if (task.status === STATUS.scheduled) {
+						this.showScheduleConfirmation = true
+					}
+					this.loading = false
+					this.showSyncTaskRunning = false
 				})
 				.catch(error => {
 					console.error('Assistant scheduling error', error)
