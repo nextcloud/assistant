@@ -95,7 +95,7 @@ import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline
 import axios from '@nextcloud/axios'
 import AssistantIcon from '../icons/AssistantIcon.vue'
 import { generateUrl } from '@nextcloud/router'
-import humanizeDuration from 'humanize-duration'
+import moment from '@nextcloud/moment'
 
 export default {
 	name: 'Text2ImageDisplay',
@@ -219,7 +219,7 @@ export default {
 					}
 					// If we didn't succeed in loading the image gen info yet, try again
 					if (!success && !this.failed && !this.closed) {
-						setTimeout(this.getImageGenInfo, 3000)
+						setTimeout(this.getImageGenInfo, 5000)
 					}
 				})
 				.catch((error) => {
@@ -229,16 +229,15 @@ export default {
 		updateTimeUntilCompletion(completionTimeStamp) {
 			// AFAIK there's no trivial way to do this with a computed property unless timers/intervals
 			// are used, so we might as well do this with a method:
-			const timeDifference = new Date(completionTimeStamp * 1000) - new Date()
+			const timeDifference = completionTimeStamp - moment().unix()
 			// If the time difference is less than 5 minutes, don't show the time left
 			// (as we don't know when the scheduled job will start exactly)
-			if (timeDifference < 5 * 60000) {
+			if (timeDifference < 5 * 60) {
 				this.timeUntilCompletion = null
 				return
 			}
 
-			this.timeUntilCompletion = humanizeDuration(timeDifference,
-				{ units: ['h', 'm'], language: OC.getLanguage(), fallbacks: ['en'], round: true })
+			this.timeUntilCompletion = moment.unix(completionTimeStamp).fromNow()
 
 			// Schedule next update:
 			if (!this.closed) {

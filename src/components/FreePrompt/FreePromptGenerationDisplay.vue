@@ -63,14 +63,17 @@
 <script>
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
-import humanizeDuration from 'humanize-duration'
+import moment from '@nextcloud/moment'
+
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
 
@@ -177,7 +180,7 @@ export default {
 							this.processCompletion(data)
 							setTimeout(() => {
 								this.getResults()
-							}, 1000)
+							}, 5000)
 						}
 					} else {
 						this.loading = false
@@ -266,14 +269,13 @@ export default {
 		},
 
 		updateTimeUntilCompletion(completionTimeStamp) {
-			const timeDifference = new Date(completionTimeStamp * 1000) - new Date()
-			if (timeDifference < 60000) {
+			const timeDifference = completionTimeStamp - moment().unix()
+			if (timeDifference < 60) {
 				this.timeUntilCompletion = null
 				return
 			}
 
-			this.timeUntilCompletion = humanizeDuration(timeDifference,
-				{ units: ['h', 'm'], language: OC.getLanguage(), fallbacks: ['en'], round: true })
+			this.timeUntilCompletion = moment.unix(completionTimeStamp).fromNow()
 
 			// Schedule next update:
 			if (!this.closed) {

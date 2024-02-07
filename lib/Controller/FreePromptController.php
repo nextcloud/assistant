@@ -12,7 +12,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Services\IInitialState;
 
 use OCP\IL10N;
 use OCP\IRequest;
@@ -23,7 +22,6 @@ class FreePromptController extends Controller {
 		IRequest $request,
 		private FreePromptService $freePromptService,
 		private ?string $userId,
-		private IInitialState $initialStateService,
 		private IL10N $l10n,
 	) {
 		parent::__construct($appName, $request);
@@ -46,7 +44,7 @@ class FreePromptController extends Controller {
 		} catch (Exception $e) {
 			return new DataResponse(['error' => $e->getMessage()], (int)$e->getCode());
 		}
-		
+
 		return new DataResponse($result);
 	}
 
