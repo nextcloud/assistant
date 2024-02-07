@@ -108,19 +108,7 @@ class AssistantService {
 	}
 
 	private function getDefaultTarget(MetaTask $task): string {
-		$category = $task->getCategory();
-		if (in_array($category, [Application::TASK_CATEGORY_TEXT_GEN, Application::TASK_CATEGORY_SPEECH_TO_TEXT], true)) {
-			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['metaTaskId' => $task->getId()]);
-		} elseif ($category === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
-			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($task->getOutput());
-			return $this->url->linkToRouteAbsolute(
-				Application::APP_ID . '.Text2Image.showGenerationPage',
-				[
-					'imageGenId' => $imageGeneration->getImageGenId(),
-				]
-			);
-		}
-		return '';
+		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['metaTaskId' => $task->getId()]);
 	}
 
 	/**
