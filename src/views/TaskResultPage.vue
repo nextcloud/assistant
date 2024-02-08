@@ -35,7 +35,14 @@ import ScheduledEmptyContent from '../components/ScheduledEmptyContent.vue'
 
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { scheduleTask, runSttTask, cancelCurrentSyncTask, runTtiTask, runOrScheduleTask } from '../assistant.js'
+import {
+	scheduleTask,
+	runOrScheduleTask,
+	scheduleTtiTask,
+	runOrScheduleTtiTask,
+	runSttTask,
+	cancelCurrentSyncTask,
+} from '../assistant.js'
 import { STATUS } from '../constants.js'
 
 export default {
@@ -77,7 +84,10 @@ export default {
 	methods: {
 		onCancelNSchedule() {
 			cancelCurrentSyncTask()
-			scheduleTask(this.task.appId, this.task.identifier, this.task.type, this.task.inputs)
+			const scheduleFunction = this.task.taskType === 'OCP\\TextToImage\\Task'
+				? scheduleTtiTask
+				: scheduleTask
+			scheduleFunction(this.task.appId, this.task.identifier, this.task.taskType, this.task.inputs)
 				.then((response) => {
 					this.showSyncTaskRunning = false
 					this.showScheduleConfirmation = true
@@ -112,7 +122,7 @@ export default {
 				return
 			}
 			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
-				? runTtiTask
+				? runOrScheduleTtiTask
 				: runOrScheduleTask
 			runOrScheduleFunction(this.task.appId, this.task.identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then((response) => {

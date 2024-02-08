@@ -39,7 +39,7 @@ use RuntimeException;
 class SpeechToTextService {
 
 	public function __construct(
-		private ISpeechToTextManager $manager,
+		private ISpeechToTextManager $speechToTextManager,
 		private IRootFolder          $rootFolder,
 		private IConfig              $config,
 		private MetaTaskMapper       $metaTaskMapper,
@@ -67,7 +67,7 @@ class SpeechToTextService {
 			throw new InvalidArgumentException('Cannot transcribe a non-file node');
 		}
 
-		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
+		$this->speechToTextManager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
 		$this->metaTaskMapper->createMetaTask(
 			$userId,
@@ -96,7 +96,7 @@ class SpeechToTextService {
 
 		$audioFile = $this->getFileObject($userId, $tempFileLocation);
 
-		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
+		$this->speechToTextManager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
 		$this->metaTaskMapper->createMetaTask(
 			$userId,

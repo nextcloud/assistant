@@ -109,7 +109,7 @@ export async function openAssistantTextProcessingForm({
 				return
 			}
 			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
-				? runTtiTask
+				? runOrScheduleTtiTask
 				: runOrScheduleTask
 			runOrScheduleFunction(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
 				.then(async (response) => {
@@ -144,7 +144,10 @@ export async function openAssistantTextProcessingForm({
 		})
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
-			scheduleTask(appId, identifier, view.textProcessingTaskTypeId, view.inputs)
+			const scheduleFunction = view.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+				? scheduleTtiTask
+				: scheduleTask
+			scheduleFunction(appId, identifier, view.textProcessingTaskTypeId, view.inputs)
 				.then(async (response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
@@ -185,7 +188,12 @@ export async function runSttTask(inputs) {
 	}
 }
 
-export async function runTtiTask(appId, identifier, taskType, inputs) {
+export function scheduleTtiTask(appId, identifier, taskType, inputs) {
+	return runOrScheduleTtiTask(appId, identifier, taskType, inputs, true)
+}
+
+export async function runOrScheduleTtiTask(appId, identifier, taskType, inputs, schedule = false) {
+	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType('OCP\\TextToImage\\Task')
@@ -196,9 +204,10 @@ export async function runTtiTask(appId, identifier, taskType, inputs) {
 		nResults: inputs.nResults,
 		displayPrompt: inputs.displayPrompt,
 		notifyReadyIfScheduled: true,
+		schedule,
 	}
 	const url = generateUrl('/apps/assistant/i/process_prompt')
-	return axios.post(url, params)
+	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
 
 async function resolveMetaTaskToOcpTask(metaTask) {
@@ -457,7 +466,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			return
 		}
 		const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
-			? runTtiTask
+			? runOrScheduleTtiTask
 			: runOrScheduleTask
 		runOrScheduleFunction(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
 			.then((response) => {
@@ -486,7 +495,10 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	})
 	view.$on('cancel-sync-n-schedule', () => {
 		cancelCurrentSyncTask()
-		scheduleTask(task.appId, task.identifier ?? '', view.textProcessingTaskTypeId, view.inputs)
+		const scheduleFunction = view.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+			? scheduleTtiTask
+			: scheduleTask
+		scheduleFunction(task.appId, task.identifier ?? '', view.textProcessingTaskTypeId, view.inputs)
 			.then((response) => {
 				view.showSyncTaskRunning = false
 				view.showScheduleConfirmation = true

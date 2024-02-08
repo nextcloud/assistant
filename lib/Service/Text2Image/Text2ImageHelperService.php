@@ -66,6 +66,7 @@ class Text2ImageHelperService {
 	 * @param bool $displayPrompt
 	 * @param string $userId
 	 * @param bool $notifyReadyIfScheduled
+	 * @param bool $schedule
 	 * @return array
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
@@ -74,7 +75,7 @@ class Text2ImageHelperService {
 	 */
 	public function processPrompt(
 		string $appId, string $identifier, string $prompt, int $nResults, bool $displayPrompt, string $userId,
-		bool $notifyReadyIfScheduled
+		bool $notifyReadyIfScheduled, bool $schedule
 	): array {
 		if (!$this->textToImageManager->hasProviders()) {
 			$this->logger->error('No text to image processing provider available');
@@ -93,7 +94,11 @@ class Text2ImageHelperService {
 		// We now store the imageGenId only as the output of the metatask (used to be duplicated in output and identifier)
 		$ttiTask = new Task($prompt, $appId, $nResults, $userId, $imageGenId);
 
-		$this->textToImageManager->runOrScheduleTask($ttiTask);
+		if ($schedule) {
+			$this->textToImageManager->scheduleTask($ttiTask);
+		} else {
+			$this->textToImageManager->runOrScheduleTask($ttiTask);
+		}
 
 		$taskExecuted = false;
 
