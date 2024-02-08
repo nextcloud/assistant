@@ -1,6 +1,5 @@
 <template>
 	<NcEmptyContent
-		:title="title"
 		:name="title"
 		:description="t('assistant', 'You will receive a notification when it has finished')">
 		<template v-if="showCloseButton" #action>

@@ -167,6 +167,7 @@ export default {
 	top: 4px;
 	right: 4px;
 	z-index: 1;
+	background-color: var(--color-main-background);
 }
 
 .assistant-modal--wrapper {
