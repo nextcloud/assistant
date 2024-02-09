@@ -18,9 +18,8 @@
 			{{ selectedTaskType.description }}
 		</span>
 		<AssistantFormInputs
-			:inputs="inputs"
-			:selected-task-type-id="mySelectedTaskTypeId"
-			:new-inputs.sync="myInputs" />
+			:inputs.sync="myInputs"
+			:selected-task-type-id="mySelectedTaskTypeId" />
 		<div v-if="myOutput !== null"
 			class="output">
 			<label

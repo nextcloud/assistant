@@ -203,19 +203,19 @@ export default {
 			}
 		},
 		onUpdate() {
-			this.$emit('update:newInputs', {
+			this.$emit('update:inputs', {
 				prompt: this.prompt,
 			})
 		},
 		onUpdateCopywriter() {
-			this.$emit('update:newInputs', {
+			this.$emit('update:inputs', {
 				writingStyle: this.writingStyle,
 				sourceMaterial: this.sourceMaterial,
 			})
 		},
 		onUpdateStt() {
 			this.$emit(
-				'update:newInputs',
+				'update:inputs',
 				this.sttMode === 'record'
 					? { audioData: this.sttAudioData }
 					: { audioFilePath: this.sttAudioFilePath },
@@ -223,7 +223,7 @@ export default {
 		},
 		onUpdateTti() {
 			this.$emit(
-				'update:newInputs',
+				'update:inputs',
 				{
 					prompt: this.prompt,
 					nResults: this.ttiNResults,
