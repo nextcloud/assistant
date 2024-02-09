@@ -181,7 +181,6 @@ export default {
 	},
 	computed: {
 		selectedTaskType() {
-			console.debug('aaaaa SELECTED TASK TYPE', this.mySelectedTaskTypeId, this.taskTypes)
 			if (this.mySelectedTaskTypeId === null) {
 				return null
 			}
@@ -284,15 +283,14 @@ export default {
 				})
 		},
 		onSubmit() {
-			this.$emit('submit', { inputs: this.myInputs, textProcessingTaskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		onSyncSubmit() {
-			this.$emit('sync-submit', { inputs: this.myInputs, textProcessingTaskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('sync-submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		async onCopy() {
 			try {
 				const container = this.$refs.output.$el ?? this.$refs.output
-				console.debug('aaaaa output CONTAINER', container)
 				await this.$copyText(this.formattedOutput, container)
 				this.copied = true
 				setTimeout(() => {

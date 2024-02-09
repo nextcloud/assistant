@@ -30,7 +30,7 @@
 					class="form"
 					:inputs="inputs"
 					:output="output"
-					:selected-task-type-id="textProcessingTaskTypeId"
+					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
 					:action-buttons="actionButtons"
 					@submit="onSubmit"
@@ -83,7 +83,7 @@ export default {
 			type: [String, null],
 			default: null,
 		},
-		textProcessingTaskTypeId: {
+		selectedTaskTypeId: {
 			type: [String, null],
 			default: null,
 		},

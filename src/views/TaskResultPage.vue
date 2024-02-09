@@ -113,18 +113,18 @@ export default {
 		onSyncSubmit(data) {
 			this.showSyncTaskRunning = true
 			this.task.inputs = data.inputs
-			this.task.taskType = data.textProcessingTaskTypeId
-			if (data.textProcessingTaskTypeId === 'speech-to-text') {
+			this.task.taskType = data.selectedTaskTypeId
+			if (data.selectedTaskTypeId === 'speech-to-text') {
 				runSttTask(data.inputs).then(response => {
 					this.showScheduleConfirmation = true
 					this.showSyncTaskRunning = false
 				})
 				return
 			}
-			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+			const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
 				? runOrScheduleTtiTask
 				: runOrScheduleTask
-			runOrScheduleFunction(this.task.appId, this.task.identifier, data.textProcessingTaskTypeId, data.inputs)
+			runOrScheduleFunction(this.task.appId, this.task.identifier, data.selectedTaskTypeId, data.inputs)
 				.then((response) => {
 					console.debug('Assistant SYNC result', response.data)
 					const task = response.data?.task

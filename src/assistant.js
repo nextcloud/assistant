@@ -54,7 +54,7 @@ export async function openAssistantTextProcessingForm({
 	Vue.mixin({ methods: { t, n } })
 
 	// fallback to the last used one
-	const textProcessingTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
+	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
 
 	return new Promise((resolve, reject) => {
 		const modalId = 'assistantTextProcessingModal'
@@ -67,7 +67,7 @@ export async function openAssistantTextProcessingForm({
 			propsData: {
 				isInsideViewer,
 				inputs: { prompt: input },
-				textProcessingTaskTypeId,
+				selectedTaskTypeId,
 				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
 				actionButtons,
@@ -80,7 +80,7 @@ export async function openAssistantTextProcessingForm({
 			reject(new Error('User cancellation'))
 		})
 		view.$on('submit', (data) => {
-			scheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
+			scheduleTask(appId, identifier, data.selectedTaskTypeId, data.inputs)
 				.then(async (response) => {
 					view.inputs = data.inputs
 					view.showScheduleConfirmation = true
@@ -99,8 +99,8 @@ export async function openAssistantTextProcessingForm({
 			view.loading = true
 			view.showSyncTaskRunning = true
 			view.inputs = data.inputs
-			view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
-			if (data.textProcessingTaskTypeId === 'speech-to-text') {
+			view.selectedTaskTypeId = data.selectedTaskTypeId
+			if (data.selectedTaskTypeId === 'speech-to-text') {
 				runSttTask(data.inputs).then(response => {
 					view.showScheduleConfirmation = true
 					view.loading = false
@@ -108,10 +108,10 @@ export async function openAssistantTextProcessingForm({
 				})
 				return
 			}
-			const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+			const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
 				? runOrScheduleTtiTask
 				: runOrScheduleTask
-			runOrScheduleFunction(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
+			runOrScheduleFunction(appId, identifier, data.selectedTaskTypeId, data.inputs)
 				.then(async (response) => {
 					const task = response.data?.task
 					lastTask = task
@@ -144,10 +144,10 @@ export async function openAssistantTextProcessingForm({
 		})
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
-			const scheduleFunction = view.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+			const scheduleFunction = view.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
 				? scheduleTtiTask
 				: scheduleTask
-			scheduleFunction(appId, identifier, view.textProcessingTaskTypeId, view.inputs)
+			scheduleFunction(appId, identifier, view.selectedTaskTypeId, view.inputs)
 				.then(async (response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
@@ -432,7 +432,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			// isInsideViewer,
 			inputs: useMetaTasks ? task.inputs : [task.input],
 			output: task.output ?? '',
-			textProcessingTaskTypeId: useMetaTasks ? task.taskType : task.type,
+			selectedTaskTypeId: useMetaTasks ? task.taskType : task.type,
 			showScheduleConfirmation: false,
 		},
 	}).$mount(modalElement)
@@ -441,7 +441,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		view.$destroy()
 	})
 	view.$on('submit', (data) => {
-		scheduleTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
+		scheduleTask(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
 				view.showScheduleConfirmation = true
 				console.debug('scheduled task', response.data?.task)
@@ -456,8 +456,8 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		view.loading = true
 		view.showSyncTaskRunning = true
 		view.inputs = data.inputs
-		view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
-		if (data.textProcessingTaskTypeId === 'speech-to-text') {
+		view.selectedTaskTypeId = data.selectedTaskTypeId
+		if (data.selectedTaskTypeId === 'speech-to-text') {
 			runSttTask(data.inputs).then(response => {
 				view.showScheduleConfirmation = true
 				view.loading = false
@@ -465,10 +465,10 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			})
 			return
 		}
-		const runOrScheduleFunction = data.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+		const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
 			? runOrScheduleTtiTask
 			: runOrScheduleTask
-		runOrScheduleFunction(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
+		runOrScheduleFunction(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
 				// resolve(response.data?.task)
 				const task = response.data?.task
@@ -495,10 +495,10 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	})
 	view.$on('cancel-sync-n-schedule', () => {
 		cancelCurrentSyncTask()
-		const scheduleFunction = view.textProcessingTaskTypeId === 'OCP\\TextToImage\\Task'
+		const scheduleFunction = view.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
 			? scheduleTtiTask
 			: scheduleTask
-		scheduleFunction(task.appId, task.identifier ?? '', view.textProcessingTaskTypeId, view.inputs)
+		scheduleFunction(task.appId, task.identifier ?? '', view.selectedTaskTypeId, view.inputs)
 			.then((response) => {
 				view.showSyncTaskRunning = false
 				view.showScheduleConfirmation = true
