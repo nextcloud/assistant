@@ -128,14 +128,14 @@ export default {
 	},
 	data() {
 		return {
-			writingStyle: '',
-			sourceMaterial: '',
-			prompt: '',
+			writingStyle: this.inputs.writingStyle ?? '',
+			sourceMaterial: this.inputs.sourceMaterial ?? this.inputs.prompt ?? '',
+			prompt: this.inputs.prompt ?? '',
 			sttMode: 'record',
 			sttAudioData: null,
-			sttAudioFilePath: null,
-			ttiNResults: 1,
-			ttiDisplayPrompt: false,
+			sttAudioFilePath: this.inputs.audioFilePath ?? null,
+			ttiNResults: this.inputs.nResults ?? 1,
+			ttiDisplayPrompt: this.inputs.displayPrompt ?? false,
 		}
 	},
 	watch: {
@@ -152,10 +152,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.writingStyle = this.inputs.writingStyle ?? ''
-		this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
-		this.prompt = this.inputs.prompt ?? ''
-
 		if (this.selectedTaskTypeId === 'copywriter') {
 			this.onUpdateCopywriter()
 		} else if (this.selectedTaskTypeId === 'speech-to-text') {

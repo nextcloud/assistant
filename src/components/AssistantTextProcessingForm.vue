@@ -172,7 +172,7 @@ export default {
 	],
 	data() {
 		return {
-			myInputs: {},
+			myInputs: this.inputs,
 			myOutput: this.output,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
@@ -236,11 +236,12 @@ export default {
 		output(newVal) {
 			this.myOutput = newVal
 		},
+		inputs(newVal) {
+			this.myInputs = newVal
+		},
 	},
 	mounted() {
 		this.getTaskTypes()
-
-		this.myInputs = this.inputs
 	},
 	methods: {
 		getTaskTypes() {
