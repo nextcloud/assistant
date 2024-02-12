@@ -106,7 +106,7 @@ class SpeechToTextController extends Controller {
 	 */
 	private function internalGetTask(int $id): MetaTask {
 		try {
-			$metaTask = $this->metaTaskMapper->getMetaTaskOfUser($id, $this->userId);
+			$metaTask = $this->metaTaskMapper->getUserMetaTask($id, $this->userId);
 
 			if($metaTask->getCategory() !== Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 				throw new Exception('Task is not a speech to text task.', Http::STATUS_BAD_REQUEST);

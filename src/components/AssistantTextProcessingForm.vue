@@ -29,7 +29,7 @@
 			</label>
 			<div v-if="mySelectedTaskTypeId === 'OCP\\TextToImage\\Task'"
 				ref="output">
-				<a :href="formattedOutput">{{ formattedOutput }}</a>
+				<a :href="formattedOutput" class="external">{{ formattedOutput }}</a>
 				<Text2ImageDisplay
 					:image-gen-id="myOutput" />
 			</div>
@@ -99,6 +99,21 @@
 				</NcButton>
 			</div>
 		</div>
+		<div class="history">
+			<NcButton class="advanced-button"
+				type="tertiary"
+				:aria-label="t('assistant', 'Show/hide task history')"
+				@click="showHistory = !showHistory">
+				<template #icon>
+					<ChevronDownIcon v-if="showHistory" />
+					<ChevronRightIcon v-else />
+				</template>
+				{{ t('assistant', 'Task history') }}
+			</NcButton>
+			<TaskList v-if="showHistory"
+				class="history--list"
+				:task-type="mySelectedTaskTypeId" />
+		</div>
 	</div>
 </template>
 
@@ -106,6 +121,8 @@
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
+import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue'
+import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -116,6 +133,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import Text2ImageDisplay from './Text2Image/Text2ImageDisplay.vue'
+import TaskList from './TaskList.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
@@ -130,6 +148,7 @@ const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
 export default {
 	name: 'AssistantTextProcessingForm',
 	components: {
+		TaskList,
 		Text2ImageDisplay,
 		TaskTypeSelect,
 		NcButton,
@@ -139,6 +158,8 @@ export default {
 		CreationIcon,
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
+		ChevronDownIcon,
+		ChevronRightIcon,
 		NcNoteCard,
 		AssistantFormInputs,
 	},
@@ -176,6 +197,7 @@ export default {
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
 			copied: false,
+			showHistory: false,
 		}
 	},
 	computed: {
@@ -384,6 +406,17 @@ export default {
 			flex-wrap: wrap;
 			justify-content: end;
 			gap: 4px;
+		}
+	}
+
+	.history {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: end;
+
+		&--list {
+			width: 100%;
 		}
 	}
 

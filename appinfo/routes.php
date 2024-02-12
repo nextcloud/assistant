@@ -8,6 +8,7 @@ return [
 
 		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{metaTaskId}', 'verb' => 'GET'],
 		['name' => 'assistant#getAssistantTask', 'url' => '/task/{metaTaskId}', 'verb' => 'GET'],
+		['name' => 'assistant#getUserTasks', 'url' => '/tasks', 'verb' => 'GET'],
 		['name' => 'assistant#runTextProcessingTask', 'url' => '/task/run', 'verb' => 'POST'],
 		['name' => 'assistant#scheduleTextProcessingTask', 'url' => '/task/schedule', 'verb' => 'POST'],
 		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/task/run-or-schedule', 'verb' => 'POST'],

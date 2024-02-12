@@ -72,7 +72,7 @@ class SpeechToTextResultListener implements IEventListener {
 
 			// Update the meta task with the output and new status
 			$assistantTask->setOutput($transcript);
-			$assistantTask->setStatus(Application::STT_TASK_SUCCESSFUL);
+			$assistantTask->setStatus(Application::STATUS_META_TASK_SUCCESSFUL);
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {
@@ -104,7 +104,7 @@ class SpeechToTextResultListener implements IEventListener {
 			}
 
 			// Update the meta task with the new status
-			$assistantTask->setStatus(Application::STT_TASK_FAILED);
+			$assistantTask->setStatus(Application::STATUS_META_TASK_FAILED);
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {

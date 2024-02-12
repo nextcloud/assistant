@@ -3,6 +3,8 @@
 namespace OCA\TpAssistant\Controller;
 
 use OCA\TpAssistant\AppInfo\Application;
+use OCA\TpAssistant\Db\MetaTask;
+use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -11,16 +13,18 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\DB\Exception;
 use OCP\IRequest;
 
 class AssistantController extends Controller {
 
 	public function __construct(
-		string                   $appName,
-		IRequest                 $request,
+		string $appName,
+		IRequest $request,
 		private AssistantService $assistantService,
-		private IInitialState    $initialStateService,
-		private ?string          $userId,
+		private MetaTaskMapper $metaTaskMapper,
+		private IInitialState $initialStateService,
+		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -54,6 +58,22 @@ class AssistantController extends Controller {
 				return new DataResponse([
 					'task' => $task->jsonSerializeCc(),
 				]);
+			}
+		}
+		return new DataResponse('', Http::STATUS_NOT_FOUND);
+	}
+
+	#[NoAdminRequired]
+	public function getUserTasks(?string $taskType = null, ?int $category = null): DataResponse {
+		if ($this->userId !== null) {
+			try {
+				$tasks = $this->metaTaskMapper->getUserMetaTasks($this->userId, $taskType, $category);
+				$serializedTasks = array_map(static function(MetaTask $task) {
+					return $task->jsonSerializeCc();
+				}, $tasks);
+				return new DataResponse(['tasks' => $serializedTasks]);
+			} catch (Exception $e) {
+				return new DataResponse(['tasks' => []]);
 			}
 		}
 		return new DataResponse('', Http::STATUS_NOT_FOUND);
