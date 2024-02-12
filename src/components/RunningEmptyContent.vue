@@ -1,6 +1,5 @@
 <template>
 	<NcEmptyContent
-		:title="t('assistant', 'Getting results…')"
 		:name="t('assistant', 'Getting results…')"
 		:description="description">
 		<template #action>

@@ -14,9 +14,9 @@
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
-					:input="task.input"
+					:inputs="task.inputs"
 					:output="task.output ?? ''"
-					:selected-task-type-id="task.type"
+					:selected-task-type-id="task.taskType"
 					:loading="loading"
 					@submit="onSubmit"
 					@sync-submit="onSyncSubmit" />
@@ -35,7 +35,15 @@ import ScheduledEmptyContent from '../components/ScheduledEmptyContent.vue'
 
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { scheduleTask, runTask, cancelCurrentSyncTask } from '../assistant.js'
+import {
+	scheduleTask,
+	runOrScheduleTask,
+	scheduleTtiTask,
+	runOrScheduleTtiTask,
+	runSttTask,
+	cancelCurrentSyncTask,
+} from '../assistant.js'
+import { STATUS } from '../constants.js'
 
 export default {
 	name: 'TaskResultPage',
@@ -62,10 +70,11 @@ export default {
 
 	computed: {
 		shortInput() {
-			if (this.task.input.length <= 200) {
-				return this.task.input
+			const input = this.task.inputs.prompt ?? this.task.inputs.sourceMaterial ?? ''
+			if (input.length <= 200) {
+				return input
 			}
-			return this.task.input.slice(0, 200) + '…'
+			return input.slice(0, 200) + '…'
 		},
 	},
 
@@ -75,7 +84,10 @@ export default {
 	methods: {
 		onCancelNSchedule() {
 			cancelCurrentSyncTask()
-			scheduleTask(this.task.appId, this.task.identifier, this.task.type, this.task.input)
+			const scheduleFunction = this.task.taskType === 'OCP\\TextToImage\\Task'
+				? scheduleTtiTask
+				: scheduleTask
+			scheduleFunction(this.task.appId, this.task.identifier, this.task.taskType, this.task.inputs)
 				.then((response) => {
 					this.showSyncTaskRunning = false
 					this.showScheduleConfirmation = true
@@ -87,9 +99,9 @@ export default {
 				})
 		},
 		onSubmit(data) {
-			scheduleTask(this.task.appId, this.task.identifier, data.taskTypeId, data.input)
+			scheduleTask(this.task.appId, this.task.identifier, data.taskTypeId, data.inputs)
 				.then((response) => {
-					this.task.input = data.input
+					this.task.inputs = data.inputs
 					this.showScheduleConfirmation = true
 					console.debug('scheduled task', response.data?.ocs?.data?.task)
 				})
@@ -100,13 +112,30 @@ export default {
 		},
 		onSyncSubmit(data) {
 			this.showSyncTaskRunning = true
-			this.task.input = data.input
-			this.task.type = data.taskTypeId
-			runTask(this.task.appId, this.task.identifier, data.taskTypeId, data.input)
-				.then((response) => {
-					this.task.output = response.data?.task?.output ?? ''
+			this.task.inputs = data.inputs
+			this.task.taskType = data.selectedTaskTypeId
+			if (data.selectedTaskTypeId === 'speech-to-text') {
+				runSttTask(data.inputs).then(response => {
+					this.showScheduleConfirmation = true
 					this.showSyncTaskRunning = false
+				})
+				return
+			}
+			const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+				? runOrScheduleTtiTask
+				: runOrScheduleTask
+			runOrScheduleFunction(this.task.appId, this.task.identifier, data.selectedTaskTypeId, data.inputs)
+				.then((response) => {
 					console.debug('Assistant SYNC result', response.data)
+					const task = response.data?.task
+					this.task.inputs = task.inputs
+					if (task.status === STATUS.successfull) {
+						this.task.output = task?.output ?? ''
+					} else if (task.status === STATUS.scheduled) {
+						this.showScheduleConfirmation = true
+					}
+					this.loading = false
+					this.showSyncTaskRunning = false
 				})
 				.catch(error => {
 					console.error('Assistant scheduling error', error)

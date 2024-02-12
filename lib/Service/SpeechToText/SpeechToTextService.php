@@ -39,7 +39,7 @@ use RuntimeException;
 class SpeechToTextService {
 
 	public function __construct(
-		private ISpeechToTextManager $manager,
+		private ISpeechToTextManager $speechToTextManager,
 		private IRootFolder          $rootFolder,
 		private IConfig              $config,
 		private MetaTaskMapper       $metaTaskMapper,
@@ -63,8 +63,11 @@ class SpeechToTextService {
 
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		$audioFile = $userFolder->get($path);
+		if (!$audioFile instanceof File) {
+			throw new InvalidArgumentException('Cannot transcribe a non-file node');
+		}
 
-		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
+		$this->speechToTextManager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
 		$this->metaTaskMapper->createMetaTask(
 			$userId,
@@ -72,7 +75,7 @@ class SpeechToTextService {
 			'',
 			time(),
 			$audioFile->getId(),
-			"Speech-to-text task",
+			'speech-to-text',
 			Application::APP_ID,
 			Application::STT_TASK_SCHEDULED,
 			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
@@ -93,7 +96,7 @@ class SpeechToTextService {
 
 		$audioFile = $this->getFileObject($userId, $tempFileLocation);
 
-		$this->manager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
+		$this->speechToTextManager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
 		$this->metaTaskMapper->createMetaTask(
 			$userId,
@@ -101,7 +104,7 @@ class SpeechToTextService {
 			'',
 			time(),
 			$audioFile->getId(),
-			"Speech-to-text task",
+			'speech-to-text',
 			Application::APP_ID,
 			Application::STT_TASK_SCHEDULED,
 			Application::TASK_CATEGORY_SPEECH_TO_TEXT);

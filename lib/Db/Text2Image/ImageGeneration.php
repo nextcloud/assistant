@@ -13,12 +13,14 @@ use OCP\AppFramework\Db\Entity;
  * @method \void setImageGenId(string $imageGenId)
  * @method \string getPrompt()
  * @method \void setPrompt(string $prompt)
- * @method \void setUserId(string $userId)
  * @method \string getUserId()
- * @method \void setTimestamp(int $timestamp)
+ * @method \void setUserId(string $userId)
  * @method \int getTimestamp()
- * @method \void setExpGenTime(int $expGenTime)
+ * @method \void setTimestamp(int $timestamp)
+ * @method \boolean getNotifyReady()
+ * @method \void setNotifyReady(bool $notifyReady)
  * @method \int getExpGenTime()
+ * @method \void setExpGenTime(int $expGenTime)
  *
  */
 class ImageGeneration extends Entity implements \JsonSerializable {
@@ -79,13 +81,5 @@ class ImageGeneration extends Entity implements \JsonSerializable {
 
 	public function getFailed(): bool {
 		return $this->failed === true;
-	}
-
-	public function setNotifyReady(?bool $notifyReady): void {
-		$this->notifyReady = $notifyReady === true;
-	}
-
-	public function getNotifyReady(): bool {
-		return $this->notifyReady === true;
 	}
 }

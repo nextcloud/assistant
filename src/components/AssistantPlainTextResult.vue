@@ -62,7 +62,7 @@ import Vue from 'vue'
 
 import { showError } from '@nextcloud/dialogs'
 
-import { TASK_TYPES } from '../constants.js'
+import { TASK_CATEGORIES } from '../constants.js'
 
 Vue.use(VueClipboard)
 
@@ -95,9 +95,9 @@ export default {
 	computed: {
 		taskCategoryName() {
 			switch (this.taskCategory) {
-			case TASK_TYPES.text_generation:
+			case TASK_CATEGORIES.text_generation:
 				return t('assistant', 'Text Generation')
-			case TASK_TYPES.speech_to_text:
+			case TASK_CATEGORIES.speech_to_text:
 				return t('assistant', 'Audio transcription')
 			default:
 				return t('assistant', 'Unknown Result Type')

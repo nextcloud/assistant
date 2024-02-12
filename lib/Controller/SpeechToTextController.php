@@ -61,16 +61,16 @@ class SpeechToTextController extends Controller {
 	}
 
 	/**
-	 * @param int $id
+	 * @param int $metaTaskId
 	 * @return TemplateResponse
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function getResultPage(int $id): TemplateResponse {
+	public function getResultPage(int $metaTaskId): TemplateResponse {
 		$response = new TemplateResponse(Application::APP_ID, 'speechToTextResultPage');
 		try {
 			$initData = [
-				'task' => $this->internalGetTask($id),
+				'task' => $this->internalGetTask($metaTaskId),
 			];
 		} catch (Exception $e) {
 			$initData = [
@@ -102,6 +102,7 @@ class SpeechToTextController extends Controller {
 	 *
 	 * @param integer $id
 	 * @return MetaTask
+	 * @throws Exception
 	 */
 	private function internalGetTask(int $id): MetaTask {
 		try {
@@ -128,6 +129,7 @@ class SpeechToTextController extends Controller {
 
 	/**
 	 * @return DataResponse
+	 * @throws NotPermittedException
 	 */
 	#[NoAdminRequired]
 	public function transcribeAudio(): DataResponse {

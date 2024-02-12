@@ -6,11 +6,11 @@ return [
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 
-		['name' => 'assistant#getTextProcessingTaskResultPage', 'url' => '/task/view/{taskId}', 'verb' => 'GET'],
+		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{metaTaskId}', 'verb' => 'GET'],
+		['name' => 'assistant#getAssistantTask', 'url' => '/task/{metaTaskId}', 'verb' => 'GET'],
 		['name' => 'assistant#runTextProcessingTask', 'url' => '/task/run', 'verb' => 'POST'],
 		['name' => 'assistant#scheduleTextProcessingTask', 'url' => '/task/schedule', 'verb' => 'POST'],
 		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/task/run-or-schedule', 'verb' => 'POST'],
-		['name' => 'assistant#getTextProcessingResult', 'url' => '/task/{taskId}', 'verb' => 'GET'],
 		['name' => 'assistant#parseTextFromFile', 'url' => '/parse-file', 'verb' => 'POST'],
 
 		['name' => 'Text2Image#processPrompt', 'url' => '/i/process_prompt', 'verb' => 'POST'],
@@ -27,7 +27,7 @@ return [
 		['name' => 'FreePrompt#getOutputs', 'url' => '/f/get_outputs', 'verb' => 'GET'],
 		['name' => 'FreePrompt#cancelGeneration', 'url' => '/f/cancel_generation', 'verb' => 'POST'],
 
-		['name' => 'SpeechToText#getResultPage', 'url' => '/stt/resultPage', 'verb' => 'GET'],
+		['name' => 'SpeechToText#getResultPage', 'url' => '/stt/result-page/{metaTaskId}', 'verb' => 'GET'],
 		['name' => 'SpeechToText#transcribeAudio', 'url' => '/stt/transcribeAudio', 'verb' => 'POST'],
 		['name' => 'SpeechToText#transcribeFile', 'url' => '/stt/transcribeFile', 'verb' => 'POST'],
 	],

@@ -1,5 +1,14 @@
 <template>
-	<div v-if="selectedTaskTypeId === 'copywriter'" class="assistant-inputs">
+	<div v-if="selectedTaskTypeId === 'speech-to-text'" class="assistant-inputs">
+		<SpeechToTextInputForm
+			:mode.sync="sttMode"
+			:audio-data.sync="sttAudioData"
+			:audio-file-path.sync="sttAudioFilePath"
+			@update:mode="onUpdateStt"
+			@update:audio-data="onUpdateStt"
+			@update:audio-file-path="onUpdateStt" />
+	</div>
+	<div v-else-if="selectedTaskTypeId === 'copywriter'" class="assistant-inputs">
 		<div class="input-container">
 			<div class="label-row">
 				<label for="writingStyle" class="input-label">
@@ -60,7 +69,14 @@
 				:multiline="true"
 				class="editable-input"
 				:placeholder="t('assistant','Type some text')"
-				@update:value="onUpdate" />
+				@update:value="onUpdateMainInput" />
+		</div>
+		<div v-if="selectedTaskTypeId === 'OCP\\TextToImage\\Task'" class="assistant-inputs">
+			<Text2ImageInputForm
+				:n-results.sync="ttiNResults"
+				:display-prompt.sync="ttiDisplayPrompt"
+				@update:nResults="onUpdateTti"
+				@update:displayPrompt="onUpdateTti" />
 		</div>
 	</div>
 </template>
@@ -68,6 +84,10 @@
 <script>
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
+import Text2ImageInputForm from './Text2Image/Text2ImageInputForm.vue'
+
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
@@ -91,6 +111,8 @@ const picker = getFilePickerBuilder(t('assistant', 'Choose a text file'))
 export default {
 	name: 'AssistantFormInputs',
 	components: {
+		Text2ImageInputForm,
+		SpeechToTextInputForm,
 		NcRichContenteditable,
 		NcButton,
 	},
@@ -106,27 +128,36 @@ export default {
 	},
 	data() {
 		return {
-			writingStyle: '',
-			sourceMaterial: '',
-			prompt: '',
+			writingStyle: this.inputs.writingStyle ?? '',
+			sourceMaterial: this.inputs.sourceMaterial ?? this.inputs.prompt ?? '',
+			prompt: this.inputs.prompt ?? '',
+			sttMode: 'record',
+			sttAudioData: null,
+			sttAudioFilePath: this.inputs.audioFilePath ?? null,
+			ttiNResults: this.inputs.nResults ?? 1,
+			ttiDisplayPrompt: this.inputs.displayPrompt ?? false,
 		}
 	},
 	watch: {
 		selectedTaskTypeId() {
 			if (this.selectedTaskTypeId === 'copywriter') {
 				this.onUpdateCopywriter()
+			} else if (this.selectedTaskTypeId === 'speech-to-text') {
+				this.onUpdateStt()
+			} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
+				this.onUpdateTti()
 			} else {
 				this.onUpdate()
 			}
 		},
 	},
 	mounted() {
-		this.writingStyle = this.inputs.writingStyle ?? ''
-		this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
-		this.prompt = this.inputs.prompt ?? ''
-
 		if (this.selectedTaskTypeId === 'copywriter') {
 			this.onUpdateCopywriter()
+		} else if (this.selectedTaskTypeId === 'speech-to-text') {
+			this.onUpdateStt()
+		} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
+			this.onUpdateTti()
 		} else {
 			this.onUpdate()
 		}
@@ -157,23 +188,48 @@ export default {
 					break
 				default:
 					this.prompt = response.data.parsedText
-					this.onUpdate()
+					this.onUpdateMainInput()
 				}
 			}).catch((error) => {
 				console.error(error)
 				showError(t('assistant', 'Could not parse file'))
 			})
 		},
+		onUpdateMainInput() {
+			if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
+				this.onUpdateTti()
+			} else {
+				this.onUpdate()
+			}
+		},
 		onUpdate() {
-			this.$emit('update:newInputs', {
+			this.$emit('update:inputs', {
 				prompt: this.prompt,
 			})
 		},
 		onUpdateCopywriter() {
-			this.$emit('update:newInputs', {
+			this.$emit('update:inputs', {
 				writingStyle: this.writingStyle,
 				sourceMaterial: this.sourceMaterial,
 			})
+		},
+		onUpdateStt() {
+			this.$emit(
+				'update:inputs',
+				this.sttMode === 'record'
+					? { audioData: this.sttAudioData }
+					: { audioFilePath: this.sttAudioFilePath },
+			)
+		},
+		onUpdateTti() {
+			this.$emit(
+				'update:inputs',
+				{
+					prompt: this.prompt,
+					nResults: this.ttiNResults,
+					displayPrompt: this.ttiDisplayPrompt,
+				},
+			)
 		},
 	},
 }

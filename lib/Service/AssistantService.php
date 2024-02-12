@@ -108,21 +108,7 @@ class AssistantService {
 	}
 
 	private function getDefaultTarget(MetaTask $task): string {
-		$category = $task->getCategory();
-		if ($category === Application::TASK_CATEGORY_TEXT_GEN) {
-			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getTextProcessingTaskResultPage', ['taskId' => $task->getId()]);
-		} elseif ($category === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
-			return $this->url->linkToRouteAbsolute(Application::APP_ID . '.SpeechToText.getResultPage', ['id' => $task->getId()]);
-		} elseif ($category === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
-			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($task->getIdentifier());
-			return $this->url->linkToRouteAbsolute(
-				Application::APP_ID . '.Text2Image.showGenerationPage',
-				[
-					'imageGenId' => $imageGeneration->getImageGenId(),
-				]
-			);
-		}
-		return '';
+		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['metaTaskId' => $task->getId()]);
 	}
 
 	/**
@@ -168,19 +154,23 @@ class AssistantService {
 
 	/**
 	 * @param string $userId
-	 * @param int $taskId
+	 * @param int $metaTaskId
 	 * @return MetaTask|null
 	 */
-	public function getTextProcessingTask(string $userId, int $taskId): ?MetaTask {
+	public function getAssistantTask(string $userId, int $metaTaskId): ?MetaTask {
 		try {
-			$metaTask = $this->metaTaskMapper->getMetaTask($taskId);
+			$metaTask = $this->metaTaskMapper->getMetaTask($metaTaskId);
 		} catch (DoesNotExistException | MultipleObjectsReturnedException | \OCP\Db\Exception $e) {
 			return null;
 		}
 		if ($metaTask->getUserId() !== $userId) {
 			return null;
 		}
-		// Check if the task status is up-to-date (if not, update status and output)
+		// only try to update meta task status for text processing ones
+		if ($metaTask->getCategory() !== Application::TASK_CATEGORY_TEXT_GEN) {
+			return $metaTask;
+		}
+		// Check if the text processing task status is up-to-date (if not, update status and output)
 		try {
 			$ocpTask = $this->textProcessingManager->getTask($metaTask->getOcpTaskId());
 

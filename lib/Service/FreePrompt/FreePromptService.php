@@ -119,9 +119,9 @@ class FreePromptService {
 		foreach ($tasks as $task) {
 			$row = ['prompt' => $task->getInput(), 'text' => $task->getOutput(), 'status' => $task->getStatus()];
 			if ($task->getStatus() === Task::STATUS_SCHEDULED) {
-				$row['completion_time'] = $task->getCompletionExpectedAt();
+				$row['completion_time'] = $task->getCompletionExpectedAt()?->getTimestamp();
 			}
-			array_push($outputs, $row);
+			$outputs[] = $row;
 		}
 
 		return $outputs;

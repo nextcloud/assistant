@@ -7,7 +7,6 @@ namespace OCA\TpAssistant\Reference;
 
 use Exception;
 use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\Text2Image\ImageGeneration;
 use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;
@@ -74,7 +73,6 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 		}
 
 		try {
-			/** @var ImageGeneration $imageGeneration */
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (Exception $e) {
 			$imageGeneration = null;
@@ -89,14 +87,16 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 		$reference = new Reference($referenceText);
 		$imageUrl = $this->urlGenerator->linkToRouteAbsolute(
 			Application::APP_ID . '.Text2Image.getGenerationInfo',
-			[
-				'imageGenId' => $imageGenId,
-			]
+			['imageGenId' => $imageGenId]
 		);
 
 		$reference->setImageUrl($imageUrl);
 
-		$richObjectInfo = ['prompt' => $prompt, 'proxied_url' => $imageUrl];
+		$richObjectInfo = [
+			'prompt' => $prompt,
+			'proxied_url' => $imageUrl,
+			'imageGenId' => $imageGenId,
+		];
 		$reference->setRichObject(
 			self::RICH_OBJECT_TYPE,
 			$richObjectInfo,

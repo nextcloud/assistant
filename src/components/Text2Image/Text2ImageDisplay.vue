@@ -74,12 +74,12 @@
 			<div v-if="timeUntilCompletion !== null" class="processing-notification">
 				<InformationOutlineIcon :size="20" class="icon" />
 				{{ t('assistant', 'Estimated generation time left: ') + timeUntilCompletion + '. ' }}
-				{{ t('assistant', 'The generated image is shown once ready.') }}
+				{{ t('assistant', 'The image(s) will be displayed here once generated.') }}
 			</div>
 			<div v-else class="processing-notification">
 				<InformationOutlineIcon :size="20" class="icon" />
 				{{ t('assistant', 'This image generation was scheduled to run in the background.') }}
-				{{ t('assistant', 'The generated image is shown once ready.') }}
+				{{ t('assistant', 'The image(s) will be displayed here once generated.') }}
 			</div>
 		</div>
 		<span v-if="failed" class="error_msg">
@@ -95,7 +95,7 @@ import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline
 import axios from '@nextcloud/axios'
 import AssistantIcon from '../icons/AssistantIcon.vue'
 import { generateUrl } from '@nextcloud/router'
-import humanizeDuration from 'humanize-duration'
+import moment from '@nextcloud/moment'
 
 export default {
 	name: 'Text2ImageDisplay',
@@ -108,7 +108,7 @@ export default {
 	},
 
 	props: {
-		src: {
+		imageGenId: {
 			type: String,
 			required: true,
 		},
@@ -149,6 +149,12 @@ export default {
 				return this.imageUrls.length > 0
 			}
 		},
+		infoUrl() {
+			return generateUrl('/apps/assistant/i/info/{imageGenId}', { imageGenId: this.imageGenId })
+		},
+		referenceUrl() {
+			return generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.imageGenId })
+		},
 	},
 	mounted() {
 		this.getImageGenInfo()
@@ -173,13 +179,13 @@ export default {
 
 			// Loop through all the fileIds and get the images:
 			fileIds.forEach((fileId) => {
-				this.imageUrls.push(generateUrl('/apps/assistant/i/' + imageGenId + '/' + fileId.id))
+				this.imageUrls.push(generateUrl('/apps/assistant/i/{imageGenId}/{fileId}', { imageGenId, fileId: fileId.id }))
 				this.imgLoadedList.push = false
 			})
 		},
 		getImageGenInfo() {
 			let success = false
-			axios.get(this.src)
+			axios.get(this.infoUrl)
 				.then((response) => {
 					if (response.status === 200) {
 						if (response.data?.files !== undefined) {
@@ -213,7 +219,7 @@ export default {
 					}
 					// If we didn't succeed in loading the image gen info yet, try again
 					if (!success && !this.failed && !this.closed) {
-						setTimeout(this.getImageGenInfo, 3000)
+						setTimeout(this.getImageGenInfo, 5000)
 					}
 				})
 				.catch((error) => {
@@ -223,16 +229,15 @@ export default {
 		updateTimeUntilCompletion(completionTimeStamp) {
 			// AFAIK there's no trivial way to do this with a computed property unless timers/intervals
 			// are used, so we might as well do this with a method:
-			const timeDifference = new Date(completionTimeStamp * 1000) - new Date()
+			const timeDifference = completionTimeStamp - moment().unix()
 			// If the time difference is less than 5 minutes, don't show the time left
 			// (as we don't know when the scheduled job will start exactly)
-			if (timeDifference < 5 * 60000) {
+			if (timeDifference < 5 * 60) {
 				this.timeUntilCompletion = null
 				return
 			}
 
-			this.timeUntilCompletion = humanizeDuration(timeDifference,
-				{ units: ['h', 'm'], language: OC.getLanguage(), fallbacks: ['en'], round: true })
+			this.timeUntilCompletion = moment.unix(completionTimeStamp).fromNow()
 
 			// Schedule next update:
 			if (!this.closed) {
@@ -264,7 +269,7 @@ export default {
 			this.$emit('ready')
 		},
 		onCheckboxChange() {
-			const url = generateUrl('/apps/assistant/i/visibility/' + this.src.split('/').pop())
+			const url = generateUrl('/apps/assistant/i/visibility/' + this.imageGenId)
 
 			axios.post(url, {
 				fileVisStatusArray: this.fileVisStatusArray,
@@ -406,12 +411,11 @@ export default {
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		margin-top: 24px;
+		margin-top: 16px;
 
 		.processing-notification {
 			display: flex;
 			flex-direction: row;
-			margin-top: 24px;
 			width: 90%;
 			align-items: center;
 			justify-content: center;

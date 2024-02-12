@@ -18,9 +18,8 @@
 			{{ selectedTaskType.description }}
 		</span>
 		<AssistantFormInputs
-			:inputs="inputs"
-			:selected-task-type-id="mySelectedTaskTypeId"
-			:new-inputs.sync="myInputs" />
+			:inputs.sync="myInputs"
+			:selected-task-type-id="mySelectedTaskTypeId" />
 		<div v-if="myOutput !== null"
 			class="output">
 			<label
@@ -28,7 +27,13 @@
 				class="input-label">
 				{{ t('assistant', 'Result') }}
 			</label>
-			<NcRichContenteditable
+			<div v-if="mySelectedTaskTypeId === 'OCP\\TextToImage\\Task'"
+				ref="output">
+				<a :href="formattedOutput">{{ formattedOutput }}</a>
+				<Text2ImageDisplay
+					:image-gen-id="myOutput" />
+			</div>
+			<NcRichContenteditable v-else
 				id="assistant-output"
 				ref="output"
 				:value.sync="myOutput"
@@ -67,19 +72,6 @@
 					<CreationIcon v-else />
 				</template>
 			</NcButton>
-			<!--NcButton
-				v-if="showSubmit"
-				:type="submitButtonType"
-				class="submit-button"
-				:disabled="!canSubmit"
-				:aria-label="t('assistant', 'Schedule an assistant task')"
-				:title="t('assistant', 'Schedule')"
-				@click="onSubmit">
-				{{ submitButtonLabel }}
-				<template #icon>
-					<CreationIcon />
-				</template>
-			</NcButton-->
 			<NcButton
 				v-if="hasOutput"
 				type="primary"
@@ -123,9 +115,10 @@ import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js
 
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import AssistantFormInputs from './AssistantFormInputs.vue'
+import Text2ImageDisplay from './Text2Image/Text2ImageDisplay.vue'
 
 import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
+import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
@@ -137,6 +130,7 @@ const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
 export default {
 	name: 'AssistantTextProcessingForm',
 	components: {
+		Text2ImageDisplay,
 		TaskTypeSelect,
 		NcButton,
 		NcRichContenteditable,
@@ -177,7 +171,7 @@ export default {
 	],
 	data() {
 		return {
-			myInputs: {},
+			myInputs: this.inputs,
 			myOutput: this.output,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
@@ -199,7 +193,13 @@ export default {
 		},
 		canSubmit() {
 			// Check that none of the properties of myInputs are empty
-			return Object.values(this.myInputs).every(v => !!v.trim()) && this.selectedTaskType
+			return Object.values(this.myInputs).every(v => {
+				return (typeof v === 'string' && !!v?.trim())
+					|| (typeof v === 'boolean')
+					|| (typeof v === 'number')
+					|| (typeof v === 'object' && !!v)
+			})
+				&& this.selectedTaskType
 		},
 		submitButtonLabel() {
 			return this.hasOutput
@@ -224,16 +224,23 @@ export default {
 		outputEqualsInput() {
 			return this.hasInitialOutput && this.output?.trim() === this.inputs.prompt?.trim()
 		},
+		formattedOutput() {
+			if (this.mySelectedTaskTypeId === 'OCP\\TextToImage\\Task') {
+				return window.location.protocol + '//' + window.location.host + generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.myOutput })
+			}
+			return this.myOutput.trim()
+		},
 	},
 	watch: {
 		output(newVal) {
 			this.myOutput = newVal
 		},
+		inputs(newVal) {
+			this.myInputs = newVal
+		},
 	},
 	mounted() {
 		this.getTaskTypes()
-
-		this.myInputs = this.inputs
 	},
 	methods: {
 		getTaskTypes() {
@@ -255,7 +262,19 @@ export default {
 						this.taskTypes.push({
 							id: 'copywriter',
 							name: t('assistant', 'Context write'),
-							description: t('assistant', 'Writes text in a given style based on the provided source material'),
+							description: t('assistant', 'Writes text in a given style based on the provided source material.'),
+						})
+						// inject a STT task type
+						this.taskTypes.push({
+							id: 'speech-to-text',
+							name: t('assistant', 'Transcribe'),
+							description: t('assistant', 'Transcribe audio to text'),
+						})
+						// inject a T2I task type
+						this.taskTypes.push({
+							id: 'OCP\\TextToImage\\Task',
+							name: t('assistant', 'Generate image'),
+							description: t('assistant', 'Generate an image from a text'),
 						})
 					}
 				})
@@ -264,15 +283,15 @@ export default {
 				})
 		},
 		onSubmit() {
-			this.$emit('submit', { inputs: this.myInputs, textProcessingTaskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		onSyncSubmit() {
-			this.$emit('sync-submit', { inputs: this.myInputs, textProcessingTaskTypeId: this.mySelectedTaskTypeId })
+			this.$emit('sync-submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		async onCopy() {
 			try {
-				const container = this.$refs.output.$el
-				await this.$copyText(this.myOutput.trim(), container)
+				const container = this.$refs.output.$el ?? this.$refs.output
+				await this.$copyText(this.formattedOutput, container)
 				this.copied = true
 				setTimeout(() => {
 					this.copied = false
@@ -283,7 +302,7 @@ export default {
 			}
 		},
 		onActionButtonClick(button) {
-			this.$emit('action-button-clicked', { button, output: this.myOutput.trim() })
+			this.$emit('action-button-clicked', { button, output: this.formattedOutput })
 		},
 	},
 }
@@ -310,9 +329,9 @@ export default {
 		margin-left: 16px;
 		.editable-output {
 			width: 100%;
-			min-height: unset !important;
-			max-height: 200px !important;
-			overflow: auto;
+			:deep(.rich-contenteditable__input) {
+				max-height: 300px !important;
+			}
 		}
 
 		.warning-note {

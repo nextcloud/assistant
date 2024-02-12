@@ -1,4 +1,4 @@
-import { STATUS, TASK_TYPES } from './constants.js'
+import { STATUS, TASK_CATEGORIES } from './constants.js'
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import { showError } from '@nextcloud/dialogs'
@@ -54,7 +54,7 @@ export async function openAssistantTextProcessingForm({
 	Vue.mixin({ methods: { t, n } })
 
 	// fallback to the last used one
-	const textProcessingTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
+	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
 
 	return new Promise((resolve, reject) => {
 		const modalId = 'assistantTextProcessingModal'
@@ -67,7 +67,7 @@ export async function openAssistantTextProcessingForm({
 			propsData: {
 				isInsideViewer,
 				inputs: { prompt: input },
-				textProcessingTaskTypeId,
+				selectedTaskTypeId,
 				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
 				actionButtons,
@@ -80,7 +80,7 @@ export async function openAssistantTextProcessingForm({
 			reject(new Error('User cancellation'))
 		})
 		view.$on('submit', (data) => {
-			scheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
+			scheduleTask(appId, identifier, data.selectedTaskTypeId, data.inputs)
 				.then(async (response) => {
 					view.inputs = data.inputs
 					view.showScheduleConfirmation = true
@@ -99,8 +99,19 @@ export async function openAssistantTextProcessingForm({
 			view.loading = true
 			view.showSyncTaskRunning = true
 			view.inputs = data.inputs
-			view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
-			runOrScheduleTask(appId, identifier, data.textProcessingTaskTypeId, data.inputs)
+			view.selectedTaskTypeId = data.selectedTaskTypeId
+			if (data.selectedTaskTypeId === 'speech-to-text') {
+				runSttTask(data.inputs).then(response => {
+					view.showScheduleConfirmation = true
+					view.loading = false
+					view.showSyncTaskRunning = false
+				})
+				return
+			}
+			const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+				? runOrScheduleTtiTask
+				: runOrScheduleTask
+			runOrScheduleFunction(appId, identifier, data.selectedTaskTypeId, data.inputs)
 				.then(async (response) => {
 					const task = response.data?.task
 					lastTask = task
@@ -133,7 +144,10 @@ export async function openAssistantTextProcessingForm({
 		})
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
-			scheduleTask(appId, identifier, view.textProcessingTaskTypeId, view.inputs)
+			const scheduleFunction = view.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+				? scheduleTtiTask
+				: scheduleTask
+			scheduleFunction(appId, identifier, view.selectedTaskTypeId, view.inputs)
 				.then(async (response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
@@ -158,10 +172,48 @@ export async function openAssistantTextProcessingForm({
 	})
 }
 
+export async function runSttTask(inputs) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType('speech-to-text')
+	if (inputs.audioData) {
+		const url = generateUrl('/apps/assistant/stt/transcribeAudio')
+		const formData = new FormData()
+		formData.append('audioData', inputs.audioData)
+		return axios.post(url, formData)
+	} else {
+		const url = generateUrl('/apps/assistant/stt/transcribeFile')
+		const params = { path: this.audioFilePath }
+		return axios.post(url, params)
+	}
+}
+
+export function scheduleTtiTask(appId, identifier, taskType, inputs) {
+	return runOrScheduleTtiTask(appId, identifier, taskType, inputs, true)
+}
+
+export async function runOrScheduleTtiTask(appId, identifier, taskType, inputs, schedule = false) {
+	window.assistantAbortController = new AbortController()
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	saveLastSelectedTaskType('OCP\\TextToImage\\Task')
+	const params = {
+		appId,
+		identifier,
+		prompt: inputs.prompt,
+		nResults: inputs.nResults,
+		displayPrompt: inputs.displayPrompt,
+		notifyReadyIfScheduled: true,
+		schedule,
+	}
+	const url = generateUrl('/apps/assistant/i/process_prompt')
+	return axios.post(url, params, { signal: window.assistantAbortController.signal })
+}
+
 async function resolveMetaTaskToOcpTask(metaTask) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
-	if (metaTask.category !== TASK_TYPES.text_generation) {
+	if (metaTask.category !== TASK_CATEGORIES.text_generation) {
 		// For now we only resolve text generation tasks
 		return null
 	}
@@ -349,13 +401,16 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	// Divert to the right modal/page if we have a meta task with a category other than text generation:
 	if (useMetaTasks) {
 		switch (task.category) {
-		case TASK_TYPES.speech_to_text:
+		/*
+		case TASK_CATEGORIES.speech_to_text:
 			openAssistantPlainTextResult(task)
 			return
-		case TASK_TYPES.image_generation:
+
+		case TASK_CATEGORIES.image_generation:
 			openAssistantImageResult(task)
 			return
-		case TASK_TYPES.text_generation:
+		*/
+		case TASK_CATEGORIES.text_generation:
 		default:
 			break
 		}
@@ -377,7 +432,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			// isInsideViewer,
 			inputs: useMetaTasks ? task.inputs : [task.input],
 			output: task.output ?? '',
-			textProcessingTaskTypeId: useMetaTasks ? task.taskType : task.type,
+			selectedTaskTypeId: useMetaTasks ? task.taskType : task.type,
 			showScheduleConfirmation: false,
 		},
 	}).$mount(modalElement)
@@ -386,7 +441,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		view.$destroy()
 	})
 	view.$on('submit', (data) => {
-		scheduleTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
+		scheduleTask(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
 				view.showScheduleConfirmation = true
 				console.debug('scheduled task', response.data?.task)
@@ -401,8 +456,19 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		view.loading = true
 		view.showSyncTaskRunning = true
 		view.inputs = data.inputs
-		view.textProcessingTaskTypeId = data.textProcessingTaskTypeId
-		runTask(task.appId, task.identifier ?? '', data.textProcessingTaskTypeId, data.inputs)
+		view.selectedTaskTypeId = data.selectedTaskTypeId
+		if (data.selectedTaskTypeId === 'speech-to-text') {
+			runSttTask(data.inputs).then(response => {
+				view.showScheduleConfirmation = true
+				view.loading = false
+				view.showSyncTaskRunning = false
+			})
+			return
+		}
+		const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+			? runOrScheduleTtiTask
+			: runOrScheduleTask
+		runOrScheduleFunction(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
 				// resolve(response.data?.task)
 				const task = response.data?.task
@@ -429,7 +495,10 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 	})
 	view.$on('cancel-sync-n-schedule', () => {
 		cancelCurrentSyncTask()
-		scheduleTask(task.appId, task.identifier ?? '', view.textProcessingTaskTypeId, view.inputs)
+		const scheduleFunction = view.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+			? scheduleTtiTask
+			: scheduleTask
+		scheduleFunction(task.appId, task.identifier ?? '', view.selectedTaskTypeId, view.inputs)
 			.then((response) => {
 				view.showSyncTaskRunning = false
 				view.showScheduleConfirmation = true
