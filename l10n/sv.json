@@ -31,6 +31,7 @@
     "Failed to save assistant options" : "Det gick inte att spara Assistant-alternativ",
     "Image generation" : "Bildgenerering",
     "Generated image" : "Genererad bild",
+    "Include the prompt in the result" : "Inkludera uppmaningen i resultatet",
     "Submit" : "Skicka",
     "Regenerate" : "Regenerera",
     "Preview" : "Förhandsvisa",
@@ -38,7 +39,6 @@
     "Send" : "Skicka",
     "Show/hide advanced options" : "Visa/dölj avancerade alternativ",
     "Advanced options" : "Avancerade inställningar",
-    "Include the prompt in the result" : "Inkludera uppmaningen i resultatet",
     "Copy link to clipboard" : "Kopiera länken till urklipp",
     "This task does not exist or has been cleaned up" : "Den här uppgiften finns inte eller har rensats",
     "Failed to schedule the task" : "Det gick inte att schemalägga uppgiften"

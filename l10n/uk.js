@@ -9,10 +9,10 @@ OC.L10N.register(
     "Result" : "Результат",
     "Copy" : "Копія",
     "Try again" : "Спробуйте ще раз",
+    "Start recording" : "Почати запис",
     "Image generation" : "Створення зображення",
     "Submit" : "Відправити",
     "Preview" : "Попередній перегляд",
-    "Start recording" : "Почати запис",
     "Send" : "Надіслати",
     "Advanced options" : "Розширені налаштування",
     "Copy link to clipboard" : "Копіювати посилання"

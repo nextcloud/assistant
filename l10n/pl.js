@@ -9,10 +9,10 @@ OC.L10N.register(
     "Reset" : "Resetuj",
     "Result" : "Wynik",
     "Copy" : "Skopiuj",
+    "Stop recording" : "Zatrzymaj nagrywanie",
     "Image generation" : "Generowanie obrazu",
     "Submit" : "Wyślij",
     "Preview" : "Podgląd",
-    "Stop recording" : "Zatrzymaj nagrywanie",
     "Send" : "Wyślij",
     "Advanced options" : "Opcje zaawansowane",
     "Copy link to clipboard" : "Kopiuj link do schowka"

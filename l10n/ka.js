@@ -7,11 +7,11 @@ OC.L10N.register(
     "Reset" : "Reset",
     "Result" : "Result",
     "Copy" : "Copy",
+    "Start recording" : "Start recording",
+    "Stop recording" : "Stop recording",
     "Image generation" : "Image generation",
     "Submit" : "Submit",
     "Preview" : "Preview",
-    "Start recording" : "Start recording",
-    "Stop recording" : "Stop recording",
     "Send" : "Send",
     "Advanced options" : "Advanced options"
 },

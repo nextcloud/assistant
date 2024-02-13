@@ -8,11 +8,11 @@ OC.L10N.register(
     "Reset" : "Ponastavi",
     "Result" : "Rezultat",
     "Copy" : "Kopiraj",
+    "Start recording" : "Začni s snemanjem",
+    "Stop recording" : "Ustavi snemanje",
     "Image generation" : "Ustvarjanje slik",
     "Submit" : "Pošlji",
     "Preview" : "Predogled",
-    "Start recording" : "Začni s snemanjem",
-    "Stop recording" : "Ustavi snemanje",
     "Send" : "Pošlji",
     "Advanced options" : "Napredne možnosti",
     "Copy link to clipboard" : "Kopiraj povezavo v odložišče"

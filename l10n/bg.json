@@ -8,16 +8,16 @@
     "Try again" : "Опитай отново",
     "Prompt" : "Подкана",
     "Result {index}" : "Резултат {index}",
+    "Start recording" : "Започване на запис",
+    "Stop recording" : "Спиране на записването",
     "Generated image" : "Генерирано изображение",
+    "Include the prompt in the result" : "Включване на подканата в резултата",
     "Submit" : "Изпращане",
     "Regenerate" : "Регенериране",
     "Preview" : "Визуализация",
-    "Start recording" : "Започване на запис",
-    "Stop recording" : "Спиране на записването",
     "Send" : "Изпращане",
     "Show/hide advanced options" : "Показване/скриване на разширени опции",
     "Advanced options" : "Допълнителни опции",
-    "Include the prompt in the result" : "Включване на подканата в резултата",
     "Copy link to clipboard" : "Копиране на връзката в клипборда"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
