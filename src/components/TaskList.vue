@@ -1,23 +1,33 @@
 <template>
-	<ul class="task-list">
+	<NcLoadingIcon v-if="loading"
+		:size="64" />
+	<ul v-else
+		class="task-list">
 		<TaskListItem v-for="task in tasks"
 			:key="task.id"
 			class="task-list--item"
-			:task="task" />
+			:task="task"
+			@delete="onTaskDelete(task)"
+			@cancel="onTaskCancel(task)" />
 	</ul>
 </template>
 
 <script>
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+
 import TaskListItem from './TaskListItem.vue'
 
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+
+import { STATUS } from '../constants.js'
 
 export default {
 	name: 'TaskList',
 
 	components: {
 		TaskListItem,
+		NcLoadingIcon,
 	},
 
 	props: {
@@ -33,6 +43,7 @@ export default {
 
 	data() {
 		return {
+			loading: false,
 			tasks: [],
 		}
 	},
@@ -66,6 +77,26 @@ export default {
 				console.error(error)
 			}).then(() => {
 				this.loading = false
+			})
+		},
+		onTaskDelete(task) {
+			const url = generateUrl('/apps/assistant/task/{id}', { id: task.id })
+			axios.delete(url).then(response => {
+				const index = this.tasks.findIndex(t => { return t.id === task.id })
+				if (index !== -1) {
+					this.tasks.splice(index, 1)
+				}
+			}).catch(error => {
+				console.error(error)
+			})
+		},
+		onTaskCancel(task) {
+			const url = generateUrl('/apps/assistant/task/cancel/{id}', { id: task.id })
+			axios.put(url).then(response => {
+				task.status = STATUS.failed
+				task.output = t('assistant', 'Canceled by user')
+			}).catch(error => {
+				console.error(error)
 			})
 		},
 	},

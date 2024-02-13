@@ -40,9 +40,9 @@ class SpeechToTextService {
 
 	public function __construct(
 		private ISpeechToTextManager $speechToTextManager,
-		private IRootFolder          $rootFolder,
-		private IConfig              $config,
-		private MetaTaskMapper       $metaTaskMapper,
+		private IRootFolder $rootFolder,
+		private IConfig $config,
+		private MetaTaskMapper $metaTaskMapper,
 	) {
 	}
 

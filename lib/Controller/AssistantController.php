@@ -31,6 +31,40 @@ class AssistantController extends Controller {
 
 	/**
 	 * @param int $metaTaskId
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function deleteTask(int $metaTaskId): DataResponse {
+		if ($this->userId !== null) {
+			try {
+				$this->assistantService->deleteAssistantTask($this->userId, $metaTaskId);
+				return new DataResponse('');
+			} catch (\Exception $e) {
+			}
+		}
+
+		return new DataResponse('', Http::STATUS_NOT_FOUND);
+	}
+
+	/**
+	 * @param int $metaTaskId
+	 * @return DataResponse
+	 */
+	#[NoAdminRequired]
+	public function cancelTask(int $metaTaskId): DataResponse {
+		if ($this->userId !== null) {
+			try {
+				$this->assistantService->cancelAssistantTask($this->userId, $metaTaskId);
+				return new DataResponse('');
+			} catch (\Exception $e) {
+			}
+		}
+
+		return new DataResponse('', Http::STATUS_NOT_FOUND);
+	}
+
+	/**
+	 * @param int $metaTaskId
 	 * @return TemplateResponse
 	 */
 	#[NoAdminRequired]
@@ -68,7 +102,7 @@ class AssistantController extends Controller {
 		if ($this->userId !== null) {
 			try {
 				$tasks = $this->metaTaskMapper->getUserMetaTasks($this->userId, $taskType, $category);
-				$serializedTasks = array_map(static function(MetaTask $task) {
+				$serializedTasks = array_map(static function (MetaTask $task) {
 					return $task->jsonSerializeCc();
 				}, $tasks);
 				return new DataResponse(['tasks' => $serializedTasks]);

@@ -4,11 +4,10 @@ namespace OCA\TpAssistant\Service;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use DateTime;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\MetaTask;
 use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\TpAssistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Common\Exception\NotFoundException;
@@ -17,14 +16,12 @@ use OCP\Files\File;
 use OCP\Files\GenericFileException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotPermittedException;
-use OCP\IURLGenerator;
+use OCP\IL10N;
 use OCP\Lock\LockedException;
-use OCP\Notification\IManager as INotificationManager;
 use OCP\PreConditionNotMetException;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\Task as TextProcessingTask;
-use OCP\TextToImage\Task as TextToImageTask;
 use Parsedown;
 use PhpOffice\PhpWord\IOFactory;
 use Psr\Log\LoggerInterface;
@@ -33,82 +30,13 @@ use RuntimeException;
 class AssistantService {
 
 	public function __construct(
-		private INotificationManager   $notificationManager,
 		private ITextProcessingManager $textProcessingManager,
-		private MetaTaskMapper         $metaTaskMapper,
-		private ImageGenerationMapper  $imageGenerationMapper,
-		private LoggerInterface        $logger,
-		private IRootFolder            $storage,
-		private IURLGenerator          $url,
+		private Text2ImageHelperService $text2ImageHelperService,
+		private MetaTaskMapper $metaTaskMapper,
+		private LoggerInterface $logger,
+		private IRootFolder $storage,
+		private IL10N $l10n,
 	) {
-	}
-
-	/**
-	 * Send a success or failure task result notification
-	 *
-	 * @param MetaTask $task
-	 * @param string|null $customTarget optional notification link target
-	 * @param string|null $actionLabel optional label for the notification action button
-	 * @param string|null $resultPreview
-	 * @return void
-	 */
-	public function sendNotification(MetaTask $task, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
-		$manager = $this->notificationManager;
-		$notification = $manager->createNotification();
-
-		$params = [
-			'appId' => $task->getAppId(),
-			'id' => $task->getId(),
-			'inputs' => $task->getInputsAsArray(),
-			'target' => $customTarget ?? $this->getDefaultTarget($task),
-			'actionLabel' => $actionLabel,
-			'result' => $resultPreview,
-		];
-		$params['taskTypeClass'] = $task->getTaskType();
-		$params['taskCategory'] = $task->getCategory();
-
-		switch ($task->getCategory()) {
-			case Application::TASK_CATEGORY_TEXT_TO_IMAGE:
-				{
-					$taskSuccessful = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL;
-					break;
-				}
-			case Application::TASK_CATEGORY_TEXT_GEN:
-				{
-					$taskSuccessful = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL;
-					break;
-				}
-			case Application::TASK_CATEGORY_SPEECH_TO_TEXT:
-				{
-					$taskSuccessful = $task->getStatus() === Application::STT_TASK_SUCCESSFUL;
-					break;
-				}
-			default:
-				{
-					$taskSuccessful = false;
-					break;
-				}
-		}
-
-		$subject = $taskSuccessful
-			? 'success'
-			: 'failure';
-
-		$objectType = $customTarget === null
-			? 'task'
-			: 'task-with-custom-target';
-
-		$notification->setApp(Application::APP_ID)
-			->setUser($task->getUserId())
-			->setDateTime(new DateTime())
-			->setObject($objectType, (string) ($task->getId() ?? 0))
-			->setSubject($subject, $params);
-
-		$manager->notify($notification);
-	}
-
-	private function getDefaultTarget(MetaTask $task): string {
-		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['metaTaskId' => $task->getId()]);
 	}
 
 	/**
@@ -188,6 +116,54 @@ class AssistantService {
 		}
 
 		return $metaTask;
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $metaTaskId
+	 * @return void
+	 * @throws Exception
+	 */
+	public function deleteAssistantTask(string $userId, int $metaTaskId): void {
+		$metaTask = $this->getAssistantTask($userId, $metaTaskId);
+		if ($metaTask !== null) {
+			$this->cancelOcpTaskOfMetaTask($userId, $metaTask);
+			$this->metaTaskMapper->delete($metaTask);
+		}
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $metaTaskId
+	 * @return void
+	 * @throws Exception
+	 */
+	public function cancelAssistantTask(string $userId, int $metaTaskId): void {
+		$metaTask = $this->getAssistantTask($userId, $metaTaskId);
+		if ($metaTask !== null) {
+			// deal with underlying tasks
+			if ($metaTask->getStatus() === Application::STATUS_META_TASK_SCHEDULED) {
+				$this->cancelOcpTaskOfMetaTask($userId, $metaTask);
+			}
+
+			$metaTask->setStatus(Application::STATUS_META_TASK_FAILED);
+			$metaTask->setOutput($this->l10n->t('Canceled by user'));
+			$this->metaTaskMapper->update($metaTask);
+		}
+	}
+
+	private function cancelOcpTaskOfMetaTask(string $userId, MetaTask $metaTask) {
+		if ($metaTask->getCategory() === Application::TASK_CATEGORY_TEXT_GEN) {
+			try {
+				$ocpTask = $this->textProcessingManager->getTask($metaTask->getOcpTaskId());
+				$this->textProcessingManager->deleteTask($ocpTask);
+			} catch (NotFoundException $e) {
+			}
+		} elseif ($metaTask->getCategory() === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
+			$this->text2ImageHelperService->cancelGeneration($metaTask->getOutput(), $userId);
+		} elseif ($metaTask->getCategory() === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
+			// TODO implement task canceling in stt manager
+		}
 	}
 
 	/**

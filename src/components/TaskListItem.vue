@@ -2,13 +2,13 @@
 	<NcListItem
 		class="task-list-item"
 		:name="name"
+		:title="subName"
 		:bold="false"
 		:active="false"
-		:details="details"
-		:counter-number="counter">
-		<!--template #icon>
-			<NcAvatar disable-menu :size="44" user="janedoe" display-name="Jane Doe" />
-		</template-->
+		:details="details">
+		<template #icon>
+			<component :is="icon" />
+		</template>
 		<template #subname>
 			{{ subName }}
 		</template>
@@ -16,13 +16,14 @@
 			<CheckboxBlankCircle :size="16" fill-color="#fff" />
 		</template-->
 		<template #actions>
-			<NcActionButton @click="cancelTask">
+			<NcActionButton v-if="isScheduled"
+				@click="$emit('cancel')">
 				<template #icon>
 					<CloseIcon />
 				</template>
 				{{ t('assistant', 'Cancel') }}
 			</NcActionButton>
-			<NcActionButton @click="deleteTask">
+			<NcActionButton @click="$emit('delete')">
 				<template #icon>
 					<DeleteIcon />
 				</template>
@@ -33,11 +34,18 @@
 </template>
 
 <script>
+import ProgressQuestionIcon from 'vue-material-design-icons/ProgressQuestion.vue'
+import ProgressCheckIcon from 'vue-material-design-icons/ProgressCheck.vue'
+import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
+import AlertCircleOutlineIcon from 'vue-material-design-icons/AlertCircleOutline.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 
 import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+
+import moment from '@nextcloud/moment'
 
 import { STATUS } from '../constants.js'
 
@@ -49,6 +57,11 @@ export default {
 		NcActionButton,
 		CloseIcon,
 		DeleteIcon,
+		ProgressClockIcon,
+		ProgressCheckIcon,
+		ProgressQuestionIcon,
+		CheckIcon,
+		AlertCircleOutlineIcon,
 	},
 
 	props: {
@@ -60,6 +73,7 @@ export default {
 
 	emits: [
 		'delete',
+		'cancel',
 	],
 
 	data() {
@@ -68,6 +82,9 @@ export default {
 	},
 
 	computed: {
+		isScheduled() {
+			return this.task.status === STATUS.scheduled
+		},
 		name() {
 			if (this.task.taskType === 'copywriter') {
 				return this.task.inputs.sourceMaterial
@@ -82,8 +99,32 @@ export default {
 					return n('assistant', '{n} image has been generated', '{n} images have been generated', this.task.inputs.nResults, { n: this.task.inputs.nResults })
 				}
 				return t('assistant', 'Output') + ': ' + this.task.output
+			} else if (this.task.status === STATUS.scheduled) {
+				if (this.task.taskType === 'OCP\\TextToImage\\Task') {
+					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', this.task.inputs.nResults, { n: this.task.inputs.nResults })
+				}
+				return t('assistant', 'This task is scheduled')
+			} else if (this.task.status === STATUS.running) {
+				return t('assistant', 'Running...')
+			} else if (this.task.status === STATUS.failed) {
+				return t('assistant', 'Failed') + ': ' + (this.task.output ?? t('assistant', 'Unknown error'))
 			}
-			return '??'
+			return t('assistant', 'Unknown status')
+		},
+		details() {
+			return moment.unix(this.task.timestamp).fromNow()
+		},
+		icon() {
+			if (this.task.status === STATUS.successfull) {
+				return CheckIcon
+			} else if (this.task.status === STATUS.failed) {
+				return AlertCircleOutlineIcon
+			} else if (this.task.status === STATUS.running) {
+				return ProgressCheckIcon
+			} else if (this.task.status === STATUS.scheduled) {
+				return ProgressClockIcon
+			}
+			return ProgressQuestionIcon
 		},
 	},
 

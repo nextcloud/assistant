@@ -5,7 +5,7 @@ namespace OCA\TpAssistant\Listener;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Event\BeforeAssistantNotificationEvent;
-use OCA\TpAssistant\Service\AssistantService;
+use OCA\TpAssistant\Service\NotificationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -18,7 +18,7 @@ use OCP\TextProcessing\Events\TaskSuccessfulEvent;
 class TaskSuccessfulListener implements IEventListener {
 
 	public function __construct(
-		private AssistantService $assistantService,
+		private NotificationService $notificationService,
 		private IEventDispatcher $eventDispatcher,
 		private MetaTaskMapper $metaTaskMapper,
 	) {
@@ -62,6 +62,6 @@ class TaskSuccessfulListener implements IEventListener {
 		$assistantTask->setOutput($task->getOutput());
 		$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
-		$this->assistantService->sendNotification($assistantTask, $notificationTarget, $notificationActionLabel);
+		$this->notificationService->sendNotification($assistantTask, $notificationTarget, $notificationActionLabel);
 	}
 }

@@ -13,6 +13,8 @@ return [
 		['name' => 'assistant#scheduleTextProcessingTask', 'url' => '/task/schedule', 'verb' => 'POST'],
 		['name' => 'assistant#runOrScheduleTextProcessingTask', 'url' => '/task/run-or-schedule', 'verb' => 'POST'],
 		['name' => 'assistant#parseTextFromFile', 'url' => '/parse-file', 'verb' => 'POST'],
+		['name' => 'assistant#deleteTask', 'url' => '/task/{metaTaskId}', 'verb' => 'DELETE'],
+		['name' => 'assistant#cancelTask', 'url' => '/task/cancel/{metaTaskId}', 'verb' => 'PUT'],
 
 		['name' => 'Text2Image#processPrompt', 'url' => '/i/process_prompt', 'verb' => 'POST'],
 		['name' => 'Text2Image#getPromptHistory', 'url' => '/i/prompt_history', 'verb' => 'GET'],
