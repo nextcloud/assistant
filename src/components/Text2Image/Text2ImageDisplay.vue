@@ -156,6 +156,26 @@ export default {
 			return generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.imageGenId })
 		},
 	},
+	watch: {
+		imageGenId() {
+			this.prompt = ''
+			this.loadingImages = true
+			this.imgLoadedList = []
+			this.timeUntilCompletion = null
+			this.failed = false
+			this.imageUrls = []
+			this.isOwner = false
+			this.closed = false
+			this.fileVisStatusArray = []
+			this.hoveredIndex = -1
+			this.hovered = false
+			this.editModeEnabled = false
+			this.waitingInBg = false
+
+			this.getImageGenInfo()
+			this.editModeEnabled = this.forceEditMode
+		},
+	},
 	mounted() {
 		this.getImageGenInfo()
 		this.editModeEnabled = this.forceEditMode

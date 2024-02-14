@@ -112,7 +112,9 @@
 			</NcButton>
 			<TaskList v-if="showHistory"
 				class="history--list"
-				:task-type="mySelectedTaskTypeId" />
+				:task-type="mySelectedTaskTypeId"
+				@try-again="$emit('try-again', $event)"
+				@load-task="$emit('load-task', $event)" />
 		</div>
 	</div>
 </template>
@@ -189,6 +191,8 @@ export default {
 		'sync-submit',
 		'submit',
 		'action-button-clicked',
+		'try-again',
+		'load-task',
 	],
 	data() {
 		return {

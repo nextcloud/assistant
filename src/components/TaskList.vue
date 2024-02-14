@@ -7,6 +7,8 @@
 			:key="task.id"
 			class="task-list--item"
 			:task="task"
+			@try-again="$emit('try-again', task)"
+			@load="$emit('load-task', task)"
 			@delete="onTaskDelete(task)"
 			@cancel="onTaskCancel(task)" />
 	</ul>
@@ -39,6 +41,7 @@ export default {
 
 	emits: [
 		'load-task',
+		'try-again',
 	],
 
 	data() {
@@ -72,7 +75,6 @@ export default {
 			const url = generateUrl('/apps/assistant/tasks')
 			axios.get(url, req).then(response => {
 				this.tasks = response.data.tasks
-				console.debug('aaaaa tasks', response.data)
 			}).catch(error => {
 				console.error(error)
 			}).then(() => {

@@ -150,6 +150,16 @@ export default {
 				this.onUpdate()
 			}
 		},
+		inputs(newVal) {
+			this.writingStyle = this.inputs.writingStyle ?? ''
+			this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
+			this.prompt = this.inputs.prompt ?? ''
+			this.sttMode = 'record'
+			this.sttAudioData = null
+			this.sttAudioFilePath = this.inputs.audioFilePath ?? null
+			this.ttiNResults = this.inputs.nResults ?? 1
+			this.ttiDisplayPrompt = this.inputs.displayPrompt ?? false
+		},
 	},
 	mounted() {
 		if (this.selectedTaskTypeId === 'copywriter') {

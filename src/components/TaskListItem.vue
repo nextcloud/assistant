@@ -5,7 +5,8 @@
 		:title="subName"
 		:bold="false"
 		:active="false"
-		:details="details">
+		:details="details"
+		@click="$emit('load')">
 		<template #icon>
 			<component :is="icon" />
 		</template>
@@ -16,6 +17,12 @@
 			<CheckboxBlankCircle :size="16" fill-color="#fff" />
 		</template-->
 		<template #actions>
+			<NcActionButton @click="$emit('try-again')">
+				<template #icon>
+					<RedoIcon />
+				</template>
+				{{ t('assistant', 'Try again') }}
+			</NcActionButton>
 			<NcActionButton v-if="isScheduled"
 				@click="$emit('cancel')">
 				<template #icon>
@@ -34,6 +41,7 @@
 </template>
 
 <script>
+import RedoIcon from 'vue-material-design-icons/Redo.vue'
 import ProgressQuestionIcon from 'vue-material-design-icons/ProgressQuestion.vue'
 import ProgressCheckIcon from 'vue-material-design-icons/ProgressCheck.vue'
 import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
@@ -62,6 +70,7 @@ export default {
 		ProgressQuestionIcon,
 		CheckIcon,
 		AlertCircleOutlineIcon,
+		RedoIcon,
 	},
 
 	props: {
@@ -74,6 +83,8 @@ export default {
 	emits: [
 		'delete',
 		'cancel',
+		'try-again',
+		'load',
 	],
 
 	data() {
