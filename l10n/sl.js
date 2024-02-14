@@ -8,6 +8,7 @@ OC.L10N.register(
     "Reset" : "Ponastavi",
     "Result" : "Rezultat",
     "Copy" : "Kopiraj",
+    "Transcribe" : "Prepiši govor",
     "Start recording" : "Začni s snemanjem",
     "Stop recording" : "Ustavi snemanje",
     "Image generation" : "Ustvarjanje slik",

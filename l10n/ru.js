@@ -27,6 +27,7 @@ OC.L10N.register(
     "Result" : "Результат",
     "Copy" : "Копировать",
     "Try again" : "Попытаться снова",
+    "Transcribe" : "Транскрибировать",
     "Assistant options saved" : "Опции ассистента сохранены",
     "Failed to save assistant options" : "Сбой сохранения опций ассистента",
     "Record Audio" : "Запись аудио",

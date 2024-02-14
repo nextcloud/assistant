@@ -60,6 +60,7 @@ OC.L10N.register(
     "Copy" : "Zkopírovat",
     "Try again" : "Zkusit znovu",
     "Send request" : "Odeslat požadavek",
+    "Transcribe" : "Přepsat do textu",
     "Text generation content" : "Obsah vytváření textu",
     "The text generation task was scheduled to run in the background." : "Úloha vytváření textu byla naplánována pro spuštění na pozadí.",
     "Estimated completion time: " : "Odhadovaná doba dokončení:",

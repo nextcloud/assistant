@@ -28,6 +28,7 @@ OC.L10N.register(
     "Result" : "结果",
     "Copy" : "复制",
     "Try again" : "请重试",
+    "Transcribe" : "转写",
     "Prompt" : "提示",
     "Result {index}" : "结果 {index}",
     "Assistant options saved" : "助手选项已保存",

@@ -68,6 +68,7 @@ OC.L10N.register(
     "Copy" : "Kopyala",
     "Try again" : "Yeniden dene",
     "Send request" : "İstek gönder",
+    "Transcribe" : "Dönüştür",
     "Text generation content" : "Metin oluşturma içeriği",
     "The text generation task was scheduled to run in the background." : "Metin oluşturma görevi arka planda yürütülmek için zamanlandı.",
     "Estimated completion time: " : "Öngörülen tamamlanma süresi:",

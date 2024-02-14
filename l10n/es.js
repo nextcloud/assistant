@@ -84,6 +84,7 @@ OC.L10N.register(
     "Copy" : "Copiar",
     "Try again" : "Vuelva a intentarlo",
     "Send request" : "Enviar solicitud",
+    "Transcribe" : "Transcribir",
     "Text generation content" : "Contenido de la generación de texto",
     "The text generation task was scheduled to run in the background." : "Esta tarea de generación de texto estaba programada para ejecutarse en segundo plano.",
     "Estimated completion time: " : "Tiempo estimado de finalización:",

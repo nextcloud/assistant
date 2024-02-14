@@ -27,6 +27,7 @@ OC.L10N.register(
     "Copy" : "Kopiera",
     "Try again" : "Försök igen",
     "Send request" : "Skicka förfrågan",
+    "Transcribe" : "Transkribera",
     "Prompt" : "Uppmaning",
     "Result {index}" : "Resultat {index}",
     "Assistant options saved" : "Assistant-alternativ sparade",

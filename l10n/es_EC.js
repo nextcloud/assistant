@@ -9,6 +9,7 @@ OC.L10N.register(
     "Result" : "Resultado",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",
+    "Transcribe" : "Transcribir",
     "Prompt" : "Promoción",
     "Result {index}" : "Resultado {índice}",
     "Start recording" : "Iniciar grabación",

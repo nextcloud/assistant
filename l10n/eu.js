@@ -35,6 +35,7 @@ OC.L10N.register(
     "Result" : "Emaitza",
     "Copy" : "Kopiatu",
     "Try again" : "Saiatu berriz",
+    "Transcribe" : "Transkribatu",
     "Assistant options saved" : "Laguntzailearen aukerak gorde dira",
     "Failed to save assistant options" : "Ezin izan dira gorde laguntzailearen aukerak",
     "Stop recording" : "Utzi grabaketa",

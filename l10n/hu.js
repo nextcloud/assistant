@@ -34,6 +34,7 @@ OC.L10N.register(
     "Result" : "Eredmény",
     "Copy" : "Másolás",
     "Try again" : "Próbálja újra",
+    "Transcribe" : "Átírás",
     "Text generation error" : "Szöveg generálás hiba",
     "Unknown text generation API error" : "Ismeretlen szöveggenerálás API hiba",
     "Prompt" : "Promtp",

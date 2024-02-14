@@ -26,6 +26,7 @@ OC.L10N.register(
     "Result" : "شروع به اسکنیک",
     "Copy" : "رونوشت",
     "Try again" : "تلاش دوباره",
+    "Transcribe" : "Transcribe",
     "Prompt" : "Prompt",
     "Result {index}" : "Result {index}",
     "Assistant options saved" : "گزینه های دستیار ذخیره شد",

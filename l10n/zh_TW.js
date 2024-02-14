@@ -90,6 +90,7 @@ OC.L10N.register(
     "Generate text" : "產生文字",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "向 Assistant 傳送請求，例如：編寫一份簡報的初稿，給我簡報的建議，編寫一份給我同事回覆的草稿。",
     "Context write" : "寫作情境",
+    "Transcribe" : "轉錄",
     "Text generation content" : "文字產生內容",
     "The text generation task was scheduled to run in the background." : "文字產生任務已安排於背景執行。",
     "Estimated completion time: " : "預計補齊時間：",

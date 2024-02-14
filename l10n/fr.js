@@ -34,6 +34,7 @@ OC.L10N.register(
     "Copy" : "Copier",
     "Try again" : "Réessayez",
     "Send request" : "Envoyer une requête",
+    "Transcribe" : "Transcrire",
     "Unexpected server response" : "Réponse du serveur inattendue",
     "Prompt" : "Invite de commande",
     "Result {index}" : "Résultat {index}",

@@ -77,6 +77,7 @@ OC.L10N.register(
     "Try again" : "Nochmals versuchen",
     "Send request" : "Anfrage senden",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Eine Anfrage an den Assistenten stellen, z. B.: schreibe einen ersten Entwurf einer Präsentation, gib mir Vorschläge für eine Präsentation, schreibe einen Entwurf der Antwort an meinen Kollegen.",
+    "Transcribe" : "Transkribieren",
     "No suitable providers are available. They must first be enabled by your administrator." : "Keine geeigneten Anbieter verfügbar. Diese müssen zunächst von deiner Administration aktiviert werden.",
     "Assistant options saved" : "Assistenteneinstellungen gespeichert",
     "Failed to save assistant options" : "Fehler beim Speichern der Assistenteneinstellungen",

@@ -88,6 +88,7 @@
     "Generate text" : "Generer tekst",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Send en forespørsel til assistenten, for eksempel: skriv et første utkast til en presentasjon, gi meg forslag til en presentasjon, skriv et utkast til svar til kollegaen min.",
     "Context write" : "Kontekstskriving",
+    "Transcribe" : "Transkribere",
     "Text generation content" : "Tekstgenereringsinnhold",
     "The text generation task was scheduled to run in the background." : "Tekstgenereringsoppgaven var planlagt å kjøre i bakgrunnen.",
     "Estimated completion time: " : "Estimert fullføringstid:",

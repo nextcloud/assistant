@@ -8,6 +8,7 @@ OC.L10N.register(
     "Result" : "Резултат",
     "Copy" : "Копие",
     "Try again" : "Опитай отново",
+    "Transcribe" : "Транскрибиране",
     "Prompt" : "Подкана",
     "Result {index}" : "Резултат {index}",
     "Start recording" : "Започване на запис",
