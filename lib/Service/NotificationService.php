@@ -7,8 +7,6 @@ use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\MetaTask;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as INotificationManager;
-use OCP\TextProcessing\Task as TextProcessingTask;
-use OCP\TextToImage\Task as TextToImageTask;
 
 class NotificationService {
 
