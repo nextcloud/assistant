@@ -154,8 +154,8 @@ export default {
 			this.writingStyle = this.inputs.writingStyle ?? ''
 			this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
 			this.prompt = this.inputs.prompt ?? ''
-			this.sttMode = 'record'
-			this.sttAudioData = null
+			// this.sttMode = 'record'
+			this.sttAudioData = this.inputs.audioData
 			this.sttAudioFilePath = this.inputs.audioFilePath ?? null
 			this.ttiNResults = this.inputs.nResults ?? 1
 			this.ttiDisplayPrompt = this.inputs.displayPrompt ?? false

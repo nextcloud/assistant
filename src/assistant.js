@@ -10,6 +10,8 @@ export async function openAssistantForm(params) {
 	return openAssistantTextProcessingForm(params)
 }
 
+// TODO add param to lock on specific task type
+
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
