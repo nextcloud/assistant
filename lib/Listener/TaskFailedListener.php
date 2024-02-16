@@ -58,7 +58,7 @@ class TaskFailedListener implements IEventListener {
 		}
 
 		// Update task status and output:
-		$assistantTask->setStatus($task->getStatus());
+		$assistantTask->setStatus(Application::TP_STATUS_TO_META_STATUS[$task->getStatus()]);
 		$assistantTask->setOutput($event->getErrorMessage());
 		$assistantTask = $this->metaTaskMapper->update($assistantTask);
 

@@ -21,49 +21,28 @@ class NotificationService {
 	/**
 	 * Send a success or failure task result notification
 	 *
-	 * @param MetaTask $task
+	 * @param MetaTask $metaTask
 	 * @param string|null $customTarget optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @param string|null $resultPreview
 	 * @return void
 	 */
-	public function sendNotification(MetaTask $task, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
+	public function sendNotification(MetaTask $metaTask, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
 		$params = [
-			'appId' => $task->getAppId(),
-			'id' => $task->getId(),
-			'inputs' => $task->getInputsAsArray(),
-			'target' => $customTarget ?? $this->getDefaultTarget($task),
+			'appId' => $metaTask->getAppId(),
+			'id' => $metaTask->getId(),
+			'inputs' => $metaTask->getInputsAsArray(),
+			'target' => $customTarget ?? $this->getDefaultTarget($metaTask),
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
-		$params['taskTypeClass'] = $task->getTaskType();
-		$params['taskCategory'] = $task->getCategory();
+		$params['taskTypeClass'] = $metaTask->getTaskType();
+		$params['taskCategory'] = $metaTask->getCategory();
 
-		switch ($task->getCategory()) {
-			case Application::TASK_CATEGORY_TEXT_TO_IMAGE:
-				{
-					$taskSuccessful = $task->getStatus() === TextToImageTask::STATUS_SUCCESSFUL;
-					break;
-				}
-			case Application::TASK_CATEGORY_TEXT_GEN:
-				{
-					$taskSuccessful = $task->getStatus() === TextProcessingTask::STATUS_SUCCESSFUL;
-					break;
-				}
-			case Application::TASK_CATEGORY_SPEECH_TO_TEXT:
-				{
-					$taskSuccessful = $task->getStatus() === Application::STT_TASK_SUCCESSFUL;
-					break;
-				}
-			default:
-				{
-					$taskSuccessful = false;
-					break;
-				}
-		}
+		$taskSuccessful = $metaTask->getStatus() === Application::STATUS_META_TASK_SUCCESSFUL;
 
 		$subject = $taskSuccessful
 			? 'success'
@@ -74,9 +53,9 @@ class NotificationService {
 			: 'task-with-custom-target';
 
 		$notification->setApp(Application::APP_ID)
-			->setUser($task->getUserId())
+			->setUser($metaTask->getUserId())
 			->setDateTime(new DateTime())
-			->setObject($objectType, (string) ($task->getId() ?? 0))
+			->setObject($objectType, (string) ($metaTask->getId() ?? 0))
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);

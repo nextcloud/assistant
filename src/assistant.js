@@ -193,7 +193,7 @@ export async function runSttTask(inputs) {
 	saveLastSelectedTaskType('speech-to-text')
 	if (inputs.sttMode === 'choose') {
 		const url = generateUrl('/apps/assistant/stt/transcribeFile')
-		const params = { path: this.audioFilePath }
+		const params = { path: inputs.audioFilePath }
 		return axios.post(url, params)
 	} else {
 		const url = generateUrl('/apps/assistant/stt/transcribeAudio')

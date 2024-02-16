@@ -4,12 +4,14 @@ namespace OCA\TpAssistant\Service;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use OC\SpeechToText\TranscriptionJob;
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\MetaTask;
 use OCA\TpAssistant\Db\MetaTaskMapper;
 use OCA\TpAssistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\BackgroundJob\IJobList;
 use OCP\Common\Exception\NotFoundException;
 use OCP\DB\Exception;
 use OCP\Files\File;
@@ -35,6 +37,7 @@ class AssistantService {
 		private MetaTaskMapper $metaTaskMapper,
 		private LoggerInterface $logger,
 		private IRootFolder $storage,
+		private IJobList $jobList,
 		private IL10N $l10n,
 	) {
 	}
@@ -163,6 +166,15 @@ class AssistantService {
 			$this->text2ImageHelperService->cancelGeneration($metaTask->getOutput(), $userId);
 		} elseif ($metaTask->getCategory() === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 			// TODO implement task canceling in stt manager
+			$jobArguments = [
+				'fileId' => $metaTask->getOcpTaskId(),
+				'owner' => $userId,
+				'userId' => $userId,
+				'appId' => Application::APP_ID,
+			];
+			if ($this->jobList->has(TranscriptionJob::class, $jobArguments)) {
+				$this->jobList->remove(TranscriptionJob::class, $jobArguments);
+			}
 		}
 	}
 

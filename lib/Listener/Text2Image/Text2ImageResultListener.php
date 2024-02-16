@@ -57,7 +57,7 @@ class Text2ImageResultListener implements IEventListener {
 
 			$this->text2ImageService->storeImages($images, $imageGenId);
 
-			$assistantTask->setStatus(Task::STATUS_SUCCESSFUL);
+			$assistantTask->setStatus(Application::STATUS_META_TASK_SUCCESSFUL);
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 		}
 
@@ -66,7 +66,7 @@ class Text2ImageResultListener implements IEventListener {
 			$this->imageGenerationMapper->setFailed($imageGenId, true);
 
 			// Update the assistant meta task status:
-			$assistantTask->setStatus(Task::STATUS_FAILED);
+			$assistantTask->setStatus(Application::STATUS_META_TASK_FAILED);
 			$assistantTask->setOutput($event->getErrorMessage());
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
