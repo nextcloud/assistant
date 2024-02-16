@@ -154,8 +154,8 @@ export default {
 			this.writingStyle = this.inputs.writingStyle ?? ''
 			this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
 			this.prompt = this.inputs.prompt ?? ''
-			// this.sttMode = 'record'
-			this.sttAudioData = this.inputs.audioData
+			this.sttMode = this.inputs.sttMode ?? 'record'
+			this.sttAudioData = this.inputs.audioData ?? null
 			this.sttAudioFilePath = this.inputs.audioFilePath ?? null
 			this.ttiNResults = this.inputs.nResults ?? 1
 			this.ttiDisplayPrompt = this.inputs.displayPrompt ?? false
@@ -226,9 +226,11 @@ export default {
 		onUpdateStt() {
 			this.$emit(
 				'update:inputs',
-				this.sttMode === 'record'
-					? { audioData: this.sttAudioData }
-					: { audioFilePath: this.sttAudioFilePath },
+				{
+					sttMode: this.sttMode,
+					audioData: this.sttAudioData,
+					audioFilePath: this.sttAudioFilePath,
+				},
 			)
 		},
 		onUpdateTti() {

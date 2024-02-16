@@ -191,15 +191,15 @@ export async function runSttTask(inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType('speech-to-text')
-	if (inputs.audioData) {
+	if (inputs.sttMode === 'choose') {
+		const url = generateUrl('/apps/assistant/stt/transcribeFile')
+		const params = { path: this.audioFilePath }
+		return axios.post(url, params)
+	} else {
 		const url = generateUrl('/apps/assistant/stt/transcribeAudio')
 		const formData = new FormData()
 		formData.append('audioData', inputs.audioData)
 		return axios.post(url, formData)
-	} else {
-		const url = generateUrl('/apps/assistant/stt/transcribeFile')
-		const params = { path: this.audioFilePath }
-		return axios.post(url, params)
 	}
 }
 

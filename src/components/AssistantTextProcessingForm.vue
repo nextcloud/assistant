@@ -218,7 +218,11 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
-			// Check that none of the properties of myInputs are empty
+			if (this.selectedTaskType.id === 'speech-to-text') {
+				return (this.myInputs.sttMode === 'record' && this.myInputs.audioData !== null)
+					|| (this.myInputs.sttMode === 'choose' && this.myInputs.audioFilePath !== null)
+			}
+			// otherwise, check that none of the properties of myInputs are empty
 			return Object.values(this.myInputs).every(v => {
 				return (typeof v === 'string' && !!v?.trim())
 					|| (typeof v === 'boolean')
