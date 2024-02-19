@@ -8,7 +8,7 @@
 		:details="details"
 		@click="$emit('load')">
 		<template #icon>
-			<component :is="icon" />
+			<component :is="icon" :title="statusTitle" />
 		</template>
 		<template #subname>
 			{{ subName }}
@@ -136,6 +136,18 @@ export default {
 				return ProgressClockIcon
 			}
 			return ProgressQuestionIcon
+		},
+		statusTitle() {
+			if (this.task.status === STATUS.successfull) {
+				return t('assistant', 'Succeeded')
+			} else if (this.task.status === STATUS.failed) {
+				return t('assistant', 'Failed')
+			} else if (this.task.status === STATUS.running) {
+				return t('assistant', 'Running')
+			} else if (this.task.status === STATUS.scheduled) {
+				return t('assistant', 'Scheduled')
+			}
+			return t('assistant', 'Unknown status')
 		},
 	},
 
