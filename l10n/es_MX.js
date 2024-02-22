@@ -7,6 +7,7 @@ OC.L10N.register(
     "Reset" : "Reiniciar",
     "Result" : "Resultado",
     "Try again" : "Reintentar",
+    "Image generation" : "Generación de imágenes",
     "Submit" : "Enviar",
     "Preview" : "Previsualizar",
     "Send" : "Enviar",
