@@ -15,7 +15,7 @@ export async function openAssistantForm(params) {
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
- * OCA.TpAssistant.openAssistantTextProcessingForm({
+ * OCA.TPAssistant.openAssistantTextProcessingForm({
  *  appId: 'my_app_id',
  *  identifier: 'my task identifier',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
