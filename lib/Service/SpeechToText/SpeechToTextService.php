@@ -77,7 +77,7 @@ class SpeechToTextService {
 			$audioFile->getId(),
 			'speech-to-text',
 			Application::APP_ID,
-			Application::STT_TASK_SCHEDULED,
+			Application::STATUS_META_TASK_SCHEDULED,
 			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 	}
 
@@ -106,7 +106,7 @@ class SpeechToTextService {
 			$audioFile->getId(),
 			'speech-to-text',
 			Application::APP_ID,
-			Application::STT_TASK_SCHEDULED,
+			Application::STATUS_META_TASK_SCHEDULED,
 			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
 	}
 

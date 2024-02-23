@@ -155,7 +155,7 @@ class AssistantService {
 		}
 	}
 
-	private function cancelOcpTaskOfMetaTask(string $userId, MetaTask $metaTask) {
+	private function cancelOcpTaskOfMetaTask(string $userId, MetaTask $metaTask): void {
 		if ($metaTask->getCategory() === Application::TASK_CATEGORY_TEXT_GEN) {
 			try {
 				$ocpTask = $this->textProcessingManager->getTask($metaTask->getOcpTaskId());
@@ -166,9 +166,23 @@ class AssistantService {
 			$this->text2ImageHelperService->cancelGeneration($metaTask->getOutput(), $userId);
 		} elseif ($metaTask->getCategory() === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
 			// TODO implement task canceling in stt manager
+			$fileId = $metaTask->getOcpTaskId();
+			$files = $this->storage->getById($fileId);
+			if (count($files) < 1) {
+				return;
+			}
+			$file = array_shift($files);
+			if (!$file instanceof File) {
+				return;
+			}
+			$owner = $file->getOwner();
+			if ($owner === null) {
+				return;
+			}
+			$ownerId = $owner->getUID();
 			$jobArguments = [
-				'fileId' => $metaTask->getOcpTaskId(),
-				'owner' => $userId,
+				'fileId' => $fileId,
+				'owner' => $ownerId,
 				'userId' => $userId,
 				'appId' => Application::APP_ID,
 			];
