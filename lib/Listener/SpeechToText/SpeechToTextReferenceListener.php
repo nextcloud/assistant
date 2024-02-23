@@ -37,7 +37,7 @@ use OCP\Util;
 class SpeechToTextReferenceListener implements IEventListener {
 	public function __construct(
 		private IConfig $config,
-		private string $userId,
+		private ?string $userId,
 		private ISpeechToTextManager $sttProcessingManager,
 	) {
 	}
@@ -47,7 +47,7 @@ class SpeechToTextReferenceListener implements IEventListener {
 			return;
 		}
 		if ($this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1' &&
-			$this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1') {
+			($this->userId === null || $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1')) {
 				
 			// Double check that atleast one provider is registered
 			if ($this->sttProcessingManager->hasProviders()) {
