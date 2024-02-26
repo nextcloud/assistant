@@ -7,7 +7,7 @@
 		<TaskTypeSelect
 			:value.sync="mySelectedTaskTypeId"
 			class="task-custom-select"
-			:inline="3"
+			:inline="5"
 			:options="taskTypes" />
 		<h2 v-if="selectedTaskType"
 			class="task-name">
@@ -102,13 +102,13 @@
 		<div class="history">
 			<NcButton class="advanced-button"
 				type="tertiary"
-				:aria-label="t('assistant', 'Show/hide task history')"
+				:aria-label="t('assistant', 'Show/hide previous tasks')"
 				@click="showHistory = !showHistory">
 				<template #icon>
 					<ChevronDownIcon v-if="showHistory" />
 					<ChevronRightIcon v-else />
 				</template>
-				{{ t('assistant', 'Task history') }}
+				{{ t('assistant', 'Previous tasks') }}
 			</NcButton>
 			<TaskList v-if="showHistory"
 				class="history--list"
