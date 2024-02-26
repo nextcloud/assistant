@@ -11,7 +11,11 @@
 			<component :is="icon" :title="statusTitle" />
 		</template>
 		<template #subname>
-			{{ subName }}
+			<Text2ImageInlineDisplay v-if="isSuccessful && isText2Image"
+				:image-gen-id="task.output" />
+			<span v-else>
+				{{ subName }}
+			</span>
 		</template>
 		<!--template #indicator>
 			<CheckboxBlankCircle :size="16" fill-color="#fff" />
@@ -64,11 +68,13 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 
 import moment from '@nextcloud/moment'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { generateUrl } from '@nextcloud/router'
 
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
 
 import { STATUS } from '../constants.js'
+import Text2ImageInlineDisplay from './Text2Image/Text2ImageInlineDisplay.vue'
 
 Vue.use(VueClipboard)
 
@@ -76,6 +82,7 @@ export default {
 	name: 'TaskListItem',
 
 	components: {
+		Text2ImageInlineDisplay,
 		NcListItem,
 		NcActionButton,
 		CloseIcon,
@@ -115,6 +122,9 @@ export default {
 		},
 		isSuccessful() {
 			return this.task.status === STATUS.successfull
+		},
+		isText2Image() {
+			return this.task.taskType === 'OCP\\TextToImage\\Task'
 		},
 		name() {
 			if (this.task.taskType === 'copywriter') {
@@ -169,6 +179,15 @@ export default {
 			}
 			return t('assistant', 'Unknown status')
 		},
+		formattedOutput() {
+			if (!this.isSuccessful) {
+				return null
+			}
+			if (this.task.taskType === 'OCP\\TextToImage\\Task') {
+				return window.location.protocol + '//' + window.location.host + generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.task.output })
+			}
+			return this.task.output.trim()
+		},
 	},
 
 	watch: {
@@ -180,7 +199,7 @@ export default {
 	methods: {
 		async onCopyOutput() {
 			try {
-				await this.$copyText(this.task.output.trim())
+				await this.$copyText(this.formattedOutput)
 				this.copied = true
 				setTimeout(() => {
 					this.copied = false
