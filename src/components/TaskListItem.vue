@@ -17,6 +17,14 @@
 			<CheckboxBlankCircle :size="16" fill-color="#fff" />
 		</template-->
 		<template #actions>
+			<NcActionButton v-if="isSuccessful"
+				:close-after-click="true"
+				@click="onCopyOutput">
+				<template #icon>
+					<ContentCopyIcon />
+				</template>
+				{{ t('assistant', 'Copy result') }}
+			</NcActionButton>
 			<NcActionButton @click="$emit('try-again')">
 				<template #icon>
 					<RedoIcon />
@@ -49,13 +57,20 @@ import AlertCircleOutlineIcon from 'vue-material-design-icons/AlertCircleOutline
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 
 import moment from '@nextcloud/moment'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+
+import VueClipboard from 'vue-clipboard2'
+import Vue from 'vue'
 
 import { STATUS } from '../constants.js'
+
+Vue.use(VueClipboard)
 
 export default {
 	name: 'TaskListItem',
@@ -71,6 +86,7 @@ export default {
 		CheckIcon,
 		AlertCircleOutlineIcon,
 		RedoIcon,
+		ContentCopyIcon,
 	},
 
 	props: {
@@ -89,12 +105,16 @@ export default {
 
 	data() {
 		return {
+			copied: false,
 		}
 	},
 
 	computed: {
 		isScheduled() {
 			return this.task.status === STATUS.scheduled
+		},
+		isSuccessful() {
+			return this.task.status === STATUS.successfull
 		},
 		name() {
 			if (this.task.taskType === 'copywriter') {
@@ -158,6 +178,19 @@ export default {
 	},
 
 	methods: {
+		async onCopyOutput() {
+			try {
+				await this.$copyText(this.task.output.trim())
+				this.copied = true
+				setTimeout(() => {
+					this.copied = false
+				}, 5000)
+				showSuccess(t('assistant', 'Task result was copied to clipboard'))
+			} catch (error) {
+				console.error(error)
+				showError(t('assistant', 'Result could not be copied to clipboard'))
+			}
+		},
 	},
 }
 </script>
