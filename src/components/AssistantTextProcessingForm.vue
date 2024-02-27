@@ -59,35 +59,43 @@
 			</NcNoteCard>
 		</div>
 		<div class="footer">
-			<NcButton
-				v-if="showSubmit"
-				:type="submitButtonType"
-				class="submit-button"
-				:disabled="!canSubmit"
-				:title="t('assistant', 'Run a task')"
-				@click="onSyncSubmit">
-				{{ syncSubmitButtonLabel }}
+			<NcButton class="history-button"
+				:type="showHistory ? 'secondary' : 'tertiary'"
+				:aria-label="showHistory ? t('assistant', 'Hide previous tasks') : t('assistant', 'Show previous tasks')"
+				@click="showHistory = !showHistory">
 				<template #icon>
-					<NcLoadingIcon v-if="loading" />
-					<CreationIcon v-else />
+					<HistoryIcon />
 				</template>
+				{{ t('assistant', 'Previous tasks') }}
 			</NcButton>
-			<NcButton
-				v-if="hasOutput"
-				type="primary"
-				class="copy-button"
-				:title="t('assistant', 'Copy output')"
-				@click="onCopy">
-				{{ t('assistant', 'Copy') }}
-				<template #icon>
-					<ClipboardCheckOutlineIcon v-if="copied" />
-					<ContentCopyIcon v-else />
-				</template>
-			</NcButton>
-			<div v-if="hasOutput"
-				class="action-buttons">
+			<div class="footer--action-buttons">
 				<NcButton
-					v-for="(b, i) in actionButtons"
+					v-if="showSubmit"
+					:type="submitButtonType"
+					class="submit-button"
+					:disabled="!canSubmit"
+					:title="t('assistant', 'Run a task')"
+					@click="onSyncSubmit">
+					{{ syncSubmitButtonLabel }}
+					<template #icon>
+						<NcLoadingIcon v-if="loading" />
+						<CreationIcon v-else />
+					</template>
+				</NcButton>
+				<NcButton
+					v-if="hasOutput"
+					type="primary"
+					class="copy-button"
+					:title="t('assistant', 'Copy output')"
+					@click="onCopy">
+					{{ t('assistant', 'Copy') }}
+					<template #icon>
+						<ClipboardCheckOutlineIcon v-if="copied" />
+						<ContentCopyIcon v-else />
+					</template>
+				</NcButton>
+				<NcButton
+					v-for="(b, i) in actionButtonsToShow"
 					:key="i"
 					:type="b.type ?? 'secondary'"
 					:title="b.title"
@@ -100,16 +108,6 @@
 			</div>
 		</div>
 		<div class="history">
-			<NcButton class="advanced-button"
-				type="tertiary"
-				:aria-label="t('assistant', 'Show/hide previous tasks')"
-				@click="showHistory = !showHistory">
-				<template #icon>
-					<ChevronDownIcon v-if="showHistory" />
-					<ChevronRightIcon v-else />
-				</template>
-				{{ t('assistant', 'Previous tasks') }}
-			</NcButton>
 			<TaskList v-if="showHistory"
 				class="history--list"
 				:task-type="mySelectedTaskTypeId"
@@ -123,8 +121,7 @@
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
-import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue'
-import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
+import HistoryIcon from 'vue-material-design-icons/History.vue'
 
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -160,8 +157,7 @@ export default {
 		CreationIcon,
 		ContentCopyIcon,
 		ClipboardCheckOutlineIcon,
-		ChevronDownIcon,
-		ChevronRightIcon,
+		HistoryIcon,
 		NcNoteCard,
 		AssistantFormInputs,
 	},
@@ -259,6 +255,9 @@ export default {
 				return window.location.protocol + '//' + window.location.host + generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.myOutput })
 			}
 			return this.myOutput.trim()
+		},
+		actionButtonsToShow() {
+			return this.hasOutput ? this.actionButtons : []
 		},
 	},
 	watch: {
@@ -406,10 +405,11 @@ export default {
 	.footer {
 		width: 100%;
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: end;
-		gap: 4px;
-		.action-buttons {
+		.history-button {
+			height: 44px;
+		}
+		&--action-buttons {
+			flex-grow: 1;
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: end;
