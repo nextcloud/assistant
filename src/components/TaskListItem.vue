@@ -8,7 +8,9 @@
 		:details="details"
 		@click="$emit('load')">
 		<template #icon>
-			<component :is="icon" :title="statusTitle" />
+			<component :is="icon"
+				style="margin-right: 8px;"
+				:title="statusTitle" />
 		</template>
 		<template #subname>
 			<Text2ImageInlineDisplay v-if="isSuccessful && isText2Image"
@@ -139,7 +141,7 @@ export default {
 				if (this.task.taskType === 'OCP\\TextToImage\\Task') {
 					return n('assistant', '{n} image has been generated', '{n} images have been generated', this.task.inputs.nResults, { n: this.task.inputs.nResults })
 				}
-				return t('assistant', 'Output') + ': ' + this.task.output
+				return t('assistant', 'Result') + ': ' + this.task.output
 			} else if (this.task.status === STATUS.scheduled) {
 				if (this.task.taskType === 'OCP\\TextToImage\\Task') {
 					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', this.task.inputs.nResults, { n: this.task.inputs.nResults })

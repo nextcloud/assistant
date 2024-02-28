@@ -66,7 +66,7 @@
 				<template #icon>
 					<HistoryIcon />
 				</template>
-				{{ t('assistant', 'Previous tasks') }}
+				{{ t('assistant', 'Previous "{taskTypeName}" tasks', { taskTypeName: selectedTaskType.name }) }}
 			</NcButton>
 			<div class="footer--action-buttons">
 				<NcButton

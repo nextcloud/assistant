@@ -17,7 +17,10 @@
 				<NcButton
 					type="secondary"
 					@click="onChooseFile('writingStyle')">
-					{{ t('assistant','Choose File') }}
+					<template #icon>
+						<FileDocumentIcon />
+					</template>
+					{{ t('assistant','Choose file') }}
 				</NcButton>
 			</div>
 			<NcRichContenteditable
@@ -37,7 +40,10 @@
 				<NcButton
 					type="secondary"
 					@click="onChooseFile('sourceMaterial')">
-					{{ t('assistant','Choose File') }}
+					<template #icon>
+						<FileDocumentIcon />
+					</template>
+					{{ t('assistant','Choose file') }}
 				</NcButton>
 			</div>
 			<NcRichContenteditable
@@ -59,7 +65,10 @@
 				<NcButton
 					type="secondary"
 					@click="onChooseFile('prompt')">
-					{{ t('assistant','Choose File') }}
+					<template #icon>
+						<FileDocumentIcon />
+					</template>
+					{{ t('assistant','Choose file') }}
 				</NcButton>
 			</div>
 			<NcRichContenteditable
@@ -82,6 +91,8 @@
 </template>
 
 <script>
+import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
@@ -115,6 +126,7 @@ export default {
 		SpeechToTextInputForm,
 		NcRichContenteditable,
 		NcButton,
+		FileDocumentIcon,
 	},
 	props: {
 		inputs: {
