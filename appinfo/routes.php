@@ -20,6 +20,8 @@ return [
 		['name' => 'FreePrompt#cancelGeneration', 'url' => '/f/cancel_generation', 'verb' => 'POST'],
 
 		['name' => 'SpeechToText#getResultPage', 'url' => '/stt/result-page/{metaTaskId}', 'verb' => 'GET'],
+
+		['name' => 'preview#getFileImage', 'url' => '/preview', 'verb' => 'GET'],
 	],
 	'ocs' => [
 		['name' => 'assistantApi#getAvailableTaskTypes', 'url' => '/api/{apiVersion}/task-types', 'verb' => 'GET', 'requirements' => $requirements],
