@@ -17,6 +17,10 @@ use OCP\AppFramework\Db\Entity;
  * @method \void setUserId(string $userId)
  * @method \int getTimestamp()
  * @method \void setTimestamp(int $timestamp)
+ * @method \boolean getIsGenerated()
+ * @method \void setIsGenerated(bool $isGenerated)
+ * @method \boolean getFailed()
+ * @method \void setFailed(bool $failed)
  * @method \boolean getNotifyReady()
  * @method \void setNotifyReady(bool $notifyReady)
  * @method \int getExpGenTime()
@@ -66,20 +70,5 @@ class ImageGeneration extends Entity implements \JsonSerializable {
 			'notify_ready' => $this->notifyReady,
 			'exp_gen_time' => $this->expGenTime,
 		];
-	}
-
-	public function setIsGenerated(?bool $isGenerated): void {
-		$this->isGenerated = $isGenerated === true;
-	}
-	public function getIsGenerated(): bool {
-		return $this->isGenerated === true;
-	}
-
-	public function setFailed(?bool $failed): void {
-		$this->failed = $failed === true;
-	}
-
-	public function getFailed(): bool {
-		return $this->failed === true;
 	}
 }

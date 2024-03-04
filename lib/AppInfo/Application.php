@@ -26,6 +26,7 @@ use OCP\SpeechToText\Events\TranscriptionFailedEvent;
 use OCP\SpeechToText\Events\TranscriptionSuccessfulEvent;
 use OCP\TextProcessing\Events\TaskFailedEvent as TextTaskFailedEvent;
 use OCP\TextProcessing\Events\TaskSuccessfulEvent as TextTaskSuccessfulEvent;
+use OCP\TextProcessing\Task as OCPTextprocessingTask;
 use OCP\TextToImage\Events\TaskFailedEvent as TextToImageTaskFailedEvent;
 use OCP\TextToImage\Events\TaskSuccessfulEvent as TextToImageTaskSuccessfulEvent;
 
@@ -44,6 +45,19 @@ class Application extends App implements IBootstrap {
 	public const STT_TASK_SCHEDULED = 0;
 	public const STT_TASK_SUCCESSFUL = 1;
 	public const STT_TASK_FAILED = -1;
+
+	public const STATUS_META_TASK_UNKNOWN = 0;
+	public const STATUS_META_TASK_SCHEDULED = 1;
+	public const STATUS_META_TASK_RUNNING = 2;
+	public const STATUS_META_TASK_SUCCESSFUL = 3;
+	public const STATUS_META_TASK_FAILED = 4;
+	public const TP_STATUS_TO_META_STATUS = [
+		OCPTextprocessingTask::STATUS_UNKNOWN => self::STATUS_META_TASK_UNKNOWN,
+		OCPTextprocessingTask::STATUS_SCHEDULED => self::STATUS_META_TASK_SCHEDULED,
+		OCPTextprocessingTask::STATUS_RUNNING => self::STATUS_META_TASK_RUNNING,
+		OCPTextprocessingTask::STATUS_SUCCESSFUL => self::STATUS_META_TASK_SUCCESSFUL,
+		OCPTextprocessingTask::STATUS_FAILED => self::STATUS_META_TASK_FAILED,
+	];
 
 	public const TASK_CATEGORY_TEXT_GEN = 0;
 	public const TASK_CATEGORY_TEXT_TO_IMAGE = 1;

@@ -17,7 +17,7 @@ use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
 use OCA\TpAssistant\Db\Text2Image\PromptMapper;
 use OCA\TpAssistant\Db\Text2Image\StaleGenerationMapper;
 
-use OCA\TpAssistant\Service\AssistantService;
+use OCA\TpAssistant\Service\NotificationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
@@ -42,17 +42,17 @@ class Text2ImageHelperService {
 	private ?ISimpleFolder $imageDataFolder = null;
 
 	public function __construct(
-		private LoggerInterface       $logger,
-		private IManager              $textToImageManager,
-		private PromptMapper          $promptMapper,
+		private LoggerInterface $logger,
+		private IManager $textToImageManager,
+		private PromptMapper $promptMapper,
 		private ImageGenerationMapper $imageGenerationMapper,
-		private ImageFileNameMapper   $imageFileNameMapper,
+		private ImageFileNameMapper $imageFileNameMapper,
 		private StaleGenerationMapper $staleGenerationMapper,
-		private IAppData              $appData,
-		private IURLGenerator         $urlGenerator,
-		private IL10N                 $l10n,
-		private AssistantService      $assistantService,
-		private MetaTaskMapper        $metaTaskMapper,
+		private IAppData $appData,
+		private IURLGenerator $urlGenerator,
+		private IL10N $l10n,
+		private NotificationService $notificationService,
+		private MetaTaskMapper $metaTaskMapper,
 	) {
 	}
 
@@ -588,7 +588,7 @@ class Text2ImageHelperService {
 			// No need to update the output since it's already set
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
-			$this->assistantService->sendNotification($assistantTask);
+			$this->notificationService->sendNotification($assistantTask);
 		}
 	}
 }

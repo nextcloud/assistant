@@ -15,11 +15,13 @@
 					v-else
 					class="form"
 					:inputs="task.inputs"
-					:output="task.output ?? ''"
+					:output="task.output"
 					:selected-task-type-id="task.taskType"
 					:loading="loading"
 					@submit="onSubmit"
-					@sync-submit="onSyncSubmit" />
+					@sync-submit="onSyncSubmit"
+					@try-again="onTryAgain"
+					@load-task="onLoadTask" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -110,21 +112,21 @@ export default {
 					showError(t('assistant', 'Failed to schedule your task'))
 				})
 		},
-		onSyncSubmit(data) {
+		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
-			this.task.inputs = data.inputs
-			this.task.taskType = data.selectedTaskTypeId
-			if (data.selectedTaskTypeId === 'speech-to-text') {
-				runSttTask(data.inputs).then(response => {
+			this.task.inputs = inputs
+			this.task.taskType = taskTypeId
+			if (taskTypeId === 'speech-to-text') {
+				runSttTask(inputs).then(response => {
 					this.showScheduleConfirmation = true
 					this.showSyncTaskRunning = false
 				})
 				return
 			}
-			const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+			const runOrScheduleFunction = taskTypeId === 'OCP\\TextToImage\\Task'
 				? runOrScheduleTtiTask
 				: runOrScheduleTask
-			runOrScheduleFunction(this.task.appId, this.task.identifier, data.selectedTaskTypeId, data.inputs)
+			runOrScheduleFunction(this.task.appId, this.task.identifier, taskTypeId, inputs)
 				.then((response) => {
 					console.debug('Assistant SYNC result', response.data)
 					const task = response.data?.task
@@ -142,6 +144,20 @@ export default {
 				})
 				.then(() => {
 				})
+		},
+		onSyncSubmit(data) {
+			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
+		},
+		onTryAgain(task) {
+			this.syncSubmit(task.inputs, task.taskType)
+		},
+		onLoadTask(task) {
+			if (this.loading === false) {
+				this.task.taskType = task.taskType
+				this.task.inputs = task.inputs
+				this.task.status = task.status
+				this.task.output = task.status === STATUS.successfull ? task.output : null
+			}
 		},
 	},
 }

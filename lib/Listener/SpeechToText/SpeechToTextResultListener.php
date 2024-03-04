@@ -24,7 +24,7 @@ namespace OCA\TpAssistant\Listener\SpeechToText;
 
 use OCA\TpAssistant\AppInfo\Application;
 use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Service\AssistantService;
+use OCA\TpAssistant\Service\NotificationService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\SpeechToText\Events\AbstractTranscriptionEvent;
@@ -39,7 +39,7 @@ class SpeechToTextResultListener implements IEventListener {
 	public function __construct(
 		private LoggerInterface  $logger,
 		private MetaTaskMapper $metaTaskMapper,
-		private AssistantService $assistantService,
+		private NotificationService $notificationService,
 	) {
 	}
 
@@ -72,17 +72,18 @@ class SpeechToTextResultListener implements IEventListener {
 
 			// Update the meta task with the output and new status
 			$assistantTask->setOutput($transcript);
-			$assistantTask->setStatus(Application::STT_TASK_SUCCESSFUL);
+			$assistantTask->setStatus(Application::STATUS_META_TASK_SUCCESSFUL);
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {
-				$this->assistantService->sendNotification($assistantTask, null, null, $transcript);
+				$this->notificationService->sendNotification($assistantTask, null, null, $transcript);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for successful transcription: ' . $e->getMessage());
 			}
 		}
 
 		if ($event instanceof TranscriptionFailedEvent) {
+			$file = $event->getFile();
 			$this->logger->error('Transcript generation failed: ' . $event->getErrorMessage());
 
 			$metaTasks = $this->metaTaskMapper->getMetaTasksByOcpTaskIdAndCategory($file->getId(), Application::TASK_CATEGORY_SPEECH_TO_TEXT);
@@ -99,16 +100,17 @@ class SpeechToTextResultListener implements IEventListener {
 			}
 
 			if ($assistantTask === null) {
-				$this->logger->error('No assistant task found for speech to text result');
+				$this->logger->error('No assistant task found for speech to text result (task id: ' . $file->getId() . ')');
 				return;
 			}
 
 			// Update the meta task with the new status
-			$assistantTask->setStatus(Application::STT_TASK_FAILED);
+			$assistantTask->setStatus(Application::STATUS_META_TASK_FAILED);
+			$assistantTask->setOutput($event->getErrorMessage());
 			$assistantTask = $this->metaTaskMapper->update($assistantTask);
 
 			try {
-				$this->assistantService->sendNotification($assistantTask);
+				$this->notificationService->sendNotification($assistantTask);
 			} catch (\InvalidArgumentException $e) {
 				$this->logger->error('Failed to dispatch notification for failed transcription: ' . $e->getMessage());
 			}

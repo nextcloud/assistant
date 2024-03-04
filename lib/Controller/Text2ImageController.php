@@ -113,11 +113,13 @@ class Text2ImageController extends Controller {
 		}
 		*/
 
-		return new DataDisplayResponse(
+		$response = new DataDisplayResponse(
 			$result['image'] ?? '',
 			Http::STATUS_OK,
 			['Content-Type' => $result['content-type'] ?? 'image/jpeg']
 		);
+		$response->cacheFor(60 * 60 * 24);
+		return $response;
 	}
 
 	/**

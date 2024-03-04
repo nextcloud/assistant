@@ -17,7 +17,10 @@
 				<NcButton
 					type="secondary"
 					@click="onChooseFile('writingStyle')">
-					{{ t('assistant','Choose File') }}
+					<template #icon>
+						<FileDocumentIcon />
+					</template>
+					{{ t('assistant','Choose file') }}
 				</NcButton>
 			</div>
 			<NcRichContenteditable
@@ -37,7 +40,10 @@
 				<NcButton
 					type="secondary"
 					@click="onChooseFile('sourceMaterial')">
-					{{ t('assistant','Choose File') }}
+					<template #icon>
+						<FileDocumentIcon />
+					</template>
+					{{ t('assistant','Choose file') }}
 				</NcButton>
 			</div>
 			<NcRichContenteditable
@@ -59,7 +65,10 @@
 				<NcButton
 					type="secondary"
 					@click="onChooseFile('prompt')">
-					{{ t('assistant','Choose File') }}
+					<template #icon>
+						<FileDocumentIcon />
+					</template>
+					{{ t('assistant','Choose file') }}
 				</NcButton>
 			</div>
 			<NcRichContenteditable
@@ -82,6 +91,8 @@
 </template>
 
 <script>
+import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
@@ -115,6 +126,7 @@ export default {
 		SpeechToTextInputForm,
 		NcRichContenteditable,
 		NcButton,
+		FileDocumentIcon,
 	},
 	props: {
 		inputs: {
@@ -149,6 +161,16 @@ export default {
 			} else {
 				this.onUpdate()
 			}
+		},
+		inputs(newVal) {
+			this.writingStyle = this.inputs.writingStyle ?? ''
+			this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
+			this.prompt = this.inputs.prompt ?? ''
+			this.sttMode = this.inputs.sttMode ?? 'record'
+			this.sttAudioData = this.inputs.audioData ?? null
+			this.sttAudioFilePath = this.inputs.audioFilePath ?? null
+			this.ttiNResults = this.inputs.nResults ?? 1
+			this.ttiDisplayPrompt = this.inputs.displayPrompt ?? false
 		},
 	},
 	mounted() {
@@ -216,9 +238,11 @@ export default {
 		onUpdateStt() {
 			this.$emit(
 				'update:inputs',
-				this.sttMode === 'record'
-					? { audioData: this.sttAudioData }
-					: { audioFilePath: this.sttAudioFilePath },
+				{
+					sttMode: this.sttMode,
+					audioData: this.sttAudioData,
+					audioFilePath: this.sttAudioFilePath,
+				},
 			)
 		},
 		onUpdateTti() {

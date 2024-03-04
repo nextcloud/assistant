@@ -59,16 +59,39 @@ class ImageGenerationMapper extends QBMapper {
 		string $imageGenId, string $prompt = '', string $userId = '', ?int $expCompletionTime = null,
 		bool $notifyReady = false
 	): ImageGeneration {
-		$imageGeneration = new ImageGeneration();
-		$imageGeneration->setImageGenId($imageGenId);
-		$imageGeneration->setTimestamp((new DateTime())->getTimestamp());
-		$imageGeneration->setPrompt($prompt);
-		$imageGeneration->setUserId($userId);
-		$imageGeneration->setIsGenerated(false);
-		$imageGeneration->setFailed(false);
-		$imageGeneration->setNotifyReady($notifyReady);
-		$imageGeneration->setExpGenTime($expCompletionTime ?? (new DateTime())->getTimestamp());
-		return $this->insert($imageGeneration);
+		$nowTimestamp = (new DateTime())->getTimestamp();
+
+		$qb = $this->db->getQueryBuilder();
+		$qb->insert($this->getTableName())
+			->values([
+				'image_gen_id' => $qb->createNamedParameter($imageGenId, IQueryBuilder::PARAM_STR),
+				'timestamp' => $qb->createNamedParameter($nowTimestamp, IQueryBuilder::PARAM_INT),
+				'prompt' => $qb->createNamedParameter($prompt, IQueryBuilder::PARAM_STR),
+				'user_id' => $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR),
+				'is_generated' => $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL),
+				'failed' => $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL),
+				'notify_ready' => $qb->createNamedParameter($notifyReady, IQueryBuilder::PARAM_BOOL),
+				'exp_gen_time' => $qb->createNamedParameter($expCompletionTime ?? $nowTimestamp, IQueryBuilder::PARAM_INT),
+			]);
+		$qb->executeStatement();
+		$qb->resetQueryParts();
+
+		return $this->getImageGenerationOfImageGenId($imageGenId);
+
+		// TODO figure out why inserting an entity does not work on PostgreSQL and produces:
+		// An exception occurred while executing a query: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type boolean: \"\""
+		// could there be a bug in the query generation?
+
+		//$imageGeneration = new ImageGeneration();
+		//$imageGeneration->setImageGenId($imageGenId);
+		//$imageGeneration->setTimestamp((new DateTime())->getTimestamp());
+		//$imageGeneration->setPrompt($prompt);
+		//$imageGeneration->setUserId($userId);
+		//$imageGeneration->setIsGenerated(false);
+		//$imageGeneration->setFailed(false);
+		//$imageGeneration->setNotifyReady($notifyReady);
+		//$imageGeneration->setExpGenTime($expCompletionTime ?? (new DateTime())->getTimestamp());
+		//return $this->insert($imageGeneration);
 	}
 
 	/**

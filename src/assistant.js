@@ -10,10 +10,12 @@ export async function openAssistantForm(params) {
 	return openAssistantTextProcessingForm(params)
 }
 
+// TODO add param to lock on specific task type
+
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
- * OCA.TpAssistant.openAssistantTextProcessingForm({
+ * OCA.TPAssistant.openAssistantTextProcessingForm({
  *  appId: 'my_app_id',
  *  identifier: 'my task identifier',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
@@ -95,23 +97,23 @@ export async function openAssistantTextProcessingForm({
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
-		view.$on('sync-submit', (data) => {
+		const syncSubmit = (inputs, taskTypeId, newTaskIdentifier = '') => {
 			view.loading = true
 			view.showSyncTaskRunning = true
-			view.inputs = data.inputs
-			view.selectedTaskTypeId = data.selectedTaskTypeId
-			if (data.selectedTaskTypeId === 'speech-to-text') {
-				runSttTask(data.inputs).then(response => {
+			view.inputs = inputs
+			view.selectedTaskTypeId = taskTypeId
+			if (taskTypeId === 'speech-to-text') {
+				runSttTask(inputs).then(response => {
 					view.showScheduleConfirmation = true
 					view.loading = false
 					view.showSyncTaskRunning = false
 				})
 				return
 			}
-			const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+			const runOrScheduleFunction = taskTypeId === 'OCP\\TextToImage\\Task'
 				? runOrScheduleTtiTask
 				: runOrScheduleTask
-			runOrScheduleFunction(appId, identifier, data.selectedTaskTypeId, data.inputs)
+			runOrScheduleFunction(appId, newTaskIdentifier, taskTypeId, inputs)
 				.then(async (response) => {
 					const task = response.data?.task
 					lastTask = task
@@ -141,6 +143,19 @@ export async function openAssistantTextProcessingForm({
 				})
 				.then(() => {
 				})
+		}
+		view.$on('sync-submit', (data) => {
+			syncSubmit(data.inputs, data.selectedTaskTypeId, identifier)
+		})
+		view.$on('try-again', (task) => {
+			syncSubmit(task.inputs, task.taskType)
+		})
+		view.$on('load-task', (task) => {
+			if (!view.loading) {
+				view.selectedTaskTypeId = task.taskType
+				view.inputs = task.inputs
+				view.output = task.status === STATUS.successfull ? task.output : null
+			}
 		})
 		view.$on('cancel-sync-n-schedule', () => {
 			cancelCurrentSyncTask()
@@ -176,15 +191,15 @@ export async function runSttTask(inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType('speech-to-text')
-	if (inputs.audioData) {
+	if (inputs.sttMode === 'choose') {
+		const url = generateUrl('/apps/assistant/stt/transcribeFile')
+		const params = { path: inputs.audioFilePath }
+		return axios.post(url, params)
+	} else {
 		const url = generateUrl('/apps/assistant/stt/transcribeAudio')
 		const formData = new FormData()
 		formData.append('audioData', inputs.audioData)
 		return axios.post(url, formData)
-	} else {
-		const url = generateUrl('/apps/assistant/stt/transcribeFile')
-		const params = { path: this.audioFilePath }
-		return axios.post(url, params)
 	}
 }
 
@@ -452,23 +467,23 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 				showError(t('assistant', 'Failed to schedule the task'))
 			})
 	})
-	view.$on('sync-submit', (data) => {
+	const syncSubmit = (inputs, taskTypeId, newTaskIdentifier = '') => {
 		view.loading = true
 		view.showSyncTaskRunning = true
-		view.inputs = data.inputs
-		view.selectedTaskTypeId = data.selectedTaskTypeId
-		if (data.selectedTaskTypeId === 'speech-to-text') {
-			runSttTask(data.inputs).then(response => {
+		view.inputs = inputs
+		view.selectedTaskTypeId = taskTypeId
+		if (taskTypeId === 'speech-to-text') {
+			runSttTask(inputs).then(response => {
 				view.showScheduleConfirmation = true
 				view.loading = false
 				view.showSyncTaskRunning = false
 			})
 			return
 		}
-		const runOrScheduleFunction = data.selectedTaskTypeId === 'OCP\\TextToImage\\Task'
+		const runOrScheduleFunction = taskTypeId === 'OCP\\TextToImage\\Task'
 			? runOrScheduleTtiTask
 			: runOrScheduleTask
-		runOrScheduleFunction(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
+		runOrScheduleFunction(task.appId, newTaskIdentifier, taskTypeId, inputs)
 			.then((response) => {
 				// resolve(response.data?.task)
 				const task = response.data?.task
@@ -492,6 +507,19 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			})
 			.then(() => {
 			})
+	}
+	view.$on('sync-submit', (data) => {
+		syncSubmit(data.inputs, data.selectedTaskTypeId, task.identifier ?? '')
+	})
+	view.$on('try-again', (task) => {
+		syncSubmit(task.inputs, task.taskType)
+	})
+	view.$on('load-task', (task) => {
+		if (!view.loading) {
+			view.selectedTaskTypeId = task.taskType
+			view.inputs = task.inputs
+			view.output = task.status === STATUS.successfull ? task.output : null
+		}
 	})
 	view.$on('cancel-sync-n-schedule', () => {
 		cancelCurrentSyncTask()

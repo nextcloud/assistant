@@ -35,7 +35,9 @@
 					:action-buttons="actionButtons"
 					@submit="onSubmit"
 					@sync-submit="onSyncSubmit"
-					@action-button-clicked="onActionButtonClicked" />
+					@action-button-clicked="onActionButtonClicked"
+					@try-again="$emit('try-again', $event)"
+					@load-task="$emit('load-task', $event)" />
 			</div>
 		</div>
 	</NcModal>
@@ -102,14 +104,19 @@ export default {
 	},
 	emits: [
 		'cancel',
+		'cancel-sync-n-schedule',
 		'submit',
+		'sync-submit',
+		'action-button-clicked',
+		'try-again',
+		'load-task',
 	],
 	data() {
 		return {
 			show: true,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
-			modalSize: 'normal',
+			modalSize: 'large',
 		}
 	},
 	computed: {

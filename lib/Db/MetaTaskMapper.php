@@ -120,7 +120,7 @@ class MetaTaskMapper extends QBMapper {
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getMetaTaskOfUser(int $id, string $userId): MetaTask {
+	public function getUserMetaTask(int $id, string $userId): MetaTask {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -136,10 +136,12 @@ class MetaTaskMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
+	 * @param string|null $taskType
+	 * @param int|null $category
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getMetaTasksOfUser(string $userId): array {
+	public function getUserMetaTasks(string $userId, ?string $taskType = null, ?int $category = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -147,6 +149,17 @@ class MetaTaskMapper extends QBMapper {
 			->where(
 				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
 			);
+		if ($taskType !== null) {
+			$qb->andWhere(
+				$qb->expr()->eq('task_type', $qb->createNamedParameter($taskType, IQueryBuilder::PARAM_STR))
+			);
+		}
+		if ($category !== null) {
+			$qb->andWhere(
+				$qb->expr()->eq('category', $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT))
+			);
+		}
+		$qb->orderBy('timestamp', 'DESC');
 
 		return $this->findEntities($qb);
 	}
