@@ -58,7 +58,6 @@ OC.L10N.register(
     "Assistant admin options saved" : "Assistenten-Administrationseinstellungen gespeichert",
     "Failed to save assistant admin options" : "Fehler beim Speichern der Assistenten-Administrationseinstellungen",
     "Writing style" : "Schreibstil",
-    "Choose File" : "Datei auswählen",
     "Describe the writing style you want to use or supply an example document." : "Beschreibe den Schreibstil, den du verwenden möchtest, oder liefere ein Beispiel-Dokument",
     "Source material" : "Quellmaterial",
     "Describe what you want the document to be written on." : "Beschreibe, worauf das Dokument geschrieben werden soll.",

@@ -58,7 +58,6 @@ OC.L10N.register(
     "Assistant admin options saved" : "Assistant admin options saved",
     "Failed to save assistant admin options" : "Failed to save assistant admin options",
     "Writing style" : "Writing style",
-    "Choose File" : "Choose File",
     "Describe the writing style you want to use or supply an example document." : "Describe the writing style you want to use or supply an example document.",
     "Source material" : "Source material",
     "Describe what you want the document to be written on." : "Describe what you want the document to be written on.",

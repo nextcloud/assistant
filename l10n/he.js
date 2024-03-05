@@ -7,6 +7,8 @@ OC.L10N.register(
     "Result" : "תוצאה",
     "Copy" : "העתקה",
     "Try again" : "ניסיון חוזר",
+    "Cancel" : "ביטול",
+    "Delete" : "מחיקה",
     "Submit" : "שליחה",
     "Preview" : "תצוגה מקדימה",
     "Send" : "שליחה",

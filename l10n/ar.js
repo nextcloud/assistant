@@ -58,7 +58,6 @@ OC.L10N.register(
     "Assistant admin options saved" : "تمّ حفظ خيارات المشرف للمُساعد  ",
     "Failed to save assistant admin options" : "تعذّر حفظ خيارات المشرف للمُساعد ",
     "Writing style" : "أسلُوب الكتابة",
-    "Choose File" : "إختَر الملف",
     "Describe the writing style you want to use or supply an example document." : "صِف أسلُوب الكتابة الذي ترغب في استعماله أو اعطِ مستنداً كنموذج.",
     "Source material" : "مصدر المواد",
     "Describe what you want the document to be written on." : "صِف الشيء الذي ترغب أن يتحدث عنه المستند",

@@ -14,6 +14,8 @@ OC.L10N.register(
     "Result {index}" : "Resultado {índice}",
     "Start recording" : "Iniciar grabación",
     "Stop recording" : "Detener grabación",
+    "Cancel" : "Cancelar",
+    "Scheduled" : "Programado",
     "Image generation" : "Generación de imágenes",
     "Generated image" : "Imagen generada",
     "Include the prompt in the result" : "Incluir el inicio en el resultado",
