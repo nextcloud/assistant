@@ -94,7 +94,7 @@ import Cog from 'vue-material-design-icons/Cog.vue'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 import axios from '@nextcloud/axios'
 import AssistantIcon from '../icons/AssistantIcon.vue'
-import { generateUrl } from '@nextcloud/router'
+import { generateOcsUrl } from '@nextcloud/router'
 import moment from '@nextcloud/moment'
 
 export default {
@@ -149,12 +149,6 @@ export default {
 				return this.imageUrls.length > 0
 			}
 		},
-		infoUrl() {
-			return generateUrl('/apps/assistant/i/info/{imageGenId}', { imageGenId: this.imageGenId })
-		},
-		referenceUrl() {
-			return generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.imageGenId })
-		},
 	},
 	watch: {
 		imageGenId() {
@@ -199,33 +193,35 @@ export default {
 
 			// Loop through all the fileIds and get the images:
 			fileIds.forEach((fileId) => {
-				this.imageUrls.push(generateUrl('/apps/assistant/i/{imageGenId}/{fileId}', { imageGenId, fileId: fileId.id }))
+				this.imageUrls.push(generateOcsUrl('/apps/assistant/api/v1/i/{imageGenId}/{fileId}', { imageGenId, fileId: fileId.id }))
 				this.imgLoadedList.push = false
 			})
 		},
 		getImageGenInfo() {
 			let success = false
-			axios.get(this.infoUrl)
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/info/{imageGenId}', { imageGenId: this.imageGenId })
+			axios.get(url)
 				.then((response) => {
 					if (response.status === 200) {
-						if (response.data?.files !== undefined) {
+						const data = response.data?.ocs?.data
+						if (data?.files !== undefined) {
 							this.waitingInBg = false
 
-							if (response.data.files.length === 0) {
+							if (data.files.length === 0) {
 								this.errorMsg = t('assistant', 'This generation has no visible images')
 								this.failed = true
 								this.imgLoadedList = []
 							} else {
-								this.prompt = response.data.prompt
-								this.isOwner = response.data.is_owner
+								this.prompt = data.prompt
+								this.isOwner = data.is_owner
 								success = true
-								this.getImages(response.data.image_gen_id, response.data.files)
+								this.getImages(data.image_gen_id, data.files)
 								this.onGenerationReady()
 							}
-						} else if (response.data?.processing !== undefined) {
+						} else if (data?.processing !== undefined) {
 							this.waitingInBg = true
 							this.$emit('processing')
-							this.updateTimeUntilCompletion(response.data.processing)
+							this.updateTimeUntilCompletion(data.processing)
 						} else {
 							this.errorMsg = t('assistant', 'Unexpected server response')
 							this.failed = true
@@ -289,7 +285,7 @@ export default {
 			this.$emit('ready')
 		},
 		onCheckboxChange() {
-			const url = generateUrl('/apps/assistant/i/visibility/' + this.imageGenId)
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/visibility/' + this.imageGenId)
 
 			axios.post(url, {
 				fileVisStatusArray: this.fileVisStatusArray,

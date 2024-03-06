@@ -56,6 +56,10 @@ class Text2ImageHelperService {
 	) {
 	}
 
+	public function hasProviders(): bool {
+		return $this->textToImageManager->hasProviders();
+	}
+
 	/**
 	 * Process a prompt using ImageProcessingProvider and return a link to the generated image(s)
 	 *

@@ -128,8 +128,8 @@ export default {
 				: runOrScheduleTask
 			runOrScheduleFunction(this.task.appId, this.task.identifier, taskTypeId, inputs)
 				.then((response) => {
-					console.debug('Assistant SYNC result', response.data)
-					const task = response.data?.task
+					console.debug('Assistant SYNC result', response.data?.ocs?.data)
+					const task = response.data?.ocs?.data?.task
 					this.task.inputs = task.inputs
 					if (task.status === STATUS.successfull) {
 						this.task.output = task?.output ?? ''

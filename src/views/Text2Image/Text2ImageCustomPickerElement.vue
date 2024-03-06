@@ -112,7 +112,7 @@ import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 
 import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import { generateOcsUrl } from '@nextcloud/router'
 import { showError, showMessage } from '@nextcloud/dialogs'
 
 import Text2ImageDisplay from '../../components/Text2Image/Text2ImageDisplay.vue'
@@ -204,14 +204,10 @@ export default {
 			}, 300)
 		},
 		getPromptHistory() {
-			const params = {
-				params: {
-				},
-			}
-			const url = generateUrl('/apps/assistant/i/prompt_history')
-			return axios.get(url, params)
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/prompt_history')
+			return axios.get(url)
 				.then((response) => {
-					this.prompts = response.data
+					this.prompts = response.data?.ocs?.data
 				})
 				.catch((error) => {
 					console.error(error)
@@ -233,7 +229,7 @@ export default {
 			if (this.result === null) {
 				return
 			}
-			const url = generateUrl('/apps/assistant/i/cancel_generation')
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/cancel_generation')
 			axios.post(url, { imageGenId: this.result.image_gen_id })
 				.catch((error) => {
 					console.error('Image generation cancel request error', error)
@@ -249,7 +245,6 @@ export default {
 			this.result = null
 		},
 		generate() {
-
 			if (this.result !== null) {
 				this.cancelGeneration()
 			}
@@ -267,10 +262,10 @@ export default {
 				nResults: this.nResults,
 				displayPrompt: this.displayPrompt,
 			}
-			const url = generateUrl('/apps/assistant/i/process_prompt')
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/process_prompt')
 			return axios.post(url, params)
 				.then((response) => {
-					const data = response.data
+					const data = response.data?.ocs?.data
 					if (data?.url !== undefined) {
 						this.result = data
 						this.insertPrompt(this.query)
@@ -297,7 +292,7 @@ export default {
 			if (this.failed || this.result === null) {
 				return
 			}
-			const url = generateUrl('/apps/assistant/i/notify/' + this.result.image_gen_id)
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/notify/{imageGenId}', { imageGenId: this.result.image_gen_id })
 			axios.post(url)
 				.then(() => {
 					showMessage(t('assistant', 'You will be notified when the image generation is ready.'))

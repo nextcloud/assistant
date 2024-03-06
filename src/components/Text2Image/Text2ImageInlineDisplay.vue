@@ -20,7 +20,7 @@
 <script>
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import { generateOcsUrl } from '@nextcloud/router'
 
 export default {
 	name: 'Text2ImageInlineDisplay',
@@ -45,9 +45,6 @@ export default {
 	},
 
 	computed: {
-		infoUrl() {
-			return generateUrl('/apps/assistant/i/info/{imageGenId}', { imageGenId: this.imageGenId })
-		},
 	},
 	watch: {
 		imageGenId() {
@@ -65,16 +62,18 @@ export default {
 		getImageGenInfo() {
 			this.imageUrls = []
 			this.loadingInfo = true
-			axios.get(this.infoUrl)
+			const url = generateOcsUrl('/apps/assistant/api/v1/i/info/{imageGenId}', { imageGenId: this.imageGenId })
+			axios.get(url)
 				.then((response) => {
 					if (response.status === 200) {
-						if (response.data?.files !== undefined) {
-							if (response.data.files.length === 0) {
+						const data = response.data?.ocs?.data
+						if (data?.files !== undefined) {
+							if (data.files.length === 0) {
 								this.errorMsg = t('assistant', 'This generation has no visible images')
 								this.failed = true
 							} else {
-								this.imageUrls = response.data.files.map(file => {
-									return generateUrl('/apps/assistant/i/{imageGenId}/{fileId}', { imageGenId: this.imageGenId, fileId: file.id })
+								this.imageUrls = data.files.map(file => {
+									return generateOcsUrl('/apps/assistant/api/v1/i/{imageGenId}/{fileId}', { imageGenId: this.imageGenId, fileId: file.id })
 								})
 							}
 						} else {

@@ -36,7 +36,7 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 
 import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import { generateOcsUrl } from '@nextcloud/router'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 
 import SpeechToTextInputForm from '../../components/SpeechToText/SpeechToTextInputForm.vue'
@@ -89,12 +89,12 @@ export default {
 		},
 		async onInputEnter() {
 			if (this.mode === 'record') {
-				const url = generateUrl('/apps/assistant/stt/transcribeAudio')
+				const url = generateOcsUrl('/apps/assistant/api/v1/stt/transcribeAudio')
 				const formData = new FormData()
 				formData.append('audioData', this.audioData)
 				await this.apiRequest(url, formData)
 			} else {
-				const url = generateUrl('/apps/assistant/stt/transcribeFile')
+				const url = generateOcsUrl('/apps/assistant/api/v1/stt/transcribeFile')
 				const params = { path: this.audioFilePath }
 				await this.apiRequest(url, params)
 			}

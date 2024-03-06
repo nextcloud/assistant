@@ -86,7 +86,7 @@ export async function openAssistantTextProcessingForm({
 				.then(async (response) => {
 					view.inputs = data.inputs
 					view.showScheduleConfirmation = true
-					const task = response.data?.task
+					const task = response.data?.ocs?.data?.task
 					lastTask = task
 					useMetaTasks ? resolve(task) : resolve(await resolveMetaTaskToOcpTask(task))
 				})
@@ -115,7 +115,7 @@ export async function openAssistantTextProcessingForm({
 				: runOrScheduleTask
 			runOrScheduleFunction(appId, newTaskIdentifier, taskTypeId, inputs)
 				.then(async (response) => {
-					const task = response.data?.task
+					const task = response.data?.ocs?.data?.task
 					lastTask = task
 					useMetaTasks ? resolve(task) : resolve(await resolveMetaTaskToOcpTask(task))
 					view.inputs = task.inputs
@@ -137,7 +137,7 @@ export async function openAssistantTextProcessingForm({
 					} else {
 						view.$destroy()
 						console.error('Assistant sync run error', error)
-						showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
+						showError(t('assistant', 'Assistant error'))
 						reject(new Error('Assistant sync run error'))
 					}
 				})
@@ -166,14 +166,14 @@ export async function openAssistantTextProcessingForm({
 				.then(async (response) => {
 					view.showSyncTaskRunning = false
 					view.showScheduleConfirmation = true
-					const task = response.data?.task
+					const task = response.data?.ocs?.data?.task
 					lastTask = task
 					useMetaTasks ? resolve(task) : resolve(await resolveMetaTaskToOcpTask(task))
 				})
 				.catch(error => {
 					view.$destroy()
 					console.error('Assistant scheduling error', error)
-					showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
+					showError(t('assistant', 'Assistant error'))
 					reject(new Error('Assistant scheduling error'))
 				})
 		})
@@ -189,14 +189,14 @@ export async function openAssistantTextProcessingForm({
 
 export async function runSttTask(inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType('speech-to-text')
 	if (inputs.sttMode === 'choose') {
-		const url = generateUrl('/apps/assistant/stt/transcribeFile')
+		const url = generateOcsUrl('/apps/assistant/api/v1/stt/transcribeFile')
 		const params = { path: inputs.audioFilePath }
 		return axios.post(url, params)
 	} else {
-		const url = generateUrl('/apps/assistant/stt/transcribeAudio')
+		const url = generateOcsUrl('/apps/assistant/api/v1/stt/transcribeAudio')
 		const formData = new FormData()
 		formData.append('audioData', inputs.audioData)
 		return axios.post(url, formData)
@@ -210,7 +210,7 @@ export function scheduleTtiTask(appId, identifier, taskType, inputs) {
 export async function runOrScheduleTtiTask(appId, identifier, taskType, inputs, schedule = false) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType('OCP\\TextToImage\\Task')
 	const params = {
 		appId,
@@ -221,7 +221,7 @@ export async function runOrScheduleTtiTask(appId, identifier, taskType, inputs, 
 		notifyReadyIfScheduled: true,
 		schedule,
 	}
-	const url = generateUrl('/apps/assistant/i/process_prompt')
+	const url = generateOcsUrl('/apps/assistant/api/v1/i/process_prompt')
 	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
 
@@ -251,9 +251,9 @@ export async function cancelCurrentSyncTask() {
 export async function runTask(appId, identifier, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateUrl('/apps/assistant/task/run')
+	const url = generateOcsUrl('/apps/assistant/api/v1/task/run')
 	const params = {
 		inputs,
 		type: taskType,
@@ -266,9 +266,9 @@ export async function runTask(appId, identifier, taskType, inputs) {
 export async function runOrScheduleTask(appId, identifier, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateUrl('/apps/assistant/task/run-or-schedule')
+	const url = generateOcsUrl('/apps/assistant/api/v1/task/run-or-schedule')
 	const params = {
 		inputs,
 		type: taskType,
@@ -289,9 +289,9 @@ export async function runOrScheduleTask(appId, identifier, taskType, inputs) {
  */
 export async function scheduleTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
-	const url = generateUrl('/apps/assistant/task/schedule')
+	const url = generateOcsUrl('/apps/assistant/api/v1/task/schedule')
 	const params = {
 		inputs,
 		type: taskType,
@@ -353,12 +353,12 @@ export function handleNotification(event) {
  */
 async function showAssistantTaskResult(taskId) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
-	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
-	const url = generateUrl('apps/assistant/task/{taskId}', { taskId })
+	const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
-		console.debug('showing results for task', response.data.task)
-		openAssistantTaskResult(response.data.task, true)
+		console.debug('showing results for task', response.data?.ocs?.data?.task)
+		openAssistantTaskResult(response.data?.ocs?.data?.task, true)
 	}).catch(error => {
 		console.error(error)
 		showError(t('assistant', 'This task does not exist or has been cleaned up'))
@@ -400,8 +400,8 @@ export async function openAssistantPlainTextResult(metaTask) {
  */
 export async function openAssistantImageResult(metaTask) {
 	// For now just open the image generation result on a new page:
-	const { generateUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
-	const url = generateUrl('apps/assistant/i/{genId}', { genId: metaTask.output })
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-lazy" */'@nextcloud/router')
+	const url = generateOcsUrl('/apps/assistant/api/v1/i/{genId}', { genId: metaTask.output })
 	window.open(url, '_blank')
 }
 
@@ -459,7 +459,7 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 		scheduleTask(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
 				view.showScheduleConfirmation = true
-				console.debug('scheduled task', response.data?.task)
+				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
 				view.$destroy()
@@ -485,8 +485,8 @@ export async function openAssistantTaskResult(task, useMetaTasks = false) {
 			: runOrScheduleTask
 		runOrScheduleFunction(task.appId, newTaskIdentifier, taskTypeId, inputs)
 			.then((response) => {
-				// resolve(response.data?.task)
-				const task = response.data?.task
+				// resolve(response.data?.ocs?.data?.task)
+				const task = response.data?.ocs?.data?.task
 				if (task.status === STATUS.successfull) {
 					view.output = task?.output
 				} else if (task.status === STATUS.scheduled) {

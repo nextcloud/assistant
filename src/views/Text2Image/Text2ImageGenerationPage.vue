@@ -37,7 +37,6 @@ import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
 import Text2ImageDisplay from '../../components/Text2Image/Text2ImageDisplay.vue'
 
-import { generateUrl } from '@nextcloud/router'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
@@ -66,7 +65,6 @@ export default {
 	},
 	data() {
 		return {
-			generationInfoUrl: generateUrl('/apps/assistant/i/info/' + this.imageGenId),
 			copied: false,
 		}
 	},
