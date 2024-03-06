@@ -59,7 +59,8 @@
 			</NcNoteCard>
 		</div>
 		<div class="footer">
-			<NcButton class="history-button"
+			<NcButton v-if="selectedTaskType"
+				class="history-button"
 				:type="showHistory ? 'secondary' : 'tertiary'"
 				:aria-label="showHistory ? t('assistant', 'Hide previous tasks') : t('assistant', 'Show previous tasks')"
 				@click="showHistory = !showHistory">
