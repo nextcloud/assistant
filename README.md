@@ -33,6 +33,7 @@ include text processing providers to:
 * Generate a headline
 * Get an answer from a free prompt
 * Reformulate (OpenAi/LocalAi only)
+* Context writer: Generate text with a specified style. The style can be described or provided via an example text.
 
 ### Text to image (Image generation)
 
@@ -45,6 +46,3 @@ Known providers:
 Known providers:
 * [OpenAi/LocalAI integration](https://apps.nextcloud.com/apps/integration_openai)
 * [Local Whisper Speech-To-Text](https://apps.nextcloud.com/apps/stt_whisper)
-
-## Integration
-
