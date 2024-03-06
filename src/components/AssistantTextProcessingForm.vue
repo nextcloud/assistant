@@ -274,39 +274,9 @@ export default {
 	},
 	methods: {
 		getTaskTypes() {
-			axios.get(generateOcsUrl('textprocessing/tasktypes', 2))
+			axios.get(generateOcsUrl('/apps/assistant/api/v1/task-types'))
 				.then((response) => {
 					this.taskTypes = response.data.ocs.data.types
-
-					// Check if FREE_PROMPT_TASK_TYPE_ID is available
-					if (this.taskTypes.find(tt => tt.id === FREE_PROMPT_TASK_TYPE_ID)) {
-						// change free prompt task type name
-						this.taskTypes = this.taskTypes.map(type => {
-							if (type.id === FREE_PROMPT_TASK_TYPE_ID) {
-								type.name = t('assistant', 'Generate text')
-								type.description = t('assistant', 'Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.')
-							}
-							return type
-						})
-						// inject a copywriter task type
-						this.taskTypes.push({
-							id: 'copywriter',
-							name: t('assistant', 'Context write'),
-							description: t('assistant', 'Writes text in a given style based on the provided source material.'),
-						})
-						// inject a STT task type
-						this.taskTypes.push({
-							id: 'speech-to-text',
-							name: t('assistant', 'Transcribe'),
-							description: t('assistant', 'Transcribe audio to text'),
-						})
-						// inject a T2I task type
-						this.taskTypes.push({
-							id: 'OCP\\TextToImage\\Task',
-							name: t('assistant', 'Generate image'),
-							description: t('assistant', 'Generate an image from a text'),
-						})
-					}
 				})
 				.catch((error) => {
 					console.error(error)
