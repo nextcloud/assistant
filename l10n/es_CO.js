@@ -6,6 +6,8 @@ OC.L10N.register(
     "Reset" : "Reiniciar",
     "Result" : "Resultado",
     "Try again" : "Reintentar",
+    "Delete" : "Borrar",
+    "Unknown error" : "Error desconocido",
     "Submit" : "Enviar",
     "Preview" : "Previsualizar",
     "Send" : "Enviar",

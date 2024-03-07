@@ -1,0 +1,14 @@
+{ "translations": {
+    "No file selected" : "Faile ei ole valitud",
+    "Close" : "Sulge",
+    "Reset" : "Lähtesta",
+    "Cancel" : "Tühista",
+    "Delete" : "Kustuta",
+    "Unknown error" : "Tundmatu viga",
+    "Running" : "Jooksmine",
+    "Submit" : "Saada",
+    "Preview" : "Eelvaade",
+    "Send" : "Saada",
+    "Advanced options" : "Täpsemad valikud"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
