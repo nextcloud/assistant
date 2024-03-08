@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.6 – 2024-03-08
+
+### Fixed
+
+- Include Php dependencies in release archive
+
 ## 1.0.5 – 2024-03-08
 
 ### Added

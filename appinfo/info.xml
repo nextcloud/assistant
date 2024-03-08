@@ -51,7 +51,7 @@ Known providers:
 * [OpenAi/LocalAI integration](https://apps.nextcloud.com/apps/integration_openai)
 * [Local Whisper Speech-To-Text](https://apps.nextcloud.com/apps/stt_whisper)
 ]]>	</description>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
 	<namespace>TpAssistant</namespace>
