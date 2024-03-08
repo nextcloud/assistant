@@ -21,11 +21,16 @@ use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
+use OCP\SpeechToText\ISpeechToTextManager;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
+use OCP\TextProcessing\ITaskType;
 use OCP\TextProcessing\Task as TextProcessingTask;
 use Parsedown;
 use PhpOffice\PhpWord\IOFactory;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -33,13 +38,70 @@ class AssistantService {
 
 	public function __construct(
 		private ITextProcessingManager $textProcessingManager,
+		private ISpeechToTextManager $speechToTextManager,
 		private Text2ImageHelperService $text2ImageHelperService,
 		private MetaTaskMapper $metaTaskMapper,
 		private LoggerInterface $logger,
 		private IRootFolder $storage,
 		private IJobList $jobList,
 		private IL10N $l10n,
+		private ContainerInterface $container,
 	) {
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAvailableTaskTypes(): array {
+		// text processing and copywriter
+		$typeClasses = $this->textProcessingManager->getAvailableTaskTypes();
+		$types = [];
+		/** @var string $typeClass */
+		foreach ($typeClasses as $typeClass) {
+			try {
+				/** @var ITaskType $object */
+				$object = $this->container->get($typeClass);
+			} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+				$this->logger->warning('Could not find ' . $typeClass, ['exception' => $e]);
+				continue;
+			}
+			if ($typeClass === FreePromptTaskType::class) {
+				$types[] = [
+					'id' => $typeClass,
+					'name' => $this->l10n->t('Generate text'),
+					'description' => $this->l10n->t('Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.'),
+				];
+				$types[] = [
+					'id' => 'copywriter',
+					'name' => $this->l10n->t('Context write'),
+					'description' => $this->l10n->t('Writes text in a given style based on the provided source material.'),
+				];
+			} else {
+				$types[] = [
+					'id' => $typeClass,
+					'name' => $object->getName(),
+					'description' => $object->getDescription(),
+				];
+			}
+		}
+
+		// STT
+		if ($this->speechToTextManager->hasProviders()) {
+			$types[] = [
+				'id' => 'speech-to-text',
+				'name' => $this->l10n->t('Transcribe'),
+				'description' => $this->l10n->t('Transcribe audio to text'),
+			];
+		}
+		// text2image
+		if ($this->text2ImageHelperService->hasProviders()) {
+			$types[] = [
+				'id' => 'OCP\TextToImage\Task',
+				'name' => $this->l10n->t('Generate image'),
+				'description' => $this->l10n->t('Generate an image from a text'),
+			];
+		}
+		return $types;
 	}
 
 	/**

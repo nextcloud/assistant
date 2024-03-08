@@ -100,7 +100,7 @@ import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
 import Text2ImageInputForm from './Text2Image/Text2ImageInputForm.vue'
 
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
-import { generateUrl } from '@nextcloud/router'
+import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 const VALID_MIME_TYPES = [
@@ -191,25 +191,26 @@ export default {
 				showError(t('assistant', 'No file selected'))
 				return
 			}
-			const url = generateUrl('apps/assistant/parse-file')
+			const url = generateOcsUrl('/apps/assistant/api/v1/parse-file')
 			axios.post(url, {
 				filePath,
 			}).then((response) => {
-				if (response.data?.parsedText === undefined) {
+				const data = response.data?.ocs?.data
+				if (data?.parsedText === undefined) {
 					showError(t('assistant', 'Unexpected response from text parser'))
 					return
 				}
 				switch (target) {
 				case 'sourceMaterial':
-					this.sourceMaterial = response.data.parsedText
+					this.sourceMaterial = data.parsedText
 					this.onUpdateCopywriter()
 					break
 				case 'writingStyle':
-					this.writingStyle = response.data.parsedText
+					this.writingStyle = data.parsedText
 					this.onUpdateCopywriter()
 					break
 				default:
-					this.prompt = response.data.parsedText
+					this.prompt = data.parsedText
 					this.onUpdateMainInput()
 				}
 			}).catch((error) => {
