@@ -11,14 +11,13 @@
 				</h3>
 				<NcCheckboxRadioSwitch
 					:checked="state.assistant_enabled"
-					:disabled="!state.text_processing_available"
 					@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Top-right assistant') }}
 						<div v-if="!state.text_processing_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>
-								{{ t('assistant', 'To enable this feature, please install any AI text processing provider.') }}
+								{{ t('assistant', 'To be able to use this feature, please install at least one AI text processing provider.') }}
 							</span>
 						</div>
 					</div>
