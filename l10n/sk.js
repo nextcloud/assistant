@@ -18,6 +18,7 @@ OC.L10N.register(
     "Unknown error" : "Neznáma chyba",
     "Running" : "Beh",
     "Scheduled" : "Naplánované",
+    "Image generation" : "Generovanie obrázka",
     "Submit" : "Odoslať",
     "Preview" : "Náhľad",
     "Unknown API error" : "Neznáma chyba API",
