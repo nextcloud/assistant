@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.5 – 2024-03-08
+
+### Added
+
+- Copy Writer feature
+- Image generation and speech-to-text smart pickers
+- Image generation and speech-to-text as tasks in the assistant itself
+- Task history
+
 ## 1.0.3 – 2023-12-12
 
 ### Changed
