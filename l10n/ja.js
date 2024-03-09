@@ -6,6 +6,7 @@ OC.L10N.register(
     "AI image generation" : "AIによる画像生成",
     "View results" : "結果を見る",
     "Artificial Intelligence" : "人工知能",
+    "Choose file" : "ファイルを選択",
     "No file selected" : "ファイル未選択",
     "Close" : "閉じる",
     "Reset" : "リセット",

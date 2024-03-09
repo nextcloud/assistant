@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "AI image generation" : "Generación de imágenes de IA",
+    "Transcribe" : "Transcribir",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Close" : "Cerrar",
@@ -9,7 +10,6 @@ OC.L10N.register(
     "Result" : "Resultado",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",
-    "Transcribe" : "Transcribir",
     "Prompt" : "Promoción",
     "Result {index}" : "Resultado {índice}",
     "Start recording" : "Iniciar grabación",

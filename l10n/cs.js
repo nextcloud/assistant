@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Transcript not found" : "Přepis nenalezn",
     "Some internal error occurred. Contact your sysadmin for more info." : "Došlo k nějaké vnitřní chybě. Ohledně dalších informací se obraťte na svého správce systémů.",
     "No Speech-to-Text provider found, install one from the app store to use this feature." : "Nenalezen žádný poskytovatel převodu řeči na text – aby bylo možné tuto funkci využívat, nainstalujte nějaký z katalogu aplikací.",
     "Audio file not found." : "Zvukový soubor nenalezen.",
@@ -18,10 +17,12 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "Úkol pro „%1$s“ se nezdařil",
     "\"%1$s\" task for \"%2$s\" has failed" : "Úkol „%1$s“ pro „%2$s“ se nezdařil",
     "View task" : "Zobrazit úkoly",
+    "Transcribe" : "Přepsat do textu",
     "FreePromptTaskType not available" : "FreePromptTaskType není k dispozici",
     "Failed to run or schedule a task" : "Úlohu se nepodařilo spustit či naplánovat",
     "Failed to get prompt history" : "Nepodařilo se získat historii promptu",
     "Generation not found" : "Vytváření nenalezeno",
+    "Transcript not found" : "Přepis nenalezn",
     "No text to image processing provider available" : "Není k dispozici žádný poskytovatel zpracovávání obrázků",
     "Image request error" : "Chyba požadavku na obrázek",
     "Image generation not found." : "Vytváření obrázku nenalezeno.",
@@ -61,7 +62,6 @@ OC.L10N.register(
     "Copy" : "Zkopírovat",
     "Try again" : "Zkusit znovu",
     "Send request" : "Odeslat požadavek",
-    "Transcribe" : "Přepsat do textu",
     "Text generation content" : "Obsah vytváření textu",
     "The text generation task was scheduled to run in the background." : "Úloha vytváření textu byla naplánována pro spuštění na pozadí.",
     "Estimated completion time: " : "Odhadovaná doba dokončení:",

@@ -1,12 +1,12 @@
 { "translations": {
     "View results" : "Rezultati",
+    "Transcribe" : "Prepiši govor",
     "Artificial Intelligence" : "Umetna inteligenca",
     "No file selected" : "Ni izbranih datotek",
     "Close" : "Zapri",
     "Reset" : "Ponastavi",
     "Result" : "Rezultat",
     "Copy" : "Kopiraj",
-    "Transcribe" : "Prepiši govor",
     "Start recording" : "Začni s snemanjem",
     "Stop recording" : "Ustavi snemanje",
     "Cancel" : "Prekliči",
