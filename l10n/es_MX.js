@@ -7,6 +7,7 @@ OC.L10N.register(
     "Close" : "Cerrar",
     "Reset" : "Reiniciar",
     "Result" : "Resultado",
+    "Copy" : "Copiar",
     "Try again" : "Reintentar",
     "Delete" : "Eliminar",
     "Unknown error" : "Se presentó un error desconocido",
