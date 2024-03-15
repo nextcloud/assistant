@@ -21,7 +21,8 @@
 					:title="t('assistant', 'Back to the assistant')"
 					@click="showHistory = false">
 					<template #icon>
-						<ArrowLeftIcon />
+						<NcLoadingIcon v-if="historyLoading" />
+						<ArrowLeftIcon v-else />
 					</template>
 				</NcButton>
 				<h2 v-if="selectedTaskType">
@@ -31,6 +32,7 @@
 			<TaskList
 				class="history--list"
 				:task-type="mySelectedTaskTypeId"
+				:loading.sync="historyLoading"
 				@try-again="onHistoryTryAgain"
 				@load-task="onHistoryLoadTask" />
 		</div>
@@ -224,6 +226,7 @@ export default {
 			copied: false,
 			showHistory: false,
 			loadingTaskTypes: false,
+			historyLoading: false,
 		}
 	},
 	computed: {
