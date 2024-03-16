@@ -4,6 +4,7 @@ OC.L10N.register(
     "Nextcloud Assistant" : "Асистент Nextcloud",
     "Artificial Intelligence" : "Штучний інтелект",
     "Choose file" : "Вибрати файл",
+    "Type some text" : "Вставте будь-який текст",
     "No file selected" : "Жодного файлу обрано",
     "Close" : "Закрити",
     "Reset" : "Відхилити зміни",
