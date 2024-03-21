@@ -3,7 +3,10 @@
 		:name="t('assistant', 'No provider found')"
 		:description="t('assistant', 'AI Providers need to be installed to use the Assistant')">
 		<template v-if="isAdmin" #action>
-			<span v-html="actionHtml" />
+			<div class="actions">
+				<span v-html="action1Html" />
+				<span v-html="action2Html" />
+			</div>
 		</template>
 		<template #icon>
 			<AssistantIcon />
@@ -27,6 +30,10 @@ const integrationSectionUrl = generateUrl('/settings/apps/integration')
 const integrationLinkText = t('assistant', 'integration')
 const integrationLink = `<a class="external" target="_blank" href="${integrationSectionUrl}">${integrationLinkText}</a>`
 
+const aiDocUrl = 'https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html'
+const aiDocLinkText = t('assistant', 'complete AI documentation')
+const aiAdminDocLink = `<a class="external" target="_blank" href="${aiDocUrl}">${aiDocLinkText}</a>`
+
 export default {
 	name: 'NoProviderEmptyContent',
 
@@ -45,10 +52,15 @@ export default {
 	},
 
 	computed: {
-		actionHtml() {
+		action1Html() {
 			return t('assistant', 'AI provider apps can be found in the {toolLink} and {integrationLink} app settings sections.', {
 				toolLink,
 				integrationLink,
+			}, undefined, { escape: false, sanitize: false })
+		},
+		action2Html() {
+			return t('assistant', 'You can also check the {aiAdminDocLink}', {
+				aiAdminDocLink,
 			}, undefined, { escape: false, sanitize: false })
 		},
 	},
@@ -65,5 +77,9 @@ export default {
 </script>
 
 <style lang="scss">
-// nothing yet
+.actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 </style>
