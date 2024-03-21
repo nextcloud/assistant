@@ -13,7 +13,6 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\IUser;
 use OCP\IUserSession;
-use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\Util;
 
 /**
@@ -26,7 +25,6 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		private IConfig $config,
 		private IInitialState $initialStateService,
 		private ?string $userId,
-		private ITextProcessingManager $textProcessingManager
 	) {
 	}
 
@@ -41,10 +39,6 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		}
 
 		if (!$this->userSession->getUser() instanceof IUser) {
-			return;
-		}
-
-		if (!$this->textProcessingManager->hasProviders()) {
 			return;
 		}
 

@@ -1,5 +1,8 @@
 <template>
-	<div class="assistant-form">
+	<NcLoadingIcon v-if="loadingTaskTypes" />
+	<NoProviderEmptyContent v-else-if="taskTypes.length === 0" />
+	<div v-else
+		class="assistant-form">
 		<span class="assistant-bubble">
 			<CreationIcon :size="16" class="icon" />
 			<span>{{ t('assistant', 'Nextcloud Assistant') }}</span>
@@ -134,6 +137,7 @@ import TaskTypeSelect from './TaskTypeSelect.vue'
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import Text2ImageDisplay from './Text2Image/Text2ImageDisplay.vue'
 import TaskList from './TaskList.vue'
+import NoProviderEmptyContent from './NoProviderEmptyContent.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
@@ -148,6 +152,7 @@ const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
 export default {
 	name: 'AssistantTextProcessingForm',
 	components: {
+		NoProviderEmptyContent,
 		TaskList,
 		Text2ImageDisplay,
 		TaskTypeSelect,
@@ -199,6 +204,7 @@ export default {
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
 			copied: false,
 			showHistory: false,
+			loadingTaskTypes: false,
 		}
 	},
 	computed: {
@@ -274,12 +280,16 @@ export default {
 	},
 	methods: {
 		getTaskTypes() {
+			this.loadingTaskTypes = true
 			axios.get(generateOcsUrl('/apps/assistant/api/v1/task-types'))
 				.then((response) => {
 					this.taskTypes = response.data.ocs.data.types
 				})
 				.catch((error) => {
 					console.error(error)
+				})
+				.then(() => {
+					this.loadingTaskTypes = false
 				})
 		},
 		onSubmit() {
