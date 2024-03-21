@@ -1,7 +1,5 @@
 <template>
-	<NcLoadingIcon v-if="loading"
-		:size="64" />
-	<ul v-else
+	<ul
 		class="task-list">
 		<TaskListItem v-for="task in tasks"
 			:key="task.id"
@@ -15,8 +13,6 @@
 </template>
 
 <script>
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-
 import TaskListItem from './TaskListItem.vue'
 
 import axios from '@nextcloud/axios'
@@ -29,13 +25,16 @@ export default {
 
 	components: {
 		TaskListItem,
-		NcLoadingIcon,
 	},
 
 	props: {
 		taskType: {
 			type: [String, null],
 			default: null,
+		},
+		loading: {
+			type: Boolean,
+			default: false,
 		},
 	},
 
@@ -46,7 +45,6 @@ export default {
 
 	data() {
 		return {
-			loading: false,
 			tasks: [],
 		}
 	},
@@ -66,7 +64,7 @@ export default {
 
 	methods: {
 		getTasks() {
-			this.loading = true
+			this.$emit('update:loading', true)
 			const req = {
 				params: {
 					taskType: this.taskType,
@@ -78,7 +76,7 @@ export default {
 			}).catch(error => {
 				console.error(error)
 			}).then(() => {
-				this.loading = false
+				this.$emit('update:loading', false)
 			})
 		},
 		onTaskDelete(task) {
@@ -107,14 +105,7 @@ export default {
 
 <style lang="scss">
 .task-list {
-	//display: flex;
-	//flex-direction: column;
-	//align-items: center;
-	//row-gap: 8px;
-	//column-gap: 6px;
-
 	&--item {
-		//margin: 0 12px 0 12px;
 		width: 99% !important;
 	}
 }

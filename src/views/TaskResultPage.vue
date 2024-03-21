@@ -169,7 +169,7 @@ export default {
 	justify-content: center;
 	margin: 24px 16px 16px 16px;
 	.form {
-		width: 600px;
+		max-width: 900px;
 	}
 }
 </style>
