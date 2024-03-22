@@ -44,7 +44,6 @@
     "Process and transform text" : "Text verarbeiten und transformieren",
     "Select which features you want to enable" : "Wähle aus, welche Funktionen aktiviert werden sollen",
     "Top-right assistant" : "Assistent oben rechts",
-    "To enable this feature, please install any AI text processing provider." : "Um diese Funktion zu aktivieren, installiere bitte einen KI-Textverarbeitungsanbieter.",
     "AI text generation smart picker" : "KI-Texterstellungs-Smart Picker",
     "To enable this feature, please install an AI text processing provider for the free prompt task type." : "Um diese Funktion zu aktivieren, installiere bitte einen KI-Textverarbeitungsanbieter für den kostenlosen Aufgabentyp \"prompt\".",
     "Text-to-image smart picker" : "Text-zu-Bild Smart Picker",

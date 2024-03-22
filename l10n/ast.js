@@ -51,7 +51,6 @@ OC.L10N.register(
     "Result" : "Resultáu",
     "The task ran successfully but the result is identical to the input." : "La xera executóse correutamente mas el resultáu ye idénticu al de la entrada.",
     "The task ran successfully but the generated text is empty." : "La xera executóse correutamente mas el testu xeneráu ta baleru.",
-    "Hide previous tasks" : "Anubrir les xeres anteriores",
     "Show previous tasks" : "Amosar les xeres anteriores",
     "Run a task" : "Executar una xera",
     "Copy" : "Copiar",
