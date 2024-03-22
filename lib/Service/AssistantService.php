@@ -22,6 +22,7 @@ use OCP\IL10N;
 use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
 use OCP\SpeechToText\ISpeechToTextManager;
+use OCP\TextProcessing\Exception\TaskFailureException;
 use OCP\TextProcessing\FreePromptTaskType;
 use OCP\TextProcessing\IManager as ITextProcessingManager;
 use OCP\TextProcessing\ITaskType;
@@ -132,6 +133,25 @@ class AssistantService {
 					if (count($inputs) !== 2) {
 						throw new \Exception('Invalid input(s)');
 					}
+					break;
+				}
+			case 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType':
+				{
+					if ((count($inputs) !== 1 && count($inputs) !== 4)
+						|| !isset($inputs['prompt'])
+						|| !is_string($inputs['prompt'])
+					) {
+						throw new \Exception('Invalid input(s)');
+					}
+
+					if (count($inputs) === 4) {
+						if (!isset($inputs['scopeType']) || !is_string($inputs['scopeType'])
+							|| !isset($inputs['scopeList']) || !is_array($inputs['scopeList'])
+							|| !isset($inputs['scopeListMeta']) || !is_array($inputs['scopeListMeta'])) {
+							throw new \Exception('Invalid input(s)');
+						}
+					}
+
 					break;
 				}
 			default:
@@ -260,11 +280,9 @@ class AssistantService {
 	 * @param string $appId
 	 * @param string $userId
 	 * @param string $identifier
-	 * @return MetaTask
-	 * @throws PreConditionNotMetException
-	 * @throws Exception
+	 * @return TextProcessingTask
 	 */
-	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
+	private function createTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): TextProcessingTask {
 		$inputs = $this->sanitizeInputs($type, $inputs);
 		switch ($type) {
 			case 'copywriter':
@@ -272,17 +290,42 @@ class AssistantService {
 					// Format the input prompt
 					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
 					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-					$this->textProcessingManager->runTask($task);
+					break;
+				}
+			case 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType':
+				{
+					$input = json_encode($inputs);
+					if ($input === false) {
+						throw new \Exception('Invalid inputs for ContextChatTaskType');
+					}
+
+					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
 					break;
 				}
 			default:
 				{
 					$input = $inputs['prompt'];
 					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-					$this->textProcessingManager->runTask($task);
 					break;
 				}
 		}
+		return $task;
+	}
+
+	/**
+	 * @param string $type
+	 * @param array $inputs
+	 * @param string $appId
+	 * @param string $userId
+	 * @param string $identifier
+	 * @return MetaTask
+	 * @throws Exception
+	 * @throws PreConditionNotMetException
+	 * @throws TaskFailureException
+	 */
+	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
+		$task = $this->createTextProcessingTask($type, $inputs, $appId, $userId, $identifier);
+		$this->textProcessingManager->runTask($task);
 
 		return $this->metaTaskMapper->createMetaTask(
 			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
@@ -301,24 +344,8 @@ class AssistantService {
 	 * @throws PreConditionNotMetException
 	 */
 	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
-		$inputs = $this->sanitizeInputs($type, $inputs);
-		switch ($type) {
-			case 'copywriter':
-				{
-					// Format the input prompt
-					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-					$this->textProcessingManager->scheduleTask($task);
-					break;
-				}
-			default:
-				{
-					$input = $inputs['prompt'];
-					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-					$this->textProcessingManager->scheduleTask($task);
-					break;
-				}
-		}
+		$task = $this->createTextProcessingTask($type, $inputs, $appId, $userId, $identifier);
+		$this->textProcessingManager->scheduleTask($task);
 
 		return $this->metaTaskMapper->createMetaTask(
 			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
@@ -338,24 +365,8 @@ class AssistantService {
 	 * @throws \Exception
 	 */
 	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
-		$inputs = $this->sanitizeInputs($type, $inputs);
-		switch ($type) {
-			case 'copywriter':
-				{
-					// Format the input prompt
-					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-					$this->textProcessingManager->runOrScheduleTask($task);
-					break;
-				}
-			default:
-				{
-					$input = $inputs['prompt'];
-					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-					$this->textProcessingManager->runOrScheduleTask($task);
-					break;
-				}
-		}
+		$task = $this->createTextProcessingTask($type, $inputs, $appId, $userId, $identifier);
+		$this->textProcessingManager->runOrScheduleTask($task);
 
 		return $this->metaTaskMapper->createMetaTask(
 			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
