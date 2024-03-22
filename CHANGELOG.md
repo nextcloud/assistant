@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.7 – 2024-03-22
+
+### Added
+
+- Custom input form for Scoped Context Chat @kyteinsky [#45](https://github.com/nextcloud/assistant/pull/45)
+
+### Changed
+
+- Improve discoverability @julien-nc [#47](https://github.com/nextcloud/assistant/pull/47)
+- Task history list now replaces the input form @julien-nc [#49](https://github.com/nextcloud/assistant/pull/49)
+
 ## 1.0.6 – 2024-03-08
 
 ### Fixed
