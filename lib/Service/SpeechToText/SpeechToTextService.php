@@ -172,7 +172,14 @@ class SpeechToTextService {
 			}
 			$this->config->setAppValue(Application::APP_ID, 'stt_folder', $sttFolderName);
 		} else {
-			$sttFolder = $userFolder->get($sttFolderName);
+			try {
+				$sttFolder = $userFolder->get($sttFolderName);
+			} catch (NotFoundException $e) {
+				// it was deleted
+				$sttFolder = $this->getUniqueNamedFolder($userId);
+				$sttFolderName = $sttFolder->getName();
+				$this->config->setAppValue(Application::APP_ID, 'stt_folder', $sttFolderName);
+			}
 			if (!$sttFolder instanceof Folder) {
 				// the folder created by this app was tampered with
 				// create a new one
