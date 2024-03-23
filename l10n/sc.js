@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Choose file" : "Sèbera un'archìviu",
+    "Choose" : "Sèbera",
     "No file selected" : "Perunu documentu seletzionadu",
     "Close" : "Serra",
     "Reset" : "Torra a impostare",

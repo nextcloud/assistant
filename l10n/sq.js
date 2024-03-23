@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Choose" : "Zgjidhni",
     "No file selected" : "S’u përzgjodh skedar",
     "Close" : "Mbylleni",
     "Reset" : "Rivendos",

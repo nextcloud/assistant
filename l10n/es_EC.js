@@ -4,6 +4,7 @@ OC.L10N.register(
     "AI image generation" : "Generación de imágenes de IA",
     "Transcribe" : "Transcribir",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
+    "Choose" : "Seleccionar",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Close" : "Cerrar",
     "Reset" : "Restablecer",

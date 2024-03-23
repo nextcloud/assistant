@@ -6,6 +6,7 @@ OC.L10N.register(
     "View results" : "Näytä tulokset",
     "Artificial Intelligence" : "Tekoäly",
     "Choose file" : "Valitse tiedosto",
+    "Choose" : "Valitse",
     "No file selected" : "Tiedostoa ei ole valittu",
     "Close" : "Sulje",
     "Reset" : "Palauta",

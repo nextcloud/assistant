@@ -24,6 +24,7 @@ OC.L10N.register(
     "Input" : "Sarrera",
     "Type some text" : "Idatzi testu bat",
     "Choose a text file" : "Aukeratu testu fitxategi bat",
+    "Choose" : "Aukeratu",
     "No file selected" : "Ez da fitxategirik hautatu",
     "Unexpected response from text parser" : "Testu analizatzailearen ustekabeko erantzuna",
     "Could not parse file" : "Ezin izan da fitxategia analizatu",

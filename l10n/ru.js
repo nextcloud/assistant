@@ -20,6 +20,7 @@ OC.L10N.register(
     "Failed to save assistant admin options" : "Сбой сохранения администраторских опций ассистента",
     "Choose file" : "Выберите файл",
     "Type some text" : "Наберите какой-то текст",
+    "Choose" : "Выберите",
     "No file selected" : "Файлы не выбраны",
     "Close" : "Закрыть",
     "Close Nextcloud Assistant" : "Закрыть Помощника Nextcloud",

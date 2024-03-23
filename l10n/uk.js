@@ -5,6 +5,7 @@ OC.L10N.register(
     "Artificial Intelligence" : "Штучний інтелект",
     "Choose file" : "Вибрати файл",
     "Type some text" : "Вставте будь-який текст",
+    "Choose" : "Вибрати",
     "No file selected" : "Жодного файлу обрано",
     "Close" : "Закрити",
     "Reset" : "Відхилити зміни",

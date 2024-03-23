@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Choose" : "בחר",
     "No file selected" : "לא נבחר קובץ",
     "Close" : "סגירה",
     "Reset" : "איפוס",

@@ -28,6 +28,7 @@ OC.L10N.register(
     "Failed to save assistant admin options" : "Nem sikerült az asszisztens rendszergazdai beállításainak mentése",
     "Choose file" : "Válasszon fájlt",
     "Type some text" : "Gépeljen be szöveget",
+    "Choose" : "Válasszon",
     "No file selected" : "Nincs fájl kiválasztva",
     "Close" : "Bezárás",
     "Close Nextcloud Assistant" : "Nextcloud Asszisztens bezárása",

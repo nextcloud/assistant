@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Choose" : "Causir",
     "Close" : "Tampar",
     "Reset" : "Reïnicializar",
     "Start recording" : "Lançar l'enregistrament",

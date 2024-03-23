@@ -19,6 +19,7 @@ OC.L10N.register(
     "Choose file" : "Välj fil",
     "Input" : "Inmatning",
     "Type some text" : "Skriv någon text",
+    "Choose" : "Välj",
     "No file selected" : "Ingen fil vald",
     "Close" : "Stäng",
     "Close Nextcloud Assistant" : "Stäng Nextcloud Assistant",

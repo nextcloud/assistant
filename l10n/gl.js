@@ -38,6 +38,7 @@ OC.L10N.register(
     "Choose file" : "Escoller o ficheiro",
     "Input" : "Entrada",
     "Type some text" : "Escriba algún texto",
+    "Choose" : "Escoller",
     "No file selected" : "Non seleccionou ningún ficheiro",
     "Close" : "Pechar",
     "Close Nextcloud Assistant" : "Pechar o Asistente de Nextcloud",

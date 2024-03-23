@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Audio file not found." : "ไม่พบไฟล์เสียง",
+    "Choose" : "เลือก",
     "No file selected" : "ไม่ได้เลือกไฟล์",
     "Close" : "ปิด",
     "Reset" : "รีเซ็ต",

@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Artificial Intelligence" : "Artificial Intelligence",
     "Choose file" : "Choose file",
+    "Choose" : "Choose",
     "No file selected" : "No file selected",
     "Close" : "Close",
     "Reset" : "Reset",

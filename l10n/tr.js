@@ -71,6 +71,7 @@ OC.L10N.register(
     "Input" : "Giriş",
     "Type some text" : "Bir şeyler yazın",
     "Choose a text file" : "Bir metin dosyası seçin",
+    "Choose" : "Seçin",
     "No file selected" : "Herhangi bir dosya seçilmemiş",
     "Unexpected response from text parser" : "Metin işleyiciden beklenmeyen bir yanıt alındı",
     "Could not parse file" : "Dosya işlenemedi",

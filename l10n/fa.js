@@ -18,6 +18,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "گزینه‌های سرپرست دستیار ذخیره شد",
     "Failed to save assistant admin options" : "گزینه‌های دستیار سرپرست ذخیره نشد",
     "Type some text" : "مقداری متن را تایپ کنید",
+    "Choose" : "انتخاب کنید",
     "No file selected" : "هیچ فایلی انتخاب نشده",
     "Close" : "بسته",
     "Close Nextcloud Assistant" : "دستیار Nextcloud را ببندید",

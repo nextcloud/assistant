@@ -97,6 +97,7 @@ OC.L10N.register(
     "Copy" : "Copy",
     "Try again" : "Try again",
     "Send request" : "Send request",
+    "Clear Selection" : "Clear Selection",
     "Text generation content" : "Text generation content",
     "The text generation task was scheduled to run in the background." : "The text generation task was scheduled to run in the background.",
     "Estimated completion time: " : "Estimated completion time: ",

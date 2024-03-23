@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Choose" : "აირჩიეთ",
     "No file selected" : "ფაილი არაა არჩეული",
     "Close" : "დახურვა",
     "Reset" : "საწყის მდოგმარეობაში დაბრუნება",

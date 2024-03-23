@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Pregledaj rezultate",
+    "Choose" : "Odaberite",
     "No file selected" : "Nije odabrana nijedna datoteka",
     "Close" : "Zatvori",
     "Reset" : "Resetiraj",

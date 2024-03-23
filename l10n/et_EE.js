@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Choose" : "Vali",
     "No file selected" : "Faile ei ole valitud",
     "Close" : "Sulge",
     "Reset" : "Lähtesta",

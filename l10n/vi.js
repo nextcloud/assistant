@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Nextcloud Assistant" : "Trợ lý Nextcloud",
     "Artificial Intelligence" : "Trí tuệ nhân tạo",
+    "Choose" : "Chọn",
     "No file selected" : "Không có tập tin nào được chọn",
     "Close" : "Đóng",
     "Reset" : "Đặt lại",

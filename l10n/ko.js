@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Artificial Intelligence" : "인공지능",
     "Choose file" : "파일 선택",
+    "Choose" : "선택",
     "No file selected" : "선택한 파일 없음",
     "Close" : "닫기",
     "Reset" : "초기화",

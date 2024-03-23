@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Choose file" : "Избери датотека",
+    "Choose" : "Избери",
     "No file selected" : "Нема избрано датотека",
     "Close" : "Затвори",
     "Reset" : "Ресетирање",
