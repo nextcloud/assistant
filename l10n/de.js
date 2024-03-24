@@ -65,6 +65,7 @@ OC.L10N.register(
     "Input" : "Eingabe",
     "Type some text" : "Bitte einen Text eingeben",
     "Choose a text file" : "Textdatei auswählen",
+    "Choose" : "Auswählen",
     "No file selected" : "Keine Datei ausgewählt",
     "Close" : "Schließen",
     "Close Nextcloud Assistant" : "Nextcloud-Assistent schließen",

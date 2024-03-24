@@ -17,6 +17,7 @@ OC.L10N.register(
     "Failed to save assistant admin options" : "No s'han pogut desar les opcions d'administrador de l'assistent",
     "Choose file" : "Tria el fitxer",
     "Type some text" : "Escriu una mica de text",
+    "Choose" : "Tria",
     "No file selected" : "No s'ha seleccionat cap fitxer",
     "Close" : "Tanca",
     "Reset" : "Reinicialitza",

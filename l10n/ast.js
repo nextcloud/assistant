@@ -36,6 +36,7 @@ OC.L10N.register(
     "Input" : "Entrada",
     "Type some text" : "Escribi daqué",
     "Choose a text file" : "Escoyer un ficheru de testu",
+    "Choose" : "Escoyer",
     "No file selected" : "Nun s'esbillaron ficheros",
     "Unexpected response from text parser" : "Recibióse una rempuesta inesperada del analizador de testos",
     "Could not parse file" : "Nun se pudo analizar el ficheru",

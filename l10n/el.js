@@ -17,6 +17,7 @@ OC.L10N.register(
     "Failed to save assistant admin options" : "Αποτυχία αποθήκευσης επιλογών βοηθού διαχειριστή",
     "Choose file" : "Επιλέξτε αρχείο",
     "Type some text" : "Πληκτρολογήστε κάποιο κείμενο",
+    "Choose" : "Επιλογή",
     "No file selected" : "Δεν επιλέχθηκε αρχείο",
     "Close" : "Κλείσιμο",
     "Close Nextcloud Assistant" : "Κλείσιμο του βοηθού του Nextcloud",

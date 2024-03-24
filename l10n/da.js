@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Artificial Intelligence" : "Kunstig Intelligens",
+    "Choose" : "Vælg",
     "No file selected" : "Ingen fil valgt",
     "Close" : "Luk",
     "Reset" : "Nulstil",

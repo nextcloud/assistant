@@ -43,6 +43,7 @@ OC.L10N.register(
     "Choose file" : "Vyberte soubor",
     "Input" : "Vstup",
     "Type some text" : "Zadejte nějaký text",
+    "Choose" : "Vybrat",
     "No file selected" : "Nevybrán žádný soubor",
     "Close" : "Zavřít",
     "Close Nextcloud Assistant" : "Zavřít Nextcloud Asistenta",
