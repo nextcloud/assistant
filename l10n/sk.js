@@ -4,6 +4,7 @@ OC.L10N.register(
     "View results" : "Zobraziť výsledky",
     "Artificial Intelligence" : "Umelá inteligencia",
     "Choose file" : "Vybrať súbor",
+    "Type some text" : "Napíšte nejaký text",
     "Choose" : "Vybrať",
     "No file selected" : "Nebol vybraný súbor",
     "Close" : "Zatvoriť",
