@@ -1,14 +1,15 @@
 <?php
 
-namespace OCA\TpAssistant\Service;
+namespace OCA\Assistant\Service;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use OC\SpeechToText\TranscriptionJob;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTask;
-use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Service\Text2Image\Text2ImageHelperService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTask;
+use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\BackgroundJob\IJobList;
@@ -35,6 +36,9 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
+/**
+ * @psalm-import-type AssistantTaskType from ResponseDefinitions
+ */
 class AssistantService {
 
 	public function __construct(
@@ -51,7 +55,7 @@ class AssistantService {
 	}
 
 	/**
-	 * @return array
+	 * @return array<AssistantTaskType>
 	 */
 	public function getAvailableTaskTypes(): array {
 		// text processing and copywriter

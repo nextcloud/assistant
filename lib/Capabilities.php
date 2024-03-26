@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\TpAssistant;
+namespace OCA\Assistant;
 
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\App\IAppManager;
 use OCP\Capabilities\IPublicCapability;
 use OCP\IConfig;

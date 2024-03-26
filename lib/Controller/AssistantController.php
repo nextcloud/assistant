@@ -1,17 +1,19 @@
 <?php
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Service\AssistantService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AssistantController extends Controller {
 
 	public function __construct(

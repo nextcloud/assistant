@@ -3,11 +3,11 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Reference;
+namespace OCA\Assistant\Reference;
 
 use Exception;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;
 use OCP\Collaboration\Reference\IReferenceManager;

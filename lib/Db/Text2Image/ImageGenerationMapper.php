@@ -4,10 +4,10 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Db\Text2Image;
+namespace OCA\Assistant\Db\Text2Image;
 
 use DateTime;
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;

@@ -6,8 +6,8 @@ import { showError } from '@nextcloud/dialogs'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
-export async function openAssistantForm(params) {
-	return openAssistantTextProcessingForm(params)
+export async function openAssistantTextProcessingForm(params) {
+	return openAssistantForm(params)
 }
 
 // TODO add param to lock on specific task type
@@ -15,7 +15,7 @@ export async function openAssistantForm(params) {
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
- * OCA.TPAssistant.openAssistantTextProcessingForm({
+ * OCA.Assistant.openAssistantForm({
  *  appId: 'my_app_id',
  *  identifier: 'my task identifier',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
@@ -47,7 +47,7 @@ export async function openAssistantForm(params) {
  * @param {boolean} params.useMetaTasks If true, the promise will resolve with the meta task object instead of the ocp task
  * @return {Promise<unknown>}
  */
-export async function openAssistantTextProcessingForm({
+export async function openAssistantForm({
 	appId, identifier = '', taskType = null, input = '',
 	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined, useMetaTasks = false,
 }) {

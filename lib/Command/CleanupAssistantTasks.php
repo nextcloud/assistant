@@ -3,12 +3,12 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Command;
+namespace OCA\Assistant\Command;
 
 use Exception;
 use OC\Core\Command\Base;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTaskMapper;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTaskMapper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -112,7 +112,7 @@ import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue'
 import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 
 import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
+import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { showError, showMessage } from '@nextcloud/dialogs'
 
 import Text2ImageDisplay from '../../components/Text2Image/Text2ImageDisplay.vue'
@@ -204,10 +204,10 @@ export default {
 			}, 300)
 		},
 		getPromptHistory() {
-			const url = generateOcsUrl('/apps/assistant/api/v1/i/prompt_history')
+			const url = generateUrl('/apps/assistant/i/prompt_history')
 			return axios.get(url)
 				.then((response) => {
-					this.prompts = response.data?.ocs?.data
+					this.prompts = response.data
 				})
 				.catch((error) => {
 					console.error(error)

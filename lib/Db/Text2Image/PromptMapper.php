@@ -6,10 +6,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\TpAssistant\Db\Text2Image;
+namespace OCA\Assistant\Db\Text2Image;
 
 use DateTime;
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;

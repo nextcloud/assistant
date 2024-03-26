@@ -20,19 +20,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
 use Exception;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\SpeechToText\SpeechToTextService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class SpeechToTextController extends Controller {
 
 	public function __construct(

@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\TpAssistant\Db;
+namespace OCA\Assistant\Db;
 
 use DateTime;
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;

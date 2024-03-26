@@ -20,11 +20,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TpAssistant\Listener\SpeechToText;
+namespace OCA\Assistant\Listener\SpeechToText;
 
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Service\NotificationService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\Service\NotificationService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\SpeechToText\Events\AbstractTranscriptionEvent;

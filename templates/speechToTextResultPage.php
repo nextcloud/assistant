@@ -1,6 +1,6 @@
 <?php
 
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\Util;
 
 $appId = Application::APP_ID;

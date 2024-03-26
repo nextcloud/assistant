@@ -1,16 +1,18 @@
 <?php
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 
 use OCP\IRequest;
 use OCP\PreConditionNotMetException;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ConfigController extends Controller {
 
 	public function __construct(

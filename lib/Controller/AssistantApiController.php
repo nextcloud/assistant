@@ -1,18 +1,24 @@
 <?php
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
-use OCA\TpAssistant\Db\MetaTask;
-use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Service\AssistantService;
+use OCA\Assistant\Db\MetaTask;
+use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\AssistantService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
 use OCP\DB\Exception;
 use OCP\IRequest;
 
+/**
+ * @psalm-import-type AssistantTaskType from ResponseDefinitions
+ * @psalm-import-type AssistantTask from ResponseDefinitions
+ */
 class AssistantApiController extends OCSController {
 
 	public function __construct(
@@ -26,20 +32,26 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
-	 * @return DataResponse
+	 * Get available task types
+	 *
+	 * @return DataResponse<Http::STATUS_OK, array{types: array<AssistantTaskType>}, array{}>
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
 	public function getAvailableTaskTypes(): DataResponse {
 		$taskTypes = $this->assistantService->getAvailableTaskTypes();
 		return new DataResponse(['types' => $taskTypes]);
 	}
 
 	/**
+	 * Delete an assistant task
+	 *
 	 * @param int $metaTaskId
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, '', array{}>
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
 	public function deleteTask(int $metaTaskId): DataResponse {
 		if ($this->userId !== null) {
 			try {
@@ -54,9 +66,10 @@ class AssistantApiController extends OCSController {
 
 	/**
 	 * @param int $metaTaskId
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, '', array{}>
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
 	public function cancelTask(int $metaTaskId): DataResponse {
 		if ($this->userId !== null) {
 			try {
@@ -70,10 +83,16 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
+	 * Get an assistant task
+	 *
 	 * @param int $metaTaskId
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 *
+	 * 200: Task has been found
+	 * 404: Task has not been found
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
 	public function getAssistantTask(int $metaTaskId): DataResponse {
 		if ($this->userId !== null) {
 			$task = $this->assistantService->getAssistantTask($this->userId, $metaTaskId);
@@ -86,7 +105,15 @@ class AssistantApiController extends OCSController {
 		return new DataResponse('', Http::STATUS_NOT_FOUND);
 	}
 
+	/**
+	 * Get user's tasks
+	 *
+	 * @param string|null $taskType
+	 * @param int|null $category
+	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
 	public function getUserTasks(?string $taskType = null, ?int $category = null): DataResponse {
 		if ($this->userId !== null) {
 			try {
@@ -103,13 +130,16 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
-	 * @param array $inputs
+	 * Run a text processing task
+	 *
+	 * @param array<string, string> $inputs
 	 * @param string $type
 	 * @param string $appId
 	 * @param string $identifier
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
 	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
 		if ($this->userId === null) {
 			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
@@ -126,13 +156,16 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
-	 * @param array $inputs
+	 * Schedule a text processing task
+	 *
+	 * @param array<string, string> $inputs
 	 * @param string $type
 	 * @param string $appId
 	 * @param string $identifier
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
 	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
 		if ($this->userId === null) {
 			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
@@ -149,13 +182,18 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
-	 * @param array $inputs
+	 * Run or schedule a text processing task
+	 *
+	 * If the task runs immediately or is schedule depends on the estimated runtime declared by the provider.
+	 *
+	 * @param array<string, string> $inputs
 	 * @param string $type
 	 * @param string $appId
 	 * @param string $identifier
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
 	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
 		if ($this->userId === null) {
 			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
@@ -172,10 +210,12 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
-	 * Parse text from file (if parsing the file type is supported)
+	 * Extract text from file
+	 *
+	 * Parse and extract text content of a file (if the file type is supported)
 	 *
 	 * @param string $filePath
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK, array{parsedText: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
 	public function parseTextFromFile(string $filePath): DataResponse {

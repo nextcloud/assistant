@@ -3,18 +3,20 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
 use Exception;
-use OCA\TpAssistant\Service\FreePrompt\FreePromptService;
+use OCA\Assistant\Service\FreePrompt\FreePromptService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class FreePromptController extends Controller {
 	public function __construct(
 		string $appName,

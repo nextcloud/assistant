@@ -1,12 +1,12 @@
 <?php
 
-namespace OCA\TpAssistant\Listener\Text2Image;
+namespace OCA\Assistant\Listener\Text2Image;
 
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TpAssistant\Service\NotificationService;
-use OCA\TpAssistant\Service\Text2Image\Text2ImageHelperService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\Assistant\Service\NotificationService;
+use OCA\Assistant\Service\Text2Image\Text2ImageHelperService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\EventDispatcher\Event;
