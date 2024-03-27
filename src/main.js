@@ -1,7 +1,7 @@
 import {
 	handleNotification, addAssistantMenuEntry,
 	openAssistantForm, openAssistantTextProcessingForm,
-	openAssistantTaskResult,
+	openAssistantTaskResult, openAssistantTask,
 } from './assistant.js'
 import { subscribe } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
@@ -20,6 +20,7 @@ function init() {
 			openAssistantForm,
 			openAssistantTextProcessingForm,
 			openAssistantTaskResult,
+			openAssistantTask,
 		}
 		// to keep backward compatibility (with apps that already integrate the assistant, like Text)
 		OCA.TPAssistant = OCA.Assistant

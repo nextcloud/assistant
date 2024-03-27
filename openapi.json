@@ -208,6 +208,7 @@
             "get": {
                 "operationId": "task_management-get-available-task-types",
                 "summary": "Get available task types",
+                "description": "Get all available task types that the assistant can handle.",
                 "tags": [
                     "task_management"
                 ],
@@ -292,6 +293,7 @@
             "get": {
                 "operationId": "task_management-get-assistant-task",
                 "summary": "Get an assistant task",
+                "description": "Get one specific task. It has to be a task owned by the current user.",
                 "tags": [
                     "task_management"
                 ],
@@ -410,6 +412,7 @@
             "delete": {
                 "operationId": "task_management-delete-task",
                 "summary": "Delete an assistant task",
+                "description": "This will cancel the task if needed and then delete it from the server.",
                 "tags": [
                     "task_management"
                 ],
@@ -522,6 +525,7 @@
             "get": {
                 "operationId": "task_management-get-user-tasks",
                 "summary": "Get user's tasks",
+                "description": "Get a list of assistant tasks for the current user.",
                 "tags": [
                     "task_management"
                 ],
@@ -653,6 +657,7 @@
             "post": {
                 "operationId": "text_processing-run-text-processing-task",
                 "summary": "Run a text processing task",
+                "description": "This endpoint will run the task synchronously.",
                 "tags": [
                     "text_processing"
                 ],
@@ -796,6 +801,7 @@
             "post": {
                 "operationId": "text_processing-schedule-text-processing-task",
                 "summary": "Schedule a text processing task",
+                "description": "This endpoint will schedule the task for it to run as soon as possible.",
                 "tags": [
                     "text_processing"
                 ],
@@ -939,7 +945,7 @@
             "post": {
                 "operationId": "text_processing-run-or-schedule-text-processing-task",
                 "summary": "Run or schedule a text processing task",
-                "description": "If the task runs immediately or is schedule depends on the estimated runtime declared by the provider.",
+                "description": "This endpoint will either run or schedule the task.\nThe choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.",
                 "tags": [
                     "text_processing"
                 ],
@@ -1202,6 +1208,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/cancel/{metaTaskId}": {
             "put": {
                 "operationId": "task_management-cancel-task",
+                "summary": "Cancel a task",
+                "description": "This endpoint will prevent a scheduled task to run by unscheduling it",
                 "tags": [
                     "task_management"
                 ],

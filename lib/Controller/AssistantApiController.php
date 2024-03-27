@@ -34,6 +34,8 @@ class AssistantApiController extends OCSController {
 	/**
 	 * Get available task types
 	 *
+	 * Get all available task types that the assistant can handle.
+	 *
 	 * @return DataResponse<Http::STATUS_OK, array{types: array<AssistantTaskType>}, array{}>
 	 */
 	#[NoAdminRequired]
@@ -46,6 +48,8 @@ class AssistantApiController extends OCSController {
 
 	/**
 	 * Delete an assistant task
+	 *
+	 * This will cancel the task if needed and then delete it from the server.
 	 *
 	 * @param int $metaTaskId
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, '', array{}>
@@ -65,6 +69,10 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
+	 * Cancel a task
+	 *
+	 * This endpoint will prevent a scheduled task to run by unscheduling it
+	 *
 	 * @param int $metaTaskId
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, '', array{}>
 	 */
@@ -84,6 +92,8 @@ class AssistantApiController extends OCSController {
 
 	/**
 	 * Get an assistant task
+	 *
+	 * Get one specific task. It has to be a task owned by the current user.
 	 *
 	 * @param int $metaTaskId
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
@@ -108,6 +118,8 @@ class AssistantApiController extends OCSController {
 	/**
 	 * Get user's tasks
 	 *
+	 * Get a list of assistant tasks for the current user.
+	 *
 	 * @param string|null $taskType
 	 * @param int|null $category
 	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
@@ -131,6 +143,8 @@ class AssistantApiController extends OCSController {
 
 	/**
 	 * Run a text processing task
+	 *
+	 * This endpoint will run the task synchronously.
 	 *
 	 * @param array<string, string> $inputs
 	 * @param string $type
@@ -158,6 +172,8 @@ class AssistantApiController extends OCSController {
 	/**
 	 * Schedule a text processing task
 	 *
+	 * This endpoint will schedule the task for it to run as soon as possible.
+	 *
 	 * @param array<string, string> $inputs
 	 * @param string $type
 	 * @param string $appId
@@ -184,7 +200,9 @@ class AssistantApiController extends OCSController {
 	/**
 	 * Run or schedule a text processing task
 	 *
-	 * If the task runs immediately or is schedule depends on the estimated runtime declared by the provider.
+	 * This endpoint will either run or schedule the task.
+	 *
+	 * The choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.
 	 *
 	 * @param array<string, string> $inputs
 	 * @param string $type

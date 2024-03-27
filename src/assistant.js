@@ -6,8 +6,12 @@ import { showError } from '@nextcloud/dialogs'
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
+// only here to stay compatible with existing implementation using it
 export async function openAssistantTextProcessingForm(params) {
-	return openAssistantForm(params)
+	return openAssistantForm({
+		...params,
+		useMetaTasks: false,
+	})
 }
 
 // TODO add param to lock on specific task type
@@ -34,6 +38,7 @@ export async function openAssistantTextProcessingForm(params) {
  *      onClick: (output) => { console.debug('second button clicked', output) },
  *    },
  *  ],
+ *  useMetaTasks: true,
  * }).then(r => {console.debug('scheduled task', r.data.ocs.data.task)})
  *
  * @param {object} params parameters for the assistant
@@ -49,7 +54,7 @@ export async function openAssistantTextProcessingForm(params) {
  */
 export async function openAssistantForm({
 	appId, identifier = '', taskType = null, input = '',
-	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined, useMetaTasks = false,
+	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined, useMetaTasks = true,
 }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
@@ -358,7 +363,7 @@ async function showAssistantTaskResult(taskId) {
 	const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}', { taskId })
 	axios.get(url).then(response => {
 		console.debug('showing results for task', response.data?.ocs?.data?.task)
-		openAssistantTaskResult(response.data?.ocs?.data?.task, true)
+		openAssistantTask(response.data?.ocs?.data?.task)
 	}).catch(error => {
 		console.error(error)
 		showError(t('assistant', 'This task does not exist or has been cleaned up'))
@@ -405,32 +410,19 @@ export async function openAssistantImageResult(metaTask) {
 	window.open(url, '_blank')
 }
 
+// only here to stay compatible with apps that already integrate the assistant, like Text
+export async function openAssistantTaskResult(task) {
+	openAssistantTask(task, false)
+}
+
 /**
  * Open an assistant modal to show the result of a task
  *
  * @param {object} task the task we want to see the result of
- * @param {boolean} useMetaTasks If false (default), treats the input task as an ocp task, otherwise as an assistant meta task
+ * @param {boolean} useMetaTasks If false, treats the input task as an ocp task, otherwise as an assistant meta task
  * @return {Promise<void>}
  */
-export async function openAssistantTaskResult(task, useMetaTasks = false) {
-	// Divert to the right modal/page if we have a meta task with a category other than text generation:
-	if (useMetaTasks) {
-		switch (task.category) {
-		/*
-		case TASK_CATEGORIES.speech_to_text:
-			openAssistantPlainTextResult(task)
-			return
-
-		case TASK_CATEGORIES.image_generation:
-			openAssistantImageResult(task)
-			return
-		*/
-		case TASK_CATEGORIES.text_generation:
-		default:
-			break
-		}
-	}
-
+export async function openAssistantTask(task, useMetaTasks = true) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	Vue.mixin({ methods: { t, n } })
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')

@@ -73,6 +73,8 @@ class SpeechToTextApiController extends OCSController {
 
 
 	/**
+	 * Transcribe uploaded audio file
+	 *
 	 * Run audio transcription of an uploaded file
 	 *
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, string, array{}>
@@ -122,7 +124,9 @@ class SpeechToTextApiController extends OCSController {
 	}
 
 	/**
-	 * Run audio transcription of a user's file
+	 * Transcribe file from user's storage
+	 *
+	 * Run audio transcription of a user's storage file
 	 *
 	 * @param string $path Nextcloud file path
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, string, array{}>
