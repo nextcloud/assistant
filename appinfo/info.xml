@@ -64,6 +64,7 @@ Known providers:
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot1.jpg</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot2.jpg</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot3.jpg</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot4.jpg</screenshot>
 	<background-jobs>
 		<job>OCA\TpAssistant\Cron\CleanupImageGenerations</job>
 		<job>OCA\TpAssistant\Cron\CleanupAssistantTasks</job>
