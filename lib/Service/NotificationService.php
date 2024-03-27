@@ -1,10 +1,10 @@
 <?php
 
-namespace OCA\TpAssistant\Service;
+namespace OCA\Assistant\Service;
 
 use DateTime;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTask;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTask;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as INotificationManager;
 

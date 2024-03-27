@@ -20,12 +20,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
 use Exception;
 use InvalidArgumentException;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Service\SpeechToText\SpeechToTextService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\SpeechToText\SpeechToTextService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
@@ -43,7 +43,7 @@ class SpeechToTextApiController extends OCSController {
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		private SpeechToTextService $service,
+		private SpeechToTextService $sttService,
 		private LoggerInterface $logger,
 		private IL10N $l10n,
 		private ?string $userId,
@@ -52,8 +52,10 @@ class SpeechToTextApiController extends OCSController {
 	}
 
 	/**
+	 * Get transcription text from transcription task ID
+	 *
 	 * @param int $id Transcript ID
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_UNAUTHORIZED|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, string, array{}>
 	 */
 	#[NoAdminRequired]
 	public function getTranscript(int $id): DataResponse {
@@ -61,15 +63,19 @@ class SpeechToTextApiController extends OCSController {
 			return new DataResponse('', Http::STATUS_UNAUTHORIZED);
 		}
 		try {
-			return new DataResponse($this->service->internalGetTask($this->userId, $id)->getOutput());
+			return new DataResponse($this->sttService->internalGetTask($this->userId, $id)->getOutput());
 		} catch (Exception $e) {
-			return new DataResponse($e->getMessage(), intval($e->getCode()));
+			/** @var Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND $exceptionCode */
+			$exceptionCode = (int) $e->getCode();
+			return new DataResponse($e->getMessage(), $exceptionCode);
 		}
 	}
 
 
 	/**
-	 * @return DataResponse
+	 * Run audio transcription of an uploaded file
+	 *
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, string, array{}>
 	 * @throws NotPermittedException
 	 */
 	#[NoAdminRequired]
@@ -89,8 +95,8 @@ class SpeechToTextApiController extends OCSController {
 		}
 
 		try {
-			$this->service->transcribeAudio($audioData['tmp_name'], $this->userId);
-			return new DataResponse('ok');
+			$this->sttService->transcribeAudio($audioData['tmp_name'], $this->userId);
+			return new DataResponse('');
 		} catch (RuntimeException $e) {
 			$this->logger->error(
 				'Runtime exception: ' . $e->getMessage(),
@@ -116,8 +122,10 @@ class SpeechToTextApiController extends OCSController {
 	}
 
 	/**
+	 * Run audio transcription of a user's file
+	 *
 	 * @param string $path Nextcloud file path
-	 * @return DataResponse
+	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, string, array{}>
 	 */
 	#[NoAdminRequired]
 	public function transcribeFile(string $path): DataResponse {
@@ -126,8 +134,8 @@ class SpeechToTextApiController extends OCSController {
 		}
 
 		try {
-			$this->service->transcribeFile($path, $this->userId);
-			return new DataResponse('ok');
+			$this->sttService->transcribeFile($path, $this->userId);
+			return new DataResponse('');
 		} catch (NotFoundException $e) {
 			$this->logger->error('Audio file not found: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			return new DataResponse(

@@ -10,3 +10,4 @@ node_modules
 /composer.lock
 
 /vendor/
+/tests/.phpunit*cache

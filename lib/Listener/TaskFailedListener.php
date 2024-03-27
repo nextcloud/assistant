@@ -1,11 +1,11 @@
 <?php
 
-namespace OCA\TpAssistant\Listener;
+namespace OCA\Assistant\Listener;
 
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Event\BeforeAssistantNotificationEvent;
-use OCA\TpAssistant\Service\NotificationService;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\Event\BeforeAssistantNotificationEvent;
+use OCA\Assistant\Service\NotificationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;

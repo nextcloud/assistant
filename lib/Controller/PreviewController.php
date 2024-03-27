@@ -1,6 +1,6 @@
 <?php
 /**
- * Nextcloud - TpAssistant
+ * Nextcloud - Assistant
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
@@ -9,14 +9,15 @@
  * @copyright Julien Veyssier 2022
  */
 
-namespace OCA\TpAssistant\Controller;
+namespace OCA\Assistant\Controller;
 
 use Exception;
-use OCA\TpAssistant\Service\PreviewService;
+use OCA\Assistant\Service\PreviewService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -25,6 +26,7 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
+#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class PreviewController extends Controller {
 
 	public function __construct(

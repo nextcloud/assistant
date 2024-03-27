@@ -11,7 +11,7 @@
 		}
 	],
 	"require": {
-		"php": "^8.0",
+		"php": "^8.1",
 		"erusev/parsedown": "^1.7",
 		"phpoffice/phpword": "^1.2"
 	},
@@ -20,20 +20,28 @@
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
 		"psalm": "psalm.phar --no-cache",
-		"test:unit": "phpunit --config tests/phpunit.xml"
+		"test:unit": "phpunit --config tests/phpunit.xml",
+		"openapi": "generate-spec --verbose --allow-missing-docs --continue-on-error"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/nextcloud/openapi-extractor"
+		}
+	],
 	"require-dev": {
 		"nextcloud/coding-standard": "^1.1",
 		"psalm/phar": "^5.16",
 		"nextcloud/ocp": "dev-master",
-		"phpunit/phpunit": "^9.5"
+		"phpunit/phpunit": "^9.5",
+		"nextcloud/openapi-extractor": "dev-main"
 	},
 	"config": {
 		"sort-packages": true,
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "8.0"
+			"php": "8.1"
 		},
-		"autoloader-suffix": "TpAssistant"
+		"autoloader-suffix": "Assistant"
 	}
 }

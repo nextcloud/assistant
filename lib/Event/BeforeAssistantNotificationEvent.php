@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\TpAssistant\Event;
+namespace OCA\Assistant\Event;
 
 use OCP\EventDispatcher\Event;
 use OCP\TextProcessing\Task;

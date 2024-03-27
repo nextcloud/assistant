@@ -20,14 +20,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TpAssistant\Service\SpeechToText;
+namespace OCA\Assistant\Service\SpeechToText;
 
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTask;
-use OCA\TpAssistant\Db\MetaTaskMapper;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTask;
+use OCA\Assistant\Db\MetaTaskMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;

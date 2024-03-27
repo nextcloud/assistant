@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\TpAssistant\Listener;
+namespace OCA\Assistant\Listener;
 
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;

@@ -54,7 +54,7 @@ Known providers:
 	<version>1.0.7</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
-	<namespace>TpAssistant</namespace>
+	<namespace>Assistant</namespace>
 	<documentation>
 		<developer>https://github.com/nextcloud/assistant</developer>
 	</documentation>
@@ -66,19 +66,19 @@ Known providers:
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot3.jpg</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot4.jpg</screenshot>
 	<background-jobs>
-		<job>OCA\TpAssistant\Cron\CleanupImageGenerations</job>
-		<job>OCA\TpAssistant\Cron\CleanupAssistantTasks</job>
+		<job>OCA\Assistant\Cron\CleanupImageGenerations</job>
+		<job>OCA\Assistant\Cron\CleanupAssistantTasks</job>
 	</background-jobs>
 	<commands>
-		<command>OCA\TpAssistant\Command\CleanupImageGenerations</command>
-		<command>OCA\TpAssistant\Command\CleanupAssistantTasks</command>
+		<command>OCA\Assistant\Command\CleanupImageGenerations</command>
+		<command>OCA\Assistant\Command\CleanupAssistantTasks</command>
 	</commands>
 	<dependencies>
 		<nextcloud min-version="28" max-version="29"/>
 	</dependencies>
 	<settings>
-		<admin>OCA\TpAssistant\Settings\Admin</admin>
-		<personal>OCA\TpAssistant\Settings\Personal</personal>
-		<personal-section>OCA\TpAssistant\Settings\PersonalSection</personal-section>
+		<admin>OCA\Assistant\Settings\Admin</admin>
+		<personal>OCA\Assistant\Settings\Personal</personal>
+		<personal-section>OCA\Assistant\Settings\PersonalSection</personal-section>
 	</settings>
 </info>

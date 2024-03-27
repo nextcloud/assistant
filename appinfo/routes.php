@@ -13,6 +13,7 @@ return [
 		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{metaTaskId}', 'verb' => 'GET'],
 
 		['name' => 'Text2Image#showGenerationPage', 'url' => '/i/{imageGenId}', 'verb' => 'GET'],
+		['name' => 'Text2Image#getPromptHistory', 'url' => '/i/prompt_history', 'verb' => 'GET'],
 
 		['name' => 'FreePrompt#processPrompt', 'url' => '/f/process_prompt', 'verb' => 'POST'],
 		['name' => 'FreePrompt#getPromptHistory', 'url' => '/f/prompt_history', 'verb' => 'GET'],
@@ -35,7 +36,6 @@ return [
 		['name' => 'assistantApi#cancelTask', 'url' => '/api/{apiVersion}/task/cancel/{metaTaskId}', 'verb' => 'PUT', 'requirements' => $requirements],
 
 		['name' => 'Text2ImageApi#processPrompt', 'url' => '/api/{apiVersion}/i/process_prompt', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'Text2ImageApi#getPromptHistory', 'url' => '/api/{apiVersion}/i/prompt_history', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'Text2ImageApi#getGenerationInfo', 'url' => '/api/{apiVersion}/i/info/{imageGenId}', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'Text2ImageApi#getImage', 'url' => '/api/{apiVersion}/i/{imageGenId}/{fileNameId}', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'Text2ImageApi#cancelGeneration', 'url' => '/api/{apiVersion}/i/cancel_generation', 'verb' => 'POST', 'requirements' => $requirements],

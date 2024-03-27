@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\TpAssistant\Settings;
+namespace OCA\Assistant\Settings;
 
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
@@ -35,7 +35,7 @@ class Personal implements ISettings {
 
 		$assistantAvailable = $textProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
-		
+
 		$textToImagePickerAvailable = $this->textToImageManager->hasProviders() && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
@@ -45,7 +45,7 @@ class Personal implements ISettings {
 
 		$speechToTextPickerAvailable = $speechToTextAvailable && $this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$speechToTextPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
-		
+
 		$userConfig = [
 			'assistant_available' => $assistantAvailable,
 			'assistant_enabled' => $assistantEnabled,

@@ -3,11 +3,11 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Service\Text2Image;
+namespace OCA\Assistant\Service\Text2Image;
 
 use Exception;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;

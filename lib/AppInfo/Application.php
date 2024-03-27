@@ -1,20 +1,20 @@
 <?php
 
-namespace OCA\TpAssistant\AppInfo;
+namespace OCA\Assistant\AppInfo;
 
-use OCA\TpAssistant\Capabilities;
-use OCA\TpAssistant\Listener\BeforeTemplateRenderedListener;
-use OCA\TpAssistant\Listener\FreePrompt\FreePromptReferenceListener;
-use OCA\TpAssistant\Listener\SpeechToText\SpeechToTextReferenceListener;
-use OCA\TpAssistant\Listener\SpeechToText\SpeechToTextResultListener;
-use OCA\TpAssistant\Listener\TaskFailedListener;
-use OCA\TpAssistant\Listener\TaskSuccessfulListener;
-use OCA\TpAssistant\Listener\Text2Image\Text2ImageReferenceListener;
-use OCA\TpAssistant\Listener\Text2Image\Text2ImageResultListener;
-use OCA\TpAssistant\Notification\Notifier;
-use OCA\TpAssistant\Reference\FreePromptReferenceProvider;
-use OCA\TpAssistant\Reference\SpeechToTextReferenceProvider;
-use OCA\TpAssistant\Reference\Text2ImageReferenceProvider;
+use OCA\Assistant\Capabilities;
+use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
+use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
+use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
+use OCA\Assistant\Listener\SpeechToText\SpeechToTextResultListener;
+use OCA\Assistant\Listener\TaskFailedListener;
+use OCA\Assistant\Listener\TaskSuccessfulListener;
+use OCA\Assistant\Listener\Text2Image\Text2ImageReferenceListener;
+use OCA\Assistant\Listener\Text2Image\Text2ImageResultListener;
+use OCA\Assistant\Notification\Notifier;
+use OCA\Assistant\Reference\FreePromptReferenceProvider;
+use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
+use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 

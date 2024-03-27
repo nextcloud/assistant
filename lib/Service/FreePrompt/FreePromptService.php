@@ -3,12 +3,12 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Service\FreePrompt;
+namespace OCA\Assistant\Service\FreePrompt;
 
 use Exception;
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\FreePrompt\PromptMapper;
-use OCA\TpAssistant\Db\MetaTaskMapper;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\FreePrompt\PromptMapper;
+use OCA\Assistant\Db\MetaTaskMapper;
 use OCP\AppFramework\Http;
 use OCP\DB\Exception as DBException;
 use OCP\IL10N;

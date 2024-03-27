@@ -20,9 +20,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\TpAssistant\Listener\SpeechToText;
+namespace OCA\Assistant\Listener\SpeechToText;
 
-use OCA\TpAssistant\AppInfo\Application;
+use OCA\Assistant\AppInfo\Application;
 
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
@@ -48,7 +48,7 @@ class SpeechToTextReferenceListener implements IEventListener {
 		}
 		if ($this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1' &&
 			($this->userId === null || $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1')) {
-				
+
 			// Double check that atleast one provider is registered
 			if ($this->sttProcessingManager->hasProviders()) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-speechToTextReference');

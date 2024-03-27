@@ -3,21 +3,22 @@
 // SPDX-FileCopyrightText: Sami Finnilä <sami.finnila@nextcloud.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\TpAssistant\Service\Text2Image;
+namespace OCA\Assistant\Service\Text2Image;
 
 use DateTime;
 use Exception as BaseException;
 use GdImage;
 
-use OCA\TpAssistant\AppInfo\Application;
-use OCA\TpAssistant\Db\MetaTaskMapper;
-use OCA\TpAssistant\Db\Text2Image\ImageFileName;
-use OCA\TpAssistant\Db\Text2Image\ImageFileNameMapper;
-use OCA\TpAssistant\Db\Text2Image\ImageGenerationMapper;
-use OCA\TpAssistant\Db\Text2Image\PromptMapper;
-use OCA\TpAssistant\Db\Text2Image\StaleGenerationMapper;
+use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\Db\Text2Image\ImageFileName;
+use OCA\Assistant\Db\Text2Image\ImageFileNameMapper;
+use OCA\Assistant\Db\Text2Image\ImageGenerationMapper;
+use OCA\Assistant\Db\Text2Image\PromptMapper;
+use OCA\Assistant\Db\Text2Image\StaleGenerationMapper;
 
-use OCA\TpAssistant\Service\NotificationService;
+use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\NotificationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
@@ -37,6 +38,9 @@ use Psr\Log\LoggerInterface;
 use Random\RandomException;
 use RuntimeException;
 
+/**
+ * @psalm-import-type AssistantImageGenInfo from ResponseDefinitions
+ */
 class Text2ImageHelperService {
 
 	private ?ISimpleFolder $imageDataFolder = null;
@@ -304,7 +308,7 @@ class Text2ImageHelperService {
 	 * @param string $imageGenId
 	 * @param string|null $userId
 	 * @param bool $updateTimestamp
-	 * @return array
+	 * @return AssistantImageGenInfo
 	 * @throws BaseException
 	 */
 	public function getGenerationInfo(string $imageGenId, ?string $userId, bool $updateTimestamp = true): array {
@@ -362,7 +366,6 @@ class Text2ImageHelperService {
 
 		$fileIds = [];
 		foreach ($fileNameEntities as $fileNameEntity) {
-
 			if ($isOwner) {
 				$fileIds[] = ['id' => $fileNameEntity->getId(), 'visible' => !$fileNameEntity->getHidden()];
 			} else {
@@ -370,7 +373,12 @@ class Text2ImageHelperService {
 			}
 		}
 
-		return ['files' => $fileIds, 'prompt' => $imageGeneration->getPrompt(), 'image_gen_id' => $imageGenId, 'is_owner' => $isOwner];
+		return [
+			'files' => $fileIds,
+			'prompt' => $imageGeneration->getPrompt(),
+			'image_gen_id' => $imageGenId,
+			'is_owner' => $isOwner,
+		];
 	}
 
 	/**
