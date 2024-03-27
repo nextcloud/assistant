@@ -11,7 +11,8 @@
 			:value.sync="mySelectedTaskTypeId"
 			class="task-custom-select"
 			:inline="5"
-			:options="taskTypes" />
+			:options="taskTypes"
+			@update:value="onTaskTypeUserChange" />
 		<div v-if="showHistory"
 			class="history">
 			<div class="history--title">
@@ -256,15 +257,8 @@ export default {
 			})
 				&& this.selectedTaskType
 		},
-		submitButtonLabel() {
-			return this.hasOutput
-				? t('assistant', 'Try again')
-				: this.selectedTaskType.id === FREE_PROMPT_TASK_TYPE_ID
-					? t('assistant', 'Send request')
-					: this.selectedTaskType.name
-		},
 		syncSubmitButtonLabel() {
-			return this.output !== null
+			return this.hasOutput
 				? t('assistant', 'Try again')
 				: this.selectedTaskType.id === FREE_PROMPT_TASK_TYPE_ID
 					? t('assistant', 'Send request')
@@ -313,6 +307,9 @@ export default {
 				.then(() => {
 					this.loadingTaskTypes = false
 				})
+		},
+		onTaskTypeUserChange() {
+			this.myOutput = null
 		},
 		onSubmit() {
 			this.$emit('submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
