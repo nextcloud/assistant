@@ -74,7 +74,7 @@ Known providers:
 		<command>OCA\Assistant\Command\CleanupAssistantTasks</command>
 	</commands>
 	<dependencies>
-		<nextcloud min-version="28" max-version="29"/>
+		<nextcloud min-version="28" max-version="30"/>
 	</dependencies>
 	<settings>
 		<admin>OCA\Assistant\Settings\Admin</admin>
