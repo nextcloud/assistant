@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "View results" : "Bekijk resultaten",
+    "Type some text" : "Geef wat tekst in",
     "Choose" : "Kies",
     "No file selected" : "Geen bestand geselecteerd",
     "Close" : "Sluit",
