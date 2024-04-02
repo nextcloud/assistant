@@ -120,8 +120,8 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Get a list of assistant tasks for the current user.
 	 *
-	 * @param string|null $taskType
-	 * @param int|null $category
+	 * @param string|null $taskType Task type id. If null, tasks of all task types will be retrieved (default: null)
+	 * @param int|null $category Task category. If null, tasks of all categories will be retrieved (default: null)
 	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
 	 */
 	#[NoAdminRequired]
@@ -147,9 +147,9 @@ class AssistantApiController extends OCSController {
 	 * This endpoint will run the task synchronously.
 	 *
 	 * @param array<string, string> $inputs
-	 * @param string $type
-	 * @param string $appId
-	 * @param string $identifier
+	 * @param string $type Task type id
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
@@ -175,9 +175,9 @@ class AssistantApiController extends OCSController {
 	 * This endpoint will schedule the task for it to run as soon as possible.
 	 *
 	 * @param array<string, string> $inputs
-	 * @param string $type
-	 * @param string $appId
-	 * @param string $identifier
+	 * @param string $type Task type id
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
@@ -205,9 +205,9 @@ class AssistantApiController extends OCSController {
 	 * The choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.
 	 *
 	 * @param array<string, string> $inputs
-	 * @param string $type
-	 * @param string $appId
-	 * @param string $identifier
+	 * @param string $type Task type id
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]
@@ -232,7 +232,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Parse and extract text content of a file (if the file type is supported)
 	 *
-	 * @param string $filePath
+	 * @param string $filePath Path of the file to parse in the user's storage
 	 * @return DataResponse<Http::STATUS_OK, array{parsedText: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 */
 	#[NoAdminRequired]

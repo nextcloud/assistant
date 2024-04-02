@@ -541,6 +541,7 @@
                     {
                         "name": "taskType",
                         "in": "query",
+                        "description": "Task type id. If null, tasks of all task types will be retrieved (default: null)",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -549,6 +550,7 @@
                     {
                         "name": "category",
                         "in": "query",
+                        "description": "Task category. If null, tasks of all categories will be retrieved (default: null)",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
@@ -673,6 +675,7 @@
                     {
                         "name": "type",
                         "in": "query",
+                        "description": "Task type id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -689,6 +692,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -697,6 +701,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -817,6 +822,7 @@
                     {
                         "name": "type",
                         "in": "query",
+                        "description": "Task type id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -833,6 +839,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -841,6 +848,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -961,6 +969,7 @@
                     {
                         "name": "type",
                         "in": "query",
+                        "description": "Task type id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -977,6 +986,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -985,6 +995,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1105,6 +1116,7 @@
                     {
                         "name": "filePath",
                         "in": "query",
+                        "description": "Path of the file to parse in the user's storage",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1337,6 +1349,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1345,6 +1358,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1361,6 +1375,7 @@
                     {
                         "name": "nResults",
                         "in": "query",
+                        "description": "Number of images to generate (default: 1)",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
@@ -1370,6 +1385,7 @@
                     {
                         "name": "displayPrompt",
                         "in": "query",
+                        "description": "Option to include the prompt when displaying the result images (default: false)",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1382,6 +1398,7 @@
                     {
                         "name": "notifyReadyIfScheduled",
                         "in": "query",
+                        "description": "Whether a notification will be produced when the tasks has run if it was scheduled (default: false)",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1394,6 +1411,7 @@
                     {
                         "name": "schedule",
                         "in": "query",
+                        "description": "Force scheduling even if the task could run synchronously (default: false)",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -2318,6 +2336,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2326,6 +2345,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2490,6 +2510,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2498,6 +2519,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"

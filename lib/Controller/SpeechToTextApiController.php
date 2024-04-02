@@ -83,8 +83,8 @@ class SpeechToTextApiController extends OCSController {
 	 *
 	 * Schedule audio transcription of an uploaded file and return the created task.
 	 *
-	 * @param string $appId
-	 * @param string $identifier
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, string, array{}>
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
@@ -142,8 +142,8 @@ class SpeechToTextApiController extends OCSController {
 	 * Schedule audio transcription of a user's storage file and return the created task
 	 *
 	 * @param string $path Nextcloud file path
-	 * @param string $appId
-	 * @param string $identifier
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, string, array{}>
 	 * @throws InvalidPathException
 	 * @throws NoUserException
