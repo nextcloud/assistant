@@ -44,12 +44,15 @@ class Text2ImageApiController extends OCSController {
 	 *
 	 * @param string $appId App id to be set in the created task
 	 * @param string $identifier Identifier to be set in the created task
-	 * @param string $prompt
+	 * @param string $prompt Input prompt for the image
 	 * @param int $nResults Number of images to generate (default: 1)
 	 * @param bool $displayPrompt Option to include the prompt when displaying the result images (default: false)
 	 * @param bool $notifyReadyIfScheduled Whether a notification will be produced when the tasks has run if it was scheduled (default: false)
 	 * @param bool $schedule Force scheduling even if the task could run synchronously (default: false)
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantImageProcessPromptResponse}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 *
+	 * 200: Task started successfully
+	 * 400: Starting task is not possible
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -73,11 +76,12 @@ class Text2ImageApiController extends OCSController {
 	/**
 	 * Get one image of a generation
 	 *
-	 * @param string $imageGenId
-	 * @param int $fileNameId
-	 * @return DataDisplayResponse<Http::STATUS_OK, array<string, mixed>>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 * @param string $imageGenId ID of the image generation
+	 * @param int $fileNameId ID of the file name
+	 * @return DataDisplayResponse<Http::STATUS_OK, array{Content-Type: string}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: Returns the image data
+	 * 400: Getting image is not possible
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -104,10 +108,14 @@ class Text2ImageApiController extends OCSController {
 		}
 		*/
 
+		/** @var string $contentType */
+		$contentType = $result['content-type'];
+		$contentType ??= 'image/jpeg';
+
 		$response = new DataDisplayResponse(
 			$result['image'] ?? '',
 			Http::STATUS_OK,
-			['Content-Type' => $result['content-type'] ?? 'image/jpeg']
+			['Content-Type' => $contentType]
 		);
 		$response->cacheFor(60 * 60 * 24);
 		return $response;
@@ -116,7 +124,7 @@ class Text2ImageApiController extends OCSController {
 	/**
 	 * Get image generation information
 	 *
-	 * @param string $imageGenId
+	 * @param string $imageGenId ID of the generation info
 	 * @return DataResponse<Http::STATUS_OK, AssistantImageGenInfo, array{}>|DataResponse<Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
 	 *
 	 * 200: Returns the requested data
@@ -149,9 +157,13 @@ class Text2ImageApiController extends OCSController {
 	/**
 	 * Set visibility of images in one generation
 	 *
-	 * @param string $imageGenId
-	 * @param array<string, mixed> $fileVisStatusArray
+	 * @param string $imageGenId ID of the image generation
+	 * @param array<string, mixed> $fileVisStatusArray New file visibilities
 	 * @return DataResponse<Http::STATUS_OK, '', array{}>|DataResponse<Http::STATUS_BAD_REQUEST|Http::STATUS_UNAUTHORIZED|Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
+	 *
+	 * 200: Visiblity set successfully
+	 * 400: Setting visibility is not possible
+	 * 401: Setting visibility is not allowed
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -189,8 +201,10 @@ class Text2ImageApiController extends OCSController {
 	 * as we don't want to keep the front-end waiting.
 	 * However, we still use rate limiting to prevent timing attacks.
 	 *
-	 * @param string $imageGenId
+	 * @param string $imageGenId ID of the image generation
 	 * @return DataResponse<Http::STATUS_OK, '', array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
+	 *
+	 * 200: Ready notification enabled successfully
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -216,9 +230,11 @@ class Text2ImageApiController extends OCSController {
 	 * (In theory bruteforce may be possible by a response timing attack but the attacker
 	 * won't gain access to the generation since its deleted during the attack.)
 	 *
-	 * @param string $imageGenId
+	 * @param string $imageGenId ID of the image generation
 	 * @return DataResponse<Http::STATUS_OK, '', array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
 	 * @throws NotPermittedException
+	 *
+	 * 200: Generation canceled successfully
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]

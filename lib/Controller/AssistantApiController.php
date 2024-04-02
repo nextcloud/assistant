@@ -37,6 +37,8 @@ class AssistantApiController extends OCSController {
 	 * Get all available task types that the assistant can handle.
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{types: array<AssistantTaskType>}, array{}>
+	 *
+	 * 200: Available task types returned
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
@@ -51,8 +53,11 @@ class AssistantApiController extends OCSController {
 	 *
 	 * This will cancel the task if needed and then delete it from the server.
 	 *
-	 * @param int $metaTaskId
+	 * @param int $metaTaskId ID of the task
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, '', array{}>
+	 *
+	 * 200: Task deleted successfully
+	 * 404: Task not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
@@ -73,8 +78,11 @@ class AssistantApiController extends OCSController {
 	 *
 	 * This endpoint will prevent a scheduled task to run by unscheduling it
 	 *
-	 * @param int $metaTaskId
+	 * @param int $metaTaskId ID of the task
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, '', array{}>
+	 *
+	 * 200: Task canceled successfully
+	 * 404: Task not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
@@ -95,7 +103,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Get one specific task. It has to be a task owned by the current user.
 	 *
-	 * @param int $metaTaskId
+	 * @param int $metaTaskId ID of the task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: Task has been found
@@ -123,6 +131,9 @@ class AssistantApiController extends OCSController {
 	 * @param string|null $taskType Task type id. If null, tasks of all task types will be retrieved (default: null)
 	 * @param int|null $category Task category. If null, tasks of all categories will be retrieved (default: null)
 	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 *
+	 * 200: User tasks returned
+	 * 404: No tasks found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['task_management'])]
@@ -146,11 +157,14 @@ class AssistantApiController extends OCSController {
 	 *
 	 * This endpoint will run the task synchronously.
 	 *
-	 * @param array<string, string> $inputs
+	 * @param array<string, string> $inputs Input parameters
 	 * @param string $type Task type id
 	 * @param string $appId App id to be set in the created task
 	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
+	 *
+	 * 200: Task started successfully
+	 * 400: Running task is not possible
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
@@ -174,11 +188,14 @@ class AssistantApiController extends OCSController {
 	 *
 	 * This endpoint will schedule the task for it to run as soon as possible.
 	 *
-	 * @param array<string, string> $inputs
+	 * @param array<string, string> $inputs Input parameters
 	 * @param string $type Task type id
 	 * @param string $appId App id to be set in the created task
 	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
+	 *
+	 * 200: Task scheduled
+	 * 400: Scheduling task is not possible
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
@@ -204,11 +221,14 @@ class AssistantApiController extends OCSController {
 	 *
 	 * The choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.
 	 *
-	 * @param array<string, string> $inputs
+	 * @param array<string, string> $inputs Input parameters
 	 * @param string $type Task type id
 	 * @param string $appId App id to be set in the created task
 	 * @param string $identifier Identifier to be set in the created task
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
+	 *
+	 * 200: Task scheduled
+	 * 400: Scheduling task is not possible
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
@@ -234,6 +254,9 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param string $filePath Path of the file to parse in the user's storage
 	 * @return DataResponse<Http::STATUS_OK, array{parsedText: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
+	 *
+	 * 200: Text parsed from file successfully
+	 * 400: Parsing text from file is not possible
 	 */
 	#[NoAdminRequired]
 	public function parseTextFromFile(string $filePath): DataResponse {

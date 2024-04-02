@@ -90,6 +90,9 @@ class SpeechToTextApiController extends OCSController {
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: Task started successfully
+	 * 400: Starting task is not possible
 	 */
 	#[NoAdminRequired]
 	public function transcribeAudio(string $appId, string $identifier): DataResponse {
@@ -148,6 +151,10 @@ class SpeechToTextApiController extends OCSController {
 	 * @throws InvalidPathException
 	 * @throws NoUserException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: Task started successfully
+	 * 400: Starting task is not possible
+	 * 404: File not found
 	 */
 	#[NoAdminRequired]
 	public function transcribeFile(string $path, string $appId, string $identifier): DataResponse {

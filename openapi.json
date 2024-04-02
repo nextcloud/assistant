@@ -246,7 +246,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Available task types returned",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -321,6 +321,7 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
+                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -440,6 +441,7 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
+                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -459,7 +461,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task deleted successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -489,7 +491,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "Task not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -582,7 +584,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "User tasks returned",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -623,7 +625,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "No tasks found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -684,6 +686,7 @@
                     {
                         "name": "inputs",
                         "in": "query",
+                        "description": "Input parameters",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -732,7 +735,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -770,7 +773,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Running task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -831,6 +834,7 @@
                     {
                         "name": "inputs",
                         "in": "query",
+                        "description": "Input parameters",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -879,7 +883,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task scheduled",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -917,7 +921,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Scheduling task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -978,6 +982,7 @@
                     {
                         "name": "inputs",
                         "in": "query",
+                        "description": "Input parameters",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1026,7 +1031,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task scheduled",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1064,7 +1069,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Scheduling task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1147,7 +1152,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Text parsed from file successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1185,7 +1190,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Parsing text from file is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1249,6 +1254,7 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
+                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1268,7 +1274,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task canceled successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1298,7 +1304,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "Task not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1367,6 +1373,7 @@
                     {
                         "name": "prompt",
                         "in": "query",
+                        "description": "Input prompt for the image",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1446,7 +1453,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1484,7 +1491,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Starting task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1556,6 +1563,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the generation info",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1752,6 +1760,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1760,6 +1769,7 @@
                     {
                         "name": "fileNameId",
                         "in": "path",
+                        "description": "ID of the file name",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1828,7 +1838,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Getting image is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1888,6 +1898,7 @@
                     {
                         "name": "imageGenId",
                         "in": "query",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1918,7 +1929,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Generation canceled successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2012,6 +2023,7 @@
                     {
                         "name": "fileVisStatusArray",
                         "in": "query",
+                        "description": "New file visibilities",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2032,6 +2044,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2050,7 +2063,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Visiblity set successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2080,7 +2093,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Setting visibility is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2118,7 +2131,7 @@
                         }
                     },
                     "401": {
-                        "description": "",
+                        "description": "Setting visibility is not allowed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2228,6 +2241,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2246,7 +2260,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Ready notification enabled successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2376,7 +2390,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2449,7 +2463,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Starting task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2550,7 +2564,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2623,7 +2637,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Starting task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2653,7 +2667,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "File not found",
                         "content": {
                             "application/json": {
                                 "schema": {
