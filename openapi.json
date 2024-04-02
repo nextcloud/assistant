@@ -109,17 +109,23 @@
             },
             "PublicCapabilities": {
                 "type": "object",
-                "additionalProperties": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "oneOf": [
-                            {
-                                "type": "boolean"
-                            },
-                            {
+                "required": [
+                    "assistant"
+                ],
+                "properties": {
+                    "assistant": {
+                        "type": "object",
+                        "required": [
+                            "version"
+                        ],
+                        "properties": {
+                            "version": {
                                 "type": "string"
+                            },
+                            "enabled": {
+                                "type": "boolean"
                             }
-                        ]
+                        }
                     }
                 }
             },
