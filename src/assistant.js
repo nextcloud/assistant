@@ -107,17 +107,11 @@ export async function openAssistantForm({
 			view.showSyncTaskRunning = true
 			view.inputs = inputs
 			view.selectedTaskTypeId = taskTypeId
-			if (taskTypeId === 'speech-to-text') {
-				runSttTask(inputs).then(response => {
-					view.showScheduleConfirmation = true
-					view.loading = false
-					view.showSyncTaskRunning = false
-				})
-				return
-			}
-			const runOrScheduleFunction = taskTypeId === 'OCP\\TextToImage\\Task'
-				? runOrScheduleTtiTask
-				: runOrScheduleTask
+			const runOrScheduleFunction = taskTypeId === 'speech-to-text'
+				? runSttTask
+				: taskTypeId === 'OCP\\TextToImage\\Task'
+					? runOrScheduleTtiTask
+					: runOrScheduleTask
 			runOrScheduleFunction(appId, newTaskIdentifier, taskTypeId, inputs)
 				.then(async (response) => {
 					const task = response.data?.ocs?.data?.task
@@ -192,18 +186,24 @@ export async function openAssistantForm({
 	})
 }
 
-export async function runSttTask(inputs) {
+export async function runSttTask(appId, identifier, taskType, inputs) {
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	saveLastSelectedTaskType('speech-to-text')
 	if (inputs.sttMode === 'choose') {
 		const url = generateOcsUrl('/apps/assistant/api/v1/stt/transcribeFile')
-		const params = { path: inputs.audioFilePath }
+		const params = {
+			appId,
+			identifier,
+			path: inputs.audioFilePath,
+		}
 		return axios.post(url, params)
 	} else {
 		const url = generateOcsUrl('/apps/assistant/api/v1/stt/transcribeAudio')
 		const formData = new FormData()
 		formData.append('audioData', inputs.audioData)
+		formData.append('appId', appId)
+		formData.append('identifier', identifier)
 		return axios.post(url, formData)
 	}
 }
@@ -464,17 +464,11 @@ export async function openAssistantTask(task, useMetaTasks = true) {
 		view.showSyncTaskRunning = true
 		view.inputs = inputs
 		view.selectedTaskTypeId = taskTypeId
-		if (taskTypeId === 'speech-to-text') {
-			runSttTask(inputs).then(response => {
-				view.showScheduleConfirmation = true
-				view.loading = false
-				view.showSyncTaskRunning = false
-			})
-			return
-		}
-		const runOrScheduleFunction = taskTypeId === 'OCP\\TextToImage\\Task'
-			? runOrScheduleTtiTask
-			: runOrScheduleTask
+		const runOrScheduleFunction = taskTypeId === 'speech-to-text'
+			? runSttTask
+			: taskTypeId === 'OCP\\TextToImage\\Task'
+				? runOrScheduleTtiTask
+				: runOrScheduleTask
 		runOrScheduleFunction(task.appId, newTaskIdentifier, taskTypeId, inputs)
 			.then((response) => {
 				// resolve(response.data?.ocs?.data?.task)
@@ -548,7 +542,7 @@ export async function addAssistantMenuEntry() {
 	}).$mount(menuEntry)
 
 	view.$on('click', () => {
-		openAssistantTextProcessingForm({ appId: 'assistant', useMetaTasks: true })
+		openAssistantForm({ appId: 'assistant' })
 			.then(r => {
 				console.debug('scheduled task', r)
 			})

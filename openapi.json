@@ -2301,7 +2301,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/stt/transcribeAudio": {
             "post": {
                 "operationId": "speech_to_text_api-transcribe-audio",
-                "summary": "Run audio transcription of an uploaded file",
+                "summary": "Transcribe uploaded audio file",
+                "description": "Schedule audio transcription of an uploaded file and return the created task.",
                 "tags": [
                     "speech_to_text_api"
                 ],
@@ -2314,6 +2315,22 @@
                     }
                 ],
                 "parameters": [
+                    {
+                        "name": "appId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "apiVersion",
                         "in": "path",
@@ -2359,7 +2376,15 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "string"
+                                                    "type": "object",
+                                                    "required": [
+                                                        "task"
+                                                    ],
+                                                    "properties": {
+                                                        "task": {
+                                                            "$ref": "#/components/schemas/Task"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -2439,7 +2464,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/stt/transcribeFile": {
             "post": {
                 "operationId": "speech_to_text_api-transcribe-file",
-                "summary": "Run audio transcription of a user's file",
+                "summary": "Transcribe file from user's storage",
+                "description": "Schedule audio transcription of a user's storage file and return the created task",
                 "tags": [
                     "speech_to_text_api"
                 ],
@@ -2456,6 +2482,22 @@
                         "name": "path",
                         "in": "query",
                         "description": "Nextcloud file path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "appId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2506,7 +2548,15 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "string"
+                                                    "type": "object",
+                                                    "required": [
+                                                        "task"
+                                                    ],
+                                                    "properties": {
+                                                        "task": {
+                                                            "$ref": "#/components/schemas/Task"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -2541,6 +2591,11 @@
                                             }
                                         }
                                     }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
                                 }
                             }
                         }
