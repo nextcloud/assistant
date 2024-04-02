@@ -116,7 +116,7 @@ OC.L10N.register(
     "Delete" : "Eliminar",
     "Failed" : "Falló",
     "Unknown error" : "Error desconocido",
-    "Running" : "Correr",
+    "Running" : "Corriendo",
     "Scheduled" : "Programado",
     "Image generation" : "Generación de imágenes",
     "Edit visible images" : "Editar imágenes visibles",
