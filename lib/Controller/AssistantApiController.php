@@ -128,8 +128,8 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Get a list of assistant tasks for the current user.
 	 *
-	 * @param string|null $taskType Task type id. If null, tasks of all task types will be retrieved (default: null)
-	 * @param int|null $category Task category. If null, tasks of all categories will be retrieved (default: null)
+	 * @param string|null $taskType Task type id. If null, tasks of all task types will be retrieved
+	 * @param int|null $category Task category. If null, tasks of all categories will be retrieved
 	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: User tasks returned

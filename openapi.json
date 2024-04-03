@@ -327,12 +327,12 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
-                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
                             "format": "int64"
-                        }
+                        },
+                        "description": "ID of the task"
                     },
                     {
                         "name": "OCS-APIRequest",
@@ -447,12 +447,12 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
-                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
                             "format": "int64"
-                        }
+                        },
+                        "description": "ID of the task"
                     },
                     {
                         "name": "OCS-APIRequest",
@@ -549,7 +549,7 @@
                     {
                         "name": "taskType",
                         "in": "query",
-                        "description": "Task type id. If null, tasks of all task types will be retrieved (default: null)",
+                        "description": "Task type id. If null, tasks of all task types will be retrieved",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -558,7 +558,7 @@
                     {
                         "name": "category",
                         "in": "query",
-                        "description": "Task category. If null, tasks of all categories will be retrieved (default: null)",
+                        "description": "Task category. If null, tasks of all categories will be retrieved",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
@@ -1260,12 +1260,12 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
-                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
                             "format": "int64"
-                        }
+                        },
+                        "description": "ID of the task"
                     },
                     {
                         "name": "OCS-APIRequest",
@@ -1388,7 +1388,7 @@
                     {
                         "name": "nResults",
                         "in": "query",
-                        "description": "Number of images to generate (default: 1)",
+                        "description": "Number of images to generate",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
@@ -1398,7 +1398,7 @@
                     {
                         "name": "displayPrompt",
                         "in": "query",
-                        "description": "Option to include the prompt when displaying the result images (default: false)",
+                        "description": "Option to include the prompt when displaying the result images",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1411,7 +1411,7 @@
                     {
                         "name": "notifyReadyIfScheduled",
                         "in": "query",
-                        "description": "Whether a notification will be produced when the tasks has run if it was scheduled (default: false)",
+                        "description": "Whether a notification will be produced when the tasks has run if it was scheduled",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1424,7 +1424,7 @@
                     {
                         "name": "schedule",
                         "in": "query",
-                        "description": "Force scheduling even if the task could run synchronously (default: false)",
+                        "description": "Force scheduling even if the task could run synchronously",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1569,11 +1569,11 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
-                        "description": "ID of the generation info",
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "description": "ID of the generation info"
                     },
                     {
                         "name": "OCS-APIRequest",
@@ -1766,21 +1766,21 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
-                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "description": "ID of the image generation"
                     },
                     {
                         "name": "fileNameId",
                         "in": "path",
-                        "description": "ID of the file name",
                         "required": true,
                         "schema": {
                             "type": "integer",
                             "format": "int64"
-                        }
+                        },
+                        "description": "ID of the file name"
                     },
                     {
                         "name": "OCS-APIRequest",
@@ -2050,11 +2050,11 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
-                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "description": "ID of the image generation"
                     },
                     {
                         "name": "OCS-APIRequest",
@@ -2247,11 +2247,11 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
-                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "description": "ID of the image generation"
                     },
                     {
                         "name": "OCS-APIRequest",

@@ -45,10 +45,10 @@ class Text2ImageApiController extends OCSController {
 	 * @param string $appId App id to be set in the created task
 	 * @param string $identifier Identifier to be set in the created task
 	 * @param string $prompt Input prompt for the image
-	 * @param int $nResults Number of images to generate (default: 1)
-	 * @param bool $displayPrompt Option to include the prompt when displaying the result images (default: false)
-	 * @param bool $notifyReadyIfScheduled Whether a notification will be produced when the tasks has run if it was scheduled (default: false)
-	 * @param bool $schedule Force scheduling even if the task could run synchronously (default: false)
+	 * @param int $nResults Number of images to generate
+	 * @param bool $displayPrompt Option to include the prompt when displaying the result images
+	 * @param bool $notifyReadyIfScheduled Whether a notification will be produced when the tasks has run if it was scheduled
+	 * @param bool $schedule Force scheduling even if the task could run synchronously
 	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantImageProcessPromptResponse}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: Task started successfully
