@@ -7,7 +7,6 @@ js/
 .*.sw*
 node_modules
 .php*.cache
-/composer.lock
 
 /vendor/
 /tests/.phpunit*cache
