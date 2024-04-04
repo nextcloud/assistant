@@ -91,6 +91,7 @@
     "Succeeded" : "Succès",
     "Running" : "Exécution",
     "Scheduled" : "Planifié",
+    "Task result was copied to clipboard" : "Le résultat de la tâche a été copié dans le presse-papier",
     "_{n} image has been generated_::_{n} images have been generated_" : ["{n} image a été générée","{n} images ont été générées","{n} images ont été générées"],
     "_Generation of {n} image is scheduled_::_Generation of {n} images is scheduled_" : ["La génération de {n} image est planifiée","La génération de {n} images est planifiée","La génération de {n} images est planifiée"],
     "Image generation" : "Génération d'image",
