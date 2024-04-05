@@ -23,6 +23,7 @@ OC.L10N.register(
     "Unknown error" : "Tuntematon virhe",
     "Running" : "Juoksu",
     "Scheduled" : "Aikataulutettu",
+    "Image generation" : "Kuvien generointi",
     "Submit" : "Lähetä",
     "Preview" : "Esikatselu",
     "Unknown API error" : "Tuntematon API-virhe",

@@ -11,6 +11,7 @@ OC.L10N.register(
     "Result" : "Resultado",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",
+    "Cancel" : "Cancelar",
     "Delete" : "Eliminar",
     "Failed" : "Falló",
     "Unknown error" : "Se presentó un error desconocido",
