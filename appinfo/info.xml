@@ -9,6 +9,9 @@ This app brings a user interface to use the Nextcloud text processing feature.
 It allows users to launch AI tasks, be notified when they finish and see the results.
 The assistant also appears in others apps like Text to easily process parts of a document.
 
+More details on the assistant OCS API and frontend integration possibilities in the
+[developer doc](https://github.com/nextcloud/assistant/raw/main/docs/developer)
+
 ### How to use it
 
 A new right header menu entry appears. Once clicked, the assistant is displayed and you can select and task type and
@@ -21,6 +24,8 @@ from which the results can be displayed.
 Other apps can integrate with the assistant. For example, Text will display an inline button besides every paragraph
 to directly select a task type to process this paragraph. Selecting a task this way will open the assistant with the task
 being pre-selected and the input text set.
+
+More details and screenshots in the [user doc](https://github.com/nextcloud/assistant/raw/main/docs/user).
 
 ## Features
 
