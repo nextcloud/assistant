@@ -25,6 +25,7 @@ namespace OCA\Assistant\Service\SpeechToText;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
+use OC\User\NoUserException;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\MetaTask;
 use OCA\Assistant\Db\MetaTaskMapper;
@@ -33,6 +34,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -89,13 +91,17 @@ class SpeechToTextService {
 	/**
 	 * @param string $path
 	 * @param string|null $userId
+	 * @param string $appId
+	 * @param string $identifier
+	 * @return MetaTask
+	 * @throws InvalidPathException
+	 * @throws NoUserException
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 * @throws PreConditionNotMetException
-	 * @throws InvalidArgumentException
-	 * @throws RuntimeException
+	 * @throws \OCP\DB\Exception
 	 */
-	public function transcribeFile(string $path, ?string $userId): void {
+	public function transcribeFile(string $path, ?string $userId, string $appId, string $identifier): MetaTask {
 		// this also prevents NoUserException
 		if (is_null($userId)) {
 			throw new InvalidArgumentException('userId must not be null');
@@ -109,27 +115,33 @@ class SpeechToTextService {
 
 		$this->speechToTextManager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
-		$this->metaTaskMapper->createMetaTask(
+		return $this->metaTaskMapper->createMetaTask(
 			$userId,
 			['fileId' => $audioFile->getId(), 'eTag' => $audioFile->getEtag()],
 			'',
 			time(),
 			$audioFile->getId(),
 			'speech-to-text',
-			Application::APP_ID,
+			$appId,
 			Application::STATUS_META_TASK_SCHEDULED,
-			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
+			Application::TASK_CATEGORY_SPEECH_TO_TEXT,
+			$identifier
+		);
 	}
 
 	/**
 	 * @param string $tempFileLocation
 	 * @param string|null $userId
+	 * @param string $appId
+	 * @param string $identifier
+	 * @return MetaTask
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 * @throws PreConditionNotMetException
-	 * @throws InvalidArgumentException
-	 * @throws RuntimeException
+	 * @throws \OCP\DB\Exception
 	 */
-	public function transcribeAudio(string $tempFileLocation, ?string $userId): void {
+	public function transcribeAudio(string $tempFileLocation, ?string $userId, string $appId, string $identifier): MetaTask {
 		if ($userId === null) {
 			throw new InvalidArgumentException('userId must not be null');
 		}
@@ -138,16 +150,18 @@ class SpeechToTextService {
 
 		$this->speechToTextManager->scheduleFileTranscription($audioFile, $userId, Application::APP_ID);
 
-		$this->metaTaskMapper->createMetaTask(
+		return $this->metaTaskMapper->createMetaTask(
 			$userId,
 			['fileId' => $audioFile->getId(), 'eTag' => $audioFile->getEtag()],
 			'',
 			time(),
 			$audioFile->getId(),
 			'speech-to-text',
-			Application::APP_ID,
+			$appId,
 			Application::STATUS_META_TASK_SCHEDULED,
-			Application::TASK_CATEGORY_SPEECH_TO_TEXT);
+			Application::TASK_CATEGORY_SPEECH_TO_TEXT,
+			$identifier
+		);
 	}
 
 	/**

@@ -19,7 +19,12 @@ class Capabilities implements IPublicCapability {
 	}
 
 	/**
-	 * @return array<string, array<string, bool|string>>
+	 * @return array{
+	 *     assistant: array{
+	 *         version: string,
+	 *         enabled?: bool
+	 *     }
+	 * }
 	 */
 	public function getCapabilities(): array {
 		$appVersion = $this->appManager->getAppVersion(Application::APP_ID);

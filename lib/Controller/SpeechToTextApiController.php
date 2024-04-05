@@ -24,12 +24,15 @@ namespace OCA\Assistant\Controller;
 
 use Exception;
 use InvalidArgumentException;
+use OC\User\NoUserException;
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\ResponseDefinitions;
 use OCA\Assistant\Service\SpeechToText\SpeechToTextService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
+use OCP\Files\InvalidPathException;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
@@ -38,6 +41,9 @@ use OCP\PreConditionNotMetException;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
+/**
+ * @psalm-import-type AssistantTask from ResponseDefinitions
+ */
 class SpeechToTextApiController extends OCSController {
 
 	public function __construct(
@@ -73,13 +79,23 @@ class SpeechToTextApiController extends OCSController {
 
 
 	/**
-	 * Run audio transcription of an uploaded file
+	 * Transcribe uploaded audio file
 	 *
-	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, string, array{}>
+	 * Schedule audio transcription of an uploaded file and return the created task.
+	 *
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
+	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, string, array{}>
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
 	 * @throws NotPermittedException
+	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: Task started successfully
+	 * 400: Starting task is not possible
 	 */
 	#[NoAdminRequired]
-	public function transcribeAudio(): DataResponse {
+	public function transcribeAudio(string $appId, string $identifier): DataResponse {
 		$audioData = $this->request->getUploadedFile('audioData');
 
 		if ($audioData['error'] !== 0) {
@@ -95,8 +111,10 @@ class SpeechToTextApiController extends OCSController {
 		}
 
 		try {
-			$this->sttService->transcribeAudio($audioData['tmp_name'], $this->userId);
-			return new DataResponse('');
+			$task = $this->sttService->transcribeAudio($audioData['tmp_name'], $this->userId, $appId, $identifier);
+			return new DataResponse([
+				'task' => $task->jsonSerializeCc(),
+			]);
 		} catch (RuntimeException $e) {
 			$this->logger->error(
 				'Runtime exception: ' . $e->getMessage(),
@@ -122,20 +140,33 @@ class SpeechToTextApiController extends OCSController {
 	}
 
 	/**
-	 * Run audio transcription of a user's file
+	 * Transcribe file from user's storage
+	 *
+	 * Schedule audio transcription of a user's storage file and return the created task
 	 *
 	 * @param string $path Nextcloud file path
-	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, string, array{}>
+	 * @param string $appId App id to be set in the created task
+	 * @param string $identifier Identifier to be set in the created task
+	 * @return DataResponse<Http::STATUS_OK, array{task: AssistantTask}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, string, array{}>
+	 * @throws InvalidPathException
+	 * @throws NoUserException
+	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: Task started successfully
+	 * 400: Starting task is not possible
+	 * 404: File not found
 	 */
 	#[NoAdminRequired]
-	public function transcribeFile(string $path): DataResponse {
+	public function transcribeFile(string $path, string $appId, string $identifier): DataResponse {
 		if ($path === '') {
 			return new DataResponse('Empty file path received', Http::STATUS_BAD_REQUEST);
 		}
 
 		try {
-			$this->sttService->transcribeFile($path, $this->userId);
-			return new DataResponse('');
+			$task = $this->sttService->transcribeFile($path, $this->userId, $appId, $identifier);
+			return new DataResponse([
+				'task' => $task->jsonSerializeCc(),
+			]);
 		} catch (NotFoundException $e) {
 			$this->logger->error('Audio file not found: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			return new DataResponse(

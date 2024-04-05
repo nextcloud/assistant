@@ -109,17 +109,23 @@
             },
             "PublicCapabilities": {
                 "type": "object",
-                "additionalProperties": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "oneOf": [
-                            {
-                                "type": "boolean"
-                            },
-                            {
+                "required": [
+                    "assistant"
+                ],
+                "properties": {
+                    "assistant": {
+                        "type": "object",
+                        "required": [
+                            "version"
+                        ],
+                        "properties": {
+                            "version": {
                                 "type": "string"
+                            },
+                            "enabled": {
+                                "type": "boolean"
                             }
-                        ]
+                        }
                     }
                 }
             },
@@ -208,6 +214,7 @@
             "get": {
                 "operationId": "task_management-get-available-task-types",
                 "summary": "Get available task types",
+                "description": "Get all available task types that the assistant can handle.",
                 "tags": [
                     "task_management"
                 ],
@@ -245,7 +252,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Available task types returned",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -292,6 +299,7 @@
             "get": {
                 "operationId": "task_management-get-assistant-task",
                 "summary": "Get an assistant task",
+                "description": "Get one specific task. It has to be a task owned by the current user.",
                 "tags": [
                     "task_management"
                 ],
@@ -319,6 +327,7 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
+                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -410,6 +419,7 @@
             "delete": {
                 "operationId": "task_management-delete-task",
                 "summary": "Delete an assistant task",
+                "description": "This will cancel the task if needed and then delete it from the server.",
                 "tags": [
                     "task_management"
                 ],
@@ -437,6 +447,7 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
+                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -456,7 +467,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task deleted successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -486,7 +497,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "Task not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -522,6 +533,7 @@
             "get": {
                 "operationId": "task_management-get-user-tasks",
                 "summary": "Get user's tasks",
+                "description": "Get a list of assistant tasks for the current user.",
                 "tags": [
                     "task_management"
                 ],
@@ -537,6 +549,7 @@
                     {
                         "name": "taskType",
                         "in": "query",
+                        "description": "Task type id. If null, tasks of all task types will be retrieved",
                         "schema": {
                             "type": "string",
                             "nullable": true
@@ -545,6 +558,7 @@
                     {
                         "name": "category",
                         "in": "query",
+                        "description": "Task category. If null, tasks of all categories will be retrieved",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
@@ -576,7 +590,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "User tasks returned",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -617,7 +631,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "No tasks found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -653,6 +667,7 @@
             "post": {
                 "operationId": "text_processing-run-text-processing-task",
                 "summary": "Run a text processing task",
+                "description": "This endpoint will run the task synchronously.",
                 "tags": [
                     "text_processing"
                 ],
@@ -668,6 +683,7 @@
                     {
                         "name": "type",
                         "in": "query",
+                        "description": "Task type id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -676,6 +692,7 @@
                     {
                         "name": "inputs",
                         "in": "query",
+                        "description": "Input parameters",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -684,6 +701,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -692,6 +710,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -722,7 +741,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -760,7 +779,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Running task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -796,6 +815,7 @@
             "post": {
                 "operationId": "text_processing-schedule-text-processing-task",
                 "summary": "Schedule a text processing task",
+                "description": "This endpoint will schedule the task for it to run as soon as possible.",
                 "tags": [
                     "text_processing"
                 ],
@@ -811,6 +831,7 @@
                     {
                         "name": "type",
                         "in": "query",
+                        "description": "Task type id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -819,6 +840,7 @@
                     {
                         "name": "inputs",
                         "in": "query",
+                        "description": "Input parameters",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -827,6 +849,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -835,6 +858,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -865,7 +889,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task scheduled",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -903,7 +927,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Scheduling task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -939,7 +963,7 @@
             "post": {
                 "operationId": "text_processing-run-or-schedule-text-processing-task",
                 "summary": "Run or schedule a text processing task",
-                "description": "If the task runs immediately or is schedule depends on the estimated runtime declared by the provider.",
+                "description": "This endpoint will either run or schedule the task.\nThe choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.",
                 "tags": [
                     "text_processing"
                 ],
@@ -955,6 +979,7 @@
                     {
                         "name": "type",
                         "in": "query",
+                        "description": "Task type id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -963,6 +988,7 @@
                     {
                         "name": "inputs",
                         "in": "query",
+                        "description": "Input parameters",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -971,6 +997,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -979,6 +1006,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1009,7 +1037,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task scheduled",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1047,7 +1075,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Scheduling task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1099,6 +1127,7 @@
                     {
                         "name": "filePath",
                         "in": "query",
+                        "description": "Path of the file to parse in the user's storage",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1129,7 +1158,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Text parsed from file successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1167,7 +1196,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Parsing text from file is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1202,6 +1231,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/cancel/{metaTaskId}": {
             "put": {
                 "operationId": "task_management-cancel-task",
+                "summary": "Cancel a task",
+                "description": "This endpoint will prevent a scheduled task to run by unscheduling it",
                 "tags": [
                     "task_management"
                 ],
@@ -1229,6 +1260,7 @@
                     {
                         "name": "metaTaskId",
                         "in": "path",
+                        "description": "ID of the task",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1248,7 +1280,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task canceled successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1278,7 +1310,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "Task not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1329,6 +1361,7 @@
                     {
                         "name": "appId",
                         "in": "query",
+                        "description": "App id to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1337,6 +1370,7 @@
                     {
                         "name": "identifier",
                         "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1345,6 +1379,7 @@
                     {
                         "name": "prompt",
                         "in": "query",
+                        "description": "Input prompt for the image",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1353,6 +1388,7 @@
                     {
                         "name": "nResults",
                         "in": "query",
+                        "description": "Number of images to generate",
                         "schema": {
                             "type": "integer",
                             "format": "int64",
@@ -1362,6 +1398,7 @@
                     {
                         "name": "displayPrompt",
                         "in": "query",
+                        "description": "Option to include the prompt when displaying the result images",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1374,6 +1411,7 @@
                     {
                         "name": "notifyReadyIfScheduled",
                         "in": "query",
+                        "description": "Whether a notification will be produced when the tasks has run if it was scheduled",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1386,6 +1424,7 @@
                     {
                         "name": "schedule",
                         "in": "query",
+                        "description": "Force scheduling even if the task could run synchronously",
                         "schema": {
                             "type": "integer",
                             "default": 0,
@@ -1420,7 +1459,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1458,7 +1497,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Starting task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1530,6 +1569,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the generation info",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1726,6 +1766,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1734,6 +1775,7 @@
                     {
                         "name": "fileNameId",
                         "in": "path",
+                        "description": "ID of the file name",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1802,7 +1844,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Getting image is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1862,6 +1904,7 @@
                     {
                         "name": "imageGenId",
                         "in": "query",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1892,7 +1935,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Generation canceled successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1986,6 +2029,7 @@
                     {
                         "name": "fileVisStatusArray",
                         "in": "query",
+                        "description": "New file visibilities",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2006,6 +2050,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2024,7 +2069,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Visiblity set successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2054,7 +2099,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Setting visibility is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2092,7 +2137,7 @@
                         }
                     },
                     "401": {
-                        "description": "",
+                        "description": "Setting visibility is not allowed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2202,6 +2247,7 @@
                     {
                         "name": "imageGenId",
                         "in": "path",
+                        "description": "ID of the image generation",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2220,7 +2266,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Ready notification enabled successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2293,7 +2339,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/stt/transcribeAudio": {
             "post": {
                 "operationId": "speech_to_text_api-transcribe-audio",
-                "summary": "Run audio transcription of an uploaded file",
+                "summary": "Transcribe uploaded audio file",
+                "description": "Schedule audio transcription of an uploaded file and return the created task.",
                 "tags": [
                     "speech_to_text_api"
                 ],
@@ -2306,6 +2353,24 @@
                     }
                 ],
                 "parameters": [
+                    {
+                        "name": "appId",
+                        "in": "query",
+                        "description": "App id to be set in the created task",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "query",
+                        "description": "Identifier to be set in the created task",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "apiVersion",
                         "in": "path",
@@ -2331,7 +2396,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2351,7 +2416,15 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "string"
+                                                    "type": "object",
+                                                    "required": [
+                                                        "task"
+                                                    ],
+                                                    "properties": {
+                                                        "task": {
+                                                            "$ref": "#/components/schemas/Task"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -2396,7 +2469,7 @@
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Starting task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2431,7 +2504,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/stt/transcribeFile": {
             "post": {
                 "operationId": "speech_to_text_api-transcribe-file",
-                "summary": "Run audio transcription of a user's file",
+                "summary": "Transcribe file from user's storage",
+                "description": "Schedule audio transcription of a user's storage file and return the created task",
                 "tags": [
                     "speech_to_text_api"
                 ],
@@ -2448,6 +2522,24 @@
                         "name": "path",
                         "in": "query",
                         "description": "Nextcloud file path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "appId",
+                        "in": "query",
+                        "description": "App id to be set in the created task",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "query",
+                        "description": "Identifier to be set in the created task",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2478,7 +2570,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "",
+                        "description": "Task started successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2498,7 +2590,15 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "string"
+                                                    "type": "object",
+                                                    "required": [
+                                                        "task"
+                                                    ],
+                                                    "properties": {
+                                                        "task": {
+                                                            "$ref": "#/components/schemas/Task"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -2534,11 +2634,16 @@
                                         }
                                     }
                                 }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
                             }
                         }
                     },
                     "400": {
-                        "description": "",
+                        "description": "Starting task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2568,7 +2673,7 @@
                         }
                     },
                     "404": {
-                        "description": "",
+                        "description": "File not found",
                         "content": {
                             "application/json": {
                                 "schema": {
