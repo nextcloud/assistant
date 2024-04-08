@@ -58,10 +58,10 @@
 	</div>
 	<div v-else class="assistant-inputs">
 		<div v-if="selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType'" class="assistant-inputs">
-			<NcCheckboxRadioSwitch :checked.sync="sccEnabled">
+			<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateContextChat">
 				{{ t('assistant', 'Selective context') }}
 			</NcCheckboxRadioSwitch>
-			<ContextChatInputForm v-if="sccEnabled" :scc-data.sync="sccData" />
+			<ContextChatInputForm v-if="sccEnabled" :scc-data.sync="sccData" @update:scc-data="onUpdateContextChat" />
 		</div>
 		<div class="input-container">
 			<div class="label-row">
@@ -179,6 +179,8 @@ export default {
 				this.onUpdateStt()
 			} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
 				this.onUpdateTti()
+			} else if (this.selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType') {
+				this.onUpdateContextChat()
 			} else {
 				this.onUpdate()
 			}
