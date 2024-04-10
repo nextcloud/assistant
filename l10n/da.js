@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Artificial Intelligence" : "Kunstig Intelligens",
+    "Type some text" : "Skriv noget tekst",
     "Choose" : "Vælg",
     "No file selected" : "Ingen fil valgt",
     "Close" : "Luk",
@@ -10,6 +11,7 @@ OC.L10N.register(
     "Copy" : "Kopiér",
     "Cancel" : "Annullér",
     "Delete" : "Slet",
+    "Failed" : "Mislykkede",
     "Unknown error" : "Ukendt fejl",
     "Running" : "Løber",
     "Scheduled" : "Planlagt",
