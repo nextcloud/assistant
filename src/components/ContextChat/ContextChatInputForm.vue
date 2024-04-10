@@ -190,6 +190,8 @@ export default {
 		},
 	},
 
+	emits: ['update:sccData'],
+
 	data() {
 		return {
 			ScopeType: _ScopeType,
