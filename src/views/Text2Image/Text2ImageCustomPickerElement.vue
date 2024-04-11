@@ -204,7 +204,7 @@ export default {
 			}, 300)
 		},
 		getPromptHistory() {
-			const url = generateUrl('/apps/assistant/i/prompt_history')
+			const url = generateUrl('/apps/assistant/i/data/prompt_history')
 			return axios.get(url)
 				.then((response) => {
 					this.prompts = response.data
