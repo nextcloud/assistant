@@ -1,19 +1,32 @@
 <template>
-	<ul
-		class="task-list">
-		<TaskListItem v-for="task in tasks"
-			:key="task.id"
-			class="task-list--item"
-			:task="task"
-			@try-again="$emit('try-again', task)"
-			@load="$emit('load-task', task)"
-			@delete="onTaskDelete(task)"
-			@cancel="onTaskCancel(task)" />
-	</ul>
+	<div>
+		<ul
+			class="task-list">
+			<TaskListItem v-for="task in tasks"
+				:key="task.id"
+				class="task-list--item"
+				:task="task"
+				@try-again="$emit('try-again', task)"
+				@load="$emit('load-task', task)"
+				@delete="onTaskDelete(task)"
+				@cancel="onTaskCancel(task)" />
+		</ul>
+		<NcEmptyContent v-if="!loading && tasks.length === 0"
+			:name="t('assistant', 'Nothing yet')"
+			:description="emptyContentDescription">
+			<template #icon>
+				<HistoryIcon />
+			</template>
+		</NcEmptyContent>
+	</div>
 </template>
 
 <script>
+import HistoryIcon from 'vue-material-design-icons/History.vue'
+
 import TaskListItem from './TaskListItem.vue'
+
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -24,12 +37,14 @@ export default {
 	name: 'TaskList',
 
 	components: {
+		HistoryIcon,
 		TaskListItem,
+		NcEmptyContent,
 	},
 
 	props: {
 		taskType: {
-			type: [String, null],
+			type: [Object, null],
 			default: null,
 		},
 		loading: {
@@ -50,6 +65,9 @@ export default {
 	},
 
 	computed: {
+		emptyContentDescription() {
+			return t('assistant', 'You have not submitted any "{taskTypeName}" task yet', { taskTypeName: this.taskType?.name })
+		},
 	},
 
 	watch: {
@@ -67,7 +85,7 @@ export default {
 			this.$emit('update:loading', true)
 			const req = {
 				params: {
-					taskType: this.taskType,
+					taskType: this.taskType.id,
 				},
 			}
 			const url = generateOcsUrl('/apps/assistant/api/v1/tasks')

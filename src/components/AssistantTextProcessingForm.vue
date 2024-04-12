@@ -32,7 +32,7 @@
 			</div>
 			<TaskList
 				class="history--list"
-				:task-type="mySelectedTaskTypeId"
+				:task-type="selectedTaskType"
 				:loading.sync="historyLoading"
 				@try-again="onHistoryTryAgain"
 				@load-task="onHistoryLoadTask" />
