@@ -85,6 +85,7 @@ OC.L10N.register(
     "You will receive a notification when it has finished" : "Du erhältst eine Benachrichtigung, wenn der Vorgang abgeschlossen ist",
     "Your task has been scheduled" : "Ihre Aufgabe wurde geplant",
     "Start recording" : "Aufnahme beginnen",
+    "Nothing yet" : "Noch nichts vorhanden",
     "Cancel" : "Abbrechen",
     "Delete" : "Löschen",
     "Failed" : "Fehlgeschlagen",

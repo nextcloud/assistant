@@ -29,6 +29,7 @@ OC.L10N.register(
     "Failed to save assistant options" : "No s'han pogut desar les opcions de l'assistent",
     "Start recording" : "Iniciar l'enregistrament",
     "Stop recording" : "Aturar l'enregistrament",
+    "Nothing yet" : "Encara res",
     "Cancel" : "Cancel·la",
     "Delete" : "Suprimir",
     "Failed" : "Ha fallat",

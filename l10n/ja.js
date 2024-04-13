@@ -18,6 +18,7 @@ OC.L10N.register(
     "Prompt" : "プロンプト",
     "Start recording" : "録画を開始",
     "Stop recording" : "録画を停止",
+    "Nothing yet" : "まだなにもありません",
     "Cancel" : "キャンセル",
     "Delete" : "削除",
     "Failed" : "失敗",

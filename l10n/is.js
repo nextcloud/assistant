@@ -10,6 +10,7 @@ OC.L10N.register(
     "Reset" : "Endurstilla",
     "Result" : "Niðurstöður",
     "Copy" : "Afrita",
+    "Nothing yet" : "Ekkert ennþá",
     "Cancel" : "Hætta við",
     "Delete" : "Eyða",
     "Unknown error" : "Óþekkt villa",

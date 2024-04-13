@@ -65,6 +65,7 @@ OC.L10N.register(
     "Failed to save assistant options" : "助手选项保存失败",
     "Start recording" : "开始录制",
     "Stop recording" : "停止录制",
+    "Nothing yet" : "暂无",
     "Cancel" : "取消",
     "Delete" : "删除",
     "Failed" : "失败了",

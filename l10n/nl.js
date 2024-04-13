@@ -12,6 +12,7 @@ OC.L10N.register(
     "Try again" : "Probeer opnieuw",
     "Start recording" : "Begin opname",
     "Stop recording" : "Beëindig opname",
+    "Nothing yet" : "Nog niets",
     "Cancel" : "Annuleren",
     "Delete" : "Verwijder",
     "Failed" : "Mislukt",

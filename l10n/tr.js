@@ -145,6 +145,7 @@ OC.L10N.register(
     "Selected Audio File:" : "Seçilmiş ses dosyası:",
     "Choose audio file in your storage" : "Depolama alanınızdaki ses dosyasını seçin",
     "Choose audio File" : "Ses dosyasını seçin",
+    "Nothing yet" : "Henüz bir şey yok",
     "Copy result" : "Sonucu kopyala",
     "Cancel" : "İptal",
     "Delete" : "Sil",

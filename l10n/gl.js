@@ -75,6 +75,7 @@ OC.L10N.register(
     "Stop recording" : "Deter a gravación",
     "No audio file selected" : "Non seleccionou ningún ficheiro de son",
     "Selected Audio File:" : "Ficheiro de son seleccionado:",
+    "Nothing yet" : "Aínda non hai nada",
     "Cancel" : "Cancelar",
     "Delete" : "Eliminar",
     "Failed" : "Fallado",

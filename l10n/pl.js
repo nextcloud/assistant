@@ -12,6 +12,7 @@ OC.L10N.register(
     "Result" : "Wynik",
     "Copy" : "Skopiuj",
     "Stop recording" : "Zatrzymaj nagrywanie",
+    "Nothing yet" : "Jeszcze nic",
     "Cancel" : "Anuluj",
     "Delete" : "Usuń",
     "Failed" : "Nie powiodło się",

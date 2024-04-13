@@ -87,6 +87,7 @@ OC.L10N.register(
     "Stop recording" : "Zastavit nahrávání",
     "No audio file selected" : "Nevybrán žádný soubor se zvukem",
     "Selected Audio File:" : "Vybraný zvukový soubor:",
+    "Nothing yet" : "Zatím nic",
     "Cancel" : "Storno",
     "Delete" : "Smazat",
     "Failed" : "Nezdařilo se",

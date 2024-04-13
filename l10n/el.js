@@ -29,6 +29,7 @@ OC.L10N.register(
     "Assistant options saved" : "Οι επιλογές του βοηθού αποθηκεύτηκαν",
     "Failed to save assistant options" : "Αποτυχία αποθήκευσης επιλογών βοηθού",
     "Start recording" : "Έναρξη εγγραφής",
+    "Nothing yet" : "Τίποτα ακόμη",
     "Cancel" : "Ακύρωση",
     "Delete" : "Διαγραφή",
     "Failed" : "Απέτυχε",

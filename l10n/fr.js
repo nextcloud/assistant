@@ -83,6 +83,7 @@ OC.L10N.register(
     "No audio file selected" : "Aucun fichier audio sélectionné",
     "Selected Audio File:" : "Fichier audio sélectionné :",
     "Choose audio File" : "Choisir un fichier audio",
+    "Nothing yet" : "Rien pour l'instant",
     "Copy result" : "Copier le résultat",
     "Cancel" : "Annuler",
     "Delete" : "Supprimer",

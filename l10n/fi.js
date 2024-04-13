@@ -17,6 +17,7 @@ OC.L10N.register(
     "Start recording" : "Käynnistä tallennus",
     "Stop recording" : "Lopeta tallennus",
     "Selected Audio File:" : "Valitse äänitiedosto:",
+    "Nothing yet" : "Ei vielä mitään",
     "Cancel" : "Peruuta",
     "Delete" : "Poista",
     "Failed" : "Epäonnistui",

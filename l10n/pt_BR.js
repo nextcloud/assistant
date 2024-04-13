@@ -145,6 +145,7 @@ OC.L10N.register(
     "Selected Audio File:" : "Arquivo de Áudio Selecionado:",
     "Choose audio file in your storage" : "Escolha o arquivo de áudio em seu armazenamento",
     "Choose audio File" : "Escolha o arquivo de áudio",
+    "Nothing yet" : "Nada ainda",
     "Copy result" : "Copiar resultado",
     "Cancel" : "Cancelar",
     "Delete" : "Excluir",

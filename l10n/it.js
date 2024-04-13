@@ -11,6 +11,7 @@ OC.L10N.register(
     "Reset" : "Ripristina",
     "Result" : "Risultato",
     "Copy" : "Copia",
+    "Nothing yet" : "Ancora niente",
     "Cancel" : "Annulla",
     "Delete" : "Elimina",
     "Failed" : "Non riuscito",

@@ -47,6 +47,7 @@ OC.L10N.register(
     "Choose Audio File" : "Válasszon audio fájlt",
     "Stop recording" : "Felvétel leállítása",
     "Selected Audio File:" : "Kiválasztott audio fájl:",
+    "Nothing yet" : "Még nincs",
     "Cancel" : "Mégse",
     "Delete" : "Törlés",
     "Failed" : "Sikertelen",
