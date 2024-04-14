@@ -146,6 +146,8 @@ OC.L10N.register(
     "Selected Audio File:" : "الملف الصوتي المحدّد:",
     "Choose audio file in your storage" : "إختَر ملفاً صوتيّاً من محفوظاتك",
     "Choose audio File" : "إختَر ملفاً صوتيّاً",
+    "Nothing yet" : "لا شيء حتى الآن",
+    "You have not submitted any \"{taskTypeName}\" task yet" : "أنت لم تُرسل أي مهمة \"{taskTypeName}\" حتى الآن",
     "Copy result" : "نسخ النتيجة",
     "Cancel" : "إلغاء",
     "Delete" : "حذف",
