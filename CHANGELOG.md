@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.8 – 2024-04-15
+
+### Added
+
+- OpenAPI specs
+- Support for NC 30
+- Developer and user docs @julien-nc [#57](https://github.com/nextcloud/assistant/pull/57) [#61](https://github.com/nextcloud/assistant/pull/61)
+- Node and eslint workflows @kyteinsky [#60](https://github.com/nextcloud/assistant/pull/60)
+- Add empty content when history is empty @julien-nc [#63](https://github.com/nextcloud/assistant/pull/63)
+
+### Changed
+
+- reset input/output form if the task type is changed by the user @julien-nc [#54](https://github.com/nextcloud/assistant/pull/54)
+
+### Fixed
+
+- create tmp folder to store docs as 0700 @kyteinsky [#64](https://github.com/nextcloud/assistant/pull/64)
+
 ## 1.0.7 – 2024-03-22
 
 ### Added
