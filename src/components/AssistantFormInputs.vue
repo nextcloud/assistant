@@ -112,6 +112,7 @@ import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 
 const VALID_MIME_TYPES = [
+	'text/rtf',
 	'text/plain',
 	'text/markdown',
 	'application/msword', // doc

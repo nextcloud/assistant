@@ -4,6 +4,7 @@ namespace OCA\Assistant\Service;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use Html2Text\Html2Text;
 use OC\SpeechToText\TranscriptionJob;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\MetaTask;
@@ -34,6 +35,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
 use RuntimeException;
 
 /**
@@ -401,7 +404,7 @@ class AssistantService {
 
 		try {
 			if ($file instanceof File) {
-				$contents = $file->getContent();
+				$fileContent = $file->getContent();
 			} else {
 				throw new \Exception('Provided path does not point to a file.');
 			}
@@ -415,21 +418,25 @@ class AssistantService {
 			default:
 			case 'text/plain':
 				{
-					$text = $contents;
+					$text = $fileContent;
 
 					break;
 				}
 			case 'text/markdown':
 				{
 					$parser = new Parsedown();
-					$text = $parser->text($contents);
+					$text = $parser->text($fileContent);
 					// Remove HTML tags:
 					$text = strip_tags($text);
 					break;
 				}
+			case 'text/rtf':
+				{
+					$text = $this->parseRtfDocument($fileContent);
+					break;
+				}
 			case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
 			case 'application/msword':
-			case 'application/rtf':
 			case 'application/vnd.oasis.opendocument.text':
 				{
 					// Store the file in a temp dir and provide a path for the doc parser to use
@@ -438,7 +445,7 @@ class AssistantService {
 					if (!file_exists(dirname($tempFilePath))) {
 						mkdir(dirname($tempFilePath), 0700, true);
 					}
-					file_put_contents($tempFilePath, $contents);
+					file_put_contents($tempFilePath, $fileContent);
 
 					$text = $this->parseDocument($tempFilePath, $mimeType);
 
@@ -470,11 +477,14 @@ class AssistantService {
 					$readerType = 'MsDoc';
 					break;
 				}
-			case 'application/rtf':
-				{
-					$readerType = 'RTF';
-					break;
-				}
+				// RTF parsing is buggy in phpoffice
+				/*
+				case 'text/rtf':
+					{
+						$readerType = 'RTF';
+						break;
+					}
+				*/
 			case 'application/vnd.oasis.opendocument.text':
 				{
 					$readerType = 'ODText';
@@ -501,5 +511,16 @@ class AssistantService {
 		}
 
 		return $outText;
+	}
+
+	private function parseRtfDocument(string $content): string {
+		// henck/rtf-to-html
+		$document = new Document($content);
+		$formatter = new HtmlFormatter('UTF-8');
+		$htmlText = $formatter->Format($document);
+
+		// html2text/html2text
+		$html = new Html2Text($htmlText);
+		return $html->getText();
 	}
 }
