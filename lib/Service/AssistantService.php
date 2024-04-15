@@ -436,7 +436,7 @@ class AssistantService {
 					$tempFilePath = sys_get_temp_dir() . '/assistant_app/' . uniqid() . '.tmp';
 					// Make sure the temp dir exists
 					if (!file_exists(dirname($tempFilePath))) {
-						mkdir(dirname($tempFilePath), 0600, true);
+						mkdir(dirname($tempFilePath), 0700, true);
 					}
 					file_put_contents($tempFilePath, $contents);
 
@@ -494,7 +494,6 @@ class AssistantService {
 		foreach ($sections as $section) {
 			$elements = $section->getElements();
 			foreach ($elements as $element) {
-				$class = get_class($element);
 				if (method_exists($element, 'getText')) {
 					$outText .= $element->getText() . "\n";
 				}
