@@ -146,6 +146,8 @@ OC.L10N.register(
     "Selected Audio File:" : "選取的音訊檔：",
     "Choose audio file in your storage" : "選擇您儲存空間中的音訊檔",
     "Choose audio File" : "選擇音訊檔",
+    "Nothing yet" : "還沒有",
+    "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未遞交任何「{taskTypename}」任務",
     "Copy result" : "複製結果",
     "Cancel" : "取消",
     "Delete" : "刪除",

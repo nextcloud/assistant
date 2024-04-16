@@ -25,6 +25,7 @@ OC.L10N.register(
     "Context write" : "Écrire contextuellement",
     "Writes text in a given style based on the provided source material." : "Écrit un texte dans un style donné, basé sur des données initiales préalablement fournies.",
     "Transcribe" : "Transcrire",
+    "Transcribe audio to text" : "Transcrire l’audio en texte",
     "Generate image" : "Générer l'image",
     "Canceled by user" : "Annulé par l’utilisateur",
     "Multiple tasks found" : "Plusieurs tâches trouvées",
