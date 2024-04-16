@@ -21,6 +21,7 @@ use OCP\Files\GenericFileException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
+use OCP\ITempManager;
 use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
 use OCP\SpeechToText\ISpeechToTextManager;
@@ -54,6 +55,7 @@ class AssistantService {
 		private IJobList $jobList,
 		private IL10N $l10n,
 		private ContainerInterface $container,
+		private ITempManager $tempManager,
 	) {
 	}
 
@@ -439,19 +441,10 @@ class AssistantService {
 			case 'application/msword':
 			case 'application/vnd.oasis.opendocument.text':
 				{
-					// Store the file in a temp dir and provide a path for the doc parser to use
-					$tempFilePath = sys_get_temp_dir() . '/assistant_app/' . uniqid() . '.tmp';
-					// Make sure the temp dir exists
-					if (!file_exists(dirname($tempFilePath))) {
-						mkdir(dirname($tempFilePath), 0700, true);
-					}
+					$tempFilePath = $this->tempManager->getTemporaryFile();
 					file_put_contents($tempFilePath, $fileContent);
-
 					$text = $this->parseDocument($tempFilePath, $mimeType);
-
-					// Remove the hardlink to the file (delete it):
-					unlink($tempFilePath);
-
+					$this->tempManager->clean();
 					break;
 				}
 		}
