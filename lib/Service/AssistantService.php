@@ -2,8 +2,6 @@
 
 namespace OCA\Assistant\Service;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 use Html2Text\Html2Text;
 use OC\SpeechToText\TranscriptionJob;
 use OCA\Assistant\AppInfo\Application;
