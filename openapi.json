@@ -212,7 +212,7 @@
     "paths": {
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task-types": {
             "get": {
-                "operationId": "task_management-get-available-task-types",
+                "operationId": "assistant_api-get-available-task-types",
                 "summary": "Get available task types",
                 "description": "Get all available task types that the assistant can handle.",
                 "tags": [
@@ -297,7 +297,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{metaTaskId}": {
             "get": {
-                "operationId": "task_management-get-assistant-task",
+                "operationId": "assistant_api-get-assistant-task",
                 "summary": "Get an assistant task",
                 "description": "Get one specific task. It has to be a task owned by the current user.",
                 "tags": [
@@ -417,7 +417,7 @@
                 }
             },
             "delete": {
-                "operationId": "task_management-delete-task",
+                "operationId": "assistant_api-delete-task",
                 "summary": "Delete an assistant task",
                 "description": "This will cancel the task if needed and then delete it from the server.",
                 "tags": [
@@ -531,7 +531,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/tasks": {
             "get": {
-                "operationId": "task_management-get-user-tasks",
+                "operationId": "assistant_api-get-user-tasks",
                 "summary": "Get user's tasks",
                 "description": "Get a list of assistant tasks for the current user.",
                 "tags": [
@@ -665,7 +665,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/run": {
             "post": {
-                "operationId": "text_processing-run-text-processing-task",
+                "operationId": "assistant_api-run-text-processing-task",
                 "summary": "Run a text processing task",
                 "description": "This endpoint will run the task synchronously.",
                 "tags": [
@@ -813,7 +813,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/schedule": {
             "post": {
-                "operationId": "text_processing-schedule-text-processing-task",
+                "operationId": "assistant_api-schedule-text-processing-task",
                 "summary": "Schedule a text processing task",
                 "description": "This endpoint will schedule the task for it to run as soon as possible.",
                 "tags": [
@@ -961,7 +961,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/run-or-schedule": {
             "post": {
-                "operationId": "text_processing-run-or-schedule-text-processing-task",
+                "operationId": "assistant_api-run-or-schedule-text-processing-task",
                 "summary": "Run or schedule a text processing task",
                 "description": "This endpoint will either run or schedule the task.\nThe choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.",
                 "tags": [
@@ -1230,7 +1230,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/cancel/{metaTaskId}": {
             "put": {
-                "operationId": "task_management-cancel-task",
+                "operationId": "assistant_api-cancel-task",
                 "summary": "Cancel a task",
                 "description": "This endpoint will prevent a scheduled task to run by unscheduling it",
                 "tags": [
@@ -1344,7 +1344,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/process_prompt": {
             "post": {
-                "operationId": "image_generation-process-prompt",
+                "operationId": "text2_image_api-process-prompt",
                 "summary": "Run or schedule an image generation task",
                 "tags": [
                     "image_generation"
@@ -1539,7 +1539,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/info/{imageGenId}": {
             "get": {
-                "operationId": "image_generation-get-generation-info",
+                "operationId": "text2_image_api-get-generation-info",
                 "summary": "Get image generation information",
                 "tags": [
                     "image_generation"
@@ -1736,7 +1736,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/{imageGenId}/{fileNameId}": {
             "get": {
-                "operationId": "image_generation-get-image",
+                "operationId": "text2_image_api-get-image",
                 "summary": "Get one image of a generation",
                 "tags": [
                     "image_generation"
@@ -1886,7 +1886,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/cancel_generation": {
             "post": {
-                "operationId": "image_generation-cancel-generation",
+                "operationId": "text2_image_api-cancel-generation",
                 "summary": "Cancel image generation",
                 "description": "Does not need bruteforce protection since we respond with success anyways (In theory bruteforce may be possible by a response timing attack but the attacker won't gain access to the generation since its deleted during the attack.)",
                 "tags": [
@@ -2012,7 +2012,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/visibility/{imageGenId}": {
             "post": {
-                "operationId": "image_generation-set-visibility-of-image-files",
+                "operationId": "text2_image_api-set-visibility-of-image-files",
                 "summary": "Set visibility of images in one generation",
                 "tags": [
                     "image_generation"
@@ -2217,7 +2217,7 @@
         },
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/notify/{imageGenId}": {
             "post": {
-                "operationId": "image_generation-notify-when-ready",
+                "operationId": "text2_image_api-notify-when-ready",
                 "summary": "Notify when image generation is ready",
                 "description": "Does not need bruteforce protection since we respond with success anyways as we don't want to keep the front-end waiting. However, we still use rate limiting to prevent timing attacks.",
                 "tags": [
