@@ -26,9 +26,9 @@
 						<ArrowLeftIcon v-else />
 					</template>
 				</NcButton>
-				<h2 v-if="selectedTaskType">
+				<h3 v-if="selectedTaskType">
 					{{ t('assistant', 'Previous "{taskTypeName}" tasks', { taskTypeName: selectedTaskType.name }) }}
-				</h2>
+				</h3>
 			</div>
 			<TaskList
 				class="history--list"
@@ -444,7 +444,8 @@ export default {
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			h2 {
+			h3 {
+				margin-top: 0px;
 				margin-bottom: 0px;
 			}
 		}
