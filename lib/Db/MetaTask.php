@@ -103,6 +103,9 @@ class MetaTask extends Entity implements \JsonSerializable {
 	 * @return array
 	 */
 	public function getInputsAsArray(): array {
+		if ($this->inputs === null) {
+			return [];
+		}
 		return json_decode($this->inputs, true) ?? [];
 	}
 }
