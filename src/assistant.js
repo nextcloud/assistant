@@ -45,7 +45,8 @@ export async function openAssistantTextProcessingForm(params) {
  * @param {string} params.appId the scheduling app id
  * @param {string} params.identifier the task identifier
  * @param {string} params.taskType the text processing task type class
- * @param {string} params.input optional initial input text
+ * @param {string} params.input DEPRECATED optional initial input text
+ * @param {object} params.inputs optional initial named inputs
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
  * @param {boolean} params.closeOnResult If true, the modal will be closed when getting a sync result
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form (only if closeOnResult is false)
@@ -53,7 +54,7 @@ export async function openAssistantTextProcessingForm(params) {
  * @return {Promise<unknown>}
  */
 export async function openAssistantForm({
-	appId, identifier = '', taskType = null, input = '',
+	appId, identifier = '', taskType = null, input = '', inputs = {},
 	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined, useMetaTasks = true,
 }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
@@ -73,7 +74,7 @@ export async function openAssistantForm({
 		const view = new View({
 			propsData: {
 				isInsideViewer,
-				inputs: { prompt: input },
+				inputs: input ? { prompt: input } : inputs,
 				selectedTaskTypeId,
 				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,

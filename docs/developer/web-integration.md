@@ -30,7 +30,8 @@ It accepts one parameter which is an object that can contain those keys:
 * appId: [string, mandatory] app id of the app currently displayed
 * identifier: [string, optional, default: ''] the task identifier (if the task is scheduled, this helps to identify the task when receiving the "task finished" event in the backend)
 * taskType: [string, optional, default: last used task type] initially selected task type. It can be a text processing task type class or `speech-to-text` or `OCP\TextToImage\Task`
-* input: [string, optional, default: ''] initial input prompt
+* input: [string, optional, default: '', DEPRECATED] initial input prompt (for task types that only require a prompt)
+* inputs: [object, optional, default: {}] initial inputs (specific to each task type)
 * isInsideViewer: [boolean, optional, default: false] should be true if this function is called while the Viewer is displayed
 * closeOnResult: [boolean, optional, default: false] If true, the modal will be closed after running a synchronous task and getting its result
 * actionButtons: [array, optional, default: empty list] List of extra buttons to show in the assistant result form (only used if closeOnResult is false)
@@ -65,7 +66,7 @@ OCA.Assistant.openAssistantForm({
 	appId: 'my_app_id',
 	identifier: 'my custom identifier',
 	taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
-	input: 'count to 3',
+	inputs: { prompt: 'count to 3' },
 	actionButtons: [
 		{
 			label: 'Label 1',
