@@ -1,8 +1,7 @@
 <template>
 	<NcContent app-name="assistant">
 		<NcAppContent>
-			<div v-if="task?.id"
-				class="assistant-wrapper">
+			<div class="assistant-wrapper">
 				<RunningEmptyContent
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
@@ -48,7 +47,7 @@ import {
 import { STATUS } from '../constants.js'
 
 export default {
-	name: 'TaskResultPage',
+	name: 'AssistantPage',
 
 	components: {
 		ScheduledEmptyContent,
@@ -81,6 +80,7 @@ export default {
 	},
 
 	mounted() {
+		console.debug('[Assistant] task', this.task)
 	},
 
 	methods: {

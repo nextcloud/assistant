@@ -11,6 +11,7 @@ return [
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 
 		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{metaTaskId}', 'verb' => 'GET'],
+		['name' => 'assistant#getAssistantStandalonePage', 'url' => '/', 'verb' => 'GET'],
 
 		['name' => 'Text2Image#showGenerationPage', 'url' => '/i/{imageGenId}', 'verb' => 'GET'],
 		['name' => 'Text2Image#getPromptHistory', 'url' => '/i/data/prompt_history', 'verb' => 'GET'],
