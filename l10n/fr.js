@@ -94,6 +94,7 @@ OC.L10N.register(
     "Selected Audio File:" : "Fichier audio sélectionné :",
     "Choose audio File" : "Choisir un fichier audio",
     "Nothing yet" : "Rien pour l'instant",
+    "You have not submitted any \"{taskTypeName}\" task yet" : "Vous n’avez soumis encore aucune tâche « {taskTypeName} »",
     "Copy result" : "Copier le résultat",
     "Cancel" : "Annuler",
     "Delete" : "Supprimer",
