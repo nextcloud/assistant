@@ -437,14 +437,14 @@ class Text2ImageHelperService {
 		try {
 			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
 		} catch (Exception | DoesNotExistException | MultipleObjectsReturnedException $e) {
-			$this->logger->warning('Image generation being deleted not in db: ' . $e->getMessage(), ['app' => Application::APP_ID]);
+			$this->logger->info('Image generation being deleted not in db: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 			$imageGeneration = null;
 		}
 
 		if ($imageGeneration) {
 			// Make sure the user is associated with the image generation
 			if ($imageGeneration->getUserId() !== $userId) {
-				$this->logger->warning('User attempted deleting another user\'s image generation!', ['app' => Application::APP_ID]);
+				$this->logger->info('A user attempted deleting another user\'s image generation', ['app' => Application::APP_ID]);
 				return;
 			}
 
@@ -452,7 +452,7 @@ class Text2ImageHelperService {
 			try {
 				$task = $this->textToImageManager->getUserTasksByApp($userId, Application::APP_ID, $imageGenId);
 			} catch (RuntimeException $e) {
-				$this->logger->debug('Task cancellation failed or it does not exist: ' . $e->getMessage(), ['app' => Application::APP_ID]);
+				$this->logger->debug('Task cancellation failed or task does not exist: ' . $e->getMessage(), ['app' => Application::APP_ID]);
 				$task = [];
 			}
 
@@ -492,14 +492,14 @@ class Text2ImageHelperService {
 		try {
 			$this->imageGenerationMapper->deleteImageGeneration($imageGenId);
 		} catch (Exception $e) {
-			$this->logger->warning('Deleting image generation db entry failed: ' . $e->getMessage());
+			$this->logger->info('Deleting image generation db entry failed: ' . $e->getMessage());
 		}
 
 		// Add the generation to the stale generation table:
 		try {
 			$this->staleGenerationMapper->createStaleGeneration($imageGenId);
 		} catch (Exception $e) {
-			$this->logger->warning('Adding stale generation to db failed: ' . $e->getMessage());
+			$this->logger->info('Adding stale generation to db failed: ' . $e->getMessage());
 		}
 
 	}
@@ -525,7 +525,7 @@ class Text2ImageHelperService {
 		}
 
 		if ($imageGeneration->getUserId() !== $userId) {
-			$this->logger->warning('User attempted deleting another user\'s image generation!');
+			$this->logger->info('User attempted deleting another user\'s image generation');
 			throw new BaseException('Unauthorized.', Http::STATUS_UNAUTHORIZED);
 		}
 		/** @var array $fileVisStatus */
@@ -567,7 +567,7 @@ class Text2ImageHelperService {
 		}
 
 		if ($imageGeneration->getUserId() !== $userId) {
-			$this->logger->warning('User attempted enabling notifications of another user\'s image generation!');
+			$this->logger->info('A user attempted enabling notifications of another user\'s image generation');
 			throw new BaseException('Unauthorized.', Http::STATUS_UNAUTHORIZED);
 		}
 
