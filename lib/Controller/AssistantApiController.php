@@ -170,7 +170,7 @@ class AssistantApiController extends OCSController {
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['text_processing'])]
 	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $identifier): DataResponse {
 		if ($this->userId === null) {
-			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
+			return new DataResponse('Unknown user', Http::STATUS_BAD_REQUEST);
 		}
 
 		try {
