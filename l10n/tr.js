@@ -146,6 +146,7 @@ OC.L10N.register(
     "Choose audio file in your storage" : "Depolama alanınızdaki ses dosyasını seçin",
     "Choose audio File" : "Ses dosyasını seçin",
     "Nothing yet" : "Henüz bir şey yok",
+    "You have not submitted any \"{taskTypeName}\" task yet" : "Henüz bir \"{taskTypeName}\" görevi göndermemişsiniz",
     "Copy result" : "Sonucu kopyala",
     "Cancel" : "İptal",
     "Delete" : "Sil",
