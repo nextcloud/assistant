@@ -10,7 +10,8 @@ use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
-use OCP\TextProcessing\IManager;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\Util;
 
 /**
@@ -20,7 +21,7 @@ class FreePromptReferenceListener implements IEventListener {
 	public function __construct(
 		private IConfig $config,
 		private ?string $userId,
-		private IManager $textProcessingManager,
+		private ITaskProcessingManager $taskProcessingManager,
 	) {
 
 	}
@@ -35,7 +36,9 @@ class FreePromptReferenceListener implements IEventListener {
 			$this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1') {
 
 			// Double check that at least one provider is registered
-			if ($this->textProcessingManager->hasProviders()) {
+			$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+			$freePromptTaskTypeAvailable = array_key_exists(TextToText::ID, $availableTaskTypes);
+			if ($freePromptTaskTypeAvailable) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-textGenerationReference');
 			}
 		}

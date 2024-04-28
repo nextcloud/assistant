@@ -1,0 +1,301 @@
+<template>
+	<div class="media-list-field">
+		<div ref="copyContainer" class="label-row">
+			<label class="field-label">
+				{{ field.name }}
+			</label>
+			<label class="field-label">
+				{{ field.description }}
+			</label>
+		</div>
+		<div v-if="!isOutput"
+			class="select-media">
+			<UploadInputFileButton
+				:accept="acceptedMimeTypes"
+				:label="t('assistant', 'Upload files')"
+				:multiple="true"
+				@files-uploaded="onFilesUploaded" />
+			<ChooseInputFileButton
+				:label="t('assistant', 'Choose files')"
+				:picker-title="t('assistant', 'Choose one or multiple files')"
+				:accept="acceptedMimeTypes"
+				:multiple="true"
+				@files-chosen="onFilesChosen" />
+			<AudioRecorderWrapper v-if="isAudioList"
+				:inline="true"
+				@new-recording="onNewRecording" />
+		</div>
+		<div v-if="value !== null"
+			class="media-list">
+			<!--div v-for="fileId in value"
+				:key="'f' + fileId">
+				FILE: {{ fileId }}
+			</div-->
+			<div v-for="fileId in value"
+				:key="fileId"
+				class="media-list--item">
+				<component :is="displayComponent"
+					:file-id="fileId"
+					:is-output="isOutput"
+					@delete="onDelete(fileId)" />
+				<div class="buttons">
+					<NcButton v-if="!isOutput"
+						:aria-label="t('assistant', 'Remove this media')"
+						@click="onDelete(fileId)">
+						<template #icon>
+							<DeleteIcon />
+						</template>
+					</NcButton>
+					<a v-if="isOutput"
+						:href="getDownloadUrl(fileId)"
+						target="_blank">
+						<NcButton :title="t('assistant', 'Download this media')">
+							<template #icon>
+								<DownloadIcon />
+							</template>
+						</NcButton>
+					</a>
+					<NcButton v-if="isOutput"
+						:title="t('assistant', 'Share this media')"
+						@click="onShare(fileId)">
+						<template #icon>
+							<ShareVariantIcon />
+						</template>
+					</NcButton>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+import DownloadIcon from 'vue-material-design-icons/Download.vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
+
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import AudioDisplay from './AudioDisplay.vue'
+import ImageDisplay from './ImageDisplay.vue'
+import FileDisplay from './FileDisplay.vue'
+import ChooseInputFileButton from './ChooseInputFileButton.vue'
+import UploadInputFileButton from './UploadInputFileButton.vue'
+import AudioRecorderWrapper from './AudioRecorderWrapper.vue'
+
+import { generateOcsUrl, generateUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import VueClipboard from 'vue-clipboard2'
+import Vue from 'vue'
+
+import {
+	SHAPE_TYPE_NAMES,
+	VALID_VIDEO_MIME_TYPES,
+	VALID_IMAGE_MIME_TYPES,
+	VALID_AUDIO_MIME_TYPES,
+} from '../../constants.js'
+
+Vue.use(VueClipboard)
+
+export default {
+	name: 'ListOfMediaField',
+
+	components: {
+		AudioRecorderWrapper,
+		ChooseInputFileButton,
+		UploadInputFileButton,
+		DeleteIcon,
+		DownloadIcon,
+		ShareVariantIcon,
+		NcButton,
+	},
+
+	inject: [
+		'providedCurrentTaskId',
+	],
+
+	props: {
+		fieldKey: {
+			type: String,
+			required: true,
+		},
+		value: {
+			type: [Array, null],
+			default: () => [],
+		},
+		field: {
+			type: Object,
+			required: true,
+		},
+		isOutput: {
+			type: Boolean,
+			default: false,
+		},
+	},
+
+	emits: [
+		'update:value',
+	],
+
+	data() {
+		return {
+		}
+	},
+
+	computed: {
+		isAudioList() {
+			return this.field.type === SHAPE_TYPE_NAMES.ListOfAudios
+		},
+		displayComponent() {
+			if (this.field.type === SHAPE_TYPE_NAMES.ListOfImages) {
+				return ImageDisplay
+			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfAudios) {
+				return AudioDisplay
+			/*
+			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfVideo) {
+				return VideoDisplay
+			*/
+			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfFiles) {
+				return FileDisplay
+			}
+			return null
+		},
+		acceptedMimeTypes() {
+			if (this.field.type === SHAPE_TYPE_NAMES.ListOfImages) {
+				return VALID_IMAGE_MIME_TYPES
+			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfAudios) {
+				return VALID_AUDIO_MIME_TYPES
+			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfVideos) {
+				return VALID_VIDEO_MIME_TYPES
+			}
+			return undefined
+		},
+	},
+
+	watch: {
+	},
+
+	mounted() {
+	},
+
+	methods: {
+		onFilesChosen(files) {
+			const fileIds = files.map(f => f.fileid)
+
+			if (this.value === null) {
+				this.$emit('update:value', fileIds)
+			} else {
+				this.$emit('update:value', [...this.value, ...fileIds])
+			}
+		},
+		onFilesUploaded(files) {
+			const fileIds = files.map(f => f.fileId)
+			if (this.value === null) {
+				this.$emit('update:value', fileIds)
+			} else {
+				this.$emit('update:value', [...this.value, ...fileIds])
+			}
+		},
+		onNewRecording(blob) {
+			const url = generateOcsUrl('/apps/assistant/api/v1/input-file')
+			const formData = new FormData()
+			formData.append('data', blob)
+			formData.append('extension', 'mp3')
+			axios.post(url, formData).then(response => {
+				const fileId = response.data.ocs.data.fileId
+				if (this.value === null) {
+					this.$emit('update:value', [fileId])
+				} else {
+					this.$emit('update:value', [...this.value, fileId])
+				}
+			})
+		},
+		onDelete(fileId) {
+			if (this.value !== null) {
+				this.$emit('update:value', this.value.filter(fid => fid !== fileId))
+			}
+		},
+		getDownloadUrl(fileId) {
+			return generateOcsUrl('taskprocessing/tasks/{taskId}/file/{fileId}', {
+				taskId: this.providedCurrentTaskId(),
+				fileId,
+			})
+		},
+		onShare(fileId) {
+			if (this.value !== null) {
+				const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/share', {
+					taskId: this.providedCurrentTaskId(),
+					fileId,
+				})
+				axios.post(url).then(response => {
+					const shareToken = response.data.ocs.data.shareToken
+					const shareUrl = window.location.protocol + '//' + window.location.host + generateUrl('/s/{shareToken}', { shareToken })
+					console.debug('aaaa share link', shareUrl)
+					const message = t('assistant', 'Output file share link copied to clipboard')
+					this.copyString(shareUrl, message)
+				}).catch(error => {
+					console.error(error)
+				})
+			}
+		},
+		async copyString(content, message) {
+			try {
+				const container = this.$refs.copyContainer
+				await this.$copyText(content, container)
+				showSuccess(message)
+			} catch (error) {
+				console.error(error)
+				showError(t('assistant', 'Could not copy to clipboard'))
+			}
+		},
+	},
+}
+</script>
+
+<style lang="scss">
+.media-list-field {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+
+	.label-row {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+		.field-label {
+			font-weight: bold;
+		}
+	}
+
+	.select-media {
+		width: 100%;
+		display: flex;
+		align-items: start;
+		gap: 8px;
+	}
+
+	.media-list {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+
+		&--item {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+
+			.buttons {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+				justify-content: center;
+			}
+		}
+	}
+}
+</style>

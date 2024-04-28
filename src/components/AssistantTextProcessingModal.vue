@@ -19,6 +19,7 @@
 				<RunningEmptyContent
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
+					:progress="progress"
 					@cancel="onCancelNSchedule" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
@@ -28,12 +29,12 @@
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
+					:selected-task-id="selectedTaskId"
 					:inputs="inputs"
-					:output="output"
+					:outputs="outputs"
 					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
 					:action-buttons="actionButtons"
-					@submit="onSubmit"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="$emit('try-again', $event)"
@@ -77,12 +78,16 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		selectedTaskId: {
+			type: [Number, null],
+			default: null,
+		},
 		inputs: {
 			type: Object,
 			default: () => {},
 		},
-		output: {
-			type: [String, null],
+		outputs: {
+			type: [Object, null],
 			default: null,
 		},
 		selectedTaskTypeId: {
@@ -92,6 +97,10 @@ export default {
 		showSyncTaskRunning: {
 			type: Boolean,
 			default: false,
+		},
+		progress: {
+			type: [Number, null],
+			default: null,
 		},
 		showScheduleConfirmation: {
 			type: Boolean,
@@ -120,9 +129,8 @@ export default {
 		}
 	},
 	computed: {
-		// TODO: Fix this to support multiple inputs
 		shortInput() {
-			const input = this.inputs[0] ?? ''
+			const input = this.inputs.input ?? this.inputs.sourceMaterial ?? ''
 			if (input.length <= 200) {
 				return input
 			}
@@ -130,6 +138,7 @@ export default {
 		},
 	},
 	mounted() {
+		console.debug('aaaa MODAL outputsss', this.outputs)
 		if (this.isInsideViewer) {
 			const elem = this.$refs.modal_content
 			emit('viewer:trapElements:changed', elem)
@@ -139,10 +148,6 @@ export default {
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')
-		},
-		onSubmit(params) {
-			// this.show = false
-			this.$emit('submit', params)
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)

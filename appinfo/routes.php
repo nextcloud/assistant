@@ -10,7 +10,7 @@ return [
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 
-		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{metaTaskId}', 'verb' => 'GET'],
+		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{taskId}', 'verb' => 'GET'],
 		['name' => 'assistant#getAssistantStandalonePage', 'url' => '/', 'verb' => 'GET'],
 
 		['name' => 'Text2Image#showGenerationPage', 'url' => '/i/{imageGenId}', 'verb' => 'GET'],
@@ -38,14 +38,14 @@ return [
 	],
 	'ocs' => [
 		['name' => 'assistantApi#getAvailableTaskTypes', 'url' => '/api/{apiVersion}/task-types', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#getAssistantTask', 'url' => '/api/{apiVersion}/task/{metaTaskId}', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#getUserTasks', 'url' => '/api/{apiVersion}/tasks', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#runTextProcessingTask', 'url' => '/api/{apiVersion}/task/run', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#scheduleTextProcessingTask', 'url' => '/api/{apiVersion}/task/schedule', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#runOrScheduleTextProcessingTask', 'url' => '/api/{apiVersion}/task/run-or-schedule', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#parseTextFromFile', 'url' => '/api/{apiVersion}/parse-file', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#deleteTask', 'url' => '/api/{apiVersion}/task/{metaTaskId}', 'verb' => 'DELETE', 'requirements' => $requirements],
-		['name' => 'assistantApi#cancelTask', 'url' => '/api/{apiVersion}/task/cancel/{metaTaskId}', 'verb' => 'PUT', 'requirements' => $requirements],
+		['name' => 'assistantApi#notifyWhenReady', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/notify', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#uploadInputFile', 'url' => '/api/{apiVersion}/input-file', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#displayUserFile', 'url' => '/api/{apiVersion}/file/{fileId}/display', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#getUserFileInfo', 'url' => '/api/{apiVersion}/file/{fileId}/info', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#shareOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/file/{fileId}/share', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#getOutputFilePreview', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview', 'verb' => 'GET', 'requirements' => $requirements],
 
 		['name' => 'Text2ImageApi#processPrompt', 'url' => '/api/{apiVersion}/i/process_prompt', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'Text2ImageApi#getGenerationInfo', 'url' => '/api/{apiVersion}/i/info/{imageGenId}', 'verb' => 'GET', 'requirements' => $requirements],

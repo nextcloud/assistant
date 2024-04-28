@@ -1,33 +1,7 @@
 <template>
-	<div class="stt-input-form">
-		<div class="form-wrapper">
-			<div class="line justified">
-				<div class="radios">
-					<NcCheckboxRadioSwitch
-						:button-variant="true"
-						:checked="mode"
-						type="radio"
-						value="record"
-						button-variant-grouped="horizontal"
-						name="mode"
-						@update:checked="onModeChanged">
-						{{ t('assistant', 'Record Audio') }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						:button-variant="true"
-						:checked="mode"
-						type="radio"
-						value="choose"
-						button-variant-grouped="horizontal"
-						name="mode"
-						@update:checked="onModeChanged">
-						{{ t('assistant', 'Choose Audio File') }}
-					</NcCheckboxRadioSwitch>
-				</div>
-			</div>
-		</div>
-		<div v-show="mode === 'record'"
-			class="recorder-wrapper">
+	<div class="assistant-audio-recorder">
+		<div class="recorder-wrapper"
+			:class="{horizontal: inline}">
 			<NcButton v-if="audioData !== null"
 				:aria-label="t('assistant', 'Reset recorded audio')"
 				@click="resetRecording">
@@ -53,6 +27,7 @@
 				{{ t('assistant', 'Stop recording') }}
 			</NcButton>
 			<audio-recorder v-if="!resettingRecorder"
+				v-show="isRecording"
 				ref="recorder"
 				class="recorder"
 				:class="{'no-audio': audioData === null, 'with-audio': audioData !== null}"
@@ -64,21 +39,6 @@
 				:after-recording="onRecordEnds"
 				mode="minimal" />
 		</div>
-		<div v-show="mode === 'choose'">
-			<div class="line">
-				{{ audioFilePath == null
-					? t('assistant', 'No audio file selected')
-					: t('assistant', 'Selected Audio File:') + " " + audioFilePath.split('/').pop() }}
-			</div>
-			<div class="line justified">
-				<NcButton
-					:disabled="loading"
-					:aria-label="t('assistant', 'Choose audio file in your storage')"
-					@click="onChooseButtonClick">
-					{{ t('assistant', 'Choose audio File') }}
-				</NcButton>
-			</div>
-		</div>
 	</div>
 </template>
 
@@ -88,104 +48,63 @@ import StopIcon from 'vue-material-design-icons/Stop.vue'
 import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import VueAudioRecorder from 'vue2-audio-recorder'
-
-import { getFilePickerBuilder } from '@nextcloud/dialogs'
 
 import Vue from 'vue'
 Vue.use(VueAudioRecorder)
 
-const VALID_MIME_TYPES = [
-	'audio/mpeg',
-	'audio/mp4',
-	'audio/ogg',
-	'audio/wav',
-	'audio/x-wav',
-	'audio/webm',
-	'audio/opus',
-	'audio/flac',
-	'audio/vorbis',
-	'audio/m4b',
-]
-
-const picker = getFilePickerBuilder(t('assistant', 'Choose Audio File'))
-	.setMimeTypeFilter(VALID_MIME_TYPES)
-	.setMultiSelect(false)
-	.allowDirectories(false)
-	.setType(1)
-	.build()
-
 export default {
-	name: 'SpeechToTextInputForm',
+	name: 'AudioRecorderWrapper',
 
 	components: {
 		NcButton,
-		NcCheckboxRadioSwitch,
 		UndoIcon,
 		MicrophoneIcon,
 		StopIcon,
 	},
 
 	props: {
-		loading: {
+		inline: {
 			type: Boolean,
 			default: false,
 		},
-		mode: {
-			type: String,
-			default: 'record',
-		},
-		audioData: {
-			type: [Blob, null],
-			default: null,
-		},
-		audioFilePath: {
-			type: [String, null],
-			default: null,
-		},
 	},
+
+	emits: [
+		'new-recording',
+	],
 
 	data() {
 		return {
+			audioData: null,
 			isRecording: false,
 			resettingRecorder: false,
 		}
 	},
 
 	mounted() {
-		const recordButton = this.$refs.startRecordingButton
-		recordButton?.$el?.focus()
+		// const recordButton = this.$refs.startRecordingButton
+		// recordButton?.$el?.focus()
 	},
 
 	methods: {
 		resetAudioState() {
-			this.$emit('update:audio-data', null)
-			this.$emit('update:audio-file-path', null)
 			this.isRecording = false
 		},
 
-		onModeChanged(newValue) {
-			if (this.isRecording) {
-				this.stopRecording()
-			}
-			this.$emit('update:mode', newValue)
-		},
-
-		async onChooseButtonClick() {
-			this.$emit('update:audio-file-path', await picker.pick())
-		},
-
 		resetRecording() {
-			this.$emit('update:audio-data', null)
+			this.audioData = null
+			// this.$emit('update:audio-data', null)
 			// trick to remove the recorder and re-render it so the data is gone and its state is fresh
 			this.resettingRecorder = true
 			this.$nextTick(() => {
 				this.resettingRecorder = false
+				/*
 				this.$nextTick(() => {
 					const recordButton = this.$refs.startRecordingButton
 					recordButton?.$el?.focus()
 				})
+				*/
 			})
 		},
 
@@ -208,57 +127,36 @@ export default {
 		async onRecordEnds(e) {
 			this.isRecording = false
 			try {
-				this.$emit('update:audio-data', e.blob)
+				this.$emit('new-recording', e.blob)
 			} catch (error) {
 				console.error('Recording error:', error)
-				this.$emit('update:audio-data', null)
+				this.$emit('new-recording', null)
 			}
+			this.resetRecording()
 		},
 	},
 }
 </script>
 
 <style scoped lang="scss">
-.stt-input-form {
+.assistant-audio-recorder {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	//padding: 12px 16px 16px 16px;
-
-	.form-wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-		margin: 8px 0;
-		.radios {
-			display: flex;
-
-			:deep(.checkbox-radio-switch__text) {
-				flex: unset !important;
-			}
-		}
-	}
-
-	.line {
-		display: flex;
-		align-items: center;
-		margin-top: 8px;
-		width: 100%;
-		&.justified {
-			justify-content: center;
-		}
-	}
 
 	.recorder-wrapper {
-		margin: 12px 0 12px 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		&.horizontal {
+			flex-direction: row;
+		}
 	}
 
 	:deep(.recorder) {
+		max-width: 150px;
+		height: 44px;
 		&.no-audio {
 			.ar-player {
 				&-actions {
@@ -270,11 +168,14 @@ export default {
 		.ar-recorder {
 			display: none;
 		}
-		margin-top: 2px;
 		background-color: var(--color-main-background) !important;
 		box-shadow: unset !important;
 		.ar-content {
 			padding: 0;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 		.ar-content * {
 			color: var(--color-main-text) !important;
@@ -285,12 +186,13 @@ export default {
 			border: 1px solid var(--color-border) !important;
 		}
 		.ar-recorder__duration {
-			margin: 16px 0 16px 0;
+			margin: 0 0 0 0;
 		}
 		.ar-recorder__time-limit {
 			position: unset !important;
 		}
 		.ar-player {
+			display: none;
 			&-bar {
 				border: 1px solid var(--color-border) !important;
 			}

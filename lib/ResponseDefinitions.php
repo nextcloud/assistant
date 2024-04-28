@@ -27,10 +27,20 @@ declare(strict_types=1);
 namespace OCA\Assistant;
 
 /**
+ * @psalm-type AssistantShapeDescriptor = array{
+ *     name: string,
+ *     description: string,
+ *     type: int,
+ * }
+ *
  * @psalm-type AssistantTaskType = array{
  *     id: string,
  *     name: string,
  *     description: string,
+ *     inputShape: array<AssistantShapeDescriptor>,
+ *     optionalInputShape: array<AssistantShapeDescriptor>,
+ *     outputShape: array<AssistantShapeDescriptor>,
+ *     optionalOutputShape: array<AssistantShapeDescriptor>,
  * }
  *
  * @psalm-type AssistantTask = array{

@@ -46,31 +46,22 @@
 				class="task-description">
 				{{ selectedTaskType.description }}
 			</span>
-			<AssistantFormInputs
+			<AssistantFormInputs v-if="selectedTaskType"
 				:inputs.sync="myInputs"
-				:selected-task-type-id="mySelectedTaskTypeId" />
-			<div v-if="myOutput !== null"
+				:selected-task-type="selectedTaskType" />
+			<div v-if="hasOutput"
 				class="output">
 				<label
 					for="assistant-output"
 					class="input-label">
 					{{ t('assistant', 'Result') }}
 				</label>
-				<div v-if="mySelectedTaskTypeId === 'OCP\\TextToImage\\Task'"
-					ref="output">
-					<a :href="formattedOutput" class="external">{{ formattedOutput }}</a>
-					<Text2ImageDisplay
-						:image-gen-id="myOutput" />
-				</div>
-				<NcRichContenteditable v-else
-					id="assistant-output"
-					ref="output"
-					:value.sync="myOutput"
-					class="editable-output"
-					:multiline="true"
-					:disabled="loading"
-					:placeholder="t('assistant', 'Result')"
-					:link-autocomplete="false" />
+				<TaskTypeFields
+					class="output-fields"
+					:is-output="true"
+					:shape="selectedTaskType.outputShape"
+					:optional-shape="selectedTaskType.optionalOutputShape ?? null"
+					:values.sync="myOutputs" />
 				<NcNoteCard v-if="outputEqualsInput"
 					class="warning-note"
 					type="warning">
@@ -105,24 +96,12 @@
 						:type="submitButtonType"
 						class="submit-button"
 						:disabled="!canSubmit"
-						:title="t('assistant', 'Run a task')"
+						:title="syncSubmitButtonTitle"
 						@click="onSyncSubmit">
 						{{ syncSubmitButtonLabel }}
 						<template #icon>
 							<NcLoadingIcon v-if="loading" />
 							<CreationIcon v-else />
-						</template>
-					</NcButton>
-					<NcButton
-						v-if="hasOutput"
-						type="primary"
-						class="copy-button"
-						:title="t('assistant', 'Copy output')"
-						@click="onCopy">
-						{{ t('assistant', 'Copy') }}
-						<template #icon>
-							<ClipboardCheckOutlineIcon v-if="copied" />
-							<ContentCopyIcon v-else />
 						</template>
 					</NcButton>
 					<NcButton
@@ -144,8 +123,6 @@
 
 <script>
 import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
-import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
-import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
 import HistoryIcon from 'vue-material-design-icons/History.vue'
 
@@ -153,54 +130,58 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
-import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import NoProviderEmptyContent from './NoProviderEmptyContent.vue'
 import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
-import Text2ImageDisplay from './Text2Image/Text2ImageDisplay.vue'
+import TaskTypeFields from './fields/TaskTypeFields.vue'
 
 import axios from '@nextcloud/axios'
-import { showError } from '@nextcloud/dialogs'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
 
 Vue.use(VueClipboard)
 
-const FREE_PROMPT_TASK_TYPE_ID = 'OCP\\TextProcessing\\FreePromptTaskType'
+const FREE_PROMPT_TASK_TYPE_ID = 'core:text2text'
 
 export default {
 	name: 'AssistantTextProcessingForm',
 	components: {
+		TaskTypeFields,
 		NoProviderEmptyContent,
 		TaskList,
-		Text2ImageDisplay,
 		TaskTypeSelect,
 		NcButton,
-		NcRichContenteditable,
 		NcLoadingIcon,
 		NcIconSvgWrapper,
 		CreationIcon,
-		ContentCopyIcon,
-		ClipboardCheckOutlineIcon,
 		HistoryIcon,
 		ArrowLeftIcon,
 		NcNoteCard,
 		AssistantFormInputs,
+	},
+	provide() {
+		return {
+			providedCurrentTaskId: () => this.selectedTaskId,
+		}
 	},
 	props: {
 		loading: {
 			type: Boolean,
 			default: false,
 		},
+		selectedTaskId: {
+			type: [Number, null],
+			default: null,
+		},
 		inputs: {
 			type: Object,
 			default: () => {},
 		},
-		output: {
-			type: [String, null],
+		outputs: {
+			type: [Object, null],
 			default: null,
 		},
 		selectedTaskTypeId: {
@@ -214,7 +195,6 @@ export default {
 	},
 	emits: [
 		'sync-submit',
-		'submit',
 		'action-button-clicked',
 		'try-again',
 		'load-task',
@@ -222,10 +202,9 @@ export default {
 	data() {
 		return {
 			myInputs: this.inputs,
-			myOutput: this.output,
+			myOutputs: this.outputs,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
-			copied: false,
 			showHistory: false,
 			loadingTaskTypes: false,
 			historyLoading: false,
@@ -236,6 +215,7 @@ export default {
 			if (this.mySelectedTaskTypeId === null) {
 				return null
 			}
+			console.debug('aaaaa ttt', this.mySelectedTaskTypeId, this.taskTypes)
 			return this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 		},
 		submitButtonType() {
@@ -250,7 +230,17 @@ export default {
 					|| (this.myInputs.sttMode === 'choose' && this.myInputs.audioFilePath !== null)
 			}
 			// otherwise, check that none of the properties of myInputs are empty
-			return Object.values(this.myInputs).every(v => {
+			console.debug('[assistant] canSubmit', this.myInputs)
+			if (Object.keys(this.myInputs).length === 0) {
+				return false
+			}
+			const taskType = this.selectedTaskType
+			return Object.keys(this.myInputs).every(k => {
+				// optional input shape is not checked
+				if (!Object.keys(taskType.inputShape).includes(k)) {
+					return true
+				}
+				const v = this.myInputs[k]
 				return (typeof v === 'string' && !!v?.trim())
 					|| (typeof v === 'boolean')
 					|| (typeof v === 'number')
@@ -265,14 +255,24 @@ export default {
 					? t('assistant', 'Send request')
 					: this.selectedTaskType.name
 		},
+		syncSubmitButtonTitle() {
+			return this.hasOutput
+				? t('assistant', 'Launch this task again')
+				: t('assistant', 'Launch a task')
+		},
 		hasInitialOutput() {
-			return !!this.output?.trim()
+			return !!this.outputs?.output?.trim()
 		},
 		hasOutput() {
-			return !!this.myOutput?.trim()
+			return this.myOutputs
+				&& Object.keys(this.myOutputs).length > 0
+				&& Object.values(this.myOutputs).every(v => v !== null)
 		},
 		outputEqualsInput() {
-			return this.hasInitialOutput && this.output?.trim() === this.inputs.prompt?.trim()
+			if (typeof this.inputs.input === 'string' && typeof this.outputs.output === 'string') {
+				return this.hasInitialOutput && this.outputs?.output?.trim() === this.inputs.input?.trim()
+			}
+			return false
 		},
 		formattedOutput() {
 			if (this.mySelectedTaskTypeId === 'OCP\\TextToImage\\Task') {
@@ -285,15 +285,20 @@ export default {
 		},
 	},
 	watch: {
-		output(newVal) {
-			this.myOutput = newVal
+		outputs(newVal) {
+			console.debug('update output in proc form', newVal)
+			this.myOutputs = newVal
 		},
 		inputs(newVal) {
 			this.myInputs = newVal
 		},
+		mySelectedTaskTypeId(newVal) {
+			this.myOutputs = {}
+		},
 	},
 	mounted() {
 		this.getTaskTypes()
+		console.debug('aaaa myoutputsss', this.myOutputs)
 	},
 	methods: {
 		getTaskTypes() {
@@ -310,29 +315,13 @@ export default {
 				})
 		},
 		onTaskTypeUserChange() {
-			this.myOutput = null
-		},
-		onSubmit() {
-			this.$emit('submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
+			this.myOutputs = null
 		},
 		onSyncSubmit() {
 			this.$emit('sync-submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
-		async onCopy() {
-			try {
-				const container = this.$refs.output.$el ?? this.$refs.output
-				await this.$copyText(this.formattedOutput, container)
-				this.copied = true
-				setTimeout(() => {
-					this.copied = false
-				}, 5000)
-			} catch (error) {
-				console.error(error)
-				showError(t('assistant', 'Result could not be copied to clipboard'))
-			}
-		},
 		onActionButtonClick(button) {
-			this.$emit('action-button-clicked', { button, output: this.formattedOutput })
+			this.$emit('action-button-clicked', { button, output: this.myOutputs })
 		},
 		onHistoryTryAgain(e) {
 			this.showHistory = false
@@ -357,6 +346,10 @@ export default {
 	overflow-y: auto;
 	overflow-x: hidden;
 
+	h2 {
+		margin-top: 0;
+	}
+
 	.task-input-output-form {
 		display: flex;
 		flex-direction: column;
@@ -365,19 +358,10 @@ export default {
 	}
 
 	.output {
-		width: 96%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		margin-right: 16px;
-		margin-left: 16px;
-		.editable-output {
-			width: 100%;
-			:deep(.rich-contenteditable__input) {
-				max-height: 300px !important;
-			}
-		}
 
 		.warning-note {
 			align-self: normal;
@@ -386,6 +370,9 @@ export default {
 		.input-label {
 			align-self: start;
 			font-weight: bold;
+		}
+		.output-fields {
+			width: 100%;
 		}
 	}
 

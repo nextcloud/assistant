@@ -5,6 +5,7 @@
 				<RunningEmptyContent
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
+					:progress="progress"
 					@cancel="onCancelNSchedule" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
@@ -13,11 +14,11 @@
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
-					:inputs="task.inputs"
-					:output="task.output"
+					:selected-task-id="task.id"
+					:inputs="task.input"
+					:outputs="task.output"
 					:selected-task-type-id="task.taskType"
 					:loading="loading"
-					@submit="onSubmit"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
 					@load-task="onLoadTask" />
@@ -38,13 +39,11 @@ import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import {
 	scheduleTask,
-	runOrScheduleTask,
-	scheduleTtiTask,
-	runOrScheduleTtiTask,
-	runSttTask,
-	cancelCurrentSyncTask,
+	cancelTaskPolling,
+	setNotifyReady,
+	pollTask,
 } from '../assistant.js'
-import { STATUS } from '../constants.js'
+import { TASK_STATUS_STRING } from '../constants.js'
 
 export default {
 	name: 'AssistantPage',
@@ -64,6 +63,7 @@ export default {
 		return {
 			task: loadState('assistant', 'task'),
 			showSyncTaskRunning: false,
+			progress: null,
 			showScheduleConfirmation: false,
 			loading: false,
 		}
@@ -71,7 +71,7 @@ export default {
 
 	computed: {
 		shortInput() {
-			const input = this.task.inputs.prompt ?? this.task.inputs.sourceMaterial ?? ''
+			const input = this.task.input.input ?? this.task.input.sourceMaterial ?? ''
 			if (input.length <= 200) {
 				return input
 			}
@@ -85,73 +85,54 @@ export default {
 
 	methods: {
 		onCancelNSchedule() {
-			cancelCurrentSyncTask()
-			const scheduleFunction = this.task.taskType === 'OCP\\TextToImage\\Task'
-				? scheduleTtiTask
-				: scheduleTask
-			scheduleFunction(this.task.appId, this.task.identifier, this.task.taskType, this.task.inputs)
-				.then((response) => {
-					this.showSyncTaskRunning = false
-					this.showScheduleConfirmation = true
-					console.debug('scheduled task', response.data?.ocs?.data?.task)
-				})
-				.catch(error => {
-					console.error('Assistant scheduling error', error)
-					showError(t('assistant', 'Failed to schedule your task'))
-				})
-		},
-		onSubmit(data) {
-			scheduleTask(this.task.appId, this.task.identifier, data.taskTypeId, data.inputs)
-				.then((response) => {
-					this.task.inputs = data.inputs
-					this.showScheduleConfirmation = true
-					console.debug('scheduled task', response.data?.ocs?.data?.task)
-				})
-				.catch(error => {
-					console.error('Assistant scheduling error', error)
-					showError(t('assistant', 'Failed to schedule your task'))
-				})
+			cancelTaskPolling()
+			this.showScheduleConfirmation = true
+			this.showSyncTaskRunning = false
+			setNotifyReady(this.task.id)
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
-			this.task.inputs = inputs
+			this.progress = null
+			this.task.input = inputs
 			this.task.taskType = taskTypeId
-			const runOrScheduleFunction = taskTypeId === 'speech-to-text'
-				? runSttTask
-				: taskTypeId === 'OCP\\TextToImage\\Task'
-					? runOrScheduleTtiTask
-					: runOrScheduleTask
-			runOrScheduleFunction(this.task.appId, this.task.identifier, taskTypeId, inputs)
+			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs)
 				.then((response) => {
 					console.debug('Assistant SYNC result', response.data?.ocs?.data)
 					const task = response.data?.ocs?.data?.task
-					this.task.inputs = task.inputs
-					if (task.status === STATUS.successfull) {
-						this.task.output = task?.output ?? ''
-					} else if (task.status === STATUS.scheduled) {
-						this.showScheduleConfirmation = true
-					}
-					this.loading = false
-					this.showSyncTaskRunning = false
+					this.task.id = task.id
+					pollTask(task.id, this.setProgress).then(finishedTask => {
+						if (finishedTask.status === TASK_STATUS_STRING.successful) {
+							this.task.output = finishedTask?.output
+						}
+						this.loading = false
+						this.showSyncTaskRunning = false
+					}).catch(error => {
+						console.debug('[assistant] poll error', error)
+					})
 				})
 				.catch(error => {
 					console.error('Assistant scheduling error', error)
+					showError(t('assistant', 'Failed to schedule your task'))
 				})
 				.then(() => {
 				})
+		},
+		setProgress(progress) {
+			this.progress = progress
 		},
 		onSyncSubmit(data) {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
 		},
 		onTryAgain(task) {
-			this.syncSubmit(task.inputs, task.taskType)
+			this.syncSubmit(task.input, task.type)
 		},
 		onLoadTask(task) {
 			if (this.loading === false) {
-				this.task.taskType = task.taskType
-				this.task.inputs = task.inputs
+				this.task.type = task.type
+				this.task.input = task.input
 				this.task.status = task.status
-				this.task.output = task.status === STATUS.successfull ? task.output : null
+				this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
+				this.task.id = task.id
 			}
 		},
 	},

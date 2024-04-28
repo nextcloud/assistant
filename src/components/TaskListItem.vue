@@ -1,7 +1,7 @@
 <template>
 	<NcListItem
 		class="task-list-item"
-		:name="name"
+		:name="mainName"
 		:title="subName"
 		:bold="false"
 		:active="false"
@@ -13,8 +13,17 @@
 				:title="statusTitle" />
 		</template>
 		<template #subname>
-			<Text2ImageInlineDisplay v-if="isSuccessful && isText2Image"
-				:image-gen-id="task.output" />
+			<div v-if="isSuccessful && isText2Image"
+				class="inline-images">
+				<ImageDisplay
+					v-for="fileId in task.output.images"
+					:key="fileId"
+					:file-id="fileId"
+					:task-id="task.id"
+					:show-delete="false"
+					:show-share="false"
+					:is-output="true" />
+			</div>
 			<span v-else>
 				{{ subName }}
 			</span>
@@ -23,21 +32,13 @@
 			<CheckboxBlankCircle :size="16" fill-color="#fff" />
 		</template-->
 		<template #actions>
-			<NcActionButton v-if="isSuccessful"
-				:close-after-click="true"
-				@click="onCopyOutput">
-				<template #icon>
-					<ContentCopyIcon />
-				</template>
-				{{ t('assistant', 'Copy result') }}
-			</NcActionButton>
 			<NcActionButton @click="$emit('try-again')">
 				<template #icon>
 					<RedoIcon />
 				</template>
 				{{ t('assistant', 'Try again') }}
 			</NcActionButton>
-			<NcActionButton v-if="isScheduled"
+			<NcActionButton v-if="isScheduled || isRunning"
 				@click="$emit('cancel')">
 				<template #icon>
 					<CloseIcon />
@@ -55,6 +56,7 @@
 </template>
 
 <script>
+import CancelIcon from 'vue-material-design-icons/Cancel.vue'
 import RedoIcon from 'vue-material-design-icons/Redo.vue'
 import ProgressQuestionIcon from 'vue-material-design-icons/ProgressQuestion.vue'
 import ProgressCheckIcon from 'vue-material-design-icons/ProgressCheck.vue'
@@ -69,14 +71,12 @@ import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 
 import moment from '@nextcloud/moment'
-import { showError, showSuccess } from '@nextcloud/dialogs'
-import { generateUrl } from '@nextcloud/router'
 
 import VueClipboard from 'vue-clipboard2'
 import Vue from 'vue'
 
-import { STATUS } from '../constants.js'
-import Text2ImageInlineDisplay from './Text2Image/Text2ImageInlineDisplay.vue'
+import { TASK_STATUS_STRING, SHAPE_TYPE_NAMES } from '../constants.js'
+import ImageDisplay from './fields/ImageDisplay.vue'
 
 Vue.use(VueClipboard)
 
@@ -84,7 +84,7 @@ export default {
 	name: 'TaskListItem',
 
 	components: {
-		Text2ImageInlineDisplay,
+		ImageDisplay,
 		NcListItem,
 		NcActionButton,
 		CloseIcon,
@@ -103,6 +103,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		taskType: {
+			type: [Object, null],
+			default: null,
+		},
 	},
 
 	emits: [
@@ -119,76 +123,99 @@ export default {
 	},
 
 	computed: {
+		isRunning() {
+			return this.task.status === TASK_STATUS_STRING.running
+		},
 		isScheduled() {
-			return this.task.status === STATUS.scheduled
+			return this.task.status === TASK_STATUS_STRING.scheduled
 		},
 		isSuccessful() {
-			return this.task.status === STATUS.successfull
+			return this.task.status === TASK_STATUS_STRING.successful
 		},
 		isText2Image() {
-			return this.task.taskType === 'OCP\\TextToImage\\Task'
+			return this.task.type === 'core:text2image'
 		},
-		name() {
+		mainName() {
 			if (this.task.taskType === 'copywriter') {
-				return this.task.inputs.sourceMaterial
+				return this.task.input.sourceMaterial
 			} else if (this.task.taskType === 'speech-to-text') {
 				return t('assistant', 'Audio input')
 			}
-			return this.task.inputs.prompt ?? t('assistant', 'Unknown input')
+			return t('assistant', 'Input') + ': ' + this.textInputPreview
 		},
 		subName() {
-			if (this.task.status === STATUS.successfull) {
-				if (this.task.taskType === 'OCP\\TextToImage\\Task') {
-					return n('assistant', '{n} image has been generated', '{n} images have been generated', this.task.inputs.nResults, { n: this.task.inputs.nResults })
+			if (this.task.status === TASK_STATUS_STRING.successful) {
+				if (this.isText2Image) {
+					const nbGeneratedImages = this.task.output?.length ?? 0
+					return n('assistant', '{n} image has been generated', '{n} images have been generated', nbGeneratedImages, { n: nbGeneratedImages })
 				}
-				return t('assistant', 'Result') + ': ' + this.task.output
-			} else if (this.task.status === STATUS.scheduled) {
-				if (this.task.taskType === 'OCP\\TextToImage\\Task') {
-					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', this.task.inputs.nResults, { n: this.task.inputs.nResults })
+				return t('assistant', 'Result') + ': ' + this.textOutputPreview
+			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
+				if (this.isText2Image) {
+					const nbImageAsked = this.task.input.numberOfImages
+					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', nbImageAsked, { n: nbImageAsked })
 				}
 				return t('assistant', 'This task is scheduled')
-			} else if (this.task.status === STATUS.running) {
+			} else if (this.task.status === TASK_STATUS_STRING.running) {
 				return t('assistant', 'Running...')
-			} else if (this.task.status === STATUS.failed) {
-				return t('assistant', 'Failed') + ': ' + (this.task.output ?? t('assistant', 'Unknown error'))
+			} else if (this.task.status === TASK_STATUS_STRING.failed) {
+				return t('assistant', 'Failed')
+			} else if (this.task.status === TASK_STATUS_STRING.cancelled) {
+				return t('assistant', 'Cancelled')
 			}
 			return t('assistant', 'Unknown status')
 		},
 		details() {
-			return moment.unix(this.task.timestamp).fromNow()
+			return moment.unix(this.task.lastUpdated).fromNow()
 		},
 		icon() {
-			if (this.task.status === STATUS.successfull) {
+			if (this.task.status === TASK_STATUS_STRING.successful) {
 				return CheckIcon
-			} else if (this.task.status === STATUS.failed) {
+			} else if (this.task.status === TASK_STATUS_STRING.cancelled) {
+				return CancelIcon
+			} else if (this.task.status === TASK_STATUS_STRING.failed) {
 				return AlertCircleOutlineIcon
-			} else if (this.task.status === STATUS.running) {
+			} else if (this.task.status === TASK_STATUS_STRING.running) {
 				return ProgressCheckIcon
-			} else if (this.task.status === STATUS.scheduled) {
+			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
 				return ProgressClockIcon
 			}
 			return ProgressQuestionIcon
 		},
 		statusTitle() {
-			if (this.task.status === STATUS.successfull) {
+			if (this.task.status === TASK_STATUS_STRING.successful) {
 				return t('assistant', 'Succeeded')
-			} else if (this.task.status === STATUS.failed) {
+			} else if (this.task.status === TASK_STATUS_STRING.failed) {
 				return t('assistant', 'Failed')
-			} else if (this.task.status === STATUS.running) {
+			} else if (this.task.status === TASK_STATUS_STRING.running) {
 				return t('assistant', 'Running')
-			} else if (this.task.status === STATUS.scheduled) {
+			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
 				return t('assistant', 'Scheduled')
 			}
 			return t('assistant', 'Unknown status')
 		},
-		formattedOutput() {
+		textInputPreview() {
+			const textInputs = []
+			Object.keys(this.taskType.inputShape).forEach(key => {
+				const field = this.taskType.inputShape[key]
+				if (field.type === SHAPE_TYPE_NAMES.Text) {
+					textInputs.push(this.task.input[key])
+				}
+			})
+			return textInputs.join(' | ')
+		},
+		textOutputPreview() {
 			if (!this.isSuccessful) {
 				return null
 			}
-			if (this.task.taskType === 'OCP\\TextToImage\\Task') {
-				return window.location.protocol + '//' + window.location.host + generateUrl('/apps/assistant/i/{imageGenId}', { imageGenId: this.task.output })
-			}
-			return this.task.output.trim()
+			const textOutputs = []
+			Object.keys(this.taskType.outputShape).forEach(key => {
+				const field = this.taskType.outputShape[key]
+				if (field.type === SHAPE_TYPE_NAMES.Text) {
+					textOutputs.push(this.task.output[key])
+				}
+			})
+			return textOutputs.join(' | ')
 		},
 	},
 
@@ -199,19 +226,6 @@ export default {
 	},
 
 	methods: {
-		async onCopyOutput() {
-			try {
-				await this.$copyText(this.formattedOutput)
-				this.copied = true
-				setTimeout(() => {
-					this.copied = false
-				}, 5000)
-				showSuccess(t('assistant', 'Task result was copied to clipboard'))
-			} catch (error) {
-				console.error(error)
-				showError(t('assistant', 'Result could not be copied to clipboard'))
-			}
-		},
 	},
 }
 </script>
@@ -220,6 +234,15 @@ export default {
 :deep(.task-list-item) {
 	.list-item {
 		width: 99% !important;
+	}
+}
+
+.inline-images {
+	display: flex;
+	gap: 4px;
+	img {
+		height: 28px;
+		width: 28px;
 	}
 }
 </style>

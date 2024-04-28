@@ -6,6 +6,7 @@
 				:key="task.id"
 				class="task-list--item"
 				:task="task"
+				:task-type="taskType"
 				@try-again="$emit('try-again', task)"
 				@load="$emit('load-task', task)"
 				@delete="onTaskDelete(task)"
@@ -31,7 +32,7 @@ import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 
-import { STATUS } from '../constants.js'
+import { TASK_STATUS_STRING } from '../constants.js'
 
 export default {
 	name: 'TaskList',
@@ -85,12 +86,20 @@ export default {
 			this.$emit('update:loading', true)
 			const req = {
 				params: {
-					taskType: this.taskType.id,
+					taskTypeId: this.taskType.id,
 				},
 			}
-			const url = generateOcsUrl('/apps/assistant/api/v1/tasks')
+			const url = generateOcsUrl('apps/assistant/api/v1/tasks')
 			axios.get(url, req).then(response => {
-				this.tasks = response.data?.ocs?.data?.tasks
+				this.tasks = response.data?.ocs?.data?.tasks.sort((a, b) => {
+					const aId = a.id
+					const bId = b.id
+					return aId === bId
+						? 0
+						: aId > bId
+							? -1
+							: 1
+				})
 			}).catch(error => {
 				console.error(error)
 			}).then(() => {
@@ -98,7 +107,7 @@ export default {
 			})
 		},
 		onTaskDelete(task) {
-			const url = generateOcsUrl('/apps/assistant/api/v1/task/{id}', { id: task.id })
+			const url = generateOcsUrl('taskprocessing/tasks/{id}', { id: task.id })
 			axios.delete(url).then(response => {
 				const index = this.tasks.findIndex(t => { return t.id === task.id })
 				if (index !== -1) {
@@ -109,10 +118,9 @@ export default {
 			})
 		},
 		onTaskCancel(task) {
-			const url = generateOcsUrl('/apps/assistant/api/v1/task/cancel/{id}', { id: task.id })
-			axios.put(url).then(response => {
-				task.status = STATUS.failed
-				task.output = t('assistant', 'Canceled by user')
+			const url = generateOcsUrl('taskprocessing/tasks/{id}/cancel', { id: task.id })
+			axios.post(url).then(response => {
+				task.status = TASK_STATUS_STRING.cancelled
 			}).catch(error => {
 				console.error(error)
 			})

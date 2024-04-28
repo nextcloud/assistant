@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OCA\Assistant\Event;
 
 use OCP\EventDispatcher\Event;
-use OCP\TextProcessing\Task;
+use OCP\TaskProcessing\Task;
 
 /**
  * Event to let apps that scheduled a task via the assistant

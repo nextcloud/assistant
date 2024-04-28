@@ -1,14 +1,6 @@
 <template>
-	<div v-if="selectedTaskTypeId === 'speech-to-text'" class="assistant-inputs">
-		<SpeechToTextInputForm
-			:mode.sync="sttMode"
-			:audio-data.sync="sttAudioData"
-			:audio-file-path.sync="sttAudioFilePath"
-			@update:mode="onUpdateStt"
-			@update:audio-data="onUpdateStt"
-			@update:audio-file-path="onUpdateStt" />
-	</div>
-	<div v-else-if="selectedTaskTypeId === 'copywriter'" class="assistant-inputs">
+	<!-- TODO remove that -->
+	<div v-if="selectedTaskTypeId === 'copywriter'" class="assistant-inputs">
 		<div class="input-container">
 			<div class="label-row">
 				<label for="writingStyle" class="input-label">
@@ -65,34 +57,12 @@
 			<ContextChatInputForm v-if="sccEnabled" :scc-data.sync="sccData" @update:scc-data="onUpdateContextChat" />
 		</div>
 		<div class="input-container">
-			<div class="label-row">
-				<label for="input-prompt" class="input-label">
-					{{ t('assistant','Input') }}
-				</label>
-				<NcButton
-					type="secondary"
-					@click="onChooseFile('prompt')">
-					<template #icon>
-						<FileDocumentIcon />
-					</template>
-					{{ t('assistant','Choose file') }}
-				</NcButton>
-			</div>
-			<NcRichContenteditable
-				id="input-prompt"
-				:value.sync="prompt"
-				:link-autocomplete="false"
-				:multiline="true"
-				class="editable-input"
-				:placeholder="t('assistant','Type some text')"
-				@update:value="onUpdateMainInput" />
-		</div>
-		<div v-if="selectedTaskTypeId === 'OCP\\TextToImage\\Task'" class="assistant-inputs">
-			<Text2ImageInputForm
-				:n-results.sync="ttiNResults"
-				:display-prompt.sync="ttiDisplayPrompt"
-				@update:nResults="onUpdateTti"
-				@update:displayPrompt="onUpdateTti" />
+			<TaskTypeFields
+				:is-output="false"
+				:shape="selectedTaskType.inputShape"
+				:optional-shape="selectedTaskType.optionalInputShape ?? null"
+				:values="inputs"
+				@update:values="$emit('update:inputs', $event)" />
 		</div>
 	</div>
 </template>
@@ -106,8 +76,7 @@ import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContente
 
 import ChattyLLMInputForm from './ChattyLLM/ChattyLLMInputForm.vue'
 import ContextChatInputForm from './ContextChat/ContextChatInputForm.vue'
-import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
-import Text2ImageInputForm from './Text2Image/Text2ImageInputForm.vue'
+import TaskTypeFields from './fields/TaskTypeFields.vue'
 
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
@@ -142,18 +111,17 @@ export default {
 		NcButton,
 		FileDocumentIcon,
 		NcCheckboxRadioSwitch,
-		Text2ImageInputForm,
-		SpeechToTextInputForm,
 		ContextChatInputForm,
 		ChattyLLMInputForm,
+		TaskTypeFields,
 	},
 	props: {
 		inputs: {
 			type: Object,
 			default: () => {},
 		},
-		selectedTaskTypeId: {
-			type: [String, null],
+		selectedTaskType: {
+			type: [Object, null],
 			default: null,
 		},
 	},
@@ -175,23 +143,25 @@ export default {
 			},
 		}
 	},
-	watch: {
+	computed: {
 		selectedTaskTypeId() {
+			return this.selectedTaskType?.id ?? null
+		},
+	},
+	watch: {
+		selectedTaskType() {
+			console.debug('aaaa watch selectedTaskType', this.selectedTaskType, this.selectedTaskTypeId)
 			if (this.selectedTaskTypeId === 'copywriter') {
 				this.onUpdateCopywriter()
-			} else if (this.selectedTaskTypeId === 'speech-to-text') {
-				this.onUpdateStt()
-			} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
-				this.onUpdateTti()
 			} else if (this.selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType') {
 				this.onUpdateContextChat()
 			} else {
-				this.onUpdate()
+				this.resetInputs()
 			}
 		},
 		inputs(newVal) {
 			this.writingStyle = this.inputs.writingStyle ?? ''
-			this.sourceMaterial = this.inputs.sourceMaterial ?? this.inputs.prompt ?? ''
+			this.sourceMaterial = this.inputs.sourceMaterial ?? ''
 			this.prompt = this.inputs.prompt ?? ''
 			this.sttMode = this.inputs.sttMode ?? 'record'
 			this.sttAudioData = this.inputs.audioData ?? null
@@ -207,17 +177,20 @@ export default {
 	mounted() {
 		if (this.selectedTaskTypeId === 'copywriter') {
 			this.onUpdateCopywriter()
-		} else if (this.selectedTaskTypeId === 'speech-to-text') {
-			this.onUpdateStt()
-		} else if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
-			this.onUpdateTti()
 		} else if (this.selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType') {
 			this.onUpdateContextChat()
 		} else {
-			this.onUpdate()
+			// this.resetInputs()
 		}
 	},
 	methods: {
+		resetInputs() {
+			const inputs = {}
+			Object.keys(this.selectedTaskType.inputShape).forEach(key => {
+				inputs[key] = null
+			})
+			this.$emit('update:inputs', inputs)
+		},
 		async onChooseFile(target) {
 			await picker(this.parseChosenFile, target).pick()
 		},
@@ -248,8 +221,6 @@ export default {
 						this.onUpdateCopywriter()
 						break
 					default:
-						this.prompt = data.parsedText
-						this.onUpdateMainInput()
 					}
 				}).catch((error) => {
 					console.error(error)
@@ -257,45 +228,11 @@ export default {
 				})
 			}
 		},
-		onUpdateMainInput() {
-			if (this.selectedTaskTypeId === 'OCP\\TextToImage\\Task') {
-				this.onUpdateTti()
-			} else if (this.selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType') {
-				this.onUpdateContextChat()
-			} else {
-				this.onUpdate()
-			}
-		},
-		onUpdate() {
-			this.$emit('update:inputs', {
-				prompt: this.prompt,
-			})
-		},
 		onUpdateCopywriter() {
 			this.$emit('update:inputs', {
 				writingStyle: this.writingStyle,
 				sourceMaterial: this.sourceMaterial,
 			})
-		},
-		onUpdateStt() {
-			this.$emit(
-				'update:inputs',
-				{
-					sttMode: this.sttMode,
-					audioData: this.sttAudioData,
-					audioFilePath: this.sttAudioFilePath,
-				},
-			)
-		},
-		onUpdateTti() {
-			this.$emit(
-				'update:inputs',
-				{
-					prompt: this.prompt,
-					nResults: this.ttiNResults,
-					displayPrompt: this.ttiDisplayPrompt,
-				},
-			)
 		},
 		onUpdateContextChat() {
 			this.$emit(
@@ -324,35 +261,5 @@ export default {
 .assistant-inputs {
 	margin-bottom: 1rem;
 	width: 100%;
-
-	/* todo: maybe not required now */
-	::v-deep .input-container {
-		border-radius: var(--border-radius-rounded);
-		padding: 12px;
-
-		&:hover {
-			background-color: var(--color-primary-element-light);
-		}
-
-		.label-row {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			margin-bottom: 12px;
-			> .input-label {
-				margin-bottom: -12px;
-			}
-
-			.input-label {
-				align-self: center;
-				font-weight: bold;
-			}
-		}
-
-		.editable-input {
-			min-height: unset !important;
-		}
-	}
 }
-
 </style>

@@ -31,12 +31,14 @@ __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 registerCustomPickerElement('assistant_speech_to_text', async (el, { providerId, accessible }) => {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	Vue.mixin({ methods: { t, n } })
-	const { default: SpeechToTextCustomPickerElement } = await import(/* webpackChunkName: "speech-to-text-picker-lazy" */'./views/SpeechToText/SpeechToTextCustomPickerElement.vue')
-	const Element = Vue.extend(SpeechToTextCustomPickerElement)
+	const { default: TextResultCustomPickerElement } = await import(/* webpackChunkName: "reference-picker-lazy" */'./views/TextResultCustomPickerElement.vue')
+	const Element = Vue.extend(TextResultCustomPickerElement)
 	const vueElement = new Element({
 		propsData: {
 			providerId,
 			accessible,
+			taskType: 'core:audio2text',
+			outputKey: 'output',
 		},
 	}).$mount(el)
 	return new NcCustomPickerRenderResult(vueElement.$el, vueElement)
