@@ -1,10 +1,12 @@
 OC.L10N.register(
     "assistant",
     {
+    "Failed to process prompt; unknown user" : "Processamento del prompt fallito, utente sconosciuto",
     "Nextcloud Assistant" : "Assistente di Nextcloud",
     "View results" : "Mostra risultati",
     "Artificial Intelligence" : "Intelligenza artificiale",
     "Choose file" : "Scegli file",
+    "Type some text" : "Aggiungi del testo",
     "Choose" : "Scegli",
     "No file selected" : "Nessun file selezionato",
     "Close" : "Chiudi",
