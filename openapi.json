@@ -2357,18 +2357,18 @@
                         "name": "appId",
                         "in": "query",
                         "description": "App id to be set in the created task",
-                        "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "default": "assistant"
                         }
                     },
                     {
                         "name": "identifier",
                         "in": "query",
                         "description": "Identifier to be set in the created task",
-                        "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "default": ""
                         }
                     },
                     {
@@ -2531,18 +2531,18 @@
                         "name": "appId",
                         "in": "query",
                         "description": "App id to be set in the created task",
-                        "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "default": "assistant"
                         }
                     },
                     {
                         "name": "identifier",
                         "in": "query",
                         "description": "Identifier to be set in the created task",
-                        "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "default": ""
                         }
                     },
                     {
