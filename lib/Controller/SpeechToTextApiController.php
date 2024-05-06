@@ -95,7 +95,7 @@ class SpeechToTextApiController extends OCSController {
 	 * 400: Starting task is not possible
 	 */
 	#[NoAdminRequired]
-	public function transcribeAudio(string $appId, string $identifier): DataResponse {
+	public function transcribeAudio(string $appId = Application::APP_ID, string $identifier = ''): DataResponse {
 		$audioData = $this->request->getUploadedFile('audioData');
 
 		if ($audioData['error'] !== 0) {
@@ -157,7 +157,7 @@ class SpeechToTextApiController extends OCSController {
 	 * 404: File not found
 	 */
 	#[NoAdminRequired]
-	public function transcribeFile(string $path, string $appId, string $identifier): DataResponse {
+	public function transcribeFile(string $path, string $appId = Application::APP_ID, string $identifier = ''): DataResponse {
 		if ($path === '') {
 			return new DataResponse('Empty file path received', Http::STATUS_BAD_REQUEST);
 		}
