@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.9 – 2024-05-06
+
+### Added
+
+- support RTF files @julien-nc [#66](https://github.com/nextcloud/assistant/pull/66)
+- new assistant standalone page @julien-nc [#72](https://github.com/nextcloud/assistant/pull/72)
+
+### Changed
+
+- use ITempManager instead of manually handling temp files @kyteinksy [#71](https://github.com/nextcloud/assistant/pull/71)
+
+### Fixed
+
+- fix audio transcription smart picker not setting appId and identifier params in the schedule request
+
 ## 1.0.8 – 2024-04-15
 
 ### Added
