@@ -56,6 +56,9 @@
 				@update:value="onUpdateCopywriter" />
 		</div>
 	</div>
+	<div v-else-if="selectedTaskTypeId === 'chatty-llm'" class="assistant-inputs" style="margin-bottom: 0 !important;">
+		<ChattyLLMInputForm />
+	</div>
 	<div v-else class="assistant-inputs">
 		<div v-if="selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType'" class="assistant-inputs">
 			<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateContextChat">
@@ -103,6 +106,7 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 
+import ChattyLLMInputForm from './ChattyLLM/ChattyLLMInputForm.vue'
 import ContextChatInputForm from './ContextChat/ContextChatInputForm.vue'
 import SpeechToTextInputForm from './SpeechToText/SpeechToTextInputForm.vue'
 import Text2ImageInputForm from './Text2Image/Text2ImageInputForm.vue'
@@ -136,13 +140,14 @@ const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose
 export default {
 	name: 'AssistantFormInputs',
 	components: {
-		Text2ImageInputForm,
-		SpeechToTextInputForm,
 		NcRichContenteditable,
 		NcButton,
 		FileDocumentIcon,
-		ContextChatInputForm,
 		NcCheckboxRadioSwitch,
+		Text2ImageInputForm,
+		SpeechToTextInputForm,
+		ContextChatInputForm,
+		ChattyLLMInputForm,
 	},
 	props: {
 		inputs: {

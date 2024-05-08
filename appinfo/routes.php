@@ -24,6 +24,17 @@ return [
 		['name' => 'SpeechToText#getResultPage', 'url' => '/stt/result-page/{metaTaskId}', 'verb' => 'GET'],
 
 		['name' => 'preview#getFileImage', 'url' => '/preview', 'verb' => 'GET'],
+
+		['name' => 'chattyLLM#newSession', 'url' => '/chat/new_session', 'verb' => 'PUT'],
+		['name' => 'chattyLLM#updateSessionTitle', 'url' => '/chat/update_session', 'verb' => 'PATCH'],
+		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/delete_session', 'verb' => 'DELETE'],
+		['name' => 'chattyLLM#getSessions', 'url' => '/chat/sessions', 'verb' => 'GET'],
+		['name' => 'chattyLLM#newMessage', 'url' => '/chat/new_message', 'verb' => 'PUT'],
+		['name' => 'chattyLLM#deleteMessage', 'url' => '/chat/delete_message', 'verb' => 'DELETE'],
+		['name' => 'chattyLLM#getMessages', 'url' => '/chat/messages', 'verb' => 'GET'],
+		['name' => 'chattyLLM#generateForSession', 'url' => '/chat/generate', 'verb' => 'GET'],
+		['name' => 'chattyLLM#regenerateForSession', 'url' => '/chat/regenerate', 'verb' => 'GET'],
+		['name' => 'chattyLLM#generateTitle', 'url' => '/chat/generate_title', 'verb' => 'GET'],
 	],
 	'ocs' => [
 		['name' => 'assistantApi#getAvailableTaskTypes', 'url' => '/api/{apiVersion}/task-types', 'verb' => 'GET', 'requirements' => $requirements],

@@ -82,22 +82,84 @@
 						@update:value="onUnsignedIntFieldChanged(state.max_image_generation_idle_time, 'max_image_generation_idle_time')" />
 				</div>
 			</div>
+			<div class="chat-with-ai">
+				<h2>
+					{{ t('assistant', 'Chat with AI') }}
+				</h2>
+				<div class="line">
+					<label for="chat_user_instructions">
+						{{ t('assistant', 'Chat User Instructions for Chat Completions') }}
+					</label>
+				</div>
+				<NcNoteCard type="info">
+					<p>{{ t('assistant', 'It is passed on to the LLM for it to better understand the context.') }}</p>
+					<p>{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}</p>
+				</NcNoteCard>
+				<NcRichContenteditable id="chat_user_instructions"
+					class="text-field"
+					:value.sync="state.chat_user_instructions"
+					:auto-complete="() => {}"
+					:link-auto-complete="false"
+					:placeholder="t('assistant', 'Chat User Instructions for Chat Completions')"
+					:aria-label="t('assistant', 'Chat User Instructions for Chat Completions')"
+					dir="auto"
+					@update:value="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')"
+					@submit="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')" />
+				<div class="line">
+					<label for="chat_user_instructions_title">
+						{{ t('assistant', 'Chat User Instructions for Title Generation') }}
+					</label>
+				</div>
+				<NcNoteCard type="info">
+					<p>{{ t('assistant', 'It is passed on to the LLMs to let it know what to do') }}</p>
+					<p>{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}</p>
+				</NcNoteCard>
+				<NcRichContenteditable id="chat_user_instructions_title"
+					class="text-field"
+					:value.sync="state.chat_user_instructions_title"
+					:auto-complete="() => {}"
+					:link-auto-complete="false"
+					:placeholder="t('assistant', 'Chat User Instructions for Title Generation')"
+					:aria-label="t('assistant', 'Chat User Instructions for Title Generation')"
+					dir="auto"
+					@update:value="delayedValueUpdate(state.chat_user_instructions_title, 'chat_user_instructions_title')"
+					@submit="delayedValueUpdate(state.chat_user_instructions_title, 'chat_user_instructions_title')" />
+				<div class="line">
+					<label for="chat_last_n_messages">
+						{{ t('assistant', 'Last N messages to consider for chat completions') }}
+					</label>
+				</div>
+				<NcNoteCard type="info">
+					<p>{{ t('assistant', ' This includes the user instructions and the LLM\'s messages') }}</p>
+				</NcNoteCard>
+				<NcTextField id="chat_last_n_messages"
+					class="text-field"
+					type="number"
+					:value.sync="state.chat_last_n_messages"
+					:error="!isUnsignedIntStr(state.chat_last_n_messages)"
+					:title="t('assistant', 'Number of messages to consider for chat completions (excluding the user instructions, which is always considered)')"
+					@update:value="delayedValueUpdate(state.chat_last_n_messages, 'chat_last_n_messages')" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import AssistantIcon from './icons/AssistantIcon.vue'
 import CalendarClockIcon from 'vue-material-design-icons/CalendarClock.vue'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
+import AssistantIcon from './icons/AssistantIcon.vue'
 
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
+import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
 
+import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
-import { showSuccess, showError } from '@nextcloud/dialogs'
+
+import { delay } from '../utils.js'
 
 export default {
 	name: 'AdminSettings',
@@ -105,12 +167,12 @@ export default {
 	components: {
 		AssistantIcon,
 		NcCheckboxRadioSwitch,
+		NcNoteCard,
+		NcRichContenteditable,
 		NcTextField,
 		CalendarClockIcon,
 		InformationOutlineIcon,
 	},
-
-	props: [],
 
 	data() {
 		return {
@@ -139,12 +201,6 @@ export default {
 		},
 	},
 
-	watch: {
-	},
-
-	mounted() {
-	},
-
 	methods: {
 		isUnsignedIntStr(value) {
 			return /^\d+$/.test(value)
@@ -155,15 +211,14 @@ export default {
 		},
 		onUnsignedIntFieldChanged(newValue, key) {
 			if (this.isUnsignedIntStr(newValue)) {
-				this.optionsToSave[key] = newValue
-
-				if (this.textFieldSaveTimer) {
-					clearTimeout(this.textFieldSaveTimer)
-				}
-				this.textFieldSaveTimer = setTimeout(() => {
-					this.saveOptions(this.optionsToSave)
-				}, 2000)
+				this.delayedValueUpdate(newValue, key)
 			}
+		},
+		delayedValueUpdate(newValue, key) {
+			delay(() => {
+				this.optionsToSave[key] = newValue
+				this.saveOptions(this.optionsToSave)
+			}, 2000)
 		},
 		saveOptions(values) {
 			const req = {
@@ -171,13 +226,17 @@ export default {
 			}
 			const url = generateUrl('/apps/assistant/admin-config')
 			return axios.put(url, req)
-				.then((response) => {
+				.then(() => {
 					showSuccess(t('assistant', 'Assistant admin options saved'))
 				})
 				.catch((error) => {
+					console.error('Failed to save assistant admin options', error)
 					showError(
 						t('assistant', 'Failed to save assistant admin options')
-						+ ': ' + error.response?.request?.responseText,
+						+ ': ' + (
+							error.response?.data?.message
+							?? error.response?.request?.responseText
+						),
 					)
 				})
 		},
@@ -227,6 +286,21 @@ export default {
 		.text-field {
 			margin-left: 8px;
 			width: 300px;
+		}
+	}
+
+	.chat-with-ai {
+		display: flex;
+		flex-direction: column;
+
+		> .line > label {
+			width: 900px !important;
+			font-weight: bold;
+		}
+
+		.notecard,
+		.text-field {
+			max-width: 900px;
 		}
 	}
 }

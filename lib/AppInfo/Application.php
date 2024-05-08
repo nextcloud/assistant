@@ -63,6 +63,9 @@ class Application extends App implements IBootstrap {
 	public const TASK_CATEGORY_TEXT_TO_IMAGE = 1;
 	public const TASK_CATEGORY_SPEECH_TO_TEXT = 2;
 
+	public const CHAT_USER_INSTRUCTIONS = 'This is a conversation between {user} and you, Nextcloud Assistant. You are a kind, polite and helpful AI that helps {user} to the best of its abilities. If you do not understand something, you will ask for clarification. Remember to verify the premise presented by {user}. In a rare case, it might be wrong.';
+	public const CHAT_USER_INSTRUCTIONS_TITLE = 'Above is a chat session between {user} and you, Nextcloud Assistant. Generate a suitable title summarizing the conversation and output only that.';
+
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
 	}
