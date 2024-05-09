@@ -20,6 +20,7 @@ OC.L10N.register(
     "Delete" : "Usuń",
     "Failed" : "Nie powiodło się",
     "Unknown error" : "Nieznany błąd",
+    "Unknown status" : "Nieznany stan",
     "Running" : "Bieganie",
     "Scheduled" : "Zaplanowane",
     "Image generation" : "Generowanie obrazu",
