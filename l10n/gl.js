@@ -80,7 +80,7 @@ OC.L10N.register(
     "Delete" : "Eliminar",
     "Failed" : "Fallado",
     "Unknown error" : "Produciuse un erro descoñecido",
-    "Running" : "Correndo",
+    "Running" : "En execución",
     "Scheduled" : "Programado",
     "Image generation" : "Xeración de imaxes",
     "Edit visible images" : "Editar as imaxes visíbeis",
