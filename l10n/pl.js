@@ -5,6 +5,8 @@ OC.L10N.register(
     "View results" : "Pokaż wyniki",
     "Artificial Intelligence" : "Sztuczna inteligencja",
     "Choose file" : "Wybierz plik",
+    "Describe the writing style you want to use or supply an example document." : "Opisz styl pisania, jakiego chcesz używać, lub podaj przykładowy dokument.",
+    "Describe what you want the document to be written on." : "Opisz, na czym ma być zapisany dokument.",
     "Input" : "Wejście",
     "Type some text" : "Wpisz jakiś tekst",
     "Choose" : "Wybierz",
@@ -28,6 +30,7 @@ OC.L10N.register(
     "Preview" : "Podgląd",
     "Send" : "Wyślij",
     "Advanced options" : "Opcje zaawansowane",
+    "A description of the image you want to generate" : "Opis obrazu, który chcesz wygenerować",
     "Copy link to clipboard" : "Kopiuj link do schowka"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");
