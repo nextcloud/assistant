@@ -47,6 +47,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "助手管理选项已保存",
     "Failed to save assistant admin options" : "助手管理选项保存失败",
     "Choose file" : "选择文件",
+    "Input" : "输入",
     "Type some text" : "输入一些文字",
     "Choose" : "选择",
     "No file selected" : "没有选择文件",
