@@ -45,10 +45,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			return;
 		}
 
-		$templateName = $event->getResponse()->getTemplateName();
-		if ($templateName === 'index' || $templateName === 'assistantPage') {
-			$this->eventDispatcher->dispatchTyped(new RenderReferenceEvent());
-		}
+		$this->eventDispatcher->dispatchTyped(new RenderReferenceEvent());
 
 		$adminAssistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$userAssistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';

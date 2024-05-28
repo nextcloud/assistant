@@ -33,6 +33,7 @@
 		<NcRichText class="message__content"
 			:text="message.content"
 			:use-markdown="true"
+			:reference-limit="1"
 			:autolink="true" />
 	</div>
 </template>
