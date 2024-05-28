@@ -142,6 +142,10 @@ export default {
 		:deep ol {
 			margin-left: 1em;
 		}
+
+		:deep .widget-default, :deep .widget-custom {
+			width: auto !important;
+		}
 	}
 }
 </style>
