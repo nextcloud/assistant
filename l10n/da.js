@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Artificial Intelligence" : "Kunstig Intelligens",
+    "Choose file" : "Vælg fil",
     "Type some text" : "Skriv noget tekst",
     "Choose" : "Vælg",
     "No file selected" : "Ingen fil valgt",
