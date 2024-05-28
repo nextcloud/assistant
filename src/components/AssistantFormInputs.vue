@@ -56,9 +56,7 @@
 				@update:value="onUpdateCopywriter" />
 		</div>
 	</div>
-	<div v-else-if="selectedTaskTypeId === 'chatty-llm'" class="assistant-inputs" style="margin-bottom: 0 !important;">
-		<ChattyLLMInputForm />
-	</div>
+	<ChattyLLMInputForm v-else-if="selectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
 	<div v-else class="assistant-inputs">
 		<div v-if="selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType'" class="assistant-inputs">
 			<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateContextChat">
@@ -318,6 +316,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.chatty-inputs {
+	margin-top: 8px;
+}
 
 .assistant-inputs {
 	margin-bottom: 1rem;

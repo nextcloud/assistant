@@ -348,7 +348,7 @@ export default {
 
 <style lang="scss" scoped>
 .assistant-form {
-	width: 100%;
+	//width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -358,7 +358,10 @@ export default {
 	overflow-x: hidden;
 
 	.task-input-output-form {
+		display: flex;
+		flex-direction: column;
 		width: 100%;
+		overflow: auto;
 	}
 
 	.output {

@@ -517,9 +517,9 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+	overflow: auto;
 	display: flex;
-	height: 44em;
-	margin-top: 8px;
+	height: 100%;
 
 	:deep .app-navigation-new {
 		padding: 0.5em 0 !important;
