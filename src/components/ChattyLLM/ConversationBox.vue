@@ -112,6 +112,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5em;
+	height: 100%;
 
 	&__message--dim {
 		opacity: 0.5;

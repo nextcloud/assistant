@@ -647,10 +647,14 @@ export default {
 			overflow-y: auto;
 			padding: 1em;
 
-			&__active-session__utility-button {
-				display: flex;
-				justify-content: center;
-				padding: 1em;
+			&__active-session {
+				height: 100%;
+
+				&__utility-button {
+					display: flex;
+					justify-content: center;
+					padding: 1em;
+				}
 			}
 		}
 
