@@ -32,7 +32,6 @@ export default {
 <style lang="scss" scoped>
 .empty-view {
 	padding: calc(var(--default-grid-baseline) * 4);
-	height: 200px;
 }
 
 .empty-content {

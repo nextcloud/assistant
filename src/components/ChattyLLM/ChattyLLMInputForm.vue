@@ -642,6 +642,8 @@ export default {
 
 		&__chat-area {
 			flex: 1;
+			display: flex;
+			flex-direction: column;
 			overflow-y: auto;
 			padding: 1em;
 

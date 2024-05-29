@@ -318,6 +318,7 @@ export default {
 <style lang="scss" scoped>
 .chatty-inputs {
 	margin-top: 8px;
+	height: 8000px;
 }
 
 .assistant-inputs {
