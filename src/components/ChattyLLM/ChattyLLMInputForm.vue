@@ -2,7 +2,7 @@
 	<div class="container">
 		<NcAppNavigation>
 			<NcAppNavigationList>
-				<NcAppNavigationNew :text="t('assistant', 'New session')"
+				<NcAppNavigationNew :text="t('assistant', 'New conversation')"
 					type="secondary"
 					@click="onNewSession">
 					<template #icon>
@@ -11,15 +11,15 @@
 				</NcAppNavigationNew>
 				<div v-if="sessions == null" class="unloaded-sessions">
 					<NcLoadingIcon :size="30" />
-					{{ t('assistant', 'Loading sessions...') }}
+					{{ t('assistant', 'Loading conversations...') }}
 				</div>
 				<div v-else-if="sessions != null && sessions.length === 0" class="unloaded-sessions">
-					{{ t('assistant', 'No sessions yet') }}
+					{{ t('assistant', 'No conversations yet') }}
 				</div>
 				<NcAppNavigationItem
 					v-for="session in sessions"
 					v-else
-					:key="'session' + session.id"
+					:key="'conversation' + session.id"
 					:active="session.id === active?.id"
 					:name="getSessionTitle(session)"
 					:title="getSessionTitle(session)"
@@ -57,7 +57,7 @@
 			</div>
 			<div class="session-area__chat-area">
 				<NoSession v-if="loading.newSession"
-					:name="t('assistant', 'Creating a new session')"
+					:name="t('assistant', 'Creating a new conversation')"
 					description="">
 					<template #icon>
 						<NcLoadingIcon />
@@ -132,6 +132,7 @@ import NoSession from './NoSession.vue'
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
+import moment from 'moment'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -259,7 +260,7 @@ export default {
 				return session.title.length > 140 ? session.title.slice(0, 140) + '...' : session.title
 			}
 
-			return t('assistant', 'Session') + (session.timestamp ? (' ' + new Date(session.timestamp * 1000).toLocaleString()) : '')
+			return session.timestamp ? (' ' + moment(session.timestamp * 1000).format('LLL')) : t('assistant', 'Untitled conversation')
 		},
 
 		async handleSubmit(event) {
@@ -321,7 +322,7 @@ export default {
 				}
 			} catch (error) {
 				console.error('onGenerateSessionTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title'))
+				showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title for the conversation'))
 			} finally {
 				this.loading.titleGeneration = false
 			}
@@ -339,7 +340,7 @@ export default {
 				}
 			} catch (error) {
 				console.error('deleteSession error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting session'))
+				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting conversation'))
 			} finally {
 				this.loading.sessionDelete = false
 			}
@@ -353,7 +354,7 @@ export default {
 			} catch (error) {
 				this.sessions = []
 				console.error('fetchSessions error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error fetching sessions'))
+				showError(error?.response?.data?.error ?? t('assistant', 'Error fetching conversations'))
 			}
 		},
 
@@ -466,7 +467,7 @@ export default {
 				this.loading.newSession = false
 				this.active = response.data?.session ?? null
 				if (this.active == null) {
-					throw new Error(t('assistant', 'Received malformed response for new session'))
+					throw new Error(t('assistant', 'Received malformed response for a new conversation request'))
 				}
 
 				this.sessions.unshift(this.active)
@@ -478,7 +479,7 @@ export default {
 				this.loading.newHumanMessage = false
 				this.loading.newSession = false
 				console.error('newSession error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error creating a new session'))
+				showError(error?.response?.data?.error ?? t('assistant', 'Error creating a new conversation'))
 			}
 		},
 
