@@ -278,6 +278,9 @@ export default {
 			this.chatContent = ''
 			this.scrollToBottom()
 
+			if (this.active == null) {
+				await this.newSession()
+			}
 			await this.newMessage(role, content, timestamp)
 		},
 
