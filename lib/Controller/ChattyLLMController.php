@@ -43,15 +43,13 @@ class ChattyLLMController extends Controller {
 
 	/**
 	 * Create a new chat session, add a system message with user instructions
-	 * and add the user message
 	 *
-	 * @param string $content
 	 * @param int $timestamp
 	 * @param ?string $title
 	 * @return JSONResponse
 	 */
 	#[NoAdminRequired]
-	public function newSession(string $content, int $timestamp, ?string $title = null): JSONResponse {
+	public function newSession(int $timestamp, ?string $title = null): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -82,16 +80,8 @@ class ChattyLLMController extends Controller {
 			$systemMsg->setTimestamp($session->getTimestamp());
 			$this->messageMapper->insert($systemMsg);
 
-			$humanMsg = new Message();
-			$humanMsg->setSessionId($session->getId());
-			$humanMsg->setRole('human');
-			$humanMsg->setContent($content);
-			$humanMsg->setTimestamp($session->getTimestamp());
-			$this->messageMapper->insert($humanMsg);
-
 			return new JSONResponse([
 				'session' => $session,
-				'message' => $humanMsg,
 			]);
 		} catch (\OCP\DB\Exception | \RuntimeException $e) {
 			$this->logger->warning('Failed to create a chat session', ['exception' => $e]);

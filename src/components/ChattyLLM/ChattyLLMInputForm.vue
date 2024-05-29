@@ -4,7 +4,7 @@
 			<NcAppNavigationList>
 				<NcAppNavigationNew :text="t('assistant', 'New conversation')"
 					type="secondary"
-					@click="onNewSession">
+					@click="newSession">
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
@@ -70,7 +70,9 @@
 						<AssistantIcon />
 					</template>
 				</NoSession>
-				<div v-else class="session-area__chat-area__active-session">
+				<div v-else
+					class="session-area__chat-area__active-session"
+					:style="{ height: (loading.initialMessages || loading.newSession) ? '100%' : 'auto' }">
 					<div v-if="messages != null && messages.length > 0 && !allMessagesLoaded" class="session-area__chat-area__active-session__utility-button">
 						<NcButton
 							:aria-label="t('assistant', 'Load older messages')"
@@ -199,9 +201,13 @@ export default {
 			this.messages = []
 			this.$refs.inputComponent.focus()
 
-			if (this.active != null) {
+			if (this.active != null && !this.loading.newSession) {
 				await this.fetchMessages()
 				this.scrollToBottom()
+			} else {
+				// when no active session or creating a new session
+				this.allMessagesLoaded = true
+				this.loading.newSession = false
 			}
 		},
 	},
@@ -225,12 +231,6 @@ export default {
 				document.querySelector('#message' + lastIdx)?.scrollIntoView()
 				this.$refs.inputComponent.focus()
 			})
-		},
-
-		onNewSession() {
-			this.active = null
-			this.chatContent = ''
-			this.$refs.inputComponent.focus()
 		},
 
 		onSessionSelect(session) {
@@ -278,12 +278,7 @@ export default {
 			this.chatContent = ''
 			this.scrollToBottom()
 
-			if (this.active != null) {
-				// existing session
-				await this.newMessage(role, content, timestamp)
-			} else {
-				await this.newSession(content, timestamp)
-			}
+			await this.newMessage(role, content, timestamp)
 		},
 
 		onLoadOlderMessages() {
@@ -336,7 +331,7 @@ export default {
 				})
 				this.sessions = this.sessions.filter((session) => session.id !== sessionId)
 				if (this.active?.id === sessionId) {
-					this.onNewSession()
+					this.active = null
 				}
 			} catch (error) {
 				console.error('deleteSession error:', error)
@@ -453,30 +448,24 @@ export default {
 			}
 		},
 
-		async newSession(content, timestamp, title = null) {
+		async newSession(title = null) {
 			try {
-				this.loading.newHumanMessage = true
 				this.loading.newSession = true
 				const response = await axios.put(getChatURL('/new_session'), {
-					content,
-					timestamp,
+					timestamp: +new Date() / 1000 | 0,
 					title,
 				})
 				console.debug('newSession response:', response)
-				this.loading.newHumanMessage = false
-				this.loading.newSession = false
-				this.active = response.data?.session ?? null
-				if (this.active == null) {
-					throw new Error(t('assistant', 'Received malformed response for a new conversation request'))
+
+				const session = response.data?.session ?? null
+				if (session == null) {
+					throw new Error(t('assistant', 'Invalid response received for a new conversation request'))
 				}
 
-				this.sessions.unshift(this.active)
-
-				// replace the last message with the response that contains the id
-				this.messages = [response.data.message]
-				await this.getLLMResponse()
+				this.sessions.unshift(session)
+				this.active = session
+				// newSession loading is reset in the active watcher
 			} catch (error) {
-				this.loading.newHumanMessage = false
 				this.loading.newSession = false
 				console.error('newSession error:', error)
 				showError(error?.response?.data?.error ?? t('assistant', 'Error creating a new conversation'))
@@ -648,14 +637,10 @@ export default {
 			overflow-y: auto;
 			padding: 1em;
 
-			&__active-session {
-				height: 100%;
-
-				&__utility-button {
-					display: flex;
-					justify-content: center;
-					padding: 1em;
-				}
+			&__active-session__utility-button {
+				display: flex;
+				justify-content: center;
+				padding: 1em;
 			}
 		}
 
