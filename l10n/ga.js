@@ -19,6 +19,7 @@ OC.L10N.register(
     "Scheduled" : "Sceidealta",
     "Image generation" : "Giniúint íomhá",
     "Submit" : "Cuir isteach",
+    "Preview" : "Réamhamharc",
     "Send" : "Seol",
     "Advanced options" : "Ardroghanna",
     "Copy link to clipboard" : "Cóipeáil an nasc chuig an ngearrthaisce"
