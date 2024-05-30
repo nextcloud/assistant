@@ -100,9 +100,15 @@ export default {
 }
 </script>
 
+<style lang="scss">
+[id$="-tribute"][id*="nc-rich-contenteditable-"][role="listbox"] {
+	z-index: 9999;
+}
+</style>
+
 <style lang="scss" scoped>
 :deep .rich-contenteditable {
-	width: 100%;
+	width: 100% !important;
 
 	&__input--multiline {
 		min-height: 0 !important;

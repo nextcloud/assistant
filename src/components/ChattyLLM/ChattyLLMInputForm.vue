@@ -630,7 +630,6 @@ export default {
 			padding-left: 4.5em;
 			font-weight: bold;
 			background-color: var(--color-main-background);
-			z-index: 99999;
 		}
 
 		&__chat-area {
