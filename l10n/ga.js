@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Nextcloud Assistant" : "Cúntóir Nextcloud",
     "Artificial Intelligence" : "Intleacht Shaorga",
+    "Choose file" : "Roghnaigh comhad",
     "Input" : "Ionchur",
     "Type some text" : "Clóscríobh roinnt téacs",
     "Choose" : "Roghnaigh",
