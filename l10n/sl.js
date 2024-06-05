@@ -4,6 +4,7 @@ OC.L10N.register(
     "View results" : "Rezultati",
     "Transcribe" : "Prepiši govor",
     "Artificial Intelligence" : "Umetna inteligenca",
+    "Choose file" : "Izbor datotek",
     "Choose" : "Izbor",
     "No file selected" : "Ni izbranih datotek",
     "Close" : "Zapri",
