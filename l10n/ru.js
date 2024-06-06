@@ -44,6 +44,7 @@ OC.L10N.register(
     "Unknown error" : "Неизвестная ошибка",
     "Running" : "Бег",
     "Scheduled" : "Запланированное",
+    "Image generation" : "Создание изображений",
     "Failed to schedule your task" : "Сбой планирования задачи",
     "Submit" : "Отправить ответ",
     "Preview" : "Предварительный просмотр",
