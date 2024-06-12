@@ -300,8 +300,12 @@ class ChattyLLMController extends Controller {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
+			$newMessage = $this->generateForSession($sessionId);
+
+			// delete messages only after the new message is generated
 			$this->messageMapper->deleteMessagesSinceId($sessionId, $messageId);
-			return $this->generateForSession($sessionId);
+
+			return $newMessage;
 		} catch (\OCP\DB\Exception $e) {
 			$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message into DB')], Http::STATUS_INTERNAL_SERVER_ERROR);
