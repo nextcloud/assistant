@@ -39,8 +39,8 @@ class Admin implements ISettings {
 		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$speechToTextAvailable = $this->speechToTextManager->hasProviders();
 		$speechToTextEnabled = $this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
-		$chattyLLMUserInstructions = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions', $this->l10n->t(Application::CHAT_USER_INSTRUCTIONS));
-		$chattyLLMUserInstructionsTitle = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions_title', $this->l10n->t(Application::CHAT_USER_INSTRUCTIONS_TITLE));
+		$chattyLLMUserInstructions = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS);
+		$chattyLLMUserInstructionsTitle = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE);
 		$chattyLLMLastNMessages = (int) $this->config->getAppValue(Application::APP_ID, 'chat_last_n_messages', '10');
 
 		$adminConfig = [
