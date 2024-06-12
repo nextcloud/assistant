@@ -64,7 +64,7 @@ class Application extends App implements IBootstrap {
 	public const TASK_CATEGORY_SPEECH_TO_TEXT = 2;
 
 	public const CHAT_USER_INSTRUCTIONS = 'This is a conversation in a specific language between {user} and you, Nextcloud Assistant. You are a kind, polite and helpful AI that helps {user} to the best of its abilities. If you do not understand something, you will ask for clarification. Detect the language that {user} is using. Make sure to use the same language in your response. Do not mention the language explicitly. Remember to verify the premise presented by {user}. In a rare case, it might be wrong.';
-	public const CHAT_USER_INSTRUCTIONS_TITLE = 'Above is a chat session between {user} and you, Nextcloud Assistant. Generate a suitable title summarizing the conversation and output only that.';
+	public const CHAT_USER_INSTRUCTIONS_TITLE = 'Above is a chat session in a specific language between {user} and you, Nextcloud Assistant. Generate a suitable title summarizing the conversation in the same language and output only that.';
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
