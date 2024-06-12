@@ -515,7 +515,7 @@ export default {
 	height: 100%;
 
 	:deep .app-navigation-new {
-		padding: 0.5em 0 !important;
+		padding: 2px 0 8px 0 !important;
 
 		> button {
 			border: 2px solid var(--color-primary-element-light-text);
@@ -545,8 +545,14 @@ export default {
 			position: relative !important;
 		}
 
-		button.app-navigation-toggle {
-			border: 1px solid var(--color-border);
+		.app-navigation-toggle-wrapper {
+			margin-right: -52px !important;
+		}
+
+		&--close {
+			.app-navigation-toggle-wrapper {
+				margin-right: -38px !important;
+			}
 		}
 
 		&--close ~ .session-area {

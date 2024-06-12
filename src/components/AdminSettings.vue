@@ -246,9 +246,6 @@ export default {
 
 <style scoped lang="scss">
 #assistant_prefs {
-	#assistant-content {
-		margin-left: 40px;
-	}
 	h2,
 	.line,
 	.settings-hint {
