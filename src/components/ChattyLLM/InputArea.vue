@@ -82,7 +82,7 @@ export default {
 
 	computed: {
 		disabled() {
-			return this.loading.llmGeneration || this.loading.olderMessages || this.loading.initialMessages || this.loading.titleGeneration || this.loading.newHumanMessage
+			return this.loading.llmGeneration || this.loading.olderMessages || this.loading.initialMessages || this.loading.titleGeneration || this.loading.newHumanMessage || this.loading.newSession
 		},
 	},
 
@@ -101,7 +101,7 @@ export default {
 </script>
 
 <style lang="scss">
-[id$="-tribute"][id*="nc-rich-contenteditable-"][role="listbox"] {
+[id$='-tribute'][id*='nc-rich-contenteditable-'][role='listbox'] {
 	z-index: 9999;
 }
 </style>
