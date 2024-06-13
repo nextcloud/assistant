@@ -495,7 +495,7 @@ export default {
 				this.loading.llmGeneration = true
 				const response = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId: this.active.id } })
 				console.debug('regenerateLLMResponse response:', response)
-				this.messages = [...this.messages.filter((message) => message.id < messageId), response.data]
+				this.messages[this.messages.length - 1] = response.data
 				this.scrollToBottom()
 			} catch (error) {
 				console.error('regenerateLLMResponse error:', error)

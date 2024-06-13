@@ -80,6 +80,22 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param integer $messageId
+	 * @return Message
+	 * @throws \OCP\DB\Exception
+	 * @throws MultipleObjectsReturnedException
+	 * @throws DoesNotExistException
+	 */
+	public function getMessageById(int $messageId): Message {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Message::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)));
+
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * @param int $sessionId
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
@@ -95,30 +111,16 @@ class MessageMapper extends QBMapper {
 
 	/**
 	 * @param integer $messageId
-	 * @throws \OCP\DB\Exception
-	 * @throws \RuntimeException
-	 * @return void
-	 */
-	public function deleteMessageById(int $messageId): void {
-		$qb = $this->db->getQueryBuilder();
-		$qb->delete($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)));
-
-		$qb->executeStatement();
-	}
-
-	/**
 	 * @param integer $sessionId
-	 * @param integer $messageId
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
 	 * @return void
 	 */
-	public function deleteMessagesSinceId(int $sessionId, int $messageId): void {
+	public function deleteMessageByIdAndSessionId(int $messageId, int $sessionId): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
-			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->gte('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
 
 		$qb->executeStatement();
 	}

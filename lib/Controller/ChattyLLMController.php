@@ -300,13 +300,44 @@ class ChattyLLMController extends Controller {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
+			$lastMessageBackup = $this->messageMapper->getMessageById($messageId);
+		} catch (\OCP\DB\Exception | \RuntimeException $e) {
+			$this->logger->warning('Failed to get the last message', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (\OCP\AppFramework\Db\DoesNotExistException | \OCP\AppFramework\Db\MultipleObjectsReturnedException $e) {
+			$this->logger->warning('Failed to get the last message', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		try {
+			$this->messageMapper->deleteMessageByIdAndSessionId($messageId, $sessionId);
+		} catch (\OCP\DB\Exception | \RuntimeException $e) {
+			$this->logger->warning('Failed to delete the last message', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		try {
 			$newMessage = $this->generateForSession($sessionId);
 
-			// delete messages only after the new message is generated
-			$this->messageMapper->deleteMessagesSinceId($sessionId, $messageId);
-
 			return $newMessage;
-		} catch (\OCP\DB\Exception $e) {
+		} catch (\OCP\DB\Exception | \OCP\TextProcessing\Exception\TaskFailureException $e) {
+			try {
+				$lastMessageBackupCopy = new Message();
+				$lastMessageBackupCopy->setSessionId($lastMessageBackup->getSessionId());
+				$lastMessageBackupCopy->setRole($lastMessageBackup->getRole());
+				$lastMessageBackupCopy->setContent($lastMessageBackup->getContent());
+				$lastMessageBackupCopy->setTimestamp($lastMessageBackup->getTimestamp());
+
+				// add the last message back
+				$this->messageMapper->insert($lastMessageBackupCopy);
+
+				if ($e instanceof \OCP\TextProcessing\Exception\TaskFailureException) {
+					throw $e;
+				}
+			} catch (\OCP\DB\Exception $dbException) {
+				$this->logger->warning('Failed to add the last message back', ['exception' => $dbException]);
+			}
+
 			$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message into DB')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}

@@ -20,6 +20,7 @@
 			:key="'message' + idx"
 			:class="{ 'convo-box__message--dim': regenerateFromId && regenerateFromId <= message.id }"
 			:message="message"
+			:show-regenerate="message.role === 'assistant' && idx === (messages.length - 1)"
 			:delete-loading="loading.messageDelete && message.id === deleteMessageId"
 			:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
 			:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"

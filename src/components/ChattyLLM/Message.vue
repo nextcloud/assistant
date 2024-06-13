@@ -4,7 +4,7 @@
 		@mouseleave="showMessageActions = false">
 		<MessageActions v-show="showMessageActions"
 			class="message__actions"
-			:show-regenerate="message.role === 'assistant'"
+			:show-regenerate="showRegenerate"
 			:delete-loading="deleteLoading"
 			:regenerate-loading="regenerateLoading"
 			@copy="copyMessage(message.content)"
@@ -70,6 +70,10 @@ export default {
 		message: {
 			type: Object,
 			required: true,
+		},
+		showRegenerate: {
+			type: Boolean,
+			default: false,
 		},
 		deleteLoading: {
 			type: Boolean,
