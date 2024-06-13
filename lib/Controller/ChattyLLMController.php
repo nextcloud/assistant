@@ -160,10 +160,11 @@ class ChattyLLMController extends Controller {
 	 * @param string $role
 	 * @param string $content
 	 * @param int $timestamp
+	 * @param bool $firstMessage
 	 * @return JSONResponse
 	 */
 	#[NoAdminRequired]
-	public function newMessage(int $sessionId, string $role, string $content, int $timestamp): JSONResponse {
+	public function newMessage(int $sessionId, string $role, string $content, int $timestamp, bool $firstHumanMessage = false): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -174,12 +175,22 @@ class ChattyLLMController extends Controller {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
+			$content = trim($content);
+			if (empty($content)) {
+				return new JSONResponse(['error' => $this->l10n->t('Message content is empty')], Http::STATUS_BAD_REQUEST);
+			}
+
 			$message = new Message();
 			$message->setSessionId($sessionId);
 			$message->setRole($role);
 			$message->setContent($content);
 			$message->setTimestamp($timestamp);
 			$this->messageMapper->insert($message);
+
+			if ($firstHumanMessage) {
+				// set the title of the session based on first human message
+				$this->sessionMapper->updateSessionTitle($sessionId, strlen($content) > 140 ? mb_substr($content, 0, 140) . '...' : $content);
+			}
 
 			return new JSONResponse($message);
 		} catch (\OCP\DB\Exception $e) {

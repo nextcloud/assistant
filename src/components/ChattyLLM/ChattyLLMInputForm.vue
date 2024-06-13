@@ -257,7 +257,7 @@ export default {
 			}
 
 			if (session.title?.trim()) {
-				return session.title.length > 140 ? session.title.slice(0, 140) + '...' : session.title
+				return session.title.length > 140 ? session.title.trim().slice(0, 140) + '...' : session.title.trim()
 			}
 
 			return session.timestamp ? (' ' + moment(session.timestamp * 1000).format('LLL')) : t('assistant', 'Untitled conversation')
@@ -274,13 +274,13 @@ export default {
 			const content = this.chatContent.trim()
 			const timestamp = +new Date() / 1000 | 0
 
-			this.messages.push({ role, content, timestamp })
-			this.chatContent = ''
-			this.scrollToBottom()
-
 			if (this.active == null) {
 				await this.newSession()
 			}
+
+			this.messages.push({ role, content, timestamp })
+			this.chatContent = ''
+			this.scrollToBottom()
 			await this.newMessage(role, content, timestamp)
 		},
 
@@ -432,17 +432,26 @@ export default {
 		async newMessage(role, content, timestamp) {
 			try {
 				this.loading.newHumanMessage = true
+				const firstHumanMessage = this.messages.length === 1 && this.messages[0].role === Roles.HUMAN
+
 				const response = await axios.put(getChatURL('/new_message'), {
 					sessionId: this.active.id,
 					role,
 					content,
 					timestamp,
+					firstHumanMessage,
 				})
 				console.debug('newMessage response:', response)
 				this.loading.newHumanMessage = false
 
 				// replace the last message with the response that contains the id
 				this.messages[this.messages.length - 1] = response.data
+
+				if (firstHumanMessage) {
+					const session = this.sessions.find((session) => session.id === this.active.id)
+					session.title = content
+				}
+
 				await this.getLLMResponse()
 			} catch (error) {
 				this.loading.newHumanMessage = false
