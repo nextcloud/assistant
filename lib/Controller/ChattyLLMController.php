@@ -321,7 +321,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$this->messageMapper->deleteMessageByIdAndSessionId($messageId, $sessionId);
+			$this->messageMapper->deleteMessageById($messageId);
 		} catch (\OCP\DB\Exception | \RuntimeException $e) {
 			$this->logger->warning('Failed to delete the last message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
