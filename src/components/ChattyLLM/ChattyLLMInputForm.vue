@@ -30,20 +30,16 @@
 					@update:name="(newTitle) => onEditSessionTitle(session.id, newTitle)">
 					<template #actions>
 						<NcActionButton @click="onGenerateSessionTitle(session.id)">
-							<template v-if="!loading.titleGeneration" #icon>
-								<AutoFixIcon :size="20" />
-							</template>
-							<template v-else #icon>
-								<NcLoadingIcon :size="20" />
+							<template #icon>
+								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
+								<NcLoadingIcon v-else :size="20" />
 							</template>
 							{{ t('assistant', 'Generate Title') }}
 						</NcActionButton>
 						<NcActionButton @click="deleteSession(session.id)">
-							<template v-if="!loading.sessionDelete" #icon>
-								<DeleteIcon :size="20" />
-							</template>
-							<template v-else #icon>
-								<NcLoadingIcon :size="20" />
+							<template #icon>
+								<DeleteIcon v-if="!loading.sessionDelete" :size="20" />
+								<NcLoadingIcon v-else :size="20" />
 							</template>
 							{{ t('assistant', 'Delete') }}
 						</NcActionButton>

@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Db\ChattyLLM;
 
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
