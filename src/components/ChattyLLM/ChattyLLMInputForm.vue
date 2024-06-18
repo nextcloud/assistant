@@ -24,18 +24,10 @@
 					:name="getSessionTitle(session)"
 					:title="getSessionTitle(session)"
 					:aria-description="getSessionTitle(session)"
-					:editable="true"
-					:edit-label="t('assistant', 'Edit Title')"
-					@click="onSessionSelect(session)"
-					@update:name="(newTitle) => onEditSessionTitle(session.id, newTitle)">
+					:editable="false"
+					:inline-actions="1"
+					@click="onSessionSelect(session)">
 					<template #actions>
-						<NcActionButton @click="onGenerateSessionTitle(session.id)">
-							<template #icon>
-								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
-								<NcLoadingIcon v-else :size="20" />
-							</template>
-							{{ t('assistant', 'Generate Title') }}
-						</NcActionButton>
 						<NcActionButton @click="deleteSession(session.id)">
 							<template #icon>
 								<DeleteIcon v-if="!loading.sessionDelete" :size="20" />
@@ -49,7 +41,32 @@
 		</NcAppNavigation>
 		<NcAppContent class="session-area">
 			<div class="session-area__top-bar">
-				{{ getSessionTitle(active) }}
+				<div class="session-area__top-bar__title">
+					<EditableTextField v-if="active != null"
+						:initial-text="getSessionTitle(active)"
+						:editing.sync="editingTitle"
+						:placeholder="t('assistant', 'Conversation title')"
+						:loading="loading.updateTitle"
+						:max-length="140"
+						@submit-text="onEditSessionTitle" />
+				</div>
+				<div v-if="active != null" class="session-area__top-bar__actions">
+					<NcActions :open.sync="titleActionsOpen">
+						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
+							<template #icon>
+								<PencilIcon :size="20" />
+							</template>
+							{{ t('assistant', 'Edit Title') }}
+						</NcActionButton>
+						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onGenerateSessionTitle">
+							<template #icon>
+								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
+								<NcLoadingIcon v-else :size="20" />
+							</template>
+							{{ t('assistant', 'Generate Title') }}
+						</NcActionButton>
+					</NcActions>
+				</div>
 			</div>
 			<div class="session-area__chat-area">
 				<NoSession v-if="loading.newSession"
@@ -110,11 +127,13 @@
 <script>
 import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import PencilIcon from 'vue-material-design-icons/Pencil.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
@@ -124,6 +143,7 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 
 import ConversationBox from './ConversationBox.vue'
+import EditableTextField from './EditableTextField.vue'
 import InputArea from './InputArea.vue'
 import NoSession from './NoSession.vue'
 
@@ -146,11 +166,13 @@ export default {
 	components: {
 		AutoFixIcon,
 		DeleteIcon,
+		PencilIcon,
 		PlusIcon,
 
 		AssistantIcon,
 
 		NcActionButton,
+		NcActions,
 		NcAppContent,
 		NcAppNavigation,
 		NcAppNavigationItem,
@@ -160,6 +182,7 @@ export default {
 		NcLoadingIcon,
 
 		ConversationBox,
+		EditableTextField,
 		InputArea,
 		NoSession,
 	},
@@ -179,6 +202,7 @@ export default {
 				olderMessages: false,
 				llmGeneration: false,
 				titleGeneration: false,
+				updateTitle: false,
 				newHumanMessage: false,
 				newSession: false,
 				messageDelete: false,
@@ -186,6 +210,8 @@ export default {
 			},
 			msgCursor: 0,
 			msgLimit: 20,
+			titleActionsOpen: false,
+			editingTitle: false,
 		}
 	},
 
@@ -195,6 +221,7 @@ export default {
 			this.chatContent = ''
 			this.msgCursor = 0
 			this.messages = []
+			this.editingTitle = false
 			this.$refs.inputComponent.focus()
 
 			if (this.active != null && !this.loading.newSession) {
@@ -233,14 +260,27 @@ export default {
 			this.active = session
 		},
 
-		onEditSessionTitle(sessionId, newTitle) {
-			console.debug(sessionId, newTitle)
-			for (const session of this.sessions) {
-				if (session.id === sessionId) {
-					session.title = newTitle
-					this.updateTitle(sessionId, newTitle)
-					break
-				}
+		onEditSessionTitleClick() {
+			this.editingTitle = true
+			this.titleActionsOpen = false
+		},
+
+		async onEditSessionTitle(newTitle) {
+			this.loading.updateTitle = true
+			const session = this.sessions.find((session) => session.id === this.active.id)
+
+			try {
+				await axios.patch(getChatURL('/update_session'), {
+					sessionId: this.active.id,
+					title: newTitle,
+				})
+				this.editingTitle = false
+				session.title = newTitle
+			} catch (error) {
+				console.error('updateTitle error:', error)
+				showError(error?.response?.data?.error ?? t('assistant', 'Error updating conversations\'s title'))
+			} finally {
+				this.loading.updateTitle = false
 			}
 		},
 
@@ -288,28 +328,16 @@ export default {
 			this.fetchMessages(true)
 		},
 
-		async updateTitle(sessionId, title) {
-			try {
-				await axios.patch(getChatURL('/update_session'), {
-					sessionId,
-					title,
-				})
-			} catch (error) {
-				console.error('updateTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error updating session title'))
-			}
-		},
-
-		async onGenerateSessionTitle(sessionId) {
+		async onGenerateSessionTitle() {
 			try {
 				this.loading.titleGeneration = true
-				const response = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
+				const response = await axios.get(getChatURL('/generate_title'), { params: { sessionId: this.active.id } })
 				if (response?.data?.result == null) {
-					throw new Error('No title generated')
+					throw new Error('No title generated, response:', response)
 				}
 
 				for (const session of this.sessions) {
-					if (session.id === sessionId) {
+					if (session.id === this.active.id) {
 						session.title = response?.data?.result
 						break
 					}
@@ -632,6 +660,7 @@ export default {
 
 		&__top-bar {
 			display: flex;
+			justify-content: space-between;
 			align-items: center;
 			position: sticky;
 			top: 0;
@@ -639,8 +668,13 @@ export default {
 			box-sizing: border-box;
 			border-bottom: 1px solid var(--color-border);
 			padding-left: 4.5em;
+			padding-right: 0.5em;
 			font-weight: bold;
 			background-color: var(--color-main-background);
+
+			&__title {
+				width: 100%;
+			}
 		}
 
 		&__chat-area {
