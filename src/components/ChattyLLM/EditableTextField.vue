@@ -13,6 +13,7 @@
 			:use-extended-markdown="true" />
 		<NcTextField v-else
 			ref="ncTextField"
+			v-tooltip="t('assistant', 'The text must be shorter than or equal to {maxLength} characters, currently {length}', { maxLength, length: text.length })"
 			dir="auto"
 			:value.sync="text"
 			:maxlength="maxLength"
@@ -37,13 +38,6 @@
 						<Check :size="20" />
 					</template>
 				</NcButton>
-				<div v-if="showCountDown"
-					v-tooltip.auto="countDownWarningText"
-					class="counter"
-					tabindex="0"
-					aria-label="countDownWarningText">
-					<span>{{ charactersCountDown }}</span>
-				</div>
 			</template>
 		</template>
 		<div v-if="loading" class="icon-loading-small spinner" />
@@ -126,31 +120,6 @@ export default {
 		}
 	},
 
-	computed: {
-		canSubmit() {
-			return this.charactersCount <= this.maxLength && this.text !== this.initialText
-		},
-
-		charactersCount() {
-			return this.text.length
-		},
-
-		charactersCountDown() {
-			return this.maxLength - this.charactersCount
-		},
-
-		showCountDown() {
-			return this.charactersCount >= this.maxLength - 20
-		},
-
-		countDownWarningText() {
-			return t('assistant', 'The text must be less than or equal to {maxLength} characters long. Your current text is {charactersCount} characters long.', {
-				maxLength: this.maxLength,
-				charactersCount: this.charactersCount,
-			})
-		},
-	},
-
 	watch: {
 		// Each time the prop changes, reflect the changes in the value stored in this component
 		initialText(newValue) {
@@ -169,8 +138,12 @@ export default {
 	},
 
 	methods: {
+		canSubmit() {
+			return this.text.length <= this.maxLength && this.text !== this.initialText
+		},
+
 		handleSubmitText() {
-			if (!this.canSubmit) {
+			if (!this.canSubmit()) {
 				return
 			}
 
@@ -191,9 +164,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '../../assets/variables';
-// @import '../../assets/markdown';
-
 .editable-text-field {
 	display: flex;
 	width: 100%;
@@ -212,33 +182,11 @@ export default {
 		line-height: var(--default-line-height) !important;
 	}
 
-	// Restyle NcRichContenteditable component from our library.
-	:deep(.rich-contenteditable) {
-		flex-grow: 1;
-	}
-
-	:deep(.rich-text--wrapper) {
-		text-align: start;
-		// @include markdown;
-	}
 }
 
 .spinner {
 	width: var(--default-clickable-area);
 	height: var(--default-clickable-area);
 	margin: 0 0 0 44px;
-}
-
-.counter {
-	background-color: var(--color-background-dark);
-	height: 44px;
-	width: 44px;
-	border-radius: var(--border-radius-pill);
-	position: absolute;
-	top: 0;
-	right: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 </style>

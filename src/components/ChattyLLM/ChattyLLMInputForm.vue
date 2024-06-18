@@ -47,7 +47,7 @@
 						:editing.sync="editingTitle"
 						:placeholder="t('assistant', 'Conversation title')"
 						:loading="loading.updateTitle"
-						:max-length="140"
+						:max-length="100"
 						@submit-text="onEditSessionTitle" />
 				</div>
 				<div v-if="active != null" class="session-area__top-bar__actions">
@@ -293,7 +293,7 @@ export default {
 			}
 
 			if (session.title?.trim()) {
-				return session.title.length > 140 ? session.title.trim().slice(0, 140) + '...' : session.title.trim()
+				return session.title.length > 100 ? session.title.trim().slice(0, 100) + '...' : session.title.trim()
 			}
 
 			return session.timestamp ? (' ' + moment(session.timestamp * 1000).format('LLL')) : t('assistant', 'Untitled conversation')
