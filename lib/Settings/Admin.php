@@ -6,6 +6,7 @@ use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
+use OCP\IL10N;
 use OCP\Settings\ISettings;
 use OCP\SpeechToText\ISpeechToTextManager;
 use OCP\TextProcessing\FreePromptTaskType;
@@ -21,6 +22,7 @@ class Admin implements ISettings {
 		private ITextToImageManager $textToImageManager,
 		private ITextProcessingManager $textProcessingManager,
 		private ISpeechToTextManager $speechToTextManager,
+		private IL10N $l10n,
 	) {
 	}
 
@@ -37,6 +39,9 @@ class Admin implements ISettings {
 		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$speechToTextAvailable = $this->speechToTextManager->hasProviders();
 		$speechToTextEnabled = $this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
+		$chattyLLMUserInstructions = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS);
+		$chattyLLMUserInstructionsTitle = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE);
+		$chattyLLMLastNMessages = (int) $this->config->getAppValue(Application::APP_ID, 'chat_last_n_messages', '10');
 
 		$adminConfig = [
 			'text_processing_available' => $textProcessingAvailable,
@@ -48,6 +53,9 @@ class Admin implements ISettings {
 			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 			'speech_to_text_picker_available' => $speechToTextAvailable,
 			'speech_to_text_picker_enabled' => $speechToTextEnabled,
+			'chat_user_instructions' => $chattyLLMUserInstructions,
+			'chat_user_instructions_title' => $chattyLLMUserInstructionsTitle,
+			'chat_last_n_messages' => $chattyLLMLastNMessages,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

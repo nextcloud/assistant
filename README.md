@@ -39,6 +39,7 @@ include text processing providers to:
 * Get an answer from a free prompt
 * Reformulate (OpenAi/LocalAi only)
 * Context writer: Generate text with a specified style. The style can be described or provided via an example text.
+* Chat with AI
 
 ### Text to image (Image generation)
 

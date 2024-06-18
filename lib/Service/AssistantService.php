@@ -84,6 +84,11 @@ class AssistantService {
 					'name' => $this->l10n->t('Context write'),
 					'description' => $this->l10n->t('Writes text in a given style based on the provided source material.'),
 				];
+				$types[] = [
+					'id' => 'chatty-llm',
+					'name' => $this->l10n->t('Chat with AI'),
+					'description' => $this->l10n->t('Chat with an AI model.'),
+				];
 			} else {
 				$types[] = [
 					'id' => $typeClass,

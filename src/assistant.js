@@ -366,6 +366,11 @@ async function showAssistantTaskResult(taskId) {
 		console.debug('showing results for task', response.data?.ocs?.data?.task)
 		openAssistantTask(response.data?.ocs?.data?.task)
 	}).catch(error => {
+		if (error.response?.status === 401) {
+			showError(t('assistant', 'Please log in to view the task result'))
+			return
+		}
+
 		console.error(error)
 		showError(t('assistant', 'This task does not exist or has been cleaned up'))
 	})

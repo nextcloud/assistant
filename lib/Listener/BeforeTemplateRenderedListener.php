@@ -8,7 +8,9 @@ use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\IUser;
@@ -24,6 +26,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		private IUserSession $userSession,
 		private IConfig $config,
 		private IInitialState $initialStateService,
+		private IEventDispatcher $eventDispatcher,
 		private ?string $userId,
 	) {
 	}
@@ -41,6 +44,8 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		if (!$this->userSession->getUser() instanceof IUser) {
 			return;
 		}
+
+		$this->eventDispatcher->dispatchTyped(new RenderReferenceEvent());
 
 		$adminAssistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$userAssistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';

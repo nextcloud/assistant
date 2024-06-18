@@ -158,13 +158,9 @@ export default {
 </script>
 
 <style lang="scss">
-// this is to avoid scroll on the container and leave it to the result block
-.assistant-modal .modal-container {
-	display: flex !important;
-
-	//&__content {
-	//padding: 16px;
-	//}
+// TODO fix this in nc/vue
+.modal-container__content .assistant-modal--wrapper {
+	height: 100%;
 }
 </style>
 
@@ -178,13 +174,14 @@ export default {
 }
 
 .assistant-modal--wrapper {
-	//width: 100%;
-	padding: 16px;
+	width: 100%;
+	display: flex;
 	overflow-y: auto;
 }
 
 .assistant-modal--content {
 	width: 100%;
+	padding: 16px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -201,6 +198,7 @@ export default {
 
 	.form {
 		width: 100%;
+		height: 100%;
 	}
 }
 </style>

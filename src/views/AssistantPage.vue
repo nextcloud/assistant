@@ -160,6 +160,7 @@ export default {
 
 <style scoped lang="scss">
 .assistant-wrapper {
+	height: 90%;
 	display: flex;
 	justify-content: center;
 	margin: 24px 16px 16px 16px;
