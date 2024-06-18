@@ -75,6 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 .message-actions {
+	--default-clickable-area: 44px;
 	display: flex;
 	right: 0.5em;
 	top: 0.5em;
