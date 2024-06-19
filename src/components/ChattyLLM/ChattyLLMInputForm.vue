@@ -278,7 +278,7 @@ export default {
 				session.title = newTitle
 			} catch (error) {
 				console.error('updateTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error updating conversations\'s title'))
+				showError(error?.response?.data?.error ?? t('assistant', 'Error updating title of conversation'))
 			} finally {
 				this.loading.updateTitle = false
 			}
