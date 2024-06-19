@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Корисникот не е пронајден",
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Choose file" : "Избери датотека",
     "Choose" : "Избери",
@@ -8,12 +9,15 @@ OC.L10N.register(
     "Close" : "Затвори",
     "Reset" : "Ресетирање",
     "Try again" : "Обиди се повторно",
-    "Cancel" : "Откажи",
     "Delete" : "Избриши",
+    "You" : "Вие",
+    "Cancel editing" : "Откажи уредување",
+    "Submit" : "Испрати",
+    "Delete message" : "Избриши порака",
+    "Cancel" : "Откажи",
     "Failed" : "Неуспешно",
     "Unknown error" : "Непозната грешка",
     "Running" : "Трчање",
-    "Submit" : "Испрати",
     "Send" : "Прати",
     "Advanced options" : "Напредни опции"
 },

@@ -8,10 +8,10 @@ OC.L10N.register(
     "Result" : "Rezultatet",
     "Copy" : "Kopjoni",
     "Try again" : "Provo përsëri",
-    "Cancel" : "Anuloje",
     "Delete" : "Fshi",
-    "Unknown error" : "Gabim i panjohur",
     "Submit" : "Dërgo",
+    "Cancel" : "Anuloje",
+    "Unknown error" : "Gabim i panjohur",
     "Preview" : "Parapamje ",
     "Send" : "Dërgo",
     "Advanced options" : "Opsione të avancuara"

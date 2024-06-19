@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Korisnik nije pronađen",
     "View results" : "Pregledaj rezultate",
     "Choose" : "Odaberite",
     "No file selected" : "Nije odabrana nijedna datoteka",
@@ -8,11 +9,12 @@ OC.L10N.register(
     "Reset" : "Resetiraj",
     "Result" : "Rezultat",
     "Copy" : "Kopirajte",
-    "Cancel" : "Odustani",
     "Delete" : "Izbriši",
+    "Submit" : "Šalji",
+    "Delete message" : "Izbriši poruku",
+    "Cancel" : "Odustani",
     "Unknown error" : "Nepoznata pogreška",
     "Running" : "Trčanje",
-    "Submit" : "Šalji",
     "Send" : "Pošaljite",
     "Advanced options" : "Napredne opcije",
     "Copy link to clipboard" : "Kopiraj poveznicu u međuspremnik"

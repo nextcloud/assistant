@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "User not found",
     "Artificial Intelligence" : "Artificial Intelligence",
     "Choose file" : "Choose file",
     "Choose" : "Choose",
@@ -9,15 +10,18 @@ OC.L10N.register(
     "Reset" : "Reset",
     "Result" : "Result",
     "Copy" : "Copy",
+    "Delete" : "Delete",
+    "You" : "You",
+    "Cancel editing" : "Cancel editing",
+    "Submit" : "Submit",
+    "Delete message" : "Delete message",
     "Start recording" : "Start recording",
     "Stop recording" : "Stop recording",
     "Cancel" : "Cancel",
-    "Delete" : "Delete",
     "Failed" : "Failed",
     "Unknown error" : "Unknown error",
     "Running" : "Running",
     "Image generation" : "Image generation",
-    "Submit" : "Submit",
     "Preview" : "Preview",
     "Send" : "Send",
     "Advanced options" : "Advanced options"

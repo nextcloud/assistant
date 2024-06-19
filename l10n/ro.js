@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Utilizatorul nu a fost găsit",
     "Input" : "Intrare",
     "Type some text" : "Tastează un text",
     "Choose" : "Alege",
@@ -9,13 +10,16 @@ OC.L10N.register(
     "Output" : "Ieșire",
     "Reset" : "Resetare",
     "Copy" : "Copiază",
-    "Cancel" : "Anulare",
     "Delete" : "Șterge",
+    "You" : "Tu",
+    "Cancel editing" : "Anulează editarea",
+    "Submit" : "Trimite",
+    "Delete message" : "Șterge mesajul",
+    "Cancel" : "Anulare",
     "Failed" : "Eșuat",
     "Unknown error" : "Eroare necunoscută",
     "Running" : "Alergat",
     "Scheduled" : "Programat",
-    "Submit" : "Trimite",
     "Preview" : "Previzualizare",
     "Send" : "Trimite",
     "Advanced options" : "Opțiuni avansate"

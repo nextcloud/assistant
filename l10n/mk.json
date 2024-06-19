@@ -1,4 +1,5 @@
 { "translations": {
+    "User not found" : "Корисникот не е пронајден",
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Choose file" : "Избери датотека",
     "Choose" : "Избери",
@@ -6,12 +7,15 @@
     "Close" : "Затвори",
     "Reset" : "Ресетирање",
     "Try again" : "Обиди се повторно",
-    "Cancel" : "Откажи",
     "Delete" : "Избриши",
+    "You" : "Вие",
+    "Cancel editing" : "Откажи уредување",
+    "Submit" : "Испрати",
+    "Delete message" : "Избриши порака",
+    "Cancel" : "Откажи",
     "Failed" : "Неуспешно",
     "Unknown error" : "Непозната грешка",
     "Running" : "Трчање",
-    "Submit" : "Испрати",
     "Send" : "Прати",
     "Advanced options" : "Напредни опции"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"

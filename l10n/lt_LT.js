@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Naudotojas nerastas",
     "View results" : "Rodyti rezultatus",
     "Choose" : "Pasirinkite",
     "No file selected" : "Neįkeltas joks failas",
@@ -8,12 +9,13 @@ OC.L10N.register(
     "Reset" : "Atstatyti",
     "Copy" : "Kopija",
     "Try again" : "Bandykite dar kartą",
-    "Cancel" : "Atsisakyti",
     "Delete" : "Ištrinti",
+    "Submit" : "Pateikti",
+    "Delete message" : "Ištrinti laišką",
+    "Cancel" : "Atsisakyti",
     "Failed" : "Nepavyko",
     "Unknown error" : "Nežinoma klaida",
     "Running" : "Bėgimas",
-    "Submit" : "Pateikti",
     "Preview" : "Peržiūra",
     "Send" : "Siųsti",
     "Show/hide advanced options" : "Rodyti/slėpti išplėstines parinktis",

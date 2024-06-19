@@ -7,10 +7,10 @@ OC.L10N.register(
     "Reset" : "საწყის მდოგმარეობაში დაბრუნება",
     "Result" : "შედეგი",
     "Try again" : "სცადეთ ახლიდან",
-    "Cancel" : "გაუქმება",
     "Delete" : "წაშლა",
-    "Unknown error" : "უცნობი შეცდომა",
     "Submit" : "გაგზავნა",
+    "Cancel" : "გაუქმება",
+    "Unknown error" : "უცნობი შეცდომა",
     "Preview" : "წინასწარი ჩვენება",
     "Send" : "გაგზავნა",
     "Advanced options" : "დამატებითი ოპციონები"

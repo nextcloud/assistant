@@ -7,8 +7,8 @@ OC.L10N.register(
     "Result" : "Resultado",
     "Try again" : "Reintentar",
     "Delete" : "Borrar",
-    "Unknown error" : "Se presentó un error desconocido",
     "Submit" : "Enviar",
+    "Unknown error" : "Se presentó un error desconocido",
     "Preview" : "Previsualizar",
     "Send" : "Enviar",
     "Advanced options" : "Opciones avanzadas"

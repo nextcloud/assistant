@@ -6,9 +6,9 @@ OC.L10N.register(
     "Close" : "Malfermi",
     "Reset" : "Restarigi",
     "Delete" : "Forigi",
+    "Submit" : "Sendi",
     "Unknown error" : "Nekonata eraro",
     "Running" : "Kuras",
-    "Submit" : "Sendi",
     "Preview" : "Antaŭvidi",
     "Send" : "Sendi",
     "Advanced options" : "Detalaj agordoj"

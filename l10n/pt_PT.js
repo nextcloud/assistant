@@ -1,16 +1,18 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Utilizador não encontrado",
     "Choose" : "Escolher",
     "No file selected" : "Nenhum ficheiro seleccionado",
     "Close" : "Fechar",
     "Reset" : "Reiniciar",
     "Copy" : "copiar",
-    "Cancel" : "Cancelar",
     "Delete" : "Eliminar",
+    "You" : "Vovê",
+    "Submit" : "Submeter",
+    "Cancel" : "Cancelar",
     "Unknown error" : "Erro desconhecido",
     "Running" : "Correr",
-    "Submit" : "Submeter",
     "Preview" : "Pré-visualizar",
     "Send" : "Enviar",
     "Advanced options" : "Opções avançadas"

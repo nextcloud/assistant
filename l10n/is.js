@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Notandi fannst ekki",
     "Nextcloud Assistant" : "Nextcloud Aðstoð",
     "Artificial Intelligence" : "Gervigreind",
     "Choose file" : "Veldu skrá",
@@ -10,13 +11,13 @@ OC.L10N.register(
     "Reset" : "Endurstilla",
     "Result" : "Niðurstöður",
     "Copy" : "Afrita",
+    "Delete" : "Eyða",
+    "Submit" : "Senda inn",
     "Nothing yet" : "Ekkert ennþá",
     "Cancel" : "Hætta við",
-    "Delete" : "Eyða",
     "Unknown error" : "Óþekkt villa",
     "Running" : "Hlaup",
     "Image generation" : "Gerð mynda",
-    "Submit" : "Senda inn",
     "Preview" : "Forskoðun",
     "Send" : "Senda",
     "Advanced options" : "Ítarlegir valkostir",

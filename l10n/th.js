@@ -7,10 +7,10 @@ OC.L10N.register(
     "Close" : "ปิด",
     "Reset" : "รีเซ็ต",
     "Copy" : "คัดลอก",
-    "Cancel" : "ยกเลิก",
     "Delete" : "ลบ",
-    "Unknown error" : "ข้อผิดพลาดที่ไม่รู้จัก",
     "Submit" : "ส่ง",
+    "Cancel" : "ยกเลิก",
+    "Unknown error" : "ข้อผิดพลาดที่ไม่รู้จัก",
     "Preview" : "ตัวอย่าง",
     "Send" : "ส่ง",
     "Advanced options" : "ตัวเลือกขั้นสูง"

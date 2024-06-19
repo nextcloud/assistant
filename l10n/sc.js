@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Utèntzia no agatada",
     "Choose file" : "Sèbera un'archìviu",
     "Choose" : "Sèbera",
     "No file selected" : "Perunu documentu seletzionadu",
@@ -8,12 +9,15 @@ OC.L10N.register(
     "Reset" : "Torra a impostare",
     "Result" : "Resurtadu",
     "Copy" : "Còpia",
-    "Cancel" : "Annulla",
+    "New conversation" : "Tzarrada noa",
     "Delete" : "Cantzella",
+    "You" : "Tue",
+    "Submit" : "Imbia",
+    "Delete message" : "Cantzella messàgiu",
+    "Cancel" : "Annulla",
     "Unknown error" : "Errore disconnotu",
     "Running" : "Cursa",
     "Image generation" : "Generatzione de immàgines",
-    "Submit" : "Imbia",
     "Advanced options" : "Sèberos avantzados",
     "Copy link to clipboard" : "Còpia su ligòngiu in punta de billete"
 },

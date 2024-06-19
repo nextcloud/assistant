@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "המשתמש לא נמצא",
     "Choose" : "בחר",
     "No file selected" : "לא נבחר קובץ",
     "Close" : "סגירה",
@@ -8,11 +9,11 @@ OC.L10N.register(
     "Result" : "תוצאה",
     "Copy" : "העתקה",
     "Try again" : "ניסיון חוזר",
-    "Cancel" : "ביטול",
     "Delete" : "מחיקה",
+    "Submit" : "שליחה",
+    "Cancel" : "ביטול",
     "Unknown error" : "שגיאה בלתי ידועה",
     "Running" : "ריצה",
-    "Submit" : "שליחה",
     "Preview" : "תצוגה מקדימה",
     "Send" : "שליחה",
     "Advanced options" : "אפשרויות מתקדמות",
