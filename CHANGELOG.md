@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.1.0 – 2024-06-19
+
+### Added
+
+- Chatty UI @kyteinsky @julien-nc @marcelklehr [#86](https://github.com/nextcloud/assistant/pull/86)
+
+
 ## 1.0.9 – 2024-05-06
 
 ### Added
