@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Benutzer nicht gefunden",
     "Failed to process prompt; unknown user" : "Fehler beim Verarbeiten der Eingabe; Unbekannter Benutzer",
     "Failed to get prompt history; unknown user" : "Eingabe-History konnte nicht abgerufen werden; unbekannter Benutzer",
     "Failed to get outputs; unknown user" : "Fehler beim Abrufen der Ausgabe; unbekannter Benutzer",
@@ -78,7 +79,10 @@ OC.L10N.register(
     "Try again" : "Nochmals versuchen",
     "Send request" : "Anfrage senden",
     "Delete" : "Löschen",
+    "You" : "Du",
+    "Cancel editing" : "Bearbeitung abbrechen",
     "Submit" : "Übermitteln",
+    "Delete message" : "Nachricht löschen",
     "No suitable providers are available. They must first be enabled by your administrator." : "Keine geeigneten Anbieter verfügbar. Diese müssen zunächst von deiner Administration aktiviert werden.",
     "Assistant options saved" : "Assistenteneinstellungen gespeichert",
     "Failed to save assistant options" : "Fehler beim Speichern der Assistenteneinstellungen",

@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Nun s'atopó l'usuariu",
     "Some internal error occurred. Contact your sysadmin for more info." : "Prodúxose dalgún error internu. Ponte en contautu cola alministración del sistema pa consiguir más información.",
     "Audio file not found." : "Nun s'atopó'l ficheru d'audiu.",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
@@ -64,8 +65,11 @@ OC.L10N.register(
     "Copy" : "Copiar",
     "Try again" : "Retentar",
     "Send request" : "Unviar la solicitú",
+    "New conversation" : "Conversación nueva",
     "Delete" : "Desaniciar",
+    "You" : "Tu",
     "Submit" : "Unviar",
+    "Delete message" : "Desaniciar el mensaxe",
     "This can take a while…" : "Esta aición pue tardar un poco…",
     "Loading generations…" : "Cargando les xeneraciones…",
     "Unexpected server response" : "Recibióse una rempuesta inesperada del sirvidor",

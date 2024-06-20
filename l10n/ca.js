@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "No s'ha trobat l'usuari",
     "Nextcloud Assistant" : "Assistent de Nextcloud",
     "Task for \"%1$s\" has finished" : "La tasca de \"%1$s\" ha finalitzat",
     "\"%1$s\" task for \"%2$s\" has finished" : "La tasca \"%1$s\" per a \"%2$s\" ha finalitzat",
@@ -26,7 +27,10 @@ OC.L10N.register(
     "Copy" : "Còpia",
     "Try again" : "Torna a provar-ho",
     "Delete" : "Suprimir",
+    "You" : "Vós",
+    "Cancel editing" : "Cancel·la l'edició",
     "Submit" : "Envia",
+    "Delete message" : "Suprimeix el missatge",
     "Assistant options saved" : "S'han desat les opcions de l'Assistent",
     "Failed to save assistant options" : "No s'han pogut desar les opcions de l'assistent",
     "Start recording" : "Iniciar l'enregistrament",

@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Bruger ikke fundet",
     "Artificial Intelligence" : "Kunstig Intelligens",
     "Choose file" : "Vælg fil",
     "Type some text" : "Skriv noget tekst",
@@ -12,6 +13,7 @@ OC.L10N.register(
     "Copy" : "Kopiér",
     "Delete" : "Slet",
     "Submit" : "Tilføj",
+    "Delete message" : "Slet besked",
     "Cancel" : "Annullér",
     "Failed" : "Mislykkede",
     "Unknown error" : "Ukendt fejl",

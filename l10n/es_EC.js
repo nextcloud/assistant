@@ -12,6 +12,7 @@ OC.L10N.register(
     "Result" : "Resultado",
     "Copy" : "Copiar",
     "Try again" : "Reintentar",
+    "New conversation" : "Nueva conversación",
     "Delete" : "Borrar",
     "Cancel editing" : "Cancelar edición",
     "Submit" : "Enviar",

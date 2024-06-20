@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Ο/Η χρήστης δεν βρέθηκε",
     "Nextcloud Assistant" : "Βοηθός Nextcloud",
     "AI image generation" : "Δημιουργία εικόνων AI",
     "Task for \"%1$s\" has finished" : "Η εργασία για το \"%1$s\" ολοκληρώθηκε",
@@ -27,7 +28,9 @@ OC.L10N.register(
     "Copy" : "Αντιγραφή",
     "Try again" : "Δοκιμάστε ξανά",
     "Delete" : "Διαγραφή",
+    "You" : "Εσύ",
     "Submit" : "Υποβολή",
+    "Delete message" : "Διαγραφή μηνύματος",
     "Assistant options saved" : "Οι επιλογές του βοηθού αποθηκεύτηκαν",
     "Failed to save assistant options" : "Αποτυχία αποθήκευσης επιλογών βοηθού",
     "Start recording" : "Έναρξη εγγραφής",

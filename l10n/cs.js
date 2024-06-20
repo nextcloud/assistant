@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Uživatel nenalezen",
     "Some internal error occurred. Contact your sysadmin for more info." : "Došlo k nějaké vnitřní chybě. Ohledně dalších informací se obraťte na svého správce systémů.",
     "No Speech-to-Text provider found, install one from the app store to use this feature." : "Nenalezen žádný poskytovatel převodu řeči na text – aby bylo možné tuto funkci využívat, nainstalujte nějaký z katalogu aplikací.",
     "Audio file not found." : "Zvukový soubor nenalezen.",
@@ -63,7 +64,9 @@ OC.L10N.register(
     "Try again" : "Zkusit znovu",
     "Send request" : "Odeslat požadavek",
     "Delete" : "Smazat",
+    "Cancel editing" : "Zrušit upravování",
     "Submit" : "Odeslat",
+    "Delete message" : "Smazat zprávu",
     "Text generation content" : "Obsah vytváření textu",
     "The text generation task was scheduled to run in the background." : "Úloha vytváření textu byla naplánována pro spuštění na pozadí.",
     "Estimated completion time: " : "Odhadovaná doba dokončení:",

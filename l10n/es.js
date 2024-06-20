@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Usuario no encontrado",
     "Failed to process prompt; unknown user" : "Fallo al procesar prompt; usuario desconocido",
     "Failed to get prompt history; unknown user" : "Fallo al obtener el historial de prompts; usuario desconocido",
     "Failed to get outputs; unknown user" : "Fallo al obtener salidas; usuario desconocido",
@@ -102,6 +103,7 @@ OC.L10N.register(
     "Try again" : "Vuelva a intentarlo",
     "Send request" : "Enviar solicitud",
     "Delete" : "Eliminar",
+    "You" : "Usted",
     "Cancel editing" : "Cancelar edición",
     "Submit" : "Enviar",
     "Delete message" : "Borrar mensaje",

@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not found" : "Потребителят не е намерен ",
     "AI image generation" : "Генериране на изображение с помощта на изкуствен интелект",
     "Transcribe" : "Транскрибиране",
     "Choose" : "Изберете",
@@ -10,8 +11,11 @@ OC.L10N.register(
     "Result" : "Резултат",
     "Copy" : "Копие",
     "Try again" : "Опитай отново",
+    "New conversation" : "Нов разговор",
     "Delete" : "Изтриване",
+    "Cancel editing" : "Отказ на редактирането",
     "Submit" : "Изпращане",
+    "Delete message" : "Изтриване на съобщението",
     "Prompt" : "Подкана",
     "Result {index}" : "Резултат {index}",
     "Start recording" : "Започване на запис",
