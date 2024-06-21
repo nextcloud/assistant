@@ -146,8 +146,8 @@ class Notifier implements INotifier {
 					: $l->t('"%1$s" task for "%2$s" has failed', [$taskTypeName, $schedulingAppName]);
 
 				$content = '';
-				if (isset($params['input'])) {
-					$content .= $l->t('Input: %1$s', [$params['input']]);
+				if ($taskInput) {
+					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
 
 
