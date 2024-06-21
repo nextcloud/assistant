@@ -20,7 +20,8 @@
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
 					:progress="progress"
-					@cancel="onCancelNSchedule" />
+					@background-notify="$emit('background-notify')"
+					@cancel="$emit('cancel-task')" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
 					:description="shortInput"
@@ -113,7 +114,8 @@ export default {
 	},
 	emits: [
 		'cancel',
-		'cancel-sync-n-schedule',
+		'cancel-task',
+		'background-notify',
 		'submit',
 		'sync-submit',
 		'action-button-clicked',
@@ -151,9 +153,6 @@ export default {
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
-		},
-		onCancelNSchedule() {
-			this.$emit('cancel-sync-n-schedule')
 		},
 		onActionButtonClicked(data) {
 			this.$emit('action-button-clicked', data)

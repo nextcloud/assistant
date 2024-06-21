@@ -11,8 +11,12 @@
 						:value="progress" />
 				</div>
 				<NcButton
+					@click="$emit('background-notify')">
+					{{ t('assistant', 'Run in the background and get notified') }}
+				</NcButton>
+				<NcButton
 					@click="$emit('cancel')">
-					{{ t('assistant', 'Run in the background') }}
+					{{ t('assistant', 'Cancel') }}
 				</NcButton>
 			</div>
 		</template>
@@ -51,6 +55,7 @@ export default {
 
 	emits: [
 		'cancel',
+		'background-notify',
 	],
 
 	data() {

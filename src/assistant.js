@@ -136,11 +136,17 @@ export async function openAssistantForm({
 				lastTask = task
 			}
 		})
-		view.$on('cancel-sync-n-schedule', () => {
+		view.$on('background-notify', () => {
 			cancelTaskPolling()
 			view.showScheduleConfirmation = true
 			view.showSyncTaskRunning = false
 			setNotifyReady(lastTask.id)
+		})
+		view.$on('cancel-task', () => {
+			cancelTaskPolling()
+			cancelTask(lastTask.id)
+			view.showSyncTaskRunning = false
+			lastTask = null
 		})
 		view.$on('action-button-clicked', (data) => {
 			if (data.button?.onClick) {
@@ -197,6 +203,13 @@ export async function setNotifyReady(taskId) {
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
 	const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/notify', { taskId })
 	return axios.post(url, {})
+}
+
+export async function cancelTask(taskId) {
+	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
+	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
+	const url = generateOcsUrl('taskprocessing/task/{taskId}', { taskId })
+	return axios.delete(url, {})
 }
 
 /**
@@ -379,11 +392,17 @@ export async function openAssistantTask(task) {
 			view.selectedTaskId = task.id
 		}
 	})
-	view.$on('cancel-sync-n-schedule', () => {
+	view.$on('background-notify', () => {
 		cancelTaskPolling()
 		view.showScheduleConfirmation = true
 		view.showSyncTaskRunning = false
 		setNotifyReady(lastTask.id)
+	})
+	view.$on('cancel-task', () => {
+		cancelTaskPolling()
+		cancelTask(lastTask.id)
+		view.showSyncTaskRunning = false
+		lastTask = null
 	})
 }
 

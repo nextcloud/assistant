@@ -6,7 +6,8 @@
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
 					:progress="progress"
-					@cancel="onCancelNSchedule" />
+					@background-notify="onBackgroundNotify"
+					@cancel="onCancel" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
 					:description="shortInput"
@@ -40,6 +41,7 @@ import { loadState } from '@nextcloud/initial-state'
 import {
 	scheduleTask,
 	cancelTaskPolling,
+	cancelTask,
 	setNotifyReady,
 	pollTask,
 } from '../assistant.js'
@@ -84,11 +86,16 @@ export default {
 	},
 
 	methods: {
-		onCancelNSchedule() {
+		onBackgroundNotify() {
 			cancelTaskPolling()
 			this.showScheduleConfirmation = true
 			this.showSyncTaskRunning = false
 			setNotifyReady(this.task.id)
+		},
+		onCancel() {
+			cancelTaskPolling()
+			cancelTask(this.task.id)
+			this.showSyncTaskRunning = false
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
