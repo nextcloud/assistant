@@ -40,6 +40,8 @@ use RuntimeException;
  */
 class AssistantService {
 
+	private const DEBUG = true;
+
 	public function __construct(
 		private ITaskProcessingManager $taskProcessingManager,
 		private TaskNotificationMapper $taskNotificationMapper,
@@ -92,45 +94,47 @@ class AssistantService {
 		// return [1,2];
 		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 		$types = [];
-		$types[] = [
-			'name' => 'input list',
-			'description' => 'plop',
-			'id' => 'core:inputList',
-			'inputShape' => [
-				'fileList' => [
-					'name' => 'Input file list',
-					'description' => 'plop',
-					'type' => 'ListOfFiles',
+		if (self::DEBUG) {
+			$types[] = [
+				'name' => 'input list',
+				'description' => 'plop',
+				'id' => 'core:inputList',
+				'inputShape' => [
+					'fileList' => [
+						'name' => 'Input file list',
+						'description' => 'plop',
+						'type' => 'ListOfFiles',
+					],
+					'imageList' => [
+						'name' => 'Input image list',
+						'description' => 'plop',
+						'type' => 'ListOfImages',
+					],
+					'audioList' => [
+						'name' => 'Input audio list',
+						'description' => 'plop',
+						'type' => 'ListOfAudios',
+					],
 				],
-				'imageList' => [
-					'name' => 'Input image list',
-					'description' => 'plop',
-					'type' => 'ListOfImages',
+				'outputShape' => [
+					'fileList' => [
+						'name' => 'Output file list',
+						'description' => 'plop',
+						'type' => 'ListOfFiles',
+					],
+					'imageList' => [
+						'name' => 'Output image list',
+						'description' => 'plop',
+						'type' => 'ListOfImages',
+					],
+					'image' => [
+						'name' => 'Output image',
+						'description' => 'plop',
+						'type' => 'Image',
+					],
 				],
-				'audioList' => [
-					'name' => 'Input audio list',
-					'description' => 'plop',
-					'type' => 'ListOfAudios',
-				],
-			],
-			'outputShape' => [
-				'fileList' => [
-					'name' => 'Output file list',
-					'description' => 'plop',
-					'type' => 'ListOfFiles',
-				],
-				'imageList' => [
-					'name' => 'Output image list',
-					'description' => 'plop',
-					'type' => 'ListOfImages',
-				],
-				'image' => [
-					'name' => 'Output image',
-					'description' => 'plop',
-					'type' => 'Image',
-				],
-			],
-		];
+			];
+		}
 		/** @var string $typeId */
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
 			$taskTypeArray['id'] = $typeId;
