@@ -336,7 +336,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: start;
 	gap: 12px;
 	overflow-y: auto;
 	overflow-x: hidden;
