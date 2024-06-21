@@ -139,6 +139,7 @@ OC.L10N.register(
     "Try sending a message to spark a conversation." : "Bain triail as teachtaireacht a sheoladh chun tús a chur le comhrá.",
     "Load older messages" : "Íosluchtaigh teachtaireachtaí níos sine",
     "Retry response generation" : "Bain triail eile as giniúint freagartha",
+    "Error updating title of conversation" : "Earráid agus teideal an chomhrá á nuashonrú",
     "Untitled conversation" : "Comhrá gan teideal",
     "Error generating a title for the conversation" : "Earráid agus teideal á ghiniúint don chomhrá",
     "Error deleting conversation" : "Tharla earráid agus an comhrá á scriosadh",

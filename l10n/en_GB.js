@@ -139,6 +139,7 @@ OC.L10N.register(
     "Try sending a message to spark a conversation." : "Try sending a message to spark a conversation.",
     "Load older messages" : "Load older messages",
     "Retry response generation" : "Retry response generation",
+    "Error updating title of conversation" : "Error updating title of conversation",
     "Untitled conversation" : "Untitled conversation",
     "Error generating a title for the conversation" : "Error generating a title for the conversation",
     "Error deleting conversation" : "Error deleting conversation",

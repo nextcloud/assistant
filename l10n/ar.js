@@ -139,6 +139,7 @@ OC.L10N.register(
     "Try sending a message to spark a conversation." : "حاول إرسالة رسالة لإثارة محادثة.",
     "Load older messages" : "تحميل الرسائل القديمة",
     "Retry response generation" : "إعادة توليد الاستجابة",
+    "Error updating title of conversation" : "حدث خطأ أثناء تحديث عنوان المحادثة",
     "Untitled conversation" : "محادثة بدون عنوان",
     "Error generating a title for the conversation" : "حدث خطأ عند توليد عنوان للمحادثة",
     "Error deleting conversation" : "حدث خطأ عند حذف المحادثة",

@@ -137,6 +137,7 @@
     "Try sending a message to spark a conversation." : "Versuchen Sie, eine Nachricht zu senden, um eine Unterhaltung anzustoßen.",
     "Load older messages" : "Ältere Nachrichten laden",
     "Retry response generation" : "Antworterstellung wiederholen",
+    "Error updating title of conversation" : "Fehler beim Aktualisieren des Titels der Unterhaltung",
     "Untitled conversation" : "Unterhaltung ohne Titel",
     "Error generating a title for the conversation" : "Fehler beim Erstellen eines Titels für die Unterhaltung",
     "Error deleting conversation" : "Fehler beim Löschen der Unterhaltung",

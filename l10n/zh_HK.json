@@ -137,6 +137,7 @@
     "Try sending a message to spark a conversation." : "試著發送一條訊息來引發對話。",
     "Load older messages" : "加載較舊的消息",
     "Retry response generation" : "請重試回應生成",
+    "Error updating title of conversation" : "更新對話標題時發生錯誤",
     "Untitled conversation" : "未命名對話",
     "Error generating a title for the conversation" : "生成對話標題時出現錯誤",
     "Error deleting conversation" : "刪除對話時發生錯誤",
