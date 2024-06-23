@@ -2,12 +2,12 @@
 
 namespace OCA\Assistant\Controller;
 
+use Exception;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
-use OCA\Assistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -17,9 +17,13 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUserManager;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager as ITextProcessingManager;
-use OCP\TextProcessing\Task as TextProcessingTask;
+use OCP\TaskProcessing\Exception\NotFoundException;
+use OCP\TaskProcessing\Exception\PreConditionNotMetException;
+use OCP\TaskProcessing\Exception\UnauthorizedException;
+use OCP\TaskProcessing\Exception\ValidationException;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
@@ -32,8 +36,7 @@ class ChattyLLMController extends Controller {
 		private MessageMapper $messageMapper,
 		private IL10N $l10n,
 		private LoggerInterface $logger,
-		private AssistantService $assistantService,
-		private ITextProcessingManager $textProcessingManager,
+		private ITaskProcessingManager $taskProcessingManager,
 		private IConfig $config,
 		private IUserManager $userManager,
 		private ?string $userId,
@@ -448,9 +451,29 @@ class ChattyLLMController extends Controller {
 	 *
 	 * @param string $content
 	 * @return string
+	 * @throws \OCP\TaskProcessing\Exception\Exception
+	 * @throws NotFoundException
+	 * @throws PreConditionNotMetException
+	 * @throws UnauthorizedException
+	 * @throws ValidationException
 	 */
 	private function queryLLM(string $content): string {
-		$task = new TextProcessingTask(FreePromptTaskType::class, $content, Application::APP_ID, $this->userId);
-		return trim($this->textProcessingManager->runTask($task));
+		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID, $this->userId, 'chatty-llm');
+		$this->taskProcessingManager->scheduleTask($task);
+		$i = 0;
+		while ($i < 60 && !in_array($task->getStatus(), [Task::STATUS_SUCCESSFUL, Task::STATUS_FAILED, Task::STATUS_CANCELLED])) {
+			sleep(1);
+			$task = $this->taskProcessingManager->getTask($task->getId());
+		}
+		if ($task->getStatus() === Task::STATUS_SUCCESSFUL) {
+			$output = $task->getOutput();
+			if (isset($output['output'])) {
+				return trim($output['output']);
+			}
+		}
+		if ($task->getStatus() === Task::STATUS_SCHEDULED) {
+			throw new Exception('Chatty LLM task took too long');
+		}
+		throw new Exception('Chatty LLM task failed or took too long');
 	}
 }
