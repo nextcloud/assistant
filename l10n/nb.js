@@ -102,6 +102,7 @@ OC.L10N.register(
     "Try again" : "Prøv igjen",
     "Send request" : "Send forespørsel",
     "Delete" : "Slett",
+    "You" : "Du",
     "Cancel editing" : "Avbryt redigering",
     "Submit" : "Send inn",
     "Delete message" : "Slett melding",
