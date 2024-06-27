@@ -13,6 +13,7 @@
 			type="tertiary"
 			:aria-label="t('assistant', 'Regenerate message')"
 			:title="t('assistant', 'Regenerate message')"
+			:disabled="regenerateLoading"
 			@click="$emit('regenerate', $event)">
 			<template v-if="regenerateLoading" #icon>
 				<NcLoadingIcon :size="20" />
@@ -25,6 +26,7 @@
 			type="tertiary"
 			:aria-label="t('assistant', 'Delete message')"
 			:title="t('assistant', 'Delete message')"
+			:disabled="regenerateLoading"
 			@click="$emit('delete', $event)">
 			<template v-if="deleteLoading" #icon>
 				<NcLoadingIcon :size="20" />

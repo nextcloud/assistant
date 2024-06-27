@@ -37,8 +37,6 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import Message from './Message.vue'
 import NoSession from './NoSession.vue'
 
-import { getCurrentUser } from '@nextcloud/auth'
-
 export default {
 	name: 'ConversationBox',
 
@@ -74,8 +72,6 @@ export default {
 
 	data: () => {
 		return {
-			displayName: getCurrentUser()?.displayName ?? getCurrentUser()?.uid ?? t('assistant', 'You'),
-			userId: getCurrentUser()?.uid ?? t('assistant', 'yooniquely-you'),
 			regenerateFromId: null,
 			deleteMessageId: null,
 		}
