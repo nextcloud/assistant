@@ -384,7 +384,7 @@ export default {
 			try {
 				this.loading.messageDelete = true
 				await axios.delete(getChatURL('/delete_message'), {
-					params: { messageId },
+					params: { messageId, sessionId: this.active.id },
 				})
 				this.messages = this.messages.filter((message) => message.id !== messageId)
 			} catch (error) {

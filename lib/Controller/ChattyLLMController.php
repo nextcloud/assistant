@@ -103,7 +103,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$this->sessionMapper->updateSessionTitle($sessionId, $title);
+			$this->sessionMapper->updateSessionTitle($this->userId, $sessionId, $title);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception | \RuntimeException  $e) {
 			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);
@@ -124,7 +124,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$this->sessionMapper->deleteSession($sessionId);
+			$this->sessionMapper->deleteSession($this->userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception | \RuntimeException  $e) {
@@ -170,7 +170,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$sessionExists = $this->sessionMapper->exists($sessionId);
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
@@ -189,7 +189,11 @@ class ChattyLLMController extends Controller {
 
 			if ($firstHumanMessage) {
 				// set the title of the session based on first human message
-				$this->sessionMapper->updateSessionTitle($sessionId, strlen($content) > 140 ? mb_substr($content, 0, 140) . '...' : $content);
+				$this->sessionMapper->updateSessionTitle(
+					$this->userId,
+					$sessionId,
+					strlen($content) > 140 ? mb_substr($content, 0, 140) . '...' : $content,
+				);
 			}
 
 			return new JSONResponse($message);
@@ -214,7 +218,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$sessionExists = $this->sessionMapper->exists($sessionId);
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
@@ -235,15 +239,21 @@ class ChattyLLMController extends Controller {
 	 * Delete a chat message by ID
 	 *
 	 * @param integer $messageId
+	 * @param integer $sessionId
 	 * @return JSONResponse
 	 */
 	#[NoAdminRequired]
-	public function deleteMessage(int $messageId): JSONResponse {
+	public function deleteMessage(int $messageId, int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
 
 		try {
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
+			if (!$sessionExists) {
+				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
+			}
+
 			$this->messageMapper->deleteMessageById($messageId);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception | \RuntimeException $e) {
@@ -265,7 +275,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$sessionExists = $this->sessionMapper->exists($sessionId);
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
@@ -306,7 +316,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$sessionExists = $this->sessionMapper->exists($sessionId);
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
@@ -372,7 +382,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$sessionExists = $this->sessionMapper->exists($sessionId);
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
@@ -394,7 +404,7 @@ class ChattyLLMController extends Controller {
 			$title = explode(PHP_EOL, $title)[0];
 			$title = trim($title);
 
-			$this->sessionMapper->updateSessionTitle($sessionId, $title);
+			$this->sessionMapper->updateSessionTitle($this->userId, $sessionId, $title);
 
 			return new JSONResponse(['result' => $title]);
 		} catch (\OCP\DB\Exception $e) {

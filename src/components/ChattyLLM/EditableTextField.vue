@@ -170,7 +170,7 @@ export default {
 	overflow: hidden;
 	position: relative;
 	min-height: var(--default-clickable-area);
-	align-items: flex-end;
+	align-items: center;
 
 	&__edit {
 		margin-left: var(--default-clickable-area);

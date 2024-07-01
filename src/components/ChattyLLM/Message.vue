@@ -90,7 +90,7 @@ export default {
 	data: () => {
 		return {
 			displayName: getCurrentUser()?.displayName ?? getCurrentUser()?.uid ?? t('assistant', 'You'),
-			userId: getCurrentUser()?.uid ?? t('assistant', 'yooniquely-you'),
+			userId: getCurrentUser()?.uid ?? t('assistant', 'You'),
 			showMessageActions: false,
 		}
 	},
