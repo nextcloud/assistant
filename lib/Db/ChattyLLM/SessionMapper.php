@@ -38,15 +38,17 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * @param string $userId
 	 * @param integer $sessionId
 	 * @return boolean
 	 * @throws \OCP\DB\Exception
 	 */
-	public function exists(int $sessionId): bool {
+	public function exists(string $userId, int $sessionId): bool {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('id')
 			->from($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
 
 		try {
 			return $this->findEntity($qb) !== null;
@@ -73,29 +75,33 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * @param string $userId
 	 * @param integer $sessionId
 	 * @param string $title
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
 	 */
-	public function updateSessionTitle(int $sessionId, string $title) {
+	public function updateSessionTitle(string $userId, int $sessionId, string $title) {
 		$qb = $this->db->getQueryBuilder();
 		$qb->update($this->getTableName())
 			->set('title', $qb->createPositionalParameter($title, IQueryBuilder::PARAM_STR))
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
 
 		$qb->executeStatement();
 	}
 
 	/**
+	 * @param string $userId
 	 * @param integer $sessionId
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
 	 */
-	public function deleteSession(int $sessionId) {
+	public function deleteSession(string $userId, int $sessionId) {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
 
 		$qb->executeStatement();
 	}
