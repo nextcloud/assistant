@@ -260,6 +260,6 @@ export default {
 
 .assistant-inputs {
 	margin-bottom: 1rem;
-	width: 100%;
+	//width: 100%;
 }
 </style>
