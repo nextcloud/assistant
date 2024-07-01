@@ -11,7 +11,7 @@
 			:value.sync="mySelectedTaskTypeId"
 			class="task-custom-select"
 			:inline="5"
-			:options="taskTypes"
+			:options="sortedTaskTypes"
 			@update:value="onTaskTypeUserChange" />
 		<div v-if="showHistory"
 			class="history">
@@ -210,8 +210,18 @@ export default {
 			if (this.mySelectedTaskTypeId === null) {
 				return null
 			}
-			console.debug('aaaaa ttt', this.mySelectedTaskTypeId, this.taskTypes)
 			return this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
+		},
+		sortedTaskTypes() {
+			return this.taskTypes.slice().sort((a, b) => {
+				const prioA = a.priority
+				const prioB = b.priority
+				return prioA > prioB
+					? 1
+					: prioA < prioB
+						? -1
+						: 0
+			})
 		},
 		submitButtonType() {
 			return this.hasOutput ? 'secondary' : 'primary'

@@ -27,7 +27,13 @@ use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\Exception\NotFoundException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\AudioToText;
+use OCP\TaskProcessing\TaskTypes\ContextWrite;
+use OCP\TaskProcessing\TaskTypes\TextToImage;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextHeadline;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToTextTopics;
 use Parsedown;
 use PhpOffice\PhpWord\IOFactory;
 use Psr\Log\LoggerInterface;
@@ -41,6 +47,20 @@ use RuntimeException;
 class AssistantService {
 
 	private const DEBUG = true;
+
+	private const TASK_TYPE_PRIORITIES = [
+		'chatty-llm' => 1,
+		TextToText::ID => 2,
+		// TODO set the correct task type ID (the textProcessing one or the future taskProcessing one)
+		'ContextChat' => 3,
+		AudioToText::ID => 4,
+		// TODO translate: 5 (translate is not migrated to taskProcessing yet
+		ContextWrite::ID => 6,
+		TextToImage::ID => 7,
+		TextToTextSummary::ID => 8,
+		TextToTextHeadline::ID => 9,
+		TextToTextTopics::ID => 10,
+	];
 
 	public function __construct(
 		private ITaskProcessingManager $taskProcessingManager,
@@ -99,6 +119,7 @@ class AssistantService {
 				'name' => 'input list',
 				'description' => 'plop',
 				'id' => 'core:inputList',
+				'priority' => 0,
 				'inputShape' => [
 					'fileList' => [
 						'name' => 'Input file list',
@@ -138,28 +159,22 @@ class AssistantService {
 		/** @var string $typeId */
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
 			$taskTypeArray['id'] = $typeId;
+			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
+
 			if ($typeId === TextToText::ID) {
 				$taskTypeArray['name'] = $this->l10n->t('Generate text');
 				$taskTypeArray['description'] = $this->l10n->t('Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.');
-				$types[] = $taskTypeArray;
-				/*
-				$types[] = [
-					'id' => 'copywriter',
-					'name' => $this->l10n->t('Context write'),
-					'description' => $this->l10n->t('Writes text in a given style based on the provided source material.'),
-				];
-				*/
+				// add the chattyUI virtual taks type
 				$types[] = [
 					'id' => 'chatty-llm',
 					'name' => $this->l10n->t('Chat with AI'),
 					'description' => $this->l10n->t('Chat with an AI model.'),
 					'inputShape' => [],
 					'outputShape' => [],
+					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
 				];
-			} else {
-				$taskTypeArray['id'] = $typeId;
-				$types[] = $taskTypeArray;
 			}
+			$types[] = $taskTypeArray;
 		}
 		return $types;
 	}
