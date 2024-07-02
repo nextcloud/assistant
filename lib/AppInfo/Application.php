@@ -6,11 +6,9 @@ use OCA\Assistant\Capabilities;
 use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
-use OCA\Assistant\Listener\SpeechToText\SpeechToTextResultListener;
 use OCA\Assistant\Listener\TaskFailedListener;
 use OCA\Assistant\Listener\TaskSuccessfulListener;
 use OCA\Assistant\Listener\Text2Image\Text2ImageReferenceListener;
-use OCA\Assistant\Listener\Text2Image\Text2ImageResultListener;
 use OCA\Assistant\Notification\Notifier;
 use OCA\Assistant\Reference\FreePromptReferenceProvider;
 use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
@@ -22,13 +20,8 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
-use OCP\SpeechToText\Events\TranscriptionFailedEvent;
-use OCP\SpeechToText\Events\TranscriptionSuccessfulEvent;
-use OCP\TextProcessing\Events\TaskFailedEvent as TextTaskFailedEvent;
-use OCP\TextProcessing\Events\TaskSuccessfulEvent as TextTaskSuccessfulEvent;
-use OCP\TextProcessing\Task as OCPTextprocessingTask;
-use OCP\TextToImage\Events\TaskFailedEvent as TextToImageTaskFailedEvent;
-use OCP\TextToImage\Events\TaskSuccessfulEvent as TextToImageTaskSuccessfulEvent;
+use OCP\TaskProcessing\Events\TaskFailedEvent;
+use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 
 class Application extends App implements IBootstrap {
 
@@ -41,27 +34,7 @@ class Application extends App implements IBootstrap {
 	public const DEFAULT_TEXT_GENERATION_STORAGE_TIME = 60 * 60 * 24 * 90; // 90 days
 	public const IMAGE_FOLDER = 'generated_images';
 	public const SPEECH_TO_TEXT_REC_FOLDER = 'stt_recordings';
-
-	public const STT_TASK_SCHEDULED = 0;
-	public const STT_TASK_SUCCESSFUL = 1;
-	public const STT_TASK_FAILED = -1;
-
-	public const STATUS_META_TASK_UNKNOWN = 0;
-	public const STATUS_META_TASK_SCHEDULED = 1;
-	public const STATUS_META_TASK_RUNNING = 2;
-	public const STATUS_META_TASK_SUCCESSFUL = 3;
-	public const STATUS_META_TASK_FAILED = 4;
-	public const TP_STATUS_TO_META_STATUS = [
-		OCPTextprocessingTask::STATUS_UNKNOWN => self::STATUS_META_TASK_UNKNOWN,
-		OCPTextprocessingTask::STATUS_SCHEDULED => self::STATUS_META_TASK_SCHEDULED,
-		OCPTextprocessingTask::STATUS_RUNNING => self::STATUS_META_TASK_RUNNING,
-		OCPTextprocessingTask::STATUS_SUCCESSFUL => self::STATUS_META_TASK_SUCCESSFUL,
-		OCPTextprocessingTask::STATUS_FAILED => self::STATUS_META_TASK_FAILED,
-	];
-
-	public const TASK_CATEGORY_TEXT_GEN = 0;
-	public const TASK_CATEGORY_TEXT_TO_IMAGE = 1;
-	public const TASK_CATEGORY_SPEECH_TO_TEXT = 2;
+	public const ASSISTANT_DATA_FOLDER_NAME = 'Assistant';
 
 	public const CHAT_USER_INSTRUCTIONS = 'This is a conversation in a specific language between {user} and you, Nextcloud Assistant. You are a kind, polite and helpful AI that helps {user} to the best of its abilities. If you do not understand something, you will ask for clarification. Detect the language that {user} is using. Make sure to use the same language in your response. Do not mention the language explicitly.';
 	public const CHAT_USER_INSTRUCTIONS_TITLE = 'Above is a chat session in a specific language between {user} and you, Nextcloud Assistant. Generate a suitable title summarizing the conversation in the same language. Output only the title in plain text, nothing else.';
@@ -83,15 +56,10 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(RenderReferenceEvent::class, FreePromptReferenceListener::class);
 		$context->registerEventListener(RenderReferenceEvent::class, SpeechToTextReferenceListener::class);
 
-		$context->registerEventListener(TextToImageTaskSuccessfulEvent::class, Text2ImageResultListener::class);
-		$context->registerEventListener(TextToImageTaskFailedEvent::class, Text2ImageResultListener::class);
-		$context->registerEventListener(TranscriptionSuccessfulEvent::class, SpeechToTextResultListener::class);
-		$context->registerEventListener(TranscriptionFailedEvent::class, SpeechToTextResultListener::class);
-
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
 
-		$context->registerEventListener(TextTaskSuccessfulEvent::class, TaskSuccessfulListener::class);
-		$context->registerEventListener(TextTaskFailedEvent::class, TaskFailedListener::class);
+		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
+		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
 
 		$context->registerNotifierService(Notifier::class);
 	}

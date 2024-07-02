@@ -11,9 +11,10 @@ use OCP\Notification\IAction;
 use OCP\Notification\INotification;
 
 use OCP\Notification\INotifier;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\ITaskType;
-use Psr\Container\ContainerInterface;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\TaskTypes\AudioToText;
+use OCP\TaskProcessing\TaskTypes\TextToImage;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 use Psr\Log\LoggerInterface;
 
 class Notifier implements INotifier {
@@ -22,7 +23,7 @@ class Notifier implements INotifier {
 		private IFactory $factory,
 		private IURLGenerator $url,
 		private IAppManager $appManager,
-		private ContainerInterface $container,
+		private ITaskProcessingManager $taskProcessingManager,
 		private LoggerInterface $logger,
 		private ?string $userId,
 	) {
@@ -65,7 +66,7 @@ class Notifier implements INotifier {
 		$params = $notification->getSubjectParameters();
 		// ignore old notifications (before meta tasks were introduced)
 		// isset returns false if null
-		if (!isset($params['target'], $params['taskCategory'], $params['inputs'])) {
+		if (!isset($params['target'], $params['inputs'])) {
 			throw new InvalidArgumentException();
 		}
 		$schedulingAppId = $params['appId'];
@@ -76,31 +77,31 @@ class Notifier implements INotifier {
 		$schedulingAppName = $schedulingAppInfo['name'];
 
 		$taskTypeName = null;
-		$taskInput = $params['inputs']['prompt'] ?? null;
-		if ($params['taskCategory'] === Application::TASK_CATEGORY_TEXT_GEN) {
+		$taskInput = $params['inputs']['input'] ?? null;
 
-			if ($params['taskTypeClass'] === 'copywriter') {
+		try {
+			if (!isset($params['taskTypeId'])) {
+				$taskTypeName = $l->t('Assistant task');
+			} elseif ($params['taskTypeId'] === TextToText::ID) {
+				$taskTypeName = $l->t('AI text generation');
+			} elseif ($params['taskTypeId'] === TextToImage::ID) {
+				$taskTypeName = $l->t('AI image generation');
+			} elseif ($params['taskTypeId'] === AudioToText::ID) {
+				$taskTypeName = $l->t('AI audio transcription');
+			} elseif ($params['taskTypeId'] === 'copywriter') {
+				// TODO adjust that when we have copywriter back on its feet
 				// Catch the custom copywriter task type built on top of the FreePrompt task type.
 				$taskTypeName = $l->t('AI context writer');
 				$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
 			} else {
-				try {
-					if ($params['taskTypeClass'] === FreePromptTaskType::class) {
-						$taskTypeName = $l->t('AI text generation');
-					} else {
-						/** @var ITaskType $taskType */
-						$taskType = $this->container->get($params['taskTypeClass']);
-						$taskTypeName = $taskType->getName();
-					}
-				} catch (\Exception | \Throwable $e) {
-					$this->logger->debug('Impossible to get task type ' . $params['taskTypeClass'], ['exception' => $e]);
-				}
+				$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+				$taskType = $availableTaskTypes[$params['taskTypeId']];
+				$taskTypeName = $taskType['name'];
 			}
-		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
-			$taskTypeName = $l->t('AI image generation');
-		} elseif ($params['taskCategory'] === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
-			$taskTypeName = $l->t('AI audio transcription');
+		} catch (\Exception | \Throwable $e) {
+			$this->logger->debug('Impossible to get task type ' . $params['taskTypeId'], ['exception' => $e]);
 		}
+
 
 		switch ($notification->getSubject()) {
 			case 'success':
@@ -145,12 +146,12 @@ class Notifier implements INotifier {
 					: $l->t('"%1$s" task for "%2$s" has failed', [$taskTypeName, $schedulingAppName]);
 
 				$content = '';
-				if (isset($params['input'])) {
-					$content .= $l->t('Input: %1$s', [$params['input']]);
+				if ($taskInput) {
+					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
 
 
-				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['metaTaskId' => $params['id']]);
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
 
 				$notification

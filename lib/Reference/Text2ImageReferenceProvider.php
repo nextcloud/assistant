@@ -5,27 +5,23 @@
 
 namespace OCA\Assistant\Reference;
 
-use Exception;
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\Text2Image\ImageGenerationMapper;
 use OCP\Collaboration\Reference\ADiscoverableReferenceProvider;
 use OCP\Collaboration\Reference\IReference;
 use OCP\Collaboration\Reference\IReferenceManager;
-use OCP\Collaboration\Reference\Reference;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 
 class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
-	private const RICH_OBJECT_TYPE = Application::APP_ID . '_image';
 
 	public function __construct(
 		private IL10N $l10n,
 		private IURLGenerator $urlGenerator,
 		private IReferenceManager $referenceManager,
-		private ImageGenerationMapper $imageGenerationMapper,
 		private ?string $userId
 	) {
 	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -60,70 +56,13 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 	 * @inheritDoc
 	 */
 	public function matchReference(string $referenceText): bool {
-		return $this->getImageGenId($referenceText) !== null;
+		return false;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function resolveReference(string $referenceText): ?IReference {
-		$imageGenId = $this->getImageGenId($referenceText);
-		if ($imageGenId === null) {
-			return null;
-		}
-
-		try {
-			$imageGeneration = $this->imageGenerationMapper->getImageGenerationOfImageGenId($imageGenId);
-		} catch (Exception $e) {
-			$imageGeneration = null;
-		}
-
-		if ($imageGeneration !== null) {
-			$prompt = $imageGeneration->getPrompt();
-		} else {
-			$prompt = '';
-		}
-
-		$reference = new Reference($referenceText);
-		$imageUrl = $this->urlGenerator->linkToRouteAbsolute(
-			Application::APP_ID . '.Text2Image.getGenerationInfo',
-			['imageGenId' => $imageGenId]
-		);
-
-		$reference->setImageUrl($imageUrl);
-
-		$richObjectInfo = [
-			'prompt' => $prompt,
-			'proxied_url' => $imageUrl,
-			'imageGenId' => $imageGenId,
-		];
-		$reference->setRichObject(
-			self::RICH_OBJECT_TYPE,
-			$richObjectInfo,
-		);
-		return $reference;
-
-	}
-
-	/**
-	 * @param string $url
-	 * @return string|null
-	 */
-	private function getImageGenId(string $url): ?string {
-		$start = $this->urlGenerator->getAbsoluteURL('/apps/' . Application::APP_ID);
-		$startIndex = $this->urlGenerator->getAbsoluteURL('/index.php/apps/' . Application::APP_ID);
-
-		// link example: https://nextcloud.local/index.php/apps/assistant/i/c3b80f5a758d2ba5ecae2531764c4a0c
-		preg_match('/^' . preg_quote($start, '/') . '\/i\/([0-9a-f]+)$/i', $url, $matches);
-		if (count($matches) > 1) {
-			return $matches[1];
-		}
-
-		preg_match('/^' . preg_quote($startIndex, '/') . '\/i\/([0-9a-f]+)$/i', $url, $matches);
-		if (count($matches) > 1) {
-			return $matches[1];
-		}
-
 		return null;
 	}
 
