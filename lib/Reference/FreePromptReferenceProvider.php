@@ -66,18 +66,6 @@ class FreePromptReferenceProvider extends ADiscoverableReferenceProvider {
 	}
 
 	/**
-	 * @param string $url
-	 * @return string|null
-	 */
-	private function getCompletionId(string $url): ?string {
-		preg_match('/\/c\/([0-9a-z]+)$/i', $url, $matches);
-		if (count($matches) > 1) {
-			return $matches[1];
-		}
-		return null;
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	public function getCachePrefix(string $referenceId): string {
@@ -89,11 +77,6 @@ class FreePromptReferenceProvider extends ADiscoverableReferenceProvider {
 	 * @inheritDoc
 	 */
 	public function getCacheKey(string $referenceId): ?string {
-		$predictionId = $this->getCompletionId($referenceId);
-		if ($predictionId !== null) {
-			return $predictionId;
-		}
-
 		return $referenceId;
 	}
 

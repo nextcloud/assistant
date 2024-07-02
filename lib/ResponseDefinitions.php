@@ -33,44 +33,29 @@ namespace OCA\Assistant;
  *     type: int,
  * }
  *
- * @psalm-type AssistantTaskType = array{
+ * @psalm-type AssistantTaskProcessingTaskType = array{
  *     id: string,
  *     name: string,
  *     description: string,
- *     inputShape: array<AssistantShapeDescriptor>,
- *     optionalInputShape: array<AssistantShapeDescriptor>,
- *     outputShape: array<AssistantShapeDescriptor>,
- *     optionalOutputShape: array<AssistantShapeDescriptor>,
+ *     inputShape: array<string, AssistantShapeDescriptor>,
+ *     optionalInputShape: array<string, AssistantShapeDescriptor>,
+ *     outputShape: array<string, AssistantShapeDescriptor>,
+ *     optionalOutputShape: array<string, AssistantShapeDescriptor>,
+ *     priority: integer,
  * }
  *
- * @psalm-type AssistantTask = array{
- *     id: int,
- *     userId: string,
- *     inputs: array<string, mixed>,
- *     output: string,
+ * @psalm-type AssistantTaskProcessingTask = array{
  *     appId: string,
- *     ocpTaskId: int,
- *     taskType: string,
- *     timestamp: int,
- *     status: int,
- *     category: int,
- *     identifier: string,
- * }
- *
- * @psalm-type AssistantImageProcessPromptResponse = array{
- *     task: AssistantTask,
- *     url: string,
- *     reference_url: string,
- *     image_gen_id: string,
- *     prompt: string,
- * }
- *
- * @psalm-type AssistantImageGenInfo = array{
- *     files?: array<array{id: int, visible?: bool}>,
- *     prompt?: string,
- *     image_gen_id?: string,
- *     is_owner?: bool,
- *     processing?: int,
+ *     completionExpectedAt: integer|null,
+ *     customId: string|null,
+ *     id: int|null,
+ *     input: array<string, mixed>,
+ *     lastUpdated: integer,
+ *     output: array<string, mixed>,
+ *     progress: float|null,
+ *     status: string,
+ *     type: string,
+ *     userId: string|null,
  * }
  */
 class ResponseDefinitions {

@@ -22,8 +22,8 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
- * @psalm-import-type AssistantTaskType from ResponseDefinitions
- * @psalm-import-type AssistantTask from ResponseDefinitions
+ * @psalm-import-type AssistantTaskProcessingTaskType from ResponseDefinitions
+ * @psalm-import-type AssistantTaskProcessingTask from ResponseDefinitions
  */
 class AssistantApiController extends OCSController {
 
@@ -73,7 +73,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Get all available task types that the assistant can handle.
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{types: array<AssistantTaskType>}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{types: array<AssistantTaskProcessingTaskType>}, array{}>
 	 *
 	 * 200: Available task types returned
 	 */
@@ -91,7 +91,7 @@ class AssistantApiController extends OCSController {
 	 * Get a list of assistant tasks for the current user.
 	 *
 	 * @param string|null $taskTypeId Task type id. If null, tasks of all task types will be retrieved
-	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{tasks: array<AssistantTaskProcessingTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 404: No tasks found

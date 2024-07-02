@@ -61,11 +61,11 @@ class TaskNotificationMapper extends QBMapper {
 
 	/**
 	 * @param int $ocpTaskId
-	 * @return TaskNotification
+	 * @return TaskNotification|null
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function createTaskNotification(int $ocpTaskId): TaskNotification {
+	public function createTaskNotification(int $ocpTaskId): ?TaskNotification {
 		$existingEntry = $this->getByTaskId($ocpTaskId);
 		if ($existingEntry !== null) {
 			return $existingEntry;

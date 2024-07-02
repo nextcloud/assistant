@@ -8,6 +8,7 @@ use Html2Text\Html2Text;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\TaskNotificationMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\Constants;
 use OCP\DB\Exception;
@@ -42,7 +43,7 @@ use RtfHtmlPhp\Html\HtmlFormatter;
 use RuntimeException;
 
 /**
- * @psalm-import-type AssistantTaskType from ResponseDefinitions
+ * @psalm-import-type AssistantTaskProcessingTaskType from ResponseDefinitions
  */
 class AssistantService {
 
@@ -79,24 +80,25 @@ class AssistantService {
 	/**
 	 * Notify when image generation is ready
 	 *
-	 * @param string $taskId
+	 * @param int $taskId
 	 * @param string $userId
 	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
 	 */
-	public function notifyWhenReady(string $taskId, string $userId): void {
+	public function notifyWhenReady(int $taskId, string $userId): void {
 		try {
 			$task = $this->taskProcessingManager->getTask($taskId);
 		} catch (NotFoundException $e) {
 			$this->logger->debug('Task request error: ' . $e->getMessage());
-			throw new BaseException('Task not found', Http::STATUS_NOT_FOUND);
+			throw new Exception('Task not found', Http::STATUS_NOT_FOUND);
 		} catch (TaskProcessingException $e) {
 			$this->logger->debug('Task request error : ' . $e->getMessage());
-			throw new BaseException('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
+			throw new Exception('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
 		if ($task->getUserId() !== $userId) {
 			$this->logger->info('A user attempted enabling notifications of another user\'s task');
-			throw new BaseException('Unauthorized', Http::STATUS_UNAUTHORIZED);
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
 		}
 
 		// Just in case check if the task is already ready and, if so, notify the user immediately so that the result is not lost:
@@ -108,7 +110,7 @@ class AssistantService {
 	}
 
 	/**
-	 * @return array<AssistantTaskType>
+	 * @return array<AssistantTaskProcessingTaskType>
 	 */
 	public function getAvailableTaskTypes(): array {
 		// return [1,2];
@@ -154,6 +156,8 @@ class AssistantService {
 						'type' => 'Image',
 					],
 				],
+				'optionalInputShape' => [],
+				'optionalOutputShape' => [],
 			];
 		}
 		/** @var string $typeId */
@@ -171,6 +175,8 @@ class AssistantService {
 					'description' => $this->l10n->t('Chat with an AI model.'),
 					'inputShape' => [],
 					'outputShape' => [],
+					'optionalInputShape' => [],
+					'optionalOutputShape' => [],
 					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
 				];
 			}
@@ -257,18 +263,28 @@ class AssistantService {
 		return null;
 	}
 
+	/**
+	 * @param string $userId
+	 * @param int $ocpTaskId
+	 * @param int $fileId
+	 * @return File
+	 * @throws Exception
+	 * @throws NotFoundException
+	 * @throws TaskProcessingException
+	 */
 	public function getTaskOutputFile(string $userId, int $ocpTaskId, int $fileId): File {
 		$task = $this->taskProcessingManager->getTask($ocpTaskId);
 		if ($task->getUserId() !== $userId) {
 			$this->logger->info('A user attempted getting a file of another user\'s task');
-			throw new BaseException('Unauthorized', Http::STATUS_UNAUTHORIZED);
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
 		}
-		// TODO uncomment this, useful for testing with fake task types
-		//		$taskFileIds = $this->extractFileIdsFromTask($task);
-		//		if (!in_array($fileId, $taskFileIds, true)) {
-		//			throw new BaseException('Not found', Http::STATUS_NOT_FOUND);
-		//		}
-
+		// avoiding this is useful for testing with fake task types
+		if (!self::DEBUG) {
+			$taskFileIds = $this->extractFileIdsFromTask($task);
+			if (!in_array($fileId, $taskFileIds, true)) {
+				throw new Exception('Not found', Http::STATUS_NOT_FOUND);
+			}
+		}
 
 		$node = $this->rootFolder->getFirstNodeById($fileId);
 		if ($node === null) {
@@ -295,7 +311,7 @@ class AssistantService {
 					$fileCopy = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
 				}
 			} else {
-				throw new BaseException('Imossible to copy output file, a directory with this name already exists', Http::STATUS_UNAUTHORIZED);
+				throw new Exception('Impossible to copy output file, a directory with this name already exists', Http::STATUS_UNAUTHORIZED);
 			}
 		} else {
 			$fileCopy = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
@@ -367,27 +383,16 @@ class AssistantService {
 	 * @param int $taskId
 	 * @param int $fileId
 	 * @return array|null
-	 * @throws BaseException
+	 * @throws Exception
 	 * @throws LockedException
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
+	 * @throws TaskProcessingException
 	 */
 	public function getOutputFilePreviewFile(string $userId, int $taskId, int $fileId): ?array {
 		$taskOutputFile = $this->getTaskOutputFile($userId, $taskId, $fileId);
-		if ($taskOutputFile === null) {
-			return null;
-		}
 		$realMime = mime_content_type($taskOutputFile->fopen('rb'));
 		return $this->previewService->getFilePreviewFile($taskOutputFile, 100, 100, $realMime ?: null);
-	}
-
-	/**
-	 * @param string $writingStyle
-	 * @param string $sourceMaterial
-	 * @return string
-	 */
-	private function formattedCopywriterPrompt(string $writingStyle, string $sourceMaterial): string {
-		return "You're a professional copywriter tasked with copying an instructed or demonstrated *WRITING STYLE* and writing a text on the provided *SOURCE MATERIAL*. \n*WRITING STYLE*:\n$writingStyle\n\n*SOURCE MATERIAL*:\n\n$sourceMaterial\n\nNow write a text in the same style detailed or demonstrated under *WRITING STYLE* using the *SOURCE MATERIAL* as source of facts and instruction on what to write about. Do not invent any facts or events yourself. Also, use the *WRITING STYLE* as a guide for how to write the text ONLY and not as a source of facts or events.";
 	}
 
 	/**
@@ -439,46 +444,6 @@ class AssistantService {
 				}
 		}
 		return $inputs;
-	}
-
-	/**
-	 * TODO change the logic of task submission for contextwrite and contextchat
-	 * either compute the input directly in the frontend or make the frontend call an assistant endpoint to reach this
-	 *
-	 * @param string $type
-	 * @param array $inputs
-	 * @param string $appId
-	 * @param string $userId
-	 * @param string $identifier
-	 * @return Task
-	 */
-	private function createTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): Task {
-		$inputs = $this->sanitizeInputs($type, $inputs);
-		switch ($type) {
-			case 'copywriter':
-				{
-					// Format the input prompt
-					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-					$task = new Task(TextToText::class, ['input' => $input], $appId, $userId, $identifier);
-					break;
-				}
-			case 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType':
-				{
-					$input = json_encode($inputs);
-					if ($input === false) {
-						throw new \Exception('Invalid inputs for ContextChatTaskType');
-					}
-
-					$task = new Task($type, $inputs, $appId, $userId, $identifier);
-					break;
-				}
-			default:
-				{
-					$task = new Task($type, $inputs, $appId, $userId, $identifier);
-					break;
-				}
-		}
-		return $task;
 	}
 
 	/**

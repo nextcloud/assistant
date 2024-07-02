@@ -12,6 +12,8 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IRequest;
+use OCP\TaskProcessing\Exception\Exception;
+use OCP\TaskProcessing\Exception\NotFoundException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\Task;
 
@@ -37,10 +39,13 @@ class AssistantController extends Controller {
 	#[NoCSRFRequired]
 	public function getAssistantTaskResultPage(int $taskId): TemplateResponse {
 		if ($this->userId !== null) {
-			$task = $this->taskProcessingManager->getTask($taskId);
-			if ($task !== null && $task->getUserId() === $this->userId) {
-				$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
-				return new TemplateResponse(Application::APP_ID, 'assistantPage');
+			try {
+				$task = $this->taskProcessingManager->getTask($taskId);
+				if ($task->getUserId() === $this->userId) {
+					$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
+					return new TemplateResponse(Application::APP_ID, 'assistantPage');
+				}
+			} catch (Exception | \Throwable $e) {
 			}
 		}
 		return new TemplateResponse('', '403', [], TemplateResponse::RENDER_AS_ERROR, Http::STATUS_FORBIDDEN);
