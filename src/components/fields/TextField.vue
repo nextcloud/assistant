@@ -1,31 +1,23 @@
 <template>
 	<div class="text-field">
-		<div class="text-field__label-row">
-			<label :for="'field-' + fieldKey" class="field-label">
-				{{ field.name }}
-			</label>
-			<label :for="'field-' + fieldKey" class="field-label">
-				{{ field.description }}
-			</label>
-			<NcButton v-if="isOutput"
-				type="secondary"
-				:title="t('assistant', 'Copy output')"
-				@click="onCopy">
-				<template #icon>
-					<ClipboardCheckOutlineIcon v-if="copied" />
-					<ContentCopyIcon v-else />
-				</template>
-				{{ t('assistant', 'Copy') }}
-			</NcButton>
-			<NcButton v-else
-				type="secondary"
-				@click="onChooseFile">
-				<template #icon>
-					<FileDocumentIcon />
-				</template>
-				{{ t('assistant','Choose file') }}
-			</NcButton>
-		</div>
+		<NcButton v-if="isOutput && hasValue"
+			type="secondary"
+			:title="t('assistant', 'Copy output')"
+			@click="onCopy">
+			<template #icon>
+				<ClipboardCheckOutlineIcon v-if="copied" />
+				<ContentCopyIcon v-else />
+			</template>
+			{{ t('assistant', 'Copy') }}
+		</NcButton>
+		<NcButton v-if="!isOutput && !hasValue"
+			type="secondary"
+			@click="onChooseFile">
+			<template #icon>
+				<FileDocumentIcon />
+			</template>
+			{{ t('assistant','Choose file') }}
+		</NcButton>
 		<NcRichContenteditable
 			:id="'field-' + fieldKey"
 			ref="field"
@@ -34,7 +26,8 @@
 			:multiline="true"
 			class="editable-input"
 			:class="{ shadowed: isOutput }"
-			:placeholder="t('assistant','Type some text')"
+			:label="field.name"
+			:placeholder="field.description"
 			@update:value="$emit('update:value', $event)" />
 	</div>
 </template>
@@ -123,6 +116,9 @@ export default {
 			}
 			return ''
 		},
+		hasValue() {
+			return this.formattedValue !== ''
+		},
 	},
 
 	watch: {
@@ -192,7 +188,9 @@ export default {
 
 	.shadowed {
 		padding: 10px;
-		> div, > div:focus, > div:hover {
+		> div.rich-contenteditable__input,
+		> div.rich-contenteditable__input:focus,
+		> div.rich-contenteditable__input:hover {
 			box-shadow: 0 0 10px var(--color-primary);
 			border: 0;
 		}
