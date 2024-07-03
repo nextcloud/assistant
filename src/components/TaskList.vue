@@ -2,7 +2,7 @@
 	<div>
 		<ul
 			class="task-list">
-			<TaskListItem v-for="task in tasks"
+			<TaskListItem v-for="task in sortedTasks"
 				:key="task.id"
 				class="task-list--item"
 				:task="task"
@@ -12,7 +12,7 @@
 				@delete="onTaskDelete(task)"
 				@cancel="onTaskCancel(task)" />
 		</ul>
-		<NcEmptyContent v-if="!loading && tasks.length === 0"
+		<NcEmptyContent v-if="!loading && sortedTasks.length === 0"
 			:name="t('assistant', 'Nothing yet')"
 			:description="emptyContentDescription">
 			<template #icon>
@@ -69,6 +69,21 @@ export default {
 		emptyContentDescription() {
 			return t('assistant', 'You have not submitted any "{taskTypeName}" task yet', { taskTypeName: this.taskType?.name })
 		},
+		sortedTasks() {
+			const result = this.taskType.id === 'core:text2text'
+				? this.tasks.filter(t => t.customId !== 'chatty-llm')
+				: this.tasks
+
+			return result.sort((a, b) => {
+				const aId = a.id
+				const bId = b.id
+				return aId === bId
+					? 0
+					: aId > bId
+						? -1
+						: 1
+			})
+		},
 	},
 
 	watch: {
@@ -91,15 +106,7 @@ export default {
 			}
 			const url = generateOcsUrl('apps/assistant/api/v1/tasks')
 			axios.get(url, req).then(response => {
-				this.tasks = response.data?.ocs?.data?.tasks.sort((a, b) => {
-					const aId = a.id
-					const bId = b.id
-					return aId === bId
-						? 0
-						: aId > bId
-							? -1
-							: 1
-				})
+				this.tasks = response.data?.ocs?.data?.tasks
 			}).catch(error => {
 				console.error(error)
 			}).then(() => {
