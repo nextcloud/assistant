@@ -19,6 +19,7 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "You" : "Usted",
     "Cancel" : "Cancelar",
+    "Audio input" : "Entrada de audio",
     "Failed" : "Falló",
     "Unknown error" : "Se presentó un error desconocido",
     "Running" : "Correr",
