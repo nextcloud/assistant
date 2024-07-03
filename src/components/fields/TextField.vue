@@ -33,6 +33,7 @@
 			:link-autocomplete="false"
 			:multiline="true"
 			class="editable-input"
+			:class="{ shadowed: isOutput }"
 			:placeholder="t('assistant','Type some text')"
 			@update:value="$emit('update:value', $event)" />
 	</div>
@@ -186,6 +187,14 @@ export default {
 
 		.field-label {
 			font-weight: bold;
+		}
+	}
+
+	.shadowed {
+		padding: 10px;
+		> div, > div:focus, > div:hover {
+			box-shadow: 0 0 10px var(--color-primary);
+			border: 0;
 		}
 	}
 }
