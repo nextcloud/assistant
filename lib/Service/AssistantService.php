@@ -2,7 +2,6 @@
 
 namespace OCA\Assistant\Service;
 
-use Couchbase\BaseException;
 use DateTime;
 use Html2Text\Html2Text;
 use OCA\Assistant\AppInfo\Application;
@@ -27,6 +26,7 @@ use OCP\TaskProcessing\EShapeType;
 use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\Exception\NotFoundException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\ShapeDescriptor;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\ContextWrite;
@@ -113,8 +113,8 @@ class AssistantService {
 	 * @return array<AssistantTaskProcessingTaskType>
 	 */
 	public function getAvailableTaskTypes(): array {
-		// return [1,2];
 		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		/** @var array<AssistantTaskProcessingTaskType> $types */
 		$types = [];
 		if (self::DEBUG) {
 			$types[] = [
@@ -123,38 +123,38 @@ class AssistantService {
 				'id' => 'core:inputList',
 				'priority' => 0,
 				'inputShape' => [
-					'fileList' => [
-						'name' => 'Input file list',
-						'description' => 'plop',
-						'type' => 'ListOfFiles',
-					],
-					'imageList' => [
-						'name' => 'Input image list',
-						'description' => 'plop',
-						'type' => 'ListOfImages',
-					],
-					'audioList' => [
-						'name' => 'Input audio list',
-						'description' => 'plop',
-						'type' => 'ListOfAudios',
-					],
+					'fileList' => new ShapeDescriptor(
+						'Input file list',
+						'plop',
+						EShapeType::ListOfFiles,
+					),
+					'imageList' => new ShapeDescriptor(
+						'Input image list',
+						'plop',
+						EShapeType::ListOfImages,
+					),
+					'audioList' => new ShapeDescriptor(
+						'Input audio list',
+						'plop',
+						EShapeType::ListOfAudios,
+					),
 				],
 				'outputShape' => [
-					'fileList' => [
-						'name' => 'Output file list',
-						'description' => 'plop',
-						'type' => 'ListOfFiles',
-					],
-					'imageList' => [
-						'name' => 'Output image list',
-						'description' => 'plop',
-						'type' => 'ListOfImages',
-					],
-					'image' => [
-						'name' => 'Output image',
-						'description' => 'plop',
-						'type' => 'Image',
-					],
+					'fileList' => new ShapeDescriptor(
+						'Output file list',
+						'plop',
+						EShapeType::ListOfFiles,
+					),
+					'imageList' => new ShapeDescriptor(
+						'Output image list',
+						'plop',
+						EShapeType::ListOfImages,
+					),
+					'image' => new ShapeDescriptor(
+						'Output image',
+						'plop',
+						EShapeType::Image,
+					),
 				],
 				'optionalInputShape' => [],
 				'optionalOutputShape' => [],

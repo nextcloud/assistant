@@ -13,7 +13,6 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\TaskProcessing\Exception\Exception;
-use OCP\TaskProcessing\Exception\NotFoundException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\Task;
 

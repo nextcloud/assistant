@@ -26,13 +26,17 @@ declare(strict_types=1);
 
 namespace OCA\Assistant;
 
+use OCP\TaskProcessing\ShapeDescriptor;
+
 /**
  * @psalm-type AssistantShapeDescriptor = array{
  *     name: string,
  *     description: string,
- *     type: int,
+ *     type: string,
  * }
  *
+ * If we replace "array<string, AssistantShapeDescriptor>" by "array<string, ShapeDescriptor|AssistantShapeDescriptor>"
+ * OpenAPI-extractor fails
  * @psalm-type AssistantTaskProcessingTaskType = array{
  *     id: string,
  *     name: string,

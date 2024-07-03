@@ -15,8 +15,11 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\OCSController;
 use OCP\DB\Exception;
+use OCP\Files\GenericFileException;
+use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\Lock\LockedException;
 use OCP\TaskProcessing\Task;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -140,6 +143,17 @@ class AssistantApiController extends OCSController {
 		]);
 	}
 
+	/**
+	 * Upload input file
+	 *
+	 * Upload an input file for a task that is being prepared
+	 *
+	 * @param string|null $extension The file extension
+	 * @return DataResponse<Http::STATUS_OK, array{fileId: int, filePath: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
+	 *
+	 * 200: The input file was uploaded
+	 * 400: Impossible to upload an input file
+	 */
 	#[NoAdminRequired]
 	public function uploadInputFile(?string $extension = null): DataResponse {
 		$inputData = $this->request->getUploadedFile('data');
@@ -159,6 +173,18 @@ class AssistantApiController extends OCSController {
 		]);
 	}
 
+	/**
+	 * Get a file of the current user
+	 *
+	 * @param int $fileId The ID of the file that is requested
+	 * @return DataDownloadResponse<Http::STATUS_OK, string, string>|DataResponse<Http::STATUS_NOT_FOUND, array{message: string}, array{}>
+	 * @throws GenericFileException
+	 * @throws NotPermittedException
+	 * @throws LockedException
+	 *
+	 * 200: The file is returned
+	 * 404: The file was not found
+	 */
 	#[NoAdminRequired]
 	#[NoCsrfRequired]
 	public function displayUserFile(int $fileId): DataDownloadResponse|DataResponse {
@@ -169,6 +195,17 @@ class AssistantApiController extends OCSController {
 		return new DataResponse(['message' => 'Not found'], Http::STATUS_NOT_FOUND);
 	}
 
+	/**
+	 * Get user file info
+	 *
+	 * Get information about a file of the current user
+	 *
+	 * @param int $fileId The file ID for which the info is requested
+	 * @return DataResponse<Http::STATUS_OK, array{name: string, path: string, owner: string, size: int}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{message: string}, array{}>
+	 *
+	 * 200: The file info is returned
+	 * 404: The file was not found
+	 */
 	#[NoAdminRequired]
 	#[NoCsrfRequired]
 	public function getUserFileInfo(int $fileId): DataResponse {
@@ -179,6 +216,18 @@ class AssistantApiController extends OCSController {
 		return new DataResponse(['message' => 'Not found'], Http::STATUS_NOT_FOUND);
 	}
 
+	/**
+	 * Share an output file
+	 *
+	 * Share a file that was produced by a task
+	 *
+	 * @param int $ocpTaskId The task ID
+	 * @param int $fileId The file ID
+	 * @return DataResponse<Http::STATUS_OK, array{shareToken: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 * 200: The file was shared
+	 * 404: The file was not found
+	 */
 	#[NoAdminRequired]
 	public function shareOutputFile(int $ocpTaskId, int $fileId): DataResponse {
 		try {
@@ -190,6 +239,19 @@ class AssistantApiController extends OCSController {
 		}
 	}
 
+	/**
+	 * Get output file preview
+	 *
+	 * Generate and get a preview of a task output file
+	 *
+	 * @param int $ocpTaskId The task ID
+	 * @param int $fileId The task output file ID
+	 * @return DataDownloadResponse<Http::STATUS_OK, string, string>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>|RedirectResponse<Http::STATUS_SEE_OTHER, array{}>
+	 *
+	 * 200: The file preview has been generated and is returned
+	 * 303: Fallback to the file type icon URL
+	 * 404: The output file is not found
+	 */
 	#[NoAdminRequired]
 	#[NoCsrfRequired]
 	public function getOutputFilePreview(int $ocpTaskId, int $fileId): RedirectResponse|DataDownloadResponse|DataResponse {
@@ -203,7 +265,7 @@ class AssistantApiController extends OCSController {
 			if ($preview['type'] === 'file') {
 				return new DataDownloadResponse(
 					$preview['file']->getContent(),
-					(string)Http::STATUS_OK,
+					'preview',
 					$preview['file']->getMimeType()
 				);
 			} elseif ($preview['type'] === 'icon') {
