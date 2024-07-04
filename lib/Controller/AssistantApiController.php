@@ -177,7 +177,7 @@ class AssistantApiController extends OCSController {
 	 * Get a file of the current user
 	 *
 	 * @param int $fileId The ID of the file that is requested
-	 * @return DataDownloadResponse<Http::STATUS_OK, string, string>|DataResponse<Http::STATUS_NOT_FOUND, array{message: string}, array{}>
+	 * @return DataDownloadResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{message: string}, array{}>
 	 * @throws GenericFileException
 	 * @throws NotPermittedException
 	 * @throws LockedException
@@ -246,7 +246,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param int $ocpTaskId The task ID
 	 * @param int $fileId The task output file ID
-	 * @return DataDownloadResponse<Http::STATUS_OK, string, string>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>|RedirectResponse<Http::STATUS_SEE_OTHER, array{}>
+	 * @return DataDownloadResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>|RedirectResponse<Http::STATUS_SEE_OTHER, array{}>
 	 *
 	 * 200: The file preview has been generated and is returned
 	 * 303: Fallback to the file type icon URL

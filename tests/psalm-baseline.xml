@@ -1,3 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.17.0@c620f6e80d0abfca532b00bda366062aaedf6e5d">
+<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
+  <file src="lib/Controller/AssistantController.php">
+    <TooManyArguments>
+      <code><![CDATA[new Task(
+				$this->config->getUserValue($this->userId, Application::APP_ID, 'last_task_type'),
+				['something' => ''],
+				Application::APP_ID,
+				$this->userId,
+				''
+			)]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="lib/Controller/ChattyLLMController.php">
+    <TooManyArguments>
+      <code><![CDATA[new Task(TextToText::ID, ['input' => $content], Application::APP_ID, $this->userId, 'chatty-llm')]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="lib/Service/AssistantService.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$types]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array<AssistantTaskProcessingTaskType>]]></code>
+    </MoreSpecificReturnType>
+    <RedundantCondition>
+      <code><![CDATA[self::DEBUG]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainType>
+      <code><![CDATA[!self::DEBUG]]></code>
+    </TypeDoesNotContainType>
+  </file>
 </files>
