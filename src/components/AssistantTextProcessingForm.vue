@@ -51,12 +51,6 @@
 				:selected-task-type="selectedTaskType" />
 			<div v-if="hasOutput"
 				class="output">
-				<hr>
-				<label
-					for="assistant-output"
-					class="output-title">
-					{{ t('assistant', 'Result') }}
-				</label>
 				<TaskTypeFields
 					class="output-fields"
 					:is-output="true"
@@ -367,6 +361,7 @@ export default {
 	}
 
 	.output {
+		margin-top: 24px;
 		display: flex;
 		flex-direction: column;
 		align-items: start;
@@ -382,11 +377,6 @@ export default {
 
 		.input-label {
 			align-self: start;
-			font-weight: bold;
-		}
-		.output-title {
-			margin-top: 8px;
-			font-size: 24px;
 			font-weight: bold;
 		}
 		.output-fields {

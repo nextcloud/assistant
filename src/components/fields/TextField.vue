@@ -10,6 +10,7 @@
 			:class="{ shadowed: isOutput }"
 			:label="field.name"
 			:placeholder="field.description"
+			:title="field.description"
 			@update:value="$emit('update:value', $event)" />
 		<NcButton v-if="isOutput && hasValue"
 			class="copy-button"
