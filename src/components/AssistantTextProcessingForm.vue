@@ -38,14 +38,14 @@
 				@load-task="onHistoryLoadTask" />
 		</div>
 		<div v-else class="task-input-output-form">
-			<h2 v-if="selectedTaskType"
+			<!--h2 v-if="selectedTaskType"
 				class="task-name">
 				{{ selectedTaskType.name }}
 			</h2>
 			<span v-if="selectedTaskType"
 				class="task-description">
 				{{ selectedTaskType.description }}
-			</span>
+			</span-->
 			<AssistantFormInputs v-if="selectedTaskType"
 				:inputs.sync="myInputs"
 				:selected-task-type="selectedTaskType" />
@@ -90,7 +90,7 @@
 			<div class="footer--action-buttons">
 				<NcButton
 					v-if="showSubmit"
-					:type="submitButtonType"
+					type="primary"
 					class="submit-button"
 					:disabled="!canSubmit"
 					:title="syncSubmitButtonTitle"
@@ -223,9 +223,6 @@ export default {
 						? -1
 						: 0
 			})
-		},
-		submitButtonType() {
-			return this.hasOutput ? 'secondary' : 'primary'
 		},
 		showSubmit() {
 			return this.selectedTaskType

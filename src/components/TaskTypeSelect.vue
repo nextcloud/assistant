@@ -4,6 +4,7 @@
 		<NcButton v-for="(t, i) in buttonTypes"
 			:key="i + t.id"
 			:type="getButtonType(t)"
+			:title="t.description"
 			@click="onTaskSelected(t)">
 			{{ t.name }}
 		</NcButton>

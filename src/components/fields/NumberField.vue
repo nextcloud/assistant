@@ -5,31 +5,21 @@
 			class="number-input-field"
 			:value="value ?? ''"
 			:label="field.name"
+			:title="field.description"
 			type="number"
-			:placeholder="t('assistant','Type some number')"
+			:placeholder="field.description || t('assistant','Type some number')"
 			@update:value="onUpdateValue" />
-		<NcButton type="tertiary"
-			:title="field.description">
-			<template #icon>
-				<HelpCircleIcon />
-			</template>
-		</NcButton>
 	</div>
 </template>
 
 <script>
-import HelpCircleIcon from 'vue-material-design-icons/HelpCircle.vue'
-
 import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
 export default {
 	name: 'NumberField',
 
 	components: {
 		NcInputField,
-		NcButton,
-		HelpCircleIcon,
 	},
 
 	props: {
@@ -84,7 +74,7 @@ export default {
 	align-items: end;
 
 	.number-input-field {
-		width: 200px;
+		width: 300px;
 	}
 }
 </style>
