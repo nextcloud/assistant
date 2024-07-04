@@ -1,23 +1,5 @@
 <template>
 	<div class="text-field">
-		<NcButton v-if="isOutput && hasValue"
-			type="secondary"
-			:title="t('assistant', 'Copy output')"
-			@click="onCopy">
-			<template #icon>
-				<ClipboardCheckOutlineIcon v-if="copied" />
-				<ContentCopyIcon v-else />
-			</template>
-			{{ t('assistant', 'Copy') }}
-		</NcButton>
-		<NcButton v-if="!isOutput && !hasValue"
-			type="secondary"
-			@click="onChooseFile">
-			<template #icon>
-				<FileDocumentIcon />
-			</template>
-			{{ t('assistant','Choose file') }}
-		</NcButton>
 		<NcRichContenteditable
 			:id="'field-' + fieldKey"
 			ref="field"
@@ -29,6 +11,26 @@
 			:label="field.name"
 			:placeholder="field.description"
 			@update:value="$emit('update:value', $event)" />
+		<NcButton v-if="isOutput && hasValue"
+			class="copy-button"
+			type="secondary"
+			:title="t('assistant', 'Copy output')"
+			@click="onCopy">
+			<template #icon>
+				<ClipboardCheckOutlineIcon v-if="copied" />
+				<ContentCopyIcon v-else />
+			</template>
+			{{ t('assistant', 'Copy') }}
+		</NcButton>
+		<NcButton v-if="!isOutput && !hasValue"
+			class="choose-file-button"
+			type="secondary"
+			@click="onChooseFile">
+			<template #icon>
+				<FileDocumentIcon />
+			</template>
+			{{ t('assistant','Choose file') }}
+		</NcButton>
 	</div>
 </template>
 
@@ -174,16 +176,25 @@ export default {
 
 <style lang="scss">
 .text-field {
-	&__label-row {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		margin-bottom: 12px;
-		align-items: center;
+	position: relative;
 
-		.field-label {
-			font-weight: bold;
-		}
+	.copy-button,
+	.choose-file-button {
+		position: absolute;
+	}
+
+	.choose-file-button {
+		bottom: 5px;
+		right: 5px;
+	}
+
+	.copy-button {
+		bottom: 13px;
+		right: 13px;
+	}
+
+	.rich-contenteditable__input {
+		min-height: 44px;
 	}
 
 	.shadowed {
@@ -193,6 +204,10 @@ export default {
 		> div.rich-contenteditable__input:hover {
 			box-shadow: 0 0 10px var(--color-primary);
 			border: 0;
+		}
+
+		> div.rich-contenteditable__input {
+			padding-bottom: 50px;
 		}
 	}
 }
