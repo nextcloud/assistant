@@ -48,7 +48,8 @@
 			</span-->
 			<AssistantFormInputs v-if="selectedTaskType"
 				:inputs.sync="myInputs"
-				:selected-task-type="selectedTaskType" />
+				:selected-task-type="selectedTaskType"
+				:show-advanced.sync="showAdvanced" />
 			<div v-if="hasOutput"
 				class="output">
 				<TaskTypeFields
@@ -56,7 +57,8 @@
 					:is-output="true"
 					:shape="selectedTaskType.outputShape"
 					:optional-shape="selectedTaskType.optionalOutputShape ?? null"
-					:values.sync="myOutputs" />
+					:values.sync="myOutputs"
+					:show-advanced.sync="showAdvanced" />
 				<NcNoteCard v-if="outputEqualsInput"
 					class="warning-note"
 					type="warning">
@@ -82,6 +84,18 @@
 				{{ t('assistant', 'Previous "{taskTypeName}" tasks', { taskTypeName: selectedTaskType.name }) }}
 			</NcButton>
 			<div class="footer--action-buttons">
+				<NcActions v-if="hasOptionalInputOutputShape"
+					:force-menu="true">
+					<NcActionButton
+						:close-after-click="true"
+						@click="showAdvanced = !showAdvanced">
+						<template #icon>
+							<UnfoldLessHorizontalIcon v-if="showAdvanced" />
+							<UnfoldMoreHorizontalIcon v-else />
+						</template>
+						{{ toggleAdvancedLabel }}
+					</NcActionButton>
+				</NcActions>
 				<NcButton
 					v-if="showSubmit"
 					type="primary"
@@ -112,10 +126,14 @@
 </template>
 
 <script>
+import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
 import HistoryIcon from 'vue-material-design-icons/History.vue'
 
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
@@ -146,7 +164,11 @@ export default {
 		NcButton,
 		NcLoadingIcon,
 		NcIconSvgWrapper,
+		NcActions,
+		NcActionButton,
 		CreationIcon,
+		UnfoldLessHorizontalIcon,
+		UnfoldMoreHorizontalIcon,
 		HistoryIcon,
 		ArrowLeftIcon,
 		NcNoteCard,
@@ -198,6 +220,7 @@ export default {
 			showHistory: false,
 			loadingTaskTypes: false,
 			historyLoading: false,
+			showAdvanced: false,
 		}
 	},
 	computed: {
@@ -217,6 +240,17 @@ export default {
 						? -1
 						: 0
 			})
+		},
+		hasOptionalInputOutputShape() {
+			const taskType = this.selectedTaskType
+			console.debug('aaaaaaaaaaaa selected tt', taskType)
+			return (taskType.optionalInputShape && Object.keys(taskType.optionalInputShape).length > 0)
+				|| (taskType.optionalOutputShape && Object.keys(taskType.optionalOutputShape.length) > 0)
+		},
+		toggleAdvancedLabel() {
+			return this.showAdvanced
+				? t('assistant', 'Hide advanced options')
+				: t('assistant', 'Show advanced options')
 		},
 		showSubmit() {
 			return this.selectedTaskType
@@ -416,9 +450,6 @@ export default {
 	.footer {
 		width: 100%;
 		display: flex;
-		.history-button {
-			height: 44px;
-		}
 		&--action-buttons {
 			flex-grow: 1;
 			display: flex;

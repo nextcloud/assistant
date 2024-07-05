@@ -7,15 +7,15 @@
 			:value="values[key] ?? null"
 			:is-output="isOutput"
 			@update:value="onValueChange(key, $event)" />
-		<NcButton v-if="hasOptionalShape"
-			@click="advanced = !advanced">
+		<!--NcButton v-if="hasOptionalShape"
+			@click="$emit('update:show-advanced', !showAdvanced)">
 			<template #icon>
-				<ChevronDownIcon v-if="advanced" />
+				<ChevronDownIcon v-if="showAdvanced" />
 				<ChevronRightIcon v-else />
 			</template>
 			{{ t('assistant', 'Advanced') }}
-		</NcButton>
-		<div v-if="advanced"
+		</NcButton-->
+		<div v-if="showAdvanced"
 			class="advanced">
 			<TaskTypeField v-for="(field, key) in myOptionalShape"
 				:key="'shape' + key"
@@ -29,19 +29,12 @@
 </template>
 
 <script>
-import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue'
-import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
-
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import TaskTypeField from './TaskTypeField.vue'
 
 export default {
 	name: 'TaskTypeFields',
 
 	components: {
-		NcButton,
-		ChevronRightIcon,
-		ChevronDownIcon,
 		TaskTypeField,
 	},
 
@@ -62,6 +55,10 @@ export default {
 			type: Boolean,
 			required: true,
 		},
+		showAdvanced: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
@@ -70,7 +67,6 @@ export default {
 
 	data() {
 		return {
-			advanced: false,
 		}
 	},
 

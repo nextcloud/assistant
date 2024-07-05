@@ -14,6 +14,8 @@
 				:shape="selectedTaskType.inputShape"
 				:optional-shape="selectedTaskType.optionalInputShape ?? null"
 				:values="inputs"
+				:show-advanced="showAdvanced"
+				@update:show-advanced="$emit('update:show-advanced', $event)"
 				@update:values="$emit('update:inputs', $event)" />
 		</div>
 	</div>
@@ -42,6 +44,10 @@ export default {
 		selectedTaskType: {
 			type: [Object, null],
 			default: null,
+		},
+		showAdvanced: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
