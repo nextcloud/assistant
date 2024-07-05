@@ -61,6 +61,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-// nothing
+<style scoped lang="scss">
+audio {
+	border-radius: 16px;
+}
 </style>

@@ -1,11 +1,9 @@
 <template>
 	<div class="media-field">
 		<div ref="copyContainer" class="label-row">
-			<label class="field-label">
+			<label class="field-label"
+				:title="field.description">
 				{{ field.name }}
-			</label>
-			<label class="field-label">
-				{{ field.description }}
 			</label>
 		</div>
 		<div v-if="!isOutput"
@@ -50,11 +48,22 @@
 					</template>
 				</NcButton>
 			</div>
+			<div v-else
+				class="buttons">
+				<NcButton
+					:title="t('assistant', 'Clear value')"
+					@click="onClear">
+					<template #icon>
+						<CloseIcon />
+					</template>
+				</NcButton>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 
@@ -87,6 +96,7 @@ export default {
 		UploadInputFileButton,
 		DownloadIcon,
 		ShareVariantIcon,
+		CloseIcon,
 		NcButton,
 	},
 
@@ -178,6 +188,9 @@ export default {
 			this.filePath = file.path
 			this.$emit('update:value', file.fileid)
 		},
+		onClear() {
+			this.$emit('update:value', null)
+		},
 		getDownloadUrl() {
 			return generateOcsUrl('taskprocessing/tasks/{taskId}/file/{fileId}', {
 				taskId: this.providedCurrentTaskId(),
@@ -220,12 +233,13 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	gap: 12px;
 
 	.label-row {
 		width: 100%;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: start;
 
 		.field-label {
 			font-weight: bold;

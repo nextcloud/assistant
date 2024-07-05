@@ -156,7 +156,7 @@ export default {
 
 	:deep(.recorder) {
 		max-width: 150px;
-		height: 44px;
+		height: 34px;
 		&.no-audio {
 			.ar-player {
 				&-actions {
