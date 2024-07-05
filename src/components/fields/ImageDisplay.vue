@@ -73,7 +73,9 @@ export default {
 .image-display {
 	display: flex;
 	img {
-		max-width: 200px;
+		width: 200px;
+		height: 200px;
+		border-radius: var(--border-radius-large);
 	}
 }
 </style>

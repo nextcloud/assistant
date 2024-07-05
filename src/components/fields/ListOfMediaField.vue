@@ -1,11 +1,9 @@
 <template>
 	<div class="media-list-field">
 		<div ref="copyContainer" class="label-row">
-			<label class="field-label">
+			<label class="field-label"
+				:title="field.description">
 				{{ field.name }}
-			</label>
-			<label class="field-label">
-				{{ field.description }}
 			</label>
 		</div>
 		<div v-if="!isOutput"
@@ -61,6 +59,7 @@
 						<template #icon>
 							<ShareVariantIcon />
 						</template>
+						{{ t('assistant', 'Share') }}
 					</NcButton>
 				</div>
 			</div>
@@ -263,7 +262,7 @@ export default {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: start;
 		align-items: center;
 
 		.field-label {
@@ -286,14 +285,21 @@ export default {
 
 		&--item {
 			display: flex;
+			flex-direction: column;
 			align-items: center;
-			gap: 4px;
+			gap: 8px;
+			padding: 12px;
+			border-radius: var(--border-radius-large);
+
+			&:hover {
+				background-color: var(--color-primary-element-light-hover);
+			}
 
 			.buttons {
+				width: 100%;
 				display: flex;
-				flex-direction: column;
 				gap: 2px;
-				justify-content: center;
+				justify-content: start;
 			}
 		}
 	}
