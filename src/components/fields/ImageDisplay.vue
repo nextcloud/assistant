@@ -1,6 +1,6 @@
 <template>
 	<div class="image-display">
-		<img :src="imageUrl">
+		<img :src="imageUrl" :style="style">
 	</div>
 </template>
 
@@ -31,6 +31,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		borderRadius: {
+			type: [Number, null],
+			default: null,
+		},
 	},
 
 	emits: [
@@ -55,6 +59,11 @@ export default {
 				})
 				: generateOcsUrl('apps/assistant/api/v1/file/{fileId}/display', { fileId: this.fileId })
 		},
+		style() {
+			return {
+				'border-radius': this.borderRadius ? (this.borderRadius + 'px') : 'var(--border-radius-large)',
+			}
+		},
 	},
 
 	watch: {
@@ -75,7 +84,6 @@ export default {
 	img {
 		width: 200px;
 		height: 200px;
-		border-radius: var(--border-radius-large);
 	}
 }
 </style>

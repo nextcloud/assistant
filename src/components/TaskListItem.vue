@@ -20,9 +20,8 @@
 					:key="fileId"
 					:file-id="fileId"
 					:task-id="task.id"
-					:show-delete="false"
-					:show-share="false"
-					:is-output="true" />
+					:is-output="true"
+					:border-radius="3" />
 			</div>
 			<span v-else>
 				{{ subName }}
