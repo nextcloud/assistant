@@ -14,7 +14,7 @@ window.assistantPollTimerId = null
  *
  * OCA.Assistant.openAssistantForm({
  *  appId: 'my_app_id',
- *  identifier: 'my task identifier',
+ *  customId: 'my task custom ID',
  *  taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
  *  input: 'count to 3',
  *  actionButtons: [
@@ -35,7 +35,8 @@ window.assistantPollTimerId = null
  *
  * @param {object} params parameters for the assistant
  * @param {string} params.appId the scheduling app id
- * @param {string} params.identifier the task identifier
+ * @param {string} params.customId the task custom identifier
+ * @param {string} params.identifier DEPRECATED the task custom identifier
  * @param {string} params.taskType the text processing task type class
  * @param {string} params.input DEPRECATED optional initial input text
  * @param {object} params.inputs optional initial named inputs
@@ -45,8 +46,9 @@ window.assistantPollTimerId = null
  * @return {Promise<unknown>}
  */
 export async function openAssistantForm({
-	appId, identifier = '', taskType = null, input = '', inputs = {},
+	appId, taskType = null, input = '', inputs = {},
 	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
+	customId = '', identifier = '',
 }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	const { default: AssistantTextProcessingModal } = await import(/* webpackChunkName: "assistant-modal-lazy" */'./components/AssistantTextProcessingModal.vue')
@@ -78,14 +80,14 @@ export async function openAssistantForm({
 			view.$destroy()
 			reject(new Error('User cancellation'))
 		})
-		const syncSubmit = (inputs, taskTypeId, newTaskIdentifier = '') => {
+		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 			view.loading = true
 			view.showSyncTaskRunning = true
 			view.progress = null
 			view.inputs = inputs
 			view.selectedTaskTypeId = taskTypeId
 
-			scheduleTask(appId, newTaskIdentifier, taskTypeId, inputs)
+			scheduleTask(appId, newTaskCustomId, taskTypeId, inputs)
 				.then((response) => {
 					const task = response.data?.ocs?.data?.task
 					lastTask = task
@@ -121,7 +123,7 @@ export async function openAssistantForm({
 		}
 		view.$on('sync-submit', (data) => {
 			console.debug('[assistant] submit', data)
-			syncSubmit(data.inputs, data.selectedTaskTypeId, identifier)
+			syncSubmit(data.inputs, data.selectedTaskTypeId, customId || identifier)
 		})
 		view.$on('try-again', (task) => {
 			syncSubmit(task.input, task.taskType)
@@ -218,12 +220,12 @@ export async function cancelTask(taskId) {
  * Send a request to schedule a task
  *
  * @param {string} appId the scheduling app id
- * @param {string} identifier the task identifier
+ * @param {string} customId the task custom ID
  * @param {string} taskType the task type class
  * @param {Array} inputs the task input texts as an array
  * @return {Promise<*>}
  */
-export async function scheduleTask(appId, identifier, taskType, inputs) {
+export async function scheduleTask(appId, customId, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import(/* webpackChunkName: "axios-lazy" */'@nextcloud/axios')
 	const { generateOcsUrl } = await import(/* webpackChunkName: "router-gen-lazy" */'@nextcloud/router')
@@ -233,7 +235,7 @@ export async function scheduleTask(appId, identifier, taskType, inputs) {
 		input: inputs,
 		type: taskType,
 		appId,
-		identifier,
+		customId,
 	}
 	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
@@ -351,13 +353,13 @@ export async function openAssistantTask(task) {
 				showError(t('assistant', 'Failed to schedule the task'))
 			})
 	})
-	const syncSubmit = (inputs, taskTypeId, newTaskIdentifier = '') => {
+	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 		view.loading = true
 		view.showSyncTaskRunning = true
 		view.inputs = inputs
 		view.selectedTaskTypeId = taskTypeId
 
-		scheduleTask('assistant', newTaskIdentifier, taskTypeId, inputs)
+		scheduleTask('assistant', newTaskCustomId, taskTypeId, inputs)
 			.then((response) => {
 				const task = response.data?.ocs?.data?.task
 				lastTask = task

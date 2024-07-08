@@ -447,7 +447,7 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Synchrounous call to the LLM
+	 * Synchronous call to the LLM
 	 *
 	 * @param string $content
 	 * @return string
@@ -458,7 +458,7 @@ class ChattyLLMController extends Controller {
 	 * @throws ValidationException
 	 */
 	private function queryLLM(string $content): string {
-		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID, $this->userId, 'chatty-llm');
+		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId);
 		$this->taskProcessingManager->scheduleTask($task);
 		$i = 0;
 		while ($i < 60 && !in_array($task->getStatus(), [Task::STATUS_SUCCESSFUL, Task::STATUS_FAILED, Task::STATUS_CANCELLED])) {

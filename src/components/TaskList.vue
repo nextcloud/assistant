@@ -70,19 +70,17 @@ export default {
 			return t('assistant', 'You have not submitted any "{taskTypeName}" task yet', { taskTypeName: this.taskType?.name })
 		},
 		sortedTasks() {
-			const result = this.taskType.id === 'core:text2text'
-				? this.tasks.filter(t => t.customId !== 'chatty-llm')
-				: this.tasks
-
-			return result.sort((a, b) => {
-				const aId = a.id
-				const bId = b.id
-				return aId === bId
-					? 0
-					: aId > bId
-						? -1
-						: 1
-			})
+			return this.tasks
+				.filter(t => t.appId === 'assistant')
+				.sort((a, b) => {
+					const aId = a.id
+					const bId = b.id
+					return aId === bId
+						? 0
+						: aId > bId
+							? -1
+							: 1
+				})
 		},
 	},
 
