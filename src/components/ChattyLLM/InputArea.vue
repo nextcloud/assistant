@@ -125,11 +125,13 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	align-items: center;
 	gap: 1em;
 
 	:deep &__thinking > div {
 		font-style: italic;
 		animation: breathing 2s linear infinite normal;
+		min-height: 44px !important;
 	}
 
 	&__button-box {
