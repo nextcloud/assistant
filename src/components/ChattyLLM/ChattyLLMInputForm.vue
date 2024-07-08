@@ -102,14 +102,14 @@
 					</div>
 					<ConversationBox :messages="messages"
 						:loading="loading"
-						@regenerate="regenerateLLMResponse"
+						@regenerate="runRegenerationTask"
 						@delete="deleteMessage" />
 					<div v-if="messages != null && messages.length > 0 && !loading.llmGeneration && !loading.newHumanMessage && messages[messages.length - 1]?.role === 'human'" class="session-area__chat-area__active-session__utility-button">
 						<NcButton
 							:aria-label="t('assistant', 'Retry response generation')"
 							:disabled="loading.initialMessages || loading.llmGeneration"
 							type="secondary"
-							@click="getLLMResponse">
+							@click="runGenerationTask">
 							{{ t('assistant', 'Retry response generation') }}
 						</NcButton>
 					</div>
@@ -212,6 +212,8 @@ export default {
 			msgLimit: 20,
 			titleActionsOpen: false,
 			editingTitle: false,
+			pollMessageGenerationTimerId: null,
+			pollTitleGenerationTimerId: null,
 		}
 	},
 
@@ -233,6 +235,15 @@ export default {
 				this.loading.newSession = false
 			}
 		},
+	},
+
+	onDestroy() {
+		if (this.pollMessageGenerationTimerId) {
+			clearInterval(this.pollMessageGenerationTimerId)
+		}
+		if (this.pollTitleGenerationTimerId) {
+			clearInterval(this.pollTitleGenerationTimerId)
+		}
 	},
 
 	mounted() {
@@ -332,13 +343,15 @@ export default {
 			try {
 				this.loading.titleGeneration = true
 				const response = await axios.get(getChatURL('/generate_title'), { params: { sessionId: this.active.id } })
-				if (response?.data?.result == null) {
+				const titleResponse = await this.pollTitleGenerationTask(response.data.taskId)
+				console.debug('checkTaskPolling result:', titleResponse)
+				if (titleResponse?.data?.result == null) {
 					throw new Error('No title generated, response:', response)
 				}
 
 				for (const session of this.sessions) {
 					if (session.id === this.active.id) {
-						session.title = response?.data?.result
+						session.title = titleResponse?.data?.result
 						break
 					}
 				}
@@ -476,7 +489,7 @@ export default {
 					session.title = content
 				}
 
-				await this.getLLMResponse()
+				await this.runGenerationTask()
 			} catch (error) {
 				this.loading.newHumanMessage = false
 				console.error('newMessage error:', error)
@@ -508,34 +521,84 @@ export default {
 			}
 		},
 
-		async getLLMResponse() {
+		async runGenerationTask() {
 			try {
 				this.loading.llmGeneration = true
 				const response = await axios.get(getChatURL('/generate'), { params: { sessionId: this.active.id } })
-				console.debug('getLLMResponse response:', response)
-				this.messages.push(response.data)
+				console.debug('scheduleGenerationTask response:', response)
+				const message = await this.pollGenerationTask(response.data.taskId)
+				console.debug('checkTaskPolling result:', message)
+				this.messages.push(message)
 				this.scrollToBottom()
 			} catch (error) {
-				console.error('getLLMResponse error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error generating a response'))
+				console.error('scheduleGenerationTask error:', error)
+				showError(t('assistant', 'Error generating a response'))
 			} finally {
 				this.loading.llmGeneration = false
 			}
 		},
 
-		async regenerateLLMResponse(messageId) {
+		async runRegenerationTask(messageId) {
 			try {
 				this.loading.llmGeneration = true
 				const response = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId: this.active.id } })
-				console.debug('regenerateLLMResponse response:', response)
-				this.messages[this.messages.length - 1] = response.data
+				console.debug('scheduleRegenerationTask response:', response)
+				const message = await this.pollGenerationTask(response.data.taskId)
+				console.debug('checkTaskPolling result:', message)
+				this.messages[this.messages.length - 1] = message
 				this.scrollToBottom()
 			} catch (error) {
-				console.error('regenerateLLMResponse error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error regenerating a response'))
+				console.error('scheduleRegenerationTask error:', error)
+				showError(t('assistant', 'Error regenerating a response'))
 			} finally {
 				this.loading.llmGeneration = false
 			}
+		},
+
+		async pollGenerationTask(taskId) {
+			return new Promise((resolve, reject) => {
+				this.pollMessageGenerationTimerId = setInterval(() => {
+					axios.get(
+						getChatURL('/check_generation'),
+						{ params: { taskId, sessionId: this.active.id } },
+					).then(response => {
+						clearInterval(this.pollMessageGenerationTimerId)
+						resolve(response.data)
+					}).catch(error => {
+						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
+						if (error.response?.status !== 417) {
+							console.error('checkTaskPolling error', error)
+							clearInterval(this.pollMessageGenerationTimerId)
+							reject(new Error('Message generation task check failed'))
+						} else {
+							console.debug('checkTaskPolling, task is still scheduled or running', error)
+						}
+					})
+				}, 2000)
+			})
+		},
+
+		async pollTitleGenerationTask(taskId) {
+			return new Promise((resolve, reject) => {
+				this.pollTitleGenerationTimerId = setInterval(() => {
+					axios.get(
+						getChatURL('/check_title_generation'),
+						{ params: { taskId, sessionId: this.active.id } },
+					).then(response => {
+						clearInterval(this.pollTitleGenerationTimerId)
+						resolve(response)
+					}).catch(error => {
+						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
+						if (error.response?.status !== 417) {
+							console.error('checkTaskPolling error', error)
+							clearInterval(this.pollTitleGenerationTimerId)
+							reject(new Error('Title generation task check failed'))
+						} else {
+							console.debug('checkTaskPolling, task is still scheduled or running', error)
+						}
+					})
+				}, 2000)
+			})
 		},
 	},
 }
