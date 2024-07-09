@@ -13,7 +13,7 @@
   </file>
   <file src="lib/Controller/ChattyLLMController.php">
     <TooManyArguments>
-      <code><![CDATA[new Task(TextToText::ID, ['input' => $content], Application::APP_ID, $this->userId, 'chatty-llm')]]></code>
+      <code><![CDATA[new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId)]]></code>
     </TooManyArguments>
   </file>
   <file src="lib/Service/AssistantService.php">
@@ -24,10 +24,10 @@
       <code><![CDATA[array<AssistantTaskProcessingTaskType>]]></code>
     </MoreSpecificReturnType>
     <RedundantCondition>
-      <code><![CDATA[self::DEBUG]]></code>
+      <code><![CDATA[!self::DEBUG]]></code>
     </RedundantCondition>
     <TypeDoesNotContainType>
-      <code><![CDATA[!self::DEBUG]]></code>
+      <code><![CDATA[self::DEBUG]]></code>
     </TypeDoesNotContainType>
   </file>
 </files>

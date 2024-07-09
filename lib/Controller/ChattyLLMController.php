@@ -2,7 +2,6 @@
 
 namespace OCA\Assistant\Controller;
 
-use Exception;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
@@ -19,6 +18,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUserManager;
+use OCP\TaskProcessing\Exception\Exception;
 use OCP\TaskProcessing\Exception\NotFoundException;
 use OCP\TaskProcessing\Exception\PreConditionNotMetException;
 use OCP\TaskProcessing\Exception\UnauthorizedException;
@@ -379,9 +379,9 @@ class ChattyLLMController extends Controller {
 				$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
 				return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message into DB')], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
-		} else if ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
+		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
 			return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
-		} else if ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
+		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
 		}
 		return new JSONResponse(['error' => 'unknown_error', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
@@ -402,8 +402,7 @@ class ChattyLLMController extends Controller {
 	 * @throws \OCP\TaskProcessing\Exception\Exception
 	 */
 	#[NoAdminRequired]
-	public function generateTitle(int $sessionId): JSONResponse
-	{
+	public function generateTitle(int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -482,9 +481,9 @@ class ChattyLLMController extends Controller {
 				$this->logger->warning('Failed to generate a title for the chat session', ['exception' => $e]);
 				return new JSONResponse(['error' => $this->l10n->t('Failed to generate a title for the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
-		} else if ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
+		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
 			return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
-		} else if ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
+		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
 		}
 		return new JSONResponse(['error' => 'unknown_error', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
@@ -524,14 +523,13 @@ class ChattyLLMController extends Controller {
 	 * Schedule the LLM task
 	 *
 	 * @param string $content
-	 * @return string
-	 * @throws \OCP\TaskProcessing\Exception\Exception
-	 * @throws NotFoundException
+	 * @return int|null
+	 * @throws Exception
 	 * @throws PreConditionNotMetException
 	 * @throws UnauthorizedException
 	 * @throws ValidationException
 	 */
-	private function scheduleLLMTask(string $content): string {
+	private function scheduleLLMTask(string $content): ?int {
 		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId();
