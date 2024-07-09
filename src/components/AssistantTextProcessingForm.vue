@@ -152,7 +152,7 @@ import VueClipboard from 'vue-clipboard2'
 
 Vue.use(VueClipboard)
 
-const FREE_PROMPT_TASK_TYPE_ID = 'core:text2text'
+const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
 
 export default {
 	name: 'AssistantTextProcessingForm',
@@ -216,7 +216,7 @@ export default {
 			myInputs: this.inputs,
 			myOutputs: this.outputs,
 			taskTypes: [],
-			mySelectedTaskTypeId: this.selectedTaskTypeId || FREE_PROMPT_TASK_TYPE_ID,
+			mySelectedTaskTypeId: this.selectedTaskTypeId || TEXT2TEXT_TASK_TYPE_ID,
 			showHistory: false,
 			loadingTaskTypes: false,
 			historyLoading: false,
@@ -228,7 +228,11 @@ export default {
 			if (this.mySelectedTaskTypeId === null) {
 				return null
 			}
-			return this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
+			const taskType = this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
+			if (taskType) {
+				return taskType
+			}
+			return null
 		},
 		sortedTaskTypes() {
 			return this.taskTypes.slice().sort((a, b) => {
@@ -244,8 +248,11 @@ export default {
 		hasOptionalInputOutputShape() {
 			const taskType = this.selectedTaskType
 			console.debug('aaaaaaaaaaaa selected tt', taskType)
-			return (taskType.optionalInputShape && Object.keys(taskType.optionalInputShape).length > 0)
-				|| (taskType.optionalOutputShape && Object.keys(taskType.optionalOutputShape.length) > 0)
+			if (taskType) {
+				return (taskType.optionalInputShape && Object.keys(taskType.optionalInputShape).length > 0)
+					|| (taskType.optionalOutputShape && Object.keys(taskType.optionalOutputShape.length) > 0)
+			}
+			return false
 		},
 		toggleAdvancedLabel() {
 			return this.showAdvanced
@@ -281,7 +288,7 @@ export default {
 		syncSubmitButtonLabel() {
 			return this.hasOutput
 				? t('assistant', 'Try again')
-				: this.selectedTaskType.id === FREE_PROMPT_TASK_TYPE_ID
+				: this.selectedTaskType.id === TEXT2TEXT_TASK_TYPE_ID
 					? t('assistant', 'Send request')
 					: this.selectedTaskType.name
 		},
@@ -336,6 +343,16 @@ export default {
 			axios.get(generateOcsUrl('/apps/assistant/api/v1/task-types'))
 				.then((response) => {
 					this.taskTypes = response.data.ocs.data.types
+					// check if selected task type is in the list, fallback to text2text
+					const taskType = this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
+					if (taskType === undefined) {
+						const text2textType = this.taskTypes.find(tt => tt.id === TEXT2TEXT_TASK_TYPE_ID)
+						if (text2textType) {
+							this.mySelectedTaskTypeId = TEXT2TEXT_TASK_TYPE_ID
+						} else {
+							this.mySelectedTaskTypeId = null
+						}
+					}
 				})
 				.catch((error) => {
 					console.error(error)
