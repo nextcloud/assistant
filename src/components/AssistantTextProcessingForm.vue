@@ -266,10 +266,10 @@ export default {
 				return false
 			}
 			const taskType = this.selectedTaskType
-			return Object.keys(this.myInputs).every(k => {
-				// optional input shape is not checked
-				if (!Object.keys(taskType.inputShape).includes(k)) {
-					return true
+			// check that all fields required by the task type are defined
+			return Object.keys(taskType.inputShape).every(k => {
+				if (this.myInputs[k] === null || this.myInputs[k] === undefined) {
+					return false
 				}
 				const v = this.myInputs[k]
 				return (typeof v === 'string' && !!v?.trim())
@@ -277,7 +277,6 @@ export default {
 					|| (typeof v === 'number')
 					|| (typeof v === 'object' && !!v)
 			})
-				&& this.selectedTaskType
 		},
 		syncSubmitButtonLabel() {
 			return this.hasOutput
