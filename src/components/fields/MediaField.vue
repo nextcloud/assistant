@@ -18,7 +18,6 @@
 				:accept="acceptedMimeTypes"
 				@files-chosen="onFileChosen" />
 			<AudioRecorderWrapper v-if="isAudio"
-				:inline="true"
 				@new-recording="onNewRecording" />
 		</div>
 		<div v-if="value !== null"

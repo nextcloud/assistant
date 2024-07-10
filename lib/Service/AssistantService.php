@@ -55,7 +55,7 @@ class AssistantService {
 		// TODO set the correct task type ID (the textProcessing one or the future taskProcessing one)
 		'ContextChat' => 3,
 		AudioToText::ID => 4,
-		// TODO translate: 5 (translate is not migrated to taskProcessing yet
+		// TODO translate: 5 (translate is not migrated to taskProcessing yet)
 		ContextWrite::ID => 6,
 		TextToImage::ID => 7,
 		TextToTextSummary::ID => 8,

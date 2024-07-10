@@ -20,7 +20,6 @@
 				:multiple="true"
 				@files-chosen="onFilesChosen" />
 			<AudioRecorderWrapper v-if="isAudioList"
-				:inline="true"
 				@new-recording="onNewRecording" />
 		</div>
 		<div v-if="value !== null"

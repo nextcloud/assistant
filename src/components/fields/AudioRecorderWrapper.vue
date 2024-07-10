@@ -1,50 +1,55 @@
 <template>
-	<div class="assistant-audio-recorder">
-		<div class="recorder-wrapper"
-			:class="{horizontal: inline}">
-			<NcButton v-if="audioData !== null"
-				:aria-label="t('assistant', 'Reset recorded audio')"
-				@click="resetRecording">
-				<template #icon>
-					<UndoIcon />
-				</template>
-				{{ t('assistant', 'Reset') }}
-			</NcButton>
-			<NcButton v-if="audioData === null && !isRecording"
-				ref="startRecordingButton"
-				@click="startRecording">
-				<template #icon>
-					<MicrophoneIcon />
-				</template>
-				{{ t('assistant', 'Start recording') }}
-			</NcButton>
-			<NcButton v-if="audioData === null && isRecording"
-				ref="stopRecordingButton"
-				@click="stopRecording">
-				<template #icon>
-					<StopIcon />
-				</template>
-				{{ t('assistant', 'Stop recording') }}
-			</NcButton>
-			<audio-recorder v-if="!resettingRecorder"
-				v-show="isRecording"
-				ref="recorder"
-				class="recorder"
-				:class="{'no-audio': audioData === null, 'with-audio': audioData !== null}"
-				:attempts="1"
-				:time="300"
-				:show-download-button="false"
-				:show-upload-button="false"
-				:before-recording="onRecordStarts"
-				:after-recording="onRecordEnds"
-				mode="minimal" />
-		</div>
+	<div class="assistant-audio-recorder-wrapper">
+		<NcButton v-if="!isRecording"
+			ref="startRecordingButton"
+			@click="startRecording">
+			<template #icon>
+				<MicrophoneIcon />
+			</template>
+			{{ t('assistant', 'Start recording') }}
+		</NcButton>
+		<!--NcButton v-if="isRecording"
+			ref="stopRecordingButton"
+			@click="stopRecording">
+			<template #icon>
+				<StopIcon />
+			</template>
+			{{ t('assistant', 'Stop recording') }}
+		</NcButton-->
+		<NcButton v-if="isRecording"
+			type="error"
+			:title="t('assistant', 'Dismiss recording')"
+			@click="cancelRecording">
+			<template #icon>
+				<CloseIcon />
+			</template>
+		</NcButton>
+		<div v-if="isRecording" class="recording-indicator fadeOutIn" />
+		<audio-recorder v-if="!resettingRecorder"
+			v-show="isRecording"
+			ref="recorder"
+			class="recorder"
+			:attempts="1"
+			:time="300"
+			:show-download-button="false"
+			:show-upload-button="false"
+			:before-recording="onRecordStarts"
+			:after-recording="onRecordEnds"
+			mode="minimal" />
+		<NcButton v-if="isRecording"
+			type="success"
+			:title="t('assistant', 'End recording and send')"
+			@click="stopRecording">
+			<template #icon>
+				<CheckIcon />
+			</template>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import UndoIcon from 'vue-material-design-icons/Undo.vue'
-import StopIcon from 'vue-material-design-icons/Stop.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -58,16 +63,12 @@ export default {
 
 	components: {
 		NcButton,
-		UndoIcon,
 		MicrophoneIcon,
-		StopIcon,
+		CheckIcon,
+		CloseIcon,
 	},
 
 	props: {
-		inline: {
-			type: Boolean,
-			default: false,
-		},
 	},
 
 	emits: [
@@ -76,9 +77,9 @@ export default {
 
 	data() {
 		return {
-			audioData: null,
 			isRecording: false,
 			resettingRecorder: false,
+			ignoreNextRecording: false,
 		}
 	},
 
@@ -88,13 +89,8 @@ export default {
 	},
 
 	methods: {
-		resetAudioState() {
-			this.isRecording = false
-		},
-
 		resetRecording() {
-			this.audioData = null
-			// this.$emit('update:audio-data', null)
+			this.ignoreNextRecording = false
 			// trick to remove the recorder and re-render it so the data is gone and its state is fresh
 			this.resettingRecorder = true
 			this.$nextTick(() => {
@@ -116,6 +112,11 @@ export default {
 			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
 		},
 
+		cancelRecording() {
+			this.ignoreNextRecording = true
+			this.stopRecording()
+		},
+
 		async onRecordStarts(e) {
 			this.isRecording = true
 			this.$nextTick(() => {
@@ -126,11 +127,13 @@ export default {
 
 		async onRecordEnds(e) {
 			this.isRecording = false
-			try {
-				this.$emit('new-recording', e.blob)
-			} catch (error) {
-				console.error('Recording error:', error)
-				this.$emit('new-recording', null)
+			if (!this.ignoreNextRecording) {
+				try {
+					this.$emit('new-recording', e.blob)
+				} catch (error) {
+					console.error('Recording error:', error)
+					this.$emit('new-recording', null)
+				}
 			}
 			this.resetRecording()
 		},
@@ -139,31 +142,32 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.assistant-audio-recorder {
+.assistant-audio-recorder-wrapper {
 	display: flex;
-	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	gap: 10px;
 
-	.recorder-wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		&.horizontal {
-			flex-direction: row;
-		}
+	.recording-indicator {
+		width: 16px;
+		height: 16px;
+		flex: 0 0 16px;
+		border-radius: 8px;
+		background-color: var(--color-error);
+	}
+
+	@keyframes fadeOutIn {
+		0% { opacity:1; }
+		50% { opacity:.3; }
+		100% { opacity:1; }
+	}
+	.fadeOutIn {
+		animation: fadeOutIn 3s infinite;
 	}
 
 	:deep(.recorder) {
 		max-width: 150px;
 		height: 34px;
-		&.no-audio {
-			.ar-player {
-				&-actions {
-					display: none;
-				}
-			}
-		}
+		width: unset;
 
 		.ar-recorder {
 			display: none;
@@ -187,6 +191,7 @@ export default {
 		}
 		.ar-recorder__duration {
 			margin: 0 0 0 0;
+			font-size: 20px;
 		}
 		.ar-recorder__time-limit {
 			position: unset !important;
