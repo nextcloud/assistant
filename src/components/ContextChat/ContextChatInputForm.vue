@@ -1,32 +1,35 @@
 <template>
 	<div class="scoped-cc-input-form">
-		<div class="line spaced">
+		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
+			{{ t('assistant', 'Selective context') }}
+		</NcCheckboxRadioSwitch>
+		<div v-if="sccEnabled" class="line spaced">
 			<div class="radios">
 				<NcCheckboxRadioSwitch
 					type="radio"
-					:checked="scopeType"
+					:checked="inputs.scopeType"
 					:value="ScopeType.SOURCE"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
 					name="scopeType"
-					@update:checked="(value) => (scopeType = value)">
+					@update:checked="onScopeTypeChanged(ScopeType.SOURCE)">
 					{{ tStrings[ScopeType.SOURCE] }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					type="radio"
-					:checked="scopeType"
+					:checked="inputs.scopeType"
 					:value="ScopeType.PROVIDER"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
 					name="scopeType"
-					@update:checked="(value) => (scopeType = value)">
+					@update:checked="onScopeTypeChanged(ScopeType.PROVIDER)">
 					{{ tStrings[ScopeType.PROVIDER] }}
 				</NcCheckboxRadioSwitch>
 			</div>
 			<NcButton
 				type="secondary"
-				:disabled="scopeListMeta.length === 0"
-				@click="clearSelection">
+				:disabled="scopeListMetaArray.length === 0"
+				@click="onInputsChanged({ scopeListMeta: ''})">
 				<template #icon>
 					<PlaylistRemoveIcon />
 				</template>
@@ -34,7 +37,7 @@
 			</NcButton>
 		</div>
 		<div class="selector-form">
-			<div v-if="scopeType === ScopeType.SOURCE" class="sources-form">
+			<div v-if="inputs.scopeType === ScopeType.SOURCE" class="sources-form">
 				<NcButton
 					type="secondary"
 					@click="onChooseSourceClicked">
@@ -43,15 +46,16 @@
 					</template>
 					{{ tStrings['Choose Files/Folders'] }}
 				</NcButton>
-				<NcSelect v-if="scopeListMeta.length > 0"
-					v-model="scopeListMeta"
+				<NcSelect v-if="scopeListMetaArray.length > 0"
+					:value="scopeListMetaArray"
 					class="line"
 					:placeholder="tStrings[ScopeType.SOURCE]"
 					:multiple="true"
 					:close-on-select="false"
-					:dropdown-should-open="dropdownShouldNotOpen"
+					:dropdown-should-open="() => false"
 					:label-outside="true"
-					:no-wrap="false">
+					:no-wrap="false"
+					@input="onInputsChanged({ scopeListMeta: JSON.stringify($event) })">
 					<template #selected-option="option">
 						<NcAvatar
 							:size="24"
@@ -65,7 +69,7 @@
 			</div>
 			<div v-else class="providers-form">
 				<NcSelect
-					v-model="scopeListMeta"
+					:value="scopeListMetaArray"
 					:placeholder="tStrings[ScopeType.PROVIDER]"
 					:multiple="true"
 					:close-on-select="false"
@@ -73,7 +77,8 @@
 					:loading="providersLoading"
 					:label-outside="true"
 					:append-to-body="false"
-					:options="options">
+					:options="providerOptions"
+					@input="onInputsChanged({ scopeListMeta: JSON.stringify($event) })">
 					<template #option="option">
 						<div class="select-option">
 							<NcAvatar
@@ -99,6 +104,7 @@
 				</NcSelect>
 			</div>
 		</div>
+		<!-- TODO TEXT input -->
 	</div>
 </template>
 
@@ -177,74 +183,45 @@ export default {
 	},
 
 	props: {
-		sccData: {
+		inputs: {
 			type: Object,
-			default: () => ({
-				sccScopeType: _ScopeType.SOURCE,
-				sccScopeList: [],
-				sccScopeListMeta: [],
-			}),
-			validator: (value) => {
-				return Object.values(_ScopeType).includes(value?.sccScopeType)
-			},
+			required: true,
 		},
 	},
 
-	emits: ['update:sccData'],
+	emits: ['update:inputs'],
 
 	data() {
 		return {
 			ScopeType: _ScopeType,
 			tStrings: _tStrings,
 
-			options: [],
+			providerOptions: [],
 			providersLoading: false,
 			defaultProviderKey: 'files__default',
+
+			sccEnabled: !!this.inputs.scopeType && !!this.inputs.scopeList,
 		}
 	},
 
 	computed: {
-		scopeType: {
-			get() {
-				return this.sccData.sccScopeType
-			},
-
-			set(value) {
-				console.debug('Setting scope type:', value)
-				if (value === this.ScopeType.PROVIDER && this.options.length === 0) {
-					this.fetchProviders()
-				}
-
-				this.$emit('update:sccData', {
-					sccScopeType: value,
-					sccScopeList: [],
-					sccScopeListMeta: [],
-				})
-			},
-		},
-		scopeListMeta: {
-			get() {
-				if (!this.sccData.sccScopeListMeta) {
-					return []
-				}
-				return this.sccData.sccScopeListMeta
-			},
-
-			set(value) {
-				console.debug('Setting scope list meta:', value)
-				this.$emit('update:sccData', {
-					sccScopeType: this.scopeType,
-					sccScopeList: value?.map((item) => item.id) ?? [],
-					sccScopeListMeta: value ?? [],
-				})
-			},
+		scopeListMetaArray() {
+			if (!this.inputs.scopeListMeta) {
+				return []
+			}
+			// TODO trycatch
+			return JSON.parse(this.inputs.scopeListMeta)
 		},
 	},
 
 	mounted() {
 		const defaultProviderUrl = generateUrl('/apps/context_chat/default-provider-key')
 		axios.get(defaultProviderUrl)
-			.then((response) => (this.defaultProviderKey = response.data ? response.data : this.defaultProviderKey))
+			.then((response) => {
+				this.defaultProviderKey = response.data
+					? response.data
+					: this.defaultProviderKey
+			})
 			.catch((error) => {
 				console.error('Error fetching default provider key:', error)
 				showError(t('assistant', 'Error fetching default provider key'))
@@ -252,22 +229,19 @@ export default {
 	},
 
 	methods: {
-		dropdownShouldNotOpen() {
-			return false
-		},
 		onChooseSourceClicked() {
 			picker(this.chooseDialogCallback).pick()
 		},
 		isScopePresent(scopeId) {
-			return this.scopeListMeta.some((item) => item.id === scopeId)
+			return this.scopeListMetaArray.some((item) => item.id === scopeId)
 		},
 		chooseDialogCallback(nodes) {
 			console.debug('nodes:', nodes)
-			const scopeListMeta = []
+			const addedScopeListMeta = []
 			for (const node of nodes) {
 				const scopeId = `${this.defaultProviderKey}: ${node.fileid}`
 				if (node.path && !this.isScopePresent(scopeId)) {
-					scopeListMeta.push({
+					addedScopeListMeta.push({
 						id: scopeId,
 						type: node.type,
 						label: (node.path?.substring(0, 100) + (node.path.length > 100 ? '...' : '')) || node.name,
@@ -276,20 +250,25 @@ export default {
 				}
 			}
 
-			this.scopeListMeta = this.scopeListMeta.concat(scopeListMeta)
+			const newScopeListMetaArray = this.scopeListMetaArray.concat(addedScopeListMeta)
+			this.onInputsChanged({
+				scopeListMeta: JSON.stringify(newScopeListMetaArray),
+				scopeList: newScopeListMetaArray.map(item => item.id),
+			})
 		},
 		fetchProviders() {
 			this.providersLoading = true
 			axios.get(generateUrl('/apps/context_chat/providers'))
-				.then((response) => (this.options = response.data))
+				.then((response) => {
+					this.providerOptions = response.data
+				})
 				.catch((error) => {
 					console.error('Error fetching providers:', error)
 					showError(t('assistant', 'Error fetching providers'))
 				})
-				.finally(() => (this.providersLoading = false))
-		},
-		clearSelection() {
-			this.scopeListMeta = []
+				.finally(() => {
+					this.providersLoading = false
+				})
 		},
 		getFilePreviewUrl(fileId) {
 			if (fileId == null) {
@@ -299,6 +278,31 @@ export default {
 				'/apps/assistant/preview?id={fileId}&x=24&y=24',
 				{ fileId: fileId.substring(`${this.defaultProviderKey}: `.length) },
 			)
+		},
+		onUpdateSccEnabled() {
+			this.$emit('update:inputs', {
+				prompt: this.inputs.prompt,
+				scopeType: _ScopeType.SOURCE,
+				scopeList: [],
+				scopeListMeta: '',
+			})
+		},
+		onScopeTypeChanged(value) {
+			if (value === this.ScopeType.PROVIDER && this.providerOptions.length === 0) {
+				this.fetchProviders()
+			}
+
+			this.onInputsChanged({
+				scopeType: value,
+				scopeList: [],
+				scopeListMeta: '',
+			})
+		},
+		onInputsChanged(changedInputs) {
+			this.$emit('update:inputs', {
+				...this.inputs,
+				...changedInputs,
+			})
 		},
 	},
 }

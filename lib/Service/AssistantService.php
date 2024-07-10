@@ -53,8 +53,7 @@ class AssistantService {
 	private const TASK_TYPE_PRIORITIES = [
 		'chatty-llm' => 1,
 		TextToText::ID => 2,
-		// TODO set the correct task type ID (the textProcessing one or the future taskProcessing one)
-		'ContextChat' => 3,
+		'context_chat:context_chat' => 3,
 		AudioToText::ID => 4,
 		// TODO translate: 5 (translate is not migrated to taskProcessing yet)
 		ContextWrite::ID => 6,

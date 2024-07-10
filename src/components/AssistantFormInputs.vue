@@ -1,12 +1,8 @@
 <template>
 	<ChattyLLMInputForm v-if="selectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
-	<div v-else-if="selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType'" class="assistant-inputs">
-		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateContextChat">
-			{{ t('assistant', 'Selective context') }}
-		</NcCheckboxRadioSwitch>
-		<ContextChatInputForm v-if="sccEnabled" :scc-data.sync="sccData" @update:scc-data="onUpdateContextChat" />
-		<!-- TODO add text input field for context chat -->
-	</div>
+	<ContextChatInputForm v-else-if="selectedTaskTypeId === 'context_chat:context_chat'"
+		:inputs="inputs"
+		@update:inputs="$emit('update:inputs', $event)" />
 	<div v-else class="assistant-inputs">
 		<div class="input-container">
 			<TaskTypeFields
@@ -22,8 +18,6 @@
 </template>
 
 <script>
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-
 import ChattyLLMInputForm from './ChattyLLM/ChattyLLMInputForm.vue'
 import ContextChatInputForm from './ContextChat/ContextChatInputForm.vue'
 import TaskTypeFields from './fields/TaskTypeFields.vue'
@@ -31,7 +25,6 @@ import TaskTypeFields from './fields/TaskTypeFields.vue'
 export default {
 	name: 'AssistantFormInputs',
 	components: {
-		NcCheckboxRadioSwitch,
 		ContextChatInputForm,
 		ChattyLLMInputForm,
 		TaskTypeFields,
@@ -52,12 +45,6 @@ export default {
 	},
 	data() {
 		return {
-			sccEnabled: !!this.inputs.scopeType && !!this.inputs.scopeList,
-			sccData: {
-				sccScopeType: this.inputs.scopeType ?? 'source',
-				sccScopeList: this.inputs.scopeList ?? [],
-				sccScopeListMeta: this.inputs.scopeListMeta ?? [],
-			},
 		}
 	},
 	computed: {
@@ -68,25 +55,10 @@ export default {
 	watch: {
 		selectedTaskType() {
 			console.debug('aaaa watch selectedTaskType', this.selectedTaskType, this.selectedTaskTypeId)
-			if (this.selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType') {
-				this.onUpdateContextChat()
-			} else {
-				this.resetInputs()
-			}
-		},
-		inputs(newVal) {
-			this.sccEnabled = !!this.inputs.scopeType && !!this.inputs.scopeList
-			this.sccData.sccScopeType = this.inputs.scopeType ?? 'source'
-			this.sccData.sccScopeList = this.inputs.scopeList ?? []
-			this.sccData.sccScopeListMeta = this.inputs.scopeListMeta ?? []
+			this.resetInputs()
 		},
 	},
 	mounted() {
-		if (this.selectedTaskTypeId === 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType') {
-			this.onUpdateContextChat()
-		} else {
-			// this.resetInputs()
-		}
 	},
 	methods: {
 		resetInputs() {
@@ -95,19 +67,7 @@ export default {
 				inputs[key] = null
 			})
 			this.$emit('update:inputs', inputs)
-		},
-		onUpdateContextChat() {
-			this.$emit(
-				'update:inputs',
-				{
-					prompt: this.prompt,
-					...(this.sccEnabled && {
-						scopeType: this.sccData.sccScopeType,
-						scopeList: this.sccData.sccScopeList,
-						scopeListMeta: this.sccData.sccScopeListMeta,
-					}),
-				},
-			)
+			// TODO do it with optional input shape as well
 		},
 	},
 }
