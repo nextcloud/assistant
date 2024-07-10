@@ -174,10 +174,13 @@ export default {
 			const url = generateOcsUrl('/apps/assistant/api/v1/input-file')
 			const formData = new FormData()
 			formData.append('data', blob)
-			formData.append('extension', 'mp3')
+			formData.append('filename', 'recording.mp3')
 			axios.post(url, formData).then(response => {
 				this.$emit('update:value', response.data.ocs.data.fileId)
 				this.filePath = response.data.ocs.data.filePath
+			}).catch(error => {
+				showError(t('assistant', 'Could not upload the recorded file'))
+				console.error(error)
 			})
 		},
 		onFileUploaded(data) {

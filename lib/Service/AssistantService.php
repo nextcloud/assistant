@@ -189,25 +189,23 @@ class AssistantService {
 		return $this->taskProcessingManager->getUserTasks($userId, $taskTypeId);
 	}
 
-	public function storeInputFile(string $userId, string $tempFileLocation, ?string $extension = null): array {
+	public function storeInputFile(string $userId, string $tempFileLocation, ?string $filename = null): array {
 		$assistantDataFolder = $this->getAssistantDataFolder($userId);
 
-		$filename = (new DateTime())->format('Y-m-d_H:i:s');
-		if ($extension !== null) {
-			$filename .= '.' . $extension;
-		}
-		$inputFile = $assistantDataFolder->newFile($filename, fopen($tempFileLocation, 'rb'));
+		$date = (new DateTime())->format('Y-m-d_H:i:s');
+		$targetFileName = $filename === null ? $date : ($date . ' ' . $filename);
+		$targetFile = $assistantDataFolder->newFile($targetFileName, fopen($tempFileLocation, 'rb'));
 
 		return [
-			'fileId' => $inputFile->getId(),
-			'filePath' => $inputFile->getPath(),
+			'fileId' => $targetFile->getId(),
+			'filePath' => $targetFile->getPath(),
 		];
 	}
 
 	public function getAssistantDataFolder(string $userId): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 
-		$dataFolderName = $this->config->getAppValue(Application::APP_ID, 'data_folder', Application::ASSISTANT_DATA_FOLDER_NAME) ?: Application::ASSISTANT_DATA_FOLDER_NAME;
+		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', Application::ASSISTANT_DATA_FOLDER_NAME) ?: Application::ASSISTANT_DATA_FOLDER_NAME;
 		if ($userFolder->nodeExists($dataFolderName)) {
 			$dataFolderNode = $userFolder->get($dataFolderName);
 			if ($dataFolderNode instanceof Folder && $dataFolderNode->isCreatable()) {
@@ -217,20 +215,24 @@ class AssistantService {
 		// it does not exist or is not a folder or does not have write permissions: we create one
 		$dataFolder = $this->createAssistantDataFolder($userId);
 		$dataFolderName = $dataFolder->getName();
-		$this->config->setAppValue(Application::APP_ID, 'data_folder', $dataFolderName);
+		$this->config->setUserValue($userId, Application::APP_ID, 'data_folder', $dataFolderName);
 		return $dataFolder;
 	}
 
-	private function createAssistantDataFolder(string $userId, int $try = 3): Folder {
+	private function createAssistantDataFolder(string $userId, int $try = 0): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
-		$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME . ' ' . strval(4 - $try);
+		if ($try === 0) {
+			$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME;
+		} else {
+			$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME . ' ' . $try;
+		}
 
 		if ($userFolder->nodeExists($folderPath)) {
-			if ($try === 0) {
+			if ($try > 3) {
 				// give up
 				throw new RuntimeException('Could not create the assistant data folder');
 			}
-			return $this->createAssistantDataFolder($userId, $try - 1);
+			return $this->createAssistantDataFolder($userId, $try + 1);
 		}
 
 		return $userFolder->newFolder($folderPath);

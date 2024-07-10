@@ -1,5 +1,5 @@
 <template>
-	<div class="audio-field">
+	<div>
 		<input ref="fileInput"
 			type="file"
 			:accept="fileInputAccept"
@@ -22,6 +22,7 @@ import UploadIcon from 'vue-material-design-icons/Upload.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
+import { showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
@@ -82,15 +83,17 @@ export default {
 				return
 			}
 			const files = this.$refs.fileInput.files
-			console.debug('aaaaa onUploadFileSelected', e)
 			console.debug('FILES', this.$refs.fileInput.files)
 			if (!this.multiple) {
 				const file = files[0]
 				this.uploadFile(file).then(response => {
 					this.$emit('files-uploaded', response.data.ocs.data)
+				}).catch(error => {
+					showError(t('assistant', 'Could not upload the file'))
+					console.error(error)
 				})
 			} else {
-				Promise.all(files.map(f => this.uploadFile(f)))
+				Promise.all(Array.from(files).map(f => this.uploadFile(f)))
 					.then(responses => {
 						if (responses.some(response => response.code === 'ERR_CANCELED')) {
 							console.debug('At least one request has been canceled, do nothing')
@@ -98,15 +101,16 @@ export default {
 						}
 						this.$emit('files-uploaded', responses.map(response => response.data.ocs.data))
 					})
+					.catch(error => {
+						showError(t('assistant', 'Could not upload the file'))
+						console.error(error)
+					})
 			}
 		},
 		uploadFile(file) {
 			const formData = new FormData()
 			formData.append('data', file)
-			if (file.name.includes('.')) {
-				const ns = file.name.split('.')
-				formData.append('extension', ns[ns.length - 1])
-			}
+			formData.append('filename', file.name)
 			return axios.post(uploadEndpointUrl, formData)
 		},
 	},

@@ -148,14 +148,14 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Upload an input file for a task that is being prepared
 	 *
-	 * @param string|null $extension The file extension
+	 * @param string|null $filename The input file name
 	 * @return DataResponse<Http::STATUS_OK, array{fileId: int, filePath: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 *
 	 * 200: The input file was uploaded
 	 * 400: Impossible to upload an input file
 	 */
 	#[NoAdminRequired]
-	public function uploadInputFile(?string $extension = null): DataResponse {
+	public function uploadInputFile(?string $filename = null): DataResponse {
 		$inputData = $this->request->getUploadedFile('data');
 
 		if ($inputData['error'] !== 0) {
@@ -166,11 +166,15 @@ class AssistantApiController extends OCSController {
 			return new DataResponse('Invalid input data received', Http::STATUS_BAD_REQUEST);
 		}
 
-		$fileInfo = $this->assistantService->storeInputFile($this->userId, $inputData['tmp_name'], $extension);
-		return new DataResponse([
-			'fileId' => $fileInfo['fileId'],
-			'filePath' => $fileInfo['filePath'],
-		]);
+		try {
+			$fileInfo = $this->assistantService->storeInputFile($this->userId, $inputData['tmp_name'], $filename);
+			return new DataResponse([
+				'fileId' => $fileInfo['fileId'],
+				'filePath' => $fileInfo['filePath'],
+			]);
+		} catch (\Exception $e) {
+			return new DataResponse('Failed to store the input file: ' . $e->getMessage(), Http::STATUS_BAD_REQUEST);
+		}
 	}
 
 	/**
