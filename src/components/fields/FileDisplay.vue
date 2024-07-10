@@ -40,9 +40,7 @@ export default {
 		},
 	},
 
-	emits: [
-		'delete',
-	],
+	emits: [],
 
 	data() {
 		return {

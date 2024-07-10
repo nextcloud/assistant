@@ -13,6 +13,7 @@ import TextField from './TextField.vue'
 import NumberField from './NumberField.vue'
 import MediaField from './MediaField.vue'
 import ListOfMediaField from './ListOfMediaField.vue'
+import ListOfTextsField from './ListOfTextsField.vue'
 
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
 
@@ -76,6 +77,8 @@ export default {
 				return MediaField
 			} else if (this.isListOfMedia) {
 				return ListOfMediaField
+			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfTexts) {
+				return ListOfTextsField
 			}
 			return TextField
 		},

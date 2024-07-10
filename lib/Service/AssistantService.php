@@ -32,6 +32,7 @@ use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\ContextWrite;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use OCP\TaskProcessing\TaskTypes\TextToTextHeadline;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use OCP\TaskProcessing\TaskTypes\TextToTextTopics;
@@ -162,6 +163,10 @@ class AssistantService {
 		}
 		/** @var string $typeId */
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
+			// skip chat task type (not directly useful to the end user)
+//			if ($typeId === TextToTextChat::ID) {
+//				continue;
+//			}
 			$taskTypeArray['id'] = $typeId;
 			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
 
