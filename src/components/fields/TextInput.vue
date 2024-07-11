@@ -193,16 +193,15 @@ export default {
 	}
 
 	.copy-button {
-		bottom: 13px;
-		right: 13px;
+		bottom: 5px;
+		right: 5px;
 	}
 
-	:deep(.rich-contenteditable__input) {
+	.rich-contenteditable__input {
 		min-height: 34px;
-
-		> .rich-contenteditable__input {
-			border: 2px solid var(--color-primary-element) !important;
-		}
+	}
+	.shadowed .rich-contenteditable__input {
+		border: 2px solid var(--color-primary-element) !important;
 	}
 }
 </style>
