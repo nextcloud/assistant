@@ -2,6 +2,7 @@
 	<ChattyLLMInputForm v-if="selectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
 	<ContextChatInputForm v-else-if="selectedTaskTypeId === 'context_chat:context_chat'"
 		:inputs="inputs"
+		:task-type="selectedTaskType"
 		@update:inputs="$emit('update:inputs', $event)" />
 	<div v-else class="assistant-inputs">
 		<div class="input-container">
@@ -63,9 +64,11 @@ export default {
 	methods: {
 		resetInputs() {
 			const inputs = {}
+			/*
 			Object.keys(this.selectedTaskType.inputShape).forEach(key => {
 				inputs[key] = null
 			})
+			*/
 			this.$emit('update:inputs', inputs)
 			// TODO do it with optional input shape as well
 		},

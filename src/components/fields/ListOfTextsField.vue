@@ -3,25 +3,27 @@
 		<h3 :title="field.description">
 			{{ field.name }}
 		</h3>
-		<div v-for="(v, i) in arrayValue"
-			:key="fieldKey + '-' + i"
-			class="text-list--item">
-			<TextInput
-				class="text-input"
-				:value="v ?? ''"
-				:is-output="isOutput"
-				:label="field.name"
-				:placeholder="field.description"
-				:title="field.description"
-				@update:value="onItemValueChanged(i, $event)" />
-			<NcButton v-if="!isOutput"
-				class="delete-button"
-				type="secondary"
-				@click="onDeleteItem(i)">
-				<template #icon>
-					<DeleteIcon />
-				</template>
-			</NcButton>
+		<div class="text-list-field--items">
+			<div v-for="(v, i) in arrayValue"
+				:key="fieldKey + '-' + i"
+				class="text-list--item">
+				<TextInput
+					class="text-input"
+					:value="v ?? ''"
+					:is-output="isOutput"
+					:label="field.name"
+					:placeholder="field.description"
+					:title="field.description"
+					@update:value="onItemValueChanged(i, $event)" />
+				<NcButton v-if="!isOutput"
+					class="delete-button"
+					type="secondary"
+					@click="onDeleteItem(i)">
+					<template #icon>
+						<DeleteIcon />
+					</template>
+				</NcButton>
+			</div>
 		</div>
 		<NcButton v-if="!isOutput"
 			class="more-button"
@@ -117,5 +119,12 @@ export default {
 </script>
 
 <style lang="scss">
-// nothing yet
+.text-list-field {
+
+	&--items {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+}
 </style>

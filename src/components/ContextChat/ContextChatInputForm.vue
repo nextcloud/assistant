@@ -1,5 +1,12 @@
 <template>
-	<div class="scoped-cc-input-form">
+	<div class="cc-input-form">
+		<TextInput
+			:value="inputs.prompt"
+			:label="taskType.inputShape?.prompt?.name"
+			:placeholder="taskType.inputShape?.prompt?.description"
+			:title="taskType.inputShape?.prompt?.description"
+			:is-output="false"
+			@update:value="onInputsChanged({ prompt: $event })" />
 		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}
 		</NcCheckboxRadioSwitch>
@@ -29,14 +36,14 @@
 			<NcButton
 				type="secondary"
 				:disabled="scopeListMetaArray.length === 0"
-				@click="onInputsChanged({ scopeListMeta: ''})">
+				@click="onInputsChanged({ scopeListMeta: '[]'})">
 				<template #icon>
 					<PlaylistRemoveIcon />
 				</template>
 				{{ tStrings['Clear Selection'] }}
 			</NcButton>
 		</div>
-		<div class="selector-form">
+		<div v-if="sccEnabled" class="selector-form">
 			<div v-if="inputs.scopeType === ScopeType.SOURCE" class="sources-form">
 				<NcButton
 					type="secondary"
@@ -55,7 +62,7 @@
 					:dropdown-should-open="() => false"
 					:label-outside="true"
 					:no-wrap="false"
-					@input="onInputsChanged({ scopeListMeta: JSON.stringify($event) })">
+					@input="onScopeListMetaChange">
 					<template #selected-option="option">
 						<NcAvatar
 							:size="24"
@@ -78,7 +85,7 @@
 					:label-outside="true"
 					:append-to-body="false"
 					:options="providerOptions"
-					@input="onInputsChanged({ scopeListMeta: JSON.stringify($event) })">
+					@input="onScopeListMetaChange">
 					<template #option="option">
 						<div class="select-option">
 							<NcAvatar
@@ -104,7 +111,6 @@
 				</NcSelect>
 			</div>
 		</div>
-		<!-- TODO TEXT input -->
 	</div>
 </template>
 
@@ -117,11 +123,14 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 
+import TextInput from '../fields/TextInput.vue'
+
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 
 const _ScopeType = Object.freeze({
+	NONE: 'none',
 	SOURCE: 'source',
 	PROVIDER: 'provider',
 })
@@ -174,6 +183,7 @@ export default {
 	name: 'ContextChatInputForm',
 
 	components: {
+		TextInput,
 		FileDocumentIcon,
 		NcAvatar,
 		NcButton,
@@ -184,6 +194,10 @@ export default {
 
 	props: {
 		inputs: {
+			type: Object,
+			required: true,
+		},
+		taskType: {
 			type: Object,
 			required: true,
 		},
@@ -200,7 +214,7 @@ export default {
 			providersLoading: false,
 			defaultProviderKey: 'files__default',
 
-			sccEnabled: !!this.inputs.scopeType && !!this.inputs.scopeList,
+			sccEnabled: !!this.inputs.scopeType && this.inputs.scopeType !== _ScopeType.NONE && !!this.inputs.scopeList,
 		}
 	},
 
@@ -209,8 +223,12 @@ export default {
 			if (!this.inputs.scopeListMeta) {
 				return []
 			}
-			// TODO trycatch
-			return JSON.parse(this.inputs.scopeListMeta)
+			try {
+				return JSON.parse(this.inputs.scopeListMeta)
+			} catch (error) {
+				console.error('failed to parse scopeListMeta', error)
+				return []
+			}
 		},
 	},
 
@@ -226,6 +244,16 @@ export default {
 				console.error('Error fetching default provider key:', error)
 				showError(t('assistant', 'Error fetching default provider key'))
 			})
+
+		// initialize the inputs if necessary
+		if (Object.keys(this.inputs).length === 0) {
+			this.$emit('update:inputs', {
+				prompt: '',
+				scopeType: _ScopeType.NONE,
+				scopeList: [],
+				scopeListMeta: '[]',
+			})
+		}
 	},
 
 	methods: {
@@ -279,12 +307,12 @@ export default {
 				{ fileId: fileId.substring(`${this.defaultProviderKey}: `.length) },
 			)
 		},
-		onUpdateSccEnabled() {
+		onUpdateSccEnabled(enabled) {
 			this.$emit('update:inputs', {
 				prompt: this.inputs.prompt,
-				scopeType: _ScopeType.SOURCE,
+				scopeType: enabled ? _ScopeType.SOURCE : _ScopeType.NONE,
 				scopeList: [],
-				scopeListMeta: '',
+				scopeListMeta: '[]',
 			})
 		},
 		onScopeTypeChanged(value) {
@@ -295,8 +323,15 @@ export default {
 			this.onInputsChanged({
 				scopeType: value,
 				scopeList: [],
-				scopeListMeta: '',
+				scopeListMeta: '[]',
 			})
+		},
+		onScopeListMetaChange(value) {
+			try {
+				this.onInputsChanged({ scopeListMeta: JSON.stringify(value) })
+			} catch (error) {
+				console.error('Failed to change scopeListMeta', error)
+			}
 		},
 		onInputsChanged(changedInputs) {
 			this.$emit('update:inputs', {
@@ -309,8 +344,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.scoped-cc-input-form {
-	padding: 12px;
+.cc-input-form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 
 	.line {
 		display: flex;
