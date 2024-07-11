@@ -197,21 +197,11 @@ export default {
 		right: 13px;
 	}
 
-	.rich-contenteditable__input {
-		min-height: 44px;
-	}
+	:deep(.rich-contenteditable__input) {
+		min-height: 34px;
 
-	.shadowed {
-		padding: 10px;
-		> div.rich-contenteditable__input,
-		> div.rich-contenteditable__input:focus,
-		> div.rich-contenteditable__input:hover {
-			box-shadow: 0 0 10px var(--color-primary);
-			border: 0;
-		}
-
-		> div.rich-contenteditable__input {
-			padding-bottom: 50px;
+		> .rich-contenteditable__input {
+			border: 2px solid var(--color-primary-element) !important;
 		}
 	}
 }

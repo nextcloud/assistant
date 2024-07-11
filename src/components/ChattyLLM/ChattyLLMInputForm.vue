@@ -611,14 +611,7 @@ export default {
 	height: 100%;
 
 	:deep .app-navigation-new {
-		padding: 2px 0 8px 0 !important;
-
-		> button {
-			border: 2px solid var(--color-primary-element-light-text);
-			border-radius: var(--border-radius-pill);
-			box-sizing: border-box;
-			height: var(--default-clickable-area);
-		}
+		padding: 0;
 	}
 
 	.unloaded-sessions {
@@ -642,7 +635,8 @@ export default {
 		}
 
 		.app-navigation-toggle-wrapper {
-			margin-right: -52px !important;
+			margin-right: -49px !important;
+			top: var(--default-grid-baseline);
 		}
 
 		&--close {
@@ -659,7 +653,7 @@ export default {
 	}
 
 	:deep .app-navigation-list {
-		padding: 0.4em !important;
+		padding: var(--default-grid-baseline) !important;
 		box-sizing: border-box;
 		height: 100%;
 
@@ -727,10 +721,10 @@ export default {
 			align-items: center;
 			position: sticky;
 			top: 0;
-			height: 60px;
+			height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
 			box-sizing: border-box;
 			border-bottom: 1px solid var(--color-border);
-			padding-left: 4.5em;
+			padding-left: 52px;
 			padding-right: 0.5em;
 			font-weight: bold;
 			background-color: var(--color-main-background);

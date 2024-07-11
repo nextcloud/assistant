@@ -132,8 +132,7 @@ export default {
 		}
 
 		&__timestamp {
-			color: var(--color-loading-light);
-			font-size: 0.8em;
+			color: var(--color-text-maxcontrast);
 		}
 	}
 

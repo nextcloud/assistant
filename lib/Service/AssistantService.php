@@ -54,6 +54,7 @@ class AssistantService {
 		'chatty-llm' => 1,
 		TextToText::ID => 2,
 		'context_chat:context_chat' => 3,
+		'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType' => 3,
 		AudioToText::ID => 4,
 		// TODO translate: 5 (translate is not migrated to taskProcessing yet)
 		ContextWrite::ID => 6,

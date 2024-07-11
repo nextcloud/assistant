@@ -119,6 +119,12 @@ export default {
 		border-radius: var(--border-radius-large) !important;
 		cursor: default !important;
 	}
+
+	// TODO or fix in nc/vue
+	.rich-contenteditable__input {
+		padding-top: 4px !important;
+		padding-bottom: 4px !important;
+	}
 }
 
 .input-area {

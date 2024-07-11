@@ -32,7 +32,7 @@
 				<NcLoadingIcon :size="20" />
 			</template>
 			<template v-else #icon>
-				<DeleteOutlineIcon :size="20" />
+				<DeleteIcon :size="20" />
 			</template>
 		</NcButton>
 	</div>
@@ -40,7 +40,7 @@
 
 <script>
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
-import DeleteOutlineIcon from 'vue-material-design-icons/DeleteOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -51,7 +51,7 @@ export default {
 
 	components: {
 		ContentCopyIcon,
-		DeleteOutlineIcon,
+		DeleteIcon,
 		ReloadIcon,
 
 		NcButton,
@@ -83,7 +83,7 @@ export default {
 	top: 0.5em;
 	position: absolute;
 	background-color: var(--color-main-background);
-	border-radius: calc(var(--default-clickable-area) / 2);
+	border-radius: var(--border-radius-element);
 	box-shadow: 0 0 4px 0 var(--color-box-shadow);
 	height: var(--default-clickable-area);
 	z-index: 1;
