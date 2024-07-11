@@ -163,16 +163,16 @@ class AssistantService {
 		/** @var string $typeId */
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
 			// skip chat task type (not directly useful to the end user)
-//			if ($typeId === TextToTextChat::ID) {
-//				continue;
-//			}
+			if ($typeId === TextToTextChat::ID) {
+				continue;
+			}
 			$taskTypeArray['id'] = $typeId;
 			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
 
 			if ($typeId === TextToText::ID) {
 				$taskTypeArray['name'] = $this->l10n->t('Generate text');
 				$taskTypeArray['description'] = $this->l10n->t('Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.');
-				// add the chattyUI virtual taks type
+				// add the chattyUI virtual task type
 				$types[] = [
 					'id' => 'chatty-llm',
 					'name' => $this->l10n->t('Chat with AI'),
