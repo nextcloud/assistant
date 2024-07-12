@@ -1,11 +1,12 @@
 <template>
 	<TextInput
+		:id="fieldKey + '-input'"
 		class="text-field"
 		:value="value ?? ''"
 		:is-output="isOutput"
-		:label="field.name"
+		:label="field.description"
 		:placeholder="field.description"
-		:title="field.description"
+		:title="field.name"
 		@update:value="$emit('update:value', $event)" />
 </template>
 

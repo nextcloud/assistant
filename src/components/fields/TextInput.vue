@@ -1,13 +1,16 @@
 <template>
 	<div class="text-input">
+		<label :for="id">
+			{{ label }}
+		</label>
 		<NcRichContenteditable
+			:id="id"
 			ref="input"
 			:value="value ?? ''"
 			:link-autocomplete="false"
 			:multiline="true"
 			class="editable-input"
 			:class="{ shadowed: isOutput }"
-			:label="label"
 			:placeholder="placeholder"
 			:title="title"
 			@update:value="$emit('update:value', $event)" />
@@ -83,6 +86,10 @@ export default {
 	},
 
 	props: {
+		id: {
+			type: String,
+			default: 'noid',
+		},
 		value: {
 			type: String,
 			default: '',
@@ -202,6 +209,7 @@ export default {
 	}
 	.shadowed .rich-contenteditable__input {
 		border: 2px solid var(--color-primary-element) !important;
+		padding-bottom: 50px;
 	}
 }
 </style>

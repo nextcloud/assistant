@@ -1,10 +1,11 @@
 <template>
 	<div class="cc-input-form">
 		<TextInput
+			id="context_chat_input"
 			:value="inputs.prompt"
-			:label="taskType.inputShape?.prompt?.name"
+			:label="taskType.inputShape?.prompt?.description"
 			:placeholder="taskType.inputShape?.prompt?.description"
-			:title="taskType.inputShape?.prompt?.description"
+			:title="taskType.inputShape?.prompt?.name"
 			:is-output="false"
 			@update:value="onInputsChanged({ prompt: $event })" />
 		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">

@@ -8,12 +8,13 @@
 				:key="fieldKey + '-' + i"
 				class="text-list--item">
 				<TextInput
+					:id="fieldKey + '-input' + '-' + i"
 					class="text-input"
 					:value="v ?? ''"
 					:is-output="isOutput"
-					:label="field.name"
+					:label="field.description"
 					:placeholder="field.description"
-					:title="field.description"
+					:title="field.name"
 					@update:value="onItemValueChanged(i, $event)" />
 				<NcButton v-if="!isOutput"
 					class="delete-button"
