@@ -145,6 +145,8 @@ import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import TaskTypeFields from './fields/TaskTypeFields.vue'
 
+import { SHAPE_TYPE_NAMES } from '../constants.js'
+
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import Vue from 'vue'
@@ -278,11 +280,24 @@ export default {
 				if (this.myInputs[k] === null || this.myInputs[k] === undefined) {
 					return false
 				}
-				const v = this.myInputs[k]
-				return (typeof v === 'string' && !!v?.trim())
-					|| (typeof v === 'boolean')
-					|| (typeof v === 'number')
-					|| (typeof v === 'object' && !!v)
+				const fieldType = taskType.inputShape[k].type
+				const value = this.myInputs[k]
+				return (fieldType === SHAPE_TYPE_NAMES.Text && typeof value === 'string' && !!value?.trim())
+					|| ([
+						SHAPE_TYPE_NAMES.Number,
+						SHAPE_TYPE_NAMES.File,
+						SHAPE_TYPE_NAMES.Image,
+						SHAPE_TYPE_NAMES.Audio,
+						SHAPE_TYPE_NAMES.Video,
+					].includes(fieldType) && typeof value === 'number')
+					|| (fieldType === SHAPE_TYPE_NAMES.ListOfTexts && typeof value === 'object' && !!value && value.every(v => typeof v === 'string'))
+					|| (fieldType === SHAPE_TYPE_NAMES.ListOfNumbers && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
+					|| ([
+						SHAPE_TYPE_NAMES.ListOfFiles,
+						SHAPE_TYPE_NAMES.ListOfImages,
+						SHAPE_TYPE_NAMES.ListOfAudios,
+						SHAPE_TYPE_NAMES.ListOfVideos,
+					].includes(fieldType) && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
 			})
 		},
 		syncSubmitButtonLabel() {
