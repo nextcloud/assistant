@@ -33,7 +33,7 @@
 		<template #actions>
 			<NcActionButton @click="$emit('try-again')">
 				<template #icon>
-					<RedoIcon />
+					<ReloadIcon />
 				</template>
 				{{ t('assistant', 'Try again') }}
 			</NcActionButton>
@@ -56,18 +56,19 @@
 
 <script>
 import CancelIcon from 'vue-material-design-icons/Cancel.vue'
-import RedoIcon from 'vue-material-design-icons/Redo.vue'
+import ReloadIcon from 'vue-material-design-icons/Reload.vue'
 import ProgressQuestionIcon from 'vue-material-design-icons/ProgressQuestion.vue'
 import ProgressCheckIcon from 'vue-material-design-icons/ProgressCheck.vue'
 import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
 import AlertCircleOutlineIcon from 'vue-material-design-icons/AlertCircleOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+
+import DeleteIcon from './icons/DeleteIcon.vue'
 
 import moment from '@nextcloud/moment'
 
@@ -93,7 +94,7 @@ export default {
 		ProgressQuestionIcon,
 		CheckIcon,
 		AlertCircleOutlineIcon,
-		RedoIcon,
+		ReloadIcon,
 		ContentCopyIcon,
 	},
 

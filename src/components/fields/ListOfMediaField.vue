@@ -75,10 +75,11 @@
 
 <script>
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import AudioDisplay from './AudioDisplay.vue'
 import ImageDisplay from './ImageDisplay.vue'

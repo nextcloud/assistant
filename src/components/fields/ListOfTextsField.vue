@@ -39,9 +39,10 @@
 
 <script>
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import TextInput from './TextInput.vue'
 

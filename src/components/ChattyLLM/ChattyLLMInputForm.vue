@@ -126,11 +126,11 @@
 
 <script>
 import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 import PencilIcon from 'vue-material-design-icons/Pencil.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
+import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
