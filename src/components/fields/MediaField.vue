@@ -10,14 +10,19 @@
 			class="select-media">
 			<UploadInputFileButton
 				:accept="acceptedMimeTypes"
-				:label="t('assistant', 'Upload a file')"
+				:label="t('assistant', 'Upload from device')"
+				:disabled="value !== null || isRecording || isUploading"
+				:is-uploading.sync="isUploading"
 				@files-uploaded="onFileUploaded" />
 			<ChooseInputFileButton
-				:label="t('assistant', 'Choose a file')"
-				:picker-title="t('assistant', 'Choose a file')"
+				:label="t('assistant', 'Select from Nextcloud')"
+				:picker-title="t('assistant', 'Pick a file')"
 				:accept="acceptedMimeTypes"
+				:disabled="value !== null || isRecording || isUploading"
 				@files-chosen="onFileChosen" />
 			<AudioRecorderWrapper v-if="isAudio"
+				:disabled="value !== null || isUploading"
+				:is-recording.sync="isRecording"
 				@new-recording="onNewRecording" />
 		</div>
 		<div v-if="value !== null"
@@ -50,6 +55,7 @@
 			<div v-else
 				class="buttons">
 				<NcButton
+					type="tertiary"
 					:title="t('assistant', 'Clear value')"
 					@click="onClear">
 					<template #icon>
@@ -129,6 +135,8 @@ export default {
 	data() {
 		return {
 			filePath: null,
+			isUploading: false,
+			isRecording: false,
 		}
 	},
 

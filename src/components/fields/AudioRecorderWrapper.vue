@@ -2,6 +2,7 @@
 	<div class="assistant-audio-recorder-wrapper">
 		<NcButton v-if="!isRecording"
 			ref="startRecordingButton"
+			:disabled="disabled"
 			@click="startRecording">
 			<template #icon>
 				<MicrophoneIcon />
@@ -69,6 +70,14 @@ export default {
 	},
 
 	props: {
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		isRecording: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
@@ -77,7 +86,7 @@ export default {
 
 	data() {
 		return {
-			isRecording: false,
+			// isRecording: false,
 			resettingRecorder: false,
 			ignoreNextRecording: false,
 		}
@@ -118,7 +127,8 @@ export default {
 		},
 
 		async onRecordStarts(e) {
-			this.isRecording = true
+			// this.isRecording = true
+			this.$emit('update:is-recording', true)
 			this.$nextTick(() => {
 				const stopButton = this.$refs.stopRecordingButton
 				stopButton?.$el?.focus()
@@ -126,7 +136,8 @@ export default {
 		},
 
 		async onRecordEnds(e) {
-			this.isRecording = false
+			// this.isRecording = false
+			this.$emit('update:is-recording', false)
 			if (!this.ignoreNextRecording) {
 				try {
 					this.$emit('new-recording', e.blob)

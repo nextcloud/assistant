@@ -48,7 +48,7 @@ use RuntimeException;
  */
 class AssistantService {
 
-	private const DEBUG = false;
+	private const DEBUG = true;
 
 	private const TASK_TYPE_PRIORITIES = [
 		'chatty-llm' => 1,

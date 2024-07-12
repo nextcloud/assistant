@@ -7,10 +7,12 @@
 			style="display: none;"
 			@change="onUploadFileSelected">
 		<NcButton
+			v-bind="$attrs"
 			type="secondary"
 			@click="onUploadFile">
 			<template #icon>
-				<UploadIcon />
+				<NcLoadingIcon v-if="isUploading" />
+				<UploadIcon v-else />
 			</template>
 			{{ label }}
 		</NcButton>
@@ -20,6 +22,7 @@
 <script>
 import UploadIcon from 'vue-material-design-icons/Upload.vue'
 
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
 import { showError } from '@nextcloud/dialogs'
@@ -34,6 +37,7 @@ export default {
 	components: {
 		NcButton,
 		UploadIcon,
+		NcLoadingIcon,
 	},
 
 	props: {
@@ -46,6 +50,10 @@ export default {
 			default: () => [],
 		},
 		multiple: {
+			type: Boolean,
+			default: false,
+		},
+		isUploading: {
 			type: Boolean,
 			default: false,
 		},
@@ -85,14 +93,18 @@ export default {
 			const files = this.$refs.fileInput.files
 			console.debug('FILES', this.$refs.fileInput.files)
 			if (!this.multiple) {
+				this.$emit('update:is-uploading', true)
 				const file = files[0]
 				this.uploadFile(file).then(response => {
 					this.$emit('files-uploaded', response.data.ocs.data)
 				}).catch(error => {
 					showError(t('assistant', 'Could not upload the file'))
 					console.error(error)
+				}).then(() => {
+					this.$emit('update:is-uploading', false)
 				})
 			} else {
+				this.$emit('update:is-uploading', true)
 				Promise.all(Array.from(files).map(f => this.uploadFile(f)))
 					.then(responses => {
 						if (responses.some(response => response.code === 'ERR_CANCELED')) {
@@ -102,8 +114,10 @@ export default {
 						this.$emit('files-uploaded', responses.map(response => response.data.ocs.data))
 					})
 					.catch(error => {
-						showError(t('assistant', 'Could not upload the file'))
+						showError(t('assistant', 'Could not upload the files'))
 						console.error(error)
+					}).then(() => {
+						this.$emit('update:is-uploading', false)
 					})
 			}
 		},

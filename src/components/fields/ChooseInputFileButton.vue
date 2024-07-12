@@ -1,5 +1,6 @@
 <template>
 	<NcButton
+		v-bind="$attrs"
 		type="secondary"
 		@click="onButtonClick">
 		<template #icon>
