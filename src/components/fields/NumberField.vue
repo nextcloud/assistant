@@ -7,10 +7,12 @@
 			:id="'input-' + fieldKey"
 			class="number-input-field"
 			:value="value ?? ''"
-			type="number"
+			type="text"
 			:label-outside="true"
 			:title="field.name"
 			:placeholder="field.description || t('assistant','Type some number')"
+			:error="!isValid"
+			:helper-text="isValid ? '' : t('assistant', 'The current value is not a number')"
 			@update:value="onUpdateValue" />
 	</div>
 </template>
@@ -50,6 +52,9 @@ export default {
 	},
 
 	computed: {
+		isValid() {
+			return this.value === null || this.value === '' || typeof this.value === 'number'
+		},
 	},
 
 	watch: {
@@ -60,11 +65,11 @@ export default {
 
 	methods: {
 		onUpdateValue(value) {
-			const intValue = parseInt(value)
-			if (isNaN(intValue)) {
-				this.$emit('update:value', null)
+			const numberValue = parseFloat(value)
+			if (isNaN(numberValue)) {
+				this.$emit('update:value', value)
 			} else {
-				this.$emit('update:value', intValue)
+				this.$emit('update:value', numberValue)
 			}
 		},
 	},
