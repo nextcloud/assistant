@@ -110,20 +110,18 @@ export default {
 :deep .rich-contenteditable {
 	width: 100% !important;
 
-	&__input--multiline {
-		min-height: 0 !important;
-		max-height: 12em;
-	}
-
 	&__input--disabled {
 		border-radius: var(--border-radius-large) !important;
 		cursor: default !important;
 	}
 
-	// TODO or fix in nc/vue
 	.rich-contenteditable__input {
+		// TODO or fix in nc/vue
 		padding-top: 4px !important;
 		padding-bottom: 4px !important;
+
+		min-height: var(--default-clickable-area) !important;
+		line-height: 22px !important;
 	}
 }
 
@@ -131,13 +129,12 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
-	gap: 1em;
+	align-items: end;
+	gap: 4px;
 
 	:deep &__thinking > div {
 		font-style: italic;
 		animation: breathing 2s linear infinite normal;
-		min-height: 44px !important;
 	}
 
 	&__button-box {

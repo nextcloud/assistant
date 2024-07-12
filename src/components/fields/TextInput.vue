@@ -196,21 +196,23 @@ export default {
 	}
 
 	.choose-file-button {
-		bottom: 5px;
-		right: 5px;
+		bottom: 2px;
+		right: 2px;
 	}
 
 	.copy-button {
-		bottom: 5px;
-		right: 5px;
+		bottom: 2px;
+		right: 2px;
 	}
 
 	.rich-contenteditable__input {
-		min-height: 34px;
+		min-height: calc(var(--default-clickable-area) + 4px);
+		padding-top: 5px !important;
+		padding-bottom: 4px !important;
 	}
 	.shadowed .rich-contenteditable__input {
 		border: 2px solid var(--color-primary-element) !important;
-		padding-bottom: 50px;
+		padding-bottom: 38px !important;
 	}
 }
 </style>
