@@ -641,13 +641,16 @@ export default {
 
 		&--close {
 			.app-navigation-toggle-wrapper {
-				margin-right: -38px !important;
+				margin-right: -33px !important;
 			}
 		}
 
 		&--close ~ .session-area {
 			.session-area__chat-area, .session-area__input-area {
 				padding-left: 0 !important;
+			}
+			.session-area__top-bar {
+				padding-left: 36px !important;
 			}
 		}
 	}
@@ -719,6 +722,7 @@ export default {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			gap: 4px;
 			position: sticky;
 			top: 0;
 			height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);

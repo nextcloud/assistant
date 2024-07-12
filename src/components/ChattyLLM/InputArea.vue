@@ -20,7 +20,8 @@
 				type="primary"
 				@click="$emit('submit', $event)">
 				<template #icon>
-					<SendIcon :size="20" />
+					<NcLoadingIcon v-if="loading.llmGeneration" />
+					<SendIcon v-else :size="20" />
 				</template>
 			</NcButton>
 		</div>
@@ -32,6 +33,7 @@ import SendIcon from 'vue-material-design-icons/Send.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -48,6 +50,7 @@ export default {
 
 		NcButton,
 		NcRichContenteditable,
+		NcLoadingIcon,
 	},
 
 	props: {
