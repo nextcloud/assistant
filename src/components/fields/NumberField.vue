@@ -1,12 +1,15 @@
 <template>
 	<div class="number-field">
+		<label :for="'input-' + fieldKey">
+			{{ field.description }}
+		</label>
 		<NcInputField
 			:id="'input-' + fieldKey"
 			class="number-input-field"
 			:value="value ?? ''"
-			:label="field.name"
-			:title="field.description"
 			type="number"
+			:label-outside="true"
+			:title="field.name"
 			:placeholder="field.description || t('assistant','Type some number')"
 			@update:value="onUpdateValue" />
 	</div>
@@ -28,7 +31,7 @@ export default {
 			required: true,
 		},
 		value: {
-			type: [Object, Array, String, Number, null],
+			type: [String, Number, null],
 			default: null,
 		},
 		field: {
@@ -71,7 +74,8 @@ export default {
 <style lang="scss">
 .number-field {
 	display: flex;
-	align-items: end;
+	flex-direction: column;
+	align-items: start;
 
 	.number-input-field {
 		width: 300px;
