@@ -10,16 +10,21 @@
 			class="select-media">
 			<UploadInputFileButton
 				:accept="acceptedMimeTypes"
-				:label="t('assistant', 'Upload files')"
+				:label="t('assistant', 'Upload from device')"
 				:multiple="true"
+				:disabled="isRecording || isUploading"
+				:is-uploading.sync="isUploading"
 				@files-uploaded="onFilesUploaded" />
 			<ChooseInputFileButton
-				:label="t('assistant', 'Choose files')"
-				:picker-title="t('assistant', 'Choose one or multiple files')"
+				:label="t('assistant', 'Select from Nextcloud')"
+				:picker-title="t('assistant', 'Pick one or multiple files')"
 				:accept="acceptedMimeTypes"
 				:multiple="true"
+				:disabled="isRecording || isUploading"
 				@files-chosen="onFilesChosen" />
 			<AudioRecorderWrapper v-if="isAudioList"
+				:disabled="isUploading"
+				:is-recording.sync="isRecording"
 				@new-recording="onNewRecording" />
 		</div>
 		<div v-if="value !== null"
@@ -30,13 +35,15 @@
 			</div-->
 			<div v-for="fileId in value"
 				:key="fileId"
-				class="media-list--item">
+				class="media-list--item"
+				:class="{ row: isAudioList }">
 				<component :is="displayComponent"
 					:file-id="fileId"
 					:is-output="isOutput"
 					@delete="onDelete(fileId)" />
 				<div class="buttons">
 					<NcButton v-if="!isOutput"
+						type="tertiary"
 						:aria-label="t('assistant', 'Remove this media')"
 						@click="onDelete(fileId)">
 						<template #icon>
@@ -137,6 +144,8 @@ export default {
 
 	data() {
 		return {
+			isUploading: false,
+			isRecording: false,
 		}
 	},
 
@@ -292,6 +301,10 @@ export default {
 			gap: 8px;
 			padding: 12px;
 			border-radius: var(--border-radius-large);
+
+			&.row {
+				flex-direction: row;
+			}
 
 			&:hover {
 				background-color: var(--color-primary-element-light-hover);

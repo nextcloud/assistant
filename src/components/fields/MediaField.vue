@@ -26,7 +26,8 @@
 				@new-recording="onNewRecording" />
 		</div>
 		<div v-if="value !== null"
-			class="media-value">
+			class="media-value"
+			:class="{ row: isAudio }">
 			<!--div>
 				FILE: {{ value }} PATH: {{ filePath }}
 			</div-->
@@ -242,7 +243,7 @@ export default {
 .media-field {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: start;
 	gap: 12px;
 
 	.label-row {
@@ -264,14 +265,23 @@ export default {
 	}
 
 	.media-value {
-		width: 100%;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		gap: 4px;
+		padding: 12px;
+		border-radius: var(--border-radius-large);
+
+		&.row {
+			flex-direction: row;
+		}
+
+		&:hover {
+			background-color: var(--color-primary-element-light-hover);
+		}
 
 		.buttons {
 			display: flex;
-			flex-direction: column;
 			gap: 2px;
 			justify-content: center;
 		}
