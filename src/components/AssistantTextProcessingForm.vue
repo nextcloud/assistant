@@ -231,7 +231,7 @@ export default {
 				return null
 			}
 			const taskType = this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
-			if (taskType) {
+			if (taskType !== undefined && taskType) {
 				return taskType
 			}
 			return null
@@ -359,6 +359,7 @@ export default {
 				.then((response) => {
 					this.taskTypes = response.data.ocs.data.types
 					// check if selected task type is in the list, fallback to text2text
+					/*
 					const taskType = this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 					if (taskType === undefined) {
 						const text2textType = this.taskTypes.find(tt => tt.id === TEXT2TEXT_TASK_TYPE_ID)
@@ -368,6 +369,7 @@ export default {
 							this.mySelectedTaskTypeId = null
 						}
 					}
+					*/
 				})
 				.catch((error) => {
 					console.error(error)
