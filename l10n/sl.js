@@ -12,7 +12,7 @@ OC.L10N.register(
     "Reset" : "Ponastavi",
     "Result" : "Rezultat",
     "Copy" : "Kopiraj",
-    "New conversation" : "NOv pogovor",
+    "New conversation" : "Nov pogovor",
     "Delete" : "Izbriši",
     "Cancel editing" : "Prekliči urejanje",
     "Submit" : "Pošlji",
