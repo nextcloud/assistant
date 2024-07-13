@@ -231,9 +231,13 @@ export default {
 </script>
 
 <style lang="scss">
-:deep(.task-list-item) {
+:deep .task-list-item {
 	.list-item {
 		width: 99% !important;
+		// TODO fix in NcListItem
+		&-content__name {
+			max-width: unset !important;
+		}
 	}
 }
 
