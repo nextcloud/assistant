@@ -681,9 +681,9 @@
                 ],
                 "parameters": [
                     {
-                        "name": "extension",
+                        "name": "filename",
                         "in": "query",
-                        "description": "The file extension",
+                        "description": "The input file name",
                         "schema": {
                             "type": "string",
                             "nullable": true
