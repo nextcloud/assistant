@@ -38,7 +38,6 @@ class NotificationService {
 			'result' => $resultPreview,
 		];
 		$params['taskTypeId'] = $task->getTaskTypeId();
-		error_log('sendnotif-TASKTYPE:' . $task->getTaskTypeId());
 
 		$taskSuccessful = $task->getStatus() === Task::STATUS_SUCCESSFUL;
 
@@ -57,7 +56,6 @@ class NotificationService {
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);
-		error_log('->NOTIFY');
 	}
 
 	private function getDefaultTarget(Task $task): string {

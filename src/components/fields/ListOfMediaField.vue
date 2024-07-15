@@ -241,7 +241,7 @@ export default {
 				axios.post(url).then(response => {
 					const shareToken = response.data.ocs.data.shareToken
 					const shareUrl = window.location.protocol + '//' + window.location.host + generateUrl('/s/{shareToken}', { shareToken })
-					console.debug('aaaa share link', shareUrl)
+					console.debug('[assistant] generated share link', shareUrl)
 					const message = t('assistant', 'Output file share link copied to clipboard')
 					this.copyString(shareUrl, message)
 				}).catch(error => {

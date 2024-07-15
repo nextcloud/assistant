@@ -29,7 +29,6 @@ class TaskSuccessfulListener implements IEventListener {
 		}
 
 		$task = $event->getTask();
-		// error_log('Task successful ' . $task->getId());
 		if ($task->getUserId() === null) {
 			return;
 		}
@@ -53,7 +52,6 @@ class TaskSuccessfulListener implements IEventListener {
 			$notificationActionLabel = $beforeAssistantNotificationEvent->getNotificationActionLabel();
 		}
 
-		error_log('SEND NOTIF');
 		$this->notificationService->sendNotification($task, $notificationTarget, $notificationActionLabel);
 		$this->taskNotificationMapper->deleteByTaskId($task->getId());
 	}

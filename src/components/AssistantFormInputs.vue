@@ -55,7 +55,7 @@ export default {
 	},
 	watch: {
 		selectedTaskType() {
-			console.debug('aaaa watch selectedTaskType', this.selectedTaskType, this.selectedTaskTypeId)
+			console.debug('[assistant] watch selectedTaskType', this.selectedTaskType, this.selectedTaskTypeId)
 			this.resetInputs()
 		},
 	},

@@ -312,7 +312,6 @@ async function showAssistantTaskResult(taskId) {
  * @return {Promise<void>}
  */
 export async function openAssistantTask(task) {
-	console.debug('ZERO')
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	Vue.mixin({ methods: { t, n } })
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
@@ -323,7 +322,6 @@ export async function openAssistantTask(task) {
 	modalElement.id = modalId
 	document.body.append(modalElement)
 
-	console.debug('ONE')
 	const View = Vue.extend(AssistantTextProcessingModal)
 	const view = new View({
 		propsData: {
@@ -336,7 +334,6 @@ export async function openAssistantTask(task) {
 		},
 	}).$mount(modalElement)
 	let lastTask = null
-	console.debug('TWO')
 
 	view.$on('cancel', () => {
 		view.$destroy()

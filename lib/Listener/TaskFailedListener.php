@@ -29,7 +29,6 @@ class TaskFailedListener implements IEventListener {
 		}
 
 		$task = $event->getTask();
-		// error_log('Task failed ' . $task->getId());
 		if ($task->getUserId() === null) {
 			return;
 		}

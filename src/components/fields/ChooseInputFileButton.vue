@@ -83,7 +83,7 @@ export default {
 					showError(t('assistant', 'No file selected'))
 					return
 				}
-				console.debug('aaaaaaaaaaaaaaaaa NODE', nodes[0])
+				console.debug('[assistant] nodes', nodes)
 				this.$emit('files-chosen', this.multiple ? nodes : nodes[0])
 			}
 		},

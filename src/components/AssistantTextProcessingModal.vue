@@ -141,7 +141,7 @@ export default {
 		},
 	},
 	mounted() {
-		console.debug('aaaa MODAL outputsss', this.outputs)
+		console.debug('[assistant] modal\'s outputs', this.outputs)
 		if (this.isInsideViewer) {
 			const elem = this.$refs.modal_content
 			emit('viewer:trapElements:changed', elem)

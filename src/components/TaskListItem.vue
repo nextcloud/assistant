@@ -80,6 +80,22 @@ import ImageDisplay from './fields/ImageDisplay.vue'
 
 Vue.use(VueClipboard)
 
+const statusIcons = {
+	[TASK_STATUS_STRING.successful]: CheckIcon,
+	[TASK_STATUS_STRING.cancelled]: CancelIcon,
+	[TASK_STATUS_STRING.failed]: AlertCircleOutlineIcon,
+	[TASK_STATUS_STRING.running]: ProgressCheckIcon,
+	[TASK_STATUS_STRING.scheduled]: ProgressClockIcon,
+}
+
+const statusTitles = {
+	[TASK_STATUS_STRING.successful]: t('assistant', 'Succeeded'),
+	[TASK_STATUS_STRING.cancelled]: t('assistant', 'Cancelled'),
+	[TASK_STATUS_STRING.failed]: t('assistant', 'Failed'),
+	[TASK_STATUS_STRING.running]: t('assistant', 'Running'),
+	[TASK_STATUS_STRING.scheduled]: t('assistant', 'Scheduled'),
+}
+
 export default {
 	name: 'TaskListItem',
 
@@ -156,43 +172,17 @@ export default {
 					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', nbImageAsked, { n: nbImageAsked })
 				}
 				return t('assistant', 'This task is scheduled')
-			} else if (this.task.status === TASK_STATUS_STRING.running) {
-				return t('assistant', 'Running...')
-			} else if (this.task.status === TASK_STATUS_STRING.failed) {
-				return t('assistant', 'Failed')
-			} else if (this.task.status === TASK_STATUS_STRING.cancelled) {
-				return t('assistant', 'Cancelled')
 			}
-			return t('assistant', 'Unknown status')
+			return statusTitles[this.task.status] ?? t('assistant', 'Unknown status')
 		},
 		details() {
 			return moment.unix(this.task.lastUpdated).fromNow()
 		},
 		icon() {
-			if (this.task.status === TASK_STATUS_STRING.successful) {
-				return CheckIcon
-			} else if (this.task.status === TASK_STATUS_STRING.cancelled) {
-				return CancelIcon
-			} else if (this.task.status === TASK_STATUS_STRING.failed) {
-				return AlertCircleOutlineIcon
-			} else if (this.task.status === TASK_STATUS_STRING.running) {
-				return ProgressCheckIcon
-			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
-				return ProgressClockIcon
-			}
-			return ProgressQuestionIcon
+			return statusIcons[this.task.status] ?? ProgressQuestionIcon
 		},
 		statusTitle() {
-			if (this.task.status === TASK_STATUS_STRING.successful) {
-				return t('assistant', 'Succeeded')
-			} else if (this.task.status === TASK_STATUS_STRING.failed) {
-				return t('assistant', 'Failed')
-			} else if (this.task.status === TASK_STATUS_STRING.running) {
-				return t('assistant', 'Running')
-			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
-				return t('assistant', 'Scheduled')
-			}
-			return t('assistant', 'Unknown status')
+			return statusTitles[this.task.status] ?? t('assistant', 'Unknown status')
 		},
 		textInputPreview() {
 			const textInputs = []
