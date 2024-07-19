@@ -20,7 +20,8 @@
 				type="primary"
 				@click="$emit('submit', $event)">
 				<template #icon>
-					<SendIcon :size="20" />
+					<NcLoadingIcon v-if="loading.llmGeneration" />
+					<SendIcon v-else :size="20" />
 				</template>
 			</NcButton>
 		</div>
@@ -32,6 +33,7 @@ import SendIcon from 'vue-material-design-icons/Send.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -48,6 +50,7 @@ export default {
 
 		NcButton,
 		NcRichContenteditable,
+		NcLoadingIcon,
 	},
 
 	props: {
@@ -110,14 +113,18 @@ export default {
 :deep .rich-contenteditable {
 	width: 100% !important;
 
-	&__input--multiline {
-		min-height: 0 !important;
-		max-height: 12em;
-	}
-
 	&__input--disabled {
 		border-radius: var(--border-radius-large) !important;
 		cursor: default !important;
+	}
+
+	.rich-contenteditable__input {
+		// TODO or fix in nc/vue
+		padding-top: 4px !important;
+		padding-bottom: 4px !important;
+
+		min-height: var(--default-clickable-area) !important;
+		line-height: 22px !important;
 	}
 }
 
@@ -125,7 +132,8 @@ export default {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	gap: 1em;
+	align-items: end;
+	gap: 4px;
 
 	:deep &__thinking > div {
 		font-style: italic;

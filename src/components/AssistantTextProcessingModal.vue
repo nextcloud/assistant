@@ -2,6 +2,7 @@
 	<NcModal v-if="show"
 		:size="modalSize"
 		:can-close="false"
+		:name="t('assistant', 'Nextcloud Assistant')"
 		class="assistant-modal"
 		@close="onCancel">
 		<div ref="modal_content"
@@ -19,7 +20,9 @@
 				<RunningEmptyContent
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
-					@cancel="onCancelNSchedule" />
+					:progress="progress"
+					@background-notify="$emit('background-notify')"
+					@cancel="$emit('cancel-task')" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
 					:description="shortInput"
@@ -28,12 +31,12 @@
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
+					:selected-task-id="selectedTaskId"
 					:inputs="inputs"
-					:output="output"
+					:outputs="outputs"
 					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
 					:action-buttons="actionButtons"
-					@submit="onSubmit"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="$emit('try-again', $event)"
@@ -77,12 +80,16 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		selectedTaskId: {
+			type: [Number, null],
+			default: null,
+		},
 		inputs: {
 			type: Object,
 			default: () => {},
 		},
-		output: {
-			type: [String, null],
+		outputs: {
+			type: [Object, null],
 			default: null,
 		},
 		selectedTaskTypeId: {
@@ -92,6 +99,10 @@ export default {
 		showSyncTaskRunning: {
 			type: Boolean,
 			default: false,
+		},
+		progress: {
+			type: [Number, null],
+			default: null,
 		},
 		showScheduleConfirmation: {
 			type: Boolean,
@@ -104,7 +115,8 @@ export default {
 	},
 	emits: [
 		'cancel',
-		'cancel-sync-n-schedule',
+		'cancel-task',
+		'background-notify',
 		'submit',
 		'sync-submit',
 		'action-button-clicked',
@@ -120,9 +132,8 @@ export default {
 		}
 	},
 	computed: {
-		// TODO: Fix this to support multiple inputs
 		shortInput() {
-			const input = this.inputs[0] ?? ''
+			const input = this.inputs.input ?? this.inputs.sourceMaterial ?? ''
 			if (input.length <= 200) {
 				return input
 			}
@@ -130,6 +141,7 @@ export default {
 		},
 	},
 	mounted() {
+		console.debug('[assistant] modal\'s outputs', this.outputs)
 		if (this.isInsideViewer) {
 			const elem = this.$refs.modal_content
 			emit('viewer:trapElements:changed', elem)
@@ -140,15 +152,8 @@ export default {
 			this.show = false
 			this.$emit('cancel')
 		},
-		onSubmit(params) {
-			// this.show = false
-			this.$emit('submit', params)
-		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
-		},
-		onCancelNSchedule() {
-			this.$emit('cancel-sync-n-schedule')
 		},
 		onActionButtonClicked(data) {
 			this.$emit('action-button-clicked', data)

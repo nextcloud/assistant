@@ -7,11 +7,10 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
-use OCP\SpeechToText\ISpeechToTextManager;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager as ITextProcessingManager;
-
-use OCP\TextToImage\IManager;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\TaskTypes\AudioToText;
+use OCP\TaskProcessing\TaskTypes\TextToImage;
+use OCP\TaskProcessing\TaskTypes\TextToText;
 
 class Personal implements ISettings {
 
@@ -19,9 +18,7 @@ class Personal implements ISettings {
 		private IConfig $config,
 		private IInitialState $initialStateService,
 		private ?string $userId,
-		private IManager $textToImageManager,
-		private ITextProcessingManager $textProcessingManager,
-		private ISpeechToTextManager $speechToTextManager,
+		private ITaskProcessingManager $taskProcessingManager,
 	) {
 	}
 
@@ -29,15 +26,18 @@ class Personal implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$textProcessingAvailable = $this->textProcessingManager->hasProviders();
-		$freePromptTaskTypeAvailable = in_array(FreePromptTaskType::class, $this->textProcessingManager->getAvailableTaskTypes());
-		$speechToTextAvailable = $this->speechToTextManager->hasProviders();
+		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 
-		$assistantAvailable = $textProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
+		$taskProcessingAvailable = $this->taskProcessingManager->hasProviders();
+
+		$freePromptTaskTypeAvailable = in_array(TextToText::ID, $availableTaskTypes);
+		$speechToTextAvailable = in_array(AudioToText::ID, $availableTaskTypes);
+		$textToImageAvailable = in_array(TextToImage::ID, $availableTaskTypes);
+
+		$assistantAvailable = $taskProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 
-		$textToImagePickerAvailable = $this->textToImageManager->hasProviders() && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
-
+		$textToImagePickerAvailable = $textToImageAvailable && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
 		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';

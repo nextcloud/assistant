@@ -2,128 +2,404 @@
 
 namespace OCA\Assistant\Service;
 
+use DateTime;
 use Html2Text\Html2Text;
-use OC\SpeechToText\TranscriptionJob;
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\MetaTask;
-use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\Db\TaskNotificationMapper;
 use OCA\Assistant\ResponseDefinitions;
-use OCA\Assistant\Service\Text2Image\Text2ImageHelperService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-use OCP\BackgroundJob\IJobList;
-use OCP\Common\Exception\NotFoundException;
+use OCP\AppFramework\Http;
+use OCP\Constants;
 use OCP\DB\Exception;
 use OCP\Files\File;
+use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotPermittedException;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ITempManager;
 use OCP\Lock\LockedException;
-use OCP\PreConditionNotMetException;
-use OCP\SpeechToText\ISpeechToTextManager;
-use OCP\TextProcessing\Exception\TaskFailureException;
-use OCP\TextProcessing\FreePromptTaskType;
-use OCP\TextProcessing\IManager as ITextProcessingManager;
-use OCP\TextProcessing\ITaskType;
-use OCP\TextProcessing\Task as TextProcessingTask;
+use OCP\Share\IManager as IShareManager;
+use OCP\Share\IShare;
+use OCP\TaskProcessing\EShapeType;
+use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
+use OCP\TaskProcessing\Exception\NotFoundException;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\ShapeDescriptor;
+use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\AudioToText;
+use OCP\TaskProcessing\TaskTypes\ContextWrite;
+use OCP\TaskProcessing\TaskTypes\TextToImage;
+use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextChat;
+use OCP\TaskProcessing\TaskTypes\TextToTextHeadline;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use OCP\TaskProcessing\TaskTypes\TextToTextTopics;
 use Parsedown;
 use PhpOffice\PhpWord\IOFactory;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use RtfHtmlPhp\Document;
 use RtfHtmlPhp\Html\HtmlFormatter;
 use RuntimeException;
 
 /**
- * @psalm-import-type AssistantTaskType from ResponseDefinitions
+ * @psalm-import-type AssistantTaskProcessingTaskType from ResponseDefinitions
  */
 class AssistantService {
 
+	private const DEBUG = false;
+
+	private const TASK_TYPE_PRIORITIES = [
+		'chatty-llm' => 1,
+		TextToText::ID => 2,
+		'context_chat:context_chat' => 3,
+		'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType' => 3,
+		AudioToText::ID => 4,
+		// TODO translate: 5 (translate is not migrated to taskProcessing yet)
+		ContextWrite::ID => 6,
+		TextToImage::ID => 7,
+		TextToTextSummary::ID => 8,
+		TextToTextHeadline::ID => 9,
+		TextToTextTopics::ID => 10,
+	];
+
 	public function __construct(
-		private ITextProcessingManager $textProcessingManager,
-		private ISpeechToTextManager $speechToTextManager,
-		private Text2ImageHelperService $text2ImageHelperService,
-		private MetaTaskMapper $metaTaskMapper,
+		private ITaskProcessingManager $taskProcessingManager,
+		private TaskNotificationMapper $taskNotificationMapper,
+		private NotificationService $notificationService,
+		private PreviewService $previewService,
 		private LoggerInterface $logger,
-		private IRootFolder $storage,
-		private IJobList $jobList,
+		private IRootFolder $rootFolder,
 		private IL10N $l10n,
-		private ContainerInterface $container,
 		private ITempManager $tempManager,
+		private IConfig $config,
+		private IShareManager $shareManager,
 	) {
 	}
 
 	/**
-	 * @return array<AssistantTaskType>
+	 * Notify when image generation is ready
+	 *
+	 * @param int $taskId
+	 * @param string $userId
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function notifyWhenReady(int $taskId, string $userId): void {
+		try {
+			$task = $this->taskProcessingManager->getTask($taskId);
+		} catch (NotFoundException $e) {
+			$this->logger->debug('Task request error: ' . $e->getMessage());
+			throw new Exception('Task not found', Http::STATUS_NOT_FOUND);
+		} catch (TaskProcessingException $e) {
+			$this->logger->debug('Task request error : ' . $e->getMessage());
+			throw new Exception('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		if ($task->getUserId() !== $userId) {
+			$this->logger->info('A user attempted enabling notifications of another user\'s task');
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
+		}
+
+		// Just in case check if the task is already ready and, if so, notify the user immediately so that the result is not lost:
+		if ($task->getStatus() === Task::STATUS_SUCCESSFUL || $task->getStatus() === Task::STATUS_FAILED) {
+			$this->notificationService->sendNotification($task);
+		} else {
+			$this->taskNotificationMapper->createTaskNotification($taskId);
+		}
+	}
+
+	/**
+	 * @return array<AssistantTaskProcessingTaskType>
 	 */
 	public function getAvailableTaskTypes(): array {
-		// text processing and copywriter
-		$typeClasses = $this->textProcessingManager->getAvailableTaskTypes();
+		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		/** @var array<AssistantTaskProcessingTaskType> $types */
 		$types = [];
-		/** @var string $typeClass */
-		foreach ($typeClasses as $typeClass) {
-			try {
-				/** @var ITaskType $object */
-				$object = $this->container->get($typeClass);
-			} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-				$this->logger->warning('Could not find ' . $typeClass, ['exception' => $e]);
+		if (self::DEBUG) {
+			$types[] = [
+				'name' => 'input list',
+				'description' => 'plop',
+				'id' => 'core:inputList',
+				'priority' => 0,
+				'inputShape' => [
+					'fileList' => new ShapeDescriptor(
+						'Input file list',
+						'plop',
+						EShapeType::ListOfFiles,
+					),
+					'imageList' => new ShapeDescriptor(
+						'Input image list',
+						'plop',
+						EShapeType::ListOfImages,
+					),
+					'audioList' => new ShapeDescriptor(
+						'Input audio list',
+						'plop',
+						EShapeType::ListOfAudios,
+					),
+				],
+				'outputShape' => [
+					'fileList' => new ShapeDescriptor(
+						'Output file list',
+						'plop',
+						EShapeType::ListOfFiles,
+					),
+					'imageList' => new ShapeDescriptor(
+						'Output image list',
+						'plop',
+						EShapeType::ListOfImages,
+					),
+					'image' => new ShapeDescriptor(
+						'Output image',
+						'plop',
+						EShapeType::Image,
+					),
+				],
+				'optionalInputShape' => [],
+				'optionalOutputShape' => [],
+			];
+		}
+		/** @var string $typeId */
+		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
+			// skip chat task type (not directly useful to the end user)
+			if ($typeId === TextToTextChat::ID) {
 				continue;
 			}
-			if ($typeClass === FreePromptTaskType::class) {
-				$types[] = [
-					'id' => $typeClass,
-					'name' => $this->l10n->t('Generate text'),
-					'description' => $this->l10n->t('Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.'),
-				];
-				$types[] = [
-					'id' => 'copywriter',
-					'name' => $this->l10n->t('Context write'),
-					'description' => $this->l10n->t('Writes text in a given style based on the provided source material.'),
-				];
+			$taskTypeArray['id'] = $typeId;
+			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
+
+			if ($typeId === TextToText::ID) {
+				$taskTypeArray['name'] = $this->l10n->t('Generate text');
+				$taskTypeArray['description'] = $this->l10n->t('Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.');
+				// add the chattyUI virtual task type
 				$types[] = [
 					'id' => 'chatty-llm',
 					'name' => $this->l10n->t('Chat with AI'),
 					'description' => $this->l10n->t('Chat with an AI model.'),
-				];
-			} else {
-				$types[] = [
-					'id' => $typeClass,
-					'name' => $object->getName(),
-					'description' => $object->getDescription(),
+					'inputShape' => [],
+					'outputShape' => [],
+					'optionalInputShape' => [],
+					'optionalOutputShape' => [],
+					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
 				];
 			}
-		}
-
-		// STT
-		if ($this->speechToTextManager->hasProviders()) {
-			$types[] = [
-				'id' => 'speech-to-text',
-				'name' => $this->l10n->t('Transcribe'),
-				'description' => $this->l10n->t('Transcribe audio to text'),
-			];
-		}
-		// text2image
-		if ($this->text2ImageHelperService->hasProviders()) {
-			$types[] = [
-				'id' => 'OCP\TextToImage\Task',
-				'name' => $this->l10n->t('Generate image'),
-				'description' => $this->l10n->t('Generate an image from a text'),
-			];
+			$types[] = $taskTypeArray;
 		}
 		return $types;
 	}
 
+	public function getUserTasks(string $userId, ?string $taskTypeId = null): array {
+		return $this->taskProcessingManager->getUserTasks($userId, $taskTypeId);
+	}
+
+	public function storeInputFile(string $userId, string $tempFileLocation, ?string $filename = null): array {
+		$assistantDataFolder = $this->getAssistantDataFolder($userId);
+
+		$date = (new DateTime())->format('Y-m-d_H:i:s');
+		$targetFileName = $filename === null ? $date : ($date . ' ' . $filename);
+		$targetFile = $assistantDataFolder->newFile($targetFileName, fopen($tempFileLocation, 'rb'));
+
+		return [
+			'fileId' => $targetFile->getId(),
+			'filePath' => $targetFile->getPath(),
+		];
+	}
+
+	public function getAssistantDataFolder(string $userId): Folder {
+		$userFolder = $this->rootFolder->getUserFolder($userId);
+
+		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', Application::ASSISTANT_DATA_FOLDER_NAME) ?: Application::ASSISTANT_DATA_FOLDER_NAME;
+		if ($userFolder->nodeExists($dataFolderName)) {
+			$dataFolderNode = $userFolder->get($dataFolderName);
+			if ($dataFolderNode instanceof Folder && $dataFolderNode->isCreatable()) {
+				return $dataFolderNode;
+			}
+		}
+		// it does not exist or is not a folder or does not have write permissions: we create one
+		$dataFolder = $this->createAssistantDataFolder($userId);
+		$dataFolderName = $dataFolder->getName();
+		$this->config->setUserValue($userId, Application::APP_ID, 'data_folder', $dataFolderName);
+		return $dataFolder;
+	}
+
+	private function createAssistantDataFolder(string $userId, int $try = 0): Folder {
+		$userFolder = $this->rootFolder->getUserFolder($userId);
+		if ($try === 0) {
+			$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME;
+		} else {
+			$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME . ' ' . $try;
+		}
+
+		if ($userFolder->nodeExists($folderPath)) {
+			if ($try > 3) {
+				// give up
+				throw new RuntimeException('Could not create the assistant data folder');
+			}
+			return $this->createAssistantDataFolder($userId, $try + 1);
+		}
+
+		return $userFolder->newFolder($folderPath);
+	}
+
+	public function getUserFile(string $userId, int $fileId): ?File {
+		$userFolder = $this->rootFolder->getUserFolder($userId);
+		$file = $userFolder->getFirstNodeById($fileId);
+		if ($file instanceof File) {
+			$owner = $file->getOwner();
+			if ($owner !== null && $owner->getUID() === $userId) {
+				return $file;
+			}
+		}
+		return null;
+	}
+
+	public function getUserFileInfo(string $userId, int $fileId): ?array {
+		$userFolder = $this->rootFolder->getUserFolder($userId);
+		$file = $userFolder->getFirstNodeById($fileId);
+		if ($file instanceof File) {
+			$owner = $file->getOwner();
+			return [
+				'name' => $file->getName(),
+				'path' => $file->getPath(),
+				'owner' => $owner->getUID(),
+				'size' => $file->getSize(),
+			];
+		}
+		return null;
+	}
+
 	/**
-	 * @param string $writingStyle
-	 * @param string $sourceMaterial
-	 * @return string
+	 * @param string $userId
+	 * @param int $ocpTaskId
+	 * @param int $fileId
+	 * @return File
+	 * @throws Exception
+	 * @throws NotFoundException
+	 * @throws TaskProcessingException
 	 */
-	private function formattedCopywriterPrompt(string $writingStyle, string $sourceMaterial): string {
-		return "You're a professional copywriter tasked with copying an instructed or demonstrated *WRITING STYLE* and writing a text on the provided *SOURCE MATERIAL*. \n*WRITING STYLE*:\n$writingStyle\n\n*SOURCE MATERIAL*:\n\n$sourceMaterial\n\nNow write a text in the same style detailed or demonstrated under *WRITING STYLE* using the *SOURCE MATERIAL* as source of facts and instruction on what to write about. Do not invent any facts or events yourself. Also, use the *WRITING STYLE* as a guide for how to write the text ONLY and not as a source of facts or events.";
+	public function getTaskOutputFile(string $userId, int $ocpTaskId, int $fileId): File {
+		$task = $this->taskProcessingManager->getTask($ocpTaskId);
+		if ($task->getUserId() !== $userId) {
+			$this->logger->info('A user attempted getting a file of another user\'s task');
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
+		}
+		// avoiding this is useful for testing with fake task types
+		if (!self::DEBUG) {
+			$taskFileIds = $this->extractFileIdsFromTask($task);
+			if (!in_array($fileId, $taskFileIds, true)) {
+				throw new Exception('Not found', Http::STATUS_NOT_FOUND);
+			}
+		}
+
+		$node = $this->rootFolder->getFirstNodeById($fileId);
+		if ($node === null) {
+			$node = $this->rootFolder->getFirstNodeByIdInPath($fileId, '/' . $this->rootFolder->getAppDataDirectoryName() . '/');
+			if (!$node instanceof File) {
+				throw new \OCP\TaskProcessing\Exception\NotFoundException('Node is not a file');
+			}
+		} elseif (!$node instanceof File) {
+			throw new \OCP\TaskProcessing\Exception\NotFoundException('Node is not a file');
+		}
+		return $node;
+	}
+
+	public function shareOutputFile(string $userId, int $ocpTaskId, int $fileId): string {
+		$taskOutputFile = $this->getTaskOutputFile($userId, $ocpTaskId, $fileId);
+		$assistantDataFolder = $this->getAssistantDataFolder($userId);
+		$targetFileName = $this->getTargetFileName($taskOutputFile);
+		if ($assistantDataFolder->nodeExists($targetFileName)) {
+			$existingTarget = $assistantDataFolder->get($targetFileName);
+			if ($existingTarget instanceof File) {
+				if ($existingTarget->getSize() === $taskOutputFile->getSize()) {
+					$fileCopy = $existingTarget;
+				} else {
+					$fileCopy = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+				}
+			} else {
+				throw new Exception('Impossible to copy output file, a directory with this name already exists', Http::STATUS_UNAUTHORIZED);
+			}
+		} else {
+			$fileCopy = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+		}
+		$share = $this->shareManager->newShare();
+		$share->setNode($fileCopy);
+		$share->setPermissions(Constants::PERMISSION_READ);
+		$share->setShareType(IShare::TYPE_LINK);
+		$share->setSharedBy($userId);
+		$share->setLabel('Assistant share');
+		$share = $this->shareManager->createShare($share);
+		$shareToken = $share->getToken();
+
+		return $shareToken;
+	}
+
+	private function getTargetFileName(File $file): string {
+		$mime = mime_content_type($file->fopen('rb'));
+		$name = $file->getName();
+		$ext = '';
+		if ($mime === 'image/png') {
+			$ext = '.png';
+		} elseif ($mime === 'image/jpeg') {
+			$ext = '.jpg';
+		}
+
+		if (str_ends_with($name, $ext)) {
+			return $name;
+		}
+		return $name . $ext;
+	}
+
+	private function extractFileIdsFromTask(Task $task): array {
+		$ids = [];
+		$taskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		if (!isset($taskTypes[$task->getTaskTypeId()])) {
+			throw new \OCP\TaskProcessing\Exception\NotFoundException('Could not find task type');
+		}
+		$taskType = $taskTypes[$task->getTaskTypeId()];
+		foreach ($taskType['inputShape'] + $taskType['optionalInputShape'] as $key => $descriptor) {
+			if (in_array(EShapeType::getScalarType($descriptor->getShapeType()), [EShapeType::File, EShapeType::Image, EShapeType::Audio, EShapeType::Video], true)) {
+				/** @var int|list<int> $inputSlot */
+				$inputSlot = $task->getInput()[$key];
+				if (is_array($inputSlot)) {
+					$ids += $inputSlot;
+				} else {
+					$ids[] = $inputSlot;
+				}
+			}
+		}
+		if ($task->getOutput() !== null) {
+			foreach ($taskType['outputShape'] + $taskType['optionalOutputShape'] as $key => $descriptor) {
+				if (in_array(EShapeType::getScalarType($descriptor->getShapeType()), [EShapeType::File, EShapeType::Image, EShapeType::Audio, EShapeType::Video], true)) {
+					/** @var int|list<int> $outputSlot */
+					$outputSlot = $task->getOutput()[$key];
+					if (is_array($outputSlot)) {
+						$ids += $outputSlot;
+					} else {
+						$ids[] = $outputSlot;
+					}
+				}
+			}
+		}
+		return array_values($ids);
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $taskId
+	 * @param int $fileId
+	 * @return array|null
+	 * @throws Exception
+	 * @throws LockedException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 * @throws TaskProcessingException
+	 */
+	public function getOutputFilePreviewFile(string $userId, int $taskId, int $fileId): ?array {
+		$taskOutputFile = $this->getTaskOutputFile($userId, $taskId, $fileId);
+		$realMime = mime_content_type($taskOutputFile->fopen('rb'));
+		return $this->previewService->getFilePreviewFile($taskOutputFile, 100, 100, $realMime ?: null);
 	}
 
 	/**
@@ -178,215 +454,6 @@ class AssistantService {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $metaTaskId
-	 * @return MetaTask|null
-	 */
-	public function getAssistantTask(string $userId, int $metaTaskId): ?MetaTask {
-		try {
-			$metaTask = $this->metaTaskMapper->getMetaTask($metaTaskId);
-		} catch (DoesNotExistException | MultipleObjectsReturnedException | \OCP\Db\Exception $e) {
-			return null;
-		}
-		if ($metaTask->getUserId() !== $userId) {
-			return null;
-		}
-		// only try to update meta task status for text processing ones
-		if ($metaTask->getCategory() !== Application::TASK_CATEGORY_TEXT_GEN) {
-			return $metaTask;
-		}
-		// Check if the text processing task status is up-to-date (if not, update status and output)
-		try {
-			$ocpTask = $this->textProcessingManager->getTask($metaTask->getOcpTaskId());
-
-			if($ocpTask->getStatus() !== $metaTask->getStatus()) {
-				$metaTask->setStatus($ocpTask->getStatus());
-				$metaTask->setOutput($ocpTask->getOutput());
-				$metaTask = $this->metaTaskMapper->update($metaTask);
-			}
-		} catch (NotFoundException $e) {
-			// Ocp task not found, so we can't update the status
-			$this->logger->debug('OCP task not found for assistant task ' . $metaTask->getId() . '. Could not update status.');
-		} catch (\InvalidArgumentException | \OCP\Db\Exception | RuntimeException $e) {
-			// Something else went wrong, so we can't update the status
-			$this->logger->warning('Unknown error while trying to retreive an updated status for assistant task: ' . $metaTask->getId() . '.', ['exception' => $e]);
-		}
-
-		return $metaTask;
-	}
-
-	/**
-	 * @param string $userId
-	 * @param int $metaTaskId
-	 * @return void
-	 * @throws Exception
-	 */
-	public function deleteAssistantTask(string $userId, int $metaTaskId): void {
-		$metaTask = $this->getAssistantTask($userId, $metaTaskId);
-		if ($metaTask !== null) {
-			$this->cancelOcpTaskOfMetaTask($userId, $metaTask);
-			$this->metaTaskMapper->delete($metaTask);
-		}
-	}
-
-	/**
-	 * @param string $userId
-	 * @param int $metaTaskId
-	 * @return void
-	 * @throws Exception
-	 */
-	public function cancelAssistantTask(string $userId, int $metaTaskId): void {
-		$metaTask = $this->getAssistantTask($userId, $metaTaskId);
-		if ($metaTask !== null) {
-			// deal with underlying tasks
-			if ($metaTask->getStatus() === Application::STATUS_META_TASK_SCHEDULED) {
-				$this->cancelOcpTaskOfMetaTask($userId, $metaTask);
-			}
-
-			$metaTask->setStatus(Application::STATUS_META_TASK_FAILED);
-			$metaTask->setOutput($this->l10n->t('Canceled by user'));
-			$this->metaTaskMapper->update($metaTask);
-		}
-	}
-
-	private function cancelOcpTaskOfMetaTask(string $userId, MetaTask $metaTask): void {
-		if ($metaTask->getCategory() === Application::TASK_CATEGORY_TEXT_GEN) {
-			try {
-				$ocpTask = $this->textProcessingManager->getTask($metaTask->getOcpTaskId());
-				$this->textProcessingManager->deleteTask($ocpTask);
-			} catch (NotFoundException $e) {
-			}
-		} elseif ($metaTask->getCategory() === Application::TASK_CATEGORY_TEXT_TO_IMAGE) {
-			$this->text2ImageHelperService->cancelGeneration($metaTask->getOutput(), $userId);
-		} elseif ($metaTask->getCategory() === Application::TASK_CATEGORY_SPEECH_TO_TEXT) {
-			// TODO implement task canceling in stt manager
-			$fileId = $metaTask->getOcpTaskId();
-			$files = $this->storage->getById($fileId);
-			if (count($files) < 1) {
-				return;
-			}
-			$file = array_shift($files);
-			if (!$file instanceof File) {
-				return;
-			}
-			$owner = $file->getOwner();
-			if ($owner === null) {
-				return;
-			}
-			$ownerId = $owner->getUID();
-			$jobArguments = [
-				'fileId' => $fileId,
-				'owner' => $ownerId,
-				'userId' => $userId,
-				'appId' => Application::APP_ID,
-			];
-			if ($this->jobList->has(TranscriptionJob::class, $jobArguments)) {
-				$this->jobList->remove(TranscriptionJob::class, $jobArguments);
-			}
-		}
-	}
-
-	/**
-	 * @param string $type
-	 * @param array $inputs
-	 * @param string $appId
-	 * @param string $userId
-	 * @param string $identifier
-	 * @return TextProcessingTask
-	 */
-	private function createTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): TextProcessingTask {
-		$inputs = $this->sanitizeInputs($type, $inputs);
-		switch ($type) {
-			case 'copywriter':
-				{
-					// Format the input prompt
-					$input = $this->formattedCopywriterPrompt($inputs['writingStyle'], $inputs['sourceMaterial']);
-					$task = new TextProcessingTask(FreePromptTaskType::class, $input, $appId, $userId, $identifier);
-					break;
-				}
-			case 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType':
-				{
-					$input = json_encode($inputs);
-					if ($input === false) {
-						throw new \Exception('Invalid inputs for ContextChatTaskType');
-					}
-
-					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-					break;
-				}
-			default:
-				{
-					$input = $inputs['prompt'];
-					$task = new TextProcessingTask($type, $input, $appId, $userId, $identifier);
-					break;
-				}
-		}
-		return $task;
-	}
-
-	/**
-	 * @param string $type
-	 * @param array $inputs
-	 * @param string $appId
-	 * @param string $userId
-	 * @param string $identifier
-	 * @return MetaTask
-	 * @throws Exception
-	 * @throws PreConditionNotMetException
-	 * @throws TaskFailureException
-	 */
-	public function runTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
-		$task = $this->createTextProcessingTask($type, $inputs, $appId, $userId, $identifier);
-		$this->textProcessingManager->runTask($task);
-
-		return $this->metaTaskMapper->createMetaTask(
-			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
-			$appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier
-		);
-	}
-
-	/**
-	 * @param string $type
-	 * @param array $inputs
-	 * @param string $appId
-	 * @param string $userId
-	 * @param string $identifier
-	 * @return MetaTask
-	 * @throws Exception
-	 * @throws PreConditionNotMetException
-	 */
-	public function scheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
-		$task = $this->createTextProcessingTask($type, $inputs, $appId, $userId, $identifier);
-		$this->textProcessingManager->scheduleTask($task);
-
-		return $this->metaTaskMapper->createMetaTask(
-			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
-			$appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier
-		);
-	}
-
-	/**
-	 * @param string $type
-	 * @param array<string> $inputs
-	 * @param string $appId
-	 * @param string $userId
-	 * @param string $identifier
-	 * @return MetaTask
-	 * @throws PreConditionNotMetException
-	 * @throws \OCP\Db\Exception
-	 * @throws \Exception
-	 */
-	public function runOrScheduleTextProcessingTask(string $type, array $inputs, string $appId, string $userId, string $identifier): MetaTask {
-		$task = $this->createTextProcessingTask($type, $inputs, $appId, $userId, $identifier);
-		$this->textProcessingManager->runOrScheduleTask($task);
-
-		return $this->metaTaskMapper->createMetaTask(
-			$userId, $inputs, $task->getOutput(), time(), $task->getId(), $type,
-			$appId, $task->getStatus(), Application::TASK_CATEGORY_TEXT_GEN, $identifier
-		);
-	}
-
-	/**
 	 * Parse text from file (if parsing the file type is supported)
 	 * @param string $filePath
 	 * @param string $userId
@@ -396,7 +463,7 @@ class AssistantService {
 	public function parseTextFromFile(string $filePath, string $userId): string {
 
 		try {
-			$userFolder = $this->storage->getUserFolder($userId);
+			$userFolder = $this->rootFolder->getUserFolder($userId);
 		} catch (\OC\User\NoUserException | NotPermittedException $e) {
 			throw new \Exception('Could not access user storage.');
 		}

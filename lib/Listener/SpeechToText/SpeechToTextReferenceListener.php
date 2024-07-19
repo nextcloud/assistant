@@ -28,7 +28,8 @@ use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
-use OCP\SpeechToText\ISpeechToTextManager;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\Util;
 
 /**
@@ -38,7 +39,7 @@ class SpeechToTextReferenceListener implements IEventListener {
 	public function __construct(
 		private IConfig $config,
 		private ?string $userId,
-		private ISpeechToTextManager $sttProcessingManager,
+		private ITaskProcessingManager $taskProcessingManager,
 	) {
 	}
 
@@ -49,8 +50,10 @@ class SpeechToTextReferenceListener implements IEventListener {
 		if ($this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1' &&
 			($this->userId === null || $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1')) {
 
-			// Double check that atleast one provider is registered
-			if ($this->sttProcessingManager->hasProviders()) {
+			// Double check that at least one provider is registered
+			$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+			$speechToTextAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
+			if ($speechToTextAvailable) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-speechToTextReference');
 			}
 		}

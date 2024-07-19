@@ -3,14 +3,13 @@
 namespace OCA\Assistant\Listener;
 
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\MetaTaskMapper;
+use OCA\Assistant\Db\TaskNotificationMapper;
 use OCA\Assistant\Event\BeforeAssistantNotificationEvent;
 use OCA\Assistant\Service\NotificationService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
-use OCP\TextProcessing\Events\TaskFailedEvent;
+use OCP\TaskProcessing\Events\TaskFailedEvent;
 
 /**
  * @template-implements IEventListener<Event>
@@ -18,9 +17,9 @@ use OCP\TextProcessing\Events\TaskFailedEvent;
 class TaskFailedListener implements IEventListener {
 
 	public function __construct(
+		private TaskNotificationMapper $taskNotificationMapper,
 		private NotificationService $notificationService,
 		private IEventDispatcher $eventDispatcher,
-		private MetaTaskMapper $metaTaskMapper,
 	) {
 	}
 
@@ -30,8 +29,11 @@ class TaskFailedListener implements IEventListener {
 		}
 
 		$task = $event->getTask();
-		error_log('Task failed ' . $task->getId());
 		if ($task->getUserId() === null) {
+			return;
+		}
+
+		if ($this->taskNotificationMapper->getByTaskId($task->getId()) === null) {
 			return;
 		}
 
@@ -50,18 +52,7 @@ class TaskFailedListener implements IEventListener {
 			$notificationActionLabel = $beforeAssistantNotificationEvent->getNotificationActionLabel();
 		}
 
-		try {
-			$assistantTask = $this->metaTaskMapper->getMetaTaskByOcpTaskIdAndCategory($task->getId(), Application::TASK_CATEGORY_TEXT_GEN);
-		} catch (DoesNotExistException $e) {
-			// Not an assistant task
-			return;
-		}
-
-		// Update task status and output:
-		$assistantTask->setStatus(Application::TP_STATUS_TO_META_STATUS[$task->getStatus()]);
-		$assistantTask->setOutput($event->getErrorMessage());
-		$assistantTask = $this->metaTaskMapper->update($assistantTask);
-
-		$this->notificationService->sendNotification($assistantTask, $notificationTarget, $notificationActionLabel);
+		$this->notificationService->sendNotification($task, $notificationTarget, $notificationActionLabel);
+		$this->taskNotificationMapper->deleteByTaskId($task->getId());
 	}
 }

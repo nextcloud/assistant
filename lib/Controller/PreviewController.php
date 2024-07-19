@@ -49,7 +49,7 @@ class PreviewController extends Controller {
 	#[NoCSRFRequired]
 	public function getFileImage(int $id, int $x = 100, int $y = 100): Response {
 		try {
-			$preview = $this->imageService->getFilePreviewFile($id, $this->userId, $x, $y);
+			$preview = $this->imageService->getUserFilePreviewFile($id, $this->userId, $x, $y);
 			if ($preview === null) {
 				$this->logger->error('No preview for user "' . $this->userId . '"');
 				return new DataResponse('', Http::STATUS_NOT_FOUND);

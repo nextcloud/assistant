@@ -20,69 +20,6 @@
             }
         },
         "schemas": {
-            "ImageGenInfo": {
-                "type": "object",
-                "properties": {
-                    "files": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "id"
-                            ],
-                            "properties": {
-                                "id": {
-                                    "type": "integer",
-                                    "format": "int64"
-                                },
-                                "visible": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    },
-                    "prompt": {
-                        "type": "string"
-                    },
-                    "image_gen_id": {
-                        "type": "string"
-                    },
-                    "is_owner": {
-                        "type": "boolean"
-                    },
-                    "processing": {
-                        "type": "integer",
-                        "format": "int64"
-                    }
-                }
-            },
-            "ImageProcessPromptResponse": {
-                "type": "object",
-                "required": [
-                    "task",
-                    "url",
-                    "reference_url",
-                    "image_gen_id",
-                    "prompt"
-                ],
-                "properties": {
-                    "task": {
-                        "$ref": "#/components/schemas/Task"
-                    },
-                    "url": {
-                        "type": "string"
-                    },
-                    "reference_url": {
-                        "type": "string"
-                    },
-                    "image_gen_id": {
-                        "type": "string"
-                    },
-                    "prompt": {
-                        "type": "string"
-                    }
-                }
-            },
             "OCSMeta": {
                 "type": "object",
                 "required": [
@@ -129,71 +66,102 @@
                     }
                 }
             },
-            "Task": {
+            "ShapeDescriptor": {
                 "type": "object",
                 "required": [
-                    "id",
-                    "userId",
-                    "inputs",
-                    "output",
-                    "appId",
-                    "ocpTaskId",
-                    "taskType",
-                    "timestamp",
-                    "status",
-                    "category",
-                    "identifier"
+                    "name",
+                    "description",
+                    "type"
                 ],
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "userId": {
+                    "name": {
                         "type": "string"
                     },
-                    "inputs": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TaskProcessingTask": {
+                "type": "object",
+                "required": [
+                    "appId",
+                    "completionExpectedAt",
+                    "customId",
+                    "id",
+                    "input",
+                    "lastUpdated",
+                    "output",
+                    "progress",
+                    "status",
+                    "type",
+                    "userId"
+                ],
+                "properties": {
+                    "appId": {
+                        "type": "string"
+                    },
+                    "completionExpectedAt": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "customId": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "input": {
                         "type": "object",
                         "additionalProperties": {
                             "type": "object"
                         }
                     },
+                    "lastUpdated": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
                     "output": {
-                        "type": "string"
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
                     },
-                    "appId": {
-                        "type": "string"
-                    },
-                    "ocpTaskId": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "taskType": {
-                        "type": "string"
-                    },
-                    "timestamp": {
-                        "type": "integer",
-                        "format": "int64"
+                    "progress": {
+                        "type": "number",
+                        "format": "double",
+                        "nullable": true
                     },
                     "status": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "category": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "identifier": {
                         "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
-            "TaskType": {
+            "TaskProcessingTaskType": {
                 "type": "object",
                 "required": [
                     "id",
                     "name",
-                    "description"
+                    "description",
+                    "inputShape",
+                    "optionalInputShape",
+                    "outputShape",
+                    "optionalOutputShape",
+                    "priority"
                 ],
                 "properties": {
                     "id": {
@@ -204,6 +172,34 @@
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "inputShape": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ShapeDescriptor"
+                        }
+                    },
+                    "optionalInputShape": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ShapeDescriptor"
+                        }
+                    },
+                    "outputShape": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ShapeDescriptor"
+                        }
+                    },
+                    "optionalOutputShape": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/ShapeDescriptor"
+                        }
+                    },
+                    "priority": {
+                        "type": "integer",
+                        "format": "int64"
                     }
                 }
             }
@@ -280,244 +276,10 @@
                                                         "types": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/components/schemas/TaskType"
+                                                                "$ref": "#/components/schemas/TaskProcessingTaskType"
                                                             }
                                                         }
                                                     }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{metaTaskId}": {
-            "get": {
-                "operationId": "assistant_api-get-assistant-task",
-                "summary": "Get an assistant task",
-                "description": "Get one specific task. It has to be a task owned by the current user.",
-                "tags": [
-                    "task_management"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "metaTaskId",
-                        "in": "path",
-                        "description": "ID of the task",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task has been found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "task"
-                                                    ],
-                                                    "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/Task"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Task has not been found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "operationId": "assistant_api-delete-task",
-                "summary": "Delete an assistant task",
-                "description": "This will cancel the task if needed and then delete it from the server.",
-                "tags": [
-                    "task_management"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "metaTaskId",
-                        "in": "path",
-                        "description": "ID of the task",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Task not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
                                                 }
                                             }
                                         }
@@ -547,21 +309,11 @@
                 ],
                 "parameters": [
                     {
-                        "name": "taskType",
+                        "name": "taskTypeId",
                         "in": "query",
                         "description": "Task type id. If null, tasks of all task types will be retrieved",
                         "schema": {
                             "type": "string",
-                            "nullable": true
-                        }
-                    },
-                    {
-                        "name": "category",
-                        "in": "query",
-                        "description": "Task category. If null, tasks of all categories will be retrieved",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64",
                             "nullable": true
                         }
                     },
@@ -618,7 +370,7 @@
                                                         "tasks": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/components/schemas/Task"
+                                                                "$ref": "#/components/schemas/TaskProcessingTask"
                                                             }
                                                         }
                                                     }
@@ -632,450 +384,6 @@
                     },
                     "404": {
                         "description": "No tasks found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/run": {
-            "post": {
-                "operationId": "assistant_api-run-text-processing-task",
-                "summary": "Run a text processing task",
-                "description": "This endpoint will run the task synchronously.",
-                "tags": [
-                    "text_processing"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "Task type id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "inputs",
-                        "in": "query",
-                        "description": "Input parameters",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "appId",
-                        "in": "query",
-                        "description": "App id to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "identifier",
-                        "in": "query",
-                        "description": "Identifier to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task started successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "task"
-                                                    ],
-                                                    "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/Task"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Running task is not possible",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/schedule": {
-            "post": {
-                "operationId": "assistant_api-schedule-text-processing-task",
-                "summary": "Schedule a text processing task",
-                "description": "This endpoint will schedule the task for it to run as soon as possible.",
-                "tags": [
-                    "text_processing"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "Task type id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "inputs",
-                        "in": "query",
-                        "description": "Input parameters",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "appId",
-                        "in": "query",
-                        "description": "App id to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "identifier",
-                        "in": "query",
-                        "description": "Identifier to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task scheduled",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "task"
-                                                    ],
-                                                    "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/Task"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Scheduling task is not possible",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/run-or-schedule": {
-            "post": {
-                "operationId": "assistant_api-run-or-schedule-text-processing-task",
-                "summary": "Run or schedule a text processing task",
-                "description": "This endpoint will either run or schedule the task.\nThe choice between run or schedule depends on the estimated runtime declared by the actual provider that will process the task.",
-                "tags": [
-                    "text_processing"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "Task type id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "inputs",
-                        "in": "query",
-                        "description": "Input parameters",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "appId",
-                        "in": "query",
-                        "description": "App id to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "identifier",
-                        "in": "query",
-                        "description": "Identifier to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task scheduled",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "task"
-                                                    ],
-                                                    "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/Task"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Scheduling task is not possible",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1228,1000 +536,13 @@
                 }
             }
         },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/cancel/{metaTaskId}": {
-            "put": {
-                "operationId": "assistant_api-cancel-task",
-                "summary": "Cancel a task",
-                "description": "This endpoint will prevent a scheduled task to run by unscheduling it",
-                "tags": [
-                    "task_management"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "metaTaskId",
-                        "in": "path",
-                        "description": "ID of the task",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task canceled successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Task not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/process_prompt": {
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{ocpTaskId}/notify": {
             "post": {
-                "operationId": "text2_image_api-process-prompt",
-                "summary": "Run or schedule an image generation task",
-                "tags": [
-                    "image_generation"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "appId",
-                        "in": "query",
-                        "description": "App id to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "identifier",
-                        "in": "query",
-                        "description": "Identifier to be set in the created task",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "prompt",
-                        "in": "query",
-                        "description": "Input prompt for the image",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "nResults",
-                        "in": "query",
-                        "description": "Number of images to generate",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64",
-                            "default": 1
-                        }
-                    },
-                    {
-                        "name": "displayPrompt",
-                        "in": "query",
-                        "description": "Option to include the prompt when displaying the result images",
-                        "schema": {
-                            "type": "integer",
-                            "default": 0,
-                            "enum": [
-                                0,
-                                1
-                            ]
-                        }
-                    },
-                    {
-                        "name": "notifyReadyIfScheduled",
-                        "in": "query",
-                        "description": "Whether a notification will be produced when the tasks has run if it was scheduled",
-                        "schema": {
-                            "type": "integer",
-                            "default": 0,
-                            "enum": [
-                                0,
-                                1
-                            ]
-                        }
-                    },
-                    {
-                        "name": "schedule",
-                        "in": "query",
-                        "description": "Force scheduling even if the task could run synchronously",
-                        "schema": {
-                            "type": "integer",
-                            "default": 0,
-                            "enum": [
-                                0,
-                                1
-                            ]
-                        }
-                    },
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Task started successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "task"
-                                                    ],
-                                                    "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/ImageProcessPromptResponse"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Starting task is not possible",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/info/{imageGenId}": {
-            "get": {
-                "operationId": "text2_image_api-get-generation-info",
-                "summary": "Get image generation information",
-                "tags": [
-                    "image_generation"
-                ],
-                "security": [
-                    {},
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "imageGenId",
-                        "in": "path",
-                        "description": "ID of the generation info",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns the requested data",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "$ref": "#/components/schemas/ImageGenInfo"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "The image generation does not exist",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "The image generation has been deleted",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Other error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/{imageGenId}/{fileNameId}": {
-            "get": {
-                "operationId": "text2_image_api-get-image",
-                "summary": "Get one image of a generation",
-                "tags": [
-                    "image_generation"
-                ],
-                "security": [
-                    {},
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "imageGenId",
-                        "in": "path",
-                        "description": "ID of the image generation",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fileNameId",
-                        "in": "path",
-                        "description": "ID of the file name",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns the image data",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "type": "string",
-                                    "format": "binary"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Getting image is not possible",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/cancel_generation": {
-            "post": {
-                "operationId": "text2_image_api-cancel-generation",
-                "summary": "Cancel image generation",
-                "description": "Does not need bruteforce protection since we respond with success anyways (In theory bruteforce may be possible by a response timing attack but the attacker won't gain access to the generation since its deleted during the attack.)",
-                "tags": [
-                    "image_generation"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "imageGenId",
-                        "in": "query",
-                        "description": "ID of the image generation",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Generation canceled successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/visibility/{imageGenId}": {
-            "post": {
-                "operationId": "text2_image_api-set-visibility-of-image-files",
-                "summary": "Set visibility of images in one generation",
-                "tags": [
-                    "image_generation"
-                ],
-                "security": [
-                    {
-                        "bearer_auth": []
-                    },
-                    {
-                        "basic_auth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "fileVisStatusArray",
-                        "in": "query",
-                        "description": "New file visibilities",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apiVersion",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "v1"
-                            ],
-                            "default": "v1"
-                        }
-                    },
-                    {
-                        "name": "imageGenId",
-                        "in": "path",
-                        "description": "ID of the image generation",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "OCS-APIRequest",
-                        "in": "header",
-                        "description": "Required to be true for the API request to pass",
-                        "required": true,
-                        "schema": {
-                            "type": "boolean",
-                            "default": true
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Visiblity set successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Setting visibility is not possible",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Setting visibility is not allowed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/i/notify/{imageGenId}": {
-            "post": {
-                "operationId": "text2_image_api-notify-when-ready",
-                "summary": "Notify when image generation is ready",
+                "operationId": "assistant_api-notify-when-ready",
+                "summary": "Notify when the task has finished",
                 "description": "Does not need bruteforce protection since we respond with success anyways as we don't want to keep the front-end waiting. However, we still use rate limiting to prevent timing attacks.",
                 "tags": [
-                    "image_generation"
+                    "assistant_api"
                 ],
                 "security": [
                     {
@@ -2245,12 +566,13 @@
                         }
                     },
                     {
-                        "name": "imageGenId",
+                        "name": "ocpTaskId",
                         "in": "path",
-                        "description": "ID of the image generation",
+                        "description": "ID of the target task",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     },
                     {
@@ -2330,19 +652,24 @@
                                         }
                                     }
                                 }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
                             }
                         }
                     }
                 }
             }
         },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/stt/transcribeAudio": {
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/input-file": {
             "post": {
-                "operationId": "speech_to_text_api-transcribe-audio",
-                "summary": "Transcribe uploaded audio file",
-                "description": "Schedule audio transcription of an uploaded file and return the created task.",
+                "operationId": "assistant_api-upload-input-file",
+                "summary": "Upload input file",
+                "description": "Upload an input file for a task that is being prepared",
                 "tags": [
-                    "speech_to_text_api"
+                    "assistant_api"
                 ],
                 "security": [
                     {
@@ -2354,21 +681,12 @@
                 ],
                 "parameters": [
                     {
-                        "name": "appId",
+                        "name": "filename",
                         "in": "query",
-                        "description": "App id to be set in the created task",
+                        "description": "The input file name",
                         "schema": {
                             "type": "string",
-                            "default": "assistant"
-                        }
-                    },
-                    {
-                        "name": "identifier",
-                        "in": "query",
-                        "description": "Identifier to be set in the created task",
-                        "schema": {
-                            "type": "string",
-                            "default": ""
+                            "nullable": true
                         }
                     },
                     {
@@ -2396,7 +714,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task started successfully",
+                        "description": "The input file was uploaded",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2418,11 +736,16 @@
                                                 "data": {
                                                     "type": "object",
                                                     "required": [
-                                                        "task"
+                                                        "fileId",
+                                                        "filePath"
                                                     ],
                                                     "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/Task"
+                                                        "fileId": {
+                                                            "type": "integer",
+                                                            "format": "int64"
+                                                        },
+                                                        "filePath": {
+                                                            "type": "string"
                                                         }
                                                     }
                                                 }
@@ -2433,43 +756,8 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
                     "400": {
-                        "description": "Starting task is not possible",
+                        "description": "Impossible to upload an input file",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2501,13 +789,12 @@
                 }
             }
         },
-        "/ocs/v2.php/apps/assistant/api/{apiVersion}/stt/transcribeFile": {
-            "post": {
-                "operationId": "speech_to_text_api-transcribe-file",
-                "summary": "Transcribe file from user's storage",
-                "description": "Schedule audio transcription of a user's storage file and return the created task",
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/file/{fileId}/display": {
+            "get": {
+                "operationId": "assistant_api-display-user-file",
+                "summary": "Get a file of the current user",
                 "tags": [
-                    "speech_to_text_api"
+                    "assistant_api"
                 ],
                 "security": [
                     {
@@ -2519,33 +806,6 @@
                 ],
                 "parameters": [
                     {
-                        "name": "path",
-                        "in": "query",
-                        "description": "Nextcloud file path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "appId",
-                        "in": "query",
-                        "description": "App id to be set in the created task",
-                        "schema": {
-                            "type": "string",
-                            "default": "assistant"
-                        }
-                    },
-                    {
-                        "name": "identifier",
-                        "in": "query",
-                        "description": "Identifier to be set in the created task",
-                        "schema": {
-                            "type": "string",
-                            "default": ""
-                        }
-                    },
-                    {
                         "name": "apiVersion",
                         "in": "path",
                         "required": true,
@@ -2555,6 +815,16 @@
                                 "v1"
                             ],
                             "default": "v1"
+                        }
+                    },
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "The ID of the file that is requested",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
                         }
                     },
                     {
@@ -2570,7 +840,18 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task started successfully",
+                        "description": "The file is returned",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The file was not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2592,11 +873,11 @@
                                                 "data": {
                                                     "type": "object",
                                                     "required": [
-                                                        "task"
+                                                        "message"
                                                     ],
                                                     "properties": {
-                                                        "task": {
-                                                            "$ref": "#/components/schemas/Task"
+                                                        "message": {
+                                                            "type": "string"
                                                         }
                                                     }
                                                 }
@@ -2610,40 +891,69 @@
                     "500": {
                         "description": "",
                         "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
                             "text/plain": {
                                 "schema": {
                                     "type": "string"
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/file/{fileId}/info": {
+            "get": {
+                "operationId": "assistant_api-get-user-file-info",
+                "summary": "Get user file info",
+                "description": "Get information about a file of the current user",
+                "tags": [
+                    "assistant_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
                     },
-                    "400": {
-                        "description": "Starting task is not possible",
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "apiVersion",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "v1"
+                            ],
+                            "default": "v1"
+                        }
+                    },
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "The file ID for which the info is requested",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The file info is returned",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2663,7 +973,28 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "string"
+                                                    "type": "object",
+                                                    "required": [
+                                                        "name",
+                                                        "path",
+                                                        "owner",
+                                                        "size"
+                                                    ],
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "path": {
+                                                            "type": "string"
+                                                        },
+                                                        "owner": {
+                                                            "type": "string"
+                                                        },
+                                                        "size": {
+                                                            "type": "integer",
+                                                            "format": "int64"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -2673,7 +1004,260 @@
                         }
                     },
                     "404": {
-                        "description": "File not found",
+                        "description": "The file was not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "message"
+                                                    ],
+                                                    "properties": {
+                                                        "message": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{ocpTaskId}/file/{fileId}/share": {
+            "post": {
+                "operationId": "assistant_api-share-output-file",
+                "summary": "Share an output file",
+                "description": "Share a file that was produced by a task",
+                "tags": [
+                    "assistant_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "apiVersion",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "v1"
+                            ],
+                            "default": "v1"
+                        }
+                    },
+                    {
+                        "name": "ocpTaskId",
+                        "in": "path",
+                        "description": "The task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "The file ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The file was shared",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "shareToken"
+                                                    ],
+                                                    "properties": {
+                                                        "shareToken": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The file was not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "error"
+                                                    ],
+                                                    "properties": {
+                                                        "error": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview": {
+            "get": {
+                "operationId": "assistant_api-get-output-file-preview",
+                "summary": "Get output file preview",
+                "description": "Generate and get a preview of a task output file",
+                "tags": [
+                    "assistant_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "apiVersion",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "v1"
+                            ],
+                            "default": "v1"
+                        }
+                    },
+                    {
+                        "name": "ocpTaskId",
+                        "in": "path",
+                        "description": "The task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "The task output file ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The file preview has been generated and is returned",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The output file is not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2698,6 +1282,16 @@
                                             }
                                         }
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "303": {
+                        "description": "Fallback to the file type icon URL",
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string"
                                 }
                             }
                         }

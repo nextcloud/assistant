@@ -6,7 +6,7 @@
 			:title="t('assistant', 'Copy message')"
 			@click="$emit('copy', $event)">
 			<template #icon>
-				<ContentCopyIcon :size="20" />
+				<CopyIcon :size="20" />
 			</template>
 		</NcButton>
 		<NcButton v-if="showRegenerate"
@@ -32,16 +32,17 @@
 				<NcLoadingIcon :size="20" />
 			</template>
 			<template v-else #icon>
-				<DeleteOutlineIcon :size="20" />
+				<DeleteIcon :size="20" />
 			</template>
 		</NcButton>
 	</div>
 </template>
 
 <script>
-import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
-import DeleteOutlineIcon from 'vue-material-design-icons/DeleteOutline.vue'
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
+
+import CopyIcon from '../icons/CopyIcon.vue'
+import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
@@ -50,8 +51,8 @@ export default {
 	name: 'MessageActions',
 
 	components: {
-		ContentCopyIcon,
-		DeleteOutlineIcon,
+		CopyIcon,
+		DeleteIcon,
 		ReloadIcon,
 
 		NcButton,
@@ -77,13 +78,12 @@ export default {
 
 <style lang="scss" scoped>
 .message-actions {
-	--default-clickable-area: 44px;
 	display: flex;
 	right: 0.5em;
 	top: 0.5em;
 	position: absolute;
 	background-color: var(--color-main-background);
-	border-radius: calc(var(--default-clickable-area) / 2);
+	border-radius: var(--border-radius-element);
 	box-shadow: 0 0 4px 0 var(--color-box-shadow);
 	height: var(--default-clickable-area);
 	z-index: 1;

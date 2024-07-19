@@ -56,7 +56,7 @@ Known providers:
 * [OpenAi/LocalAI integration](https://apps.nextcloud.com/apps/integration_openai)
 * [Local Whisper Speech-To-Text](https://apps.nextcloud.com/apps/stt_whisper)
 ]]>	</description>
-	<version>1.1.0</version>
+	<version>2.0.1</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
 	<namespace>Assistant</namespace>
@@ -70,16 +70,8 @@ Known providers:
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot2.jpg</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot3.jpg</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshot4.jpg</screenshot>
-	<background-jobs>
-		<job>OCA\Assistant\Cron\CleanupImageGenerations</job>
-		<job>OCA\Assistant\Cron\CleanupAssistantTasks</job>
-	</background-jobs>
-	<commands>
-		<command>OCA\Assistant\Command\CleanupImageGenerations</command>
-		<command>OCA\Assistant\Command\CleanupAssistantTasks</command>
-	</commands>
 	<dependencies>
-		<nextcloud min-version="28" max-version="30"/>
+		<nextcloud min-version="30" max-version="30"/>
 	</dependencies>
 	<settings>
 		<admin>OCA\Assistant\Settings\Admin</admin>

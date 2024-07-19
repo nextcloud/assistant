@@ -19,6 +19,7 @@
 			:maxlength="maxLength"
 			:disabled="loading"
 			:placeholder="placeholder"
+			:label-outside="true"
 			@keydown.enter="handleSubmitText"
 			@keydown.esc="handleCancelEditing" />
 		<template v-if="!loading">
@@ -166,11 +167,16 @@ export default {
 <style lang="scss" scoped>
 .editable-text-field {
 	display: flex;
-	width: 100%;
+	//width: 100%;
 	overflow: hidden;
 	position: relative;
 	min-height: var(--default-clickable-area);
 	align-items: center;
+	gap: 4px;
+
+	> div.input-field {
+		margin: 0 0 0 6px !important;
+	}
 
 	&__edit {
 		margin-left: var(--default-clickable-area);
@@ -179,6 +185,7 @@ export default {
 	&__output {
 		width: 100%;
 		padding: 10px;
+		margin: 0 !important;
 		line-height: var(--default-line-height) !important;
 	}
 

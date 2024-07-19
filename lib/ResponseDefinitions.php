@@ -26,41 +26,40 @@ declare(strict_types=1);
 
 namespace OCA\Assistant;
 
+use OCP\TaskProcessing\ShapeDescriptor;
+
 /**
- * @psalm-type AssistantTaskType = array{
+ * @psalm-type AssistantShapeDescriptor = array{
+ *     name: string,
+ *     description: string,
+ *     type: string,
+ * }
+ *
+ * If we replace "array<string, AssistantShapeDescriptor>" by "array<string, ShapeDescriptor|AssistantShapeDescriptor>"
+ * OpenAPI-extractor fails
+ * @psalm-type AssistantTaskProcessingTaskType = array{
  *     id: string,
  *     name: string,
  *     description: string,
+ *     inputShape: array<string, AssistantShapeDescriptor>,
+ *     optionalInputShape: array<string, AssistantShapeDescriptor>,
+ *     outputShape: array<string, AssistantShapeDescriptor>,
+ *     optionalOutputShape: array<string, AssistantShapeDescriptor>,
+ *     priority: integer,
  * }
  *
- * @psalm-type AssistantTask = array{
- *     id: int,
- *     userId: string,
- *     inputs: array<string, mixed>,
- *     output: string,
+ * @psalm-type AssistantTaskProcessingTask = array{
  *     appId: string,
- *     ocpTaskId: int,
- *     taskType: string,
- *     timestamp: int,
- *     status: int,
- *     category: int,
- *     identifier: string,
- * }
- *
- * @psalm-type AssistantImageProcessPromptResponse = array{
- *     task: AssistantTask,
- *     url: string,
- *     reference_url: string,
- *     image_gen_id: string,
- *     prompt: string,
- * }
- *
- * @psalm-type AssistantImageGenInfo = array{
- *     files?: array<array{id: int, visible?: bool}>,
- *     prompt?: string,
- *     image_gen_id?: string,
- *     is_owner?: bool,
- *     processing?: int,
+ *     completionExpectedAt: integer|null,
+ *     customId: string|null,
+ *     id: int|null,
+ *     input: array<string, mixed>,
+ *     lastUpdated: integer,
+ *     output: array<string, mixed>,
+ *     progress: float|null,
+ *     status: string,
+ *     type: string,
+ *     userId: string|null,
  * }
  */
 class ResponseDefinitions {

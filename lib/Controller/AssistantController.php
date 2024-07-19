@@ -3,8 +3,6 @@
 namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\MetaTask;
-use OCA\Assistant\Service\AssistantService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -14,6 +12,9 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IRequest;
+use OCP\TaskProcessing\Exception\Exception;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\Task;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class AssistantController extends Controller {
@@ -21,7 +22,7 @@ class AssistantController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,
-		private AssistantService $assistantService,
+		private ITaskProcessingManager $taskProcessingManager,
 		private IInitialState $initialStateService,
 		private IConfig $config,
 		private ?string $userId,
@@ -30,17 +31,20 @@ class AssistantController extends Controller {
 	}
 
 	/**
-	 * @param int $metaTaskId
+	 * @param int $taskId
 	 * @return TemplateResponse
 	 */
 	#[NoAdminRequired]
 	#[NoCSRFRequired]
-	public function getAssistantTaskResultPage(int $metaTaskId): TemplateResponse {
+	public function getAssistantTaskResultPage(int $taskId): TemplateResponse {
 		if ($this->userId !== null) {
-			$task = $this->assistantService->getAssistantTask($this->userId, $metaTaskId);
-			if ($task !== null) {
-				$this->initialStateService->provideInitialState('task', $task->jsonSerializeCc());
-				return new TemplateResponse(Application::APP_ID, 'assistantPage');
+			try {
+				$task = $this->taskProcessingManager->getTask($taskId);
+				if ($task->getUserId() === $this->userId) {
+					$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
+					return new TemplateResponse(Application::APP_ID, 'assistantPage');
+				}
+			} catch (Exception | \Throwable $e) {
 			}
 		}
 		return new TemplateResponse('', '403', [], TemplateResponse::RENDER_AS_ERROR, Http::STATUS_FORBIDDEN);
@@ -53,13 +57,14 @@ class AssistantController extends Controller {
 	#[NoCSRFRequired]
 	public function getAssistantStandalonePage(): TemplateResponse {
 		if ($this->userId !== null) {
-			$task = new MetaTask();
-			$task->setTaskType($this->config->getUserValue($this->userId, Application::APP_ID, 'last_task_type'));
-			$task->setUserId($this->userId);
-			$task->setAppId(Application::APP_ID);
-			$task->setInputs('{"prompt":""}');
-			$task->setIdentifier('');
-			$this->initialStateService->provideInitialState('task', $task->jsonSerializeCc());
+			$task = new Task(
+				$this->config->getUserValue($this->userId, Application::APP_ID, 'last_task_type'),
+				['something' => ''],
+				Application::APP_ID,
+				$this->userId,
+				''
+			);
+			$this->initialStateService->provideInitialState('task', $task->jsonSerialize());
 			return new TemplateResponse(Application::APP_ID, 'assistantPage');
 		}
 		return new TemplateResponse('', '403', [], TemplateResponse::RENDER_AS_ERROR, Http::STATUS_FORBIDDEN);

@@ -4,9 +4,9 @@ namespace OCA\Assistant\Service;
 
 use DateTime;
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\MetaTask;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as INotificationManager;
+use OCP\TaskProcessing\Task;
 
 class NotificationService {
 
@@ -19,28 +19,27 @@ class NotificationService {
 	/**
 	 * Send a success or failure task result notification
 	 *
-	 * @param MetaTask $metaTask
+	 * @param Task $task
 	 * @param string|null $customTarget optional notification link target
 	 * @param string|null $actionLabel optional label for the notification action button
 	 * @param string|null $resultPreview
 	 * @return void
 	 */
-	public function sendNotification(MetaTask $metaTask, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
+	public function sendNotification(Task $task, ?string $customTarget = null, ?string $actionLabel = null, ?string $resultPreview = null): void {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
 		$params = [
-			'appId' => $metaTask->getAppId(),
-			'id' => $metaTask->getId(),
-			'inputs' => $metaTask->getInputsAsArray(),
-			'target' => $customTarget ?? $this->getDefaultTarget($metaTask),
+			'appId' => $task->getAppId(),
+			'id' => $task->getId(),
+			'inputs' => $task->getInput(),
+			'target' => $customTarget ?? $this->getDefaultTarget($task),
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
-		$params['taskTypeClass'] = $metaTask->getTaskType();
-		$params['taskCategory'] = $metaTask->getCategory();
+		$params['taskTypeId'] = $task->getTaskTypeId();
 
-		$taskSuccessful = $metaTask->getStatus() === Application::STATUS_META_TASK_SUCCESSFUL;
+		$taskSuccessful = $task->getStatus() === Task::STATUS_SUCCESSFUL;
 
 		$subject = $taskSuccessful
 			? 'success'
@@ -51,15 +50,15 @@ class NotificationService {
 			: 'task-with-custom-target';
 
 		$notification->setApp(Application::APP_ID)
-			->setUser($metaTask->getUserId())
+			->setUser($task->getUserId())
 			->setDateTime(new DateTime())
-			->setObject($objectType, (string) ($metaTask->getId() ?? 0))
+			->setObject($objectType, (string) ($task->getId() ?? 0))
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);
 	}
 
-	private function getDefaultTarget(MetaTask $task): string {
-		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['metaTaskId' => $task->getId()]);
+	private function getDefaultTarget(Task $task): string {
+		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $task->getId()]);
 	}
 }
