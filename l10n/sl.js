@@ -14,6 +14,7 @@ OC.L10N.register(
     "No file selected" : "Ni izbranih datotek",
     "Close" : "Zapri",
     "Reset" : "Ponastavi",
+    "Audio transcription" : "Zvočni prepis",
     "Result" : "Rezultat",
     "Copy" : "Kopiraj",
     "New conversation" : "Nov pogovor",
@@ -33,6 +34,7 @@ OC.L10N.register(
     "Preview" : "Predogled",
     "Send" : "Pošlji",
     "Advanced options" : "Napredne možnosti",
+    "Unknown image generation error" : "Neznana napaka ustvarjanja slike",
     "Copy link to clipboard" : "Kopiraj povezavo v odložišče"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");
