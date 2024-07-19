@@ -201,8 +201,8 @@ export default {
 	}
 
 	.copy-button {
-		bottom: 2px;
-		right: 2px;
+		bottom: 4px;
+		right: 4px;
 	}
 
 	.rich-contenteditable__input {

@@ -359,7 +359,6 @@ export default {
 				.then((response) => {
 					this.taskTypes = response.data.ocs.data.types
 					// check if selected task type is in the list, fallback to text2text
-					/*
 					const taskType = this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 					if (taskType === undefined) {
 						const text2textType = this.taskTypes.find(tt => tt.id === TEXT2TEXT_TASK_TYPE_ID)
@@ -369,7 +368,26 @@ export default {
 							this.mySelectedTaskTypeId = null
 						}
 					}
-					*/
+					// add placeholders
+					this.taskTypes.forEach(tt => {
+						if (tt.id === TEXT2TEXT_TASK_TYPE_ID && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Generate a first draft for a blog post about privacy')
+						} else if (tt.id === 'context_chat:context_chat' && tt.inputShape.prompt) {
+							tt.inputShape.prompt.placeholder = t('assistant', 'What is the venue for the team retreat this quarter?')
+						} else if (tt.id === 'core:text2text:summary' && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to summarize')
+						} else if (tt.id === 'core:text2text:headline' && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to generate a headline for')
+						} else if (tt.id === 'core:text2text:topics' && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to extract the topics from')
+						} else if (tt.id === 'core:text2image' && tt.inputShape.input && tt.inputShape.numberOfImages) {
+							tt.inputShape.input.placeholder = t('assistant', 'landscape trees forest peaceful')
+							tt.inputShape.numberOfImages.placeholder = t('assistant', 'a number')
+						} else if (tt.id === 'core:contextwrite' && tt.inputShape.source_input && tt.inputShape.style_input) {
+							tt.inputShape.style_input.placeholder = t('assistant', 'Shakespeare or an example of the style')
+							tt.inputShape.source_input.placeholder = t('assistant', 'A description of what you need or some original content')
+						}
+					})
 				})
 				.catch((error) => {
 					console.error(error)

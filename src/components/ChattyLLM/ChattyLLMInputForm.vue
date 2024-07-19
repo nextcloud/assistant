@@ -56,14 +56,14 @@
 							<template #icon>
 								<PencilIcon :size="20" />
 							</template>
-							{{ t('assistant', 'Edit Title') }}
+							{{ t('assistant', 'Edit title') }}
 						</NcActionButton>
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onGenerateSessionTitle">
 							<template #icon>
 								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
 								<NcLoadingIcon v-else :size="20" />
 							</template>
-							{{ t('assistant', 'Generate Title') }}
+							{{ t('assistant', 'Generate title') }}
 						</NcActionButton>
 					</NcActions>
 				</div>

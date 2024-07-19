@@ -5,7 +5,7 @@
 		:value="value ?? ''"
 		:is-output="isOutput"
 		:label="field.description"
-		:placeholder="field.description"
+		:placeholder="field.placeholder ?? field.description"
 		:title="field.name"
 		@update:value="$emit('update:value', $event)" />
 </template>

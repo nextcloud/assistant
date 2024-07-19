@@ -10,7 +10,7 @@
 			type="text"
 			:label-outside="true"
 			:title="field.name"
-			:placeholder="field.description || t('assistant','Type some number')"
+			:placeholder="field.placeholder ?? (field.description || t('assistant','Type some number'))"
 			:error="!isValid"
 			:helper-text="isValid ? '' : t('assistant', 'The current value is not a number')"
 			@update:value="onUpdateValue" />
@@ -84,6 +84,7 @@ export default {
 
 	.number-input-field {
 		width: 300px;
+		margin-top: 0;
 	}
 }
 </style>
