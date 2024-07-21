@@ -18,6 +18,7 @@ OC.L10N.register(
     "Input" : "Intrare",
     "No file selected" : "Niciun fișier selectat",
     "Upload from device" : "Încarcă din dispozitiv",
+    "Share" : "Partajează",
     "Advanced" : "Avansat",
     "Copy" : "Copiază",
     "Upload file" : "Încarcă fișier",

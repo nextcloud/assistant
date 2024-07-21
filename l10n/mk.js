@@ -20,6 +20,8 @@ OC.L10N.register(
     "End recording and send" : "Заврши снимање и испрати",
     "Choose file" : "Избери датотека",
     "No file selected" : "Нема избрано датотека",
+    "Upload from device" : "Прикачи од уред",
+    "Share" : "Сподели",
     "Advanced" : "Напредно",
     "Upload file" : "Прикачи датотека",
     "Reset" : "Ресетирање",

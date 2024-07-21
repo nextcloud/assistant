@@ -11,6 +11,7 @@ OC.L10N.register(
     "Cancelled" : "Cancelado",
     "Running" : "Correr",
     "No file selected" : "Nenhum ficheiro seleccionado",
+    "Share" : "Partilhar",
     "Advanced" : "Avançado",
     "Copy" : "copiar",
     "Upload file" : "Enviar ficheiro",
