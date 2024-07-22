@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.0.1 – 2024-07-22
+
+### Added
+
+- Ability to cancel a task while waiting for results in the assistant @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+
+### Changed
+
+- Set min and max NC version to 30
+- Switch from text processing to task processing API @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+- UI/UX improvements @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+- Avoid blocking a Php runner waiting for ChattyUI tasks to finish, poll in the frontend like the other task types @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+- Get rid of the smart picker custom components, open the assistant instead @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+- Simplify image generation, let users download or share result images directly in the assistant @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+- Simplify the audio recorder and make it look more like the one in Talk @julien-nc [#97](https://github.com/nextcloud/assistant/pull/97)
+
 ## 1.1.0 – 2024-06-19
 
 ### Added
