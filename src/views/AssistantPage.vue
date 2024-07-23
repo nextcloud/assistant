@@ -74,10 +74,13 @@ export default {
 	computed: {
 		shortInput() {
 			const input = this.task.input.input ?? this.task.input.sourceMaterial ?? ''
-			if (input.length <= 200) {
-				return input
+			if (typeof input === 'string') {
+				if (input.length <= 200) {
+					return input
+				}
+				return input.slice(0, 200) + '…'
 			}
-			return input.slice(0, 200) + '…'
+			return ''
 		},
 	},
 
