@@ -7,6 +7,7 @@
 			:placeholder="taskType.inputShape?.prompt?.description"
 			:title="taskType.inputShape?.prompt?.name"
 			:is-output="false"
+			:show-choose-button="false"
 			@update:value="onInputsChanged({ prompt: $event })" />
 		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}

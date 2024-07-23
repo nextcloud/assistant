@@ -25,7 +25,7 @@
 			</template>
 			{{ t('assistant', 'Copy') }}
 		</NcButton>
-		<NcButton v-if="!isOutput && !hasValue"
+		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
 			type="secondary"
 			@click="onChooseFile">
@@ -110,6 +110,10 @@ export default {
 		isOutput: {
 			type: Boolean,
 			default: false,
+		},
+		showChooseButton: {
+			type: Boolean,
+			default: true,
 		},
 	},
 
