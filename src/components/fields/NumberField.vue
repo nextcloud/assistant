@@ -83,8 +83,8 @@ export default {
 	align-items: start;
 
 	.number-input-field {
-		width: 300px;
-		margin-top: 0;
+		width: 300px !important;
+		margin-top: 0 !important;
 	}
 }
 </style>

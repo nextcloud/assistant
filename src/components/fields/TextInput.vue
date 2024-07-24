@@ -196,7 +196,7 @@ export default {
 
 	.copy-button,
 	.choose-file-button {
-		position: absolute;
+		position: absolute !important;
 	}
 
 	.choose-file-button {
