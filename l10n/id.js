@@ -6,6 +6,7 @@ OC.L10N.register(
     "Edit title" : "Edit judul",
     "Choose" : "Pilih",
     "Cancel" : "Batal",
+    "Cancelled" : "Dibatalkan",
     "Failed" : "Gagal",
     "Scheduled" : "Dijadwalkan",
     "Input" : "Input",
