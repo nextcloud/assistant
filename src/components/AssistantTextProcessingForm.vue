@@ -403,6 +403,7 @@ export default {
 			this.$emit('sync-submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		onActionButtonClick(button) {
+			console.debug('[assistant] action button clicked', button, this.myOutputs)
 			this.$emit('action-button-clicked', { button, output: this.myOutputs })
 		},
 		onHistoryTryAgain(e) {

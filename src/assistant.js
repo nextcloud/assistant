@@ -310,9 +310,12 @@ async function showAssistantTaskResult(taskId) {
  * Open an assistant modal to show the result of a task
  *
  * @param {object} task the task we want to see the result of
+ * @param {object} params parameters for the assistant
+ * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
+ * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form
  * @return {Promise<void>}
  */
-export async function openAssistantTask(task) {
+export async function openAssistantTask(task, { isInsideViewer = undefined, actionButtons = undefined }) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	Vue.mixin({ methods: { t, n } })
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
@@ -326,15 +329,16 @@ export async function openAssistantTask(task) {
 	const View = Vue.extend(AssistantTextProcessingModal)
 	const view = new View({
 		propsData: {
-			// isInsideViewer,
+			isInsideViewer,
 			selectedTaskId: task.id,
 			inputs: task.input,
 			outputs: task.output ?? {},
 			selectedTaskTypeId: task.type,
 			showScheduleConfirmation: false,
+			actionButtons,
 		},
 	}).$mount(modalElement)
-	let lastTask = null
+	let lastTask = task
 
 	view.$on('cancel', () => {
 		view.$destroy()
@@ -397,6 +401,7 @@ export async function openAssistantTask(task) {
 			view.inputs = task.input
 			view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
 			view.selectedTaskId = task.id
+			lastTask = task
 		}
 	})
 	view.$on('background-notify', () => {
@@ -410,6 +415,13 @@ export async function openAssistantTask(task) {
 		cancelTask(lastTask.id)
 		view.showSyncTaskRunning = false
 		lastTask = null
+	})
+	view.$on('action-button-clicked', (data) => {
+		if (data.button?.onClick) {
+			lastTask.output = data.output
+			data.button.onClick(lastTask)
+		}
+		view.$destroy()
 	})
 }
 

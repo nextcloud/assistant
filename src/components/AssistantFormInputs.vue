@@ -62,23 +62,24 @@ export default {
 	watch: {
 		selectedTaskType() {
 			console.debug('[assistant] watch selectedTaskType', this.selectedTaskType, this.selectedTaskTypeId)
-			this.resetInputs()
+			this.setDefaultValues(true)
 		},
 	},
 	mounted() {
 		console.debug('[assistant] mounted AssistantFormInputs', this.selectedTaskId, this.selectedTaskType)
 		// don't set the default values if there is a loaded task (initial or from history)
 		if (this.selectedTaskType && this.selectedTaskId === null) {
-			this.setDefaultValues()
+			this.setDefaultValues(false)
 		}
 	},
 	methods: {
-		resetInputs() {
-			this.setDefaultValues()
-		},
-		setDefaultValues() {
+		setDefaultValues(clear = true) {
 			console.debug('[assistant] set default values', this.selectedTaskType?.inputShapeDefaults, this.selectedTaskType?.optionalInputShapeDefaults)
-			const inputs = {}
+			const inputs = clear
+				? {}
+				: {
+					...this.inputs,
+				}
 			// set default values
 			if (this.selectedTaskType.inputShapeDefaults) {
 				Object.keys(this.selectedTaskType.inputShapeDefaults).forEach(key => {
