@@ -10,6 +10,8 @@
 				:is-output="false"
 				:shape="selectedTaskType.inputShape"
 				:optional-shape="selectedTaskType.optionalInputShape ?? null"
+				:shape-options="selectedTaskType.inputShapeEnumValues ?? null"
+				:optional-shape-options="selectedTaskType.optionalInputShapeEnumValues ?? null"
 				:values="inputs"
 				:show-advanced="showAdvanced"
 				@update:show-advanced="$emit('update:show-advanced', $event)"
@@ -34,6 +36,10 @@ export default {
 		inputs: {
 			type: Object,
 			default: () => {},
+		},
+		selectedTaskId: {
+			type: [Number, null],
+			default: null,
 		},
 		selectedTaskType: {
 			type: [Object, null],
@@ -60,17 +66,35 @@ export default {
 		},
 	},
 	mounted() {
+		console.debug('[assistant] mounted AssistantFormInputs', this.selectedTaskId, this.selectedTaskType)
+		// don't set the default values if there is a loaded task (initial or from history)
+		if (this.selectedTaskType && this.selectedTaskId === null) {
+			this.setDefaultValues()
+		}
 	},
 	methods: {
 		resetInputs() {
+			this.setDefaultValues()
+		},
+		setDefaultValues() {
+			console.debug('[assistant] set default values', this.selectedTaskType?.inputShapeDefaults, this.selectedTaskType?.optionalInputShapeDefaults)
 			const inputs = {}
-			/*
-			Object.keys(this.selectedTaskType.inputShape).forEach(key => {
-				inputs[key] = null
-			})
-			*/
+			// set default values
+			if (this.selectedTaskType.inputShapeDefaults) {
+				Object.keys(this.selectedTaskType.inputShapeDefaults).forEach(key => {
+					if (this.selectedTaskType.inputShapeDefaults[key]) {
+						inputs[key] = this.selectedTaskType.inputShapeDefaults[key]
+					}
+				})
+			}
+			if (this.selectedTaskType.optionalInputShapeDefaults) {
+				Object.keys(this.selectedTaskType.optionalInputShapeDefaults).forEach(key => {
+					if (this.selectedTaskType.optionalInputShapeDefaults[key]) {
+						inputs[key] = this.selectedTaskType.optionalInputShapeDefaults[key]
+					}
+				})
+			}
 			this.$emit('update:inputs', inputs)
-			// TODO do it with optional input shape as well
 		},
 	},
 }

@@ -85,7 +85,7 @@ export default {
 	},
 
 	mounted() {
-		console.debug('[Assistant] task', this.task)
+		console.debug('[assistant] task', this.task)
 	},
 
 	methods: {
@@ -113,6 +113,10 @@ export default {
 					pollTask(task.id, this.setProgress).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
+						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+							showError(t('assistant', 'Your task has failed'))
+							console.error('[assistant] Task failed', finishedTask)
+							this.task.output = null
 						}
 						this.loading = false
 						this.showSyncTaskRunning = false

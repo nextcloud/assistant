@@ -140,6 +140,8 @@ class AssistantService {
 						EShapeType::ListOfAudios,
 					),
 				],
+				'inputShapeEnumValues' => [],
+				'inputShapeDefaults' => [],
 				'outputShape' => [
 					'fileList' => new ShapeDescriptor(
 						'Output file list',
@@ -157,8 +159,12 @@ class AssistantService {
 						EShapeType::Image,
 					),
 				],
+				'outputShapeEnumValues' => [],
 				'optionalInputShape' => [],
+				'optionalInputShapeEnumValues' => [],
+				'optionalInputShapeDefaults' => [],
 				'optionalOutputShape' => [],
+				'optionalOutputShapeEnumValues' => [],
 			];
 		}
 		/** @var string $typeId */
@@ -179,8 +185,12 @@ class AssistantService {
 					'name' => $this->l10n->t('Chat with AI'),
 					'description' => $this->l10n->t('Chat with an AI model.'),
 					'inputShape' => [],
+					'inputShapeEnumValues' => [],
+					'inputShapeDefaults' => [],
 					'outputShape' => [],
 					'optionalInputShape' => [],
+					'optionalInputShapeEnumValues' => [],
+					'optionalInputShapeDefaults' => [],
 					'optionalOutputShape' => [],
 					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
 				];

@@ -44,6 +44,7 @@ export const SHAPE_TYPE_NAMES = {
 	Audio: 'Audio',
 	Video: 'Video',
 	File: 'File',
+	Enum: 'Enum',
 	ListOfNumbers: 'ListOfNumbers',
 	ListOfTexts: 'ListOfTexts',
 	ListOfImages: 'ListOfImages',

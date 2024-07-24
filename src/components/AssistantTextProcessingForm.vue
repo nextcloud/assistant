@@ -48,6 +48,7 @@
 			</span-->
 			<AssistantFormInputs v-if="selectedTaskType"
 				:inputs.sync="myInputs"
+				:selected-task-id="selectedTaskId"
 				:selected-task-type="selectedTaskType"
 				:show-advanced.sync="showAdvanced" />
 			<div v-if="hasOutput"
@@ -57,6 +58,8 @@
 					:is-output="true"
 					:shape="selectedTaskType.outputShape"
 					:optional-shape="selectedTaskType.optionalOutputShape ?? null"
+					:shape-options="selectedTaskType.outputShapeEnumValues ?? null"
+					:optional-shape-options="selectedTaskType.optionalOutputShapeEnumValues ?? null"
 					:values.sync="myOutputs"
 					:show-advanced.sync="showAdvanced" />
 				<NcNoteCard v-if="outputEqualsInput"
@@ -265,10 +268,6 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
-			if (this.selectedTaskType.id === 'speech-to-text') {
-				return (this.myInputs.sttMode === 'record' && this.myInputs.audioData !== null)
-					|| (this.myInputs.sttMode === 'choose' && this.myInputs.audioFilePath !== null)
-			}
 			// otherwise, check that none of the properties of myInputs are empty
 			console.debug('[assistant] canSubmit', this.myInputs)
 			if (Object.keys(this.myInputs).length === 0) {
@@ -400,6 +399,7 @@ export default {
 			this.myOutputs = null
 		},
 		onSyncSubmit() {
+			console.debug('[assistant] in form submit ---------', this.myInputs)
 			this.$emit('sync-submit', { inputs: this.myInputs, selectedTaskTypeId: this.mySelectedTaskTypeId })
 		},
 		onActionButtonClick(button) {

@@ -106,6 +106,7 @@ export async function openAssistantForm({
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 							showError(t('assistant', 'Your task has failed'))
 							console.error('[assistant] Task failed', finishedTask)
+							view.outputs = null
 						}
 						resolve(finishedTask)
 						view.loading = false
@@ -130,7 +131,7 @@ export async function openAssistantForm({
 		})
 		view.$on('load-task', (task) => {
 			if (!view.loading) {
-				console.debug('aaaaa loading task', task)
+				console.debug('[assistant] loading task', task)
 				view.selectedTaskTypeId = task.taskType
 				view.inputs = task.input
 				view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
@@ -364,12 +365,17 @@ export async function openAssistantTask(task) {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
 						view.selectedTaskId = finishedTask?.id
+					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+						showError(t('assistant', 'Your task has failed'))
+						console.error('[assistant] Task failed', finishedTask)
+						view.outputs = null
 					}
 					// resolve(finishedTask)
 					view.loading = false
 					view.showSyncTaskRunning = false
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
+					view.outputs = null
 				})
 			})
 			.catch(error => {

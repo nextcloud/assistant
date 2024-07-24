@@ -4,6 +4,7 @@
 		:field-key="fieldKey"
 		:value="value"
 		:field="field"
+		:options="options ?? undefined"
 		:is-output="isOutput"
 		@update:value="$emit('update:value', $event)" />
 </template>
@@ -12,6 +13,7 @@
 import TextField from './TextField.vue'
 import NumberField from './NumberField.vue'
 import MediaField from './MediaField.vue'
+import EnumField from './EnumField.vue'
 import ListOfMediaField from './ListOfMediaField.vue'
 import ListOfTextsField from './ListOfTextsField.vue'
 
@@ -35,6 +37,10 @@ export default {
 		field: {
 			type: Object,
 			required: true,
+		},
+		options: {
+			type: [Array, null],
+			default: null,
 		},
 		isOutput: {
 			type: Boolean,
@@ -79,6 +85,8 @@ export default {
 				return ListOfMediaField
 			} else if (this.field.type === SHAPE_TYPE_NAMES.ListOfTexts) {
 				return ListOfTextsField
+			} else if (this.field.type === SHAPE_TYPE_NAMES.Enum) {
+				return EnumField
 			}
 			return TextField
 		},

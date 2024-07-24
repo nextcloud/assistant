@@ -5,6 +5,7 @@
 			:field-key="key"
 			:field="field"
 			:value="values[key] ?? null"
+			:options="getInputFieldOptions(field, key)"
 			:is-output="isOutput"
 			@update:value="onValueChange(key, $event)" />
 		<!--NcButton v-if="hasOptionalShape"
@@ -22,6 +23,7 @@
 				:field-key="key"
 				:field="field"
 				:value="values[key] ?? null"
+				:options="getOptionalInputFieldOptions(field, key)"
 				:is-output="isOutput"
 				@update:value="onValueChange(key, $event)" />
 		</div>
@@ -50,6 +52,14 @@ export default {
 		optionalShape: {
 			type: [Object, Array, null],
 			default: () => {},
+		},
+		shapeOptions: {
+			type: [Object, Array, null],
+			default: null,
+		},
+		optionalShapeOptions: {
+			type: [Object, Array, null],
+			default: null,
 		},
 		isOutput: {
 			type: Boolean,
@@ -91,11 +101,33 @@ export default {
 	},
 
 	methods: {
+		getInputFieldOptions(field, key) {
+			if (field.type === 'Enum'
+				&& this.shapeOptions !== null
+				&& !Array.isArray(this.shapeOptions)
+				&& this.shapeOptions[key]
+			) {
+				return this.shapeOptions[key]
+			}
+			return undefined
+		},
+		getOptionalInputFieldOptions(field, key) {
+			if (field.type === 'Enum'
+				&& this.optionalShapeOptions !== null
+				&& !Array.isArray(this.optionalShapeOptionsshapeOptions)
+				&& this.optionalShapeOptions[key]
+			) {
+				return this.optionalShapeOptions[key]
+			}
+			return undefined
+		},
 		onValueChange(key, value) {
-			this.$emit('update:values', {
+			const newValues = {
 				...this.values,
 				[key]: value,
-			})
+			}
+			console.debug('[assistant] field value change', newValues)
+			this.$emit('update:values', newValues)
 		},
 	},
 }

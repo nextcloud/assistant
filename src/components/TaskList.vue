@@ -112,7 +112,7 @@ export default {
 			})
 		},
 		onTaskDelete(task) {
-			const url = generateOcsUrl('taskprocessing/tasks/{id}', { id: task.id })
+			const url = generateOcsUrl('taskprocessing/task/{id}', { id: task.id })
 			axios.delete(url).then(response => {
 				const index = this.tasks.findIndex(t => { return t.id === task.id })
 				if (index !== -1) {

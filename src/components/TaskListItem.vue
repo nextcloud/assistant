@@ -152,11 +152,6 @@ export default {
 			return this.task.type === 'core:text2image'
 		},
 		mainName() {
-			if (this.task.taskType === 'copywriter') {
-				return this.task.input.sourceMaterial
-			} else if (this.task.taskType === 'speech-to-text') {
-				return t('assistant', 'Audio input')
-			}
 			return t('assistant', 'Input') + ': ' + this.textInputPreview
 		},
 		subName() {
