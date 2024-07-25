@@ -281,7 +281,7 @@ export default {
 				}
 				const fieldType = taskType.inputShape[k].type
 				const value = this.myInputs[k]
-				return (fieldType === SHAPE_TYPE_NAMES.Text && typeof value === 'string' && !!value?.trim())
+				return ([SHAPE_TYPE_NAMES.Text, SHAPE_TYPE_NAMES.Enum].includes(fieldType) && typeof value === 'string' && !!value?.trim())
 					|| ([
 						SHAPE_TYPE_NAMES.Number,
 						SHAPE_TYPE_NAMES.File,

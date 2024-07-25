@@ -36,6 +36,7 @@ use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use OCP\TaskProcessing\TaskTypes\TextToTextHeadline;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use OCP\TaskProcessing\TaskTypes\TextToTextTopics;
+use OCP\TaskProcessing\TaskTypes\TextToTextTranslate;
 use Parsedown;
 use PhpOffice\PhpWord\IOFactory;
 use Psr\Log\LoggerInterface;
@@ -56,7 +57,7 @@ class AssistantService {
 		'context_chat:context_chat' => 3,
 		'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType' => 3,
 		AudioToText::ID => 4,
-		// TODO translate: 5 (translate is not migrated to taskProcessing yet)
+		TextToTextTranslate::ID => 5,
 		ContextWrite::ID => 6,
 		TextToImage::ID => 7,
 		TextToTextSummary::ID => 8,

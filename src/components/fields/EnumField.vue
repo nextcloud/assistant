@@ -1,11 +1,11 @@
 <template>
-	<div class="number-field">
+	<div class="enum-field">
 		<label :for="'input-' + fieldKey">
 			{{ field.description }}
 		</label>
 		<NcSelect
 			:id="'input-' + fieldKey"
-			class="enum-field"
+			class="enum-field-input"
 			:value="selectValue"
 			:options="options"
 			:clearable="true"
@@ -84,13 +84,13 @@ export default {
 </script>
 
 <style lang="scss">
-.number-field {
+.enum-field {
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 
-	.number-input-field {
-		width: 300px !important;
+	&-input {
+		min-width: 300px !important;
 		margin-top: 0 !important;
 	}
 }
