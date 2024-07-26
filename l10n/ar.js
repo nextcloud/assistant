@@ -164,6 +164,7 @@ OC.L10N.register(
     "Choose file" : "إختَر ملفاً",
     "Choose a file" : "إختيار ملف",
     "No file selected" : "لم تقم بتحديد أي ملف",
+    "Choose a value" : "إختَر قيمةً",
     "Upload from device" : "إرفَع من الجهاز",
     "Select from Nextcloud" : "إختَر من نكست كلاود",
     "Pick one or multiple files" : "إختَر ملفاً أو أكثر",

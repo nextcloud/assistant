@@ -164,6 +164,7 @@ OC.L10N.register(
     "Choose file" : "選擇檔案",
     "Choose a file" : "選擇一個檔案",
     "No file selected" : "未選擇任何檔案",
+    "Choose a value" : "選擇一個數值",
     "Upload from device" : "從裝置上傳",
     "Select from Nextcloud" : "從 Nextcloud 選擇",
     "Pick one or multiple files" : "選擇一個或多個檔案",

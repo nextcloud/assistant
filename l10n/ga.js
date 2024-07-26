@@ -164,6 +164,7 @@ OC.L10N.register(
     "Choose file" : "Roghnaigh comhad",
     "Choose a file" : "Roghnaigh comhad",
     "No file selected" : "Níor roghnaíodh aon chomhad",
+    "Choose a value" : "Roghnaigh luach",
     "Upload from device" : "Íosluchtaigh ó gléas",
     "Select from Nextcloud" : "Roghnaigh ó Nextcloud",
     "Pick one or multiple files" : "Roghnaigh comhad amháin nó níos mó",
