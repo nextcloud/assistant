@@ -164,6 +164,7 @@ OC.L10N.register(
     "Choose file" : "Datei auswählen",
     "Choose a file" : "Datei auswählen",
     "No file selected" : "Keine Datei gewählt",
+    "Choose a value" : "Einen Wert auswählen",
     "Upload from device" : "Von Gerät hochladen",
     "Select from Nextcloud" : "Aus Nextcloud auswählen",
     "Pick one or multiple files" : "Eine oder mehrere Dateien auswählen",
