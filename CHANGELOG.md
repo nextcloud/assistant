@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.0.2 – 2024-07-26
+
+### Added
+
+- Support for Enum field type @julien-nc
+- Support action buttons when opening a task with OCA.Assistant.openAssistantTask @julien-nc
+
+### Changed
+
+- Hide 'choose file' button in context chat input form @julien-nc
+
+### Fixed
+
+- Fix short input displayed when a task is scheduled @julien-nc
+- Fix style issues in standalone page @julien-nc
+
 ## 2.0.1 – 2024-07-22
 
 ### Added
