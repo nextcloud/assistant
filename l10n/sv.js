@@ -38,6 +38,8 @@ OC.L10N.register(
     "Input" : "Inmatning",
     "Result" : "Resultat",
     "Unknown status" : "Okänd status",
+    "Start recording" : "Starta inspelning",
+    "Stop recording" : "Stoppa inspelning",
     "Dismiss recording" : "Stäng inspelningen",
     "End recording and send" : "Avsluta inspelningen och skicka",
     "Choose file" : "Välj fil",

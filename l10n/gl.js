@@ -230,7 +230,7 @@ OC.L10N.register(
     "Image file not found" : "Non se atopou o ficheiro de imaxe",
     "Writing style" : "Estilo de escritura",
     "Describe the writing style you want to use or supply an example document." : "Describa o estilo de escritura que quere que se utilice ou forneza un documento de exemplo.",
-    "Source material" : "Material de partida",
+    "Source material" : "Material orixinal",
     "Describe what you want the document to be written on." : "Describa sobre que quere que se escriba no documento.",
     "Type some text" : "Escriba algún texto",
     "Output" : "Saída",
