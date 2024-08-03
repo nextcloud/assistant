@@ -164,6 +164,7 @@ OC.L10N.register(
     "Choose file" : "Velg fil",
     "Choose a file" : "Velg fil",
     "No file selected" : "Ingen fil ble valgt",
+    "Choose a value" : "Velg en verdi",
     "Upload from device" : "Last opp fra enhet",
     "Select from Nextcloud" : "Velg fra Nextcloud",
     "Pick one or multiple files" : "Velg én eller flere filer",
