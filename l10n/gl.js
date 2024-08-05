@@ -204,7 +204,7 @@ OC.L10N.register(
     "Some internal error occurred. Contact your sysadmin for more info." : "Produciuse un erro interno. Póñase en contacto coa administración do sistema para obter máis información.",
     "No Speech-to-Text provider found, install one from the app store to use this feature." : "Non se atopou ningún provedor de conversión de voz a texto. Instale un da tenda de aplicacións para usar esta función.",
     "Audio file not found." : "Non se atopou o ficheiro de son.",
-    "No permission to create recording file/directory, contact your sysadmin to resolve this issue." : "Sen permiso para crear un ficheiro/directorio de gravación, póñase en contacto coa administración do sistema para resolver esta incidencia.",
+    "No permission to create recording file/directory, contact your sysadmin to resolve this issue." : "Non ten permiso para crear un ficheiro/directorio de gravación, póñase en contacto coa administración do sistema para resolver esta incidencia.",
     "Failed to set visibility of image files; unknown user" : "Produciuse un fallo ao definir a visibilidade dos ficheiros de imaxe; usuario descoñecido",
     "Unknown error while retrieving prompt history." : "Produciuse un erro descoñecido ao recuperar o historial de indicacións.",
     "Context write" : "Redacción por contexto",
