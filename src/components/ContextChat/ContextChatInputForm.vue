@@ -64,7 +64,7 @@
 					:dropdown-should-open="() => false"
 					:label-outside="true"
 					:no-wrap="false"
-					@input="onScopeListMetaChange">
+					@input="onScopeListChange">
 					<template #selected-option="option">
 						<NcAvatar
 							:size="24"
@@ -87,7 +87,7 @@
 					:label-outside="true"
 					:append-to-body="false"
 					:options="providerOptions"
-					@input="onScopeListMetaChange">
+					@input="onScopeListChange">
 					<template #option="option">
 						<div class="select-option">
 							<NcAvatar
@@ -328,9 +328,9 @@ export default {
 				scopeListMeta: '[]',
 			})
 		},
-		onScopeListMetaChange(value) {
+		onScopeListChange(value) {
 			try {
-				this.onInputsChanged({ scopeListMeta: JSON.stringify(value) })
+				this.onInputsChanged({ scopeList: value.map(v => v.id), scopeListMeta: JSON.stringify(value) })
 			} catch (error) {
 				console.error('Failed to change scopeListMeta', error)
 			}
