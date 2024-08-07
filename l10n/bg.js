@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "User not found" : "Потребителят не е намерен ",
     "AI image generation" : "Генериране на изображение с помощта на изкуствен интелект",
+    "Artificial Intelligence" : "Изкуствен интелект",
     "Try again" : "Опитай отново",
     "Close" : "Затваряне",
     "New conversation" : "Нов разговор",
