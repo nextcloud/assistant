@@ -349,6 +349,7 @@ class ChattyLLMController extends Controller {
 	 * @return JSONResponse
 	 * @throws \OCP\DB\Exception
 	 */
+	#[NoAdminRequired]
 	public function checkMessageGenerationTask(int $taskId, int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -437,6 +438,7 @@ class ChattyLLMController extends Controller {
 		}
 	}
 
+	#[NoAdminRequired]
 	public function checkTitleGenerationTask(int $taskId, int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
