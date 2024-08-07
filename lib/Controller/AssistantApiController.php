@@ -173,6 +173,7 @@ class AssistantApiController extends OCSController {
 				'filePath' => $fileInfo['filePath'],
 			]);
 		} catch (\Exception $e) {
+			$this->logger->error('Failed to store input file for assistant task', ['exception' => $e]);
 			return new DataResponse('Failed to store the input file: ' . $e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}
 	}
