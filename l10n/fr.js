@@ -120,6 +120,7 @@ OC.L10N.register(
     "Result {index}" : "Résultat {index}",
     "Record Audio" : "Enregistrement audio",
     "Choose Audio File" : "Choisissez un fichier audio",
+    "Reset recorded audio" : "Réinitialiser l'audio enregistré",
     "No audio file selected" : "Aucun fichier audio sélectionné",
     "Selected Audio File:" : "Fichier audio sélectionné :",
     "Choose audio File" : "Choisir un fichier audio",
