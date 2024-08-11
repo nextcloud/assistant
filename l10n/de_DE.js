@@ -56,7 +56,7 @@ OC.L10N.register(
     "Chat User Instructions for Title Generation" : "Chat-Benutzeranleitung zur Titelerstellung",
     "It is passed on to the LLMs to let it know what to do" : "Es wird an die LLMs weitergegeben, um ihnen mitzuteilen, was zu durchzuführen ist",
     "\"{user}\" is a placeholder for the user's display name here as well." : "Auch hier ist \"{user}“ ein Platzhalter für den Anzeigenamen des Benutzers.",
-    "Last N messages to consider for chat completions" : "Die letzten n Nachrichten, die für den Chatabschluss berücksichtigt werden sollen",
+    "Last N messages to consider for chat completions" : "Die letzten n Nachrichten, die für Chatabschlüsse berücksichtigt werden sollen",
     " This includes the user instructions and the LLM's messages" : "Hierzu zählen die Benutzerhinweise und die Meldungen des LLM",
     "Number of messages to consider for chat completions (excluding the user instructions, which is always considered)" : "Anzahl der Nachrichten, die für den Chatabschluss berücksichtigt werden sollen (ausgenommen Benutzeranweisungen, die immer berücksichtigt werden)",
     "Assistant admin options saved" : "Assistenten-Administrationseinstellungen gespeichert",
