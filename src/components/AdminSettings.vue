@@ -4,6 +4,7 @@
 			<AssistantIcon class="icon" />
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
+    <p><a href="https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html">{{ t('assistant', 'Find more details on how to set up Assistant and recommended backends in the Administration documentation.') }}</a></p>
 		<div id="assistant-content">
 			<div>
 				<h3>
@@ -31,8 +32,12 @@
 						<div v-if="!state.free_prompt_task_type_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>
-								{{ t('assistant', 'To enable this feature, please install an AI text processing provider for the free prompt task type.') }}
+								{{ t('assistant', 'To enable this feature, please install an AI text processing provider for the free prompt task type:') }}
 							</span>
+              <ul>
+                <li><a href="https://github.com/nextcloud/llm2#readme">Local Large language model app</a></li>
+                <li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+              </ul>
 						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
@@ -45,8 +50,12 @@
 						<div v-if="!state.text_to_image_picker_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>
-								{{ t('assistant', 'To enable this feature, please install a text-to-image provider.') }}
+								{{ t('assistant', 'To enable this feature, please install a text-to-image provider:') }}
 							</span>
+              <ul>
+                <li><a href="https://github.com/nextcloud/text2image_stablediffusion#readme">Local Text-To-Image StableDiffusion</a></li>
+                <li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+              </ul>
 						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
@@ -59,8 +68,12 @@
 						<div v-if="!state.speech_to_text_picker_available" class="checkbox-text">
 							<InformationOutlineIcon class="icon" />
 							<span>
-								{{ t('assistant', 'To enable this feature, please install a speech-to-text provider.') }}
+								{{ t('assistant', 'To enable this feature, please install a speech-to-text provider:') }}
 							</span>
+              <ul>
+                <li><a href="https://github.com/nextcloud/stt_whisper2#readme">Local Speech-To-Text Whisper</a></li>
+                <li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+              </ul>
 						</div>
 					</div>
 				</NcCheckboxRadioSwitch>

@@ -34,7 +34,7 @@ This means you have complete freedom over which service/software will actually r
 
 ### Text processing providers
 
-So far, the [Large language model](https://github.com/nextcloud/llm#readme)
+So far, the [Local Large language model](https://github.com/nextcloud/llm2#readme)
 and the [OpenAi/LocalAI integration](https://apps.nextcloud.com/apps/integration_openai) apps
 include text processing providers to:
 * Summarize
@@ -55,6 +55,8 @@ Known providers:
 Known providers:
 * [OpenAi/LocalAI integration](https://apps.nextcloud.com/apps/integration_openai)
 * [Local Whisper Speech-To-Text](https://apps.nextcloud.com/apps/stt_whisper)
+
+More details on how to set this up in the [admin docs](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html)
 ]]>	</description>
 	<version>2.0.2</version>
 	<licence>agpl</licence>
