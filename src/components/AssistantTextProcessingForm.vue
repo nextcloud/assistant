@@ -10,7 +10,6 @@
 		<TaskTypeSelect
 			:value.sync="mySelectedTaskTypeId"
 			class="task-custom-select"
-			:inline="5"
 			:options="sortedTaskTypes"
 			@update:value="onTaskTypeUserChange" />
 		<div v-if="showHistory"
@@ -38,14 +37,6 @@
 				@load-task="onHistoryLoadTask" />
 		</div>
 		<div v-else class="task-input-output-form">
-			<!--h2 v-if="selectedTaskType"
-				class="task-name">
-				{{ selectedTaskType.name }}
-			</h2>
-			<span v-if="selectedTaskType"
-				class="task-description">
-				{{ selectedTaskType.description }}
-			</span-->
 			<AssistantFormInputs v-if="selectedTaskType"
 				:inputs.sync="myInputs"
 				:selected-task-id="selectedTaskId"
