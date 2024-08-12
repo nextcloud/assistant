@@ -7,7 +7,7 @@
 		:label="field.description"
 		:placeholder="field.placeholder ?? field.description"
 		:title="field.name"
-		@update:value="$emit('update:value', $event)" />
+		@update:value="onUpdateValue" />
 </template>
 
 <script>
@@ -58,6 +58,10 @@ export default {
 	},
 
 	methods: {
+		onUpdateValue(newValue) {
+			console.debug('[Assistant] new text value', newValue)
+			this.$emit('update:value', newValue?.trim())
+		},
 	},
 }
 </script>

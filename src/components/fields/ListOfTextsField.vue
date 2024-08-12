@@ -99,9 +99,9 @@ export default {
 	methods: {
 		onItemValueChanged(i, itemValue) {
 			const newValue = this.arrayValue.slice()
-			newValue[i] = itemValue
+			newValue[i] = itemValue?.trim()
 			this.$emit('update:value', newValue)
-			console.debug('onvaluechanggeeee', i, itemValue, newValue)
+			console.debug('[Assistant] on item value change', i, itemValue, newValue)
 		},
 		onDeleteItem(i) {
 			if (this.arrayValue.length === 1 && i === 0) {
