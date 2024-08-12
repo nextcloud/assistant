@@ -8,7 +8,7 @@
 			@click="onTaskSelected(t)">
 			{{ t.name }}
 		</NcButton>
-		<NcActions v-if="actionTypes.length > 0"
+		<NcActions v-if="!onlyInline && actionTypes.length > 0"
 			:force-menu="true"
 			:container="$refs.taskTypeSelect">
 			<NcActionButton v-for="(t, i) in actionTypes"
@@ -49,9 +49,13 @@ export default {
 			type: Array,
 			required: true,
 		},
+		/**
+		 * Number of inline elements
+		 * All elements are inline if this prop is null
+		 */
 		inline: {
-			type: Number,
-			default: 3,
+			type: [Number, null],
+			default: null,
 		},
 	},
 
@@ -66,7 +70,13 @@ export default {
 	},
 
 	computed: {
+		onlyInline() {
+			return this.inline === null
+		},
 		buttonTypes() {
+			if (this.onlyInline) {
+				return this.options
+			}
 			// extra button replaces the last one
 			if (this.extraButtonType !== null) {
 				const types = this.options.slice(0, this.inline - 1)
@@ -104,6 +114,9 @@ export default {
 
 	methods: {
 		moveSelectedIfInMenu() {
+			if (this.onlyInline) {
+				return
+			}
 			// if the initially selected value is in the dropdown, get it out
 			const selectedAction = this.actionTypes.find(a => a.id === this.value)
 			if (this.actionTypes.find(a => a.id === this.value)) {
