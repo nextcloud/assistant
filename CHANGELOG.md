@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.0.3 – 2024-08-13
+
+### Changed
+
+- Show all task types inline @julien-nc [#109](https://github.com/nextcloud/assistant/pull/109)
+- More links to docs @marcelklehr [#108](https://github.com/nextcloud/assistant/pull/108)
+
+### Fixed
+
+- Populate scopeList with scopeListMeta on select event @kyteinsky [#105](https://github.com/nextcloud/assistant/pull/105)
+- More error log @marcelklehr [#107](https://github.com/nextcloud/assistant/pull/107)
+- Don't require Admin access for Chat with AI @marcelklehr [#106](https://github.com/nextcloud/assistant/pull/106)
+- Trim text values @julien-nc [#110](https://github.com/nextcloud/assistant/pull/110)
+- Avoid colon in uploaded file names @julien-nc [#111](https://github.com/nextcloud/assistant/pull/111)
+
 ## 2.0.2 – 2024-07-26
 
 ### Added
