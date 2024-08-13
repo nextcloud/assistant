@@ -4,6 +4,7 @@ namespace OCA\Assistant\Service;
 
 use DateTime;
 use Html2Text\Html2Text;
+use OC\User\NoUserException;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\TaskNotificationMapper;
 use OCA\Assistant\ResponseDefinitions;
@@ -14,12 +15,14 @@ use OCP\DB\Exception;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
+use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ITempManager;
 use OCP\Lock\LockedException;
+use OCP\PreConditionNotMetException;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
 use OCP\TaskProcessing\EShapeType;
@@ -201,15 +204,33 @@ class AssistantService {
 		return $types;
 	}
 
+	/**
+	 * @param string $userId
+	 * @param string|null $taskTypeId
+	 * @return array
+	 * @throws NotFoundException
+	 * @throws TaskProcessingException
+	 */
 	public function getUserTasks(string $userId, ?string $taskTypeId = null): array {
 		return $this->taskProcessingManager->getUserTasks($userId, $taskTypeId);
 	}
 
+	/**
+	 * @param string $userId
+	 * @param string $tempFileLocation
+	 * @param string|null $filename
+	 * @return array
+	 * @throws NotPermittedException
+	 * @throws InvalidPathException
+	 * @throws \OCP\Files\NotFoundException
+	 */
 	public function storeInputFile(string $userId, string $tempFileLocation, ?string $filename = null): array {
 		$assistantDataFolder = $this->getAssistantDataFolder($userId);
 
-		$date = (new DateTime())->format('Y-m-d_H:i:s');
-		$targetFileName = $filename === null ? $date : ($date . ' ' . $filename);
+		$formattedDate = (new DateTime())->format('Y-m-d_H.i.s');
+		$targetFileName = $filename === null
+			? $formattedDate
+			: ($formattedDate . ' ' . str_replace(':', '.', $filename));
 		$targetFile = $assistantDataFolder->newFile($targetFileName, fopen($tempFileLocation, 'rb'));
 
 		return [
@@ -218,6 +239,14 @@ class AssistantService {
 		];
 	}
 
+	/**
+	 * @param string $userId
+	 * @return Folder
+	 * @throws NotPermittedException
+	 * @throws \OCP\Files\NotFoundException
+	 * @throws PreConditionNotMetException
+	 * @throws NoUserException
+	 */
 	public function getAssistantDataFolder(string $userId): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 
@@ -235,6 +264,13 @@ class AssistantService {
 		return $dataFolder;
 	}
 
+	/**
+	 * @param string $userId
+	 * @param int $try
+	 * @return Folder
+	 * @throws NoUserException
+	 * @throws NotPermittedException
+	 */
 	private function createAssistantDataFolder(string $userId, int $try = 0): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		if ($try === 0) {
@@ -254,6 +290,13 @@ class AssistantService {
 		return $userFolder->newFolder($folderPath);
 	}
 
+	/**
+	 * @param string $userId
+	 * @param int $fileId
+	 * @return File|null
+	 * @throws NoUserException
+	 * @throws NotPermittedException
+	 */
 	public function getUserFile(string $userId, int $fileId): ?File {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		$file = $userFolder->getFirstNodeById($fileId);
@@ -266,6 +309,15 @@ class AssistantService {
 		return null;
 	}
 
+	/**
+	 * @param string $userId
+	 * @param int $fileId
+	 * @return array|null
+	 * @throws InvalidPathException
+	 * @throws NoUserException
+	 * @throws NotPermittedException
+	 * @throws \OCP\Files\NotFoundException
+	 */
 	public function getUserFileInfo(string $userId, int $fileId): ?array {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		$file = $userFolder->getFirstNodeById($fileId);
@@ -316,6 +368,21 @@ class AssistantService {
 		return $node;
 	}
 
+	/**
+	 * @param string $userId
+	 * @param int $ocpTaskId
+	 * @param int $fileId
+	 * @return string
+	 * @throws Exception
+	 * @throws InvalidPathException
+	 * @throws LockedException
+	 * @throws NoUserException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 * @throws PreConditionNotMetException
+	 * @throws TaskProcessingException
+	 * @throws \OCP\Files\NotFoundException
+	 */
 	public function shareOutputFile(string $userId, int $ocpTaskId, int $fileId): string {
 		$taskOutputFile = $this->getTaskOutputFile($userId, $ocpTaskId, $fileId);
 		$assistantDataFolder = $this->getAssistantDataFolder($userId);
@@ -346,6 +413,12 @@ class AssistantService {
 		return $shareToken;
 	}
 
+	/**
+	 * @param File $file
+	 * @return string
+	 * @throws LockedException
+	 * @throws NotPermittedException
+	 */
 	private function getTargetFileName(File $file): string {
 		$mime = mime_content_type($file->fopen('rb'));
 		$name = $file->getName();
@@ -362,6 +435,11 @@ class AssistantService {
 		return $name . $ext;
 	}
 
+	/**
+	 * @param Task $task
+	 * @return array
+	 * @throws NotFoundException
+	 */
 	private function extractFileIdsFromTask(Task $task): array {
 		$ids = [];
 		$taskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
@@ -415,6 +493,7 @@ class AssistantService {
 
 	/**
 	 * Sanitize inputs for storage based on the input type
+	 *
 	 * @param string $type
 	 * @param array $inputs
 	 * @return array
@@ -587,6 +666,10 @@ class AssistantService {
 		return $outText;
 	}
 
+	/**
+	 * @param string $content
+	 * @return string
+	 */
 	private function parseRtfDocument(string $content): string {
 		// henck/rtf-to-html
 		$document = new Document($content);
