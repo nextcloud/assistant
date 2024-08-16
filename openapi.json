@@ -309,15 +309,6 @@
                 ],
                 "parameters": [
                     {
-                        "name": "taskTypeId",
-                        "in": "query",
-                        "description": "Task type id. If null, tasks of all task types will be retrieved",
-                        "schema": {
-                            "type": "string",
-                            "nullable": true
-                        }
-                    },
-                    {
                         "name": "apiVersion",
                         "in": "path",
                         "required": true,
@@ -327,6 +318,15 @@
                                 "v1"
                             ],
                             "default": "v1"
+                        }
+                    },
+                    {
+                        "name": "taskTypeId",
+                        "in": "query",
+                        "description": "Task type id. If null, tasks of all task types will be retrieved",
+                        "schema": {
+                            "type": "string",
+                            "nullable": true
                         }
                     },
                     {
@@ -431,16 +431,26 @@
                         "basic_auth": []
                     }
                 ],
-                "parameters": [
-                    {
-                        "name": "filePath",
-                        "in": "query",
-                        "description": "Path of the file to parse in the user's storage",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "filePath"
+                                ],
+                                "properties": {
+                                    "filePath": {
+                                        "type": "string",
+                                        "description": "Path of the file to parse in the user's storage"
+                                    }
+                                }
+                            }
                         }
-                    },
+                    }
+                },
+                "parameters": [
                     {
                         "name": "apiVersion",
                         "in": "path",
@@ -679,16 +689,24 @@
                         "basic_auth": []
                     }
                 ],
-                "parameters": [
-                    {
-                        "name": "filename",
-                        "in": "query",
-                        "description": "The input file name",
-                        "schema": {
-                            "type": "string",
-                            "nullable": true
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "filename": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "description": "The input file name"
+                                    }
+                                }
+                            }
                         }
-                    },
+                    }
+                },
+                "parameters": [
                     {
                         "name": "apiVersion",
                         "in": "path",
