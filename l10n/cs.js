@@ -39,6 +39,7 @@ OC.L10N.register(
     "Submit" : "Odeslat",
     "Delete message" : "Smazat zprávu",
     "Choose" : "Vybrat",
+    "Clear Selection" : "Vyčistit  výběr",
     "No suitable providers are available. They must first be enabled by your administrator." : "Nejsou k dispozici příhodní poskytovatelé. Je třeba, aby tito byli nejprve zapnutí vaším správcem.",
     "Assistant options saved" : "Předvolby pro Asistenta uloženy",
     "Failed to save assistant options" : "Předvolby pro asistenta se nepodařilo uložit",
