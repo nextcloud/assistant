@@ -179,12 +179,12 @@ export default {
 		max-width: 150px;
 		height: 34px;
 		width: unset;
+		background-color: var(--color-main-background) !important;
+		box-shadow: unset !important;
 
 		.ar-recorder {
 			display: none;
 		}
-		background-color: var(--color-main-background) !important;
-		box-shadow: unset !important;
 		.ar-content {
 			padding: 0;
 			height: 100%;
