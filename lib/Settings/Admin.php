@@ -37,7 +37,6 @@ class Admin implements ISettings {
 
 		$freePromptPickerEnabled = $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
-		$maxImageGenerationIdleTime = (int) $this->config->getAppValue(Application::APP_ID, 'max_image_generation_idle_time', (string) Application::DEFAULT_MAX_IMAGE_GENERATION_IDLE_TIME);
 
 		$speechToTextEnabled = $this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$chattyLLMUserInstructions = $this->config->getAppValue(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS);
@@ -49,7 +48,6 @@ class Admin implements ISettings {
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImageAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
-			'max_image_generation_idle_time' => $maxImageGenerationIdleTime,
 			'free_prompt_task_type_available' => $freePromptTaskTypeAvailable,
 			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 			'speech_to_text_picker_available' => $speechToTextAvailable,
