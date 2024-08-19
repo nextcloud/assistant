@@ -61,6 +61,7 @@ OC.L10N.register(
     "You" : "Du",
     "Delete message" : "Nachricht löschen",
     "Choose" : "Auswählen",
+    "Clear Selection" : "Auswahl leeren",
     "No suitable providers are available. They must first be enabled by your administrator." : "Keine geeigneten Anbieter verfügbar. Diese müssen zunächst von deiner Administration aktiviert werden.",
     "Assistant options saved" : "Assistenteneinstellungen gespeichert",
     "Failed to save assistant options" : "Fehler beim Speichern der Assistenteneinstellungen",
