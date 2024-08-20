@@ -64,6 +64,7 @@ OC.L10N.register(
     "Image file not found" : "Képfájl nem található",
     "Type some text" : "Gépeljen be szöveget",
     "Reset" : "Alaphelyzetbe állítás",
+    "Audio transcription" : "Hang átírása",
     "Text generation error" : "Szöveg generálás hiba",
     "Unknown text generation API error" : "Ismeretlen szöveggenerálás API hiba",
     "Prompt" : "Promtp",
