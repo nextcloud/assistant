@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2cb47e073c2bf1c487c4e986bb98e2a0",
+    "content-hash": "0ca6f4f9023891c92d09312fec397405",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -105,20 +105,20 @@
         },
         {
             "name": "html2text/html2text",
-            "version": "4.3.1",
+            "version": "4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mtibben/html2text.git",
-                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c"
+                "reference": "3b443cbe302b52eb5806a21a9dbd79524203970a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtibben/html2text/zipball/61ad68e934066a6f8df29a3d23a6460536d0855c",
-                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "url": "https://api.github.com/repos/mtibben/html2text/zipball/3b443cbe302b52eb5806a21a9dbd79524203970a",
+                "reference": "3b443cbe302b52eb5806a21a9dbd79524203970a",
                 "shasum": ""
             },
             "require-dev": {
-                "phpunit/phpunit": "~4"
+                "phpunit/phpunit": "~4|^9.0"
             },
             "suggest": {
                 "ext-mbstring": "For best performance",
@@ -127,10 +127,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Html2Text\\": [
-                        "src/",
-                        "test/"
-                    ]
+                    "Html2Text\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -140,9 +137,9 @@
             "description": "Converts HTML to formatted plain text",
             "support": {
                 "issues": "https://github.com/mtibben/html2text/issues",
-                "source": "https://github.com/mtibben/html2text/tree/4.3.1"
+                "source": "https://github.com/mtibben/html2text/tree/4.3.2"
             },
-            "time": "2020-04-16T23:44:31+00:00"
+            "time": "2024-08-20T02:43:29+00:00"
         },
         {
             "name": "phpoffice/math",
@@ -596,16 +593,16 @@
         },
         {
             "name": "nextcloud/openapi-extractor",
-            "version": "dev-main",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nextcloud/openapi-extractor.git",
-                "reference": "cdfedf4382b4f9d2a90f6bb1578f6a590017944b"
+                "url": "https://github.com/nextcloud-releases/openapi-extractor.git",
+                "reference": "88e347097db28b6e3f8f3c221502b80a4f455b1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/openapi-extractor/zipball/cdfedf4382b4f9d2a90f6bb1578f6a590017944b",
-                "reference": "cdfedf4382b4f9d2a90f6bb1578f6a590017944b",
+                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/88e347097db28b6e3f8f3c221502b80a4f455b1f",
+                "reference": "88e347097db28b6e3f8f3c221502b80a4f455b1f",
                 "shasum": ""
             },
             "require": {
@@ -619,7 +616,6 @@
                 "nextcloud/coding-standard": "^1.2",
                 "nextcloud/ocp": "dev-master"
             },
-            "default-branch": true,
             "bin": [
                 "generate-spec",
                 "merge-specs"
@@ -630,25 +626,16 @@
                     "OpenAPIExtractor\\": "src"
                 }
             },
-            "scripts": {
-                "lint": [
-                    "find . -name \\*.php -not -path './tests/*' -not -path './vendor/*' -not -path './build/*' -print0 | xargs -0 -n1 php -l && php -l generate-spec && php -l merge-specs"
-                ],
-                "cs:check": [
-                    "php-cs-fixer fix --dry-run --diff"
-                ],
-                "cs:fix": [
-                    "php-cs-fixer fix"
-                ],
-                "test:unit": [
-                    "cd tests && ../generate-spec"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "description": "A tool for extracting OpenAPI specifications from Nextcloud source code",
             "support": {
-                "source": "https://github.com/nextcloud/openapi-extractor/tree/main",
-                "issues": "https://github.com/nextcloud/openapi-extractor/issues"
+                "issues": "https://github.com/nextcloud-releases/openapi-extractor/issues",
+                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.0.0"
             },
-            "time": "2024-08-05T15:03:39+00:00"
+            "time": "2024-08-20T16:46:27+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -2600,8 +2587,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "nextcloud/ocp": 20,
-        "nextcloud/openapi-extractor": 20
+        "nextcloud/ocp": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

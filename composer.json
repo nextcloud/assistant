@@ -27,18 +27,12 @@
 		"test:unit": "phpunit --config tests/phpunit.xml",
 		"openapi": "generate-spec --verbose"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/nextcloud/openapi-extractor"
-		}
-	],
 	"require-dev": {
 		"nextcloud/coding-standard": "^1.1",
 		"psalm/phar": "^5.16",
 		"nextcloud/ocp": "dev-master",
 		"phpunit/phpunit": "^9.5",
-		"nextcloud/openapi-extractor": "dev-main"
+		"nextcloud/openapi-extractor": "^1.0.0"
 	},
 	"config": {
 		"sort-packages": true,
