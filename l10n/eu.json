@@ -64,6 +64,7 @@
     "No Speech-to-Text provider found, install one from the app store to use this feature." : "Ez da ahotsetik testurako hornitzailerik aurkitu, instalatu bat aplikazio dendatik ezaugarri hau erabiltzeko.",
     "Audio file not found." : "Ez da audio fitxategia aurkitu.",
     "No permission to create recording file/directory, contact your sysadmin to resolve this issue." : "Ez dago baimenik grabazioen fitxategi/karpeta sortzeko, jarri harremanetan zure sistemaren administratzailearekin arazo hau konpontzeko..",
+    "Context write" : "Testuingurua idaztea",
     "Writes text in a given style based on the provided source material." : "Testua estilo jakin batean idazten du, emandako iturri-materialean oinarrituta.",
     "Transcribe" : "Transkribatu",
     "Generate image" : "Sortu irudia",
