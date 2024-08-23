@@ -6,7 +6,7 @@
 			<div class="actions">
 				<div v-if="progress !== null"
 					class="progress">
-					<span>{{ progress }}%</span>
+					<span>{{ formattedProgress }} %</span>
 					<NcProgressBar
 						:value="progress" />
 				</div>
@@ -64,6 +64,12 @@ export default {
 	},
 
 	computed: {
+		formattedProgress() {
+			if (this.progress !== null) {
+				return this.progress.toFixed(2)
+			}
+			return null
+		},
 	},
 
 	mounted() {
