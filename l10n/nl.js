@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "User not found" : "Gebruiker niet gevonden",
     "View results" : "Bekijk resultaten",
+    "Artificial Intelligence" : "Artificiële Intelligentie",
     "Try again" : "Probeer opnieuw",
     "Close" : "Sluit",
     "Delete" : "Verwijder",
