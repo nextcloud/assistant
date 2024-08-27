@@ -294,7 +294,7 @@ export function handleNotification(event) {
 async function showAssistantTaskResult(taskId) {
 	getTask(taskId).then(response => {
 		console.debug('showing results for task', response.data?.ocs?.data?.task)
-		openAssistantTask(response.data?.ocs?.data?.task)
+		openAssistantTask(response.data?.ocs?.data?.task, {})
 	}).catch(error => {
 		if (error.response?.status === 401) {
 			showError(t('assistant', 'Please log in to view the task result'))
@@ -315,7 +315,7 @@ async function showAssistantTaskResult(taskId) {
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form
  * @return {Promise<void>}
  */
-export async function openAssistantTask(task, { isInsideViewer = undefined, actionButtons = undefined }) {
+export async function openAssistantTask(task, { isInsideViewer = undefined, actionButtons = undefined } = {}) {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
 	Vue.mixin({ methods: { t, n } })
 	const { showError } = await import(/* webpackChunkName: "dialogs-lazy" */'@nextcloud/dialogs')
