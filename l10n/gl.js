@@ -142,7 +142,7 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "You will receive a notification when it has finished" : "Recibirá unha notificación cando remate",
     "Your task has been scheduled" : "A súa tarefa foi programada",
-    "Nothing yet" : "Aínda non hai nada",
+    "Nothing yet" : "Aínda non hai ren",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Aínda non enviou ningunha tarefa «{taskTypeName}»",
     "Succeeded" : "Satisfactoriamente",
     "Cancelled" : "Cancelado",
