@@ -426,7 +426,8 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 }
 
 export async function addAssistantMenuEntry() {
-	const headerRight = document.querySelector('#header .header-right')
+	// changed in NC 31 header-right -> header-end
+	const headerRight = document.querySelector('#header .header-right') ?? document.querySelector('#header .header-end')
 	const menuEntry = document.createElement('div')
 	menuEntry.id = 'assistant'
 	headerRight.prepend(menuEntry)
