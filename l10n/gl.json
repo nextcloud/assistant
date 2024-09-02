@@ -251,7 +251,7 @@
     "The text generation task was scheduled to run in the background." : "A tarefa de xeración de texto foi programada para executarse en segundo plano.",
     "Estimated completion time: " : "Tempo restante estimado de finalización:",
     "This can take a while…" : "Isto pode levar un tempo…",
-    "Some generations are still being processed in the background! Showing finished generations." : "Algunhas xeracións aínda están a ser procesadas en segundo plano! Amosando as xeracións acabadas.",
+    "Some generations are still being processed in the background! Showing finished generations." : "Algunhas xeracións aínda están a seren procesadas en segundo plano! Amosando as xeracións rematadas.",
     "Loading generations…" : "Cargando xeracións…",
     "Include prompt in the final result" : "Incluír a indicación no resultado final",
     "Unexpected server response" : "Resposta non agardada do servidor",
