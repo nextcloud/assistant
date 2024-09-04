@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.0.4 – 2024-09-04
+
+### Fixed
+
+- Do not send the user's display name in the chat instruct prompts by default @julien-nc [#116](https://github.com/nextcloud/assistant/pull/116)
+- Only show 2 digits for the task progress @julien-nc [#119](https://github.com/nextcloud/assistant/pull/119)
+- Missing destructured param when calling openAssistantTask @julien-nc [#120](https://github.com/nextcloud/assistant/pull/120)
+- Adjust to html header structure change in 31
+
 ## 2.0.3 – 2024-08-13
 
 ### Changed
