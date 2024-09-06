@@ -148,7 +148,7 @@ export default {
 				}
 				return t('assistant', 'This task is scheduled')
 			} else if (this.task.status === STATUS.running) {
-				return t('assistant', 'Running...')
+				return t('assistant', 'Running…')
 			} else if (this.task.status === STATUS.failed) {
 				return t('assistant', 'Failed') + ': ' + (this.task.output ?? t('assistant', 'Unknown error'))
 			}
