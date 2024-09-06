@@ -11,7 +11,7 @@
 				</NcAppNavigationNew>
 				<div v-if="sessions == null" class="unloaded-sessions">
 					<NcLoadingIcon :size="30" />
-					{{ t('assistant', 'Loading conversations...') }}
+					{{ t('assistant', 'Loading conversations…') }}
 				</div>
 				<div v-else-if="sessions != null && sessions.length === 0" class="unloaded-sessions">
 					{{ t('assistant', 'No conversations yet') }}
