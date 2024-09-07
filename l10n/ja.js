@@ -179,7 +179,6 @@ OC.L10N.register(
     "Copy result" : "結果をコピー",
     "Audio input" : "音声入力",
     "Unknown input" : "不明な入力",
-    "Running..." : "実行中...",
     "Unknown error" : "不明なエラー",
     "Task result was copied to clipboard" : "タスク結果はクリップボードにコピーされた",
     "Image generation" : "画像の生成",

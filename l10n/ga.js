@@ -274,7 +274,6 @@ OC.L10N.register(
     "Copy result" : "Cóipeáil an toradh",
     "Audio input" : "Ionchur fuaime",
     "Unknown input" : "Ionchur anaithnid",
-    "Running..." : "Ag rith...",
     "Unknown error" : "Earráid anaithnid",
     "Task result was copied to clipboard" : "Cóipeáladh toradh an taisc chuig an ngearrthaisce",
     "Image generation" : "Giniúint íomhá",

@@ -274,7 +274,6 @@ OC.L10N.register(
     "Copy result" : "Sonucu kopyala",
     "Audio input" : "Ses girişi",
     "Unknown input" : "Giriş bilinmiyor",
-    "Running..." : "Yapılıyor...",
     "Unknown error" : "Sorun bilinmiyor",
     "Task result was copied to clipboard" : "Görev sonuçları panoya kopyalandı",
     "Image generation" : "Görsel oluşturma",
