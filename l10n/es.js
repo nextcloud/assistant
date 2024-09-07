@@ -179,7 +179,6 @@ OC.L10N.register(
     "Copy result" : "Copiar resultado",
     "Audio input" : "Entrada de audio",
     "Unknown input" : "Entrada desconocida",
-    "Running..." : "Ejecutando...",
     "Unknown error" : "Error desconocido",
     "Task result was copied to clipboard" : "El resultado de la tarea fue copiado al portapapeles",
     "Image generation" : "Generación de imágenes",

@@ -274,7 +274,6 @@ OC.L10N.register(
     "Copy result" : "Копирај резултат",
     "Audio input" : "Аудио улаз",
     "Unknown input" : "Непознати улаз",
-    "Running..." : "Извршава се…",
     "Unknown error" : "Непозната грешка",
     "Task result was copied to clipboard" : "Резултат задатка је копиран у клипборд",
     "Image generation" : "Генерисање слике",
