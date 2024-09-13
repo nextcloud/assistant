@@ -36,6 +36,7 @@ OC.L10N.register(
     "Type some text" : "Napíšte nejaký text",
     "Output" : "Výstup",
     "Reset" : "Resetovať",
+    "Audio input" : "Audio vstup",
     "Unknown error" : "Neznáma chyba",
     "Image generation" : "Generovanie obrázka",
     "Preview" : "Náhľad",
