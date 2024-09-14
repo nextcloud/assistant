@@ -272,6 +272,7 @@ OC.L10N.register(
     "Copy result" : "复制结果",
     "Audio input" : "音频输入",
     "Unknown input" : "未知输入",
+    "Running…" : "正在运行……",
     "Unknown error" : "未知错误",
     "Task result was copied to clipboard" : "任务结果已复制到剪贴板",
     "Image generation" : "图像生成",
