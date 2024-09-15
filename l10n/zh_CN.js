@@ -76,7 +76,7 @@ OC.L10N.register(
     "Type or paste the text to extract the topics from" : "输入或粘贴需要提取话题的文本",
     "landscape trees forest peaceful" : "风景 树木 森林 宁静",
     "a number" : "数字",
-    "Shakespeare or an example of the style" : "莎士比亚或类似风格的离子",
+    "Shakespeare or an example of the style" : "莎士比亚或类似风格的例子",
     "A description of what you need or some original content" : "您需要的或者一些原创的内容的描述",
     "Close" : "关闭",
     "Close Nextcloud Assistant" : "关闭云助手",
