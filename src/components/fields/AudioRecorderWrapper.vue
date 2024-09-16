@@ -26,7 +26,7 @@
 			</template>
 		</NcButton>
 		<div v-if="isRecording" class="recording-indicator fadeOutIn" />
-		<audio-recorder v-if="!resettingRecorder"
+		<!--audio-recorder v-if="!resettingRecorder"
 			v-show="isRecording"
 			ref="recorder"
 			class="recorder"
@@ -36,7 +36,7 @@
 			:show-upload-button="false"
 			:before-recording="onRecordStarts"
 			:after-recording="onRecordEnds"
-			mode="minimal" />
+			mode="minimal" /-->
 		<NcButton v-if="isRecording"
 			type="success"
 			:title="t('assistant', 'End recording and send')"
@@ -54,10 +54,10 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import VueAudioRecorder from 'vue2-audio-recorder'
+// import VueAudioRecorder from 'vue2-audio-recorder'
 
 import Vue from 'vue'
-Vue.use(VueAudioRecorder)
+// Vue.use(VueAudioRecorder)
 
 export default {
 	name: 'AudioRecorderWrapper',

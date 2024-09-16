@@ -55,6 +55,7 @@ class SpeechToTextReferenceListener implements IEventListener {
 			$speechToTextAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
 			if ($speechToTextAvailable) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-speechToTextReference');
+				Util::addStyle(Application::APP_ID, Application::APP_ID . '-speechToTextReference');
 			}
 		}
 	}

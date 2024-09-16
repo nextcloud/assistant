@@ -3,8 +3,8 @@ import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import { showError } from '@nextcloud/dialogs'
 
-__webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
-__webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
+// __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+// __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 window.assistantPollTimerId = null
 
 // TODO add param to lock on specific task type

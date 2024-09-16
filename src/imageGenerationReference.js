@@ -6,8 +6,8 @@ import { registerCustomPickerElement, NcCustomPickerRenderResult } from '@nextcl
 import { linkTo } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 
-__webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
-__webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
+// __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+// __webpack_public_path__ = linkTo('assistant', 'js/') // eslint-disable-line
 
 registerCustomPickerElement('assistant_image_generation', async (el, { providerId, accessible }) => {
 	const { default: Vue } = await import(/* webpackChunkName: "vue-lazy" */'vue')
