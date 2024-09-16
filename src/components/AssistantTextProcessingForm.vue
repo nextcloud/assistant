@@ -44,7 +44,11 @@
 				:show-advanced.sync="showAdvanced" />
 			<div v-if="hasOutput"
 				class="output">
-				<TaskTypeFields
+				<ContextChatOutputForm v-if="mySelectedTaskTypeId === 'context_chat:context_chat'"
+					class="output-fields"
+					:output-shape="selectedTaskType.outputShape"
+					:output="myOutputs" />
+				<TaskTypeFields v-else
 					class="output-fields"
 					:is-output="true"
 					:shape="selectedTaskType.outputShape"
@@ -120,20 +124,21 @@
 </template>
 
 <script>
-import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
-import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
 import HistoryIcon from 'vue-material-design-icons/History.vue'
+import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
+import ContextChatOutputForm from './ContextChat/ContextChatOutputForm.vue'
 import NoProviderEmptyContent from './NoProviderEmptyContent.vue'
 import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
@@ -169,6 +174,7 @@ export default {
 		ArrowLeftIcon,
 		NcNoteCard,
 		AssistantFormInputs,
+		ContextChatOutputForm,
 	},
 	provide() {
 		return {
