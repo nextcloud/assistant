@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 </template>
 
 <script>
-import checkSvg from '@mdi/svg/svg/check.svg'
+import checkSvg from '@mdi/svg/svg/check.svg?raw'
 
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'

@@ -56,7 +56,7 @@ import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 // import VueAudioRecorder from 'vue2-audio-recorder'
 
-import Vue from 'vue'
+// import Vue from 'vue'
 // Vue.use(VueAudioRecorder)
 
 export default {

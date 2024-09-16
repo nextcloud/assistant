@@ -1,6 +1,6 @@
 import { TASK_STATUS_STRING } from './constants.js'
-import { linkTo } from '@nextcloud/router'
-import { getRequestToken } from '@nextcloud/auth'
+// import { linkTo } from '@nextcloud/router'
+// import { getRequestToken } from '@nextcloud/auth'
 import { showError } from '@nextcloud/dialogs'
 
 // __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
