@@ -40,7 +40,6 @@ class FreePromptReferenceListener implements IEventListener {
 			$freePromptTaskTypeAvailable = array_key_exists(TextToText::ID, $availableTaskTypes);
 			if ($freePromptTaskTypeAvailable) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-textGenerationReference');
-				Util::addStyle(Application::APP_ID, Application::APP_ID . '-textGenerationReference');
 			}
 		}
 	}

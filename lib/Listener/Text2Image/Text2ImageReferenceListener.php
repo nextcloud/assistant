@@ -39,7 +39,6 @@ class Text2ImageReferenceListener implements IEventListener {
 			$textToImageAvailable = array_key_exists(TextToImage::ID, $availableTaskTypes);
 			if ($textToImageAvailable) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-imageGenerationReference');
-				Util::addStyle(Application::APP_ID, Application::APP_ID . '-imageGenerationReference');
 			}
 		}
 	}

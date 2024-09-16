@@ -52,6 +52,5 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
 		$this->initialStateService->provideInitialState('assistant-enabled', $assistantEnabled);
 		Util::addScript(Application::APP_ID, Application::APP_ID . '-main');
-		Util::addStyle(Application::APP_ID, Application::APP_ID . '-main');
 	}
 }
