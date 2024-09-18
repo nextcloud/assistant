@@ -22,7 +22,7 @@ OC.L10N.register(
     "Share" : "Cumpartzidura",
     "Advanced" : "Connoschèntzia avantzada",
     "Copy" : "Còpia",
-    "Reset" : "Torra a impostare",
+    "Reset" : "Riprìstinu",
     "Unknown error" : "Errore disconnotu",
     "Image generation" : "Generatzione de immàgines",
     "Advanced options" : "Sèberos avantzados",
