@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "Clear Selection",
     "Error fetching default provider key" : "Error fetching default provider key",
     "Error fetching providers" : "Error fetching providers",
+    "No sources referenced" : "No sources referenced",
     "No provider found" : "No provider found",
     "AI Providers need to be installed to use the Assistant" : "AI Providers need to be installed to use the Assistant",
     "tool" : "tool",

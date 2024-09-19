@@ -123,6 +123,7 @@
     "Clear Selection" : "Auswahl leeren",
     "Error fetching default provider key" : "Fehler beim Abrufen des Standardanbieterschlüssels",
     "Error fetching providers" : "Fehler beim Abrufen der Anbieter",
+    "No sources referenced" : "Keine Quellen referenziert",
     "No provider found" : "Kein Anbieter gefunden",
     "AI Providers need to be installed to use the Assistant" : "Um den Assistenten nutzen zu können, müssen KI-Anbieter installiert sein",
     "tool" : "Werkzeug",

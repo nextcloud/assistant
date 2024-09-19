@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "清除選擇",
     "Error fetching default provider key" : "擷取默認提供者密鑰時發生錯誤",
     "Error fetching providers" : "擷取提供者時發生錯誤",
+    "No sources referenced" : "沒有引用來源",
     "No provider found" : "找不到提供者",
     "AI Providers need to be installed to use the Assistant" : "必須安裝人工智慧提供者以使用小幫手",
     "tool" : "工具",
