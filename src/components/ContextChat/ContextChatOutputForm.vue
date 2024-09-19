@@ -76,7 +76,7 @@ export default {
 	computed: {
 		sources() {
 			try {
-				return JSON.parse(this.output.sources)
+				return this.output?.sources?.map(JSON.parse) ?? []
 			} catch (e) {
 				console.error('Failed to parse sources', e)
 				return []
