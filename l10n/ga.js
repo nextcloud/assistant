@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "Glan Roghnú",
     "Error fetching default provider key" : "Earráid agus eochair an tsoláthraí réamhshocraithe á fáil",
     "Error fetching providers" : "Earráid ag fáil soláthraithe",
+    "No sources referenced" : "Níor thagairt aon fhoinse",
     "No provider found" : "Níor aimsíodh aon soláthraí",
     "AI Providers need to be installed to use the Assistant" : "Ní mór Soláthraithe AI ​​a shuiteáil chun an Cúntóir a úsáid",
     "tool" : "uirlis",

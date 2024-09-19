@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "إلغاء التحديد",
     "Error fetching default provider key" : "حدث خطأ في جلب مفتاح المزود التلقائي",
     "Error fetching providers" : "حدث خطأ في جلب المزودين",
+    "No sources referenced" : "لم تتم الإشارة لأي مصادر",
     "No provider found" : "لا يوجد أي مزود",
     "AI Providers need to be installed to use the Assistant" : "يجب تثبيت مزودين للذكاء الاصطناعي حتى يتسنّى استعمال المُساعد",
     "tool" : "أداة",
