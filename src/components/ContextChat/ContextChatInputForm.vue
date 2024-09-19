@@ -249,11 +249,13 @@ export default {
 
 		// initialize the inputs if necessary
 		if (Object.keys(this.inputs).length === 0) {
-			this.$emit('update:inputs', {
-				prompt: '',
-				scopeType: _ScopeType.NONE,
-				scopeList: [],
-				scopeListMeta: '[]',
+			this.$nextTick(() => {
+				this.$emit('update:inputs', {
+					prompt: '',
+					scopeType: _ScopeType.NONE,
+					scopeList: [],
+					scopeListMeta: '[]',
+				})
 			})
 		}
 	},
