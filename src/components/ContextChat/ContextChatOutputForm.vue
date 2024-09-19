@@ -21,7 +21,7 @@
 				:append-to-body="false"
 				:dropdown-should-open="() => false">
 				<template #option="option">
-					<a class="select-option" :href="option.url">
+					<a class="select-option" :href="option.url" target="_blank">
 						<NcAvatar
 							:size="24"
 							:url="option.icon"
@@ -32,7 +32,7 @@
 					</a>
 				</template>
 				<template #selected-option="option">
-					<a class="select-option" :href="option.url">
+					<a class="select-option" :href="option.url" target="_blank">
 						<NcAvatar
 							:size="24"
 							:url="option.icon"
