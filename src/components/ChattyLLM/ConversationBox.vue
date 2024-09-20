@@ -8,7 +8,7 @@
 			</template>
 		</NoSession>
 		<NoSession v-else-if="loading.initialMessages"
-			:name="t('assistant', 'Loading messages...')"
+			:name="t('assistant', 'Loading messages…')"
 			description="">
 			<template #icon>
 				<NcLoadingIcon />

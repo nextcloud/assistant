@@ -126,7 +126,7 @@
 					</label>
 				</div>
 				<NcNoteCard type="info">
-					<p>{{ t('assistant', ' This includes the user instructions and the LLM\'s messages') }}</p>
+					<p>{{ t('assistant', 'This includes the user instructions and the LLM\'s messages') }}</p>
 				</NcNoteCard>
 				<NcTextField id="chat_last_n_messages"
 					class="text-field"
