@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "Seleção Clara",
     "Error fetching default provider key" : "Erro ao buscar a chave do provedor padrão",
     "Error fetching providers" : "Erro ao buscar provedores",
+    "No sources referenced" : "Nenhuma fonte referenciada",
     "No provider found" : "Nenhum provedor encontrado",
     "AI Providers need to be installed to use the Assistant" : "Os provedores de IA precisam ser instalados para usar o Assistente",
     "tool" : "ferramenta",
