@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "Seçimi temizle",
     "Error fetching default provider key" : "Varsayılan hizmet sağlayıcı anahtarı alınırken sorun çıktı",
     "Error fetching providers" : "Hizmet sağlayıcılar alınırken sorun çıktı",
+    "No sources referenced" : "Başvurulan bir kaynak yok",
     "No provider found" : "Herhangi bir hizmet sağlayıcı bulunamadı",
     "AI Providers need to be installed to use the Assistant" : "Yardımcıyı kullanabilmek için Yapay Zeka hizmeti sağlayıcıları kurulmuş olmalıdır",
     "tool" : "araç",

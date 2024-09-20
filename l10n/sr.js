@@ -125,6 +125,7 @@ OC.L10N.register(
     "Clear Selection" : "Уклони избор",
     "Error fetching default provider key" : "Грешка приликом преузимања подразумеваног кључа пружаоца услуге",
     "Error fetching providers" : "Грешка приликом преузимања листе пружаоца услуге",
+    "No sources referenced" : "Није указан ниједан извор",
     "No provider found" : "Није пронађен ниједан пружалац услуге",
     "AI Providers need to be installed to use the Assistant" : "Да би се користио Асистент, морају да буду инсталирани пружаоци AI услуге",
     "tool" : "алат",
