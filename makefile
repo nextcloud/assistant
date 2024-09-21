@@ -81,6 +81,7 @@ appstore: clean
 	--exclude=/src \
 	--exclude=translationfiles \
 	--exclude=webpack.* \
+	--exclude=/vite.* \
 	--exclude=stylelint.config.js \
 	--exclude=.eslintrc.js \
 	--exclude=.github \

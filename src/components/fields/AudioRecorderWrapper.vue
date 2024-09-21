@@ -3,44 +3,30 @@
 		<NcButton v-if="!isRecording"
 			ref="startRecordingButton"
 			:disabled="disabled"
-			@click="startRecording">
+			@click="start">
 			<template #icon>
 				<MicrophoneIcon />
 			</template>
 			{{ t('assistant', 'Start recording') }}
 		</NcButton>
-		<!--NcButton v-if="isRecording"
-			ref="stopRecordingButton"
-			@click="stopRecording">
-			<template #icon>
-				<StopIcon />
-			</template>
-			{{ t('assistant', 'Stop recording') }}
-		</NcButton-->
 		<NcButton v-if="isRecording"
 			type="error"
 			:title="t('assistant', 'Dismiss recording')"
-			@click="cancelRecording">
+			@click="abortRecording">
 			<template #icon>
 				<CloseIcon />
 			</template>
 		</NcButton>
-		<div v-if="isRecording" class="recording-indicator fadeOutIn" />
-		<audio-recorder v-if="!resettingRecorder"
-			v-show="isRecording"
-			ref="recorder"
-			class="recorder"
-			:attempts="1"
-			:time="300"
-			:show-download-button="false"
-			:show-upload-button="false"
-			:before-recording="onRecordStarts"
-			:after-recording="onRecordEnds"
-			mode="minimal" />
+		<div v-if="isRecording" class="recording">
+			<div class="recording--indicator fadeOutIn" />
+			<span class="time">
+				{{ parsedRecordTime }}
+			</span>
+		</div>
 		<NcButton v-if="isRecording"
 			type="success"
 			:title="t('assistant', 'End recording and send')"
-			@click="stopRecording">
+			@click="stop">
 			<template #icon>
 				<CheckIcon />
 			</template>
@@ -54,11 +40,14 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import VueAudioRecorder from 'vue2-audio-recorder'
 
-import Vue from 'vue'
-Vue.use(VueAudioRecorder)
+import { showError } from '@nextcloud/dialogs'
 
+import { MediaRecorder } from 'extendable-media-recorder'
+
+/**
+ * Slightly simpler than the talk NewMessageAudioRecorder
+ */
 export default {
 	name: 'AudioRecorderWrapper',
 
@@ -86,67 +75,135 @@ export default {
 
 	data() {
 		return {
-			// isRecording: false,
-			resettingRecorder: false,
-			ignoreNextRecording: false,
+			// The audio stream object
+			audioStream: null,
+			// The media recorder which generate the recorded chunks
+			mediaRecorder: null,
+			// The chunks array
+			chunks: [],
+			// The final audio file blob
+			blob: null,
+			// Switched to true if the recording is aborted
+			aborted: false,
+			// recordTimer
+			recordTimer: null,
+			// the record timer
+			recordTime: {
+				minutes: 0,
+				seconds: 0,
+			},
 		}
 	},
 
+	computed: {
+		parsedRecordTime() {
+			const seconds = this.recordTime.seconds.toString().length === 2 ? this.recordTime.seconds : `0${this.recordTime.seconds}`
+			const minutes = this.recordTime.minutes.toString().length === 2 ? this.recordTime.minutes : `0${this.recordTime.minutes}`
+			return `${minutes}:${seconds}`
+		},
+	},
+
+	watch: {
+		isRecording(newValue) {
+			console.debug('isRecording', newValue)
+		},
+	},
+
 	mounted() {
-		// const recordButton = this.$refs.startRecordingButton
-		// recordButton?.$el?.focus()
+	},
+
+	beforeDestroy() {
+		this.killStreams()
 	},
 
 	methods: {
-		resetRecording() {
-			this.ignoreNextRecording = false
-			// trick to remove the recorder and re-render it so the data is gone and its state is fresh
-			this.resettingRecorder = true
-			this.$nextTick(() => {
-				this.resettingRecorder = false
-				/*
-				this.$nextTick(() => {
-					const recordButton = this.$refs.startRecordingButton
-					recordButton?.$el?.focus()
-				})
-				*/
-			})
-		},
+		async start() {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+			this.mediaRecorder = new MediaRecorder(stream)
 
-		startRecording() {
-			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
-		},
+			// Add event handler to onstop
+			this.mediaRecorder.onstop = this.generateFile
 
-		stopRecording() {
-			this.$refs.recorder.$el.querySelector('.ar-recorder .ar-icon').click()
-		},
-
-		cancelRecording() {
-			this.ignoreNextRecording = true
-			this.stopRecording()
-		},
-
-		async onRecordStarts(e) {
-			// this.isRecording = true
-			this.$emit('update:is-recording', true)
-			this.$nextTick(() => {
-				const stopButton = this.$refs.stopRecordingButton
-				stopButton?.$el?.focus()
-			})
-		},
-
-		async onRecordEnds(e) {
-			// this.isRecording = false
-			this.$emit('update:is-recording', false)
-			if (!this.ignoreNextRecording) {
-				try {
-					this.$emit('new-recording', e.blob)
-				} catch (error) {
-					console.error('Recording error:', error)
-					this.$emit('new-recording', null)
-				}
+			// Add event handler to ondataavailable
+			this.mediaRecorder.ondataavailable = (e) => {
+				this.chunks.push(e.data)
 			}
-			this.resetRecording()
+
+			try {
+				// Start the recording
+				this.mediaRecorder.start()
+			} catch (exception) {
+				console.debug(exception)
+				this.aborted = true
+				this.stop()
+				this.killStreams()
+				this.resetComponentData()
+				showError(t('assistant', 'Error while recording audio'))
+				return
+			}
+
+			console.debug(this.mediaRecorder.state)
+
+			// Start the timer
+			this.recordTimer = setInterval(() => {
+				if (this.recordTime.seconds === 59) {
+					this.recordTime.minutes++
+					this.recordTime.seconds = 0
+				}
+				this.recordTime.seconds++
+			}, 1000)
+			// Forward an event to let the parent NewMessage component
+			// that there's an undergoing recording operation
+			this.$emit('update:is-recording', true)
+		},
+
+		stop() {
+			this.mediaRecorder.stop()
+			clearInterval(this.recordTimer)
+			this.$emit('update:is-recording', false)
+		},
+
+		/**
+		 * Generate the file
+		 */
+		generateFile() {
+			this.killStreams()
+			if (!this.aborted) {
+				this.blob = new Blob(this.chunks, { type: 'audio/mp3' })
+				this.$emit('new-recording', this.blob)
+				this.$emit('update:is-recording', false)
+			}
+			this.resetComponentData()
+		},
+
+		/**
+		 * Aborts the recording operation.
+		 */
+		abortRecording() {
+			this.aborted = true
+			this.stop()
+		},
+
+		/**
+		 * Resets this component to its initial state
+		 */
+		resetComponentData() {
+			this.audioStream = null
+			this.mediaRecorder = null
+			this.chunks = []
+			this.blob = null
+			this.aborted = false
+			this.recordTime = {
+				minutes: 0,
+				seconds: 0,
+			}
+		},
+
+		/**
+		 * Stop the audio streams
+		 */
+		killStreams() {
+			this.audioStream?.getTracks().forEach(track => track.stop())
 		},
 	},
 }
@@ -158,88 +215,33 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	.recording-indicator {
-		width: 16px;
-		height: 16px;
-		flex: 0 0 16px;
-		border-radius: 8px;
-		background-color: var(--color-error);
-	}
+	.recording {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 
-	@keyframes fadeOutIn {
-		0% { opacity:1; }
-		50% { opacity:.3; }
-		100% { opacity:1; }
-	}
-	.fadeOutIn {
-		animation: fadeOutIn 3s infinite;
-	}
+		&--indicator {
+			width: 16px;
+			height: 16px;
+			flex: 0 0 16px;
+			border-radius: 8px;
+			background-color: var(--color-error);
+		}
 
-	:deep(.recorder) {
-		max-width: 150px;
-		height: 34px;
-		width: unset;
-		background-color: var(--color-main-background) !important;
-		box-shadow: unset !important;
+		@keyframes fadeOutIn {
+			0% {
+				opacity: 1;
+			}
+			50% {
+				opacity: .3;
+			}
+			100% {
+				opacity: 1;
+			}
+		}
 
-		.ar-recorder {
-			display: none;
-		}
-		.ar-content {
-			padding: 0;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		.ar-content * {
-			color: var(--color-main-text) !important;
-		}
-		.ar-icon {
-			background-color: var(--color-main-background) !important;
-			fill: var(--color-main-text) !important;
-			border: 1px solid var(--color-border) !important;
-		}
-		.ar-recorder__duration {
-			margin: 0 0 0 0;
-			font-size: 20px;
-		}
-		.ar-recorder__time-limit {
-			position: unset !important;
-		}
-		.ar-player {
-			display: none;
-			&-bar {
-				border: 1px solid var(--color-border) !important;
-			}
-			.ar-line-control {
-				background-color: var(--color-background-dark) !important;
-				&__head {
-					background-color: var(--color-main-text) !important;
-				}
-			}
-			&__time {
-				font-size: 14px;
-			}
-			.ar-volume {
-				&__icon {
-					background-color: var(--color-main-background) !important;
-					fill: var(--color-main-text) !important;
-				}
-			}
-		}
-		.ar-records {
-			height: unset !important;
-			&__record {
-				border-bottom: 1px solid var(--color-border) !important;
-			}
-			&__record--selected {
-				background-color: var(--color-background-dark) !important;
-				border: 1px solid var(--color-border) !important;
-				.ar-icon {
-					background-color: var(--color-background-dark) !important;
-				}
-			}
+		.fadeOutIn {
+			animation: fadeOutIn 3s infinite;
 		}
 	}
 }
