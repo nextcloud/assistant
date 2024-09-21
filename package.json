@@ -8,9 +8,9 @@
 	},
 	"type": "module",
 	"scripts": {
-		"build": "vite --mode production build",
-		"dev": "vite --mode development build",
-		"watch": "vite --mode development build --watch",
+		"build": "NODE_ENV=production vite --mode production build",
+		"dev": "NODE_ENV=development vite --mode development build",
+		"watch": "NODE_ENV=development vite --mode development build --watch",
 		"lint": "eslint --ext .js,.vue src",
 		"lint:fix": "eslint --ext .js,.vue src --fix",
 		"stylelint": "stylelint src/**/*.vue src/**/*.scss src/**/*.css",
