@@ -15,6 +15,7 @@ OC.L10N.register(
     "Result" : "Rezultat",
     "Dismiss recording" : "Odbaci snimak",
     "End recording and send" : "Završi snimak i pošalji",
+    "Error while recording audio" : "Pogreška tijekom snimanja zvuka",
     "Choose a file" : "Odaberi datoteku",
     "No file selected" : "Nije odabrana nijedna datoteka",
     "Share" : "Dijeli",
