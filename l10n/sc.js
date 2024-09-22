@@ -16,6 +16,7 @@ OC.L10N.register(
     "Result" : "Resurtadu",
     "Dismiss recording" : "Iscarta sa registratzione",
     "End recording and send" : "Agabba sa registratzione e imbia",
+    "Error while recording audio" : "Errore in sa registratzione de s'àudio",
     "Choose file" : "Sèbera un'archìviu",
     "Choose a file" : "Sèbera un'archìviu",
     "No file selected" : "Perunu documentu seletzionadu",

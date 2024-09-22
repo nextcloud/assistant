@@ -22,6 +22,7 @@ OC.L10N.register(
     "Result" : "Risultato",
     "Dismiss recording" : "Annulla la registrazione",
     "End recording and send" : "Termina la registrazione e invia",
+    "Error while recording audio" : "Errore durante la registrazione dell'audio",
     "Choose file" : "Scegli file",
     "Choose a file" : "Scegli un file",
     "No file selected" : "Nessun file selezionato",
