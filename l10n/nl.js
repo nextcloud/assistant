@@ -24,6 +24,7 @@ OC.L10N.register(
     "Dismiss recording" : "Opname sluiten",
     "End recording and send" : "Beëindigen opname en versturen",
     "Error while recording audio" : "Fout tijdens opnemen audio",
+    "Choose file" : "Kies bestand",
     "Choose a file" : "Kies een bestand",
     "No file selected" : "Geen bestand geselecteerd",
     "Upload from device" : "Uploaden vanaf apparaat",
