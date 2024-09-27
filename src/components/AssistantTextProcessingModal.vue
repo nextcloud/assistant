@@ -22,12 +22,14 @@
 					:description="shortInput"
 					:progress="progress"
 					@background-notify="$emit('background-notify')"
-					@cancel="$emit('cancel-task')" />
+					@cancel="$emit('cancel-task')"
+					@back="onBackToAssistant" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
 					:description="shortInput"
 					:show-close-button="true"
-					@close="onCancel" />
+					@close="onCancel"
+					@back="onBackToAssistant" />
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
@@ -122,6 +124,7 @@ export default {
 		'action-button-clicked',
 		'try-again',
 		'load-task',
+		'back-to-assistant',
 	],
 	data() {
 		return {
@@ -151,6 +154,9 @@ export default {
 		}
 	},
 	methods: {
+		onBackToAssistant() {
+			this.$emit('back-to-assistant')
+		},
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')

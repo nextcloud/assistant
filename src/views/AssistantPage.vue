@@ -7,11 +7,13 @@
 					:description="shortInput"
 					:progress="progress"
 					@background-notify="onBackgroundNotify"
-					@cancel="onCancel" />
+					@cancel="onCancel"
+					@back="onBackToAssistant" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
 					:description="shortInput"
-					:show-close-button="false" />
+					:show-close-button="false"
+					@back="onBackToAssistant" />
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
@@ -94,6 +96,11 @@ export default {
 			this.showScheduleConfirmation = true
 			this.showSyncTaskRunning = false
 			setNotifyReady(this.task.id)
+		},
+		onBackToAssistant() {
+			this.showSyncTaskRunning = false
+			this.showScheduleConfirmation = false
+			this.task.output = null
 		},
 		onCancel() {
 			cancelTaskPolling()

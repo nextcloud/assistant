@@ -38,6 +38,7 @@
 				{{ t('assistant', 'Try again') }}
 			</NcActionButton>
 			<NcActionButton v-if="isScheduled || isRunning"
+				:close-after-click="true"
 				@click="$emit('cancel')">
 				<template #icon>
 					<CloseIcon />

@@ -156,6 +156,13 @@ export async function openAssistantForm({
 			}
 			view.$destroy()
 		})
+		view.$on('back-to-assistant', () => {
+			view.showScheduleConfirmation = false
+			view.showSyncTaskRunning = false
+			view.loading = false
+			view.outputs = null
+			lastTask = null
+		})
 	})
 }
 
@@ -418,6 +425,13 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 			data.button.onClick(lastTask)
 		}
 		view.$destroy()
+	})
+	view.$on('back-to-assistant', () => {
+		view.showScheduleConfirmation = false
+		view.showSyncTaskRunning = false
+		view.loading = false
+		view.outputs = null
+		lastTask = null
 	})
 }
 
