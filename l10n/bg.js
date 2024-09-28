@@ -22,6 +22,7 @@ OC.L10N.register(
     "Start recording" : "Започване на запис",
     "Dismiss recording" : "Отхвърляне на записа",
     "End recording and send" : "Край на записа и изпращане",
+    "Error while recording audio" : "Грешка при запис на аудио",
     "Choose a file" : "Изберете файл",
     "No file selected" : "Не сте избрали файл",
     "Upload from device" : "Качване от устройство",
