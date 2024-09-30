@@ -50,7 +50,7 @@ import Check from 'vue-material-design-icons/Check.vue'
 import Close from 'vue-material-design-icons/Close.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcRichText from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
 import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
 import Tooltip from '@nextcloud/vue/dist/Directives/Tooltip.js'
 

@@ -42,7 +42,7 @@ import AssistantIcon from '../icons/AssistantIcon.vue'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcDateTime from '@nextcloud/vue/dist/Components/NcDateTime.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import NcRichText from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
 
 import MessageActions from './MessageActions.vue'
 
