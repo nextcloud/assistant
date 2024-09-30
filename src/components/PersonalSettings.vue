@@ -44,7 +44,7 @@
 				<p>{{ t('assistant', 'The following services are used as backends for Nextcloud Assistant:') }}</p>
 				<ul>
 					<li v-for="(providerName, taskName) in providers" :key="taskName">
-						{{ t('assistant', '{providerName} for {taskName}', {providerName, taskName}) }}
+						{{ t('assistant', '{providerName} for {taskName}', { providerName, taskName }, null, { escape: false }) }}
 					</li>
 				</ul>
 			</div>
