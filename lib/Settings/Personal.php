@@ -7,6 +7,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
+use OCP\TaskProcessing\Exception\Exception;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
@@ -57,6 +58,17 @@ class Personal implements ISettings {
 			'speech_to_text_picker_enabled' => $speechToTextPickerEnabled,
 		];
 		$this->initialStateService->provideInitialState('config', $userConfig);
+
+        $availableProviders = [];
+        foreach ($availableTaskTypes as $taskTypeId => $availableTaskType) {
+            try {
+                $provider = $this->taskProcessingManager->getPreferredProvider($taskTypeId);
+                $availableProviders[$availableTaskType['name']] = $provider->getName();
+            } catch (Exception $e) {
+                // pass
+            }
+        }
+        $this->initialStateService->provideInitialState('availableProviders', $availableProviders);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 
