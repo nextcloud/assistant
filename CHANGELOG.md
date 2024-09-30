@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.1.0 – 2024-09-30
+
+### Added
+
+- Add back buttons after launching a task @julien-nc [#131](https://github.com/nextcloud/assistant/pull/131)
+- Close the task history item menu when canceling a task @julien-nc [#131](https://github.com/nextcloud/assistant/pull/131)
+- Render context chat's the referenced source items @kyteinsky [#124](https://github.com/nextcloud/assistant/pull/124)
+
+### Changed
+
+- Migrate to vite build system @julien-nc [#125](https://github.com/nextcloud/assistant/pull/125)
+- Switch audio recorder to extendable-media-recorder @julien-nc [#125](https://github.com/nextcloud/assistant/pull/125)
+
+### Fixed
+
+- Enable submit button without scope in context chat @kyteinsky [#128](https://github.com/nextcloud/assistant/pull/128)
+
 ## 2.0.4 – 2024-09-04
 
 ### Fixed
