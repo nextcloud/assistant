@@ -168,6 +168,10 @@ export default {
 					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', nbImageAsked, { n: nbImageAsked })
 				}
 				return t('assistant', 'This task is scheduled')
+			} else if (this.task.status === TASK_STATUS_STRING.failed) {
+				return this.task.error_message
+					? statusTitles[this.task.status] + ': ' + this.task.error_message
+					: statusTitles[this.task.status]
 			}
 			return statusTitles[this.task.status] ?? t('assistant', 'Unknown status')
 		},
