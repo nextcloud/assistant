@@ -100,7 +100,7 @@ export async function openAssistantForm({
 								view.selectedTaskId = finishedTask?.id
 							}
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(t('assistant', 'Your task has failed'))
+							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
 						}
