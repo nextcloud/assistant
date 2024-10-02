@@ -4,6 +4,7 @@ namespace OCA\Assistant\AppInfo;
 
 use OCA\Assistant\Capabilities;
 use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
+use OCA\Assistant\Listener\CSPListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
 use OCA\Assistant\Listener\TaskFailedListener;
@@ -20,6 +21,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
+use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 
@@ -55,6 +57,8 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
 
 		$context->registerNotifierService(Notifier::class);
+
+		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
 	}
 
 	public function boot(IBootContext $context): void {
