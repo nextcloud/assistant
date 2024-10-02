@@ -59,16 +59,16 @@ class Personal implements ISettings {
 		];
 		$this->initialStateService->provideInitialState('config', $userConfig);
 
-        $availableProviders = [];
-        foreach ($availableTaskTypes as $taskTypeId => $availableTaskType) {
-            try {
-                $provider = $this->taskProcessingManager->getPreferredProvider($taskTypeId);
-                $availableProviders[$availableTaskType['name']] = $provider->getName();
-            } catch (Exception $e) {
-                // pass
-            }
-        }
-        $this->initialStateService->provideInitialState('availableProviders', $availableProviders);
+		$availableProviders = [];
+		foreach ($availableTaskTypes as $taskTypeId => $availableTaskType) {
+			try {
+				$provider = $this->taskProcessingManager->getPreferredProvider($taskTypeId);
+				$availableProviders[$availableTaskType['name']] = $provider->getName();
+			} catch (Exception $e) {
+				// pass
+			}
+		}
+		$this->initialStateService->provideInitialState('availableProviders', $availableProviders);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 
