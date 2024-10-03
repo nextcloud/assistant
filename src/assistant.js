@@ -373,7 +373,7 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 						view.outputs = finishedTask?.output
 						view.selectedTaskId = finishedTask?.id
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-						showError(t('assistant', 'Your task has failed'))
+						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
 						console.error('[assistant] Task failed', finishedTask)
 						view.outputs = null
 					}
