@@ -121,7 +121,7 @@ export default {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(t('assistant', 'Your task has failed'))
+							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
 							console.error('[assistant] Task failed', finishedTask)
 							this.task.output = null
 						}
