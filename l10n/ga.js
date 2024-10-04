@@ -193,7 +193,6 @@ OC.L10N.register(
     "Upload file" : "Uaslódáil comhad",
     "Could not upload the file" : "Níorbh fhéidir an comhad a uaslódáil",
     "Could not upload the files" : "Níorbh fhéidir na comhaid a uaslódáil",
-    "Your task has failed" : "Theip ar do thasc",
     "Failed to schedule your task" : "Theip ar do thasc a sceidealú",
     "Submit the current task's result" : "Cuir isteach toradh an taisc reatha",
     "Assistant error" : "Earráid Assistant",

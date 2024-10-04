@@ -180,7 +180,6 @@ OC.L10N.register(
     "Upload file" : "上传文件",
     "Could not upload the file" : "无法上传文件",
     "Could not upload the files" : "无法上传文件",
-    "Your task has failed" : "您的任务执行失败",
     "Failed to schedule your task" : "您的任务排期失败",
     "Submit the current task's result" : "提交当前任务的结果",
     "Assistant error" : "助手错误",

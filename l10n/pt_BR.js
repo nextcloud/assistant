@@ -187,7 +187,6 @@ OC.L10N.register(
     "Upload file" : "Enviar arquivo",
     "Could not upload the file" : "Não foi possível fazer o envio do arquivo",
     "Could not upload the files" : "Não foi possível fazer o envio dos arquivos",
-    "Your task has failed" : "Sua tarefa falhou",
     "Failed to schedule your task" : "Falha ao agendar sua tarefa",
     "Submit the current task's result" : "Envie o resultado da tarefa atual",
     "Assistant error" : "Erro do assistente",
