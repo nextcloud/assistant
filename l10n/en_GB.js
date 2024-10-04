@@ -193,7 +193,6 @@ OC.L10N.register(
     "Upload file" : "Upload file",
     "Could not upload the file" : "Could not upload the file",
     "Could not upload the files" : "Could not upload the files",
-    "Your task has failed" : "Your task has failed",
     "Failed to schedule your task" : "Failed to schedule your task",
     "Submit the current task's result" : "Submit the current task's result",
     "Assistant error" : "Assistant error",

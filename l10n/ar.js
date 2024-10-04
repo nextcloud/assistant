@@ -193,7 +193,6 @@ OC.L10N.register(
     "Upload file" : "رفع ملف",
     "Could not upload the file" : "يتعذّر رفع الملف",
     "Could not upload the files" : "يتعذّر رفع الملفات",
-    "Your task has failed" : "مهمّتك أخفقت",
     "Failed to schedule your task" : "تعذّرت جدولة مُهِمّتك",
     "Submit the current task's result" : "أرسِل نتيجة المهمة الحالية",
     "Assistant error" : "حدث خطأ في عمل المُساعد",

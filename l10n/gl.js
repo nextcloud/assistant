@@ -193,7 +193,6 @@ OC.L10N.register(
     "Upload file" : "Enviar ficheiro",
     "Could not upload the file" : "Non foi posíbel enviar o ficheiro",
     "Could not upload the files" : "Non foi posíbel enviar os ficheiros",
-    "Your task has failed" : "A súa tarefa fallou",
     "Failed to schedule your task" : "Produciuse un fallo ao programar a súa tarefa",
     "Submit the current task's result" : "Enviar o resultado da tarefa actual",
     "Assistant error" : "Produciuse un erro do asistente",

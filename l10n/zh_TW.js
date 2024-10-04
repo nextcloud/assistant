@@ -193,7 +193,6 @@ OC.L10N.register(
     "Upload file" : "上傳檔案",
     "Could not upload the file" : "無法上傳檔案",
     "Could not upload the files" : "無法上傳檔案",
-    "Your task has failed" : "您的任務已失敗",
     "Failed to schedule your task" : "無法安排您的任務",
     "Submit the current task's result" : "遞交目前任務的結果",
     "Assistant error" : "Assistant 錯誤",

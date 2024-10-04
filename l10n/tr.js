@@ -187,7 +187,6 @@ OC.L10N.register(
     "Upload file" : "Dosya yükle",
     "Could not upload the file" : "Dosya yüklenemedi",
     "Could not upload the files" : "Dosyalar yüklenemedi",
-    "Your task has failed" : "Göreviniz tamamlanamadı",
     "Failed to schedule your task" : "Göreviniz zamanlanamadı",
     "Submit the current task's result" : "Geçerli görevin sonucunu gönder",
     "Assistant error" : "Yardımcı sorunu",
