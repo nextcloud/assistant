@@ -1,7 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "User not logged in" : "Utilisateur non connecté",
     "User not found" : "Utilisateur non trouvé",
+    "Session not found" : "Session non trouvée",
     "Nextcloud Assistant" : "Assistant Nextcloud",
     "AI image generation" : "Génération d'image par IA",
     "Writing style: %1$s; Source material: %2$s" : "Style rédactionnel : %1$s ; Données initiales : %2$s",
@@ -123,6 +125,7 @@ OC.L10N.register(
     "Text generation error" : "Erreur de génération du texte",
     "Prompt" : "Invite de commande",
     "Result {index}" : "Résultat {index}",
+    "Run in the background" : "Exécuter en arrière-plan",
     "Record Audio" : "Enregistrement audio",
     "Choose Audio File" : "Choisissez un fichier audio",
     "Reset recorded audio" : "Effacer l'audio enregistré",
