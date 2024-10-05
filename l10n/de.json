@@ -134,6 +134,7 @@
     "AI image generation smart picker" : "Smart Picker für KI-Bildgenerierung",
     "AI transcription smart picker" : "Smart Picker für KI-Transkription",
     "No suitable providers are available. They must first be enabled by your administrator." : "Keine geeigneten Anbieter verfügbar. Diese müssen zunächst von deiner Administration aktiviert werden.",
+    "Configured Backends" : "Konfigurierte Backends",
     "Assistant options saved" : "Assistenteneinstellungen gespeichert",
     "Failed to save assistant options" : "Fehler beim Speichern der Assistenteneinstellungen",
     "Getting results…" : "Ergebnisse holen…",

@@ -193,6 +193,7 @@ OC.L10N.register(
     "Upload file" : "Datei hochladen",
     "Could not upload the file" : "Datei konnte nicht hochgeladen werden",
     "Could not upload the files" : "Dateien konnten nicht hochgeladen werden",
+    "Your task with ID {id} has failed" : "Ihre Aufgabe mit der ID {id} ist fehlgeschlagen",
     "Failed to schedule your task" : "Die Planung Ihrer Aufgabe ist fehlgeschlagen",
     "Submit the current task's result" : "Das Ergebnis der aktuellen Aufgabe übermitteln",
     "Assistant error" : "Fehler des Assistenten",

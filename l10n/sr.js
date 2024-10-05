@@ -193,6 +193,7 @@ OC.L10N.register(
     "Upload file" : "Отпреми фајл",
     "Could not upload the file" : "Фајл није могао да се отпреми",
     "Could not upload the files" : "Фајлови нису могли да се отпреме",
+    "Your task with ID {id} has failed" : "Ваш задатак чији је ID {id} се није успешно завршио",
     "Failed to schedule your task" : "Није успело заказивање вашег задатка",
     "Submit the current task's result" : "Поднеси резултат текућег задатка",
     "Assistant error" : "Грешка Асистента",
