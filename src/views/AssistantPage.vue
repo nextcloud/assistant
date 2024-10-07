@@ -20,7 +20,7 @@
 					:selected-task-id="task.id"
 					:inputs="task.input"
 					:outputs="task.output"
-					:selected-task-type-id="task.taskType"
+					:selected-task-type-id="task.type"
 					:loading="loading"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
@@ -111,7 +111,7 @@ export default {
 			this.showSyncTaskRunning = true
 			this.progress = null
 			this.task.input = inputs
-			this.task.taskType = taskTypeId
+			this.task.type = taskTypeId
 			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs)
 				.then((response) => {
 					console.debug('Assistant SYNC result', response.data?.ocs?.data)
