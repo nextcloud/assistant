@@ -36,6 +36,7 @@ OC.L10N.register(
     "Edit title" : "Upravit nadpis",
     "Cancel editing" : "Zrušit upravování",
     "Submit" : "Odeslat",
+    "You" : "Vy",
     "Delete message" : "Smazat zprávu",
     "Choose" : "Vybrat",
     "Clear Selection" : "Vyčistit  výběr",
