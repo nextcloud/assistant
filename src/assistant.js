@@ -123,12 +123,13 @@ export async function openAssistantForm({
 			syncSubmit(data.inputs, data.selectedTaskTypeId, customId || identifier)
 		})
 		view.$on('try-again', (task) => {
-			syncSubmit(task.input, task.taskType)
+			console.debug('[assistant] try again', task)
+			syncSubmit(task.input, task.type)
 		})
 		view.$on('load-task', (task) => {
 			if (!view.loading) {
 				console.debug('[assistant] loading task', task)
-				view.selectedTaskTypeId = task.taskType
+				view.selectedTaskTypeId = task.type
 				view.inputs = task.input
 				view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
 				view.selectedTaskId = task.id
@@ -396,11 +397,11 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 		syncSubmit(data.inputs, data.selectedTaskTypeId, task.identifier ?? '')
 	})
 	view.$on('try-again', (task) => {
-		syncSubmit(task.input, task.taskType)
+		syncSubmit(task.input, task.type)
 	})
 	view.$on('load-task', (task) => {
 		if (!view.loading) {
-			view.selectedTaskTypeId = task.taskType
+			view.selectedTaskTypeId = task.type
 			view.inputs = task.input
 			view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
 			view.selectedTaskId = task.id
