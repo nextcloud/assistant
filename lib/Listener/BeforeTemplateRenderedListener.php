@@ -12,6 +12,7 @@ use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IUser;
 use OCP\IUserSession;
@@ -25,6 +26,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 	public function __construct(
 		private IUserSession $userSession,
 		private IConfig $config,
+		private IAppConfig $appConfig,
 		private IInitialState $initialStateService,
 		private IEventDispatcher $eventDispatcher,
 		private ?string $userId,
@@ -47,7 +49,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 
 		$this->eventDispatcher->dispatchTyped(new RenderReferenceEvent());
 
-		$adminAssistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
+		$adminAssistantEnabled = $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$userAssistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
 		$this->initialStateService->provideInitialState('assistant-enabled', $assistantEnabled);

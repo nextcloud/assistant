@@ -14,7 +14,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\IConfig;
+use OCP\IAppConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUserManager;
@@ -39,7 +39,7 @@ class ChattyLLMController extends Controller {
 		private IL10N $l10n,
 		private LoggerInterface $logger,
 		private ITaskProcessingManager $taskProcessingManager,
-		private IConfig $config,
+		private IAppConfig $appConfig,
 		private IUserManager $userManager,
 		private ?string $userId,
 	) {
@@ -64,7 +64,7 @@ class ChattyLLMController extends Controller {
 			return new JSONResponse(['error' => $this->l10n->t('User not found')], Http::STATUS_UNAUTHORIZED);
 		}
 
-		$userInstructions = $this->config->getAppValue(
+		$userInstructions = $this->appConfig->getValueString(
 			Application::APP_ID,
 			'chat_user_instructions',
 			Application::CHAT_USER_INSTRUCTIONS,
@@ -419,7 +419,7 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$userInstructions = $this->config->getAppValue(
+			$userInstructions = $this->appConfig->getValueString(
 				Application::APP_ID,
 				'chat_user_instructions_title',
 				Application::CHAT_USER_INSTRUCTIONS_TITLE,
@@ -465,7 +465,7 @@ class ChattyLLMController extends Controller {
 		if ($task->getStatus() === Task::STATUS_SUCCESSFUL) {
 			try {
 				$taskOutput = trim($task->getOutput()['output'] ?? '');
-				$userInstructions = $this->config->getAppValue(
+				$userInstructions = $this->appConfig->getValueString(
 					Application::APP_ID,
 					'chat_user_instructions_title',
 					Application::CHAT_USER_INSTRUCTIONS_TITLE,
@@ -510,7 +510,7 @@ class ChattyLLMController extends Controller {
 			$stichedPrompt = $firstMessage->getContent() . PHP_EOL;
 		}
 
-		$lastNMessages = intval($this->config->getAppValue(Application::APP_ID, 'chat_last_n_messages', '10'));
+		$lastNMessages = intval($this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10'));
 		$messages = $this->messageMapper->getMessages($sessionId, 0, $lastNMessages);
 
 		if ($messages[0]->getRole() === 'system') {

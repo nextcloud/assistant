@@ -27,6 +27,7 @@ use OCA\Assistant\AppInfo\Application;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
@@ -38,6 +39,7 @@ use OCP\Util;
 class SpeechToTextReferenceListener implements IEventListener {
 	public function __construct(
 		private IConfig $config,
+		private IAppConfig $appConfig,
 		private ?string $userId,
 		private ITaskProcessingManager $taskProcessingManager,
 	) {
@@ -47,8 +49,8 @@ class SpeechToTextReferenceListener implements IEventListener {
 		if (!$event instanceof RenderReferenceEvent) {
 			return;
 		}
-		if ($this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1' &&
-			($this->userId === null || $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1')) {
+		if ($this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1'
+			&& ($this->userId === null || $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1')) {
 
 			// Double check that at least one provider is registered
 			$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
