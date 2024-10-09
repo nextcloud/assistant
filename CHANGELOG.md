@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.1.1 – 2024-10-09
+
+### Added
+
+- Add a personal settings section listing the configured backends @marcelklehr [#134](https://github.com/nextcloud/assistant/pull/134)
+
+### Changed
+
+- Report task ID in more failure messages @marcelklehr [#137](https://github.com/nextcloud/assistant/pull/137)
+
+### Fixed
+
+- Missing worker policy when launching assistant @smarinier [#139](https://github.com/nextcloud/assistant/pull/139)
+- Incorrect task type prop set when trying again @julien-nc [#144](https://github.com/nextcloud/assistant/pull/144)
+- Fix navigation icon color @julien-nc [#145](https://github.com/nextcloud/assistant/pull/145)
+
 ## 2.1.0 – 2024-09-30
 
 ### Added
