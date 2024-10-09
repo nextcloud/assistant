@@ -70,7 +70,7 @@ export default {
 			background-color: rgba(0,0,0,0) !important;
 		}
 		.menu-icon {
-			color: var(--color-primary-text) !important;
+			color: var(--color-background-plain-text) !important;
 		}
 	}
 }
