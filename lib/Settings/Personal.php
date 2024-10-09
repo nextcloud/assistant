@@ -5,6 +5,7 @@ namespace OCA\Assistant\Settings;
 use OCA\Assistant\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
 use OCP\TaskProcessing\Exception\Exception;
@@ -17,6 +18,7 @@ class Personal implements ISettings {
 
 	public function __construct(
 		private IConfig $config,
+		private IAppConfig $appConfig,
 		private IInitialState $initialStateService,
 		private ?string $userId,
 		private ITaskProcessingManager $taskProcessingManager,
@@ -35,16 +37,16 @@ class Personal implements ISettings {
 		$speechToTextAvailable = in_array(AudioToText::ID, $availableTaskTypes);
 		$textToImageAvailable = in_array(TextToImage::ID, $availableTaskTypes);
 
-		$assistantAvailable = $taskProcessingAvailable && $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
+		$assistantAvailable = $taskProcessingAvailable && $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 
-		$textToImagePickerAvailable = $textToImageAvailable && $this->config->getAppValue(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+		$textToImagePickerAvailable = $textToImageAvailable && $this->appConfig->getValueString(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
-		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->config->getAppValue(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
+		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->appConfig->getValueString(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$freePromptPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 
-		$speechToTextPickerAvailable = $speechToTextAvailable && $this->config->getAppValue(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
+		$speechToTextPickerAvailable = $speechToTextAvailable && $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$speechToTextPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 
 		$userConfig = [

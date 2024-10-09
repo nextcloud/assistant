@@ -7,6 +7,7 @@ namespace OCA\Assistant;
 use OCA\Assistant\AppInfo\Application;
 use OCP\App\IAppManager;
 use OCP\Capabilities\IPublicCapability;
+use OCP\IAppConfig;
 use OCP\IConfig;
 
 class Capabilities implements IPublicCapability {
@@ -14,6 +15,7 @@ class Capabilities implements IPublicCapability {
 	public function __construct(
 		private IAppManager $appManager,
 		private IConfig $config,
+		private IAppConfig $appConfig,
 		private ?string $userId,
 	) {
 	}
@@ -34,7 +36,7 @@ class Capabilities implements IPublicCapability {
 			],
 		];
 		if ($this->userId !== null) {
-			$adminAssistantEnabled = $this->config->getAppValue(Application::APP_ID, 'assistant_enabled', '1') === '1';
+			$adminAssistantEnabled = $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1') === '1';
 			$userAssistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 			$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
 			$capability[Application::APP_ID]['enabled'] = $assistantEnabled;
