@@ -150,7 +150,7 @@ OC.L10N.register(
     "Nothing yet" : "لا شيء حتى الآن",
     "You have not submitted any \"{taskTypeName}\" task yet" : "أنت لم تُرسل أي مهمة \"{taskTypeName}\" حتى الآن",
     "Cancel" : "إلغاء",
-    "Succeeded" : "تمّت بنجاحٍ",
+    "Succeeded" : "تمّت بنجاح",
     "Cancelled" : "ملغى",
     "Failed" : "فشل",
     "Running" : "ركض",
