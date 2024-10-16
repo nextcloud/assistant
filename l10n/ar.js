@@ -172,7 +172,7 @@ OC.L10N.register(
     "Upload from device" : "إرفَع من الجهاز",
     "Select from Nextcloud" : "إختَر من نكست كلاود",
     "Pick one or multiple files" : "إختَر ملفاً أو أكثر",
-    "Remove this media" : "إحذِف هذه الوسائط",
+    "Remove this media" : "حذف هذه الوسائط",
     "Download this media" : "حمِّل هذه الوسائط",
     "Share this media" : "شارِك هذه الوسائط",
     "Share" : "مُشارَكة",

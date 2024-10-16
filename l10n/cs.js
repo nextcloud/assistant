@@ -32,6 +32,7 @@ OC.L10N.register(
     "\"%1$s\" task for \"%2$s\" has failed" : "Úkol „%1$s“ pro „%2$s“ se nezdařil",
     "View task" : "Zobrazit úkoly",
     "Generate text" : "Vytvořit text",
+    "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Odeslat požadavek do Asistenta, například: napiš koncept prezentace, dej mi doporučení pro prezentaci, napiš koncept odpovědi kolegovi.",
     "Chat with AI" : "Chatovat s AI",
     "Chat with an AI model." : "Chatovat s AI modelem.",
     "Artificial Intelligence" : "Umělá inteligence",

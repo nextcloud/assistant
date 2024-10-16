@@ -35,6 +35,7 @@ OC.L10N.register(
     "Upload file" : "Lähetä tiedosto",
     "Audio file not found." : "Äänitiedostoa ei löytynyt.",
     "Generate image" : "Luo kuva",
+    "Type some text" : "Syötä tekstiä",
     "Reset" : "Palauta",
     "This can take a while…" : "Tämä saattaa kestää hetken…",
     "Prompt" : "Kehote",
