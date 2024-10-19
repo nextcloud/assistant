@@ -20,6 +20,7 @@ OC.L10N.register(
     "Scheduled" : "Programmato",
     "Input" : "Input",
     "Result" : "Risultato",
+    "Unknown status" : "Status sconosciuto",
     "Dismiss recording" : "Annulla la registrazione",
     "End recording and send" : "Termina la registrazione e invia",
     "Error while recording audio" : "Errore durante la registrazione dell'audio",
