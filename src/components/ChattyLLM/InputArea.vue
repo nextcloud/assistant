@@ -78,7 +78,7 @@ export default {
 	data: () => {
 		return {
 			placeholderText: t('assistant', 'Type a message…'),
-			thinkingText: t('assistant', 'Thinking…'),
+			thinkingText: t('assistant', 'Processing…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
 		}
 	},
