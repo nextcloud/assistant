@@ -111,7 +111,6 @@ OC.L10N.register(
     "Cancel editing" : "إلغاء التحرير",
     "Submit" : "إرسال ",
     "Type a message…" : "أُكتُب رسالةً ...",
-    "Thinking…" : "التفكير جارٍ ...",
     "You" : "أنتَ",
     "Message copied to clipboard" : "تمّ نسخ الرسالة إلى الحافظة",
     "Copy message" : "نسخ الرسالة",

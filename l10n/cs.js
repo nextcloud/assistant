@@ -110,7 +110,6 @@ OC.L10N.register(
     "Cancel editing" : "Zrušit upravování",
     "Submit" : "Odeslat",
     "Type a message…" : "Napište zprávu…",
-    "Thinking…" : "Přemýšlení…",
     "You" : "Vy",
     "Message copied to clipboard" : "Zpráva zkopírována do schránky",
     "Copy message" : "Zkopírovat zprávu",

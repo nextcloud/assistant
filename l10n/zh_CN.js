@@ -109,7 +109,6 @@ OC.L10N.register(
     "Cancel editing" : "取消编辑",
     "Submit" : "提交",
     "Type a message…" : "输入消息……",
-    "Thinking…" : "正在思考……",
     "You" : "您",
     "Message copied to clipboard" : "消息已复制到剪贴板",
     "Copy message" : "复制消息",

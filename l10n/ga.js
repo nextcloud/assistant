@@ -111,7 +111,6 @@ OC.L10N.register(
     "Cancel editing" : "Cealaigh eagarthóireacht",
     "Submit" : "Cuir isteach",
     "Type a message…" : "Clóscríobh teachtaireacht…",
-    "Thinking…" : "Ag smaoineamh…",
     "You" : "tú",
     "Message copied to clipboard" : "Cóipeáladh an teachtaireacht chuig an ngearrthaisce",
     "Copy message" : "Cóipeáil teachtaireacht",
