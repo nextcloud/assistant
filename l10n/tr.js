@@ -111,7 +111,6 @@ OC.L10N.register(
     "Cancel editing" : "Düzenlemeyi iptal et",
     "Submit" : "Gönder",
     "Type a message…" : "Bir ileti yazın…",
-    "Thinking…" : "Düşünüyorum…",
     "You" : "Siz",
     "Message copied to clipboard" : "İleti panoya kopyalandı",
     "Copy message" : "İletiyi kopyala",
