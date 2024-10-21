@@ -111,6 +111,7 @@ OC.L10N.register(
     "Cancel editing" : "取消編輯",
     "Submit" : "遞交",
     "Type a message…" : "請輸入一則訊息 ...",
+    "Processing…" : "處理中 ...",
     "You" : "您",
     "Message copied to clipboard" : "訊息已複製到剪貼板",
     "Copy message" : "複製訊息",
