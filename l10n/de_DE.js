@@ -111,6 +111,7 @@ OC.L10N.register(
     "Cancel editing" : "Bearbeitung abbrechen",
     "Submit" : "Übermitteln",
     "Type a message…" : "Geben Sie eine Nachricht ein…",
+    "Processing…" : "Verarbeite…",
     "You" : "Sie",
     "Message copied to clipboard" : "Nachricht in die Zwischenablage kopiert",
     "Copy message" : "Nachricht kopieren",

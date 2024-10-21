@@ -111,6 +111,7 @@ OC.L10N.register(
     "Cancel editing" : "Cancel editing",
     "Submit" : "Submit",
     "Type a message…" : "Type a message…",
+    "Processing…" : "Processing …",
     "You" : "You",
     "Message copied to clipboard" : "Message copied to clipboard",
     "Copy message" : "Copy message",
