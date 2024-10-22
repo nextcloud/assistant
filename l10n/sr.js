@@ -111,6 +111,7 @@ OC.L10N.register(
     "Cancel editing" : "Откажи уређивање",
     "Submit" : "Пошаљи",
     "Type a message…" : "Откуцајте поруку…",
+    "Processing…" : "Обрађује се…",
     "You" : "Ви",
     "Message copied to clipboard" : "Порука је копирана у клипборд",
     "Copy message" : "Копирај поруку",

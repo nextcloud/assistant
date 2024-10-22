@@ -1,9 +1,18 @@
 OC.L10N.register(
     "assistant",
     {
+    "Failed to notify when ready; unknown user" : "Échec de la notification lorsque prêt; utilisateur inconnu",
     "User not logged in" : "Utilisateur non connecté",
     "User not found" : "Utilisateur non trouvé",
+    "Failed to create a chat session" : "Échec de créer d'une session de tchat",
+    "Failed to update the chat session" : "Échec de la mise à jour de la session du tchat",
+    "Failed to delete the chat session" : "Échec de suppression de la session de tchat",
+    "Failed to get chat sessions" : "Échec de l'obtenir des sessions de chat",
     "Session not found" : "Session non trouvée",
+    "Message content is empty" : "Le contenu du message est vide",
+    "Failed to add a chat message" : "Échec d'ajouter d'un message de discussion",
+    "Failed to get chat messages" : "Échec de reception des messages du tchat",
+    "Failed to delete a chat message" : "Échec de suppression d'un message de tchat",
     "Nextcloud Assistant" : "Assistant Nextcloud",
     "AI image generation" : "Génération d'image par IA",
     "Writing style: %1$s; Source material: %2$s" : "Style rédactionnel : %1$s ; Données initiales : %2$s",
