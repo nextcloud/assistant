@@ -88,6 +88,7 @@ OC.L10N.register(
     "Choose a file" : "Välj en fil",
     "No file selected" : "Ingen fil vald",
     "Upload from device" : "Ladda upp från enheten",
+    "Select from Nextcloud" : "Välj från Nextcloud",
     "Share" : "Dela",
     "Could not copy to clipboard" : "Kunde inte kopiera till urklipp",
     "Advanced" : "Avancerad",
