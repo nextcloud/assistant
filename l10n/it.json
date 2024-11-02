@@ -34,12 +34,14 @@
     "Type some text" : "Aggiungi del testo",
     "Output" : "Output",
     "Reset" : "Ripristina",
+    "Audio transcription" : "Trascrizione audio",
     "Unknown error" : "Errore sconosciuto",
     "Image generation" : "Generazione di immagini",
     "Preview" : "Anteprima",
     "Successfully scheduled transcription" : "Pianificazione della trascrizione eseguita correttamente",
     "Send" : "Invia",
     "Advanced options" : "Opzioni avanzate",
+    "Unknown image generation error" : "Errore di generazione dell'immagine sconosciuto",
     "Copy link to clipboard" : "Copia collegamento negli appunti"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
