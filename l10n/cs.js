@@ -2,7 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
-    "User not logged in" : "Uživatel není přihlášen",
+    "User not logged in" : "Uživatel nepřihlášen",
     "User not found" : "Uživatel nenalezen",
     "Failed to create a chat session" : "Nepodařilo se vytvořit relaci chatu",
     "Failed to update the chat session" : "Nepodařilo se zaktualizovat relaci chatu",
