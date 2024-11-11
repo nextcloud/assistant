@@ -83,7 +83,7 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "أغلِق مُساعِد نكست كلاود Nextcloud Assistant",
     "New conversation" : "محادثة جديدة",
     "Loading conversations…" : "تحميل المحادثات جارٍ ...",
-    "No conversations yet" : "لا توجد أي محادثاتٍ بعدُ",
+    "No conversations yet" : "لا توجد أي محادثات حتى الآن",
     "Delete" : "حذف",
     "Conversation title" : "عنوان المحادثة",
     "Edit title" : "تحرير عنوان",
