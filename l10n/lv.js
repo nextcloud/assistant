@@ -10,6 +10,7 @@ OC.L10N.register(
     "Cancelled" : "Atcelts",
     "Failed" : "Neizdevās",
     "Running" : "Skriešana",
+    "Start recording" : "Uzsākt ierakstīšanu",
     "Choose a file" : "Izvēlieties datni",
     "No file selected" : "Netika izvēlēta neviena datne",
     "Upload from device" : "Augšupielādēt no ierīces",
