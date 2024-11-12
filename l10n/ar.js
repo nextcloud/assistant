@@ -112,7 +112,7 @@ OC.L10N.register(
     "Submit" : "إرسال ",
     "Type a message…" : "أُكتُب رسالةً ...",
     "Processing…" : "قيدَ المعالجة ...",
-    "You" : "أنتَ",
+    "You" : "أنت",
     "Message copied to clipboard" : "تمّ نسخ الرسالة إلى الحافظة",
     "Copy message" : "نسخ الرسالة",
     "Regenerate message" : "إعادة توليد الرسالة",
