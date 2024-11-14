@@ -181,7 +181,7 @@ class AssistantService {
 			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
 
 			if ($typeId === TextToText::ID) {
-				$taskTypeArray['name'] = $this->l10n->t('Generate text');
+				$taskTypeArray['name'] = $this->l10n->t('Ask anything');
 				$taskTypeArray['description'] = $this->l10n->t('Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague.');
 				// add the chattyUI virtual task type
 				$types[] = [
