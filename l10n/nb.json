@@ -258,7 +258,7 @@
     "Text generation error" : "Tekstgenereringsfeil",
     "Unknown text generation API error" : "Ukjent tekstgenerering API-feil",
     "Prompt" : "Spør",
-    "Result {index}" : "Resultat {indeks}",
+    "Result {index}" : "Resultat {index}",
     "Run in the background" : "Kjør i bakgrunnen",
     "Record Audio" : "Ta opp lyd",
     "Choose Audio File" : "Velg lydfil",
