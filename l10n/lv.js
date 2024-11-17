@@ -7,6 +7,7 @@ OC.L10N.register(
     "Submit" : "Iesniegt",
     "Choose" : "Izvēlies",
     "Clear Selection" : "Notīrīt atlasi",
+    "Cancel" : "Atcelt",
     "Cancelled" : "Atcelts",
     "Failed" : "Neizdevās",
     "Running" : "Skriešana",
