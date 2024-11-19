@@ -328,7 +328,7 @@ export default {
 			this.messages.push({ role, content, timestamp })
 			this.chatContent = ''
 			this.scrollToBottom()
-			await this.newMessage(role, content, timestamp)
+			await this.newMessage(this.active.id, role, content, timestamp)
 		},
 
 		onLoadOlderMessages() {
@@ -466,13 +466,13 @@ export default {
 			}
 		},
 
-		async newMessage(role, content, timestamp) {
+		async newMessage(sessionId, role, content, timestamp) {
 			try {
 				this.loading.newHumanMessage = true
 				const firstHumanMessage = this.messages.length === 1 && this.messages[0].role === Roles.HUMAN
 
 				const response = await axios.put(getChatURL('/new_message'), {
-					sessionId: this.active.id,
+					sessionId,
 					role,
 					content,
 					timestamp,
@@ -485,11 +485,11 @@ export default {
 				this.messages[this.messages.length - 1] = response.data
 
 				if (firstHumanMessage) {
-					const session = this.sessions.find((session) => session.id === this.active.id)
+					const session = this.sessions.find((session) => session.id === sessionId)
 					session.title = content
 				}
 
-				await this.runGenerationTask()
+				await this.runGenerationTask(sessionId)
 			} catch (error) {
 				this.loading.newHumanMessage = false
 				console.error('newMessage error:', error)
@@ -521,15 +521,25 @@ export default {
 			}
 		},
 
-		async runGenerationTask() {
+		async runGenerationTask(sessionId) {
+			if (!sessionId) {
+				sessionId = this.active.id
+				if (!sessionId) {
+					console.error('runGenerationTask: no active session')
+					return
+				}
+			}
 			try {
 				this.loading.llmGeneration = true
-				const response = await axios.get(getChatURL('/generate'), { params: { sessionId: this.active.id } })
+				const response = await axios.get(getChatURL('/generate'), { params: { sessionId } })
 				console.debug('scheduleGenerationTask response:', response)
-				const message = await this.pollGenerationTask(response.data.taskId)
-				console.debug('checkTaskPolling result:', message)
-				this.messages.push(message)
-				this.scrollToBottom()
+				const message = await this.pollGenerationTask(sessionId, response.data.taskId)
+				console.debug(`checkTaskPolling result for sessionId (${sessionId}): ${message}`)
+				if (this.active.id === sessionId) {
+					// add the message to the list only if the session is still active
+					this.messages.push(message)
+					this.scrollToBottom()
+				}
 			} catch (error) {
 				console.error('scheduleGenerationTask error:', error)
 				showError(t('assistant', 'Error generating a response'))
@@ -538,15 +548,17 @@ export default {
 			}
 		},
 
-		async runRegenerationTask(messageId) {
+		async runRegenerationTask(messageId, sessionId) {
 			try {
 				this.loading.llmGeneration = true
-				const response = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId: this.active.id } })
+				const response = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				console.debug('scheduleRegenerationTask response:', response)
-				const message = await this.pollGenerationTask(response.data.taskId)
+				const message = await this.pollGenerationTask(sessionId, response.data.taskId)
 				console.debug('checkTaskPolling result:', message)
-				this.messages[this.messages.length - 1] = message
-				this.scrollToBottom()
+				if (this.active.id === sessionId) {
+					this.messages[this.messages.length - 1] = message
+					this.scrollToBottom()
+				}
 			} catch (error) {
 				console.error('scheduleRegenerationTask error:', error)
 				showError(t('assistant', 'Error regenerating a response'))
@@ -555,12 +567,20 @@ export default {
 			}
 		},
 
-		async pollGenerationTask(taskId) {
+		async pollGenerationTask(sessionId, taskId) {
 			return new Promise((resolve, reject) => {
 				this.pollMessageGenerationTimerId = setInterval(() => {
+					if (this.active.id !== sessionId) {
+						console.debug('pollGenerationTask: session is not active, stopping polling')
+						clearInterval(this.pollMessageGenerationTimerId)
+						// silent resolution
+						resolve('')
+						return
+					}
+
 					axios.get(
 						getChatURL('/check_generation'),
-						{ params: { taskId, sessionId: this.active.id } },
+						{ params: { taskId, sessionId } },
 					).then(response => {
 						clearInterval(this.pollMessageGenerationTimerId)
 						resolve(response.data)

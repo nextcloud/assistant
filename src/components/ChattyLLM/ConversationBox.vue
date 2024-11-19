@@ -24,7 +24,7 @@
 			:delete-loading="loading.messageDelete && message.id === deleteMessageId"
 			:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
 			:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"
-			@regenerate="regenerate(message.id)"
+			@regenerate="regenerate(message.id, message.session_id)"
 			@delete="deleteMessage(message.id)" />
 	</div>
 </template>
