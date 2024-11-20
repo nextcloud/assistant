@@ -220,6 +220,7 @@ export default {
 	watch: {
 		async active() {
 			this.loading.llmGeneration = false
+			this.loading.titleGeneration = false
 			this.allMessagesLoaded = false
 			this.chatContent = ''
 			this.msgCursor = 0
@@ -238,22 +239,45 @@ export default {
 			}
 			// start polling in case a message is currently being generated
 			try {
-				const checkSessionResponse = await axios.get(getChatURL('/check_session'), { params: { sessionId: this.active.id } })
-				console.debug('check session response:', checkSessionResponse)
-				if (checkSessionResponse.data.taskId === null) {
-					return
+				const sessionId = this.active.id
+				const checkSessionResponse = await axios.get(getChatURL('/check_session'), { params: { sessionId } })
+				if (checkSessionResponse.data?.sessionTitle && checkSessionResponse.data?.sessionTitle !== this.active.title) {
+					this.active.title = checkSessionResponse.data?.sessionTitle
+					console.debug('update session title with check result')
 				}
-				try {
-					this.loading.llmGeneration = true
-					const message = await this.pollGenerationTask(checkSessionResponse.data.taskId, this.active.id)
-					console.debug('checkTaskPolling result:', message)
-					this.messages.push(message)
-					this.scrollToBottom()
-				} catch (error) {
-					console.error('checkGenerationTask error:', error)
-					showError(t('assistant', 'Error generating a response'))
-				} finally {
-					this.loading.llmGeneration = false
+				console.debug('check session response:', checkSessionResponse.data)
+				if (checkSessionResponse.data.messageTaskId !== null) {
+					try {
+						this.loading.llmGeneration = true
+						const message = await this.pollGenerationTask(checkSessionResponse.data.messageTaskId, sessionId)
+						console.debug('checkTaskPolling result:', message)
+						this.messages.push(message)
+						this.scrollToBottom()
+					} catch (error) {
+						console.error('checkGenerationTask error:', error)
+						showError(t('assistant', 'Error generating a response'))
+					} finally {
+						this.loading.llmGeneration = false
+					}
+				} else if (checkSessionResponse.data.titleTaskId !== null) {
+					try {
+						this.loading.titleGeneration = true
+						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponse.data.titleTaskId, sessionId)
+						console.debug('checkTaskPolling result:', titleResponse)
+						if (titleResponse?.data?.result == null) {
+							throw new Error('No title generated, response:', titleResponse)
+						}
+
+						const session = this.sessions.find(s => s.id === sessionId)
+						if (session) {
+							session.title = titleResponse?.data?.result
+						}
+					} catch (error) {
+						console.error('onCheckSessionTitle error:', error)
+						showError(error?.response?.data?.error ?? t('assistant', 'Error getting the generated title for the conversation'))
+					} finally {
+						this.loading.titleGeneration = false
+					}
 				}
 			} catch (error) {
 				console.error('check session error:', error)
@@ -367,18 +391,17 @@ export default {
 		async onGenerateSessionTitle() {
 			try {
 				this.loading.titleGeneration = true
-				const response = await axios.get(getChatURL('/generate_title'), { params: { sessionId: this.active.id } })
-				const titleResponse = await this.pollTitleGenerationTask(response.data.taskId)
+				const sessionId = this.active.id
+				const response = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
+				const titleResponse = await this.pollTitleGenerationTask(response.data.taskId, sessionId)
 				console.debug('checkTaskPolling result:', titleResponse)
 				if (titleResponse?.data?.result == null) {
 					throw new Error('No title generated, response:', response)
 				}
 
-				for (const session of this.sessions) {
-					if (session.id === this.active.id) {
-						session.title = titleResponse?.data?.result
-						break
-					}
+				const session = this.sessions.find(s => s.id === sessionId)
+				if (session) {
+					session.title = titleResponse?.data?.result
 				}
 			} catch (error) {
 				console.error('onGenerateSessionTitle error:', error)
@@ -592,12 +615,12 @@ export default {
 						if (sessionId === this.active.id) {
 							resolve(response.data)
 						} else {
-							console.debug('Ignoring received a message for session ' + sessionId + ' that is not selected anymore')
+							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')
 							// should we reject here?
 						}
 					}).catch(error => {
 						if (sessionId !== this.active.id) {
-							console.debug('Stop polling session ' + sessionId + ' because it is not selected anymore')
+							console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
 							clearInterval(this.pollMessageGenerationTimerId)
 						}
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
@@ -606,30 +629,39 @@ export default {
 							clearInterval(this.pollMessageGenerationTimerId)
 							reject(new Error('Message generation task check failed'))
 						} else {
-							console.debug('checkTaskPolling, task is still scheduled or running', error)
+							console.debug('checkTaskPolling, task is still scheduled or running')
 						}
 					})
 				}, 2000)
 			})
 		},
 
-		async pollTitleGenerationTask(taskId) {
+		async pollTitleGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollTitleGenerationTimerId = setInterval(() => {
 					axios.get(
 						getChatURL('/check_title_generation'),
-						{ params: { taskId, sessionId: this.active.id } },
+						{ params: { taskId, sessionId } },
 					).then(response => {
+						if (sessionId === this.active.id) {
+							resolve(response)
+						} else {
+							console.debug('Ignoring received title for session ' + sessionId + ' that is not selected anymore')
+							// should we reject here?
+						}
 						clearInterval(this.pollTitleGenerationTimerId)
-						resolve(response)
 					}).catch(error => {
+						if (sessionId !== this.active.id) {
+							console.debug('Stop polling title for session ' + sessionId + ' because it is not selected anymore')
+							clearInterval(this.pollTitleGenerationTimerId)
+						}
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
 						if (error.response?.status !== 417) {
 							console.error('checkTaskPolling error', error)
 							clearInterval(this.pollTitleGenerationTimerId)
 							reject(new Error('Title generation task check failed'))
 						} else {
-							console.debug('checkTaskPolling, task is still scheduled or running', error)
+							console.debug('checkTaskPolling, task is still scheduled or running')
 						}
 					})
 				}, 2000)

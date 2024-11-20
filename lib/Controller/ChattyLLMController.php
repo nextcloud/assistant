@@ -403,7 +403,7 @@ class ChattyLLMController extends Controller {
 	 * @throws \OCP\DB\Exception
 	 */
 	#[NoAdminRequired]
-	public function checkMessageGenerationSession(int $sessionId): JSONResponse {
+	public function checkSession(int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -414,22 +414,32 @@ class ChattyLLMController extends Controller {
 		}
 
 		try {
-			$tasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', 'chatty-llm:' . $sessionId);
+			$messageTasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', 'chatty-llm:' . $sessionId);
+			$titleTasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', 'chatty-title:' . $sessionId);
 		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
 			return new JSONResponse(['error' => 'task_query_failed'], Http::STATUS_BAD_REQUEST);
 		}
-		$tasks = array_filter($tasks, static function (Task $task) {
+		$messageTasks = array_filter($messageTasks, static function (Task $task) {
 			return $task->getStatus() === Task::STATUS_RUNNING || $task->getStatus() === Task::STATUS_SCHEDULED;
 		});
-		if (empty($tasks)) {
-			return new JSONResponse([
-				'taskId' => null,
-			]);
+		$titleTasks = array_filter($titleTasks, static function (Task $task) {
+			return $task->getStatus() === Task::STATUS_RUNNING || $task->getStatus() === Task::STATUS_SCHEDULED;
+		});
+		$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+		$responseData = [
+			'messageTaskId' => null,
+			'titleTaskId' => null,
+			'sessionTitle' => $session->getTitle(),
+		];
+		if (!empty($messageTasks)) {
+			$task = array_pop($messageTasks);
+			$responseData['messageTaskId'] = $task->getId();
 		}
-		$task = array_pop($tasks);
-		return new JSONResponse([
-			'taskId' => $task->getId(),
-		]);
+		if (!empty($titleTasks)) {
+			$task = array_pop($titleTasks);
+			$responseData['titleTaskId'] = $task->getId();
+		}
+		return new JSONResponse($responseData);
 	}
 
 	/**
@@ -523,8 +533,7 @@ class ChattyLLMController extends Controller {
 				$title = str_replace('"', '', $title);
 				$title = explode(PHP_EOL, $title)[0];
 				$title = trim($title);
-
-				$this->sessionMapper->updateSessionTitle($this->userId, $sessionId, $title);
+				// do not write the title here since it's done in the listener
 
 				return new JSONResponse(['result' => $title]);
 			} catch (\OCP\DB\Exception $e) {

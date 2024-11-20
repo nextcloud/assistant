@@ -7,6 +7,7 @@ namespace OCA\Assistant\Listener;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
+use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
@@ -19,6 +20,7 @@ class ChattyLLMTaskListener implements IEventListener {
 
 	public function __construct(
 		private MessageMapper $messageMapper,
+		private SessionMapper $sessionMapper,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -31,23 +33,32 @@ class ChattyLLMTaskListener implements IEventListener {
 		$task = $event->getTask();
 		$customId = $task->getCustomId();
 		$appId = $task->getAppId();
-		if ($appId !== (Application::APP_ID . ':chatty-llm')
-			|| $customId === null
-			|| !preg_match('/^chatty-llm:(\d+)$/', $customId, $matches)
-		) {
+
+		if ($customId === null || $appId !== (Application::APP_ID . ':chatty-llm')) {
 			return;
 		}
-		$sessionId = (int)$matches[1];
 
-		$message = new Message();
-		$message->setSessionId($sessionId);
-		$message->setRole('assistant');
-		$message->setContent(trim($task->getOutput()['output'] ?? ''));
-		$message->setTimestamp(time());
-		try {
-			$this->messageMapper->insert($message);
-		} catch (\OCP\DB\Exception $e) {
-			$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
+		// title generation
+		if (preg_match('/^chatty-title:(\d+)$/', $customId, $matches)) {
+			$sessionId = (int)$matches[1];
+			$title = trim($task->getOutput()['output'] ?? '');
+			$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $title);
+		}
+
+		// message generation
+		if (preg_match('/^chatty-llm:(\d+)$/', $customId, $matches)) {
+			$sessionId = (int)$matches[1];
+
+			$message = new Message();
+			$message->setSessionId($sessionId);
+			$message->setRole('assistant');
+			$message->setContent(trim($task->getOutput()['output'] ?? ''));
+			$message->setTimestamp(time());
+			try {
+				$this->messageMapper->insert($message);
+			} catch (\OCP\DB\Exception $e) {
+				$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
+			}
 		}
 	}
 }
