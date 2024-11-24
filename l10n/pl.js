@@ -38,6 +38,7 @@ OC.L10N.register(
     "Upload file" : "Prześlij plik",
     "Could not upload the file" : "Nie można przesłać pliku",
     "Could not upload the files" : "Nie udało się przesłać plików",
+    "Writing style" : "Styl pisania",
     "Describe the writing style you want to use or supply an example document." : "Opisz styl pisania, jakiego chcesz używać, lub podaj przykładowy dokument.",
     "Source material" : "Materiał źródłowy",
     "Describe what you want the document to be written on." : "Opisz, na czym ma być zapisany dokument.",
