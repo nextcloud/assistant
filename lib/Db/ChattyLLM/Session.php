@@ -31,7 +31,7 @@ use OCP\DB\Types;
 /**
  * @method \string getUserId()
  * @method \void setUserId(string $userId)
- * @method \?string getTitle()
+ * @method \string|null getTitle()
  * @method \void setTitle(?string $title)
  * @method \int|null getTimestamp()
  * @method \void setTimestamp(?int $timestamp)

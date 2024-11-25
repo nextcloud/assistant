@@ -4,6 +4,7 @@ namespace OCA\Assistant\AppInfo;
 
 use OCA\Assistant\Capabilities;
 use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
+use OCA\Assistant\Listener\ChattyLLMTaskListener;
 use OCA\Assistant\Listener\CSPListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
@@ -55,6 +56,7 @@ class Application extends App implements IBootstrap {
 
 		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
+		$context->registerEventListener(TaskSuccessfulEvent::class, ChattyLLMTaskListener::class);
 
 		$context->registerNotifierService(Notifier::class);
 

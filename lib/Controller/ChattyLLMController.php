@@ -297,7 +297,11 @@ class ChattyLLMController extends Controller {
 			. PHP_EOL
 			. 'assistant: ';
 
-		$taskId = $this->scheduleLLMTask($stichedPrompt);
+		try {
+			$taskId = $this->scheduleLLMTask($stichedPrompt, $sessionId);
+		} catch (\Exception $e) {
+			return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+		}
 
 		return new JSONResponse(['taskId' => $taskId]);
 	}
@@ -374,7 +378,7 @@ class ChattyLLMController extends Controller {
 				$message->setRole('assistant');
 				$message->setContent(trim($task->getOutput()['output'] ?? ''));
 				$message->setTimestamp(time());
-				$this->messageMapper->insert($message);
+				// do not insert here, it is done by the listener
 				return new JSONResponse($message);
 			} catch (\OCP\DB\Exception $e) {
 				$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
@@ -386,6 +390,56 @@ class ChattyLLMController extends Controller {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
 		}
 		return new JSONResponse(['error' => 'unknown_error', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
+	}
+
+	/**
+	 * Check the status of a session
+	 *
+	 * Used by the frontend to determine if it should poll a generation task status.
+	 *
+	 * @param int $sessionId
+	 * @return JSONResponse
+	 * @throws \JsonException
+	 * @throws \OCP\DB\Exception
+	 */
+	#[NoAdminRequired]
+	public function checkSession(int $sessionId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+
+		$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
+		if (!$sessionExists) {
+			return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
+		}
+
+		try {
+			$messageTasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', 'chatty-llm:' . $sessionId);
+			$titleTasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', 'chatty-title:' . $sessionId);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			return new JSONResponse(['error' => 'task_query_failed'], Http::STATUS_BAD_REQUEST);
+		}
+		$messageTasks = array_filter($messageTasks, static function (Task $task) {
+			return $task->getStatus() === Task::STATUS_RUNNING || $task->getStatus() === Task::STATUS_SCHEDULED;
+		});
+		$titleTasks = array_filter($titleTasks, static function (Task $task) {
+			return $task->getStatus() === Task::STATUS_RUNNING || $task->getStatus() === Task::STATUS_SCHEDULED;
+		});
+		$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+		$responseData = [
+			'messageTaskId' => null,
+			'titleTaskId' => null,
+			'sessionTitle' => $session->getTitle(),
+		];
+		if (!empty($messageTasks)) {
+			$task = array_pop($messageTasks);
+			$responseData['messageTaskId'] = $task->getId();
+		}
+		if (!empty($titleTasks)) {
+			$task = array_pop($titleTasks);
+			$responseData['titleTaskId'] = $task->getId();
+		}
+		return new JSONResponse($responseData);
 	}
 
 	/**
@@ -430,7 +484,11 @@ class ChattyLLMController extends Controller {
 				. PHP_EOL . PHP_EOL
 				. $userInstructions;
 
-			$taskId = $this->scheduleLLMTask($stichedPrompt);
+			try {
+				$taskId = $this->scheduleLLMTask($stichedPrompt, $sessionId, false);
+			} catch (\Exception $e) {
+				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+			}
 			return new JSONResponse(['taskId' => $taskId]);
 		} catch (\OCP\DB\Exception $e) {
 			$this->logger->warning('Failed to generate a title for the chat session', ['exception' => $e]);
@@ -475,8 +533,7 @@ class ChattyLLMController extends Controller {
 				$title = str_replace('"', '', $title);
 				$title = explode(PHP_EOL, $title)[0];
 				$title = trim($title);
-
-				$this->sessionMapper->updateSessionTitle($this->userId, $sessionId, $title);
+				// do not write the title here since it's done in the listener
 
 				return new JSONResponse(['result' => $title]);
 			} catch (\OCP\DB\Exception $e) {
@@ -525,14 +582,32 @@ class ChattyLLMController extends Controller {
 	 * Schedule the LLM task
 	 *
 	 * @param string $content
+	 * @param int $sessionId
+	 * @param bool $isMessage
 	 * @return int|null
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
 	 * @throws UnauthorizedException
 	 * @throws ValidationException
+	 * @throws \JsonException
 	 */
-	private function scheduleLLMTask(string $content): ?int {
-		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId);
+	private function scheduleLLMTask(string $content, int $sessionId, bool $isMessage = true): ?int {
+		$customId = ($isMessage
+			? 'chatty-llm:'
+			: 'chatty-title:') . $sessionId;
+		try {
+			$tasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', $customId);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \Exception('task_query_failed');
+		}
+		$tasks = array_filter($tasks, static function (Task $task) {
+			return $task->getStatus() === Task::STATUS_RUNNING || $task->getStatus() === Task::STATUS_SCHEDULED;
+		});
+		// prevent scheduling multiple llm tasks simultaneously for one session
+		if (!empty($tasks)) {
+			throw new \Exception('session_already_thinking');
+		}
+		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId, $customId);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId();
 	}

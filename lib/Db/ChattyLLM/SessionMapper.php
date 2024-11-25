@@ -25,7 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Db\ChattyLLM;
 
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -57,6 +60,24 @@ class SessionMapper extends QBMapper {
 		} catch (\OCP\AppFramework\Db\MultipleObjectsReturnedException $e) {
 			return true;
 		}
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $sessionId
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getUserSession(string $userId, int $sessionId): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('id', 'title', 'timestamp')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
+
+		return $this->findEntity($qb);
 	}
 
 	/**
