@@ -219,8 +219,9 @@ export default {
 
 	watch: {
 		async active() {
-			this.loading.llmGeneration = false
-			this.loading.titleGeneration = false
+			// set loading to true since we know we check that
+			this.loading.llmGeneration = true
+			this.loading.titleGeneration = true
 			this.allMessagesLoaded = false
 			this.chatContent = ''
 			this.msgCursor = 0
@@ -248,7 +249,6 @@ export default {
 				console.debug('check session response:', checkSessionResponse.data)
 				if (checkSessionResponse.data.messageTaskId !== null) {
 					try {
-						this.loading.llmGeneration = true
 						const message = await this.pollGenerationTask(checkSessionResponse.data.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
 						this.messages.push(message)
@@ -256,12 +256,10 @@ export default {
 					} catch (error) {
 						console.error('checkGenerationTask error:', error)
 						showError(t('assistant', 'Error generating a response'))
-					} finally {
-						this.loading.llmGeneration = false
 					}
-				} else if (checkSessionResponse.data.titleTaskId !== null) {
+				}
+				if (checkSessionResponse.data.titleTaskId !== null) {
 					try {
-						this.loading.titleGeneration = true
 						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponse.data.titleTaskId, sessionId)
 						console.debug('checkTaskPolling result:', titleResponse)
 						if (titleResponse?.data?.result == null) {
@@ -275,13 +273,14 @@ export default {
 					} catch (error) {
 						console.error('onCheckSessionTitle error:', error)
 						showError(error?.response?.data?.error ?? t('assistant', 'Error getting the generated title for the conversation'))
-					} finally {
-						this.loading.titleGeneration = false
 					}
 				}
 			} catch (error) {
 				console.error('check session error:', error)
 				showError(t('assistant', 'Error checking if the session is thinking'))
+			} finally {
+				this.loading.llmGeneration = false
+				this.loading.titleGeneration = false
 			}
 		},
 	},
@@ -607,6 +606,11 @@ export default {
 		async pollGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollMessageGenerationTimerId = setInterval(() => {
+					if (sessionId !== this.active.id) {
+						console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
+						clearInterval(this.pollMessageGenerationTimerId)
+						return
+					}
 					axios.get(
 						getChatURL('/check_generation'),
 						{ params: { taskId, sessionId } },
@@ -619,10 +623,6 @@ export default {
 							// should we reject here?
 						}
 					}).catch(error => {
-						if (sessionId !== this.active.id) {
-							console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
-							clearInterval(this.pollMessageGenerationTimerId)
-						}
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
 						if (error.response?.status !== 417) {
 							console.error('checkTaskPolling error', error)
@@ -639,6 +639,11 @@ export default {
 		async pollTitleGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollTitleGenerationTimerId = setInterval(() => {
+					if (sessionId !== this.active.id) {
+						console.debug('Stop polling title for session ' + sessionId + ' because it is not selected anymore')
+						clearInterval(this.pollTitleGenerationTimerId)
+						return
+					}
 					axios.get(
 						getChatURL('/check_title_generation'),
 						{ params: { taskId, sessionId } },
@@ -651,10 +656,6 @@ export default {
 						}
 						clearInterval(this.pollTitleGenerationTimerId)
 					}).catch(error => {
-						if (sessionId !== this.active.id) {
-							console.debug('Stop polling title for session ' + sessionId + ' because it is not selected anymore')
-							clearInterval(this.pollTitleGenerationTimerId)
-						}
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
 						if (error.response?.status !== 417) {
 							console.error('checkTaskPolling error', error)
