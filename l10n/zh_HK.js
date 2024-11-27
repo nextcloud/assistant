@@ -94,6 +94,8 @@ OC.L10N.register(
     "Load older messages" : "加載較舊的消息",
     "Retry response generation" : "請重試回應生成",
     "Error generating a response" : "産生回應對時發生錯誤",
+    "Error getting the generated title for the conversation" : "獲取對話生成標題時發生錯誤",
+    "Error checking if the session is thinking" : "檢查工作階段是否正在思考時發生錯誤",
     "Error updating title of conversation" : "更新對話標題時發生錯誤",
     "Untitled conversation" : "未命名對話",
     "Error generating a title for the conversation" : "生成對話標題時出現錯誤",

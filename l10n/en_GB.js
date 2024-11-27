@@ -94,6 +94,8 @@ OC.L10N.register(
     "Load older messages" : "Load older messages",
     "Retry response generation" : "Retry response generation",
     "Error generating a response" : "Error generating a response",
+    "Error getting the generated title for the conversation" : "Error getting the generated title for the conversation",
+    "Error checking if the session is thinking" : "Error checking if the session is thinking",
     "Error updating title of conversation" : "Error updating title of conversation",
     "Untitled conversation" : "Untitled conversation",
     "Error generating a title for the conversation" : "Error generating a title for the conversation",
