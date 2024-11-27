@@ -94,6 +94,8 @@ OC.L10N.register(
     "Load older messages" : "تحميل الرسائل القديمة",
     "Retry response generation" : "إعادة توليد الاستجابة",
     "Error generating a response" : "حدث خطأ عند توليد استجابة",
+    "Error getting the generated title for the conversation" : "خطأ في الحصول على العنوان المُولَّد للمحادثة",
+    "Error checking if the session is thinking" : "خطأ في التحقُّق من أن الجلسة في حالة تفكير",
     "Error updating title of conversation" : "حدث خطأ أثناء تحديث عنوان المحادثة",
     "Untitled conversation" : "محادثة بدون عنوان",
     "Error generating a title for the conversation" : "حدث خطأ عند توليد عنوان للمحادثة",

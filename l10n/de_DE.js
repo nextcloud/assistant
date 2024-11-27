@@ -94,6 +94,8 @@ OC.L10N.register(
     "Load older messages" : "Ältere Nachrichten laden",
     "Retry response generation" : "Antworterstellung wiederholen",
     "Error generating a response" : "Fehler beim Erstellen einer Antwort",
+    "Error getting the generated title for the conversation" : "Fehler beim Abrufen des generierten Titels für die Unterhaltung",
+    "Error checking if the session is thinking" : "Fehler bei der Prüfung, ob die Sitzung nachdenkt",
     "Error updating title of conversation" : "Fehler beim Aktualisieren des Titels der Unterhaltung",
     "Untitled conversation" : "Unterhaltung ohne Titel",
     "Error generating a title for the conversation" : "Fehler beim Erstellen eines Titels für die Unterhaltung",
