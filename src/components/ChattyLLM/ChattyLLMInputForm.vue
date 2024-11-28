@@ -28,7 +28,7 @@
 					:inline-actions="1"
 					@click="onSessionSelect(session)">
 					<template #actions>
-						<NcActionButton @click="deleteSession(session.id)">
+						<NcActionButton @click="sessionIdToDelete = session.id">
 							<template #icon>
 								<DeleteIcon v-if="!loading.sessionDelete" :size="20" />
 								<NcLoadingIcon v-else :size="20" />
@@ -121,6 +121,26 @@
 				:loading="loading"
 				@submit="handleSubmit" />
 		</NcAppContent>
+		<NcDialog :open="sessionIdToDelete !== null"
+			:name="t('assistant', 'Conversation deletion')"
+			:message="deletionConfirmationMessage"
+			:container="null"
+			@closing="sessionIdToDelete = null">
+			<template #actions>
+				<NcButton
+					@click="sessionIdToDelete = null">
+					{{ t('assistant', 'Cancel') }}
+				</NcButton>
+				<NcButton
+					type="warning"
+					@click="deleteSession(sessionIdToDelete)">
+					<template #icon>
+						<DeleteIcon />
+					</template>
+					{{ t('assistant', 'Delete') }}
+				</NcButton>
+			</template>
+		</NcDialog>
 	</div>
 </template>
 
@@ -141,6 +161,7 @@ import NcAppNavigationList from '@nextcloud/vue/dist/Components/NcAppNavigationL
 import NcAppNavigationNew from '@nextcloud/vue/dist/Components/NcAppNavigationNew.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
 
 import ConversationBox from './ConversationBox.vue'
 import EditableTextField from './EditableTextField.vue'
@@ -180,6 +201,7 @@ export default {
 		NcAppNavigationNew,
 		NcButton,
 		NcLoadingIcon,
+		NcDialog,
 
 		ConversationBox,
 		EditableTextField,
@@ -191,6 +213,7 @@ export default {
 		return {
 			// { id: number, title: string, user_id: string, timestamp: number }
 			active: null,
+			sessionIdToDelete: null,
 			chatContent: '',
 			sessions: null,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number }]
@@ -215,6 +238,17 @@ export default {
 			pollMessageGenerationTimerId: null,
 			pollTitleGenerationTimerId: null,
 		}
+	},
+
+	computed: {
+		deletionConfirmationMessage() {
+			if (this.sessions === null || this.sessionIdToDelete === null) {
+				return ''
+			}
+			const session = this.sessions.find(s => s.id === this.sessionIdToDelete)
+			const sessionTitle = this.getSessionTitle(session)?.trim()
+			return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
+		},
 	},
 
 	watch: {
@@ -426,6 +460,7 @@ export default {
 				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting conversation'))
 			} finally {
 				this.loading.sessionDelete = false
+				this.sessionIdToDelete = null
 			}
 		},
 
