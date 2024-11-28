@@ -93,6 +93,8 @@ OC.L10N.register(
     "Load older messages" : "Načíst starší zprávy",
     "Retry response generation" : "Znovu zkusit vytvořit odpověď",
     "Error generating a response" : "Chyba při vytváření odpovědi",
+    "Error getting the generated title for the conversation" : "Chyba při získávání vygenerovaného nadpisu pro konverzaci",
+    "Error checking if the session is thinking" : "Chyba při zjišťování, zda relace „přemýšlí“",
     "Error updating title of conversation" : "Chyba při aktualizaci nadpisu konverzace",
     "Untitled conversation" : "Nenazvaná konverzace",
     "Error generating a title for the conversation" : "Chyba při vytváření nadpisu konverzace",

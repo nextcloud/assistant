@@ -92,6 +92,8 @@
     "Load older messages" : "Cargar mensaxes antigas",
     "Retry response generation" : "Volver tentar a xeración de respostas",
     "Error generating a response" : "Produciuse un erro ao xerar unha resposta",
+    "Error getting the generated title for the conversation" : "Produciuse un erro ao obter o título xerado para a conversa",
+    "Error checking if the session is thinking" : "Produciuse un erro ao comprobar se a sesión está a pensar",
     "Error updating title of conversation" : "Produciuse un erro ao actualizar o título da conversa",
     "Untitled conversation" : "Conversa sen título",
     "Error generating a title for the conversation" : "Produciuse un erro ao xerar un título para a conversa",
