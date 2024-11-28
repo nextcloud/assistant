@@ -219,9 +219,6 @@ export default {
 
 	watch: {
 		async active() {
-			// set loading to true since we know we check that
-			this.loading.llmGeneration = true
-			this.loading.titleGeneration = true
 			this.allMessagesLoaded = false
 			this.chatContent = ''
 			this.msgCursor = 0
@@ -230,10 +227,14 @@ export default {
 			this.$refs.inputComponent.focus()
 
 			if (this.active !== null && !this.loading.newSession) {
+				this.loading.llmGeneration = true
+				this.loading.titleGeneration = true
 				await this.fetchMessages()
 				this.scrollToBottom()
 			} else {
 				// when no active session or creating a new session
+				this.loading.llmGeneration = false
+				this.loading.titleGeneration = false
 				this.allMessagesLoaded = true
 				this.loading.newSession = false
 				return
