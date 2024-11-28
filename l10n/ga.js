@@ -94,6 +94,8 @@ OC.L10N.register(
     "Load older messages" : "Íosluchtaigh teachtaireachtaí níos sine",
     "Retry response generation" : "Bain triail eile as giniúint freagartha",
     "Error generating a response" : "Earráid agus freagra á ghiniúint",
+    "Error getting the generated title for the conversation" : "Earráid agus an teideal ginte á fháil don chomhrá",
+    "Error checking if the session is thinking" : "Earráid ag seiceáil an bhfuil an seisiún ag smaoineamh",
     "Error updating title of conversation" : "Earráid agus teideal an chomhrá á nuashonrú",
     "Untitled conversation" : "Comhrá gan teideal",
     "Error generating a title for the conversation" : "Earráid agus teideal á ghiniúint don chomhrá",
