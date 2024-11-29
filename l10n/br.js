@@ -3,9 +3,9 @@ OC.L10N.register(
     {
     "Close" : "Serriñ",
     "Delete" : "Lemel",
+    "Cancel" : "Nullañ",
     "Submit" : "Kinnig",
     "Choose" : "Dibab",
-    "Cancel" : "Nullañ",
     "Cancelled" : "Arrestet",
     "Failed" : "C'hwitet",
     "Running" : "O redek",

@@ -3,9 +3,9 @@ OC.L10N.register(
     {
     "Close" : "ปิด",
     "Delete" : "ลบ",
+    "Cancel" : "ยกเลิก",
     "Submit" : "ส่ง",
     "Choose" : "เลือก",
-    "Cancel" : "ยกเลิก",
     "Cancelled" : "ยกเลิกแล้ว",
     "No file selected" : "ไม่ได้เลือกไฟล์",
     "Advanced" : "ขั้นสูง",
