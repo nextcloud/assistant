@@ -121,20 +121,24 @@ class AssistantApiController extends OCSController {
 	 *
 	 * Parse and extract text content of a file (if the file type is supported)
 	 *
-	 * @param string $filePath Path of the file to parse in the user's storage
+	 * @param string|null $filePath Path of the file to parse in the user's storage
+	 * @param int|null $fileId Id of the file to parse in the user's storage
 	 * @return DataResponse<Http::STATUS_OK, array{parsedText: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, string, array{}>
 	 *
 	 * 200: Text parsed from file successfully
 	 * 400: Parsing text from file is not possible
 	 */
 	#[NoAdminRequired]
-	public function parseTextFromFile(string $filePath): DataResponse {
+	public function parseTextFromFile(?string $filePath = null, ?int $fileId = null): DataResponse {
 		if ($this->userId === null) {
 			return new DataResponse('Unknow user', Http::STATUS_BAD_REQUEST);
 		}
+		if ($fileId === null && $filePath === null) {
+			return new DataResponse('Invalid parameters', Http::STATUS_BAD_REQUEST);
+		}
 
 		try {
-			$text = $this->assistantService->parseTextFromFile($filePath, $this->userId);
+			$text = $this->assistantService->parseTextFromFile($this->userId, $filePath, $fileId);
 		} catch (\Exception | \Throwable $e) {
 			return new DataResponse($e->getMessage(), Http::STATUS_BAD_REQUEST);
 		}
