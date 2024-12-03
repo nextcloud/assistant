@@ -7,6 +7,7 @@ OC.L10N.register(
     "Result: %1$s" : "Rezultatas: %1$s",
     "View results" : "Rodyti rezultatus",
     "Artificial Intelligence" : "Dirbtinis intelektas",
+    "Show previous tasks" : "Rodyti ankstesnes užduotis",
     "Hide advanced options" : "Slėpti išplėstines parinktis",
     "Show advanced options" : "Rodyti išplėstines parinktis",
     "Try again" : "Bandyti dar kartą",
