@@ -125,6 +125,7 @@ import { SHAPE_TYPE_NAMES } from '../constants.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
+import { showError } from '@nextcloud/dialogs'
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
 
@@ -330,6 +331,10 @@ export default {
 								if (response.data?.ocs?.data?.parsedText) {
 									this.myInputs[k] = response.data?.ocs?.data?.parsedText
 								}
+							})
+							.catch(error => {
+								console.error(error)
+								showError(t('assistant', 'Failed to parse some files'))
 							})
 					}
 				}
