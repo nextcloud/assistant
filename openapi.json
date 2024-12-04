@@ -432,18 +432,22 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "required": [
-                                    "filePath"
-                                ],
                                 "properties": {
                                     "filePath": {
                                         "type": "string",
+                                        "nullable": true,
                                         "description": "Path of the file to parse in the user's storage"
+                                    },
+                                    "fileId": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "nullable": true,
+                                        "description": "Id of the file to parse in the user's storage"
                                     }
                                 }
                             }
