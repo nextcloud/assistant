@@ -125,6 +125,7 @@ import { SHAPE_TYPE_NAMES } from '../constants.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
+import { showError } from '@nextcloud/dialogs'
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
 
@@ -315,23 +316,57 @@ export default {
 		console.debug('[assistant] form\'s myoutputs', this.myOutputs)
 	},
 	methods: {
+		// Parse the file if a fileId is passed as initial value to a text field
+		parseTextFileInputs(taskType) {
+			if (taskType === undefined || taskType === null) {
+				return
+			}
+			Object.keys(this.myInputs).forEach(k => {
+				if (taskType.inputShape[k]?.type === 'Text') {
+					if (this.myInputs[k]?.fileId || this.myInputs[k]?.filePath) {
+						const { filePath, fileId } = { fileId: this.myInputs[k]?.fileId, filePath: this.myInputs[k]?.filePath }
+						this.myInputs[k] = ''
+						this.parseFile({ fileId, filePath })
+							.then(response => {
+								if (response.data?.ocs?.data?.parsedText) {
+									this.myInputs[k] = response.data?.ocs?.data?.parsedText
+								}
+							})
+							.catch(error => {
+								console.error(error)
+								showError(t('assistant', 'Failed to parse some files'))
+							})
+					}
+				}
+			})
+		},
+		parseFile({ filePath, fileId }) {
+			const url = generateOcsUrl('/apps/assistant/api/v1/parse-file')
+			return axios.post(url, {
+				filePath,
+				fileId,
+			})
+		},
 		getTaskTypes() {
 			this.loadingTaskTypes = true
 			axios.get(generateOcsUrl('/apps/assistant/api/v1/task-types'))
 				.then((response) => {
-					this.taskTypes = response.data.ocs.data.types
+					const taskTypes = response.data.ocs.data.types
 					// check if selected task type is in the list, fallback to text2text
-					const taskType = this.taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
+					const taskType = taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 					if (taskType === undefined) {
-						const text2textType = this.taskTypes.find(tt => tt.id === TEXT2TEXT_TASK_TYPE_ID)
+						const text2textType = taskTypes.find(tt => tt.id === TEXT2TEXT_TASK_TYPE_ID)
 						if (text2textType) {
+							this.parseTextFileInputs(text2textType)
 							this.mySelectedTaskTypeId = TEXT2TEXT_TASK_TYPE_ID
 						} else {
 							this.mySelectedTaskTypeId = null
 						}
+					} else {
+						this.parseTextFileInputs(taskType)
 					}
 					// add placeholders
-					this.taskTypes.forEach(tt => {
+					taskTypes.forEach(tt => {
 						if (tt.id === TEXT2TEXT_TASK_TYPE_ID && tt.inputShape.input) {
 							tt.inputShape.input.placeholder = t('assistant', 'Generate a first draft for a blog post about privacy')
 						} else if (tt.id === 'context_chat:context_chat' && tt.inputShape.prompt) {
@@ -350,6 +385,7 @@ export default {
 							tt.inputShape.source_input.placeholder = t('assistant', 'A description of what you need or some original content')
 						}
 					})
+					this.taskTypes = taskTypes
 				})
 				.catch((error) => {
 					console.error(error)

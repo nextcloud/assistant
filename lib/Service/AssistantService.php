@@ -545,12 +545,14 @@ class AssistantService {
 
 	/**
 	 * Parse text from file (if parsing the file type is supported)
-	 * @param string $filePath
 	 * @param string $userId
+	 * @param string|null $filePath
+	 * @param int|null $fileId
 	 * @return string
-	 * @throws \Exception
+	 * @throws NotPermittedException
+	 * @throws \OCP\Files\NotFoundException
 	 */
-	public function parseTextFromFile(string $filePath, string $userId): string {
+	public function parseTextFromFile(string $userId, ?string $filePath = null, ?int $fileId = null): string {
 
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($userId);
@@ -559,7 +561,11 @@ class AssistantService {
 		}
 
 		try {
-			$file = $userFolder->get($filePath);
+			if ($filePath !== null) {
+				$file = $userFolder->get($filePath);
+			} else {
+				$file = $userFolder->getFirstNodeById($fileId);
+			}
 		} catch (NotFoundException $e) {
 			throw new \Exception('File not found.');
 		}
