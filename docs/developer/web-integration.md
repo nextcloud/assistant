@@ -28,10 +28,9 @@ A helper function is exposed as `OCA.Assistant.openAssistantForm`. It opens the 
 
 It accepts one parameter which is an object that can contain those keys:
 * appId: [string, mandatory] app id of the app currently displayed
-* identifier: [string, optional, default: ''] the task identifier (if the task is scheduled, this helps to identify the task when receiving the "task finished" event in the backend)
+* customId: [string, optional, default: ''] the task custom ID (if the task is scheduled, this helps to identify the task when receiving the "task finished" event in the backend)
 * taskType: [string, optional, default: last used task type] initially selected task type. It can be a text processing task type class or `speech-to-text` or `OCP\TextToImage\Task`
-* input: [string, optional, default: '', DEPRECATED] initial input prompt (for task types that only require a prompt)
-* inputs: [object, optional, default: {}] initial inputs (specific to each task type)
+* input: [object, optional, default: {}] initial inputs (specific to each task type)
 * isInsideViewer: [boolean, optional, default: false] should be true if this function is called while the Viewer is displayed
 * closeOnResult: [boolean, optional, default: false] If true, the modal will be closed after running a synchronous task and getting its result
 * actionButtons: [array, optional, default: empty list] List of extra buttons to show in the assistant result form (only used if closeOnResult is false)
@@ -47,15 +46,17 @@ The promise resolves with a task object which looks like:
 ```javascript
 {
 	appId: 'text',
-	category: 1, // 0: text generation, 1: image generation, 2: speech-to-text
 	id: 310, // the assistant task ID
-	identifier: 'my custom identifier',
-	inputs: { prompt: 'give me a short summary of a simple settings section about GitHub' },
+	customId: 'my custom identifier',
+	input: { input: 'give me a short summary of a simple settings section about GitHub' },
 	ocpTaskId: 152, // the underlying OCP task ID
-	output: 'blabla',
-	status: 3, // 0: unknown, 1: scheduled, 2: running, 3: sucessful, 4: failed
-	taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
-	timestamp: 1711545305,
+	output: { output: 'blabla' },
+	status: 'STATUS_SUCCESSFUL', // 0: unknown, 1: scheduled, 2: running, 3: sucessful, 4: failed
+	type: 'core:text2text',
+	lastUpdated: 1711545305,
+	scheduledAt: 1711545301,
+	startedAt: 1711545302,
+	endedAt: 1711545303,
 	userId: 'janedoe',
 }
 ```
@@ -64,9 +65,9 @@ Complete example:
 ``` javascript
 OCA.Assistant.openAssistantForm({
 	appId: 'my_app_id',
-	identifier: 'my custom identifier',
-	taskType: 'OCP\\TextProcessing\\FreePromptTaskType',
-	inputs: { prompt: 'count to 3' },
+	customId: 'my custom identifier',
+	taskType: 'core:text2text',
+	inputs: { input: 'count to 3' },
 	actionButtons: [
 		{
 			label: 'Label 1',
@@ -85,5 +86,25 @@ OCA.Assistant.openAssistantForm({
 	console.debug('assistant promise success', task)
 }).catch(error => {
 	console.debug('assistant promise failure', error)
+})
+```
+
+### Populate input fields with the content of a file
+
+You might want to initialize an input field with the content of a file.
+This is possible by passing a file path or ID like this:
+
+``` javascript
+OCA.Assistant.openAssistantForm({
+	appId: 'my_app_id',
+	customId: 'my custom identifier',
+	taskType: 'core:text2text',
+	inputs: { input: { fileId: 123 } },
+})
+OCA.Assistant.openAssistantForm({
+	appId: 'my_app_id',
+	customId: 'my custom identifier',
+	taskType: 'core:text2text',
+	inputs: { input: { filePath: '/path/to/file.txt' } },
 })
 ```
