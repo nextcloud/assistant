@@ -70,6 +70,7 @@ OC.L10N.register(
     "Send request" : "Anfrage senden",
     "Launch this task again" : "Diese Aufgabe erneut ausführen",
     "Launch a task" : "Eine Aufgabe ausführen",
+    "Failed to parse some files" : "Einige Dateien konnten nicht geparst werden",
     "Generate a first draft for a blog post about privacy" : "Einen ersten Entwurf für einen Blogbeitrag zum Thema Datenschutz erstellen",
     "What is the venue for the team retreat this quarter?" : "Wo findet die Teamklausur in diesem Quartal statt?",
     "Type or paste the text to summarize" : "Text eingeben oder einfügen, der zusammengefasst werden soll",
