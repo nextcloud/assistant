@@ -70,6 +70,7 @@ OC.L10N.register(
     "Send request" : "傳送請求",
     "Launch this task again" : "再次啟動此任務",
     "Launch a task" : "執行任務",
+    "Failed to parse some files" : "部份檔案解析失敗",
     "Generate a first draft for a blog post about privacy" : "為隱私的部落格文章產生初稿",
     "What is the venue for the team retreat this quarter?" : "本季團隊靜修地點在哪裡？",
     "Type or paste the text to summarize" : "輸入或貼上文字進行總結",
