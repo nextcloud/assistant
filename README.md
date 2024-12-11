@@ -4,6 +4,8 @@
 -->
 # Nextcloud Assistant
 
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/assistant)](https://api.reuse.software/info/github.com/nextcloud/assistant)
+
 This app brings a user interface to use the Nextcloud text processing feature.
 
 It allows users to launch AI tasks, be notified when they finish and see the results.
