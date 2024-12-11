@@ -49,4 +49,3 @@ jobs:
           start-date: '2024-04-30'
           exempt-authors: '${{ steps.blocklist.outputs.blocklist }},${{ steps.scrape.outputs.users }}'
           exempt-bots: true
-
