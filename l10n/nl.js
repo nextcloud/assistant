@@ -9,6 +9,7 @@ OC.L10N.register(
     "Delete" : "Verwijder",
     "Edit title" : "Titel bewerken",
     "Cancel" : "Annuleren",
+    "Cancel editing" : "Annuleer bewerken",
     "Submit" : "Verwerken",
     "You" : "Je",
     "Delete message" : "Bericht verwijderen",
