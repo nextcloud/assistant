@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 # Nextcloud Assistant
 
 This app brings a user interface to use the Nextcloud text processing feature.
