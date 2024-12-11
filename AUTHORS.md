@@ -7,7 +7,7 @@
 - Andy Scherzinger <info@andy-scherzinger.de>
 - Anupam Kumar <kyteinsky@gmail.com>
 - Julien Veyssier <julien-nc@posteo.net>
-- Julius Härtl <jus@bitgrid.net>
+- Julius Knorr <jus@bitgrid.net>
 - Marcel Klehr <mklehr@gmx.net>
 - Sami Finnilä <sami.finnila@gmail.com>
 - provokateurin <kate@provokateurin.de>
