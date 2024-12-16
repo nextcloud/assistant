@@ -69,6 +69,7 @@ OC.L10N.register(
     "Cancel editing" : "Avbryt redigering",
     "Submit" : "Skicka",
     "You" : "Du",
+    "Copy message" : "Kopiera meddelande",
     "Delete message" : "Radera meddelande",
     "Choose" : "Välj",
     "Assistant options saved" : "Assistant-alternativ sparade",
