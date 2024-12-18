@@ -95,8 +95,10 @@ class Notifier implements INotifier {
 				$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
 			} else {
 				$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
-				$taskType = $availableTaskTypes[$params['taskTypeId']];
-				$taskTypeName = $taskType['name'];
+				if (isset($availableTaskTypes[$params['taskTypeId']])) {
+					$taskType = $availableTaskTypes[$params['taskTypeId']];
+					$taskTypeName = $taskType['name'];
+				}
 			}
 		} catch (\Exception | \Throwable $e) {
 			$this->logger->debug('Impossible to get task type ' . $params['taskTypeId'], ['exception' => $e]);
