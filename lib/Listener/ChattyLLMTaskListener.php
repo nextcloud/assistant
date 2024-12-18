@@ -33,6 +33,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		$task = $event->getTask();
 		$customId = $task->getCustomId();
 		$appId = $task->getAppId();
+		$taskTypeId = $task->getTaskTypeId();
 
 		if ($customId === null || $appId !== (Application::APP_ID . ':chatty-llm')) {
 			return;
@@ -58,6 +59,17 @@ class ChattyLLMTaskListener implements IEventListener {
 				$this->messageMapper->insert($message);
 			} catch (\OCP\DB\Exception $e) {
 				$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
+			}
+
+			// store the conversation token and the actions if we are using the agency feature
+			if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
+				$conversationToken = ($task->getOutput()['conversation_token'] ?? null) ?: null;
+				$pendingActions = ($task->getOutput()['actions'] ?? null) ?: null;
+				$session->setAgencyConversationToken($conversationToken);
+				$session->setAgencyPendingActions($pendingActions);
+				$this->sessionMapper->update($session);
 			}
 		}
 	}

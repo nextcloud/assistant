@@ -653,6 +653,8 @@ export default {
 					).then(response => {
 						clearInterval(this.pollMessageGenerationTimerId)
 						if (sessionId === this.active.id) {
+							// TODO check that
+							this.session_agency_pending_actions = response.data.session_agency_pending_actions
 							resolve(response.data)
 						} else {
 							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')

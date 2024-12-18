@@ -292,15 +292,28 @@ class ChattyLLMController extends Controller {
 			return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 		}
 
-		$stichedPrompt =
-			$this->getStichedMessages($sessionId)
-			. PHP_EOL
-			. 'assistant: ';
-
-		try {
-			$taskId = $this->scheduleLLMTask($stichedPrompt, $sessionId);
-		} catch (\Exception $e) {
-			return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+			&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID])
+		) {
+			$message = $this->messageMapper->getLastHumanMessage($sessionId);
+			$prompt = $message->getContent();
+			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+			$lastConversationToken = $session->getAgencyConversationToken() ?? '{}';
+			try {
+				$taskId = $this->scheduleAgencyTask($prompt, 0, $lastConversationToken, $sessionId);
+			} catch (\Exception $e) {
+				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+			}
+		} else {
+			$prompt =
+				$this->getStichedMessages($sessionId)
+				. PHP_EOL
+				. 'assistant: ';
+			try {
+				$taskId = $this->scheduleLLMTask($prompt, $sessionId);
+			} catch (\Exception $e) {
+				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+			}
 		}
 
 		return new JSONResponse(['taskId' => $taskId]);
@@ -378,8 +391,11 @@ class ChattyLLMController extends Controller {
 				$message->setRole('assistant');
 				$message->setContent(trim($task->getOutput()['output'] ?? ''));
 				$message->setTimestamp(time());
+				$jsonMessage = $message->jsonSerialize();
+				$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+				$jsonMessage['session_agency_pending_actions'] = $session->getAgencyPendingActions();
 				// do not insert here, it is done by the listener
-				return new JSONResponse($message);
+				return new JSONResponse($jsonMessage);
 			} catch (\OCP\DB\Exception $e) {
 				$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
 				return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message into DB')], Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -430,6 +446,7 @@ class ChattyLLMController extends Controller {
 			'messageTaskId' => null,
 			'titleTaskId' => null,
 			'sessionTitle' => $session->getTitle(),
+			'session_agency_pending_actions' => $session->getAgencyPendingActions(),
 		];
 		if (!empty($messageTasks)) {
 			$task = array_pop($messageTasks);
@@ -578,23 +595,7 @@ class ChattyLLMController extends Controller {
 		return $stichedPrompt;
 	}
 
-	/**
-	 * Schedule the LLM task
-	 *
-	 * @param string $content
-	 * @param int $sessionId
-	 * @param bool $isMessage
-	 * @return int|null
-	 * @throws Exception
-	 * @throws PreConditionNotMetException
-	 * @throws UnauthorizedException
-	 * @throws ValidationException
-	 * @throws \JsonException
-	 */
-	private function scheduleLLMTask(string $content, int $sessionId, bool $isMessage = true): ?int {
-		$customId = ($isMessage
-			? 'chatty-llm:'
-			: 'chatty-title:') . $sessionId;
+	private function checkIfSessionIsThinking(string $customId): void {
 		try {
 			$tasks = $this->taskProcessingManager->getUserTasksByApp($this->userId, Application::APP_ID . ':chatty-llm', $customId);
 		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
@@ -607,7 +608,59 @@ class ChattyLLMController extends Controller {
 		if (!empty($tasks)) {
 			throw new \Exception('session_already_thinking');
 		}
+	}
+
+	/**
+	 * Schedule the LLM task
+	 *
+	 * @param string $content
+	 * @param int $sessionId
+	 * @param bool $isMessage whether we want to generate a message or a session title
+	 * @return int|null
+	 * @throws Exception
+	 * @throws PreConditionNotMetException
+	 * @throws UnauthorizedException
+	 * @throws ValidationException
+	 * @throws \JsonException
+	 */
+	private function scheduleLLMTask(string $content, int $sessionId, bool $isMessage = true): ?int {
+		$customId = ($isMessage
+			? 'chatty-llm:'
+			: 'chatty-title:') . $sessionId;
+		$this->checkIfSessionIsThinking($customId);
 		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId, $customId);
+		$this->taskProcessingManager->scheduleTask($task);
+		return $task->getId();
+	}
+
+	/**
+	 * Schedule an agency task
+	 *
+	 * @param string $content
+	 * @param int $confirmation
+	 * @param string $conversationToken
+	 * @param int $sessionId
+	 * @return int|null
+	 * @throws Exception
+	 * @throws PreConditionNotMetException
+	 * @throws UnauthorizedException
+	 * @throws ValidationException
+	 */
+	private function scheduleAgencyTask(string $content, int $confirmation, string $conversationToken, int $sessionId): ?int {
+		$customId = 'chatty-llm:' . $sessionId;
+		$this->checkIfSessionIsThinking($customId);
+		$taskInput = [
+			'input' => $content,
+			'confirmation' => $confirmation,
+			'conversation_token' => $conversationToken,
+		];
+		$task = new Task(
+			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
+			$taskInput,
+			Application::APP_ID . ':chatty-llm',
+			$this->userId,
+			$customId
+		);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId();
 	}

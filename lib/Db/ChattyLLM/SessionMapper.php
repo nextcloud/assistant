@@ -72,7 +72,7 @@ class SessionMapper extends QBMapper {
 	 */
 	public function getUserSession(string $userId, int $sessionId): Session {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('id', 'title', 'timestamp')
+		$qb->select(Session::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
@@ -87,7 +87,7 @@ class SessionMapper extends QBMapper {
 	 */
 	public function getUserSessions(string $userId): array {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('id', 'title', 'timestamp')
+		$qb->select(Session::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
 			->orderBy('timestamp', 'DESC');
