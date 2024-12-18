@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: Julien Veyssier <julien-nc@posteo.net>
-SPDX-License-Identifier: AGPL-3.0-or-later
+  - SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
 	<div class="assistant-picker-content-wrapper" />
