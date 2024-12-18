@@ -235,6 +235,9 @@ export async function scheduleTask(appId, customId, taskType, inputs) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	saveLastSelectedTaskType(taskType)
+	if (taskType === 'core:text2text:translate') {
+		saveLastTargetLanguage(inputs.target_language)
+	}
 	const url = generateOcsUrl('taskprocessing/schedule')
 	const params = {
 		input: inputs,
@@ -269,6 +272,19 @@ async function getLastSelectedTaskType() {
 	}
 	const url = generateUrl('/apps/assistant/config')
 	return axios.get(url, req)
+}
+
+async function saveLastTargetLanguage(targetLanguage) {
+	const { default: axios } = await import('@nextcloud/axios')
+	const { generateUrl } = await import('@nextcloud/router')
+
+	const req = {
+		values: {
+			last_target_language: targetLanguage,
+		},
+	}
+	const url = generateUrl('/apps/assistant/config')
+	return axios.put(url, req)
 }
 
 /**
