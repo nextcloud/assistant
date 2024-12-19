@@ -115,6 +115,11 @@
 					</div>
 				</div>
 			</div>
+			<AgencyConfirmation v-if="active?.sessionAgencyPendingActions && active?.agencyAnswered === false"
+				:actions="active?.sessionAgencyPendingActions"
+				class="session-area__agency-confirmation"
+				@confirm="onAgencyAnswer(true)"
+				@reject="onAgencyAnswer(false)" />
 			<InputArea ref="inputComponent"
 				class="session-area__input-area"
 				:chat-content.sync="chatContent"
@@ -167,6 +172,7 @@ import ConversationBox from './ConversationBox.vue'
 import EditableTextField from './EditableTextField.vue'
 import InputArea from './InputArea.vue'
 import NoSession from './NoSession.vue'
+import AgencyConfirmation from './AgencyConfirmation.vue'
 
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
@@ -185,6 +191,7 @@ export default {
 	name: 'ChattyLLMInputForm',
 
 	components: {
+		AgencyConfirmation,
 		AutoFixIcon,
 		DeleteIcon,
 		PencilIcon,
@@ -282,6 +289,9 @@ export default {
 					console.debug('update session title with check result')
 				}
 				console.debug('check session response:', checkSessionResponse.data)
+				// update the pending actions when switching conversations
+				this.active.sessionAgencyPendingActions = checkSessionResponse.data?.sessionAgencyPendingActions
+				this.active.agencyAnswered = false
 				if (checkSessionResponse.data.messageTaskId !== null) {
 					try {
 						const message = await this.pollGenerationTask(checkSessionResponse.data.messageTaskId, sessionId)
@@ -404,8 +414,14 @@ export default {
 			const content = this.chatContent.trim()
 			const timestamp = +new Date() / 1000 | 0
 
-			if (this.active == null) {
+			if (this.active === null) {
 				await this.newSession()
+			}
+
+			// sending a message if there are pending actions means the user rejected the actions
+			// so we can consider the agency confirmation answered
+			if (this.active.sessionAgencyPendingActions) {
+				this.active.agencyAnswered = true
 			}
 
 			this.messages.push({ role, content, timestamp })
@@ -549,7 +565,7 @@ export default {
 			}
 		},
 
-		async newMessage(role, content, timestamp, sessionId) {
+		async newMessage(role, content, timestamp, sessionId, replaceLastMessage = true, agencyConfirm = null) {
 			try {
 				this.loading.newHumanMessage = true
 				const firstHumanMessage = this.messages.length === 1 && this.messages[0].role === Roles.HUMAN
@@ -564,15 +580,17 @@ export default {
 				console.debug('newMessage response:', response)
 				this.loading.newHumanMessage = false
 
-				// replace the last message with the response that contains the id
-				this.messages[this.messages.length - 1] = response.data
+				if (replaceLastMessage) {
+					// replace the last message with the response that contains the id
+					this.messages[this.messages.length - 1] = response.data
+				}
 
 				if (firstHumanMessage) {
 					const session = this.sessions.find((session) => session.id === sessionId)
 					session.title = content
 				}
 
-				await this.runGenerationTask(sessionId)
+				await this.runGenerationTask(sessionId, agencyConfirm)
 			} catch (error) {
 				this.loading.newHumanMessage = false
 				console.error('newMessage error:', error)
@@ -604,10 +622,16 @@ export default {
 			}
 		},
 
-		async runGenerationTask(sessionId) {
+		async runGenerationTask(sessionId, agencyConfirm = null) {
 			try {
 				this.loading.llmGeneration = true
-				const response = await axios.get(getChatURL('/generate'), { params: { sessionId } })
+				const params = {
+					sessionId,
+				}
+				if (agencyConfirm !== null) {
+					params.agencyConfirm = agencyConfirm ? 1 : 0
+				}
+				const response = await axios.get(getChatURL('/generate'), { params })
 				console.debug('scheduleGenerationTask response:', response)
 				const message = await this.pollGenerationTask(response.data.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
@@ -653,8 +677,8 @@ export default {
 					).then(response => {
 						clearInterval(this.pollMessageGenerationTimerId)
 						if (sessionId === this.active.id) {
-							// TODO check that
-							this.session_agency_pending_actions = response.data.session_agency_pending_actions
+							this.active.sessionAgencyPendingActions = response.data.sessionAgencyPendingActions
+							this.active.agencyAnswered = false
 							resolve(response.data)
 						} else {
 							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')
@@ -705,6 +729,22 @@ export default {
 					})
 				}, 2000)
 			})
+		},
+		async onAgencyAnswer(confirm) {
+			this.active.agencyAnswered = true
+			// send accept/reject message
+			const role = Roles.HUMAN
+			const content = ''
+			const timestamp = +new Date() / 1000 | 0
+
+			if (this.active === null) {
+				await this.newSession()
+			}
+
+			// this.messages.push({ role, content, timestamp })
+			this.chatContent = ''
+			this.scrollToBottom()
+			await this.newMessage(role, content, timestamp, this.active.id, false, confirm)
 		},
 	},
 }
@@ -860,6 +900,10 @@ export default {
 
 		&__chat-area, &__input-area {
 			padding-left: 1em;
+		}
+
+		&__agency-confirmation {
+			margin-left: 1em;
 		}
 
 		&__input-area {

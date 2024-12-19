@@ -181,7 +181,10 @@ class ChattyLLMController extends Controller {
 			}
 
 			$content = trim($content);
-			if (empty($content)) {
+			if (empty($content)
+				&& (!class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+					|| !isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]))
+			) {
 				return new JSONResponse(['error' => $this->l10n->t('Message content is empty')], Http::STATUS_BAD_REQUEST);
 			}
 
@@ -271,18 +274,14 @@ class ChattyLLMController extends Controller {
 	 * Schedule a task to generate a new message for the session
 	 *
 	 * @param integer $sessionId
+	 * @param int $agencyConfirm
 	 * @return JSONResponse
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
-	 * @throws NotFoundException
-	 * @throws PreConditionNotMetException
-	 * @throws UnauthorizedException
-	 * @throws ValidationException
 	 * @throws \OCP\DB\Exception
-	 * @throws \OCP\TaskProcessing\Exception\Exception
 	 */
 	#[NoAdminRequired]
-	public function generateForSession(int $sessionId): JSONResponse {
+	public function generateForSession(int $sessionId, int $agencyConfirm = 0): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -300,7 +299,7 @@ class ChattyLLMController extends Controller {
 			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
 			$lastConversationToken = $session->getAgencyConversationToken() ?? '{}';
 			try {
-				$taskId = $this->scheduleAgencyTask($prompt, 0, $lastConversationToken, $sessionId);
+				$taskId = $this->scheduleAgencyTask($prompt, $agencyConfirm, $lastConversationToken, $sessionId);
 			} catch (\Exception $e) {
 				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 			}
@@ -393,7 +392,10 @@ class ChattyLLMController extends Controller {
 				$message->setTimestamp(time());
 				$jsonMessage = $message->jsonSerialize();
 				$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
-				$jsonMessage['session_agency_pending_actions'] = $session->getAgencyPendingActions();
+				$jsonMessage['sessionAgencyPendingActions'] = $session->getAgencyPendingActions();
+				if ($jsonMessage['sessionAgencyPendingActions'] !== null) {
+					$jsonMessage['sessionAgencyPendingActions'] = json_decode($jsonMessage['sessionAgencyPendingActions']);
+				}
 				// do not insert here, it is done by the listener
 				return new JSONResponse($jsonMessage);
 			} catch (\OCP\DB\Exception $e) {
@@ -442,11 +444,15 @@ class ChattyLLMController extends Controller {
 			return $task->getStatus() === Task::STATUS_RUNNING || $task->getStatus() === Task::STATUS_SCHEDULED;
 		});
 		$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+		$pendingActions = $session->getAgencyPendingActions();
+		if ($pendingActions !== null) {
+			$pendingActions = json_decode($pendingActions);
+		}
 		$responseData = [
 			'messageTaskId' => null,
 			'titleTaskId' => null,
 			'sessionTitle' => $session->getTitle(),
-			'session_agency_pending_actions' => $session->getAgencyPendingActions(),
+			'sessionAgencyPendingActions' => $pendingActions,
 		];
 		if (!empty($messageTasks)) {
 			$task = array_pop($messageTasks);
