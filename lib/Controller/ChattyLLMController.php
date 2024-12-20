@@ -14,6 +14,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\Exceptions\AppConfigTypeConflictException;
 use OCP\IAppConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -26,6 +27,7 @@ use OCP\TaskProcessing\Exception\ValidationException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
@@ -276,6 +278,7 @@ class ChattyLLMController extends Controller {
 	 * @param integer $sessionId
 	 * @param int $agencyConfirm
 	 * @return JSONResponse
+	 * @throws AppConfigTypeConflictException
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
@@ -304,12 +307,25 @@ class ChattyLLMController extends Controller {
 				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 			}
 		} else {
-			$prompt =
-				$this->getStichedMessages($sessionId)
-				. PHP_EOL
-				. 'assistant: ';
+			// classic chat
+			$systemPrompt = '';
+			$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1);
+			if ($firstMessage->getRole() === 'system') {
+				$systemPrompt = $firstMessage->getContent();
+			}
+			$history = $this->getRawLastMessages($sessionId);
+			do {
+				$lastUserMessage = array_pop($history);
+			} while ($lastUserMessage->getRole() !== 'human');
+			// history is a list of JSON strings
+			$history = array_map(static function (Message $message) {
+				return json_encode([
+					'role' => $message->getRole(),
+					'content' => $message->getContent(),
+				]);
+			}, $history);
 			try {
-				$taskId = $this->scheduleLLMTask($prompt, $sessionId);
+				$taskId = $this->scheduleLLMChatTask($lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
 			} catch (\Exception $e) {
 				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 			}
@@ -325,14 +341,10 @@ class ChattyLLMController extends Controller {
 	 * @param int $sessionId
 	 * @param int $messageId
 	 * @return JSONResponse
+	 * @throws AppConfigTypeConflictException
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
-	 * @throws NotFoundException
-	 * @throws PreConditionNotMetException
-	 * @throws UnauthorizedException
-	 * @throws ValidationException
 	 * @throws \OCP\DB\Exception
-	 * @throws \OCP\TaskProcessing\Exception\Exception
 	 */
 	#[NoAdminRequired]
 	public function regenerateForSession(int $sessionId, int $messageId): JSONResponse {
@@ -363,6 +375,8 @@ class ChattyLLMController extends Controller {
 	 * @param int $taskId
 	 * @param int $sessionId
 	 * @return JSONResponse
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
 	 */
 	#[NoAdminRequired]
@@ -417,6 +431,8 @@ class ChattyLLMController extends Controller {
 	 *
 	 * @param int $sessionId
 	 * @return JSONResponse
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
 	 * @throws \JsonException
 	 * @throws \OCP\DB\Exception
 	 */
@@ -470,14 +486,10 @@ class ChattyLLMController extends Controller {
 	 *
 	 * @param integer $sessionId
 	 * @return JSONResponse
+	 * @throws AppConfigTypeConflictException
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
-	 * @throws NotFoundException
-	 * @throws PreConditionNotMetException
-	 * @throws UnauthorizedException
-	 * @throws ValidationException
 	 * @throws \OCP\DB\Exception
-	 * @throws \OCP\TaskProcessing\Exception\Exception
 	 */
 	#[NoAdminRequired]
 	public function generateTitle(int $sessionId): JSONResponse {
@@ -503,12 +515,23 @@ class ChattyLLMController extends Controller {
 			);
 			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 
-			$stichedPrompt = $this->getStichedMessages($sessionId)
-				. PHP_EOL . PHP_EOL
-				. $userInstructions;
+			$systemPrompt = '';
+			$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1);
+			if ($firstMessage->getRole() === 'system') {
+				$systemPrompt = $firstMessage->getContent();
+			}
+
+			$history = $this->getRawLastMessages($sessionId);
+			// history is a list of JSON strings
+			$history = array_map(static function (Message $message) {
+				return json_encode([
+					'role' => $message->getRole(),
+					'content' => $message->getContent(),
+				]);
+			}, $history);
 
 			try {
-				$taskId = $this->scheduleLLMTask($stichedPrompt, $sessionId, false);
+				$taskId = $this->scheduleLLMChatTask($userInstructions, $systemPrompt, $history, $sessionId, false);
 			} catch (\Exception $e) {
 				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 			}
@@ -572,33 +595,21 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Get the first message (user instructions) and the last N messages (assistant and user messages)
-	 * and stich them together
+	 * Get the last N messages (assistant and user messages, avoid initial system prompt) as an array
 	 *
 	 * @param integer $sessionId
-	 * @return string
+	 * @return array<Message>
+	 * @throws AppConfigTypeConflictException
 	 * @throws \OCP\DB\Exception
-	 * @throws \RuntimeException
-	 * @throws \OCP\AppFramework\Db\DoesNotExistException
-	 * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException
 	 */
-	private function getStichedMessages(int $sessionId): string {
-		$stichedPrompt = '';
-
-		$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1);
-		if ($firstMessage->getRole() === 'system') {
-			$stichedPrompt = $firstMessage->getContent() . PHP_EOL;
-		}
-
+	private function getRawLastMessages(int $sessionId): array {
 		$lastNMessages = intval($this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10'));
 		$messages = $this->messageMapper->getMessages($sessionId, 0, $lastNMessages);
 
 		if ($messages[0]->getRole() === 'system') {
 			array_shift($messages);
 		}
-		$stichedPrompt .= implode(PHP_EOL, array_map(fn ($msg) => $msg->getContent(), $messages));
-
-		return $stichedPrompt;
+		return $messages;
 	}
 
 	private function checkIfSessionIsThinking(string $customId): void {
@@ -619,7 +630,9 @@ class ChattyLLMController extends Controller {
 	/**
 	 * Schedule the LLM task
 	 *
-	 * @param string $content
+	 * @param string $newPrompt
+	 * @param string $systemPrompt
+	 * @param array $history
 	 * @param int $sessionId
 	 * @param bool $isMessage whether we want to generate a message or a session title
 	 * @return int|null
@@ -627,14 +640,20 @@ class ChattyLLMController extends Controller {
 	 * @throws PreConditionNotMetException
 	 * @throws UnauthorizedException
 	 * @throws ValidationException
-	 * @throws \JsonException
 	 */
-	private function scheduleLLMTask(string $content, int $sessionId, bool $isMessage = true): ?int {
+	private function scheduleLLMChatTask(
+		string $newPrompt, string $systemPrompt, array $history, int $sessionId, bool $isMessage = true
+	): ?int {
 		$customId = ($isMessage
 			? 'chatty-llm:'
 			: 'chatty-title:') . $sessionId;
 		$this->checkIfSessionIsThinking($customId);
-		$task = new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId, $customId);
+		$input = [
+			'input' => $newPrompt,
+			'system_prompt' => $systemPrompt,
+			'history' => $history,
+		];
+		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $this->userId, $customId);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId();
 	}
