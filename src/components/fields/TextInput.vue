@@ -60,7 +60,7 @@ const VALID_MIME_TYPES = [
 	'application/msword', // doc
 	'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
 	'application/vnd.oasis.opendocument.text', // odt
-	// 'application/pdf', // Not yet supported
+	'application/pdf', // pdf
 ]
 
 const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose a text file'))

@@ -15,7 +15,8 @@
 		"erusev/parsedown": "^1.7",
 		"henck/rtf-to-html": "^1.2",
 		"html2text/html2text": "^4.3",
-		"phpoffice/phpword": "^1.2"
+		"phpoffice/phpword": "^1.2",
+		"smalot/pdfparser": "^2.10"
 	},
 	"scripts": {
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
