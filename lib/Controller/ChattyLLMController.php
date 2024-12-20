@@ -26,7 +26,6 @@ use OCP\TaskProcessing\Exception\UnauthorizedException;
 use OCP\TaskProcessing\Exception\ValidationException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\Task;
-use OCP\TaskProcessing\TaskTypes\TextToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use Psr\Log\LoggerInterface;
 
@@ -90,7 +89,7 @@ class ChattyLLMController extends Controller {
 			return new JSONResponse([
 				'session' => $session,
 			]);
-		} catch (\OCP\DB\Exception | \RuntimeException $e) {
+		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to create a chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to create a chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -112,7 +111,7 @@ class ChattyLLMController extends Controller {
 		try {
 			$this->sessionMapper->updateSessionTitle($this->userId, $sessionId, $title);
 			return new JSONResponse();
-		} catch (\OCP\DB\Exception | \RuntimeException  $e) {
+		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to update the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -134,7 +133,7 @@ class ChattyLLMController extends Controller {
 			$this->sessionMapper->deleteSession($this->userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
 			return new JSONResponse();
-		} catch (\OCP\DB\Exception | \RuntimeException  $e) {
+		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to delete the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -266,7 +265,7 @@ class ChattyLLMController extends Controller {
 
 			$this->messageMapper->deleteMessageById($messageId);
 			return new JSONResponse();
-		} catch (\OCP\DB\Exception | \RuntimeException $e) {
+		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete a chat message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete a chat message')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -642,7 +641,7 @@ class ChattyLLMController extends Controller {
 	 * @throws ValidationException
 	 */
 	private function scheduleLLMChatTask(
-		string $newPrompt, string $systemPrompt, array $history, int $sessionId, bool $isMessage = true
+		string $newPrompt, string $systemPrompt, array $history, int $sessionId, bool $isMessage = true,
 	): ?int {
 		$customId = ($isMessage
 			? 'chatty-llm:'

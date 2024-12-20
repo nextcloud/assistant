@@ -557,7 +557,7 @@ class AssistantService {
 
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($userId);
-		} catch (\OC\User\NoUserException | NotPermittedException $e) {
+		} catch (\OC\User\NoUserException|NotPermittedException $e) {
 			throw new \Exception('Could not access user storage.');
 		}
 
@@ -577,7 +577,7 @@ class AssistantService {
 			} else {
 				throw new \Exception('Provided path does not point to a file.');
 			}
-		} catch (LockedException | GenericFileException | NotPermittedException $e) {
+		} catch (LockedException|GenericFileException|NotPermittedException $e) {
 			throw new \Exception('File could not be accessed.');
 		}
 

@@ -18,7 +18,7 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 		private IL10N $l10n,
 		private IURLGenerator $urlGenerator,
 		private IReferenceManager $referenceManager,
-		private ?string $userId
+		private ?string $userId,
 	) {
 	}
 

@@ -52,7 +52,7 @@ class NotificationService {
 		$notification->setApp(Application::APP_ID)
 			->setUser($task->getUserId())
 			->setDateTime(new DateTime())
-			->setObject($objectType, (string) ($task->getId() ?? 0))
+			->setObject($objectType, (string)($task->getId() ?? 0))
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);
