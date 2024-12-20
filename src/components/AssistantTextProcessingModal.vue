@@ -131,7 +131,7 @@ export default {
 			show: true,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
-			modalSize: 'large',
+			modalSize: 'full',
 		}
 	},
 	computed: {
