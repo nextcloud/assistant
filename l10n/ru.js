@@ -38,6 +38,7 @@ OC.L10N.register(
     "Cancel editing" : "Отменить редактирование",
     "Submit" : "Отправить ответ",
     "You" : "Вы",
+    "Copy message" : "Копировать сообщение",
     "Delete message" : "Удалить сообщение",
     "Choose" : "Выберите",
     "AI image generation smart picker" : "Генерация изображений с помощью ИИ",
