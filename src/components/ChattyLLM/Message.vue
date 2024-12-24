@@ -1,5 +1,6 @@
 <template>
-	<div class="message"
+	<div v-if="message.content"
+		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
 		<MessageActions v-show="showMessageActions"
@@ -34,6 +35,7 @@
 			:reference-limit="1"
 			:autolink="true" />
 	</div>
+	<div v-else />
 </template>
 
 <script>

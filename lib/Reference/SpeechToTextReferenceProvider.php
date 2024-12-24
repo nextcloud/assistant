@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2023 Anupam Kumar <kyteinsky@gmail.com>
  *
@@ -35,7 +36,7 @@ class SpeechToTextReferenceProvider extends ADiscoverableReferenceProvider {
 		private IL10N $l10n,
 		private IURLGenerator $urlGenerator,
 		private IReferenceManager $referenceManager,
-		private ?string $userId
+		private ?string $userId,
 	) {
 	}
 

@@ -21,7 +21,7 @@ class ConfigController extends Controller {
 		IRequest $request,
 		private IConfig $config,
 		private IAppConfig $appConfig,
-		private ?string $userId
+		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
 	}

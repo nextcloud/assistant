@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="lib/Controller/AssistantApiController.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[new DataResponse(['tasks' => $serializedTasks])]]></code>
+      <code><![CDATA[new DataResponse(['types' => $taskTypes])]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[DataResponse<Http::STATUS_OK, array{tasks: list<AssistantTaskProcessingTask>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>]]></code>
+      <code><![CDATA[DataResponse<Http::STATUS_OK, array{types: list<AssistantTaskProcessingTaskType>}, array{}>]]></code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="lib/Controller/AssistantController.php">
     <TooManyArguments>
       <code><![CDATA[new Task(
@@ -13,7 +23,14 @@
   </file>
   <file src="lib/Controller/ChattyLLMController.php">
     <TooManyArguments>
-      <code><![CDATA[new Task(TextToText::ID, ['input' => $content], Application::APP_ID . ':chatty-llm', $this->userId, $customId)]]></code>
+      <code><![CDATA[new Task(
+			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
+			$taskInput,
+			Application::APP_ID . ':chatty-llm',
+			$this->userId,
+			$customId
+		)]]></code>
+      <code><![CDATA[new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $this->userId, $customId)]]></code>
     </TooManyArguments>
   </file>
   <file src="lib/Service/AssistantService.php">

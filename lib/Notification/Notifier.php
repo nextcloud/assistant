@@ -100,7 +100,7 @@ class Notifier implements INotifier {
 					$taskTypeName = $taskType['name'];
 				}
 			}
-		} catch (\Exception | \Throwable $e) {
+		} catch (\Exception|\Throwable $e) {
 			$this->logger->debug('Impossible to get task type ' . $params['taskTypeId'], ['exception' => $e]);
 		}
 
