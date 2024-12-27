@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 # Using the assistant OCS API
 
 The assistant OCS API allows you to run/schedule tasks, get the task history, manage tasks etc...

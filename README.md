@@ -1,4 +1,10 @@
+<!--
+  - SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 # Nextcloud Assistant
+
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/assistant)](https://api.reuse.software/info/github.com/nextcloud/assistant)
 
 This app brings a user interface to use the Nextcloud text processing feature.
 
