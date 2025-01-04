@@ -12,6 +12,7 @@ OC.L10N.register(
     "Cancel editing" : "Anuluj edycję",
     "Submit" : "Wyślij",
     "You" : "Ty",
+    "Copy message" : "Skopiuj wiadomość",
     "Delete message" : "Usuń wiadomość",
     "Choose" : "Wybierz",
     "Nothing yet" : "Jeszcze nic",
