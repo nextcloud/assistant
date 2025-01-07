@@ -31,6 +31,7 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ChattyLLMController extends Controller {
+	private array $agencyActionNames;
 
 	public function __construct(
 		string $appName,
@@ -45,6 +46,22 @@ class ChattyLLMController extends Controller {
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
+		$this->agencyActionNames = [
+			'send_message_to_conversation' => $this->l10n->t('Send a message to a Talk conversation'),
+			'list_talk_conversations' => $this->l10n->t('List Talk conversations'),
+			'list_messages_in_conversation' => $this->l10n->t('List messages in a Talk conversation'),
+			'schedule_event' => $this->l10n->t('Schedule a calendar event'),
+			'list_calendars' => $this->l10n->t('List calendars'),
+		];
+	}
+
+	private function improveAgencyActionNames(array $actions): array {
+		return array_map(function ($action) {
+			if (isset($action->name) && isset($this->agencyActionNames[$action->name])) {
+				$action->name = $this->agencyActionNames[$action->name];
+			}
+			return $action;
+		}, $actions);
 	}
 
 	/**
@@ -408,6 +425,7 @@ class ChattyLLMController extends Controller {
 				$jsonMessage['sessionAgencyPendingActions'] = $session->getAgencyPendingActions();
 				if ($jsonMessage['sessionAgencyPendingActions'] !== null) {
 					$jsonMessage['sessionAgencyPendingActions'] = json_decode($jsonMessage['sessionAgencyPendingActions']);
+					$jsonMessage['sessionAgencyPendingActions'] = $this->improveAgencyActionNames($jsonMessage['sessionAgencyPendingActions']);
 				}
 				// do not insert here, it is done by the listener
 				return new JSONResponse($jsonMessage);
@@ -462,6 +480,7 @@ class ChattyLLMController extends Controller {
 		$pendingActions = $session->getAgencyPendingActions();
 		if ($pendingActions !== null) {
 			$pendingActions = json_decode($pendingActions);
+			$pendingActions = $this->improveAgencyActionNames($pendingActions);
 		}
 		$responseData = [
 			'messageTaskId' => null,
