@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.2.0 – 2025-01-07
+
+### Added
+
+- Agency support @julien-nc [#169](https://github.com/nextcloud/assistant/pull/169)
+
+### Changed
+
+- Use Text2TextChat in the chatty UI when the Agency task type is not available @julien-nc [#169](https://github.com/nextcloud/assistant/pull/169)
+- Switch to IAppConfig @julien-nc [#147](https://github.com/nextcloud/assistant/pull/147)
+- Avoid anthropomorphism @marcelklehr [#148](https://github.com/nextcloud/assistant/pull/148)
+- Add confirmation dialog before deleting a conversation @julien-nc [#160](https://github.com/nextcloud/assistant/pull/160)
+- Allow to pass file ID or path as initial input text field value @julien-nc [#161](https://github.com/nextcloud/assistant/pull/161)
+
+### Fixed
+
+- Fix polling when switching sessions in the frontend, prevent scheduling multiple llm tasks for one session @julien-nc [#156](https://github.com/nextcloud/assistant/pull/156)
+- Fix(notifier): check if task type is there before getting its name @julien-nc [#166](https://github.com/nextcloud/assistant/pull/166)
+
 ## 2.1.1 – 2024-10-09
 
 ### Added
