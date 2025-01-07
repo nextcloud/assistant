@@ -1,6 +1,6 @@
 <template>
 	<div class="convo-box">
-		<NoSession v-if="messages == null"
+		<NoSession v-if="messages === null"
 			:name="t('assistant', 'Error loading messages')"
 			description="Please try again later.">
 			<template #icon>

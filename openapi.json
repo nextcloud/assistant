@@ -98,7 +98,10 @@
                     "progress",
                     "status",
                     "type",
-                    "userId"
+                    "userId",
+                    "endedAt",
+                    "scheduledAt",
+                    "startedAt"
                 ],
                 "properties": {
                     "appId": {
@@ -115,13 +118,32 @@
                     },
                     "id": {
                         "type": "integer",
-                        "format": "int64",
-                        "nullable": true
+                        "format": "int64"
                     },
                     "input": {
                         "type": "object",
                         "additionalProperties": {
-                            "type": "object"
+                            "oneOf": [
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
                         }
                     },
                     "lastUpdated": {
@@ -130,8 +152,29 @@
                     },
                     "output": {
                         "type": "object",
+                        "nullable": true,
                         "additionalProperties": {
-                            "type": "object"
+                            "oneOf": [
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
                         }
                     },
                     "progress": {
@@ -147,6 +190,21 @@
                     },
                     "userId": {
                         "type": "string",
+                        "nullable": true
+                    },
+                    "endedAt": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "scheduledAt": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "startedAt": {
+                        "type": "integer",
+                        "format": "int64",
                         "nullable": true
                     }
                 }

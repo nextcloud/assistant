@@ -52,14 +52,17 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     appId: string,
  *     completionExpectedAt: integer|null,
  *     customId: string|null,
- *     id: int|null,
- *     input: array<string, mixed>,
+ *     id: int,
+ *     input: array<string, list<numeric|string>|numeric|string>,
  *     lastUpdated: integer,
- *     output: array<string, mixed>,
+ *     output: array<string, list<numeric|string>|numeric|string>|null,
  *     progress: float|null,
  *     status: string,
  *     type: string,
  *     userId: string|null,
+ *     endedAt: int|null,
+ *     scheduledAt: int|null,
+ *     startedAt: int|null,
  * }
  */
 class ResponseDefinitions {

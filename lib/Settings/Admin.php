@@ -41,7 +41,7 @@ class Admin implements ISettings {
 		$speechToTextEnabled = $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS);
 		$chattyLLMUserInstructionsTitle = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE);
-		$chattyLLMLastNMessages = (int) $this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10');
+		$chattyLLMLastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10');
 
 		$adminConfig = [
 			'text_processing_available' => $taskProcessingAvailable,
