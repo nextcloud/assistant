@@ -42,6 +42,8 @@
     </MoreSpecificReturnType>
     <RedundantCondition>
       <code><![CDATA[!self::DEBUG]]></code>
+      <code><![CDATA[!self::DEBUG]]></code>
+      <code><![CDATA[!self::DEBUG]]></code>
     </RedundantCondition>
     <TypeDoesNotContainType>
       <code><![CDATA[self::DEBUG]]></code>
