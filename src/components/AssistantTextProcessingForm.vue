@@ -347,19 +347,6 @@ export default {
 				fileId,
 			})
 		},
-
-		async getLastTargetLanguage() {
-			const { default: axios } = await import('@nextcloud/axios')
-			const { generateUrl } = await import('@nextcloud/router')
-
-			const req = {
-				params: {
-					key: 'last_target_language',
-				},
-			}
-			const url = generateUrl('/apps/assistant/config')
-			return axios.get(url, req)
-		},
 		getTaskTypes() {
 			this.loadingTaskTypes = true
 			axios.get(generateOcsUrl('/apps/assistant/api/v1/task-types'))
@@ -379,37 +366,33 @@ export default {
 						this.parseTextFileInputs(taskType)
 					}
 
-					this.getLastTargetLanguage()
-						.then((response) => {
-							const defaultTargetLanguage = response.data
-							// add placeholders
-							taskTypes.forEach(tt => {
-								if (tt.id === TEXT2TEXT_TASK_TYPE_ID && tt.inputShape.input) {
-									tt.inputShape.input.placeholder = t('assistant', 'Generate a first draft for a blog post about privacy')
-								} else if (tt.id === 'context_chat:context_chat' && tt.inputShape.prompt) {
-									tt.inputShape.prompt.placeholder = t('assistant', 'What is the venue for the team retreat this quarter?')
-								} else if (tt.id === 'core:text2text:summary' && tt.inputShape.input) {
-									tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to summarize')
-								} else if (tt.id === 'core:text2text:headline' && tt.inputShape.input) {
-									tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to generate a headline for')
-								} else if (tt.id === 'core:text2text:topics' && tt.inputShape.input) {
-									tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to extract the topics from')
-								} else if (tt.id === 'core:text2image' && tt.inputShape.input && tt.inputShape.numberOfImages) {
-									tt.inputShape.input.placeholder = t('assistant', 'landscape trees forest peaceful')
-									tt.inputShape.numberOfImages.placeholder = t('assistant', 'a number')
-								} else if (tt.id === 'core:contextwrite' && tt.inputShape.source_input && tt.inputShape.style_input) {
-									tt.inputShape.style_input.placeholder = t('assistant', 'Shakespeare or an example of the style')
-									tt.inputShape.source_input.placeholder = t('assistant', 'A description of what you need or some original content')
-									// set defaults for translate
-								} else if (tt.id === 'core:text2text:translate') {
-									if (defaultTargetLanguage) {
-										tt.inputShapeDefaults.target_language = defaultTargetLanguage
-									}
-									tt.inputShapeDefaults.origin_language = 'detect_language'
-								}
-							})
-							this.taskTypes = taskTypes
-						})
+					// add placeholders
+					taskTypes.forEach(tt => {
+						if (tt.id === TEXT2TEXT_TASK_TYPE_ID && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Generate a first draft for a blog post about privacy')
+						} else if (tt.id === 'context_chat:context_chat' && tt.inputShape.prompt) {
+							tt.inputShape.prompt.placeholder = t('assistant', 'What is the venue for the team retreat this quarter?')
+						} else if (tt.id === 'core:text2text:summary' && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to summarize')
+						} else if (tt.id === 'core:text2text:headline' && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to generate a headline for')
+						} else if (tt.id === 'core:text2text:topics' && tt.inputShape.input) {
+							tt.inputShape.input.placeholder = t('assistant', 'Type or paste the text to extract the topics from')
+						} else if (tt.id === 'core:text2image' && tt.inputShape.input && tt.inputShape.numberOfImages) {
+							tt.inputShape.input.placeholder = t('assistant', 'landscape trees forest peaceful')
+							tt.inputShape.numberOfImages.placeholder = t('assistant', 'a number')
+						} else if (tt.id === 'core:contextwrite' && tt.inputShape.source_input && tt.inputShape.style_input) {
+							tt.inputShape.style_input.placeholder = t('assistant', 'Shakespeare or an example of the style')
+							tt.inputShape.source_input.placeholder = t('assistant', 'A description of what you need or some original content')
+						} else if (tt.id === 'core:text2text:translate') {
+							tt.inputShapeDefaults.origin_language = 'detect_language'
+							const defaultTargetLanguage = OCA.Assistant.last_target_language
+							if (defaultTargetLanguage) {
+								tt.inputShapeDefaults.target_language = defaultTargetLanguage
+							}
+						}
+					})
+					this.taskTypes = taskTypes
 				})
 				.catch((error) => {
 					console.error(error)

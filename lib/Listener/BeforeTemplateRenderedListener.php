@@ -53,6 +53,10 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		$userAssistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
 		$this->initialStateService->provideInitialState('assistant-enabled', $assistantEnabled);
+		if ($assistantEnabled) {
+			$lastTargetLanguage = $this->config->getUserValue($this->userId, Application::APP_ID, 'last_target_language', '');
+			$this->initialStateService->provideInitialState('last-target-language', $lastTargetLanguage);
+		}
 		Util::addScript(Application::APP_ID, Application::APP_ID . '-main');
 	}
 }

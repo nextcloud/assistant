@@ -275,6 +275,8 @@ async function getLastSelectedTaskType() {
 }
 
 async function saveLastTargetLanguage(targetLanguage) {
+	OCA.Assistant.last_target_language = targetLanguage
+
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateUrl } = await import('@nextcloud/router')
 
