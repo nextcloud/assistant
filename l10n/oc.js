@@ -3,9 +3,9 @@ OC.L10N.register(
     {
     "User not found" : "Utilizaire pas trobat",
     "Close" : "Tampar",
+    "Cancel" : "Anullar",
     "Delete" : "Suprimir",
     "Edit title" : "Modificar lo títol",
-    "Cancel" : "Anullar",
     "Cancel editing" : "Anullar la modificacion",
     "Submit" : "Transmetre",
     "You" : "Vos",

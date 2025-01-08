@@ -2,9 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "Close" : "Tutup",
+    "Cancel" : "Batal",
     "Delete" : "Hapus",
     "Edit title" : "Edit judul",
-    "Cancel" : "Batal",
     "Choose" : "Pilih",
     "Cancelled" : "Dibatalkan",
     "Failed" : "Gagal",

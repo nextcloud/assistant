@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "User not found" : "Utèntzia no agatada",
     "Close" : "Serra",
+    "Cancel" : "Annulla",
     "New conversation" : "Tzarrada noa",
     "Delete" : "Cantzella",
     "Edit title" : "Modìfica tìtulu",
-    "Cancel" : "Annulla",
     "Submit" : "Imbia",
     "You" : "Tue",
     "Delete message" : "Cantzella messàgiu",

@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "User not found" : "Utilizador não encontrado",
     "Close" : "Fechar",
-    "Delete" : "Eliminar",
     "Cancel" : "Cancelar",
+    "Delete" : "Eliminar",
     "Submit" : "Submeter",
     "You" : "Vovê",
     "Choose" : "Escolher",

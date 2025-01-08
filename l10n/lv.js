@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "User not found" : "Lietotājs nav atrasts",
     "Close" : "Aizvērt",
-    "Delete" : "Dzēst",
     "Cancel" : "Atcelt",
+    "Delete" : "Dzēst",
     "Submit" : "Iesniegt",
     "Choose" : "Izvēlies",
     "Clear Selection" : "Notīrīt atlasi",

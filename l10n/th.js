@@ -2,8 +2,8 @@ OC.L10N.register(
     "assistant",
     {
     "Close" : "ปิด",
-    "Delete" : "ลบ",
     "Cancel" : "ยกเลิก",
+    "Delete" : "ลบ",
     "Submit" : "ส่ง",
     "Choose" : "เลือก",
     "Cancelled" : "ยกเลิกแล้ว",

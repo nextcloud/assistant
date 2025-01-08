@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "User not found" : "Kasutajat ei leitud",
     "Close" : "Sulge",
-    "Delete" : "Kustuta",
     "Cancel" : "Tühista",
+    "Delete" : "Kustuta",
     "Submit" : "Saada",
     "Choose" : "Vali",
     "Cancelled" : "Tühistatud",
