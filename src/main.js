@@ -26,6 +26,7 @@ function init() {
 		subscribe('notifications:action:execute', handleNotification)
 		if (loadState('assistant', 'assistant-enabled')) {
 			addAssistantMenuEntry()
+			OCA.Assistant.last_target_language = loadState('assistant', 'last-target-language')
 		}
 	}
 }

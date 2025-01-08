@@ -365,6 +365,7 @@ export default {
 					} else {
 						this.parseTextFileInputs(taskType)
 					}
+
 					// add placeholders
 					taskTypes.forEach(tt => {
 						if (tt.id === TEXT2TEXT_TASK_TYPE_ID && tt.inputShape.input) {
@@ -383,6 +384,12 @@ export default {
 						} else if (tt.id === 'core:contextwrite' && tt.inputShape.source_input && tt.inputShape.style_input) {
 							tt.inputShape.style_input.placeholder = t('assistant', 'Shakespeare or an example of the style')
 							tt.inputShape.source_input.placeholder = t('assistant', 'A description of what you need or some original content')
+						} else if (tt.id === 'core:text2text:translate') {
+							tt.inputShapeDefaults.origin_language = 'detect_language'
+							const defaultTargetLanguage = OCA.Assistant.last_target_language
+							if (defaultTargetLanguage) {
+								tt.inputShapeDefaults.target_language = defaultTargetLanguage
+							}
 						}
 					})
 					this.taskTypes = taskTypes
