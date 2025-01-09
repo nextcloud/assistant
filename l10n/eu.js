@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Failed to notify when ready; unknown user" : "Ezin izan da jakinarazi prest dagoenean; erabiltzaile ezezaguna",
+    "Send a message to a Talk conversation" : "Bidali mezu bat Talk elkarrizketa batera",
     "User not found" : "Ez da erabiltzailea aurkitu",
     "Nextcloud Assistant" : "Nextcloud Assistant",
     "AI text generation" : "IA testu sorpena",
