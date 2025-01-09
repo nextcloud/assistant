@@ -173,7 +173,17 @@ class AssistantService {
 		}
 		/** @var string $typeId */
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
-			// skip chat task type (not directly useful to the end user)
+			// skip chat, chat with tools and ContextAgent task types (not directly useful to the end user)
+			if (!self::DEBUG) {
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToTextChatWithTools')
+					&& $typeId === \OCP\TaskProcessing\TaskTypes\TextToTextChatWithTools::ID) {
+					continue;
+				}
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+					&& $typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+					continue;
+				}
+			}
 			if ($typeId === TextToTextChat::ID) {
 				// add the chattyUI virtual task type
 				$types[] = [
@@ -191,7 +201,9 @@ class AssistantService {
 					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
 				];
 				// do not add the raw TextToTextChat type
-				continue;
+				if (!self::DEBUG) {
+					continue;
+				}
 			}
 			$taskTypeArray['id'] = $typeId;
 			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
