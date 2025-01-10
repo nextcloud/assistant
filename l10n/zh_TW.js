@@ -162,7 +162,7 @@ OC.L10N.register(
     "You will receive a notification when it has finished" : "完成後，您將會收到通知",
     "Your task has been scheduled" : "您的任務已排程",
     "Nothing yet" : "還沒有",
-    "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未遞交任何「{taskTypename}」任務",
+    "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未遞交任何「{taskTypeName}」任務",
     "Succeeded" : "成功了",
     "Cancelled" : "已取消",
     "Failed" : "失敗",
