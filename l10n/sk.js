@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "User not found" : "Užívateľ nebol nájdený",
+    "AI image generation" : "Generovanie obrázkov pomocou AI",
     "View results" : "Zobraziť výsledky",
     "Artificial Intelligence" : "Umelá inteligencia",
     "Try again" : "Skúste znovu",
@@ -46,6 +47,8 @@ OC.L10N.register(
     "Audio input" : "Audio vstup",
     "Unknown error" : "Neznáma chyba",
     "Image generation" : "Generovanie obrázka",
+    "Generated image" : "Vygenerovaný obrázok",
+    "Regenerate" : "Znova vygenerovať",
     "Preview" : "Náhľad",
     "Unknown API error" : "Neznáma chyba API",
     "Send" : "Odoslať",
