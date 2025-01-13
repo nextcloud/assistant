@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "List calendars" : "Išvardyti kalendorius",
+    "User not logged in" : "Naudotojas neprisijungęs",
     "User not found" : "Naudotojas nerastas",
     "Session not found" : "Seansas nerastas",
     "Input: %1$s" : "Įvestis: %1$s",
