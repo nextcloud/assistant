@@ -62,7 +62,7 @@ Known providers:
 
 More details on how to set this up in the [admin docs](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html)
 ]]>	</description>
-	<version>2.2.1</version>
+	<version>2.3.0</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
 	<namespace>Assistant</namespace>

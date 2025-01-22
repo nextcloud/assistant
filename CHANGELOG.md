@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.3.0 – 2025-01-22
+
+### Changed
+
+- Save default target language & set detect_language as origin default @janepie @julien-nc [#167](https://github.com/nextcloud/assistant/pull/167)
+- Hide ChatWithTools and ContextAgentInteraction task types @julien-nc [#172](https://github.com/nextcloud/assistant/pull/172)
+- Add reuse compliance @AndyScherzinger [#163](https://github.com/nextcloud/assistant/pull/163)
+
+### Fixed
+
+- Fix config value types for some bools and ints we store @julien-nc [#174](https://github.com/nextcloud/assistant/pull/174)
+
 ## 2.2.0 – 2025-01-07
 
 ### Added
