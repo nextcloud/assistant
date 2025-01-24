@@ -9,6 +9,7 @@ OC.L10N.register(
     "Delete" : "Eyða",
     "Edit title" : "Breyta titli",
     "Submit" : "Senda inn",
+    "You" : "Þú",
     "Choose" : "Velja",
     "Nothing yet" : "Ekkert ennþá",
     "Cancelled" : "Hætt við",
