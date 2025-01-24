@@ -19,68 +19,68 @@
 					@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Top-right assistant') }}
-						<div v-if="!state.text_processing_available" class="checkbox-text">
-							<InformationOutlineIcon class="icon" />
-							<span>
-								{{ t('assistant', 'To be able to use this feature, please install at least one AI text processing provider.') }}
-							</span>
-						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
+				<NcNoteCard v-if="!state.text_processing_available" type="info">
+					{{ t('assistant', 'To be able to use this feature, please install at least one AI task processing provider.') }}
+				</NcNoteCard>
 				<NcCheckboxRadioSwitch
 					:checked="state.free_prompt_picker_enabled"
 					:disabled="!state.free_prompt_task_type_available"
 					@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'AI text generation smart picker') }}
-						<div v-if="!state.free_prompt_task_type_available" class="checkbox-text">
-							<InformationOutlineIcon class="icon" />
-							<span>
-								{{ t('assistant', 'To enable this feature, please install an AI text processing provider for the free prompt task type:') }}
-							</span>
-							<ul>
-								<li><a href="https://github.com/nextcloud/llm2#readme">Local Large language model app</a></li>
-								<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
-							</ul>
-						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
+				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="info">
+					<div class="checkbox-text">
+						<span>
+							{{ t('assistant', 'To enable this feature, please install an AI task processing provider for the free prompt task type:') }}
+						</span>
+						<ul>
+							<li><a href="https://github.com/nextcloud/llm2#readme">Local Large language model app</a></li>
+							<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+						</ul>
+					</div>
+				</NcNoteCard>
 				<NcCheckboxRadioSwitch
 					:checked="state.text_to_image_picker_enabled"
 					:disabled="!state.text_to_image_picker_available"
 					@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Text-to-image smart picker') }}
-						<div v-if="!state.text_to_image_picker_available" class="checkbox-text">
-							<InformationOutlineIcon class="icon" />
-							<span>
-								{{ t('assistant', 'To enable this feature, please install a text-to-image provider:') }}
-							</span>
-							<ul>
-								<li><a href="https://github.com/nextcloud/text2image_stablediffusion#readme">Local Text-To-Image StableDiffusion</a></li>
-								<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
-							</ul>
-						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
+				<NcNoteCard v-if="!state.text_to_image_picker_available" type="info">
+					<div class="checkbox-text">
+						<span>
+							{{ t('assistant', 'To enable this feature, please install a text-to-image provider:') }}
+						</span>
+						<ul>
+							<li><a href="https://github.com/nextcloud/text2image_stablediffusion#readme">Local Text-To-Image StableDiffusion</a></li>
+							<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+						</ul>
+					</div>
+				</NcNoteCard>
 				<NcCheckboxRadioSwitch
 					:checked="state.speech_to_text_picker_enabled"
 					:disabled="!state.speech_to_text_picker_available"
 					@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Speech-to-text smart picker') }}
-						<div v-if="!state.speech_to_text_picker_available" class="checkbox-text">
-							<InformationOutlineIcon class="icon" />
-							<span>
-								{{ t('assistant', 'To enable this feature, please install a speech-to-text provider:') }}
-							</span>
-							<ul>
-								<li><a href="https://github.com/nextcloud/stt_whisper2#readme">Local Speech-To-Text Whisper</a></li>
-								<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
-							</ul>
-						</div>
 					</div>
 				</NcCheckboxRadioSwitch>
+				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="info">
+					<div class="checkbox-text">
+						<span>
+							{{ t('assistant', 'To enable this feature, please install a speech-to-text provider:') }}
+						</span>
+						<ul>
+							<li><a href="https://github.com/nextcloud/stt_whisper2#readme">Local Speech-To-Text Whisper</a></li>
+							<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+						</ul>
+					</div>
+				</NcNoteCard>
 			</div>
 			<div class="chat-with-ai">
 				<h2>
@@ -145,7 +145,6 @@
 </template>
 
 <script>
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 import AssistantIcon from './icons/AssistantIcon.vue'
 
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
@@ -169,7 +168,6 @@ export default {
 		NcNoteCard,
 		NcRichContenteditable,
 		NcTextField,
-		InformationOutlineIcon,
 	},
 
 	data() {
@@ -224,7 +222,6 @@ export default {
 
 <style scoped lang="scss">
 #assistant_prefs {
-	h2,
 	.line,
 	.settings-hint {
 		display: flex;
@@ -237,16 +234,15 @@ export default {
 
 	.checkbox-text {
 		display: flex;
-		flex-direction: row;
-
-		.icon {
-			margin-right: 8px;
-			margin-left: 24px;
-		}
+		flex-direction: column;
 	}
 
-	h2 .icon {
-		margin-right: 8px;
+	h2 {
+		justify-content: start;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 8px;
 	}
 
 	.line {
@@ -264,6 +260,11 @@ export default {
 		}
 	}
 
+	.notecard,
+	.text-field {
+		max-width: 900px;
+	}
+
 	.chat-with-ai {
 		display: flex;
 		flex-direction: column;
@@ -271,11 +272,6 @@ export default {
 		> .line > label {
 			width: 900px !important;
 			font-weight: bold;
-		}
-
-		.notecard,
-		.text-field {
-			max-width: 900px;
 		}
 	}
 }
