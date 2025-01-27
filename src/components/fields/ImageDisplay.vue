@@ -84,7 +84,10 @@ export default {
 .image-display {
 	display: flex;
 	img {
-		width: 200px;
+		// we could use object-fit:cover instead and keep width=200 but the image preview would just show a portion of the image
+		// object-fit: cover;
+		// width: 200px;
+		width: auto;
 		height: 200px;
 	}
 }
