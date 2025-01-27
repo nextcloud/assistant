@@ -503,10 +503,10 @@ class AssistantService {
 	 * @throws NotPermittedException
 	 * @throws TaskProcessingException
 	 */
-	public function getOutputFilePreviewFile(string $userId, int $taskId, int $fileId): ?array {
+	public function getOutputFilePreviewFile(string $userId, int $taskId, int $fileId, ?int $x = 100, ?int $y = 100): ?array {
 		$taskOutputFile = $this->getTaskOutputFile($userId, $taskId, $fileId);
 		$realMime = mime_content_type($taskOutputFile->fopen('rb'));
-		return $this->previewService->getFilePreviewFile($taskOutputFile, 100, 100, $realMime ?: null);
+		return $this->previewService->getFilePreviewFile($taskOutputFile, $x, $y, $realMime ?: null);
 	}
 
 	/**

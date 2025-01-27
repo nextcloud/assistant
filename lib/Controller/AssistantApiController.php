@@ -20,6 +20,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\OCSController;
 use OCP\DB\Exception;
+use OCP\Files\File;
 use OCP\Files\GenericFileException;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
@@ -254,12 +255,14 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
-	 * Get output file preview
+	 * Get task output file preview
 	 *
 	 * Generate and get a preview of a task output file
 	 *
 	 * @param int $ocpTaskId The task ID
 	 * @param int $fileId The task output file ID
+	 * @param int|null $x Optional preview width in pixels
+	 * @param int|null $y Optional preview height in pixels
 	 * @return DataDownloadResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>|RedirectResponse<Http::STATUS_SEE_OTHER, array{}>
 	 *
 	 * 200: The file preview has been generated and is returned
@@ -268,20 +271,24 @@ class AssistantApiController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[NoCsrfRequired]
-	public function getOutputFilePreview(int $ocpTaskId, int $fileId): RedirectResponse|DataDownloadResponse|DataResponse {
+	public function getOutputFilePreview(int $ocpTaskId, int $fileId, ?int $x = 100, ?int $y = 100): RedirectResponse|DataDownloadResponse|DataResponse {
 		try {
-			$preview = $this->assistantService->getOutputFilePreviewFile($this->userId, $ocpTaskId, $fileId);
+			$preview = $this->assistantService->getOutputFilePreviewFile($this->userId, $ocpTaskId, $fileId, $x, $y);
 			if ($preview === null) {
 				$this->logger->error('No preview for user "' . $this->userId . '"');
 				return new DataResponse('', Http::STATUS_NOT_FOUND);
 			}
 
 			if ($preview['type'] === 'file') {
-				return new DataDownloadResponse(
-					$preview['file']->getContent(),
-					'preview',
-					$preview['file']->getMimeType()
+				/** @var File $file */
+				$file = $preview['type'];
+				$response = new DataDownloadResponse(
+					$file->getContent(),
+					$ocpTaskId . '-' . $fileId . '-preview',
+					$file->getMimeType()
 				);
+				$response->cacheFor(60 * 60 * 24, false, true);
+				return $response;
 			} elseif ($preview['type'] === 'icon') {
 				return new RedirectResponse($preview['icon']);
 			}
@@ -290,5 +297,36 @@ class AssistantApiController extends OCSController {
 			return new DataResponse('', Http::STATUS_NOT_FOUND);
 		}
 		return new DataResponse('', Http::STATUS_NOT_FOUND);
+	}
+
+	/**
+	 * Get task output file
+	 *
+	 * Get a real task output file
+	 *
+	 * @param int $ocpTaskId The task ID
+	 * @param int $fileId The task output file ID
+	 * @return DataDownloadResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 *
+	 * 200: The file preview has been generated and is returned
+	 * 404: The output file is not found
+	 */
+	#[NoAdminRequired]
+	#[NoCsrfRequired]
+	public function getOutputFile(int $ocpTaskId, int $fileId): DataDownloadResponse|DataResponse {
+		try {
+			$taskOutputFile = $this->assistantService->getTaskOutputFile($this->userId, $ocpTaskId, $fileId);
+			$realMime = mime_content_type($taskOutputFile->fopen('rb'));
+			$response = new DataDownloadResponse(
+				$taskOutputFile->getContent(),
+				$ocpTaskId . '-' . $fileId,
+				$realMime ?: 'application/octet-stream',
+			);
+			$response->cacheFor(60 * 60 * 24, false, true);
+			return $response;
+		} catch (Exception|Throwable $e) {
+			$this->logger->error('getOutputFile error', ['exception' => $e]);
+			return new DataResponse('', Http::STATUS_NOT_FOUND);
+		}
 	}
 }

@@ -1267,8 +1267,145 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview": {
             "get": {
                 "operationId": "assistant_api-get-output-file-preview",
-                "summary": "Get output file preview",
+                "summary": "Get task output file preview",
                 "description": "Generate and get a preview of a task output file",
+                "tags": [
+                    "assistant_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "apiVersion",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "v1"
+                            ],
+                            "default": "v1"
+                        }
+                    },
+                    {
+                        "name": "ocpTaskId",
+                        "in": "path",
+                        "description": "The task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "The task output file ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "x",
+                        "in": "query",
+                        "description": "Optional preview width in pixels",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "nullable": true,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "y",
+                        "in": "query",
+                        "description": "Optional preview height in pixels",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "nullable": true,
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The file preview has been generated and is returned",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The output file is not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "303": {
+                        "description": "Fallback to the file type icon URL",
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/assistant/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download": {
+            "get": {
+                "operationId": "assistant_api-get-output-file",
+                "summary": "Get task output file",
+                "description": "Get a real task output file",
                 "tags": [
                     "assistant_api"
                 ],
@@ -1362,16 +1499,6 @@
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }
-                    },
-                    "303": {
-                        "description": "Fallback to the file type icon URL",
-                        "headers": {
-                            "Location": {
-                                "schema": {
-                                    "type": "string"
                                 }
                             }
                         }
