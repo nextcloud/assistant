@@ -5,6 +5,12 @@
 -->
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="lib/Controller/AssistantApiController.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$response]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[DataDownloadResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>]]></code>
+    </InvalidReturnType>
     <LessSpecificReturnStatement>
       <code><![CDATA[new DataResponse(['tasks' => $serializedTasks])]]></code>
       <code><![CDATA[new DataResponse(['types' => $taskTypes])]]></code>

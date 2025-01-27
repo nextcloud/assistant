@@ -20,6 +20,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\OCSController;
 use OCP\DB\Exception;
+use OCP\Files\File;
 use OCP\Files\GenericFileException;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
@@ -279,10 +280,12 @@ class AssistantApiController extends OCSController {
 			}
 
 			if ($preview['type'] === 'file') {
+				/** @var File $file */
+				$file = $preview['type'];
 				$response = new DataDownloadResponse(
-					$preview['file']->getContent(),
+					$file->getContent(),
 					$ocpTaskId . '-' . $fileId . '-preview',
-					$preview['file']->getMimeType()
+					$file->getMimeType()
 				);
 				$response->cacheFor(60 * 60 * 24, false, true);
 				return $response;
