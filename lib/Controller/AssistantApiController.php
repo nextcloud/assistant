@@ -281,7 +281,7 @@ class AssistantApiController extends OCSController {
 
 			if ($preview['type'] === 'file') {
 				/** @var File $file */
-				$file = $preview['type'];
+				$file = $preview['file'];
 				$response = new DataDownloadResponse(
 					$file->getContent(),
 					$ocpTaskId . '-' . $fileId . '-preview',
