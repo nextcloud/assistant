@@ -122,7 +122,7 @@
     "The text must be shorter than or equal to {maxLength} characters, currently {length}" : "Der Text muss kürzer oder gleich {maxLength} Zeichen sein, aktuell {length}",
     "Cancel editing" : "Bearbeitung abbrechen",
     "Submit" : "Übermitteln",
-    "Type a message…" : "Geben Sie eine Nachricht ein…",
+    "Type a message…" : "Gib eine Nachricht ein…",
     "Processing…" : "Verarbeite…",
     "You" : "Du",
     "Message copied to clipboard" : "Nachricht in die Zwischenablage kopiert",
