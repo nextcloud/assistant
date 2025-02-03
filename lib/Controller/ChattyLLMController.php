@@ -420,11 +420,7 @@ class ChattyLLMController extends Controller {
 		}
 		if ($task->getStatus() === Task::STATUS_SUCCESSFUL) {
 			try {
-				$message = new Message();
-				$message->setSessionId($sessionId);
-				$message->setRole('assistant');
-				$message->setContent(trim($task->getOutput()['output'] ?? ''));
-				$message->setTimestamp(time());
+				$message = $this->messageMapper->getMessageByTaskId($sessionId, $taskId);
 				$jsonMessage = $message->jsonSerialize();
 				$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
 				$jsonMessage['sessionAgencyPendingActions'] = $session->getAgencyPendingActions();

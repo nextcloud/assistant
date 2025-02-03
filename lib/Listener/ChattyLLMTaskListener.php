@@ -57,6 +57,7 @@ class ChattyLLMTaskListener implements IEventListener {
 
 			$message = new Message();
 			$message->setSessionId($sessionId);
+			$message->setOcpTaskId($task->getId());
 			$message->setRole('assistant');
 			$message->setContent(trim($task->getOutput()['output'] ?? ''));
 			$message->setTimestamp(time());

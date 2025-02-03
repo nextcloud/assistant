@@ -103,6 +103,24 @@ class MessageMapper extends QBMapper {
 
 	/**
 	 * @param int $sessionId
+	 * @param int $ocpTaskId
+	 * @return Message
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getMessageByTaskId(int $sessionId, int $ocpTaskId): Message {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Message::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('ocp_task_id', $qb->createPositionalParameter($ocpTaskId, IQueryBuilder::PARAM_INT)));
+
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * @param int $sessionId
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
 	 * @return void
