@@ -510,58 +510,6 @@ class AssistantService {
 	}
 
 	/**
-	 * Sanitize inputs for storage based on the input type
-	 *
-	 * @param string $type
-	 * @param array $inputs
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function sanitizeInputs(string $type, array $inputs): array {
-		switch ($type) {
-			case 'copywriter':
-				{
-					// Sanitize the input array based on the allowed keys and making sure all inputs are strings:
-					$inputs = array_filter($inputs, function ($value, $key) {
-						return in_array($key, ['writingStyle', 'sourceMaterial']) && is_string($value);
-					}, ARRAY_FILTER_USE_BOTH);
-
-					if (count($inputs) !== 2) {
-						throw new \Exception('Invalid input(s)');
-					}
-					break;
-				}
-			case 'OCA\\ContextChat\\TextProcessing\\ContextChatTaskType':
-				{
-					if ((count($inputs) !== 1 && count($inputs) !== 4)
-						|| !isset($inputs['prompt'])
-						|| !is_string($inputs['prompt'])
-					) {
-						throw new \Exception('Invalid input(s)');
-					}
-
-					if (count($inputs) === 4) {
-						if (!isset($inputs['scopeType']) || !is_string($inputs['scopeType'])
-							|| !isset($inputs['scopeList']) || !is_array($inputs['scopeList'])
-							|| !isset($inputs['scopeListMeta']) || !is_array($inputs['scopeListMeta'])) {
-							throw new \Exception('Invalid input(s)');
-						}
-					}
-
-					break;
-				}
-			default:
-				{
-					if (!is_string($inputs['prompt']) || count($inputs) !== 1) {
-						throw new \Exception('Invalid input(s)');
-					}
-					break;
-				}
-		}
-		return $inputs;
-	}
-
-	/**
 	 * Parse text from file (if parsing the file type is supported)
 	 * @param string $userId
 	 * @param string|null $filePath

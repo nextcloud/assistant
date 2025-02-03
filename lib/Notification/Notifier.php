@@ -98,7 +98,10 @@ class Notifier implements INotifier {
 				// Catch the custom copywriter task type built on top of the FreePrompt task type.
 				$taskTypeName = $l->t('AI context writer');
 				$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
-			} elseif ($params['taskTypeId'] === 'context_chat:context_chat') {
+			} elseif (
+				$params['taskTypeId'] === 'context_chat:context_chat'
+				|| $params['taskTypeId'] === 'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType'
+			) {
 				$taskInput = $params['inputs']['prompt'] ?? null;
 				$taskTypeName = $l->t('Context Chat');
 			} else {
