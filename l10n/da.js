@@ -30,6 +30,7 @@ OC.L10N.register(
     "Output" : "Output",
     "Reset" : "Nulstil",
     "Unknown error" : "Ukendt fejl",
+    "Image generation" : "Billedgenerering",
     "Preview" : "Forhåndsvisning",
     "Send" : "Send",
     "Advanced options" : "Avancerede indstillinger"
