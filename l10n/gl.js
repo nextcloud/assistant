@@ -2,9 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Produciuse un fallo ao notificar cando estaba listo; usuario descoñecido",
-    "Send a message to a Talk conversation" : "Enviar unha mensaxe a unha conversa en Parlar",
-    "List Talk conversations" : "Lista de conversas en Parlar",
-    "List messages in a Talk conversation" : "Lista de mensaxes nunha conversa en Parlar",
+    "Send a message to a Talk conversation" : "Enviar unha mensaxe a unha conversa en Parladoiro",
+    "List Talk conversations" : "Lista de conversas en Parladoiro",
+    "List messages in a Talk conversation" : "Lista de mensaxes nunha conversa en Parladoiro",
     "Schedule a calendar event" : "Programar un evento no calendario",
     "List calendars" : "Lista de calendarios",
     "User not logged in" : "O usuario non accedeu",
