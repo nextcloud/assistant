@@ -10,7 +10,7 @@ OC.L10N.register(
     "Choose" : "Escolher",
     "Cancelled" : "Cancelado",
     "Running" : "Correr",
-    "No file selected" : "Nenhum ficheiro seleccionado",
+    "No file selected" : "Nenhum ficheiro selecionado",
     "Share" : "Partilhar",
     "Advanced" : "Avançado",
     "Copy" : "copiar",
