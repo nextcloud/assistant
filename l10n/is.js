@@ -27,6 +27,8 @@ OC.L10N.register(
     "Type some text" : "Skrifaðu einhvern texta",
     "Output" : "Frálag",
     "Reset" : "Endurstilla",
+    "Prompt" : "Kvaðning",
+    "Audio input" : "Hljóðinntak",
     "Unknown error" : "Óþekkt villa",
     "Image generation" : "Gerð mynda",
     "Preview" : "Forskoðun",
