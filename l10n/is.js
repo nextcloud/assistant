@@ -10,6 +10,7 @@ OC.L10N.register(
     "Edit title" : "Breyta titli",
     "Submit" : "Senda inn",
     "You" : "Þú",
+    "Delete message" : "Eyða skilaboðum",
     "Choose" : "Velja",
     "Nothing yet" : "Ekkert ennþá",
     "Cancelled" : "Hætt við",
