@@ -16,17 +16,12 @@
 			class="param"
 			:no-close="true"
 			:text="getParamText(argName, argValue)"
-			:title="getParamText(argName, argValue)">
-			<template #icon>
-				<CogIcon :size="16" />
-			</template>
-		</NcChip>
+			:title="getParamText(argName, argValue)" />
 	</div>
 </template>
 
 <script>
 import ToolsIcon from 'vue-material-design-icons/Tools.vue'
-import CogIcon from 'vue-material-design-icons/Cog.vue'
 
 import NcChip from '@nextcloud/vue/dist/Components/NcChip.js'
 
@@ -36,7 +31,6 @@ export default {
 	components: {
 		NcChip,
 		ToolsIcon,
-		CogIcon,
 	},
 
 	props: {
