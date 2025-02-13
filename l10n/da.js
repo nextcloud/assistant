@@ -14,6 +14,7 @@ OC.L10N.register(
     "You" : "Dig",
     "Delete message" : "Slet besked",
     "Choose" : "Vælg",
+    "Clear Selection" : "Ryd markering",
     "Cancelled" : "Annulléret",
     "Failed" : "Mislykkede",
     "Running" : "Løber",
@@ -33,11 +34,13 @@ OC.L10N.register(
     "Type some text" : "Skriv noget tekst",
     "Output" : "Output",
     "Reset" : "Nulstil",
+    "Audio transcription" : "Lydtransskription",
     "Stop recording" : "Stop optagelse",
     "Unknown error" : "Ukendt fejl",
     "Image generation" : "Billedgenerering",
     "Preview" : "Forhåndsvisning",
     "Send" : "Send",
-    "Advanced options" : "Avancerede indstillinger"
+    "Advanced options" : "Avancerede indstillinger",
+    "Unknown image generation error" : "Ukendt billedgenereringsfejl"
 },
 "nplurals=2; plural=(n != 1);");
