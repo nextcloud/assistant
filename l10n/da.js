@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "User not found" : "Bruger ikke fundet",
+    "Nextcloud Assistant" : "Nextcloud assistent",
     "Context Chat" : "Kontekstchat",
     "Artificial Intelligence" : "Kunstig Intelligens",
     "To be able to use this feature, please install at least one AI task processing provider." : "For at kunne bruge denne funktion skal du installere mindst én udbyder af AI-opgavebehandling.",
