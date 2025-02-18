@@ -91,7 +91,7 @@ OC.L10N.register(
     "The Assistant wants to perform sensitive actions on your behalf." : "O Asistente quere realizar accións sensíbeis no teu nome.",
     "Confirm those actions" : "Confirme esas accións",
     "Cancel" : "Cancelar",
-    "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Se non está satisfeito coas accións que quere executar o Asistente, pode axustar a súa solicitude enviando unha nova mensaxe no canto de premer no botón «Cancelar».",
+    "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Se non está satisfeito coas accións que quere executar o Asistente, pode axustar a súa solicitude enviando unha nova mensaxe en troques de premer no botón «Cancelar».",
     "New conversation" : "Nova conversa",
     "Loading conversations…" : "Cargando conversas…",
     "No conversations yet" : "Aínda non hai conversas",
