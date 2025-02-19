@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "User not found" : "Gebruiker niet gevonden",
+    "Nextcloud Assistant" : "Nextcloud Assistent",
     "View results" : "Bekijk resultaten",
     "Artificial Intelligence" : "Artificiële Intelligentie",
     "Try again" : "Probeer opnieuw",
