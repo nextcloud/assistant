@@ -23,6 +23,6 @@ OC.L10N.register(
     "Unknown error" : "Nezināma kļūda",
     "Preview" : "Priekšskatīt",
     "Send" : "Sūtīt",
-    "Advanced options" : "Papildu opcijas"
+    "Advanced options" : "Papildu iespējas"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");
