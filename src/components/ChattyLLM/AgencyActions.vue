@@ -34,7 +34,7 @@ export default {
 .agency-actions {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: start;
+	align-items: stretch;
 	gap: 8px;
 
 	.action {

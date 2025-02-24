@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface;
 
 #[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
 class ChattyLLMController extends Controller {
-	private array $agencyActionNames;
+	private array $agencyActionData;
 
 	public function __construct(
 		string $appName,
@@ -51,19 +51,47 @@ class ChattyLLMController extends Controller {
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
-		$this->agencyActionNames = [
-			'send_message_to_conversation' => $this->l10n->t('Send a message to a Talk conversation'),
-			'list_talk_conversations' => $this->l10n->t('List Talk conversations'),
-			'list_messages_in_conversation' => $this->l10n->t('List messages in a Talk conversation'),
-			'schedule_event' => $this->l10n->t('Schedule a calendar event'),
-			'list_calendars' => $this->l10n->t('List calendars'),
+		$this->agencyActionData = [
+			// talk
+			'send_message_to_conversation' => [
+				'title' => $this->l10n->t('Send a message to a Talk conversation'),
+				'icon' => 'Send',
+			],
+			'create_public_conversation' => [
+				'title' => $this->l10n->t('Create a conversation'),
+				'icon' => 'ChatPlus',
+			],
+			// mail
+			'send_email' => [
+				'title' => $this->l10n->t('Send an email'),
+				'icon' => 'EmailPlus',
+			],
+			// calendar
+			'schedule_event' => [
+				'title' => $this->l10n->t('Schedule a calendar event'),
+				'icon' => 'CalendarPlus',
+			],
+			'add_task' => [
+				'title' => $this->l10n->t('Add a calendar task'),
+				'icon' => 'CalendarCheck',
+			],
+			// deck
+			'add_card' => [
+				'title' => $this->l10n->t('Create a Deck card'),
+				'icon' => 'CardPlus',
+			],
 		];
 	}
 
 	private function improveAgencyActionNames(array $actions): array {
 		return array_map(function ($action) {
-			if (isset($action->name) && isset($this->agencyActionNames[$action->name])) {
-				$action->name = $this->agencyActionNames[$action->name];
+			if (isset($action->name, $this->agencyActionData[$action->name])) {
+				if (isset($this->agencyActionData[$action->name]['icon'])) {
+					$action->icon = $this->agencyActionData[$action->name]['icon'];
+				}
+				if (isset($this->agencyActionData[$action->name]['title'])) {
+					$action->name = $this->agencyActionData[$action->name]['title'];
+				}
 			}
 			return $action;
 		}, $actions);

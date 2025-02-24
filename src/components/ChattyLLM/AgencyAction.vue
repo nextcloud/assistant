@@ -5,9 +5,9 @@
 <template>
 	<div class="agency-action">
 		<div class="action-title">
-			<ToolsIcon :size="20" />
+			<NcIconSvgWrapper :path="iconPath" :name="action.name" />
 			<strong>
-				{{ action.name.replace(/_/g, ' ') }}
+				{{ action.name }}
 			</strong>
 		</div>
 		<span v-for="(argValue, argName) in action.args"
@@ -20,13 +20,13 @@
 </template>
 
 <script>
-import ToolsIcon from 'vue-material-design-icons/Tools.vue'
+import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 
 export default {
 	name: 'AgencyAction',
 
 	components: {
-		ToolsIcon,
+		NcIconSvgWrapper,
 	},
 
 	props: {
@@ -36,9 +36,23 @@ export default {
 		},
 	},
 
+	data: () => {
+		return {
+			iconPath: null,
+		}
+	},
+
+	mounted() {
+		this.getIcon()
+	},
+
 	methods: {
 		getParamText(argName, argValue) {
 			return argName.replace(/_/g, ' ') + ': ' + argValue
+		},
+		async getIcon() {
+			const { ['mdi' + (this.action.icon ?? 'Tools')]: icon } = await import('@mdi/js')
+			this.iconPath = icon
 		},
 	},
 }
@@ -58,6 +72,7 @@ export default {
 	.action-title {
 		display: flex;
 		align-items: center;
+		gap: 4px;
 	}
 
 	.param {
