@@ -10,23 +10,41 @@
 				{{ action.name }}
 			</strong>
 		</div>
-		<span v-for="(argValue, argName) in action.args"
+		<span v-for="(argValue, argName) in actionArguments"
 			:key="argName + argValue"
 			class="param"
 			:title="getParamText(argName, argValue)">
 			{{ getParamText(argName, argValue) }}
 		</span>
+		<NcButton v-if="needsExpand"
+			class="expand"
+			@click="expanded = !expanded">
+			{{ expanded ? t('assistant', 'Less') : t('assistant', 'More') }}
+			<template #icon>
+				<ChevronDoubleUpIcon v-if="expanded" />
+				<ChevronDoubleDownIcon v-else />
+			</template>
+		</NcButton>
 	</div>
 </template>
 
 <script>
+import ChevronDoubleDownIcon from 'vue-material-design-icons/ChevronDoubleDown.vue'
+import ChevronDoubleUpIcon from 'vue-material-design-icons/ChevronDoubleUp.vue'
+
 import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+const maxDisplayedArgs = 3
 
 export default {
 	name: 'AgencyAction',
 
 	components: {
 		NcIconSvgWrapper,
+		NcButton,
+		ChevronDoubleDownIcon,
+		ChevronDoubleUpIcon,
 	},
 
 	props: {
@@ -39,7 +57,24 @@ export default {
 	data: () => {
 		return {
 			iconPath: null,
+			expanded: false,
 		}
+	},
+
+	computed: {
+		needsExpand() {
+			return Object.keys(this.action.args).length > maxDisplayedArgs
+		},
+		actionArguments() {
+			if (this.needsExpand && !this.expanded) {
+				const keys = Object.keys(this.action.args).slice(0, maxDisplayedArgs)
+				return keys.reduce((acc, val) => {
+					acc[val] = this.action.args[val]
+					return acc
+				}, {})
+			}
+			return this.action.args
+		},
 	},
 
 	mounted() {
@@ -80,6 +115,10 @@ export default {
 		text-overflow: ellipsis;
 		width: 100%;
 		overflow: hidden;
+	}
+
+	.expand {
+		align-self: center;
 	}
 }
 </style>
