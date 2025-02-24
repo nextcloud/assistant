@@ -6,7 +6,8 @@
 	<div class="agency-actions">
 		<AgencyAction v-for="action in actions"
 			:key="action.id"
-			:action="action" />
+			:action="action"
+			class="action" />
 	</div>
 </template>
 
@@ -32,8 +33,12 @@ export default {
 <style lang="scss" scoped>
 .agency-actions {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
 	align-items: start;
-	gap: 4px;
+	gap: 8px;
+
+	.action {
+		max-width: 300px;
+	}
 }
 </style>

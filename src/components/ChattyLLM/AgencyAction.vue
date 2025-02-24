@@ -4,32 +4,28 @@
 -->
 <template>
 	<div class="agency-action">
-		<NcChip type="primary"
-			:no-close="true"
-			:text="action.name.replace(/_/g, ' ')">
-			<template #icon>
-				<ToolsIcon :size="16" />
-			</template>
-		</NcChip>
-		<NcChip v-for="(argValue, argName) in action.args"
+		<div class="action-title">
+			<ToolsIcon :size="20" />
+			<strong>
+				{{ action.name.replace(/_/g, ' ') }}
+			</strong>
+		</div>
+		<span v-for="(argValue, argName) in action.args"
 			:key="argName + argValue"
 			class="param"
-			:no-close="true"
-			:text="getParamText(argName, argValue)"
-			:title="getParamText(argName, argValue)" />
+			:title="getParamText(argName, argValue)">
+			{{ getParamText(argName, argValue) }}
+		</span>
 	</div>
 </template>
 
 <script>
 import ToolsIcon from 'vue-material-design-icons/Tools.vue'
 
-import NcChip from '@nextcloud/vue/dist/Components/NcChip.js'
-
 export default {
 	name: 'AgencyAction',
 
 	components: {
-		NcChip,
 		ToolsIcon,
 	},
 
@@ -51,12 +47,24 @@ export default {
 <style lang="scss" scoped>
 .agency-action {
 	display: flex;
+	flex-direction: column;
 	align-items: start;
 	gap: 4px;
-	flex-wrap: wrap;
+
+	border-radius: var(--border-radius-large);
+	background-color: var(--color-primary-element-light-hover);
+	padding: 8px;
+
+	.action-title {
+		display: flex;
+		align-items: center;
+	}
 
 	.param {
-		max-width: 300px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		width: 100%;
+		overflow: hidden;
 	}
 }
 </style>
