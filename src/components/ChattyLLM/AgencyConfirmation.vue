@@ -18,18 +18,18 @@
 						<InformationOutlineIcon :size="20" />
 					</template>
 				</NcButton>
-				<NcButton type="primary"
-					@click="$emit('confirm')">
-					{{ t('assistant', 'Confirm those actions') }}
-					<template #icon>
-						<AssistantIcon :size="20" />
-					</template>
-				</NcButton>
 				<NcButton type="secondary"
 					@click="$emit('reject')">
 					{{ t('assistant', 'Cancel') }}
 					<template #icon>
 						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+				<NcButton type="primary"
+					@click="$emit('confirm')">
+					{{ t('assistant', 'Confirm those actions') }}
+					<template #icon>
+						<AssistantIcon :size="20" />
 					</template>
 				</NcButton>
 			</div>
