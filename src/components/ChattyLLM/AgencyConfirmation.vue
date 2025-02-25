@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcNoteCard type="warning"
+	<NcNoteCard type="info"
 		class="agency-confirmation">
 		<div class="notecard-content">
 			<span>
@@ -18,18 +18,18 @@
 						<InformationOutlineIcon :size="20" />
 					</template>
 				</NcButton>
-				<NcButton type="success"
-					@click="$emit('confirm')">
-					{{ t('assistant', 'Confirm those actions') }}
-					<template #icon>
-						<AssistantIcon :size="20" />
-					</template>
-				</NcButton>
-				<NcButton type="error"
+				<NcButton type="secondary"
 					@click="$emit('reject')">
 					{{ t('assistant', 'Cancel') }}
 					<template #icon>
 						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+				<NcButton type="primary"
+					@click="$emit('confirm')">
+					{{ t('assistant', 'Confirm those actions') }}
+					<template #icon>
+						<AssistantIcon :size="20" />
 					</template>
 				</NcButton>
 			</div>

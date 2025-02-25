@@ -4,39 +4,47 @@
 -->
 <template>
 	<div class="agency-action">
-		<NcChip type="primary"
-			:no-close="true"
-			:text="action.name.replace(/_/g, ' ')">
-			<template #icon>
-				<ToolsIcon :size="16" />
-			</template>
-		</NcChip>
-		<NcChip v-for="(argValue, argName) in action.args"
+		<div class="action-title">
+			<NcIconSvgWrapper :path="iconPath" :name="action.name" />
+			<strong>
+				{{ action.name }}
+			</strong>
+		</div>
+		<span v-for="(argValue, argName) in actionArguments"
 			:key="argName + argValue"
 			class="param"
-			:no-close="true"
-			:text="getParamText(argName, argValue)"
 			:title="getParamText(argName, argValue)">
+			{{ getParamText(argName, argValue) }}
+		</span>
+		<NcButton v-if="needsExpand"
+			class="expand"
+			@click="expanded = !expanded">
+			{{ expanded ? t('assistant', 'Less') : t('assistant', 'More') }}
 			<template #icon>
-				<CogIcon :size="16" />
+				<ChevronDoubleUpIcon v-if="expanded" />
+				<ChevronDoubleDownIcon v-else />
 			</template>
-		</NcChip>
+		</NcButton>
 	</div>
 </template>
 
 <script>
-import ToolsIcon from 'vue-material-design-icons/Tools.vue'
-import CogIcon from 'vue-material-design-icons/Cog.vue'
+import ChevronDoubleDownIcon from 'vue-material-design-icons/ChevronDoubleDown.vue'
+import ChevronDoubleUpIcon from 'vue-material-design-icons/ChevronDoubleUp.vue'
 
-import NcChip from '@nextcloud/vue/dist/Components/NcChip.js'
+import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+const maxDisplayedArgs = 3
 
 export default {
 	name: 'AgencyAction',
 
 	components: {
-		NcChip,
-		ToolsIcon,
-		CogIcon,
+		NcIconSvgWrapper,
+		NcButton,
+		ChevronDoubleDownIcon,
+		ChevronDoubleUpIcon,
 	},
 
 	props: {
@@ -46,9 +54,40 @@ export default {
 		},
 	},
 
+	data: () => {
+		return {
+			iconPath: null,
+			expanded: false,
+		}
+	},
+
+	computed: {
+		needsExpand() {
+			return Object.keys(this.action.args).length > maxDisplayedArgs
+		},
+		actionArguments() {
+			if (this.needsExpand && !this.expanded) {
+				const keys = Object.keys(this.action.args).slice(0, maxDisplayedArgs)
+				return keys.reduce((acc, val) => {
+					acc[val] = this.action.args[val]
+					return acc
+				}, {})
+			}
+			return this.action.args
+		},
+	},
+
+	mounted() {
+		this.getIcon()
+	},
+
 	methods: {
 		getParamText(argName, argValue) {
 			return argName.replace(/_/g, ' ') + ': ' + argValue
+		},
+		async getIcon() {
+			const { ['mdi' + (this.action.icon ?? 'Tools')]: icon } = await import('@mdi/js')
+			this.iconPath = icon
 		},
 	},
 }
@@ -57,12 +96,29 @@ export default {
 <style lang="scss" scoped>
 .agency-action {
 	display: flex;
+	flex-direction: column;
 	align-items: start;
 	gap: 4px;
-	flex-wrap: wrap;
+
+	border-radius: var(--border-radius-large);
+	background-color: var(--color-primary-element-light-hover);
+	padding: 8px;
+
+	.action-title {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
 
 	.param {
-		max-width: 300px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		width: 100%;
+		overflow: hidden;
+	}
+
+	.expand {
+		align-self: center;
 	}
 }
 </style>
