@@ -10,6 +10,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.4.0 – 2025-02-25
+
+### Changed
+
+- Show image results full width @julien-nc [#183](https://github.com/nextcloud/assistant/pull/183)
+- Use new assistant endpoint to download task output files with mimetype detection, use preview endpoint to display image results @julien-nc [#184](https://github.com/nextcloud/assistant/pull/184)
+- Improve agency action confirmation style+design @julien-nc [#194](https://github.com/nextcloud/assistant/pull/194)
+
+### Fixed
+
+- Update npm pkgs to fix NcSelect with right-to-left languages @janepie [#185](https://github.com/nextcloud/assistant/pull/185)
+- Make assistant modal 'dark' @janepie [#180](https://github.com/nextcloud/assistant/pull/180)
+- Fix choose file button position with RTL languages @julien-nc [#186](https://github.com/nextcloud/assistant/pull/186)
+- Fix UI issues for Context Chat @kyteinsky [#190](https://github.com/nextcloud/assistant/pull/190)
+- Fix(regeneration): store task id in messages so the check endpoint can return a message ID @julien-nc [#188](https://github.com/nextcloud/assistant/pull/188)
+
 ## 2.3.0 – 2025-01-22
 
 ### Changed
