@@ -35,6 +35,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		private IInitialState $initialStateService,
 		private IEventDispatcher $eventDispatcher,
 		private ?string $userId,
+		private IAppConfig $allAppConfig,
 	) {
 	}
 
@@ -61,6 +62,8 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		if ($assistantEnabled) {
 			$lastTargetLanguage = $this->config->getUserValue($this->userId, Application::APP_ID, 'last_target_language', '');
 			$this->initialStateService->provideInitialState('last-target-language', $lastTargetLanguage);
+			$indexingComplete = $this->allAppConfig->getValueInt('context_chat', 'last_indexed_time', 0) !== 0;
+			$this->initialStateService->provideInitialState('contextChatIndexingComplete', $indexingComplete);
 		}
 		Util::addScript(Application::APP_ID, Application::APP_ID . '-main');
 	}
