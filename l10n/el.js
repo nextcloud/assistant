@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Αποστολή ηλεκτρονικού ταχυδρομείου",
     "User not found" : "Ο/Η χρήστης δεν βρέθηκε",
     "Nextcloud Assistant" : "Βοηθός Nextcloud",
     "AI image generation" : "Δημιουργία εικόνων AI",
@@ -19,6 +20,7 @@ OC.L10N.register(
     "Try again" : "Δοκιμάστε ξανά",
     "Close" : "Κλείσιμο",
     "Close Nextcloud Assistant" : "Κλείσιμο του βοηθού του Nextcloud",
+    "Less" : "Λιγότερα",
     "Cancel" : "Ακύρωση",
     "Delete" : "Διαγραφή",
     "Edit title" : "Επεξεργασία τίτλου",

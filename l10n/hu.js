@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "E-mail küldése",
     "User not found" : "A felhasználó nem található",
     "Nextcloud Assistant" : "Nextcloud Asszisztens",
     "AI text generation" : "AI szöveggenerálás",
@@ -20,6 +21,8 @@ OC.L10N.register(
     "Try again" : "Próbálja újra",
     "Close" : "Bezárás",
     "Close Nextcloud Assistant" : "Nextcloud Asszisztens bezárása",
+    "Less" : "Kevesebb",
+    "More" : "Továbbiak",
     "Cancel" : "Mégse",
     "Delete" : "Törlés",
     "Edit title" : "Cím szerkesztése",

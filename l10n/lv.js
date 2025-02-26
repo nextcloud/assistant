@@ -1,8 +1,11 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Sūtīt e-pasta ziņojumu",
     "User not found" : "Lietotājs nav atrasts",
     "Close" : "Aizvērt",
+    "Less" : "Mazāk",
+    "More" : "Vairāk",
     "Cancel" : "Atcelt",
     "Delete" : "Dzēst",
     "Submit" : "Iesniegt",

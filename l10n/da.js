@@ -8,6 +8,7 @@ OC.L10N.register(
     "To be able to use this feature, please install at least one AI task processing provider." : "For at kunne anvende denne funktion, så skal du installere mindst en udbyder af AI opgavebehandling.",
     "To enable this feature, please install an AI task processing provider for the free prompt task type:" : "For at aktivere denne funktion skal du installere en AI opgavebehandlingsudbyder til den gratis promptopgavetype:",
     "Close" : "Luk",
+    "Less" : "Mindre",
     "Cancel" : "Annuller",
     "Delete" : "Slet",
     "Edit title" : "Rediger titel",

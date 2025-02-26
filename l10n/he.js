@@ -1,9 +1,12 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "שליחת דוא״ל",
     "User not found" : "המשתמש לא נמצא",
     "Try again" : "ניסיון חוזר",
     "Close" : "סגירה",
+    "Less" : "פחות:",
+    "More" : "יותר",
     "Cancel" : "ביטול",
     "Delete" : "מחיקה",
     "Edit title" : "עריכת כותרת",

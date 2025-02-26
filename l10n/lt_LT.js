@@ -1,7 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
-    "List calendars" : "Išvardyti kalendorius",
+    "Send an email" : "Siųsti el. laišką",
     "User not logged in" : "Naudotojas neprisijungęs",
     "User not found" : "Naudotojas nerastas",
     "Session not found" : "Seansas nerastas",
@@ -14,6 +14,8 @@ OC.L10N.register(
     "Show advanced options" : "Rodyti išplėstines parinktis",
     "Try again" : "Bandyti dar kartą",
     "Close" : "Užverti",
+    "Less" : "Mažiau",
+    "More" : "Daugiau",
     "Cancel" : "Atsisakyti",
     "New conversation" : "Naujas pokalbis",
     "Loading conversations…" : "Įkeliami pokalbiai…",

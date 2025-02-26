@@ -1,9 +1,12 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Pošalji poruku e-pošte",
     "User not found" : "Korisnik nije pronađen",
     "View results" : "Pregledaj rezultate",
     "Close" : "Zatvori",
+    "Less" : "Manje",
+    "More" : "Više",
     "Cancel" : "Odustani",
     "Delete" : "Izbriši",
     "Edit title" : "Uredi naslov",

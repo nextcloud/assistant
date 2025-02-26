@@ -1,10 +1,12 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Испрати е-пошта",
     "User not found" : "Корисникот не е пронајден",
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",
+    "Less" : "Помалку",
     "Cancel" : "Откажи",
     "Delete" : "Избриши",
     "Edit title" : "Удери наслов",

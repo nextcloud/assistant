@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Try again" : "Provo përsëri",
     "Close" : "Mbylleni",
+    "Less" : "Më pak",
+    "More" : "Më tepër",
     "Cancel" : "Anuloje",
     "Delete" : "Fshi",
     "Submit" : "Dërgo",

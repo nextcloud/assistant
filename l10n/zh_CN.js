@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "就绪时通知失败；未知用户",
+    "Send an email" : "发送一封电子邮件",
     "User not logged in" : "用户未登录",
     "User not found" : "未找到用户",
     "Failed to create a chat session" : "创建聊天会话失败",
@@ -77,6 +78,8 @@ OC.L10N.register(
     "A description of what you need or some original content" : "您需要的或者一些原创的内容的描述",
     "Close" : "关闭",
     "Close Nextcloud Assistant" : "关闭云助手",
+    "Less" : "更少",
+    "More" : "更多",
     "Cancel" : "取消",
     "New conversation" : "新的对话",
     "Loading conversations…" : "正在加载对话……",

@@ -1,12 +1,15 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Stuur een e-mail",
     "User not found" : "Gebruiker niet gevonden",
     "Nextcloud Assistant" : "Nextcloud Assistent",
     "View results" : "Bekijk resultaten",
     "Artificial Intelligence" : "Artificiële Intelligentie",
     "Try again" : "Probeer opnieuw",
     "Close" : "Sluit",
+    "Less" : "minder",
+    "More" : "Meer",
     "Cancel" : "Annuleren",
     "Delete" : "Verwijder",
     "Edit title" : "Titel bewerken",

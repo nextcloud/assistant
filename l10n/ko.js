@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "준비 완료 알림을 전달하지 못함; 알 수 없는 사용자",
+    "Send an email" : "이메일 보내기",
     "User not logged in" : "사용자가 로그인하지 않음",
     "User not found" : "사용자를 찾을 수 없음",
     "Failed to create a chat session" : "채팅 세션을 생성하지 못함",
@@ -60,6 +61,8 @@ OC.L10N.register(
     "Send request" : "요청 전송",
     "Close" : "닫기",
     "Close Nextcloud Assistant" : "Nextcloud 어시스턴트 닫기",
+    "Less" : "덜 중요함",
+    "More" : "더 보기",
     "Cancel" : "취소",
     "New conversation" : "새 대화",
     "No conversations yet" : "아직 대화가 존재하지 않음",
