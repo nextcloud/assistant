@@ -6,6 +6,8 @@ OC.L10N.register(
     "Artificial Intelligence" : "Trí tuệ nhân tạo",
     "Try again" : "Thử lại",
     "Close" : "Đóng",
+    "Less" : "ít",
+    "More" : "Thêm",
     "Cancel" : "Hủy",
     "Delete" : "Xóa",
     "Edit title" : "Chỉnh sửa tiêu đề",

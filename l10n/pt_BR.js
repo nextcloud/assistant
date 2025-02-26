@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Falha ao notificar quando estiver pronto; usuário desconhecido",
+    "Send an email" : "Enviar um e-mail",
     "User not logged in" : "Usuário não conectado",
     "User not found" : "Usuário não encontrado",
     "Failed to create a chat session" : "Falha ao criar uma sessão de bate-papo",
@@ -80,6 +81,8 @@ OC.L10N.register(
     "A description of what you need or some original content" : "Uma descrição do que você precisa ou algum conteúdo original",
     "Close" : "Fechar",
     "Close Nextcloud Assistant" : "Fechar o Assistente Nextcloud",
+    "Less" : "Menos",
+    "More" : "Mais",
     "Cancel" : "Cancelar",
     "New conversation" : "Nova conversa",
     "Loading conversations…" : "Carregando conversas…",

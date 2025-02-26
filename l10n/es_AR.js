@@ -4,6 +4,7 @@ OC.L10N.register(
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "Try again" : "Inténtalo de nuevo",
     "Close" : "Cerrar",
+    "Less" : "Menos",
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
     "Choose" : "Elige",

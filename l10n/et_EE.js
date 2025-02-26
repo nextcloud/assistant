@@ -1,8 +1,10 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Saada kiri",
     "User not found" : "Kasutajat ei leitud",
     "Close" : "Sulge",
+    "Less" : "Vähem",
     "Cancel" : "Tühista",
     "Delete" : "Kustuta",
     "Submit" : "Saada",

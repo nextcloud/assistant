@@ -1,11 +1,13 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Enviar correo electrónico",
     "User not found" : "No se encontró el usuario",
     "AI image generation" : "Generación de imágenes de IA",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
+    "Less" : "Menos",
     "Cancel" : "Cancelar",
     "New conversation" : "Nueva conversación",
     "Delete" : "Borrar",

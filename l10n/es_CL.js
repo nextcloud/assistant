@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Enviar correo electrónico",
     "User not found" : "No se encontró el usuario",
     "Try again" : "Reintentar",
     "Delete" : "Borrar",

@@ -1,11 +1,14 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Lähetä sähköposti",
     "User not found" : "Käyttäjää ei löydy",
     "Nextcloud Assistant" : "Nextcloud-avustaja",
     "View results" : "Näytä tulokset",
     "Artificial Intelligence" : "Tekoäly",
     "Close" : "Sulje",
+    "Less" : "Vähemmän",
+    "More" : "Lisää",
     "Cancel" : "Peruuta",
     "Delete" : "Poista",
     "Edit title" : "Muokkaa otsikkoa",

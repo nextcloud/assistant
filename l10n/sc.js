@@ -1,8 +1,11 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Imbia unu messàgiu de posta eletrònica",
     "User not found" : "Utèntzia no agatada",
     "Close" : "Serra",
+    "Less" : "De mancu",
+    "More" : "Prus",
     "Cancel" : "Annulla",
     "New conversation" : "Tzarrada noa",
     "Delete" : "Cantzella",

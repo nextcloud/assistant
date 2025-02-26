@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Pošlji elektronsko sporočilo",
     "User not found" : "Uporabnika ni mogoče najti",
     "Session not found" : "Seje ni mogoče najti",
     "Input: %1$s" : "Vnos: %1$s",
@@ -13,6 +14,8 @@ OC.L10N.register(
     "Launch this task again" : "Znova zaženi nalogo",
     "Launch a task" : "Zaženi nalogo",
     "Close" : "Zapri",
+    "Less" : "Manj",
+    "More" : "Več",
     "Cancel" : "Prekliči",
     "New conversation" : "Nov pogovor",
     "No conversations yet" : "Ni še začetih pogovorov",

@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Failed to notify when ready; unknown user" : "Ezin izan da jakinarazi prest dagoenean; erabiltzaile ezezaguna",
     "Send a message to a Talk conversation" : "Bidali mezu bat Talk elkarrizketa batera",
+    "Send an email" : "Bidali posta-mezu bat",
     "User not found" : "Ez da erabiltzailea aurkitu",
     "Nextcloud Assistant" : "Nextcloud Assistant",
     "AI text generation" : "IA testu sorpena",
@@ -28,6 +29,8 @@ OC.L10N.register(
     "Send request" : "Bidali eskaera",
     "Close" : "Itxi",
     "Close Nextcloud Assistant" : "Itxi Nextcloud Assistant",
+    "Less" : "Gutxiago",
+    "More" : "Gehiago",
     "Cancel" : "Utzi",
     "New conversation" : "Elkarrizketa berria",
     "Delete" : "Ezabatu",

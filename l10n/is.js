@@ -1,10 +1,13 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Senda tölvupóst",
     "User not found" : "Notandi fannst ekki",
     "Nextcloud Assistant" : "Nextcloud Aðstoð",
     "Artificial Intelligence" : "Gervigreind",
     "Close" : "Loka",
+    "Less" : "Minna",
+    "More" : "Meira",
     "Cancel" : "Hætta við",
     "Delete" : "Eyða",
     "Edit title" : "Breyta titli",

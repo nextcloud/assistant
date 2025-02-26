@@ -1,11 +1,14 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Надіслати лист на ел.пошту",
     "User not found" : "Користувача не знайдено",
     "Nextcloud Assistant" : "Асистент Nextcloud",
     "Artificial Intelligence" : "Штучний інтелект",
     "Try again" : "Спробуйте ще раз",
     "Close" : "Закрити",
+    "Less" : "Менше",
+    "More" : "Більше",
     "Cancel" : "Скасувати",
     "New conversation" : "Нова розмова",
     "Delete" : "Вилучати",

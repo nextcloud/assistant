@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Отправить по эл. почте",
     "User not found" : "Пользователь не найден",
     "Nextcloud Assistant" : "Помощник Nextcloud",
     "Task for \"%1$s\" has finished" : "Задача для \"%1$s\" завершена",
@@ -27,6 +28,8 @@ OC.L10N.register(
     "Send request" : "Отправить запрос",
     "Close" : "Закрыть",
     "Close Nextcloud Assistant" : "Закрыть Помощника Nextcloud",
+    "Less" : "Меньше",
+    "More" : "Ещё",
     "Cancel" : "Отмена",
     "New conversation" : "Новый разговор",
     "Delete" : "Удалить",

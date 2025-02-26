@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "تەييار بولغاندا ئۇقتۇرۇش قىلالمىدى نامەلۇم ئىشلەتكۈچى",
+    "Send an email" : "ئېلېكترونلۇق خەت ئەۋەتىڭ",
     "User not logged in" : "ئىشلەتكۈچى تىزىمغا كىرمىدى",
     "User not found" : "ئىشلەتكۈچى تېپىلمىدى",
     "Failed to create a chat session" : "پاراڭلىشىش يىغىنى قۇرالمىدى",
@@ -79,6 +80,8 @@ OC.L10N.register(
     "A description of what you need or some original content" : "سىزگە لازىملىق ياكى بەزى ئەسلى مەزمۇنلارنىڭ چۈشەندۈرۈشى",
     "Close" : "ياپ",
     "Close Nextcloud Assistant" : "Nextcloud ياردەمچىسىنى تاقاڭ",
+    "Less" : "ئاز",
+    "More" : "تېخىمۇ كۆپ",
     "Cancel" : "بىكار قىلىش",
     "New conversation" : "يېڭى سۆھبەت",
     "Loading conversations…" : "پاراڭلارنى يۈكلەۋاتىدۇ…",

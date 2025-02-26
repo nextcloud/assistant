@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "ارسال ایمیل",
     "User not found" : "کاربر یافت نشد",
     "Nextcloud Assistant" : "Nextcloud Assistant",
     "AI image generation" : "AI image generation",
@@ -20,6 +21,8 @@ OC.L10N.register(
     "Try again" : "تلاش دوباره",
     "Close" : "بسته",
     "Close Nextcloud Assistant" : "دستیار Nextcloud را ببندید",
+    "Less" : "کم‌تر",
+    "More" : "بیشتر",
     "Cancel" : "منصرف شدن",
     "New conversation" : "مکالمه جدید",
     "Delete" : "حذف",
