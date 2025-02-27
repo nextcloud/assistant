@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Close" : "Serriñ",
+    "More" : "Muioc'h",
     "Cancel" : "Nullañ",
     "Delete" : "Lemel",
     "Submit" : "Kinnig",

@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Send an email" : "Send en e-mail",
     "User not found" : "Bruger ikke fundet",
     "Nextcloud Assistant" : "Nextcloud assistent",
     "Context Chat" : "Kontekstchat",
@@ -9,6 +10,7 @@ OC.L10N.register(
     "To enable this feature, please install an AI task processing provider for the free prompt task type:" : "For at aktivere denne funktion skal du installere en AI opgavebehandlingsudbyder til den gratis promptopgavetype:",
     "Close" : "Luk",
     "Less" : "Mindre",
+    "More" : "Mere",
     "Cancel" : "Annuller",
     "Delete" : "Slet",
     "Edit title" : "Rediger titel",
@@ -27,9 +29,9 @@ OC.L10N.register(
     "Choose file" : "Vælg fil",
     "Choose a file" : "Vælg en fil",
     "No file selected" : "Ingen fil valgt",
+    "Could not copy to clipboard" : "Kunne ikke kopiere til udklipsholderen",
     "Upload from device" : "Upload fra enhed",
     "Share" : "Del",
-    "Could not copy to clipboard" : "Kunne ikke kopiere til udklipsholderen",
     "Advanced" : "Avanceret",
     "Copy" : "Kopier",
     "Upload file" : "Upload fil",
@@ -39,17 +41,17 @@ OC.L10N.register(
     "Writing style" : "Skrivestil",
     "Source material" : "Kildemateriale",
     "Type some text" : "Skriv noget tekst",
+    "Audio transcription" : "Lydtransskription",
     "Output" : "Output",
     "Reset" : "Nulstil",
-    "Audio transcription" : "Lydtransskription",
     "Prompt" : "Prompt",
     "Stop recording" : "Stop optagelse",
     "Audio input" : "Lydinput",
     "Unknown error" : "Ukendt fejl",
     "Image generation" : "Billedgenerering",
     "Preview" : "Forhåndsvisning",
+    "Unknown image generation error" : "Ukendt billedgenereringsfejl",
     "Send" : "Send",
-    "Advanced options" : "Avancerede indstillinger",
-    "Unknown image generation error" : "Ukendt billedgenereringsfejl"
+    "Advanced options" : "Avancerede indstillinger"
 },
 "nplurals=2; plural=(n != 1);");
