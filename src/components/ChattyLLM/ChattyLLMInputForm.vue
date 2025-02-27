@@ -113,7 +113,7 @@
 							:aria-label="t('assistant', 'Retry response generation')"
 							:disabled="loading.initialMessages || loading.llmGeneration"
 							type="secondary"
-							@click="runGenerationTask">
+							@click="runGenerationTask(active.id)">
 							{{ t('assistant', 'Retry response generation') }}
 						</NcButton>
 					</div>
