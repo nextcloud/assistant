@@ -3,8 +3,11 @@ OC.L10N.register(
     {
     "Failed to notify when ready; unknown user" : "Hazır olduğunda bildirilemedi. Kullanıcı bilinmiyor",
     "Send a message to a Talk conversation" : "Bir Konuş görüşmesine bir ileti gönder",
+    "Create a conversation" : "Bir görüşme oluştur",
     "Send an email" : "E-posta gönder",
     "Schedule a calendar event" : "Bir takvim etkinliği zamanlayın",
+    "Add a calendar task" : "Bir takvim görevi ekle",
+    "Create a Deck card" : "Bir tahta kartı ekle",
     "User not logged in" : "Kullanıcı oturum açmamış",
     "User not found" : "Kullanıcı bulunamadı",
     "Failed to create a chat session" : "Bir sohbet oturumu oluşturulamadı",
