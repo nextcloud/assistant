@@ -1,8 +1,11 @@
 { "translations": {
     "Failed to notify when ready; unknown user" : "Failed to notify when ready; unknown user",
     "Send a message to a Talk conversation" : "Send a message to a Talk conversation",
+    "Create a conversation" : "Create a conversation",
     "Send an email" : "Send an email",
     "Schedule a calendar event" : "Schedule a calendar event",
+    "Add a calendar task" : "Add a calendar task",
+    "Create a Deck card" : "Create a Deck card",
     "User not logged in" : "User not logged in",
     "User not found" : "User not found",
     "Failed to create a chat session" : "Failed to create a chat session",
