@@ -3,8 +3,11 @@ OC.L10N.register(
     {
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
     "Send a message to a Talk conversation" : "Odeslat zprávu do konverzace v Talk",
+    "Create a conversation" : "Vytvořit konverzaci",
     "Send an email" : "Odeslat e-mail",
     "Schedule a calendar event" : "Naplánovat událost v kalendáři",
+    "Add a calendar task" : "Přidat úkol do kalendáře",
+    "Create a Deck card" : "Vytvořit kartu v Deck",
     "User not logged in" : "Uživatel nepřihlášen",
     "User not found" : "Uživatel nenalezen",
     "Failed to create a chat session" : "Nepodařilo se vytvořit relaci chatu",
