@@ -3,8 +3,11 @@ OC.L10N.register(
     {
     "Failed to notify when ready; unknown user" : "Није успело обавештавање када је спремно; корисник није познат",
     "Send a message to a Talk conversation" : "Пошаљи поруку у Talk разговор",
+    "Create a conversation" : "Креирај разговор",
     "Send an email" : "Пошаљи е-пошту",
     "Schedule a calendar event" : "Закажи догађај календара",
+    "Add a calendar task" : "Додај задатак календара",
+    "Create a Deck card" : "Креирај шпил картица",
     "User not logged in" : "Корисник није пријављен",
     "User not found" : "Корисник није нађен",
     "Failed to create a chat session" : "Није успело креирање чет сесије",
