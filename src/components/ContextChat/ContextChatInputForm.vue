@@ -4,6 +4,9 @@
 -->
 <template>
 	<div class="cc-input-form">
+		<NcNoteCard v-if="!indexingComplete" type="warning">
+			{{ t('assistant', 'Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet.') }}
+		</NcNoteCard>
 		<TextInput
 			id="context_chat_input"
 			:value="inputs.prompt"
@@ -128,12 +131,14 @@ import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 import TextInput from '../fields/TextInput.vue'
 
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
 
 const _ScopeType = Object.freeze({
 	NONE: 'none',
@@ -196,6 +201,7 @@ export default {
 		NcCheckboxRadioSwitch,
 		NcSelect,
 		PlaylistRemoveIcon,
+		NcNoteCard,
 	},
 
 	props: {
@@ -221,6 +227,7 @@ export default {
 			defaultProviderKey: 'files__default',
 
 			sccEnabled: !!this.inputs.scopeType && this.inputs.scopeType !== _ScopeType.NONE && !!this.inputs.scopeList,
+			indexingComplete: loadState('assistant', 'contextChatIndexingComplete'),
 		}
 	},
 
