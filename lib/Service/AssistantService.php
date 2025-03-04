@@ -51,6 +51,7 @@ use Psr\Log\LoggerInterface;
 use RtfHtmlPhp\Document;
 use RtfHtmlPhp\Html\HtmlFormatter;
 use RuntimeException;
+use Smalot\PdfParser\Parser;
 
 /**
  * @psalm-import-type AssistantTaskProcessingTaskType from ResponseDefinitions
@@ -577,6 +578,13 @@ class AssistantService {
 					file_put_contents($tempFilePath, $fileContent);
 					$text = $this->parseDocument($tempFilePath, $mimeType);
 					$this->tempManager->clean();
+					break;
+				}
+			case 'application/pdf':
+				{
+					$parser = new Parser();
+					$pdf = $parser->parseContent($fileContent);
+					$text = $pdf->getText();
 					break;
 				}
 		}
