@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="message.content"
+	<div
 		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
@@ -34,12 +34,11 @@
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
 		<NcRichText class="message__content"
-			:text="message.content"
+			:text="message.content || t('assistant', '(empty message)')"
 			:use-markdown="true"
 			:reference-limit="1"
 			:autolink="true" />
 	</div>
-	<div v-else />
 </template>
 
 <script>
