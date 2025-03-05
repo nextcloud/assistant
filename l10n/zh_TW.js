@@ -142,7 +142,7 @@ OC.L10N.register(
     "Clear Selection" : "清除選取範圍",
     "Error fetching default provider key" : "擷取預設提供者金鑰時發生錯誤",
     "Error fetching providers" : "擷取提供者時發生錯誤",
-    "Selective context" : "選擇性脈絡",
+    "Selective context" : "情境篩選",
     "No sources referenced" : "沒有引用來源",
     "tool" : "工具",
     "integration" : "整合",
