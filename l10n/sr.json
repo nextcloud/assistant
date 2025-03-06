@@ -140,6 +140,7 @@
     "Clear Selection" : "Уклони избор",
     "Error fetching default provider key" : "Грешка приликом преузимања подразумеваног кључа пружаоца услуге",
     "Error fetching providers" : "Грешка приликом преузимања листе пружаоца услуге",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "Контекст Чет још увек није завршио индексирање свих ваших докумената, тако да можда још увек неће моћи да одговори на ваша питања.",
     "Selective context" : "Контекст за разликовање",
     "No sources referenced" : "Није указан ниједан извор",
     "tool" : "алат",

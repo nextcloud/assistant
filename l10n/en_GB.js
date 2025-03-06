@@ -142,6 +142,7 @@ OC.L10N.register(
     "Clear Selection" : "Clear Selection",
     "Error fetching default provider key" : "Error fetching default provider key",
     "Error fetching providers" : "Error fetching providers",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet.",
     "Selective context" : "Selective context",
     "No sources referenced" : "No sources referenced",
     "tool" : "tool",

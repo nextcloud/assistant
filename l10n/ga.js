@@ -142,6 +142,7 @@ OC.L10N.register(
     "Clear Selection" : "Glan Roghnú",
     "Error fetching default provider key" : "Earráid agus eochair an tsoláthraí réamhshocraithe á fáil",
     "Error fetching providers" : "Earráid ag fáil soláthraithe",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "Níor chríochnaigh Context Chat do dhoiciméid go léir a innéacsú go fóill, seans nach mbeidh sé in ann do cheisteanna a fhreagairt, fós.",
     "Selective context" : "Comhthéacs roghnach",
     "No sources referenced" : "Níor thagairt aon fhoinse",
     "tool" : "uirlis",

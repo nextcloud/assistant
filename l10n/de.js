@@ -142,6 +142,7 @@ OC.L10N.register(
     "Clear Selection" : "Auswahl leeren",
     "Error fetching default provider key" : "Fehler beim Abrufen des Standardanbieterschlüssels",
     "Error fetching providers" : "Fehler beim Abrufen der Anbieter",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "Context Chat hat die Indizierung der Dokumente noch nicht abgeschlossen und kann die Fragen möglicherweise noch nicht beantworten.",
     "Selective context" : "Selektiver Kontext",
     "No sources referenced" : "Keine Quellen referenziert",
     "tool" : "Werkzeug",
