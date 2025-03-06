@@ -140,6 +140,7 @@
     "Clear Selection" : "清除選擇",
     "Error fetching default provider key" : "擷取默認提供者密鑰時發生錯誤",
     "Error fetching providers" : "擷取提供者時發生錯誤",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "上下文聊天尚未完成索引所有文檔，因此目前可能無法回答您的問題。",
     "Selective context" : "選擇性上下文",
     "No sources referenced" : "沒有引用來源",
     "tool" : "工具",

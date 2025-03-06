@@ -140,6 +140,7 @@
     "Clear Selection" : "清除選取範圍",
     "Error fetching default provider key" : "擷取預設提供者金鑰時發生錯誤",
     "Error fetching providers" : "擷取提供者時發生錯誤",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "情境聊天尚未完成所有文件的索引，因此可能無法回答您的問題。",
     "Selective context" : "情境篩選",
     "No sources referenced" : "沒有引用來源",
     "tool" : "工具",
