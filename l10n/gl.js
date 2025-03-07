@@ -132,6 +132,7 @@ OC.L10N.register(
     "Processing…" : "Procesando…",
     "You" : "Vde.",
     "Message copied to clipboard" : "Copiouse a mensaxe no portapapeis",
+    "(empty message)" : "(mensaxe baleira)",
     "Copy message" : "Copiar a mensaxe",
     "Regenerate message" : "Volver xerar a mensaxe",
     "Delete message" : "Eliminar a mensaxe",

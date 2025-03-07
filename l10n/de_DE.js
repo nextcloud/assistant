@@ -132,6 +132,7 @@ OC.L10N.register(
     "Processing…" : "Verarbeite…",
     "You" : "Sie",
     "Message copied to clipboard" : "Nachricht in die Zwischenablage kopiert",
+    "(empty message)" : "(leere Nachricht)",
     "Copy message" : "Nachricht kopieren",
     "Regenerate message" : "Nachricht erneut erstellen",
     "Delete message" : "Nachricht löschen",
