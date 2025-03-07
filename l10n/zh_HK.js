@@ -132,6 +132,7 @@ OC.L10N.register(
     "Processing…" : "處理中 ...",
     "You" : "您",
     "Message copied to clipboard" : "訊息已複製到剪貼板",
+    "(empty message)" : "（空訊息）",
     "Copy message" : "複製訊息",
     "Regenerate message" : "重新生成訊息",
     "Delete message" : "刪除訊息",

@@ -132,6 +132,7 @@ OC.L10N.register(
     "Processing…" : "Processing …",
     "You" : "You",
     "Message copied to clipboard" : "Message copied to clipboard",
+    "(empty message)" : "(empty message)",
     "Copy message" : "Copy message",
     "Regenerate message" : "Regenerate message",
     "Delete message" : "Delete message",
