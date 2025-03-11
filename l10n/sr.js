@@ -132,6 +132,7 @@ OC.L10N.register(
     "Processing…" : "Обрађује се…",
     "You" : "Ви",
     "Message copied to clipboard" : "Порука је копирана у клипборд",
+    "(empty message)" : "(празна порука)",
     "Copy message" : "Копирај поруку",
     "Regenerate message" : "Поново генериши поруку",
     "Delete message" : "Обриши поруку",
