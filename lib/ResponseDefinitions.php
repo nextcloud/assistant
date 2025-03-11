@@ -47,6 +47,35 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     scheduledAt: int|null,
  *     startedAt: int|null,
  * }
+ *
+ * @psalm-type AssistantChatSession = array{
+ *     id: int,
+ *     user_id: string,
+ *     title: ?string,
+ *     timestamp: ?int,
+ *     agency_conversation_token: ?string,
+ *     agency_pending_actions: ?string,
+ * }
+ *
+ * @psalm-type AssistantChatMessage = array{
+ *     id: int,
+ *     session_id: int,
+ *     role: string,
+ *     content: string,
+ *     timestamp: int,
+ *     ocp_task_id: int,
+ * }
+ *
+ * @psalm-type AssistantChatAgencyMessage = AssistantChatMessage&array{
+ *     sessionAgencyPendingActions: array<string, mixed>,
+ * }
+ *
+ * @psalm-type AssistantChatSessionCheck = array{
+ *     messageTaskId: ?int,
+ *     titleTaskId: ?int,
+ *     sessionTitle: ?string,
+ *     sessionAgencyPendingActions: ?array<string, mixed>,
+ * }
  */
 class ResponseDefinitions {
 }

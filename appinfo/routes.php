@@ -19,6 +19,18 @@ return [
 		['name' => 'assistant#getAssistantStandalonePage', 'url' => '/', 'verb' => 'GET'],
 
 		['name' => 'preview#getFileImage', 'url' => '/preview', 'verb' => 'GET'],
+	],
+	'ocs' => [
+		['name' => 'assistantApi#getAvailableTaskTypes', 'url' => '/api/{apiVersion}/task-types', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#getUserTasks', 'url' => '/api/{apiVersion}/tasks', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#parseTextFromFile', 'url' => '/api/{apiVersion}/parse-file', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#notifyWhenReady', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/notify', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#uploadInputFile', 'url' => '/api/{apiVersion}/input-file', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#displayUserFile', 'url' => '/api/{apiVersion}/file/{fileId}/display', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#getUserFileInfo', 'url' => '/api/{apiVersion}/file/{fileId}/info', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#shareOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/file/{fileId}/share', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#getOutputFilePreview', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#getOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download', 'verb' => 'GET', 'requirements' => $requirements],
 
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/new_session', 'verb' => 'PUT'],
 		['name' => 'chattyLLM#updateSessionTitle', 'url' => '/chat/update_session', 'verb' => 'PATCH'],
@@ -33,17 +45,5 @@ return [
 		['name' => 'chattyLLM#checkMessageGenerationTask', 'url' => '/chat/check_generation', 'verb' => 'GET'],
 		['name' => 'chattyLLM#generateTitle', 'url' => '/chat/generate_title', 'verb' => 'GET'],
 		['name' => 'chattyLLM#checkTitleGenerationTask', 'url' => '/chat/check_title_generation', 'verb' => 'GET'],
-	],
-	'ocs' => [
-		['name' => 'assistantApi#getAvailableTaskTypes', 'url' => '/api/{apiVersion}/task-types', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#getUserTasks', 'url' => '/api/{apiVersion}/tasks', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#parseTextFromFile', 'url' => '/api/{apiVersion}/parse-file', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#notifyWhenReady', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/notify', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#uploadInputFile', 'url' => '/api/{apiVersion}/input-file', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#displayUserFile', 'url' => '/api/{apiVersion}/file/{fileId}/display', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#getUserFileInfo', 'url' => '/api/{apiVersion}/file/{fileId}/info', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#shareOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/file/{fileId}/share', 'verb' => 'POST', 'requirements' => $requirements],
-		['name' => 'assistantApi#getOutputFilePreview', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview', 'verb' => 'GET', 'requirements' => $requirements],
-		['name' => 'assistantApi#getOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download', 'verb' => 'GET', 'requirements' => $requirements],
 	],
 ];
