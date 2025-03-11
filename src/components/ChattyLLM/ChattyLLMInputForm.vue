@@ -635,6 +635,7 @@ export default {
 				if (agencyConfirm !== null) {
 					params.agencyConfirm = agencyConfirm ? 1 : 0
 				}
+				this.saveLastSelectedTaskType('chatty-llm')
 				const response = await axios.get(getChatURL('/generate'), { params })
 				console.debug('scheduleGenerationTask response:', response)
 				const message = await this.pollGenerationTask(response.data.taskId, sessionId)
@@ -750,6 +751,16 @@ export default {
 			this.scrollToBottom()
 			await this.newMessage(role, content, timestamp, this.active.id, false, confirm)
 		},
+
+		async saveLastSelectedTaskType(taskType) {
+			const req = {
+				values: {
+					last_task_type: taskType,
+				},
+			}
+			const url = generateUrl('/apps/assistant/config')
+			return axios.put(url, req)
+		}
 	},
 }
 </script>
