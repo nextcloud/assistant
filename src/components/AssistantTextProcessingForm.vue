@@ -389,7 +389,9 @@ export default {
 							tt.inputShape.style_input.placeholder = t('assistant', 'Shakespeare or an example of the style')
 							tt.inputShape.source_input.placeholder = t('assistant', 'A description of what you need or some original content')
 						} else if (tt.id === 'core:text2text:translate') {
-							tt.inputShapeDefaults.origin_language = 'detect_language'
+							if (!tt.inputShapeDefaults.origin_language) {
+								tt.inputShapeDefaults.origin_language = tt.inputShapeEnumValues.origin_language[0].value
+							}
 							const defaultTargetLanguage = OCA.Assistant.last_target_language
 							if (defaultTargetLanguage) {
 								tt.inputShapeDefaults.target_language = defaultTargetLanguage
