@@ -12,13 +12,14 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
-use OCP\AppFramework\Controller;
+use OCA\Assistant\ResponseDefinitions;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\OCSController;
 use OCP\Exceptions\AppConfigTypeConflictException;
 use OCP\IAppConfig;
 use OCP\IL10N;
@@ -34,8 +35,13 @@ use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use Psr\Log\LoggerInterface;
 
-#[OpenAPI(scope: OpenAPI::SCOPE_IGNORE)]
-class ChattyLLMController extends Controller {
+/**
+ * @psalm-import-type AssistantChatSession from ResponseDefinitions
+ * @psalm-import-type AssistantChatMessage from ResponseDefinitions
+ * @psalm-import-type AssistantChatAgencyMessage from ResponseDefinitions
+ * @psalm-import-type AssistantChatSessionCheck from ResponseDefinitions
+ */
+class ChattyLLMController extends OCSController {
 	private array $agencyActionData;
 
 	public function __construct(
@@ -98,13 +104,20 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
+	 * Create chat session
+	 *
 	 * Create a new chat session, add a system message with user instructions
 	 *
-	 * @param int $timestamp
-	 * @param ?string $title
-	 * @return JSONResponse
+	 * @param int $timestamp The session creation date
+	 * @param ?string $title The session title
+	 * @return JSONResponse<Http::STATUS_OK, array{session: AssistantChatSession}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 * @throws AppConfigTypeConflictException
+	 *
+	 * 200: Chat session has been successfully created
+	 * 401: User is either not logged in or not found
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function newSession(int $timestamp, ?string $title = null): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -137,7 +150,7 @@ class ChattyLLMController extends Controller {
 			$this->messageMapper->insert($systemMsg);
 
 			return new JSONResponse([
-				'session' => $session,
+				'session' => $session->jsonSerialize(),
 			]);
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to create a chat session', ['exception' => $e]);
@@ -146,13 +159,19 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Update the title of the chat session
+	 * Update session title
 	 *
-	 * @param integer $sessionId
-	 * @param string $title
-	 * @return JSONResponse
+	 * Update the title of a chat session
+	 *
+	 * @param integer $sessionId The chat session ID
+	 * @param string $title The new chat session title
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: The title has been updated successfully
+	 * 401: Not logged in
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function updateSessionTitle(int $sessionId, string $title): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -168,12 +187,18 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
+	 * Delete a chat session
+	 *
 	 * Delete a chat session by ID
 	 *
-	 * @param integer $sessionId
-	 * @return JSONResponse
+	 * @param integer $sessionId The session ID
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: The session has been deleted successfully
+	 * 401: Not logged in
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function deleteSession(int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -190,11 +215,17 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Get all chat sessions for the user
+	 * Get chat sessions
 	 *
-	 * @return JSONResponse
+	 * Get all chat sessions for the current user
+	 *
+	 * @return JSONResponse<Http::STATUS_OK, list<AssistantChatSession>, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: The session list has been obtained successfully
+	 * 401: Not logged in
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function getSessions(): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -210,16 +241,24 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
+	 * Add a message
+	 *
 	 * Add a new chat message to the session
 	 *
-	 * @param int $sessionId
-	 * @param string $role
-	 * @param string $content
-	 * @param int $timestamp
-	 * @param bool $firstHumanMessage
-	 * @return JSONResponse
+	 * @param int $sessionId The chat session ID
+	 * @param string $role Role of the message (human, assistant etc...)
+	 * @param string $content Content of the message
+	 * @param int $timestamp Date of the message
+	 * @param bool $firstHumanMessage Is it the first human message of the session?
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 * 200: The session list has been obtained successfully
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Message is malformed
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function newMessage(int $sessionId, string $role, string $content, int $timestamp, bool $firstHumanMessage = false): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -255,7 +294,7 @@ class ChattyLLMController extends Controller {
 				);
 			}
 
-			return new JSONResponse($message);
+			return new JSONResponse($message->jsonSerialize());
 		} catch (\OCP\DB\Exception $e) {
 			$this->logger->warning('Failed to add a chat message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message')], Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -263,14 +302,21 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
+	 * Get session messages
+	 *
 	 * Get chat messages for the session without the system message
 	 *
-	 * @param int $sessionId
-	 * @param int $limit
-	 * @param int $cursor
-	 * @return JSONResponse
+	 * @param int $sessionId The session ID
+	 * @param int $limit The max number of messages to return
+	 * @param int $cursor The index of the first result to return
+	 * @return JSONResponse<Http::STATUS_OK, list<AssistantChatMessage>, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 * 200: The message list has been successfully obtained
+	 * 401: Not logged in
+	 * 404: The session was not found
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function getMessages(int $sessionId, int $limit = 20, int $cursor = 0): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -282,12 +328,13 @@ class ChattyLLMController extends Controller {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
+			/** @var list<Message> $messages */
 			$messages = $this->messageMapper->getMessages($sessionId, $cursor, $limit);
 			if ($messages[0]->getRole() === 'system') {
 				array_shift($messages);
 			}
 
-			return new JSONResponse($messages);
+			return new JSONResponse(array_map(static function (Message $message) { return $message->jsonSerialize(); }, $messages));
 		} catch (\OCP\DB\Exception $e) {
 			$this->logger->warning('Failed to get chat messages', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to get chat messages')], Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -295,13 +342,20 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
+	 * Delete a message
+	 *
 	 * Delete a chat message by ID
 	 *
-	 * @param integer $messageId
-	 * @param integer $sessionId
-	 * @return JSONResponse
+	 * @param integer $messageId The message ID
+	 * @param integer $sessionId The session ID
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 *  200: The message has been successfully deleted
+	 *  401: Not logged in
+	 *  404: The session was not found
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function deleteMessage(int $messageId, int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -322,17 +376,25 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Schedule a task to generate a new message for the session
+	 * Generate a new assistant message
 	 *
-	 * @param integer $sessionId
-	 * @param int $agencyConfirm
-	 * @return JSONResponse
+	 * Schedule a task to generate a new message for a session
+	 *
+	 * @param integer $sessionId The session ID
+	 * @param int $agencyConfirm Potential agency sensitive actions confirmation (1: accept, 0: reject)
+	 * @return JSONResponse<Http::STATUS_OK, array{taskId: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws AppConfigTypeConflictException
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: The task has been successfully scheduled
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Task was not scheduled
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function generateForSession(int $sessionId, int $agencyConfirm = 0): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -384,18 +446,26 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Delete all messages since the given message ID and then
-	 * schedule a task to generate a new message for the session
+	 * Regenerate response for a message
 	 *
-	 * @param int $sessionId
-	 * @param int $messageId
-	 * @return JSONResponse
+	 * Delete the message with the given message ID and all following ones,
+	 * then schedule a task to generate a new message for the session
+	 *
+	 * @param int $sessionId The chat session ID
+	 * @param int $messageId The chat message ID
+	 * @return JSONResponse<Http::STATUS_OK, array{taskId: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws AppConfigTypeConflictException
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: The task has been successfully scheduled
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Task was not scheduled
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function regenerateForSession(int $sessionId, int $messageId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -421,14 +491,21 @@ class ChattyLLMController extends Controller {
 	 *
 	 * Used by the frontend to poll a generation task status. If the task succeeds, a new message is stored and returned.
 	 *
-	 * @param int $taskId
-	 * @param int $sessionId
-	 * @return JSONResponse
+	 * @param int $taskId The message generation task ID
+	 * @param int $sessionId The chat session ID
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: The task was successful, a message has been generated
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Task processing failed
+	 * 417: The task is still running or has not been picked up yet
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function checkMessageGenerationTask(int $taskId, int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -475,14 +552,20 @@ class ChattyLLMController extends Controller {
 	 *
 	 * Used by the frontend to determine if it should poll a generation task status.
 	 *
-	 * @param int $sessionId
-	 * @return JSONResponse
+	 * @param int $sessionId The chat session ID
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatSessionCheck, array{}>|JSONResponse<Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \JsonException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: The session status has been successfully obtained
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Task processing failed, impossible to check the related tasks
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function checkSession(int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -511,11 +594,13 @@ class ChattyLLMController extends Controller {
 			$pendingActions = json_decode($pendingActions);
 			$pendingActions = $this->improveAgencyActionNames($pendingActions);
 		}
+		/** @var ?array<string, mixed> $p */
+		$p = $pendingActions;
 		$responseData = [
 			'messageTaskId' => null,
 			'titleTaskId' => null,
 			'sessionTitle' => $session->getTitle(),
-			'sessionAgencyPendingActions' => $pendingActions,
+			'sessionAgencyPendingActions' => $p,
 		];
 		if (!empty($messageTasks)) {
 			$task = array_pop($messageTasks);
@@ -529,16 +614,24 @@ class ChattyLLMController extends Controller {
 	}
 
 	/**
-	 * Schedule a task to generate a title for the chat session
+	 * Generate a session title
 	 *
-	 * @param integer $sessionId
-	 * @return JSONResponse
+	 * Schedule a task to generate a title for a chat session
+	 *
+	 * @param integer $sessionId The chat session ID
+	 * @return JSONResponse<Http::STATUS_OK, array{taskId: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws AppConfigTypeConflictException
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
+	 *
+	 * 200: The task has been successfully scheduled
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Task was not scheduled
 	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function generateTitle(int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -589,7 +682,25 @@ class ChattyLLMController extends Controller {
 		}
 	}
 
+	/**
+	 * Check the status of a title generation task
+	 *
+	 * Used by the frontend to poll a title generation task status. If the task succeeds, the new title is set and returned.
+	 *
+	 * @param int $taskId The title generation task ID
+	 * @param int $sessionId The chat session ID
+	 * @return JSONResponse<Http::STATUS_OK, array{result: string}, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 * @throws AppConfigTypeConflictException
+	 * @throws \OCP\DB\Exception 200: The task was successful, a message has been generated
+	 *
+	 * 200: Title has been successfully generated
+	 * 401: Not logged in
+	 * 404: Session was not found
+	 * 400: Task processing failed
+	 * 417: The task is still running or has not been picked up yet
+	 */
 	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function checkTitleGenerationTask(int $taskId, int $sessionId): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
@@ -682,7 +793,7 @@ class ChattyLLMController extends Controller {
 	 * @param array $history
 	 * @param int $sessionId
 	 * @param bool $isMessage whether we want to generate a message or a session title
-	 * @return int|null
+	 * @return int
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
 	 * @throws UnauthorizedException
@@ -690,7 +801,7 @@ class ChattyLLMController extends Controller {
 	 */
 	private function scheduleLLMChatTask(
 		string $newPrompt, string $systemPrompt, array $history, int $sessionId, bool $isMessage = true,
-	): ?int {
+	): int {
 		$customId = ($isMessage
 			? 'chatty-llm:'
 			: 'chatty-title:') . $sessionId;
@@ -702,7 +813,7 @@ class ChattyLLMController extends Controller {
 		];
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $this->userId, $customId);
 		$this->taskProcessingManager->scheduleTask($task);
-		return $task->getId();
+		return $task->getId() ?? 0;
 	}
 
 	/**
@@ -712,13 +823,13 @@ class ChattyLLMController extends Controller {
 	 * @param int $confirmation
 	 * @param string $conversationToken
 	 * @param int $sessionId
-	 * @return int|null
+	 * @return int
 	 * @throws Exception
 	 * @throws PreConditionNotMetException
 	 * @throws UnauthorizedException
 	 * @throws ValidationException
 	 */
-	private function scheduleAgencyTask(string $content, int $confirmation, string $conversationToken, int $sessionId): ?int {
+	private function scheduleAgencyTask(string $content, int $confirmation, string $conversationToken, int $sessionId): int {
 		$customId = 'chatty-llm:' . $sessionId;
 		$this->checkIfSessionIsThinking($customId);
 		$taskInput = [
@@ -734,6 +845,6 @@ class ChattyLLMController extends Controller {
 			$customId
 		);
 		$this->taskProcessingManager->scheduleTask($task);
-		return $task->getId();
+		return $task->getId() ?? 0;
 	}
 }

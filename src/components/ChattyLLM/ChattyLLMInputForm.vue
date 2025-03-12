@@ -180,12 +180,12 @@ import AgencyConfirmation from './AgencyConfirmation.vue'
 
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import moment from 'moment'
 
 // future: type (text, image, file, etc), attachments, etc support
 
-const getChatURL = (endpoint) => generateUrl('/apps/assistant/chat' + endpoint)
+const getChatURL = (endpoint) => generateOcsUrl('/apps/assistant/chat' + endpoint)
 const Roles = {
 	HUMAN: 'human',
 	ASSISTANT: 'assistant',
@@ -288,17 +288,18 @@ export default {
 			try {
 				const sessionId = this.active.id
 				const checkSessionResponse = await axios.get(getChatURL('/check_session'), { params: { sessionId } })
-				if (checkSessionResponse.data?.sessionTitle && checkSessionResponse.data?.sessionTitle !== this.active.title) {
-					this.active.title = checkSessionResponse.data?.sessionTitle
+				const checkSessionResponseData = checkSessionResponse.data
+				if (checkSessionResponseData?.sessionTitle && checkSessionResponseData?.sessionTitle !== this.active.title) {
+					this.active.title = checkSessionResponseData?.sessionTitle
 					console.debug('update session title with check result')
 				}
-				console.debug('check session response:', checkSessionResponse.data)
+				console.debug('check session response:', checkSessionResponseData)
 				// update the pending actions when switching conversations
-				this.active.sessionAgencyPendingActions = checkSessionResponse.data?.sessionAgencyPendingActions
+				this.active.sessionAgencyPendingActions = checkSessionResponseData?.sessionAgencyPendingActions
 				this.active.agencyAnswered = false
-				if (checkSessionResponse.data.messageTaskId !== null) {
+				if (checkSessionResponseData.messageTaskId !== null) {
 					try {
-						const message = await this.pollGenerationTask(checkSessionResponse.data.messageTaskId, sessionId)
+						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
 						this.messages.push(message)
 						this.scrollToBottom()
@@ -307,17 +308,18 @@ export default {
 						showError(t('assistant', 'Error generating a response'))
 					}
 				}
-				if (checkSessionResponse.data.titleTaskId !== null) {
+				if (checkSessionResponseData.titleTaskId !== null) {
 					try {
-						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponse.data.titleTaskId, sessionId)
+						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponseData.titleTaskId, sessionId)
+						const titleResponseData = titleResponse.data
 						console.debug('checkTaskPolling result:', titleResponse)
-						if (titleResponse?.data?.result == null) {
+						if (titleResponseData?.result == null) {
 							throw new Error('No title generated, response:', titleResponse)
 						}
 
 						const session = this.sessions.find(s => s.id === sessionId)
 						if (session) {
-							session.title = titleResponse?.data?.result
+							session.title = titleResponseData?.result
 						}
 					} catch (error) {
 						console.error('onCheckSessionTitle error:', error)
@@ -446,16 +448,17 @@ export default {
 			try {
 				this.loading.titleGeneration = true
 				const sessionId = this.active.id
-				const response = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
-				const titleResponse = await this.pollTitleGenerationTask(response.data.taskId, sessionId)
-				console.debug('checkTaskPolling result:', titleResponse)
-				if (titleResponse?.data?.result == null) {
-					throw new Error('No title generated, response:', response)
+				const titleGenerationResponse = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
+				const titlePollResponse = await this.pollTitleGenerationTask(titleGenerationResponse.data.taskId, sessionId)
+				const titlePollResponseData = titlePollResponse.data
+				console.debug('checkTaskPolling result:', titlePollResponseData)
+				if (titlePollResponseData?.result == null) {
+					throw new Error('No title generated, response:', titlePollResponse)
 				}
 
 				const session = this.sessions.find(s => s.id === sessionId)
 				if (session) {
-					session.title = titleResponse?.data?.result
+					session.title = titlePollResponseData?.result
 				}
 			} catch (error) {
 				console.error('onGenerateSessionTitle error:', error)
@@ -530,7 +533,7 @@ export default {
 				}
 				this.messagesAxiosController = new AbortController()
 
-				const response = await axios.get(getChatURL('/messages'), {
+				const messagesResponse = await axios.get(getChatURL('/messages'), {
 					params: {
 						sessionId: this.active.id,
 						cursor: this.msgCursor,
@@ -538,13 +541,14 @@ export default {
 					},
 					signal: this.messagesAxiosController.signal,
 				})
-				console.debug('fetchMessages response:', response.data)
+				const messagesResponseData = messagesResponse.data
+				console.debug('fetchMessages response:', messagesResponseData)
 				if (this.messages == null) {
 					this.messages = []
 				}
-				this.messages.unshift(...response.data)
+				this.messages.unshift(...messagesResponseData)
 
-				if (response.data.length < this.msgLimit) {
+				if (messagesResponseData.length < this.msgLimit) {
 					this.allMessagesLoaded = true
 				}
 
@@ -574,19 +578,20 @@ export default {
 				this.loading.newHumanMessage = true
 				const firstHumanMessage = this.messages.length === 1 && this.messages[0].role === Roles.HUMAN
 
-				const response = await axios.put(getChatURL('/new_message'), {
+				const newMessageResponse = await axios.put(getChatURL('/new_message'), {
 					sessionId,
 					role,
 					content,
 					timestamp,
 					firstHumanMessage,
 				})
-				console.debug('newMessage response:', response)
+				const newMessageResponseData = newMessageResponse.data
+				console.debug('newMessage response:', newMessageResponseData)
 				this.loading.newHumanMessage = false
 
 				if (replaceLastMessage) {
 					// replace the last message with the response that contains the id
-					this.messages[this.messages.length - 1] = response.data
+					this.messages[this.messages.length - 1] = newMessageResponseData
 				}
 
 				if (firstHumanMessage) {
@@ -605,13 +610,14 @@ export default {
 		async newSession(title = null) {
 			try {
 				this.loading.newSession = true
-				const response = await axios.put(getChatURL('/new_session'), {
+				const newSessionResponse = await axios.put(getChatURL('/new_session'), {
 					timestamp: +new Date() / 1000 | 0,
 					title,
 				})
-				console.debug('newSession response:', response)
+				const newSessionResponseData = newSessionResponse.data
+				console.debug('newSession response:', newSessionResponseData)
 
-				const session = response.data?.session ?? null
+				const session = newSessionResponseData?.session ?? null
 				if (session == null) {
 					throw new Error(t('assistant', 'Invalid response received for a new conversation request'))
 				}
@@ -636,9 +642,10 @@ export default {
 					params.agencyConfirm = agencyConfirm ? 1 : 0
 				}
 				this.saveLastSelectedTaskType('chatty-llm')
-				const response = await axios.get(getChatURL('/generate'), { params })
-				console.debug('scheduleGenerationTask response:', response)
-				const message = await this.pollGenerationTask(response.data.taskId, sessionId)
+				const generationResponse = await axios.get(getChatURL('/generate'), { params })
+				const generationResponseData = generationResponse.data
+				console.debug('scheduleGenerationTask response:', generationResponseData)
+				const message = await this.pollGenerationTask(generationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages.push(message)
 				this.scrollToBottom()
@@ -654,9 +661,10 @@ export default {
 			try {
 				const sessionId = this.active.id
 				this.loading.llmGeneration = true
-				const response = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
-				console.debug('scheduleRegenerationTask response:', response)
-				const message = await this.pollGenerationTask(response.data.taskId, sessionId)
+				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
+				const regenerationResponseData = regenerationResponse.data
+				console.debug('scheduleRegenerationTask response:', regenerationResponse)
+				const message = await this.pollGenerationTask(regenerationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages[this.messages.length - 1] = message
 				this.scrollToBottom()
@@ -680,11 +688,12 @@ export default {
 						getChatURL('/check_generation'),
 						{ params: { taskId, sessionId } },
 					).then(response => {
+						const responseData = response.data
 						clearInterval(this.pollMessageGenerationTimerId)
 						if (sessionId === this.active.id) {
-							this.active.sessionAgencyPendingActions = response.data.sessionAgencyPendingActions
+							this.active.sessionAgencyPendingActions = responseData.sessionAgencyPendingActions
 							this.active.agencyAnswered = false
-							resolve(response.data)
+							resolve(responseData)
 						} else {
 							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')
 							// should we reject here?
@@ -760,7 +769,7 @@ export default {
 			}
 			const url = generateUrl('/apps/assistant/config')
 			return axios.put(url, req)
-		}
+		},
 	},
 }
 </script>
