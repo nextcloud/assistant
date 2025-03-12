@@ -222,7 +222,7 @@
     "Failed to cancel generation; unknown user" : "Није успело отказивање генерисања; корисник није познат",
     "Some internal error occurred. Contact your sysadmin for more info." : "Дошло је до неке интерне грешке. Да бисте сазнате више, обратите се свом систем админу.",
     "No Speech-to-Text provider found, install one from the app store to use this feature." : "Није пронађен ниједан пружалац услуге претварања говора у текст, инсталирајте неки из продавнице апликација ако желите да користите ову функцију.",
-    "Audio file not found." : "Није пронађен аѕудио фајл",
+    "Audio file not found." : "Није пронађен аудио фајл.",
     "No permission to create recording file/directory, contact your sysadmin to resolve this issue." : "Нема дозвола за креирање фајла/директоријума снимка. Обратите се систем админу да бисте решили проблем.",
     "Failed to set visibility of image files; unknown user" : "Није успело постављање видљивости фајлова слике; корисник није познат",
     "Unknown error while retrieving prompt history." : "Грешка приликом преузимања историје захтева",
