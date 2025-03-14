@@ -123,6 +123,7 @@ OC.L10N.register(
     "Image file not found in database" : "Το αρχείο εικόνας δεν βρέθηκε στη βάση δεδομένων",
     "Image file not found" : "Το αρχείο εικόνας δεν βρέθηκε",
     "Type some text" : "Πληκτρολογήστε κάποιο κείμενο",
+    "Audio transcription" : "Μεταγραφή ήχου",
     "Reset" : "Επαναφορά",
     "Unexpected server response" : "Απροσδόκητη απάντηση από τον διακομιστή",
     "Choose Audio File" : "Επιλογή Αρχείου Ήχου",
