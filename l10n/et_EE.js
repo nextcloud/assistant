@@ -20,6 +20,7 @@ OC.L10N.register(
     "Copy" : "Kopeeri",
     "Upload file" : "Laadi fail üles",
     "Type some text" : "Kirjuta midagi vahvat",
+    "Output" : "Väljund",
     "Reset" : "Lähtesta",
     "Unknown error" : "Tundmatu viga",
     "Preview" : "Eelvaade",
