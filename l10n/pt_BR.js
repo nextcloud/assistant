@@ -2,7 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Falha ao notificar quando estiver pronto; usuário desconhecido",
+    "Create a conversation" : "Criar uma conversa",
     "Send an email" : "Enviar um e-mail",
+    "Schedule a calendar event" : "Agendar um evento de calendário",
     "User not logged in" : "Usuário não conectado",
     "User not found" : "Usuário não encontrado",
     "Failed to create a chat session" : "Falha ao criar uma sessão de bate-papo",
@@ -84,6 +86,7 @@ OC.L10N.register(
     "Less" : "Menos",
     "More" : "Mais",
     "Cancel" : "Cancelar",
+    "Confirm those actions" : "Confirme essas ações",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Tem certeza que quer remover \"{sessionTitle}\"?",
     "Error generating a response" : "Erro ao gerar uma resposta",
     "Error getting the generated title for the conversation" : "Erro coletando o título gerado para a conversa",
