@@ -13,6 +13,7 @@ OC.L10N.register(
     "Cancelled" : "Tühistatud",
     "Running" : "Jooksmine",
     "Input" : "Sisend",
+    "Unknown status" : "Tundmatu olek",
     "Choose file" : "Vali fail",
     "No file selected" : "Faile ei ole valitud",
     "Upload from device" : "Laadi üles seadmest",
