@@ -7,7 +7,7 @@ OC.L10N.register(
     "Send an email" : "Enviar um e-mail",
     "Schedule a calendar event" : "Agendar um evento de calendário",
     "Add a calendar task" : "Adicionar uma tarefa de calendário",
-    "Create a Deck card" : "Criar um cartão do Deck",
+    "Create a Deck card" : "Criar um cartão de Deck",
     "User not logged in" : "Usuário não conectado",
     "User not found" : "Usuário não encontrado",
     "Failed to create a chat session" : "Falha ao criar uma sessão de bate-papo",
