@@ -126,7 +126,7 @@ OC.L10N.register(
     "Error loading messages" : "Erro ao carregar mensagens",
     "Loading messages…" : "Carregando mensagens…",
     "The text must be shorter than or equal to {maxLength} characters, currently {length}" : "O texto deve ser menor ou igual a {maxLength} personagens, atualmente {length}",
-    "Cancel editing" : "Cancel editing",
+    "Cancel editing" : "Cancelar edição",
     "Submit" : "Enviar",
     "Type a message…" : "Digite uma mensagem...",
     "Processing…" : "Processando...",
