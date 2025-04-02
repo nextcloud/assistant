@@ -7,6 +7,7 @@ OC.L10N.register(
     "Add a calendar task" : "Lisa kalendrisse ülesanne",
     "User not logged in" : "Kasutaja pole sisse loginud",
     "User not found" : "Kasutajat ei leitud",
+    "Artificial Intelligence" : "Tehisintellekt",
     "Close" : "Sulge",
     "Less" : "Vähem",
     "Cancel" : "Tühista",
