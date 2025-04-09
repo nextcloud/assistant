@@ -3214,7 +3214,7 @@
                         }
                     },
                     "500": {
-                        "description": "200: The task was successful, a message has been generated",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
