@@ -30,10 +30,10 @@
 	},
 	"require-dev": {
 		"nextcloud/coding-standard": "^1.1",
-		"psalm/phar": "^5.16",
 		"nextcloud/ocp": "dev-master",
+		"nextcloud/openapi-extractor": "^1.0.0",
 		"phpunit/phpunit": "^9.5",
-		"nextcloud/openapi-extractor": "^1.0.0"
+		"psalm/phar": "6.4.0"
 	},
 	"config": {
 		"sort-packages": true,

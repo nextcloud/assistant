@@ -350,9 +350,9 @@ class ChattyLLMController extends OCSController {
 	 * @param integer $sessionId The session ID
 	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
-	 *  200: The message has been successfully deleted
-	 *  401: Not logged in
-	 *  404: The session was not found
+	 * 200: The message has been successfully deleted
+	 * 401: Not logged in
+	 * 404: The session was not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
