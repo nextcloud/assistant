@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f01195cd0e101bae1961ad7e5073ae8",
+    "content-hash": "b2ea5122778117d13a792a020c986787",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -304,16 +304,16 @@
         },
         {
             "name": "smalot/pdfparser",
-            "version": "v2.11.0",
+            "version": "v2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smalot/pdfparser.git",
-                "reference": "ac8e6678b0940e4b2ccd5caadd3fb18e68093be6"
+                "reference": "8440edbf58c8596074e78ada38dcb0bd041a5948"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/ac8e6678b0940e4b2ccd5caadd3fb18e68093be6",
-                "reference": "ac8e6678b0940e4b2ccd5caadd3fb18e68093be6",
+                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/8440edbf58c8596074e78ada38dcb0bd041a5948",
+                "reference": "8440edbf58c8596074e78ada38dcb0bd041a5948",
                 "shasum": ""
             },
             "require": {
@@ -349,9 +349,9 @@
             ],
             "support": {
                 "issues": "https://github.com/smalot/pdfparser/issues",
-                "source": "https://github.com/smalot/pdfparser/tree/v2.11.0"
+                "source": "https://github.com/smalot/pdfparser/tree/v2.12.0"
             },
-            "time": "2024-08-16T06:48:03+00:00"
+            "time": "2025-03-31T13:16:09+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -580,16 +580,16 @@
         },
         {
             "name": "kubawerlos/php-cs-fixer-custom-fixers",
-            "version": "v3.22.0",
+            "version": "v3.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers.git",
-                "reference": "8701394f0c7cd450ac4fa577d24589122c1d5d5e"
+                "reference": "93222100a91399314c3726857e249e76c4a7d760"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/8701394f0c7cd450ac4fa577d24589122c1d5d5e",
-                "reference": "8701394f0c7cd450ac4fa577d24589122c1d5d5e",
+                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/93222100a91399314c3726857e249e76c4a7d760",
+                "reference": "93222100a91399314c3726857e249e76c4a7d760",
                 "shasum": ""
             },
             "require": {
@@ -599,7 +599,7 @@
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.6.4 || ^10.5.29"
+                "phpunit/phpunit": "^9.6.22 || 10.5.45 || ^11.5.7"
             },
             "type": "library",
             "autoload": {
@@ -620,22 +620,22 @@
             "description": "A set of custom fixers for PHP CS Fixer",
             "support": {
                 "issues": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/issues",
-                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.22.0"
+                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.24.0"
             },
-            "time": "2024-08-16T20:44:35+00:00"
+            "time": "2025-03-22T16:51:39+00:00"
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.12.1",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845"
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/123267b2c49fbf30d78a7b2d333f6be754b94845",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/024473a478be9df5fdaca2c793f2232fe788e414",
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414",
                 "shasum": ""
             },
             "require": {
@@ -674,7 +674,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.1"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.0"
             },
             "funding": [
                 {
@@ -682,7 +682,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-08T17:47:46+00:00"
+            "time": "2025-02-12T12:17:51+00:00"
         },
         {
             "name": "nextcloud/coding-standard",
@@ -732,16 +732,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-deps/ocp.git",
-                "reference": "e14d7d0897b96b3c32aff426721e8e198c884730"
+                "reference": "e2304c4f0f5ecf7fe16a3d3745c63b5f019dc718"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/e14d7d0897b96b3c32aff426721e8e198c884730",
-                "reference": "e14d7d0897b96b3c32aff426721e8e198c884730",
+                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/e2304c4f0f5ecf7fe16a3d3745c63b5f019dc718",
+                "reference": "e2304c4f0f5ecf7fe16a3d3745c63b5f019dc718",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1 || ~8.2 || ~8.3",
+                "php": "~8.1 || ~8.2 || ~8.3 || ~8.4",
                 "psr/clock": "^1.0",
                 "psr/container": "^2.0.2",
                 "psr/event-dispatcher": "^1.0",
@@ -751,7 +751,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "31.0.0-dev"
+                    "dev-master": "32.0.0-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -773,20 +773,20 @@
                 "issues": "https://github.com/nextcloud-deps/ocp/issues",
                 "source": "https://github.com/nextcloud-deps/ocp/tree/master"
             },
-            "time": "2024-12-19T00:46:23+00:00"
+            "time": "2025-04-09T00:48:03+00:00"
         },
         {
             "name": "nextcloud/openapi-extractor",
-            "version": "v1.3.0",
+            "version": "v1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-releases/openapi-extractor.git",
-                "reference": "c0761cb7a3a0cd29c85ede9f27883d7f9f477bd0"
+                "reference": "4fcdc49ff57b5d12ca9133f10c5be0e386e5ce17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/c0761cb7a3a0cd29c85ede9f27883d7f9f477bd0",
-                "reference": "c0761cb7a3a0cd29c85ede9f27883d7f9f477bd0",
+                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/4fcdc49ff57b5d12ca9133f10c5be0e386e5ce17",
+                "reference": "4fcdc49ff57b5d12ca9133f10c5be0e386e5ce17",
                 "shasum": ""
             },
             "require": {
@@ -794,7 +794,7 @@
                 "ext-simplexml": "*",
                 "nikic/php-parser": "^5.0",
                 "php": "^8.1",
-                "phpstan/phpdoc-parser": "^1.28"
+                "phpstan/phpdoc-parser": "^2.1"
             },
             "require-dev": {
                 "nextcloud/coding-standard": "^1.2",
@@ -818,22 +818,22 @@
             "description": "A tool for extracting OpenAPI specifications from Nextcloud source code",
             "support": {
                 "issues": "https://github.com/nextcloud-releases/openapi-extractor/issues",
-                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.3.0"
+                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.5.3"
             },
-            "time": "2024-12-17T16:34:26+00:00"
+            "time": "2025-04-08T20:40:36+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.3.1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b"
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8eea230464783aa9671db8eea6f8c6ac5285794b",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
                 "shasum": ""
             },
             "require": {
@@ -876,9 +876,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
             },
-            "time": "2024-10-08T18:51:32+00:00"
+            "time": "2024-12-30T11:07:19+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1000,16 +1000,16 @@
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.65.0",
+            "version": "v3.75.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "4983ec79b9dee926695ac324ea6e8d291935525d"
+                "reference": "eea219a577085bd13ff0cb644a422c20798316c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/4983ec79b9dee926695ac324ea6e8d291935525d",
-                "reference": "4983ec79b9dee926695ac324ea6e8d291935525d",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/eea219a577085bd13ff0cb644a422c20798316c7",
+                "reference": "eea219a577085bd13ff0cb644a422c20798316c7",
                 "shasum": ""
             },
             "require": {
@@ -1046,36 +1046,36 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.65.0"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.75.0"
             },
-            "time": "2024-11-25T00:39:41+00:00"
+            "time": "2025-03-31T18:45:02+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.33.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "82a311fd3690fb2bf7b64d5c98f912b3dd746140"
+                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/82a311fd3690fb2bf7b64d5c98f912b3dd746140",
-                "reference": "82a311fd3690fb2bf7b64d5c98f912b3dd746140",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
+                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
                 "doctrine/annotations": "^2.0",
-                "nikic/php-parser": "^4.15",
+                "nikic/php-parser": "^5.3.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^1.5",
-                "phpstan/phpstan-phpunit": "^1.1",
-                "phpstan/phpstan-strict-rules": "^1.0",
-                "phpunit/phpunit": "^9.5",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6",
                 "symfony/process": "^5.2"
             },
             "type": "library",
@@ -1093,9 +1093,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.33.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.1.0"
             },
-            "time": "2024-10-13T11:25:22+00:00"
+            "time": "2025-02-19T13:28:12+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1521,16 +1521,16 @@
         },
         {
             "name": "psalm/phar",
-            "version": "5.26.1",
+            "version": "6.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547"
+                "reference": "38771dadf1f2c64cadc3a81d12a73c23d040380f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
-                "reference": "8a38e7ad04499a0ccd2c506fd1da6fc01fff4547",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/38771dadf1f2c64cadc3a81d12a73c23d040380f",
+                "reference": "38771dadf1f2c64cadc3a81d12a73c23d040380f",
                 "shasum": ""
             },
             "require": {
@@ -1550,9 +1550,9 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/5.26.1"
+                "source": "https://github.com/psalm/phar/tree/6.4.0"
             },
-            "time": "2024-09-09T16:22:43+00:00"
+            "time": "2025-02-05T14:15:07+00:00"
         },
         {
             "name": "psr/clock",
