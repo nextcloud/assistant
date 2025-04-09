@@ -441,12 +441,20 @@ class AssistantService {
 	private function getTargetFileName(File $file): string {
 		$mime = mime_content_type($file->fopen('rb'));
 		$name = $file->getName();
-		$ext = '';
-		if ($mime === 'image/png') {
-			$ext = '.png';
-		} elseif ($mime === 'image/jpeg') {
-			$ext = '.jpg';
-		}
+
+		$mime2ext = [
+			'image/png' => '.png',
+			'image/jpeg' => '.jpg',
+			'image/webp' => '.webp',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => '.xlsx',
+			'application/vnd.oasis.opendocument.spreadsheet' => '.ods',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => '.docx',
+			'application/vnd.oasis.opendocument.text-web' => '.odt',
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation' => '.pptx',
+			'application/vnd.oasis.opendocument.presentation' => '.odp',
+			'application/vnd.oasis.opendocument.graphics' => '.odg',
+		];
+		$ext = $mime2ext[$mime] ?? '';
 
 		if (str_ends_with($name, $ext)) {
 			return $name;
