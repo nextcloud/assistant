@@ -16,6 +16,7 @@
 		"henck/rtf-to-html": "^1.2",
 		"html2text/html2text": "^4.3",
 		"phpoffice/phpword": "^1.2",
+		"ralouphie/mimey": "^1.0",
 		"smalot/pdfparser": "^2.11"
 	},
 	"scripts": {
