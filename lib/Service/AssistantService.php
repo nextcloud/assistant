@@ -439,27 +439,16 @@ class AssistantService {
 	 * @throws NotPermittedException
 	 */
 	private function getTargetFileName(File $file): string {
-		$mime = mime_content_type($file->fopen('rb'));
-		$name = $file->getName();
+		$mimeType = mime_content_type($file->fopen('rb'));
+		$fileName = $file->getName();
 
-		$mime2ext = [
-			'image/png' => '.png',
-			'image/jpeg' => '.jpg',
-			'image/webp' => '.webp',
-			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => '.xlsx',
-			'application/vnd.oasis.opendocument.spreadsheet' => '.ods',
-			'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => '.docx',
-			'application/vnd.oasis.opendocument.text-web' => '.odt',
-			'application/vnd.openxmlformats-officedocument.presentationml.presentation' => '.pptx',
-			'application/vnd.oasis.opendocument.presentation' => '.odp',
-			'application/vnd.oasis.opendocument.graphics' => '.odg',
-		];
-		$ext = $mime2ext[$mime] ?? '';
+		$mimes = new \Mimey\MimeTypes;
 
-		if (str_ends_with($name, $ext)) {
-			return $name;
+		$extension = $mimes->getExtension($mimeType);
+		if (is_string($extension) && $extension !== '' && !str_ends_with($fileName, $extension)) {
+			return $fileName . '.' . $extension;
 		}
-		return $name . $ext;
+		return $fileName;
 	}
 
 	/**
