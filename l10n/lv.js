@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Sūtīt e-pasta ziņojumu",
+    "Add a calendar task" : "Pievienot kalendāra uzdevumu",
     "User not found" : "Lietotājs nav atrasts",
     "Close" : "Aizvērt",
     "Less" : "Mazāk",
