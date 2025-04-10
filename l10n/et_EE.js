@@ -13,6 +13,7 @@ OC.L10N.register(
     "More" : "Veel",
     "Cancel" : "Tühista",
     "Delete" : "Kustuta",
+    "Edit title" : "Muuda pealkirja",
     "Cancel editing" : "Katkesta muutmine",
     "Submit" : "Saada",
     "You" : "Sina",
