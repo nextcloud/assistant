@@ -16,6 +16,7 @@ OC.L10N.register(
     "New conversation" : "Нова розмова",
     "Delete" : "Вилучати",
     "Edit title" : "Редагувати",
+    "Cancel editing" : "Скасувати редагування",
     "Submit" : "Відправити",
     "Type a message…" : "Введіть повідомлення...",
     "Processing…" : "Обробка...",
