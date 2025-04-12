@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Send an email" : "Send an email",
     "User not found" : "User not found",
+    "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
     "Artificial Intelligence" : "Artificial Intelligence",
     "Close" : "Close",
     "More" : "More",
