@@ -10,6 +10,7 @@
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
 					:progress="progress"
+					:expected-runtime="expectedRuntime"
 					@background-notify="onBackgroundNotify"
 					@cancel="onCancel"
 					@back="onBackToAssistant" />
@@ -88,6 +89,11 @@ export default {
 			}
 			return ''
 		},
+		expectedRuntime() {
+			const expected = this.task.completionExpectedAt
+			const scheduled = this.task.scheduledAt
+			return (expected && scheduled) ? (expected - scheduled) : null
+		},
 	},
 
 	mounted() {
@@ -114,6 +120,8 @@ export default {
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
 			this.progress = null
+			this.task.completionExpectedAt = null
+			this.task.scheduledAt = null
 			this.task.input = inputs
 			this.task.type = taskTypeId
 			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs)
@@ -121,6 +129,8 @@ export default {
 					console.debug('Assistant SYNC result', response.data?.ocs?.data)
 					const task = response.data?.ocs?.data?.task
 					this.task.id = task.id
+					this.task.completionExpectedAt = task.completionExpectedAt
+					this.task.scheduledAt = task.scheduledAt
 					pollTask(task.id, this.setProgress).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
