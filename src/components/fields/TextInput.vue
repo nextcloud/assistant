@@ -17,7 +17,7 @@
 			:class="{ shadowed: isOutput }"
 			:placeholder="placeholder"
 			:title="title"
-			@submit="$emit('submit', $event)"
+			@submit="hasValue && $emit('submit', $event)"
 			@update:value="$emit('update:value', $event)" />
 		<NcButton v-if="isOutput && hasValue"
 			class="copy-button"
