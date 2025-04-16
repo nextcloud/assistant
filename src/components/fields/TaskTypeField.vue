@@ -10,6 +10,7 @@
 		:field="field"
 		:options="options ?? undefined"
 		:is-output="isOutput"
+		@submit="$emit('submit', $event)"
 		@update:value="$emit('update:value', $event)" />
 </template>
 
@@ -53,6 +54,7 @@ export default {
 	},
 
 	emits: [
+		'submit',
 		'update:value',
 	],
 

@@ -11,6 +11,7 @@
 			:value="values[key] ?? null"
 			:options="getInputFieldOptions(field, key)"
 			:is-output="isOutput"
+			@submit="onSubmit"
 			@update:value="onValueChange(key, $event)" />
 		<!--NcButton v-if="hasOptionalShape"
 			@click="$emit('update:show-advanced', !showAdvanced)">
@@ -76,6 +77,7 @@ export default {
 	},
 
 	emits: [
+		'submit',
 		'update:values',
 	],
 
@@ -124,6 +126,10 @@ export default {
 				return this.optionalShapeOptions[key]
 			}
 			return undefined
+		},
+		onSubmit(event) {
+			console.debug('[assistant] field value submitted', event)
+			this.$emit('submit', event)
 		},
 		onValueChange(key, value) {
 			const newValues = {

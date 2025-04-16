@@ -45,7 +45,8 @@
 				:inputs.sync="myInputs"
 				:selected-task-id="selectedTaskId"
 				:selected-task-type="selectedTaskType"
-				:show-advanced.sync="showAdvanced" />
+				:show-advanced.sync="showAdvanced"
+				@submit="onSyncSubmit" />
 			<AssistantFormOutputs v-if="hasOutput"
 				:inputs="myInputs"
 				:outputs.sync="myOutputs"
