@@ -13,6 +13,7 @@
 					<span>{{ formattedProgress }} %</span>
 					<NcProgressBar
 						:value="progress" />
+					<span>{{ formattedRuntime }}</span>
 				</div>
 				<NcButton
 					@click="$emit('background-notify')">
@@ -75,6 +76,10 @@ export default {
 			type: [Number, null],
 			default: null,
 		},
+		expectedRuntime: {
+			type: [Number, null],
+			default: null,
+		},
 	},
 
 	emits: [
@@ -94,6 +99,15 @@ export default {
 				return this.progress.toFixed(2)
 			}
 			return null
+		},
+		formattedRuntime() {
+			if (this.expectedRuntime === null) {
+				return t('assistant', 'This may take a while…')
+			}
+			if (this.expectedRuntime < 60) {
+				return t('assistant', 'This may take a few seconds…')
+			}
+			return t('assistant', 'This may take a few minutes…')
 		},
 	},
 
@@ -116,6 +130,7 @@ export default {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		gap: 2px;
 	}
 }
 </style>
