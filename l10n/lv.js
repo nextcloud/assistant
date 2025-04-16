@@ -8,7 +8,7 @@ OC.L10N.register(
     "Less" : "Mazāk",
     "More" : "Vairāk",
     "Cancel" : "Atcelt",
-    "Delete" : "Dzēst",
+    "Delete" : "Izdzēst",
     "Submit" : "Iesniegt",
     "Choose" : "Izvēlēties",
     "Clear Selection" : "Notīrīt atlasi",
