@@ -111,6 +111,7 @@ OC.L10N.register(
     "Preview" : "Forhåndsvisning",
     "Unknown image generation error" : "Ukendt billedgenereringsfejl",
     "Send" : "Send",
-    "Advanced options" : "Avancerede indstillinger"
+    "Advanced options" : "Avancerede indstillinger",
+    "Copy link to clipboard" : "Kopiér link til udklipsholderen"
 },
 "nplurals=2; plural=(n != 1);");
