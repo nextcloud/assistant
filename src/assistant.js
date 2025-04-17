@@ -85,6 +85,7 @@ export async function openAssistantForm({
 			view.loading = true
 			view.showSyncTaskRunning = true
 			view.progress = null
+			view.expectedRuntime = null
 			view.inputs = inputs
 			view.selectedTaskTypeId = taskTypeId
 
@@ -92,6 +93,7 @@ export async function openAssistantForm({
 				.then((response) => {
 					const task = response.data?.ocs?.data?.task
 					lastTask = task
+					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 					const setProgress = (progress) => {
 						view.progress = progress
 					}
@@ -385,6 +387,7 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 		view.loading = true
 		view.showSyncTaskRunning = true
+		view.expectedRuntime = null
 		view.inputs = inputs
 		view.selectedTaskTypeId = taskTypeId
 
@@ -392,6 +395,7 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 			.then((response) => {
 				const task = response.data?.ocs?.data?.task
 				lastTask = task
+				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 				pollTask(task.id).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
