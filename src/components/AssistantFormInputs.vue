@@ -18,6 +18,7 @@
 				:optional-shape-options="selectedTaskType.optionalInputShapeEnumValues ?? null"
 				:values="inputs"
 				:show-advanced="showAdvanced"
+				@submit="$emit('submit', $event)"
 				@update:show-advanced="$emit('update:show-advanced', $event)"
 				@update:values="$emit('update:inputs', $event)" />
 		</div>
