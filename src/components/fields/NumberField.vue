@@ -17,7 +17,7 @@
 			:placeholder="field.placeholder ?? (field.description || t('assistant','Type some number'))"
 			:error="!isValid"
 			:helper-text="isValid ? '' : t('assistant', 'The current value is not a number')"
-			@update:value="onUpdateValue" />
+			@update:model-value="onUpdateValue" />
 	</div>
 </template>
 
