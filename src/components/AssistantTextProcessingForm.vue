@@ -265,7 +265,7 @@ export default {
 						SHAPE_TYPE_NAMES.Image,
 						SHAPE_TYPE_NAMES.Audio,
 						SHAPE_TYPE_NAMES.Video,
-					].includes(fieldType) && typeof value === 'number')
+					].includes(fieldType) && typeof value === 'number' && !isNaN(value))
 					|| (fieldType === SHAPE_TYPE_NAMES.ListOfTexts && typeof value === 'object' && !!value && value.every(v => typeof v === 'string'))
 					|| (fieldType === SHAPE_TYPE_NAMES.ListOfNumbers && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
 					|| ([
