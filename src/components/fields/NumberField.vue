@@ -11,7 +11,7 @@
 			:id="'input-' + fieldKey"
 			class="number-input-field"
 			:value="value ?? ''"
-			type="text"
+			type="number"
 			:label-outside="true"
 			:title="field.name"
 			:placeholder="field.placeholder ?? (field.description || t('assistant','Type some number'))"
