@@ -37,6 +37,7 @@
 			:text="message.content || t('assistant', '(empty message)')"
 			:use-markdown="true"
 			:reference-limit="1"
+			:references="references"
 			:autolink="true" />
 	</div>
 </template>
@@ -53,6 +54,11 @@ import MessageActions from './MessageActions.vue'
 
 import { getCurrentUser } from '@nextcloud/auth'
 import { showSuccess } from '@nextcloud/dialogs'
+import { generateOcsUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
+
+const PLAIN_URL_PATTERN = /(?:\s|^|\()((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;()]*)*))(?:\s|$|\))/ig
+const MARKDOWN_LINK_PATTERN = /\[[-A-Z0-9+&@#%?=~_|!:,.;()]+\]\(((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;]*)*))\)/ig
 
 export default {
 	name: 'Message',
@@ -97,13 +103,40 @@ export default {
 			displayName: getCurrentUser()?.displayName ?? getCurrentUser()?.uid ?? t('assistant', 'You'),
 			userId: getCurrentUser()?.uid ?? t('assistant', 'You'),
 			showMessageActions: false,
+			// we could initialize this with undefined but then NcRichText will try to find links
+			// and resolve them before we had a chance to do so, resulting in unnecessary requests to references/resolve
+			// with [] we inhibit the extract+resolve mechanism on NcRichText
+			// TODO This can be removed (and all the custom extract+resolve logic) when fixed in NcRichText
+			references: [],
 		}
+	},
+
+	mounted() {
+		this.fetch()
 	},
 
 	methods: {
 		copyMessage(message) {
 			navigator.clipboard.writeText(message)
 			showSuccess(t('assistant', 'Message copied to clipboard'))
+		},
+		fetch() {
+			const urlMatch = (new RegExp(PLAIN_URL_PATTERN).exec(this.message.content.trim()))
+			const mdMatch = (new RegExp(MARKDOWN_LINK_PATTERN).exec(this.message.content.trim()))
+			const firstMatch = urlMatch
+				? urlMatch[1].replaceAll(/[).,:;!?]+$/g, '')
+				: mdMatch
+					? mdMatch[1]
+					: false
+			if (firstMatch) {
+				axios.get(generateOcsUrl('references/resolve') + `?reference=${encodeURIComponent(firstMatch)}`)
+					.then((response) => {
+						this.references = Object.values(response.data.ocs.data.references)
+					})
+					.catch((error) => {
+						console.error('Failed to extract references', error)
+					})
+			}
 		},
 	},
 }
