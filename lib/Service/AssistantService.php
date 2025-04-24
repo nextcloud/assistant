@@ -391,6 +391,41 @@ class AssistantService {
 	 * @param string $userId
 	 * @param int $ocpTaskId
 	 * @param int $fileId
+	 * @return File
+	 * @throws Exception
+	 * @throws InvalidPathException
+	 * @throws LockedException
+	 * @throws NoUserException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 * @throws PreConditionNotMetException
+	 * @throws TaskProcessingException
+	 * @throws \OCP\Files\NotFoundException
+	 */
+	private function saveFile(string $userId, int $ocpTaskId, int $fileId): File {
+		$taskOutputFile = $this->getTaskOutputFile($userId, $ocpTaskId, $fileId);
+		$assistantDataFolder = $this->getAssistantDataFolder($userId);
+		$targetFileName = $this->getTargetFileName($taskOutputFile);
+		if ($assistantDataFolder->nodeExists($targetFileName)) {
+			$existingTarget = $assistantDataFolder->get($targetFileName);
+			if ($existingTarget instanceof File) {
+				if ($existingTarget->getSize() === $taskOutputFile->getSize()) {
+					return $existingTarget;
+				} else {
+					return $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+				}
+			} else {
+				throw new Exception('Impossible to copy output file, a directory with this name already exists', Http::STATUS_UNAUTHORIZED);
+			}
+		} else {
+			return $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+		}
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $ocpTaskId
+	 * @param int $fileId
 	 * @return string
 	 * @throws Exception
 	 * @throws InvalidPathException
@@ -403,23 +438,7 @@ class AssistantService {
 	 * @throws \OCP\Files\NotFoundException
 	 */
 	public function shareOutputFile(string $userId, int $ocpTaskId, int $fileId): string {
-		$taskOutputFile = $this->getTaskOutputFile($userId, $ocpTaskId, $fileId);
-		$assistantDataFolder = $this->getAssistantDataFolder($userId);
-		$targetFileName = $this->getTargetFileName($taskOutputFile);
-		if ($assistantDataFolder->nodeExists($targetFileName)) {
-			$existingTarget = $assistantDataFolder->get($targetFileName);
-			if ($existingTarget instanceof File) {
-				if ($existingTarget->getSize() === $taskOutputFile->getSize()) {
-					$fileCopy = $existingTarget;
-				} else {
-					$fileCopy = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
-				}
-			} else {
-				throw new Exception('Impossible to copy output file, a directory with this name already exists', Http::STATUS_UNAUTHORIZED);
-			}
-		} else {
-			$fileCopy = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
-		}
+		$fileCopy = $this->saveFile($userId, $ocpTaskId, $fileId);
 		$share = $this->shareManager->newShare();
 		$share->setNode($fileCopy);
 		$share->setPermissions(Constants::PERMISSION_READ);
@@ -427,9 +446,15 @@ class AssistantService {
 		$share->setSharedBy($userId);
 		$share->setLabel('Assistant share');
 		$share = $this->shareManager->createShare($share);
-		$shareToken = $share->getToken();
+		return $share->getToken();
+	}
 
-		return $shareToken;
+	public function saveOutputFile(string $userId, int $ocpTaskId, int $fileId): array {
+		$fileCopy = $this->saveFile($userId, $ocpTaskId, $fileId);
+		return [
+			'fileId' => $fileCopy->getId(),
+			'path' => $fileCopy->getInternalPath(),
+		];
 	}
 
 	/**

@@ -1,17 +1,29 @@
 <template>
 	<div class="task-output-widget">
-		<strong>
-			{{ t('assistant', 'Output file for task {taskId} ({taskTypeName})', { taskId: richObject.taskId, taskTypeName: richObject.taskTypeName }) }}
-		</strong>
+		<MediaField :field="field"
+			field-key="dummyKey"
+			:value="richObject.fileId"
+			:is-output="true" />
 	</div>
 </template>
 
 <script>
 
+import MediaField from '../components/fields/MediaField.vue'
+
+import { SHAPE_TYPE_NAMES } from '../constants.js'
+
 export default {
 	name: 'TaskOutputFileReferenceWidget',
 
 	components: {
+		MediaField,
+	},
+
+	provide() {
+		return {
+			providedCurrentTaskId: () => this.richObject.taskId,
+		}
 	},
 
 	props: {
@@ -31,6 +43,11 @@ export default {
 
 	data() {
 		return {
+			field: {
+				description: 'field desc',
+				name: t('assistant', 'Output file for task {taskId} ({taskTypeName})', { taskId: this.richObject.taskId, taskTypeName: this.richObject.taskTypeName }),
+				type: SHAPE_TYPE_NAMES.File,
+			},
 		}
 	},
 

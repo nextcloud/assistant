@@ -234,13 +234,13 @@ class AssistantApiController extends OCSController {
 	/**
 	 * Share an output file
 	 *
-	 * Share a file that was produced by a task
+	 * Save and share a file that was produced by a task
 	 *
 	 * @param int $ocpTaskId The task ID
 	 * @param int $fileId The file ID
 	 * @return DataResponse<Http::STATUS_OK, array{shareToken: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
-	 * 200: The file was shared
+	 * 200: The file was saved and shared
 	 * 404: The file was not found
 	 */
 	#[NoAdminRequired]
@@ -250,6 +250,29 @@ class AssistantApiController extends OCSController {
 			return new DataResponse(['shareToken' => $shareToken]);
 		} catch (\Exception $e) {
 			$this->logger->debug('Failed to share assistant output file', ['exception' => $e]);
+			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * Save an output file
+	 *
+	 * Save a file that was produced by a task
+	 *
+	 * @param int $ocpTaskId The task ID
+	 * @param int $fileId The file ID
+	 * @return DataResponse<Http::STATUS_OK, array{shareToken: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 * 200: The file was saved
+	 * 404: The file was not found
+	 */
+	#[NoAdminRequired]
+	public function saveOutputFile(int $ocpTaskId, int $fileId): DataResponse {
+		try {
+			$info = $this->assistantService->saveOutputFile($this->userId, $ocpTaskId, $fileId);
+			return new DataResponse($info);
+		} catch (\Exception $e) {
+			$this->logger->debug('Failed to save assistant output file', ['exception' => $e]);
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_NOT_FOUND);
 		}
 	}

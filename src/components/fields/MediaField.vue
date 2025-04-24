@@ -50,6 +50,13 @@
 					</NcButton>
 				</a>
 				<NcButton
+					:title="t('assistant', 'Save this media')"
+					@click="onSave">
+					<template #icon>
+						<ContentSaveIcon />
+					</template>
+				</NcButton>
+				<NcButton
 					:title="t('assistant', 'Share this media')"
 					@click="onShare">
 					<template #icon>
@@ -76,6 +83,7 @@
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
+import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
@@ -107,6 +115,7 @@ export default {
 		DownloadIcon,
 		ShareVariantIcon,
 		CloseIcon,
+		ContentSaveIcon,
 		NcButton,
 	},
 
@@ -220,21 +229,43 @@ export default {
 			})
 		},
 		onShare() {
-			if (this.value !== null) {
-				const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/share', {
-					taskId: this.providedCurrentTaskId(),
-					fileId: this.value,
-				})
-				axios.post(url).then(response => {
-					const shareToken = response.data.ocs.data.shareToken
-					const shareUrl = window.location.protocol + '//' + window.location.host + generateUrl('/s/{shareToken}', { shareToken })
-					console.debug('[assistant] generated share link', shareUrl)
-					const message = t('assistant', 'Output file share link copied to clipboard')
-					this.copyString(shareUrl, message)
-				}).catch(error => {
-					console.error(error)
-				})
+			if (this.value === null) {
+				return
 			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/share', {
+				taskId: this.providedCurrentTaskId(),
+				fileId: this.value,
+			})
+			axios.post(url).then(response => {
+				const shareToken = response.data.ocs.data.shareToken
+				const shareUrl = window.location.protocol + '//' + window.location.host + generateUrl('/s/{shareToken}', { shareToken })
+				console.debug('[assistant] generated share link', shareUrl)
+				const message = t('assistant', 'Output file share link copied to clipboard')
+				this.copyString(shareUrl, message)
+			}).catch(error => {
+				console.error(error)
+			})
+		},
+		onSave() {
+			if (this.value === null) {
+				return
+			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/save', {
+				taskId: this.providedCurrentTaskId(),
+				fileId: this.value,
+			})
+			axios.post(url).then(response => {
+				const savedPath = response.data.ocs.data.path
+				const savedFileId = response.data.ocs.data.fileId
+				console.debug('[assistant] save output file', savedPath)
+				const directUrl = window.location.protocol + '//' + window.location.host + generateUrl('/f/{savedFileId}', { savedFileId })
+				const message = t('assistant', 'This output file has been saved in {path}', { path: savedPath }) + '\n' + directUrl
+				this.copyString(directUrl, message)
+			}).catch(error => {
+				console.error(error)
+			})
 		},
 		async copyString(content, message) {
 			try {
