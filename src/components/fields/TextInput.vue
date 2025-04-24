@@ -12,7 +12,7 @@
 			ref="input"
 			:value="value ?? ''"
 			:link-autocomplete="false"
-			:multiline="true"
+			:multiline="false"
 			class="editable-input"
 			:class="{ shadowed: isOutput }"
 			:placeholder="placeholder"
