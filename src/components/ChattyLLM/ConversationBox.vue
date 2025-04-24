@@ -18,18 +18,20 @@
 				<NcLoadingIcon />
 			</template>
 		</NoSession>
-		<Message v-for="(message, idx) in messages"
-			v-else
-			:id="'message' + idx"
-			:key="'message' + idx"
-			:class="{ 'convo-box__message--dim': regenerateFromId && regenerateFromId <= message.id }"
-			:message="message"
-			:show-regenerate="message.role === 'assistant' && idx === (messages.length - 1)"
-			:delete-loading="loading.messageDelete && message.id === deleteMessageId"
-			:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
-			:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"
-			@regenerate="regenerate(message.id)"
-			@delete="deleteMessage(message.id)" />
+		<div v-else>
+			<Message v-for="(message, idx) in messages"
+				:id="'message' + idx"
+				:key="'message' + idx"
+				:class="{ 'convo-box__message--dim': regenerateFromId && regenerateFromId <= message.id }"
+				:message="message"
+				:show-regenerate="message.role === 'assistant' && idx === (messages.length - 1)"
+				:delete-loading="loading.messageDelete && message.id === deleteMessageId"
+				:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
+				:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"
+				@regenerate="regenerate(message.id)"
+				@delete="deleteMessage(message.id)" />
+			<LoadingPlaceholder v-if="loading.llmGeneration" />
+		</div>
 	</div>
 </template>
 
@@ -38,6 +40,7 @@ import AlertOutlineIcon from 'vue-material-design-icons/AlertOutline.vue'
 
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 
+import LoadingPlaceholder from './LoadingPlaceholder.vue'
 import Message from './Message.vue'
 import NoSession from './NoSession.vue'
 
@@ -49,6 +52,7 @@ export default {
 
 		NcLoadingIcon,
 
+		LoadingPlaceholder,
 		Message,
 		NoSession,
 	},
