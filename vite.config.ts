@@ -15,6 +15,7 @@ export default createAppConfig({
 	imageGenerationReference: 'src/imageGenerationReference.js',
 	textGenerationReference: 'src/textGenerationReference.js',
 	speechToTextReference: 'src/speechToTextReference.js',
+    taskOutputFileReference: 'src/taskOutputFileReference.js',
 	assistantPage: 'src/assistantPage.js',
 }, {
 	config: {
