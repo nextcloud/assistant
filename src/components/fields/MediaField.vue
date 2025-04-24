@@ -38,7 +38,9 @@
 			<component :is="displayComponent"
 				:file-id="value"
 				:show-delete="false"
-				:is-output="isOutput" />
+				:is-output="isOutput"
+				:clickable="true"
+				@click.native="onPreviewClick" />
 			<div v-if="isOutput"
 				class="buttons">
 				<a :href="getDownloadUrl()"
@@ -256,13 +258,17 @@ export default {
 				taskId: this.providedCurrentTaskId(),
 				fileId: this.value,
 			})
-			axios.post(url).then(response => {
+			return axios.post(url).then(response => {
 				const savedPath = response.data.ocs.data.path
 				const savedFileId = response.data.ocs.data.fileId
 				console.debug('[assistant] save output file', savedPath)
+
 				const directUrl = window.location.protocol + '//' + window.location.host + generateUrl('/f/{savedFileId}', { savedFileId })
-				const message = t('assistant', 'This output file has been saved in {path}', { path: savedPath }) + '\n' + directUrl
-				this.copyString(directUrl, message)
+				const openMessage = `<a href="${directUrl}" target="_blank">${t('assistant', 'Click this to open the file')}</a>`
+				showSuccess(openMessage, { isHTML: true })
+
+				const afterCopyMessage = t('assistant', 'This output file has been saved in {path}', { path: savedPath })
+				this.copyString(directUrl, afterCopyMessage)
 			}).catch(error => {
 				console.error(error)
 			})
@@ -276,6 +282,24 @@ export default {
 				console.error(error)
 				showError(t('assistant', 'Could not copy to clipboard'))
 			}
+		},
+		onPreviewClick() {
+			if (this.value === null) {
+				return
+			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/save', {
+				taskId: this.providedCurrentTaskId(),
+				fileId: this.value,
+			})
+			return axios.post(url).then(response => {
+				const savedPath = response.data.ocs.data.path
+				console.debug('[assistant] view output file', savedPath)
+				// TODO find a way to make it work when the assistant is in a modal itself
+				OCA.Viewer.open({ path: savedPath })
+			}).catch(error => {
+				console.error(error)
+			})
 		},
 	},
 }

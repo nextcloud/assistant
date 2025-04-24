@@ -453,7 +453,7 @@ class AssistantService {
 		$fileCopy = $this->saveFile($userId, $ocpTaskId, $fileId);
 		return [
 			'fileId' => $fileCopy->getId(),
-			'path' => $fileCopy->getInternalPath(),
+			'path' => preg_replace('/^files\//', '/', $fileCopy->getInternalPath()),
 		];
 	}
 

@@ -5,7 +5,7 @@
 <template>
 	<div class="file-display">
 		<div class="preview">
-			<img :src="imageUrl">
+			<img :src="imageUrl" :class="{ clickable }">
 			<span v-if="fileName"
 				class="file-name"
 				:title="fileName">
@@ -39,6 +39,10 @@ export default {
 			required: true,
 		},
 		isOutput: {
+			type: Boolean,
+			default: false,
+		},
+		clickable: {
 			type: Boolean,
 			default: false,
 		},
@@ -100,6 +104,10 @@ export default {
 		justify-content: center;
 		img {
 			width: 100px;
+
+			&.clickable {
+				cursor: pointer !important;
+			}
 		}
 		.file-name {
 			max-width: 100px;
