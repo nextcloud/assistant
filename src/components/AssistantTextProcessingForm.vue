@@ -16,121 +16,121 @@
 			class="task-custom-select"
 			:options="sortedTaskTypes"
 			@update:value="onTaskTypeUserChange" />
-		<div v-if="showHistory"
-			class="history">
-			<div class="history--title">
-				<NcButton
-					class="history--back-button"
-					type="secondary"
-					:title="t('assistant', 'Back to the assistant')"
-					@click="showHistory = false">
-					<template #icon>
-						<NcLoadingIcon v-if="historyLoading" />
-						<ArrowLeftIcon v-else />
-					</template>
-				</NcButton>
-				<h3 v-if="selectedTaskType">
-					{{ t('assistant', 'Previous "{taskTypeName}" tasks', { taskTypeName: selectedTaskType.name }) }}
-				</h3>
-			</div>
-			<TaskList
-				class="history--list"
-				:task-type="selectedTaskType"
-				:loading.sync="historyLoading"
-				@try-again="onHistoryTryAgain"
-				@load-task="onHistoryLoadTask" />
-		</div>
-		<div v-else-if="mySelectedTaskTypeId === 'core:text2text:translate'"
-			class="task-input-output-form">
-			<TranslateForm v-if="selectedTaskType"
-				:inputs.sync="myInputs"
-				:outputs.sync="myOutputs"
-				:translate-task-id="selectedTaskId"
-				:translate-task-type="selectedTaskType"
-				:show-advanced.sync="showAdvanced" />
-		</div>
-		<div v-else class="task-input-output-form">
-			<AssistantFormInputs v-if="selectedTaskType"
-				:inputs.sync="myInputs"
-				:selected-task-id="selectedTaskId"
-				:selected-task-type="selectedTaskType"
-				:show-advanced.sync="showAdvanced"
-				@submit="onSyncSubmit" />
-			<AssistantFormOutputs v-if="hasOutput"
-				:inputs="myInputs"
-				:outputs.sync="myOutputs"
-				:selected-task-type="selectedTaskType"
-				:show-advanced.sync="showAdvanced" />
-		</div>
-		<!-- hide the footer for chatty-llm -->
-		<div v-if="!showHistory && mySelectedTaskTypeId !== 'chatty-llm'" class="footer">
-			<NcButton v-if="selectedTaskType"
-				class="history-button"
-				type="secondary"
-				:aria-label="t('assistant', 'Show previous tasks')"
-				@click="showHistory = true">
-				<template #icon>
-					<HistoryIcon />
-				</template>
-				{{ t('assistant', 'Previous "{taskTypeName}" tasks', { taskTypeName: selectedTaskType.name }) }}
-			</NcButton>
-			<div class="footer--action-buttons">
-				<NcActions v-if="hasOptionalInputOutputShape"
-					:force-menu="true">
-					<NcActionButton
-						:close-after-click="true"
-						@click="showAdvanced = !showAdvanced">
-						<template #icon>
-							<UnfoldLessHorizontalIcon v-if="showAdvanced" />
-							<UnfoldMoreHorizontalIcon v-else />
-						</template>
-						{{ toggleAdvancedLabel }}
-					</NcActionButton>
-				</NcActions>
-				<NcButton
-					v-if="showSubmit"
-					type="primary"
-					class="submit-button"
-					:disabled="!canSubmit"
-					:title="syncSubmitButtonTitle"
-					@click="onSyncSubmit">
-					{{ syncSubmitButtonLabel }}
-					<template #icon>
-						<NcLoadingIcon v-if="loading" />
-						<CreationIcon v-else />
-					</template>
-				</NcButton>
-				<NcButton
-					v-for="(b, i) in actionButtonsToShow"
-					:key="i"
-					:type="b.type ?? 'secondary'"
-					:title="b.title"
-					@click="onActionButtonClick(b)">
-					{{ b.label }}
-					<template v-if="b.iconSvg" #icon>
-						<NcIconSvgWrapper :svg="b.iconSvg" />
-					</template>
-				</NcButton>
+		<div class="task-input-output-form">
+			<ChattyLLMInputForm v-if="mySelectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
+			<div v-else class="container chatty-inputs">
+				<NcAppNavigation>
+					<NcAppNavigationList>
+						<NcAppNavigationNew :text="t('assistant', 'New task')"
+							type="secondary"
+							@click="onHistoryNewTask">
+							<template #icon>
+								<PlusIcon :size="20" />
+							</template>
+						</NcAppNavigationNew>
+						<TaskList
+							class="history--list"
+							:task-type="selectedTaskType"
+							:loading.sync="historyLoading"
+							@try-again="onHistoryTryAgain"
+							@load-task="onHistoryLoadTask" />
+					</NcAppNavigationList>
+				</NcAppNavigation>
+				<NcAppContent class="session-area">
+					<div class="session-area__top-bar">
+						<div class="session-area__top-bar__title">
+							<EditableTextField :initial-text="selectedTaskType.name ?? ''" />
+						</div>
+					</div>
+					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
+						class="session-area__chat-area">
+						<TranslateForm v-if="selectedTaskType"
+							:inputs.sync="myInputs"
+							:outputs.sync="myOutputs"
+							:translate-task-id="selectedTaskId"
+							:translate-task-type="selectedTaskType"
+							:show-advanced.sync="showAdvanced" />
+					</div>
+					<div v-else class="session-area__chat-area">
+						<AssistantFormInputs v-if="selectedTaskType"
+							ref="assistantFormInputs"
+							:inputs.sync="myInputs"
+							:selected-task-id="selectedTaskId"
+							:selected-task-type="selectedTaskType"
+							:show-advanced.sync="showAdvanced"
+							@submit="onSyncSubmit" />
+						<AssistantFormOutputs v-if="hasOutput"
+							:inputs="myInputs"
+							:outputs.sync="myOutputs"
+							:selected-task-type="selectedTaskType"
+							:show-advanced.sync="showAdvanced" />
+					</div>
+					<div class="footer">
+						<div class="footer--action-buttons">
+							<NcActions v-if="hasOptionalInputOutputShape"
+								:force-menu="true">
+								<NcActionButton
+									:close-after-click="true"
+									@click="showAdvanced = !showAdvanced">
+									<template #icon>
+										<UnfoldLessHorizontalIcon v-if="showAdvanced" />
+										<UnfoldMoreHorizontalIcon v-else />
+									</template>
+									{{ toggleAdvancedLabel }}
+								</NcActionButton>
+							</NcActions>
+							<NcButton
+								v-if="showSubmit"
+								type="primary"
+								class="submit-button"
+								:disabled="!canSubmit"
+								:title="syncSubmitButtonTitle"
+								@click="onSyncSubmit">
+								{{ syncSubmitButtonLabel }}
+								<template #icon>
+									<NcLoadingIcon v-if="loading" />
+									<CreationIcon v-else />
+								</template>
+							</NcButton>
+							<NcButton
+								v-for="(b, i) in actionButtonsToShow"
+								:key="i"
+								:type="b.type ?? 'secondary'"
+								:title="b.title"
+								@click="onActionButtonClick(b)">
+								{{ b.label }}
+								<template v-if="b.iconSvg" #icon>
+									<NcIconSvgWrapper :svg="b.iconSvg" />
+								</template>
+							</NcButton>
+						</div>
+					</div>
+				</NcAppContent>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
 import CreationIcon from 'vue-material-design-icons/Creation.vue'
-import HistoryIcon from 'vue-material-design-icons/History.vue'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
+import NcAppNavigationList from '@nextcloud/vue/dist/Components/NcAppNavigationList.js'
+import NcAppNavigationNew from '@nextcloud/vue/dist/Components/NcAppNavigationNew.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import AssistantFormOutputs from './AssistantFormOutputs.vue'
+import ChattyLLMInputForm from './ChattyLLM/ChattyLLMInputForm.vue'
+import EditableTextField from './ChattyLLM/EditableTextField.vue'
 import NoProviderEmptyContent from './NoProviderEmptyContent.vue'
 import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
@@ -160,13 +160,18 @@ export default {
 		NcIconSvgWrapper,
 		NcActions,
 		NcActionButton,
+		NcAppContent,
+		NcAppNavigation,
+		NcAppNavigationList,
+		NcAppNavigationNew,
 		CreationIcon,
+		PlusIcon,
 		UnfoldLessHorizontalIcon,
 		UnfoldMoreHorizontalIcon,
-		HistoryIcon,
-		ArrowLeftIcon,
 		AssistantFormInputs,
 		AssistantFormOutputs,
+		ChattyLLMInputForm,
+		EditableTextField,
 	},
 	provide() {
 		return {
@@ -438,6 +443,10 @@ export default {
 			this.showHistory = false
 			this.$emit('load-task', e)
 		},
+		onHistoryNewTask() {
+			this.$refs.assistantFormInputs.setDefaultValues(true)
+			this.myOutputs = null
+		},
 	},
 }
 </script>
@@ -467,6 +476,11 @@ export default {
 
 		> * {
 			margin-right: 6px;
+		}
+
+		.chatty-inputs {
+			margin-top: 8px;
+			height: 8000px;
 		}
 	}
 
@@ -522,7 +536,6 @@ export default {
 
 		&--list {
 			width: 100%;
-			overflow: auto;
 		}
 
 		&--title {
@@ -540,6 +553,168 @@ export default {
 
 	.success-icon {
 		color: var(--color-success);
+	}
+}
+
+.container {
+	overflow: auto;
+	display: flex;
+	height: 100%;
+
+	:deep .app-navigation-new {
+		padding: 0;
+	}
+
+	.unloaded-sessions {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1em;
+		font-weight: bold;
+		padding: 1em;
+		height: 100%;
+	}
+
+	:deep .app-navigation {
+		--app-navigation-max-width: calc(100vw - (var(--app-navigation-padding) + 24px + var(--default-grid-baseline)));
+		background-color: var(--color-primary-element-light);
+		color: var(--color-primary-element-light-text);
+		border-radius: var(--border-radius-large);
+
+		@media only screen and (max-width: 1024px) {
+			position: relative !important;
+		}
+
+		.app-navigation-toggle-wrapper {
+			margin-right: -49px !important;
+			top: var(--default-grid-baseline);
+		}
+
+		&--close {
+			.app-navigation-toggle-wrapper {
+				margin-right: -33px !important;
+			}
+		}
+
+		&--close ~ .session-area {
+			.session-area__chat-area, .session-area__input-area {
+				padding-left: 0 !important;
+			}
+			.session-area__top-bar {
+				padding-left: 36px !important;
+			}
+		}
+	}
+
+	:deep .app-navigation-list {
+		padding: var(--default-grid-baseline) !important;
+		box-sizing: border-box;
+		height: 100%;
+
+		.app-navigation-input-confirm > form {
+			align-items: center;
+			height: var(--default-clickable-area);
+
+			> button {
+				scale: calc(36/44);
+			}
+		}
+
+		.app-navigation-entry-wrapper .app-navigation-entry-link {
+			.app-navigation-entry-icon {
+				display: none;
+			}
+			.app-navigation-entry__name {
+				margin-left: 16px;
+			}
+		}
+
+		.app-navigation-entry {
+			&-link {
+				padding-right: 0.3em;
+			}
+
+			&.active {
+				font-weight: bold;
+
+				&:hover {
+					background-color: var(--color-primary-element) !important;
+				}
+			}
+
+			&:hover {
+				background-color: var(--color-primary-element-light-hover);
+			}
+
+			.app-navigation-entry-button {
+				border: none !important;
+				padding-right: 0 !important;
+
+				> span {
+					font-size: 100% !important;
+					padding-left: 0;
+				}
+			}
+
+			.editingContainer {
+				margin: 0 !important;
+				width: 100% !important;
+				padding-left: 24px;
+			}
+		}
+	}
+
+	.session-area {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
+		&__top-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 4px;
+			position: sticky;
+			top: 0;
+			height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
+			box-sizing: border-box;
+			border-bottom: 1px solid var(--color-border);
+			padding-left: 52px;
+			padding-right: 0.5em;
+			font-weight: bold;
+			background-color: var(--color-main-background);
+
+			&__title {
+				width: 100%;
+			}
+		}
+
+		&__chat-area {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			overflow-y: auto;
+			padding: 1em;
+
+			&__active-session__utility-button {
+				display: flex;
+				justify-content: center;
+				padding: 1em;
+			}
+		}
+
+		&__chat-area, &__input-area {
+			padding-left: 1em;
+		}
+
+		&__agency-confirmation {
+			margin-left: 1em;
+		}
+
+		&__input-area {
+			position: sticky;
+			bottom: 0;
+		}
 	}
 }
 </style>
