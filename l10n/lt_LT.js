@@ -31,6 +31,7 @@ OC.L10N.register(
     "Cancelled" : "Atsisakytas",
     "Failed" : "Nepavyko",
     "Running" : "Bėgimas",
+    "Input" : "Įvestis",
     "Unknown status" : "Nežinoma būsena",
     "Choose a file" : "Pasirinkti failą",
     "No file selected" : "Neįkeltas joks failas",
