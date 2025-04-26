@@ -17,6 +17,7 @@
 				@cancel="onTaskCancel(task)" />
 		</ul>
 		<NcEmptyContent v-if="!loading && sortedTasks.length === 0"
+			class="task-list--empty"
 			:name="t('assistant', 'Nothing yet')"
 			:description="emptyContentDescription">
 			<template #icon>
@@ -142,6 +143,11 @@ export default {
 .task-list {
 	&--item {
 		width: 99% !important;
+	}
+
+	&--empty {
+		text-align: center;
+		margin: 5vh 0.5vw;
 	}
 }
 </style>
