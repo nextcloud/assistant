@@ -12,6 +12,7 @@ OC.L10N.register(
     "Less" : "Vähem",
     "More" : "Veel",
     "Cancel" : "Tühista",
+    "New conversation" : "Uus vestlus",
     "Delete" : "Kustuta",
     "Edit title" : "Muuda pealkirja",
     "Cancel editing" : "Katkesta muutmine",
