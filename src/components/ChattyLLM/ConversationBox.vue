@@ -58,7 +58,7 @@ export default {
 	},
 
 	props: {
-		// [{ id: number, session_id: number, role: string, content: string, timestamp: number }]
+		// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources: string }]
 		messages: {
 			type: Array,
 			default: null,

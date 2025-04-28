@@ -227,7 +227,7 @@ export default {
 			sessionIdToDelete: null,
 			chatContent: '',
 			sessions: null,
-			// [{ id: number, session_id: number, role: string, content: string, timestamp: number }]
+			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			messagesAxiosController: null, // for request cancellation
 			allMessagesLoaded: false,

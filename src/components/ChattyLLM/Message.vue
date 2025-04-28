@@ -30,6 +30,26 @@
 				<div class="message__header__role__name">
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
+				<div style="display: flex">
+					<NcPopover v-if="sources.length">
+						<template #trigger>
+							<NcButton
+								:aria-label="t('assistant', 'Information sources')">
+								<template #icon>
+									<InformationBox :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<template #default>
+							Information sources:
+							<ul>
+								<li v-for="source in sources" :key="source">
+									{{ source }}
+								</li>
+							</ul>
+						</template>
+					</NcPopover>
+				</div>
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
@@ -48,7 +68,11 @@ import AssistantIcon from '../icons/AssistantIcon.vue'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcDateTime from '@nextcloud/vue/dist/Components/NcDateTime.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcPopover from '@nextcloud/vue/dist/Components/NcPopover.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
+
+import InformationBox from 'vue-material-design-icons/InformationBox.vue'
 
 import MessageActions from './MessageActions.vue'
 
@@ -70,12 +94,15 @@ export default {
 		NcDateTime,
 		NcLoadingIcon,
 		NcRichText,
+		NcPopover,
+		NcButton,
+		InformationBox,
 
 		MessageActions,
 	},
 
 	props: {
-		// { id: number, session_id: number, role: string, content: string, timestamp: number }
+		// { id: number, session_id: number, role: string, content: string, timestamp: number, sources: string }
 		message: {
 			type: Object,
 			required: true,
@@ -108,11 +135,13 @@ export default {
 			// with [] we inhibit the extract+resolve mechanism on NcRichText
 			// TODO This can be removed (and all the custom extract+resolve logic) when fixed in NcRichText
 			references: [],
+			sources: [],
 		}
 	},
 
 	mounted() {
 		this.fetch()
+		this.sources = JSON.parse(this.message.sources)
 	},
 
 	methods: {

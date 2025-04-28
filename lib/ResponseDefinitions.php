@@ -64,6 +64,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     content: string,
  *     timestamp: int,
  *     ocp_task_id: int,
+ *     sources: string,
  * }
  *
  * @psalm-type AssistantChatAgencyMessage = AssistantChatMessage&array{
