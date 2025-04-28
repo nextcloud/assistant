@@ -272,7 +272,7 @@ class AssistantApiController extends OCSController {
 			$info = $this->assistantService->saveOutputFile($this->userId, $ocpTaskId, $fileId);
 			return new DataResponse($info);
 		} catch (\Exception $e) {
-			$this->logger->debug('Failed to save assistant output file', ['exception' => $e]);
+			$this->logger->error('Failed to save assistant output file', ['exception' => $e]);
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_NOT_FOUND);
 		}
 	}
