@@ -295,7 +295,7 @@ export default {
 			return axios.post(url).then(response => {
 				const savedPath = response.data.ocs.data.path
 				console.debug('[assistant] view output file', savedPath)
-				// TODO find a way to make it work when the assistant is in a modal itself
+				// This works and shows the Viewer on top the assitant's NcModal because we give it container="#content"
 				OCA.Viewer.open({ path: savedPath })
 			}).catch(error => {
 				console.error(error)
