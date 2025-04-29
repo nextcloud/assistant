@@ -14,11 +14,13 @@ use OCA\Assistant\Listener\CSPListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
 use OCA\Assistant\Listener\TaskFailedListener;
+use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
 use OCA\Assistant\Listener\TaskSuccessfulListener;
 use OCA\Assistant\Listener\Text2Image\Text2ImageReferenceListener;
 use OCA\Assistant\Notification\Notifier;
 use OCA\Assistant\Reference\FreePromptReferenceProvider;
 use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
+use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -52,10 +54,12 @@ class Application extends App implements IBootstrap {
 		$context->registerReferenceProvider(Text2ImageReferenceProvider::class);
 		$context->registerReferenceProvider(FreePromptReferenceProvider::class);
 		$context->registerReferenceProvider(SpeechToTextReferenceProvider::class);
+		$context->registerReferenceProvider(TaskOutputFileReferenceProvider::class);
 
 		$context->registerEventListener(RenderReferenceEvent::class, Text2ImageReferenceListener::class);
 		$context->registerEventListener(RenderReferenceEvent::class, FreePromptReferenceListener::class);
 		$context->registerEventListener(RenderReferenceEvent::class, SpeechToTextReferenceListener::class);
+		$context->registerEventListener(RenderReferenceEvent::class, TaskOutputFileReferenceListener::class);
 
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
 

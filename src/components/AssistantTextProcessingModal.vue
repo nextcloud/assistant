@@ -7,6 +7,7 @@
 		:size="modalSize"
 		:can-close="false"
 		:name="t('assistant', 'Nextcloud Assistant')"
+		container="#content"
 		dark
 		class="assistant-modal"
 		@close="onCancel">

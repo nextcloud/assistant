@@ -64,6 +64,9 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			$indexingComplete = $this->appConfig->getValueInt('context_chat', 'last_indexed_time', 0) !== 0;
 			$this->initialStateService->provideInitialState('contextChatIndexingComplete', $indexingComplete);
 		}
+		if (class_exists(\OCA\Viewer\Event\LoadViewer::class)) {
+			$this->eventDispatcher->dispatchTyped(new \OCA\Viewer\Event\LoadViewer());
+		}
 		Util::addScript(Application::APP_ID, Application::APP_ID . '-main');
 	}
 }
