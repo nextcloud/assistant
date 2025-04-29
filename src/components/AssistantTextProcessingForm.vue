@@ -31,6 +31,7 @@
 						<TaskList
 							class="history--list"
 							:task-type="selectedTaskType"
+							:selected-task-id="selectedTaskId"
 							:loading.sync="historyLoading"
 							@try-again="onHistoryTryAgain"
 							@load-task="onHistoryLoadTask" />

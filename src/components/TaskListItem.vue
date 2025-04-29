@@ -8,7 +8,7 @@
 		:name="mainName"
 		:title="subName"
 		:bold="false"
-		:active="false"
+		:active="active"
 		:details="details"
 		@click="$emit('load')">
 		<template #icon>
@@ -120,6 +120,10 @@ export default {
 	},
 
 	props: {
+		active: {
+			type: Boolean,
+			default: false,
+		},
 		task: {
 			type: Object,
 			required: true,

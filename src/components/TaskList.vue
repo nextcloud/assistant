@@ -9,6 +9,7 @@
 			<TaskListItem v-for="task in sortedTasks"
 				:key="task.id"
 				class="task-list--item"
+				:active="task.id === selectedTaskId"
 				:task="task"
 				:task-type="taskType"
 				@try-again="$emit('try-again', task)"
@@ -51,6 +52,10 @@ export default {
 	props: {
 		taskType: {
 			type: [Object, null],
+			default: null,
+		},
+		selectedTaskId: {
+			type: [Number, null],
 			default: null,
 		},
 		loading: {
