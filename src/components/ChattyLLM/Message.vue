@@ -31,7 +31,7 @@
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
 				<div style="display: flex">
-					<NcPopover v-if="sources.length">
+					<NcPopover v-if="parsedSources.length">
 						<template #trigger>
 							<NcButton
 								:aria-label="t('assistant', 'Information sources')">
@@ -44,7 +44,7 @@
 							<div class="toolinfo_popover_inner">
 								<h6> Information sources </h6>
 								<ul>
-									<li v-for="source in sources" :key="source">
+									<li v-for="source in parsedSources" :key="source">
 										{{ source }}
 									</li>
 								</ul>
@@ -141,13 +141,19 @@ export default {
 			// with [] we inhibit the extract+resolve mechanism on NcRichText
 			// TODO This can be removed (and all the custom extract+resolve logic) when fixed in NcRichText
 			references: [],
-			sources: [],
 		}
+	},
+
+	computed: {
+		parsedSources() {
+			let parsedSources = JSON.parse(this.message.sources)
+			parsedSources = parsedSources.map((source) => this.getSourceString(source))
+			return [...new Set(parsedSources)]
+		},
 	},
 
 	mounted() {
 		this.fetch()
-		this.sources = this.parse_sources()
 	},
 
 	methods: {
@@ -175,11 +181,6 @@ export default {
 		},
 		getSourceString(source) {
 			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
-		},
-		parse_sources() {
-			let parsedSources = JSON.parse(this.message.sources)
-			parsedSources = parsedSources.map((source) => this.getSourceString(source))
-			return [...new Set(parsedSources)]
 		},
 	},
 }
