@@ -41,12 +41,14 @@
 							</NcButton>
 						</template>
 						<template #default>
-							Information sources:
-							<ul>
-								<li v-for="source in sources" :key="source">
-									{{ source }}
-								</li>
-							</ul>
+							<div class="toolinfo_popover_inner">
+								<h6> Information sources </h6>
+								<ul>
+									<li v-for="source in sources" :key="source">
+										{{ source }}
+									</li>
+								</ul>
+							</div>
 						</template>
 					</NcPopover>
 				</div>
@@ -123,6 +125,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		informationSourceNames: {
+			type: Array,
+			default: null,
+		},
 	},
 
 	data: () => {
@@ -141,7 +147,7 @@ export default {
 
 	mounted() {
 		this.fetch()
-		this.sources = JSON.parse(this.message.sources)
+		this.sources = this.parse_sources()
 	},
 
 	methods: {
@@ -167,6 +173,14 @@ export default {
 					})
 			}
 		},
+		getSourceString(source) {
+			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
+		},
+		parse_sources() {
+			let parsedSources = JSON.parse(this.message.sources)
+			parsedSources = parsedSources.map((source) => this.getSourceString(source))
+			return [...new Set(parsedSources)]
+		},
 	},
 }
 </script>
@@ -184,6 +198,7 @@ export default {
 	&__header {
 		display: flex;
 		flex-direction: row;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
 
@@ -214,6 +229,19 @@ export default {
 		:deep .widget-default, :deep .widget-custom {
 			width: auto !important;
 		}
+	}
+}
+</style>
+
+<style lang="scss">
+.toolinfo_popover_inner {
+	margin: 12px;
+	h6 {
+		margin: 2px;
+	}
+	ul {
+		list-style-type: disc;
+		padding-left: 18px;
 	}
 }
 </style>

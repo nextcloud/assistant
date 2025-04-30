@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace OCA\Assistant\Listener;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\AssistantService;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -34,6 +35,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		private IAppConfig $appConfig,
 		private IInitialState $initialStateService,
 		private IEventDispatcher $eventDispatcher,
+		private AssistantService $assistantService,
 		private ?string $userId,
 	) {
 	}
@@ -63,6 +65,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			$this->initialStateService->provideInitialState('last-target-language', $lastTargetLanguage);
 			$indexingComplete = $this->appConfig->getValueInt('context_chat', 'last_indexed_time', 0) !== 0;
 			$this->initialStateService->provideInitialState('contextChatIndexingComplete', $indexingComplete);
+			$this->initialStateService->provideInitialState('contextAgentToolSources', $this->assistantService->informationSources);
 		}
 		if (class_exists(\OCA\Viewer\Event\LoadViewer::class)) {
 			$this->eventDispatcher->dispatchTyped(new \OCA\Viewer\Event\LoadViewer());
