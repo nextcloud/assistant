@@ -13,7 +13,7 @@
 			:placeholder="loading.llmGeneration ? thinkingText : placeholderText"
 			:aria-label="loading.llmGeneration ? thinkingText : placeholderText"
 			:maxlength="1600"
-			:multiline="false"
+			:multiline="isMobile"
 			dir="auto"
 			@update:value="$emit('update:chatContent', $event)"
 			@submit="$emit('submit', $event)" />
@@ -34,6 +34,8 @@
 <script>
 import SendIcon from 'vue-material-design-icons/Send.vue'
 
+import isMobile from '../../mixins/isMobile.js'
+
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 
@@ -53,6 +55,10 @@ export default {
 		NcButton,
 		NcRichContenteditable,
 	},
+
+	mixins: [
+		isMobile,
+	],
 
 	props: {
 		chatContent: {

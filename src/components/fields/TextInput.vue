@@ -12,7 +12,7 @@
 			ref="input"
 			:value="value ?? ''"
 			:link-autocomplete="false"
-			:multiline="false"
+			:multiline="isMobile"
 			class="editable-input"
 			:class="{ shadowed: isOutput }"
 			:placeholder="placeholder"
@@ -49,6 +49,7 @@ import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckO
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 
+import isMobile from '../../mixins/isMobile.js'
 import CopyIcon from '../icons/CopyIcon.vue'
 
 import axios from '@nextcloud/axios'
@@ -90,6 +91,10 @@ export default {
 		ClipboardCheckOutlineIcon,
 		CopyIcon,
 	},
+
+	mixins: [
+		isMobile,
+	],
 
 	props: {
 		id: {
