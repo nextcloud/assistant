@@ -1,0 +1,21 @@
+{ "translations": {
+    "Send an email" : "Elektron pochta xabarini yuboring",
+    "User not found" : "Foydalanuvchi topilmadi",
+    "Nextcloud Assistant" : "Next bulut yordamchisi",
+    "Close" : "Close",
+    "More" : "Ko'proq",
+    "Cancel" : "Cancel",
+    "Delete" : "Delete",
+    "Edit title" : "Sarlavhani tahrirlash",
+    "Choose" : "Choose",
+    "Upload from device" : "Qurilmadan yuklash",
+    "Share" : "Ulashish",
+    "Copy" : "Nusxalash",
+    "Upload file" : "Upload file",
+    "Type some text" : "Bir oz matn yozing",
+    "Reset" : "Qayta tiklash",
+    "Unknown error" : "Unknown error",
+    "Preview" : "Ko‘rib chiqish",
+    "Send" : "Yuborish"
+},"pluralForm" :"nplurals=1; plural=0;"
+}
