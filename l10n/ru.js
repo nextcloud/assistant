@@ -56,7 +56,6 @@ OC.L10N.register(
     "Type a message…" : "Набирает сообщение…",
     "Processing…" : "Обработка…",
     "You" : "Вы",
-    "(empty message)" : "(пустое сообщение)",
     "Copy message" : "Копировать сообщение",
     "Delete message" : "Удалить сообщение",
     "Choose" : "Выберите",

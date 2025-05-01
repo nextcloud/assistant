@@ -132,7 +132,6 @@ OC.L10N.register(
     "Processing…" : "قيدَ المعالجة ...",
     "You" : "أنت",
     "Message copied to clipboard" : "تمّ نسخ الرسالة إلى الحافظة",
-    "(empty message)" : "(رسالة فارغة)",
     "Copy message" : "نسخ الرسالة",
     "Regenerate message" : "إعادة توليد الرسالة",
     "Delete message" : "إحْذِفِ الرسالة",
