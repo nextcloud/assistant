@@ -21,7 +21,6 @@ OC.L10N.register(
     "Type a message…" : "Введіть повідомлення...",
     "Processing…" : "Обробка...",
     "You" : "Ви",
-    "(empty message)" : "(порожнє повідомлення)",
     "Delete message" : "Вилучити повідомлення",
     "Select Files/Folders" : "Виберіть файли/каталоги",
     "Choose" : "Вибрати",

@@ -66,7 +66,6 @@ OC.L10N.register(
     "Type a message…" : "Indtast en besked...",
     "You" : "Dig",
     "Message copied to clipboard" : "Besked kopieret til udklipsholder",
-    "(empty message)" : "(tom besked)",
     "Copy message" : "Kopier besked",
     "Regenerate message" : "Regenerer besked",
     "Delete message" : "Slet besked",

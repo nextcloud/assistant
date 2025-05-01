@@ -132,7 +132,6 @@ OC.L10N.register(
     "Processing…" : "Ag próiseáil…",
     "You" : "tú",
     "Message copied to clipboard" : "Cóipeáladh an teachtaireacht chuig an ngearrthaisce",
-    "(empty message)" : "(teachtaireacht folamh)",
     "Copy message" : "Cóipeáil teachtaireacht",
     "Regenerate message" : "Athghin teachtaireacht",
     "Delete message" : "Scrios teachtaireacht",

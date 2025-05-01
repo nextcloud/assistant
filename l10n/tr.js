@@ -132,7 +132,6 @@ OC.L10N.register(
     "Processing…" : "İşleniyor…",
     "You" : "Siz",
     "Message copied to clipboard" : "İleti panoya kopyalandı",
-    "(empty message)" : "(boş ileti)",
     "Copy message" : "İletiyi kopyala",
     "Regenerate message" : "İletiyi yeniden oluştur",
     "Delete message" : "İletiyi sil",
