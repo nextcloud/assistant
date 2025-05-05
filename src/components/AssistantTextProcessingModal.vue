@@ -48,7 +48,8 @@
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="$emit('try-again', $event)"
-					@load-task="$emit('load-task', $event)" />
+					@load-task="$emit('load-task', $event)"
+					@new-task="$emit('new-task')" />
 			</div>
 		</div>
 	</NcModal>
@@ -134,6 +135,7 @@ export default {
 		'action-button-clicked',
 		'try-again',
 		'load-task',
+		'new-task',
 		'back-to-assistant',
 	],
 	data() {

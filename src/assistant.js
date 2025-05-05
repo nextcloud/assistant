@@ -144,6 +144,12 @@ export async function openAssistantForm({
 				lastTask = task
 			}
 		})
+		view.$on('new-task', () => {
+			console.debug('[assistant] new task')
+			view.outputs = null
+			view.selectedTaskId = null
+			lastTask = null
+		})
 		view.$on('background-notify', () => {
 			cancelTaskPolling()
 			view.showScheduleConfirmation = true
@@ -436,6 +442,12 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 			view.selectedTaskId = task.id
 			lastTask = task
 		}
+	})
+	view.$on('new-task', () => {
+		console.debug('[assistant] new task')
+		view.outputs = null
+		view.selectedTaskId = null
+		lastTask = null
 	})
 	view.$on('background-notify', () => {
 		cancelTaskPolling()

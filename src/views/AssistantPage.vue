@@ -29,7 +29,8 @@
 					:loading="loading"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
-					@load-task="onLoadTask" />
+					@load-task="onLoadTask"
+					@new-task="onNewTask" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -169,6 +170,11 @@ export default {
 				this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
 				this.task.id = task.id
 			}
+		},
+		onNewTask() {
+			this.task.status = TASK_STATUS_STRING.unknown
+			this.task.output = null
+			this.task.id = null
 		},
 	},
 }

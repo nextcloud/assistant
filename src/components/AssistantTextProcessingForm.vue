@@ -210,6 +210,7 @@ export default {
 		'action-button-clicked',
 		'try-again',
 		'load-task',
+		'new-task',
 	],
 	data() {
 		return {
@@ -445,8 +446,8 @@ export default {
 			this.$emit('load-task', e)
 		},
 		onHistoryNewTask() {
+			this.$emit('new-task')
 			this.$refs.assistantFormInputs.setDefaultValues(true)
-			this.myOutputs = null
 		},
 	},
 }
