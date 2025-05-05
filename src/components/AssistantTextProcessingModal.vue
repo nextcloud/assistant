@@ -27,6 +27,7 @@
 					v-if="showSyncTaskRunning"
 					:description="shortInput"
 					:progress="progress"
+					:expected-runtime="expectedRuntime"
 					@background-notify="$emit('background-notify')"
 					@cancel="$emit('cancel-task')"
 					@back="onBackToAssistant" />
@@ -109,6 +110,10 @@ export default {
 			default: false,
 		},
 		progress: {
+			type: [Number, null],
+			default: null,
+		},
+		expectedRuntime: {
 			type: [Number, null],
 			default: null,
 		},
