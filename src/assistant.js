@@ -62,7 +62,8 @@ export async function openAssistantForm({
 		const modalId = 'assistantTextProcessingModal'
 		const modalElement = document.createElement('div')
 		modalElement.id = modalId
-		document.body.append(modalElement)
+		const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
+		document.querySelector('body').insertBefore(modalElement, content.nextSibling)
 
 		const View = Vue.extend(AssistantTextProcessingModal)
 		const view = new View({
@@ -351,7 +352,8 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 	const modalId = 'assistantTextProcessingModal'
 	const modalElement = document.createElement('div')
 	modalElement.id = modalId
-	document.body.append(modalElement)
+	const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
+	document.querySelector('body').insertBefore(modalElement, content.nextSibling)
 
 	const View = Vue.extend(AssistantTextProcessingModal)
 	const view = new View({
