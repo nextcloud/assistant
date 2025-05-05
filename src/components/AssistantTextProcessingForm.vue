@@ -331,7 +331,8 @@ export default {
 			this.myInputs = newVal
 		},
 		mySelectedTaskTypeId(newVal) {
-			this.myOutputs = {}
+			this.$emit('new-task')
+			this.$refs.assistantFormInputs.setDefaultValues(true)
 		},
 	},
 	mounted() {
