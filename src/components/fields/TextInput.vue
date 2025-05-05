@@ -12,11 +12,12 @@
 			ref="input"
 			:value="value ?? ''"
 			:link-autocomplete="false"
-			:multiline="true"
+			:multiline="isMobile"
 			class="editable-input"
 			:class="{ shadowed: isOutput }"
 			:placeholder="placeholder"
 			:title="title"
+			@submit="hasValue && $emit('submit', $event)"
 			@update:value="$emit('update:value', $event)" />
 		<NcButton v-if="isOutput && hasValue"
 			class="copy-button"
@@ -48,6 +49,7 @@ import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckO
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 
+import isMobile from '../../mixins/isMobile.js'
 import CopyIcon from '../icons/CopyIcon.vue'
 
 import axios from '@nextcloud/axios'
@@ -90,6 +92,10 @@ export default {
 		CopyIcon,
 	},
 
+	mixins: [
+		isMobile,
+	],
+
 	props: {
 		id: {
 			type: String,
@@ -122,6 +128,7 @@ export default {
 	},
 
 	emits: [
+		'submit',
 		'update:value',
 	],
 

@@ -11,6 +11,7 @@
 		:label="field.description"
 		:placeholder="field.placeholder ?? field.description"
 		:title="field.name"
+		@submit="onSubmit"
 		@update:value="onUpdateValue" />
 </template>
 
@@ -44,6 +45,7 @@ export default {
 	},
 
 	emits: [
+		'submit',
 		'update:value',
 	],
 
@@ -62,6 +64,10 @@ export default {
 	},
 
 	methods: {
+		onSubmit(event) {
+			console.debug('[Assistant] submit task event', event)
+			this.$emit('submit', event)
+		},
 		onUpdateValue(newValue) {
 			console.debug('[Assistant] new text value', newValue)
 			this.$emit('update:value', newValue?.trim())
