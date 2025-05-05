@@ -45,6 +45,7 @@
 			<TranslateForm v-if="selectedTaskType"
 				:inputs.sync="myInputs"
 				:outputs.sync="myOutputs"
+				:translate-task-id="selectedTaskId"
 				:translate-task-type="selectedTaskType"
 				:show-advanced.sync="showAdvanced" />
 		</div>

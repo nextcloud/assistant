@@ -78,6 +78,10 @@ export default {
 	},
 
 	props: {
+		translateTaskId: {
+			type: [Number, null],
+			default: null,
+		},
 		translateTaskType: {
 			type: Object,
 			required: true,
@@ -118,9 +122,19 @@ export default {
 	},
 
 	watch: {
+		translateTaskType() {
+			console.debug('[assistant] watch translateTaskType', this.translateTaskType, this.translateTaskTypeId)
+			this.setDefaultValues(true)
+		},
 	},
 
 	mounted() {
+		console.debug('[assistant] mounted TranslateForm', this.translateTaskId, this.translateTaskType)
+		// don't set the default values if there is a loaded task (initial or from history)
+		if (this.translateTaskId === null) {
+			this.setDefaultValues(false)
+		}
+
 		this.autosize()
 	},
 
@@ -145,8 +159,32 @@ export default {
 				...this.inputs,
 				[key]: value,
 			}
-			console.debug('[assistant] field value change', newValues)
+			console.debug('[assistant] translate field value change', newValues)
 			this.$emit('update:inputs', newValues)
+		},
+		setDefaultValues(clear = true) {
+			console.debug('[assistant] set translate default values', this.translateTaskType?.inputShapeDefaults, this.translateTaskType?.optionalInputShapeDefaults)
+			const inputs = clear
+				? {}
+				: {
+					...this.inputs,
+				}
+			// set default values
+			if (this.translateTaskType.inputShapeDefaults) {
+				Object.keys(this.translateTaskType.inputShapeDefaults).forEach(key => {
+					if (this.translateTaskType.inputShapeDefaults[key]) {
+						inputs[key] = this.translateTaskType.inputShapeDefaults[key]
+					}
+				})
+			}
+			if (this.translateTaskType.optionalInputShapeDefaults) {
+				Object.keys(this.translateTaskType.optionalInputShapeDefaults).forEach(key => {
+					if (this.translateTaskType.optionalInputShapeDefaults[key]) {
+						inputs[key] = this.translateTaskType.optionalInputShapeDefaults[key]
+					}
+				})
+			}
+			this.$emit('update:inputs', inputs)
 		},
 	},
 }
