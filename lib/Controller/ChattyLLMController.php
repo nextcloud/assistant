@@ -283,6 +283,7 @@ class ChattyLLMController extends OCSController {
 			$message->setRole($role);
 			$message->setContent($content);
 			$message->setTimestamp($timestamp);
+			$message->setSources('[]');
 			$this->messageMapper->insert($message);
 
 			if ($firstHumanMessage) {
