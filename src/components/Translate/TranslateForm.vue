@@ -47,7 +47,8 @@
 						field-key="output"
 						:field="translateTaskType.outputShape.output"
 						:value="outputs?.output ?? null"
-						:is-output="true" />
+						:is-output="true"
+						@update:value="onOutputValueChange('output', $event)" />
 					<NcNoteCard v-if="outputEqualsInput"
 						class="warning-note"
 						type="warning">
@@ -161,6 +162,14 @@ export default {
 			}
 			console.debug('[assistant] translate field value change', newValues)
 			this.$emit('update:inputs', newValues)
+		},
+		onOutputValueChange(key, value) {
+			const newValues = {
+				...this.outputs,
+				[key]: value,
+			}
+			console.debug('[assistant] translate output field value change', newValues)
+			this.$emit('update:outputs', newValues)
 		},
 		setDefaultValues(clear = true) {
 			console.debug('[assistant] set translate default values', this.translateTaskType?.inputShapeDefaults, this.translateTaskType?.optionalInputShapeDefaults)
