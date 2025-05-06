@@ -98,6 +98,9 @@ export default {
 		taskType() {
 			this.getTasks()
 		},
+		selectedTaskId() {
+			this.getTasks()
+		},
 	},
 
 	mounted() {
