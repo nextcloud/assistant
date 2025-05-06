@@ -204,12 +204,11 @@ export default {
 	margin-bottom: 1rem;
 
 	.wrapper {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(300px, 1fr));
-		grid-column-gap: 16px;
+		display: flex;
+		gap: 16px;
 
 		.col {
-			grid-row: 1/2;
+			width: 100%;
 		}
 	}
 
