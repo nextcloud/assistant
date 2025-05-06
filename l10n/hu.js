@@ -34,6 +34,7 @@ OC.L10N.register(
     "Clear Selection" : "Kiválasztás törlése",
     "Assistant options saved" : "Asszisztens beállítások elmentve",
     "Failed to save assistant options" : "Nem sikerült az asszisztens beállításainak mentése",
+    "This may take a few seconds…" : "Ez eltarthat néhány másodpercig ...",
     "Nothing yet" : "Még nincs",
     "Cancelled" : "Megszakítva",
     "Failed" : "Sikertelen",

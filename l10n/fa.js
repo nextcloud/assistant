@@ -33,6 +33,7 @@ OC.L10N.register(
     "Choose" : "انتخاب کنید",
     "Assistant options saved" : "گزینه های دستیار ذخیره شد",
     "Failed to save assistant options" : "گزینه های دستیار ذخیره نشد",
+    "This may take a few seconds…" : "این ممکن است چند ثانیه طول بکشد…",
     "Cancelled" : "لغو شده",
     "Failed" : "Failed",
     "Running" : "در حال دویدن",

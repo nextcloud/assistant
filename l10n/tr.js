@@ -158,6 +158,7 @@ OC.L10N.register(
     "Configured Backends" : "Yapılandırılmış arka uçlar",
     "The following services are used as backends for Nextcloud Assistant:" : "Nextcloud yardımcı ile arka uç olarak kullanılmak için şu hizmetler yapılandırılmış:",
     "{providerName} for {taskName}" : "{taskName} için {providerName}",
+    "This may take a few seconds…" : "Bu işlem bir kaç saniye sürebilir …",
     "Getting results…" : "Sonuçlar alınıyor…",
     "Run task in the background and get notified" : "Görev arka planda çalıştırılsın ve bildirim gönderilsin",
     "Back to the Assistant" : "Yardımcıya dön",

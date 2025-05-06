@@ -15,6 +15,7 @@ OC.L10N.register(
     "You" : "Þú",
     "Delete message" : "Eyða skilaboðum",
     "Choose" : "Velja",
+    "This may take a few seconds…" : "Þetta gæti tekið örfáar sekúndur…",
     "Nothing yet" : "Ekkert ennþá",
     "Cancelled" : "Hætt við",
     "Running" : "Hlaup",

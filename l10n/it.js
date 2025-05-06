@@ -16,6 +16,7 @@ OC.L10N.register(
     "You" : "Tu",
     "Delete message" : "Elimina messaggio",
     "Choose" : "Scegli",
+    "This may take a few seconds…" : "Potrebbe richiedere alcuni secondi...",
     "Nothing yet" : "Ancora niente",
     "Cancelled" : "Annullato",
     "Failed" : "Non riuscito",

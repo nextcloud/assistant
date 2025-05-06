@@ -138,6 +138,7 @@ OC.L10N.register(
     "Configured Backends" : "已设定的后端",
     "The following services are used as backends for Nextcloud Assistant:" : "以下服务被用于云助手的后端：",
     "{providerName} for {taskName}" : "供{taskName}使用的{providerName}",
+    "This may take a few seconds…" : "此操作可能需要花费几秒钟 ...",
     "Getting results…" : "正在获取结果……",
     "Run task in the background and get notified" : "在后台执行任务并接收通知",
     "Back to the Assistant" : "回到云助手",

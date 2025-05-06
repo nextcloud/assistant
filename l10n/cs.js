@@ -157,6 +157,7 @@ OC.L10N.register(
     "Configured Backends" : "Nastavené podpůrné vrstvy",
     "The following services are used as backends for Nextcloud Assistant:" : "Následující služby slouží jako podpůrné vrstvy pro Nextcloud Asistenta:",
     "{providerName} for {taskName}" : "{providerName} pro {taskName}",
+    "This may take a few seconds…" : "Může to pár sekund trvat…",
     "Getting results…" : "Získávání výsledků",
     "Run task in the background and get notified" : "Spusťte úkol na pozadí a následně obdržíte upozornění",
     "Back to the Assistant" : "Zpět na asistenta",

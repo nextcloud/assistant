@@ -18,6 +18,7 @@ OC.L10N.register(
     "Copy message" : "Skopiuj wiadomość",
     "Delete message" : "Usuń wiadomość",
     "Choose" : "Wybierz",
+    "This may take a few seconds…" : "Może to potrwać kilka sekund…",
     "Nothing yet" : "Jeszcze nic",
     "Cancelled" : "Anulowane",
     "Failed" : "Nie powiodło się",

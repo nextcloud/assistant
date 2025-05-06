@@ -52,6 +52,7 @@ OC.L10N.register(
     "AI Providers need to be installed to use the Assistant" : "AA hornitzaileak instalatu behar dira Laguntzailea erabiltzeko",
     "Assistant options saved" : "Laguntzailearen aukerak gorde dira",
     "Failed to save assistant options" : "Ezin izan dira gorde laguntzailearen aukerak",
+    "This may take a few seconds…" : "Segundo batzuk beharko dira...",
     "Getting results…" : "Emaitzak lortzen...",
     "Nothing yet" : "Ezer ez oraindik",
     "Succeeded" : "Arrakastatsua",

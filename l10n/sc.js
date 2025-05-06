@@ -14,6 +14,7 @@ OC.L10N.register(
     "You" : "Tue",
     "Delete message" : "Cantzella messàgiu",
     "Choose" : "Sèbera",
+    "This may take a few seconds…" : "S'at a istentare calicunu segundu...",
     "Cancelled" : "Annulladu",
     "Running" : "Cursa",
     "Result" : "Resurtadu",
