@@ -27,6 +27,7 @@ OC.L10N.register(
     "You" : "Jūs",
     "Delete message" : "Ištrinti laišką",
     "Choose" : "Pasirinkite",
+    "This may take a few seconds…" : "Tai gali šiek tiek užtrukti…",
     "Getting results…" : "Gaunami rezultatai…",
     "Cancelled" : "Atsisakytas",
     "Failed" : "Nepavyko",

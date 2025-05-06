@@ -18,6 +18,7 @@ OC.L10N.register(
     "You" : "Je",
     "Delete message" : "Bericht verwijderen",
     "Choose" : "Kies",
+    "This may take a few seconds…" : "Dit kan enige tijd duren...",
     "Nothing yet" : "Nog niets",
     "Cancelled" : "Geannuleerd",
     "Failed" : "Mislukt",

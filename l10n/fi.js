@@ -17,6 +17,7 @@ OC.L10N.register(
     "You" : "Sinä",
     "Delete message" : "Poista viesti",
     "Choose" : "Valitse",
+    "This may take a few seconds…" : "Tämä saattaa kestää muutaman sekunnin",
     "Nothing yet" : "Ei vielä mitään",
     "Cancelled" : "Peruttu",
     "Failed" : "Epäonnistui",

@@ -65,6 +65,7 @@ OC.L10N.register(
     "Failed to save assistant options" : "Сбой сохранения опций ассистента",
     "AI image generation smart picker" : "Генерация изображений с помощью ИИ",
     "AI transcription smart picker" : "Умный селектор транскрипции ИИ",
+    "This may take a few seconds…" : "Подождите немного…",
     "Getting results…" : "Получение результатов…",
     "Cancel task" : "Отменить задачу",
     "Succeeded" : "Успешно",

@@ -13,6 +13,7 @@ OC.L10N.register(
     "Submit" : "Šalji",
     "Delete message" : "Izbriši poruku",
     "Choose" : "Odaberite",
+    "This may take a few seconds…" : "To može potrajati nekoliko sekundi...",
     "Cancelled" : "Otkazano",
     "Running" : "Trčanje",
     "Result" : "Rezultat",

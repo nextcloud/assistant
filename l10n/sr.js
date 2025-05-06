@@ -158,6 +158,7 @@ OC.L10N.register(
     "Configured Backends" : "Конфигурисани позадински механизми",
     "The following services are used as backends for Nextcloud Assistant:" : "Следећи сервиси се користе као позадински механизми за Nextcloud Асистент:",
     "{providerName} for {taskName}" : "{providerName} за {taskName}",
+    "This may take a few seconds…" : "Ово може потрајати пар секунди…",
     "Getting results…" : "Преузимање резултата",
     "Run task in the background and get notified" : "Покрени задатак у позадини и обавести ме",
     "Back to the Assistant" : "Назад на Асистента",

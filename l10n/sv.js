@@ -76,6 +76,7 @@ OC.L10N.register(
     "Choose" : "Välj",
     "Assistant options saved" : "Assistant-alternativ sparade",
     "Failed to save assistant options" : "Det gick inte att spara Assistant-alternativ",
+    "This may take a few seconds…" : "Detta kan ta några sekunder…",
     "Cancelled" : "Avbokad",
     "Failed" : "Misslyckades",
     "Running" : "Löpning",

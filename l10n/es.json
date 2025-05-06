@@ -139,6 +139,7 @@
     "Configured Backends" : "Backends configurados",
     "The following services are used as backends for Nextcloud Assistant:" : "Los siguientes servicios se utilizan como backends para el Asistente de Nextcloud:",
     "{providerName} for {taskName}" : "{providerName} para {taskName}",
+    "This may take a few seconds…" : "Esto puede tardar unos segundos…",
     "Getting results…" : "Obteniendo resultados…",
     "Run task in the background and get notified" : "Ejecutar una tarea en segundo plano y sea notificado",
     "Back to the Assistant" : "Regresar al Asistente",

@@ -12,6 +12,7 @@ OC.L10N.register(
     "Edit title" : "עריכת כותרת",
     "Submit" : "שליחה",
     "Choose" : "בחר",
+    "This may take a few seconds…" : "פעולה זו עשויה לארוך מספר שניות…",
     "Cancelled" : "בוטל",
     "Running" : "ריצה",
     "Result" : "תוצאה",

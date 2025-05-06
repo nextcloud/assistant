@@ -73,6 +73,7 @@
     "Configured Backends" : "Ρυθμισμένοι Backends",
     "The following services are used as backends for Nextcloud Assistant:" : "Οι ακόλουθες υπηρεσίες χρησιμοποιούνται ως backends για τον Βοηθό Nextcloud:",
     "{providerName} for {taskName}" : "{providerName} για {taskName}",
+    "This may take a few seconds…" : "Χρειάζονται λίγα δευτερόλεπτα...",
     "Getting results…" : "Λήψη αποτελεσμάτων…",
     "Run task in the background and get notified" : "Εκτέλεση εργασίας στο παρασκήνιο και ειδοποίηση",
     "Cancel task" : "Ακύρωση εργασίας",
