@@ -218,7 +218,6 @@ export default {
 			myOutputs: this.outputs,
 			taskTypes: [],
 			mySelectedTaskTypeId: this.selectedTaskTypeId || TEXT2TEXT_TASK_TYPE_ID,
-			showHistory: false,
 			loadingTaskTypes: false,
 			historyLoading: false,
 			showAdvanced: false,
@@ -439,11 +438,9 @@ export default {
 			this.$emit('action-button-clicked', { button, output: this.myOutputs })
 		},
 		onHistoryTryAgain(e) {
-			this.showHistory = false
 			this.$emit('try-again', e)
 		},
 		onHistoryLoadTask(e) {
-			this.showHistory = false
 			this.$emit('load-task', e)
 		},
 		onHistoryNewTask() {
