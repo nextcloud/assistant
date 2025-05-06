@@ -17,7 +17,7 @@
 			:optional-shape-options="selectedTaskType.optionalOutputShapeEnumValues ?? null"
 			:values="outputs"
 			:show-advanced="showAdvanced"
-			@update:outputs="$emit('update:outputs', $event)"
+			@update:values="$emit('update:outputs', $event)"
 			@update:show-advanced="$emit('update:show-advanced', $event)" />
 		<NcNoteCard v-if="outputEqualsInput"
 			class="warning-note"
@@ -65,6 +65,10 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: [
+		'update:outputs',
+	],
 
 	computed: {
 		selectedTaskTypeId() {
