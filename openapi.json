@@ -49,7 +49,8 @@
                     "role",
                     "content",
                     "timestamp",
-                    "ocp_task_id"
+                    "ocp_task_id",
+                    "sources"
                 ],
                 "properties": {
                     "id": {
@@ -73,6 +74,9 @@
                     "ocp_task_id": {
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "sources": {
+                        "type": "string"
                     }
                 }
             },

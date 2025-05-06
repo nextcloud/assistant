@@ -28,6 +28,7 @@
 				:delete-loading="loading.messageDelete && message.id === deleteMessageId"
 				:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
 				:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"
+				:information-source-names="informationSourceNames"
 				@regenerate="regenerate(message.id)"
 				@delete="deleteMessage(message.id)" />
 			<LoadingPlaceholder v-if="loading.llmGeneration" />
@@ -44,6 +45,8 @@ import LoadingPlaceholder from './LoadingPlaceholder.vue'
 import Message from './Message.vue'
 import NoSession from './NoSession.vue'
 
+import { loadState } from '@nextcloud/initial-state'
+
 export default {
 	name: 'ConversationBox',
 
@@ -58,7 +61,7 @@ export default {
 	},
 
 	props: {
-		// [{ id: number, session_id: number, role: string, content: string, timestamp: number }]
+		// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources: string }]
 		messages: {
 			type: Array,
 			default: null,
@@ -82,6 +85,7 @@ export default {
 		return {
 			regenerateFromId: null,
 			deleteMessageId: null,
+			informationSourceNames: loadState('assistant', 'contextAgentToolSources'),
 		}
 	},
 

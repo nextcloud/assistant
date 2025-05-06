@@ -61,6 +61,8 @@ class ChattyLLMTaskListener implements IEventListener {
 			$message->setRole('assistant');
 			$message->setContent(trim($task->getOutput()['output'] ?? ''));
 			$message->setTimestamp(time());
+			$sources = json_encode($task->getOutput()['sources'] ?? []);
+			$message->setSources($sources ? $sources : '[]');
 			try {
 				$this->messageMapper->insert($message);
 			} catch (\OCP\DB\Exception $e) {

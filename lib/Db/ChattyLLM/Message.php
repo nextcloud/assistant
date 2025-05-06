@@ -23,6 +23,8 @@ use OCP\DB\Types;
  * @method \void setTimestamp(int $timestamp)
  * @method \int getOcpTaskId()
  * @method \void setOcpTaskId(int $ocpTaskId)
+ * @method \string getSources()
+ * @method \void setSources(string $sources)
  */
 class Message extends Entity implements \JsonSerializable {
 	/** @var int */
@@ -35,6 +37,8 @@ class Message extends Entity implements \JsonSerializable {
 	protected $timestamp;
 	/** @var int */
 	protected $ocpTaskId;
+	/** @var string */
+	protected $sources;
 
 	public static $columns = [
 		'id',
@@ -43,6 +47,7 @@ class Message extends Entity implements \JsonSerializable {
 		'content',
 		'timestamp',
 		'ocp_task_id',
+		'sources',
 	];
 	public static $fields = [
 		'id',
@@ -51,6 +56,7 @@ class Message extends Entity implements \JsonSerializable {
 		'content',
 		'timestamp',
 		'ocpTaskId',
+		'sources',
 	];
 
 	public function __construct() {
@@ -59,6 +65,7 @@ class Message extends Entity implements \JsonSerializable {
 		$this->addType('content', Types::STRING);
 		$this->addType('timestamp', Types::INTEGER);
 		$this->addType('ocp_task_id', Types::INTEGER);
+		$this->addType('sources', Types::STRING);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -70,6 +77,7 @@ class Message extends Entity implements \JsonSerializable {
 			'content' => $this->content,
 			'timestamp' => $this->timestamp,
 			'ocp_task_id' => $this->ocpTaskId,
+			'sources' => $this->sources,
 		];
 	}
 }

@@ -30,6 +30,28 @@
 				<div class="message__header__role__name">
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
+				<div style="display: flex">
+					<NcPopover v-if="parsedSources.length">
+						<template #trigger>
+							<NcButton
+								:aria-label="t('assistant', 'Information sources')">
+								<template #icon>
+									<InformationBox :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<template #default>
+							<div class="toolinfo_popover_inner">
+								<h6> Information sources </h6>
+								<ul>
+									<li v-for="source in parsedSources" :key="source">
+										{{ source }}
+									</li>
+								</ul>
+							</div>
+						</template>
+					</NcPopover>
+				</div>
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
@@ -48,7 +70,11 @@ import AssistantIcon from '../icons/AssistantIcon.vue'
 import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
 import NcDateTime from '@nextcloud/vue/dist/Components/NcDateTime.js'
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcPopover from '@nextcloud/vue/dist/Components/NcPopover.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
+
+import InformationBox from 'vue-material-design-icons/InformationBox.vue'
 
 import MessageActions from './MessageActions.vue'
 
@@ -70,12 +96,15 @@ export default {
 		NcDateTime,
 		NcLoadingIcon,
 		NcRichText,
+		NcPopover,
+		NcButton,
+		InformationBox,
 
 		MessageActions,
 	},
 
 	props: {
-		// { id: number, session_id: number, role: string, content: string, timestamp: number }
+		// { id: number, session_id: number, role: string, content: string, timestamp: number, sources: string }
 		message: {
 			type: Object,
 			required: true,
@@ -96,6 +125,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		informationSourceNames: {
+			type: Array,
+			default: null,
+		},
 	},
 
 	data: () => {
@@ -109,6 +142,14 @@ export default {
 			// TODO This can be removed (and all the custom extract+resolve logic) when fixed in NcRichText
 			references: [],
 		}
+	},
+
+	computed: {
+		parsedSources() {
+			let parsedSources = JSON.parse(this.message.sources)
+			parsedSources = parsedSources.map((source) => this.getSourceString(source))
+			return [...new Set(parsedSources)]
+		},
 	},
 
 	mounted() {
@@ -138,6 +179,9 @@ export default {
 					})
 			}
 		},
+		getSourceString(source) {
+			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
+		},
 	},
 }
 </script>
@@ -155,6 +199,7 @@ export default {
 	&__header {
 		display: flex;
 		flex-direction: row;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
 
@@ -185,6 +230,19 @@ export default {
 		:deep .widget-default, :deep .widget-custom {
 			width: auto !important;
 		}
+	}
+}
+</style>
+
+<style lang="scss">
+.toolinfo_popover_inner {
+	margin: 12px;
+	h6 {
+		margin: 2px;
+	}
+	ul {
+		list-style-type: disc;
+		padding-left: 18px;
 	}
 }
 </style>

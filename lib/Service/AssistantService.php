@@ -74,6 +74,8 @@ class AssistantService {
 		TextToTextTopics::ID => 10,
 	];
 
+	public array $informationSources;
+
 	public function __construct(
 		private ITaskProcessingManager $taskProcessingManager,
 		private TaskNotificationMapper $taskNotificationMapper,
@@ -86,6 +88,36 @@ class AssistantService {
 		private IConfig $config,
 		private IShareManager $shareManager,
 	) {
+		$this->informationSources = [
+			'ask_context_chat' => $this->l10n->t('Context Chat'),
+			'transcribe_file' => $this->l10n->t('Assistant File Transcription'),
+			'generate_document' => $this->l10n->t('Assistant Document Generation'),
+			'list_calendars' => $this->l10n->t('Nextcloud Calendar'),
+			'schedule_event' => $this->l10n->t('Nextcloud Calendar'),
+			'find_free_time_slot_in_calendar' => $this->l10n->t('Nextcloud Calendar'),
+			'add_task' => $this->l10n->t('Nextcloud Tasks'),
+			'find_details_of_current_user' => $this->l10n->t('Nextcloud User Profile'),
+			'list_decks' => $this->l10n->t('Nextcloud Deck'),
+			'add_card' => $this->l10n->t('Nextcloud Deck'),
+			'get_coordinates_for_address' => $this->l10n->t('OpenStreetMap'),
+			'get_current_weather_for_coordinates' => $this->l10n->t('Norwegian Meteorological Institute Weather Forecast'),
+			'get_public_transport_route_for_coordinates,' => $this->l10n->t('HERE Public Transport API'),
+			'get_osm_route,' => $this->l10n->t('OpenStreetMap'),
+			'get_osm_link,' => $this->l10n->t('OpenStreetMap'),
+			'get_file_content' => $this->l10n->t('Nextcloud Files'),
+			'get_folder_tree' => $this->l10n->t('Nextcloud Files'),
+			'create_public_sharing_link' => $this->l10n->t('Nextcloud Files'),
+			'send_email' => $this->l10n->t('Nextcloud Mail'),
+			'get_mail_account_list' => $this->l10n->t('Nextcloud Mail'),
+			'list_projects,' => $this->l10n->t('OpenProject'),
+			'list_assignees,' => $this->l10n->t('OpenProject'),
+			'create_work_package' => $this->l10n->t('OpenProject'),
+			'list_talk_conversations' => $this->l10n->t('Nextcloud Talk'),
+			'create_public_conversation' => $this->l10n->t('Nextcloud Talk'),
+			'send_message_to_conversation' => $this->l10n->t('Nextcloud Talk'),
+			'list_messages_in_conversation' => $this->l10n->t('Nextcloud Talk'),
+			'duckduckgo_results_json' => $this->l10n->t('DuckDuckGo Web Search'),
+		];
 	}
 
 	/**
