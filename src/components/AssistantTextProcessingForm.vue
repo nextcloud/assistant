@@ -46,6 +46,7 @@
 					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
 						class="session-area__chat-area">
 						<TranslateForm v-if="selectedTaskType"
+							ref="translateForm"
 							:inputs.sync="myInputs"
 							:outputs.sync="myOutputs"
 							:translate-task-id="selectedTaskId"
@@ -330,8 +331,7 @@ export default {
 			this.myInputs = newVal
 		},
 		mySelectedTaskTypeId(newVal) {
-			this.$emit('new-task')
-			this.$refs.assistantFormInputs.setDefaultValues(true)
+			this.myOutputs = {}
 		},
 	},
 	mounted() {
@@ -427,7 +427,10 @@ export default {
 				})
 		},
 		onTaskTypeUserChange() {
-			this.myOutputs = null
+			this.$emit('new-task')
+
+			this.$refs?.translateForm?.setDefaultValues(true)
+			this.$refs?.assistantFormInputs?.setDefaultValues(true)
 		},
 		onSyncSubmit() {
 			console.debug('[assistant] in form submit ---------', this.myInputs)
@@ -445,7 +448,9 @@ export default {
 		},
 		onHistoryNewTask() {
 			this.$emit('new-task')
-			this.$refs.assistantFormInputs.setDefaultValues(true)
+
+			this.$refs?.translateForm?.setDefaultValues(true)
+			this.$refs?.assistantFormInputs?.setDefaultValues(true)
 		},
 	},
 }
