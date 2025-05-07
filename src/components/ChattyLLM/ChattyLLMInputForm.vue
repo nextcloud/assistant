@@ -273,15 +273,15 @@ export default {
 			this.editingTitle = false
 			this.$refs.inputComponent.focus()
 
-			if (this.active !== null && !this.loading.newSession) {
-				await this.fetchMessages()
-				this.scrollToBottom()
-			} else {
-				// when no active session or creating a new session
+			if (this.active === null || this.loading.newSession) {
 				this.allMessagesLoaded = true
 				this.loading.newSession = false
 				return
 			}
+
+			await this.fetchMessages()
+			this.scrollToBottom()
+
 			// start polling in case a message is currently being generated
 			try {
 				const sessionId = this.active.id
