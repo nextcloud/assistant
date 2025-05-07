@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Send an email" : "Imbia unu messàgiu de posta eletrònica",
     "User not found" : "Utèntzia no agatada",
+    "Nextcloud Mail" : "Nextcloud Mail",
     "Close" : "Serra",
     "Less" : "De mancu",
     "More" : "Prus",

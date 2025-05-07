@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Send an email" : "Enviar um e-mail",
     "User not found" : "Utilizador não encontrado",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Close" : "Fechar",
     "Less" : "Menos",
     "More" : "Mais",

@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Send an email" : "Испрати е-пошта",
     "User not found" : "Корисникот не е пронајден",
+    "Nextcloud Mail" : "Електронска пошта",
+    "Nextcloud Talk" : "Talk",
     "Artificial Intelligence" : "Вештачка интелигенција",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",

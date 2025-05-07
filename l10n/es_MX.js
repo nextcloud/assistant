@@ -4,6 +4,8 @@ OC.L10N.register(
     "Send an email" : "Enviar correo electrónico",
     "User not found" : "No se encontró el usuario",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
+    "Nextcloud Mail" : "Correo Nextcloud",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Artificial Intelligence" : "Inteligencia artificial",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",

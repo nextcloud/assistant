@@ -31,6 +31,8 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "%1$s 작업을 실패함",
     "\"%1$s\" task for \"%2$s\" has failed" : "%2$s를 위한 작업 %1$s을 실패함",
     "View task" : "작업 보기",
+    "Nextcloud Mail" : "Nextcloud 메일",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Chat with AI" : "AI와 채팅",
     "Chat with an AI model." : "AI 모델과 채팅하세요",
     "Generate text" : "텍스트 생성",

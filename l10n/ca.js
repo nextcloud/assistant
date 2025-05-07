@@ -158,6 +158,7 @@ OC.L10N.register(
     "Configured Backends" : "Rerefons configurats",
     "The following services are used as backends for Nextcloud Assistant:" : "Els serveis següents s'utilitzen com a backend per a Nextcloud Assistant:",
     "{providerName} for {taskName}" : "{providerName} per a {taskName}",
+    "This may take a few seconds…" : "Això podria trigar uns quants segons...",
     "Getting results…" : "S'estan obtenint resultats…",
     "Run task in the background and get notified" : "Executeu la tasca en segon pla i rebeu una notificació",
     "Back to the Assistant" : "Torna a l'Assistent",
