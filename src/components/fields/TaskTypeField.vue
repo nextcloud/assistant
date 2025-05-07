@@ -17,6 +17,7 @@
 <script>
 import TextField from './TextField.vue'
 import NumberField from './NumberField.vue'
+import SmallNumberField from './SmallNumberField.vue'
 import MediaField from './MediaField.vue'
 import EnumField from './EnumField.vue'
 import ListOfMediaField from './ListOfMediaField.vue'
@@ -51,6 +52,10 @@ export default {
 			type: Boolean,
 			required: true,
 		},
+		defaults: {
+			type: [Object, Array, null],
+			default: null,
+		},
 	},
 
 	emits: [
@@ -80,11 +85,17 @@ export default {
 				SHAPE_TYPE_NAMES.File,
 			].includes(this.field.type)
 		},
+		isSmallNumberField() {
+			if (this.field.type !== SHAPE_TYPE_NAMES.Number) {
+				return false
+			}
+			return (this.defaults && this.defaults[this.fieldKey] && parseInt(this.defaults[this.fieldKey]) < 10)
+		},
 		component() {
 			if (this.field.type === SHAPE_TYPE_NAMES.Text) {
 				return TextField
 			} else if (this.field.type === SHAPE_TYPE_NAMES.Number) {
-				return NumberField
+				return this.isSmallNumberField ? SmallNumberField : NumberField
 			} else if (this.isMedia) {
 				return MediaField
 			} else if (this.isListOfMedia) {
