@@ -4,6 +4,7 @@ OC.L10N.register(
     "Send an email" : "Pošalji poruku e-pošte",
     "User not found" : "Korisnik nije pronađen",
     "View results" : "Pregledaj rezultate",
+    "Nextcloud Mail" : "Nextcloud Mail",
     "Close" : "Zatvori",
     "Less" : "Manje",
     "More" : "Više",

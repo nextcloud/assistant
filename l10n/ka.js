@@ -4,6 +4,8 @@ OC.L10N.register(
     "Send an email" : "Send an email",
     "User not found" : "User not found",
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
+    "Nextcloud Mail" : "Nextcloud Mail",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Artificial Intelligence" : "Artificial Intelligence",
     "Close" : "Close",
     "More" : "More",

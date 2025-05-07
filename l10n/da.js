@@ -38,6 +38,7 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "Opgave for \"%1$s\" er fejlet",
     "\"%1$s\" task for \"%2$s\" has failed" : "\"%1$s\" opgave for \"%2$s\" har fejlet",
     "View task" : "Vis opgave",
+    "Nextcloud Talk" : "Nextcloud Snak",
     "Chat with AI" : "Chat med AI",
     "Chat with an AI model." : "Chat med en AI model",
     "Generate text" : "Generer tekst",

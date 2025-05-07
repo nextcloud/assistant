@@ -12,6 +12,7 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "Η εργασία για το \"%1$s\" απέτυχε",
     "\"%1$s\" task for \"%2$s\" has failed" : "Η εργασία \"%1$s\" για το \"%2$s\" απέτυχε",
     "View task" : "Προβολή εργασίας",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Artificial Intelligence" : "Τεχνητή νοημοσύνη",
     "Process and transform text" : "Επεξεργασία και μετατροπή κειμένου",
     "Assistant admin options saved" : "Αποθηκεύτηκαν οι επιλογές βοηθού του διαχειριστή",

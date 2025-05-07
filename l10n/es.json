@@ -30,6 +30,8 @@
     "Task for \"%1$s\" has failed" : "La tarea para \"%1$s\" ha fallado",
     "\"%1$s\" task for \"%2$s\" has failed" : "La tarea \"%1$s\" para \"%2$s\" ha fallado",
     "View task" : "Ver tarea",
+    "Nextcloud Deck" : "Nextcloud Deck",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Chat with AI" : "Chatear con la IA",
     "Chat with an AI model." : "Chatear con un modelo de IA.",
     "Generate text" : "Generar texto",

@@ -38,6 +38,8 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "Task for \"%1$s\" has failed",
     "\"%1$s\" task for \"%2$s\" has failed" : "\"%1$s\" task for \"%2$s\" has failed",
     "View task" : "View task",
+    "Nextcloud Deck" : "Nextcloud Deck",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Chat with AI" : "Chat with AI",
     "Chat with an AI model." : "Chat with an AI model.",
     "Generate text" : "Generate text",
