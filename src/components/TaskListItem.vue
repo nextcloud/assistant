@@ -8,7 +8,7 @@
 		:name="mainName"
 		:title="subName"
 		:bold="false"
-		:active="false"
+		:active="active"
 		:details="details"
 		@click="$emit('load')">
 		<template #icon>
@@ -120,6 +120,10 @@ export default {
 	},
 
 	props: {
+		active: {
+			type: Boolean,
+			default: false,
+		},
 		task: {
 			type: Object,
 			required: true,
@@ -157,21 +161,21 @@ export default {
 			return this.task.type === 'core:text2image'
 		},
 		mainName() {
-			return t('assistant', 'Input') + ': ' + this.textInputPreview
+			return this.textInputPreview
 		},
 		subName() {
 			if (this.task.status === TASK_STATUS_STRING.successful) {
 				if (this.isText2Image) {
 					const nbGeneratedImages = this.task.output?.length ?? 0
-					return n('assistant', '{n} image has been generated', '{n} images have been generated', nbGeneratedImages, { n: nbGeneratedImages })
+					return n('assistant', '{n} image generated', '{n} images generated', nbGeneratedImages, { n: nbGeneratedImages })
 				}
-				return t('assistant', 'Result') + ': ' + this.textOutputPreview
+				return this.textOutputPreview
 			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
 				if (this.isText2Image) {
 					const nbImageAsked = this.task.input.numberOfImages
-					return n('assistant', 'Generation of {n} image is scheduled', 'Generation of {n} images is scheduled', nbImageAsked, { n: nbImageAsked })
+					return n('assistant', '{n} image scheduled', '{n} images scheduled', nbImageAsked, { n: nbImageAsked })
 				}
-				return t('assistant', 'This task is scheduled')
+				return t('assistant', 'Task scheduled')
 			}
 			return statusTitles[this.task.status] ?? t('assistant', 'Unknown status')
 		},

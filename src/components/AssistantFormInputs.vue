@@ -3,8 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<ChattyLLMInputForm v-if="selectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
-	<ContextChatInputForm v-else-if="selectedTaskTypeId === 'context_chat:context_chat'"
+	<ContextChatInputForm v-if="selectedTaskTypeId === 'context_chat:context_chat'"
 		:inputs="inputs"
 		:task-type="selectedTaskType"
 		@update:inputs="$emit('update:inputs', $event)" />
@@ -26,7 +25,6 @@
 </template>
 
 <script>
-import ChattyLLMInputForm from './ChattyLLM/ChattyLLMInputForm.vue'
 import ContextChatInputForm from './ContextChat/ContextChatInputForm.vue'
 import TaskTypeFields from './fields/TaskTypeFields.vue'
 
@@ -34,7 +32,6 @@ export default {
 	name: 'AssistantFormInputs',
 	components: {
 		ContextChatInputForm,
-		ChattyLLMInputForm,
 		TaskTypeFields,
 	},
 	props: {

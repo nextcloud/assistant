@@ -9,6 +9,7 @@
 			<TaskListItem v-for="task in sortedTasks"
 				:key="task.id"
 				class="task-list--item"
+				:active="task.id === selectedTaskId"
 				:task="task"
 				:task-type="taskType"
 				@try-again="$emit('try-again', task)"
@@ -17,6 +18,7 @@
 				@cancel="onTaskCancel(task)" />
 		</ul>
 		<NcEmptyContent v-if="!loading && sortedTasks.length === 0"
+			class="task-list--empty"
 			:name="t('assistant', 'Nothing yet')"
 			:description="emptyContentDescription">
 			<template #icon>
@@ -50,6 +52,10 @@ export default {
 	props: {
 		taskType: {
 			type: [Object, null],
+			default: null,
+		},
+		selectedTaskId: {
+			type: [Number, null],
 			default: null,
 		},
 		loading: {
@@ -90,6 +96,9 @@ export default {
 
 	watch: {
 		taskType() {
+			this.getTasks()
+		},
+		selectedTaskId() {
 			this.getTasks()
 		},
 	},
@@ -142,6 +151,11 @@ export default {
 .task-list {
 	&--item {
 		width: 99% !important;
+	}
+
+	&--empty {
+		text-align: center;
+		margin: 5vh 0.5vw;
 	}
 }
 </style>
