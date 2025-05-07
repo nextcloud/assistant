@@ -265,25 +265,23 @@ export default {
 	watch: {
 		async active() {
 			this.allMessagesLoaded = false
+			this.loading.llmGeneration = false
+			this.loading.titleGeneration = false
 			this.chatContent = ''
 			this.msgCursor = 0
 			this.messages = []
 			this.editingTitle = false
 			this.$refs.inputComponent.focus()
 
-			if (this.active !== null && !this.loading.newSession) {
-				this.loading.llmGeneration = true
-				this.loading.titleGeneration = true
-				await this.fetchMessages()
-				this.scrollToBottom()
-			} else {
-				// when no active session or creating a new session
-				this.loading.llmGeneration = false
-				this.loading.titleGeneration = false
+			if (this.active === null || this.loading.newSession) {
 				this.allMessagesLoaded = true
 				this.loading.newSession = false
 				return
 			}
+
+			await this.fetchMessages()
+			this.scrollToBottom()
+
 			// start polling in case a message is currently being generated
 			try {
 				const sessionId = this.active.id
@@ -299,6 +297,7 @@ export default {
 				this.active.agencyAnswered = false
 				if (checkSessionResponseData.messageTaskId !== null) {
 					try {
+						this.loading.llmGeneration = true
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
 						this.messages.push(message)
@@ -310,6 +309,7 @@ export default {
 				}
 				if (checkSessionResponseData.titleTaskId !== null) {
 					try {
+						this.loading.titleGeneration = true
 						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponseData.titleTaskId, sessionId)
 						const titleResponseData = titleResponse.data
 						console.debug('checkTaskPolling result:', titleResponse)
