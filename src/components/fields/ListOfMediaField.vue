@@ -44,7 +44,9 @@
 				<component :is="displayComponent"
 					:file-id="fileId"
 					:is-output="isOutput"
-					@delete="onDelete(fileId)" />
+					:clickable="isOutput"
+					@delete="onDelete(fileId)"
+					@click.native="onPreviewClick(isOutput, fileId)" />
 				<div class="buttons">
 					<NcButton v-if="!isOutput"
 						type="tertiary"
@@ -64,12 +66,18 @@
 						</NcButton>
 					</a>
 					<NcButton v-if="isOutput"
+						:title="t('assistant', 'Save this media')"
+						@click="onSave(fileId)">
+						<template #icon>
+							<ContentSaveIcon />
+						</template>
+					</NcButton>
+					<NcButton v-if="isOutput"
 						:title="t('assistant', 'Share this media')"
 						@click="onShare(fileId)">
 						<template #icon>
 							<ShareVariantIcon />
 						</template>
-						{{ t('assistant', 'Share') }}
 					</NcButton>
 				</div>
 			</div>
@@ -80,6 +88,7 @@
 <script>
 import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
+import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
@@ -117,6 +126,7 @@ export default {
 		DeleteIcon,
 		DownloadIcon,
 		ShareVariantIcon,
+		ContentSaveIcon,
 		NcButton,
 	},
 
@@ -244,21 +254,47 @@ export default {
 			})
 		},
 		onShare(fileId) {
-			if (this.value !== null) {
-				const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/share', {
-					taskId: this.providedCurrentTaskId(),
-					fileId,
-				})
-				axios.post(url).then(response => {
-					const shareToken = response.data.ocs.data.shareToken
-					const shareUrl = window.location.protocol + '//' + window.location.host + generateUrl('/s/{shareToken}', { shareToken })
-					console.debug('[assistant] generated share link', shareUrl)
-					const message = t('assistant', 'Output file share link copied to clipboard')
-					this.copyString(shareUrl, message)
-				}).catch(error => {
-					console.error(error)
-				})
+			if (this.value === null) {
+				return
 			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/share', {
+				taskId: this.providedCurrentTaskId(),
+				fileId,
+			})
+			axios.post(url).then(response => {
+				const shareToken = response.data.ocs.data.shareToken
+				const shareUrl = window.location.protocol + '//' + window.location.host + generateUrl('/s/{shareToken}', { shareToken })
+				console.debug('[assistant] generated share link', shareUrl)
+				const message = t('assistant', 'Output file share link copied to clipboard')
+				this.copyString(shareUrl, message)
+			}).catch(error => {
+				console.error(error)
+			})
+		},
+		onSave(fileId) {
+			if (this.value === null) {
+				return
+			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/save', {
+				taskId: this.providedCurrentTaskId(),
+				fileId,
+			})
+			return axios.post(url).then(response => {
+				const savedPath = response.data.ocs.data.path
+				const savedFileId = response.data.ocs.data.fileId
+				console.debug('[assistant] save output file', savedPath)
+
+				const directUrl = window.location.protocol + '//' + window.location.host + generateUrl('/f/{savedFileId}', { savedFileId })
+				const openMessage = `<a href="${directUrl}" target="_blank">${t('assistant', 'Click this to open the file')}</a>`
+				showSuccess(openMessage, { isHTML: true })
+
+				const afterCopyMessage = t('assistant', 'This output file has been saved in {path}', { path: savedPath })
+				this.copyString(directUrl, afterCopyMessage)
+			}).catch(error => {
+				console.error(error)
+			})
 		},
 		async copyString(content, message) {
 			try {
@@ -269,6 +305,24 @@ export default {
 				console.error(error)
 				showError(t('assistant', 'Could not copy to clipboard'))
 			}
+		},
+		onPreviewClick(isOutput, fileId) {
+			// do not open input media files in the viewer
+			if (this.value === null || !isOutput) {
+				return
+			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/save', {
+				taskId: this.providedCurrentTaskId(),
+				fileId,
+			})
+			return axios.post(url).then(response => {
+				const savedPath = response.data.ocs.data.path
+				console.debug('[assistant] view output file', savedPath)
+				OCA.Viewer.open({ path: savedPath })
+			}).catch(error => {
+				console.error(error)
+			})
 		},
 	},
 }
