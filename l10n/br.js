@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Nextcloud Talk" : "Flap Nextcloud",
     "Close" : "Serriñ",
     "More" : "Muioc'h",
     "Cancel" : "Nullañ",
@@ -11,11 +12,11 @@ OC.L10N.register(
     "Failed" : "C'hwitet",
     "Running" : "O redek",
     "Scheduled" : "Raktreset",
-    "Input" : "Enmont",
     "No file selected" : "Restr choazet ebet",
     "Share" : "Rannañ",
     "Advanced" : "Araokadennet",
     "Upload file" : "Pellgas ur restr",
+    "Input" : "Enmont",
     "Type some text" : "Skrivañ un tamm testenn",
     "Output" : "Ezvont",
     "Unknown error" : "Fazi dizanv",
