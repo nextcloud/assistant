@@ -170,6 +170,7 @@ OC.L10N.register(
     "Failed" : "Échec",
     "Running" : "Exécution",
     "Scheduled" : "Planifié",
+    "_{n} image generated_::_{n} images generated_" : ["{n} image générée","{n} images générées","{n} image(s) générée(s)"],
     "Unknown status" : "État inconnu",
     "Error while recording audio" : "Erreur pendant l'enregistrement de l'audio",
     "Start recording" : "Lancer l’enregistrement",
