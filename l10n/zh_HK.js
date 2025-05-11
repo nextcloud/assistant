@@ -39,6 +39,7 @@ OC.L10N.register(
     "\"%1$s\" task for \"%2$s\" has failed" : "「%2$s」的「%1$s」任務失敗",
     "View task" : "檢視任務",
     "OpenStreetMap" : "OpenStreetMap",
+    "Nextcloud Files" : "Nextcloud 檔案",
     "Nextcloud Mail" : "Nextcloud 郵件",
     "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Talk",
