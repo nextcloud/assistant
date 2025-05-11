@@ -28,6 +28,7 @@ OC.L10N.register(
     "Share" : "Cumpartzidura",
     "Advanced" : "Connoschèntzia avantzada",
     "Copy" : "Còpia",
+    "Upload file" : "Càrriga archìviu",
     "Could not upload the files" : "Impossìbile carrigare is archìvios",
     "Reset" : "Riprìstinu",
     "Result" : "Resurtadu",
