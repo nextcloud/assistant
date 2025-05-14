@@ -4,7 +4,9 @@
 -->
 <template>
 	<div class="image-display">
-		<img :src="imageUrl" :style="style">
+		<img :src="imageUrl"
+			:style="style"
+			:class="{ clickable }">
 	</div>
 </template>
 
@@ -37,6 +39,10 @@ export default {
 		borderRadius: {
 			type: [Number, null],
 			default: null,
+		},
+		clickable: {
+			type: Boolean,
+			default: false,
 		},
 	},
 
@@ -87,6 +93,10 @@ export default {
 		// width: 200px;
 		width: auto;
 		height: 200px;
+
+		&.clickable {
+			cursor: pointer !important;
+		}
 	}
 }
 </style>
