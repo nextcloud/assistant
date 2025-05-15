@@ -31,7 +31,6 @@ OC.L10N.register(
     "Choose a file" : "Изберете файл",
     "No file selected" : "Не сте избрали файл",
     "Upload from device" : "Качване от устройство",
-    "Share" : "Споделяне",
     "Advanced" : "Допълнителни",
     "Copy" : "Копие",
     "Transcribe" : "Транскрибиране",

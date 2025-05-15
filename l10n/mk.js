@@ -26,7 +26,6 @@ OC.L10N.register(
     "Choose file" : "Избери датотека",
     "No file selected" : "Нема избрано датотека",
     "Upload from device" : "Прикачи од уред",
-    "Share" : "Сподели",
     "Advanced" : "Напредно",
     "Upload file" : "Прикачи датотека",
     "Reset" : "Ресетирање",

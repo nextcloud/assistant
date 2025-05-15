@@ -20,7 +20,6 @@ OC.L10N.register(
     "Scheduled" : "Lên kế hoạch",
     "Choose file" : "Choose file",
     "No file selected" : "Không có tập tin nào được chọn",
-    "Share" : "Chia sẽ",
     "Advanced" : "Nâng cao",
     "Upload file" : "Tải lên tập tin",
     "Reset" : "Đặt lại",

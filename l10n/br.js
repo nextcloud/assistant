@@ -13,7 +13,6 @@ OC.L10N.register(
     "Running" : "O redek",
     "Scheduled" : "Raktreset",
     "No file selected" : "Restr choazet ebet",
-    "Share" : "Rannañ",
     "Advanced" : "Araokadennet",
     "Upload file" : "Pellgas ur restr",
     "Input" : "Enmont",

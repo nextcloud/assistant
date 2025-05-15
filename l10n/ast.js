@@ -45,7 +45,6 @@ OC.L10N.register(
     "Start recording" : "Aniciar la grabación",
     "Choose file" : "Escoyer un ficheru",
     "No file selected" : "Nun s'esbillaron ficheros",
-    "Share" : "Compartir",
     "Choose a text file" : "Escoyer un ficheru de testu",
     "Unexpected response from text parser" : "Recibióse una rempuesta inesperada del analizador de testos",
     "Could not parse file" : "Nun se pudo analizar el ficheru",
