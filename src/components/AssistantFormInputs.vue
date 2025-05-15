@@ -64,7 +64,7 @@ export default {
 	watch: {
 		selectedTaskType() {
 			console.debug('[assistant] watch selectedTaskType', this.selectedTaskType, this.selectedTaskTypeId)
-			this.setDefaultValues(true)
+			this.setDefaultValues(false)
 		},
 	},
 	mounted() {

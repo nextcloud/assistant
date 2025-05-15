@@ -429,8 +429,23 @@ export default {
 		onTaskTypeUserChange() {
 			this.$emit('new-task')
 
+			const lastInput = this.myInputs?.input
+				|| this.myInputs?.source_input // used in context write
+				|| this.myInputs?.text // used in document generation
+
 			this.$refs?.translateForm?.setDefaultValues(true)
 			this.$refs?.assistantFormInputs?.setDefaultValues(true)
+
+			// keep last prompt if new task type has text input
+			if (lastInput && this.selectedTaskType?.inputShape?.input) {
+				this.myInputs.input = lastInput
+			}
+			if (lastInput && this.selectedTaskType?.inputShape?.source_input) {
+				this.myInputs.source_input = lastInput
+			}
+			if (lastInput && this.selectedTaskType?.inputShape?.text) {
+				this.myInputs.text = lastInput
+			}
 		},
 		onSyncSubmit() {
 			console.debug('[assistant] in form submit ---------', this.myInputs)
