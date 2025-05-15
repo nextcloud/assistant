@@ -28,7 +28,6 @@ OC.L10N.register(
     "Choose a file" : "Choose a file",
     "No file selected" : "No file selected",
     "Upload from device" : "Upload from device",
-    "Share" : "Share",
     "Advanced" : "Advanced",
     "Copy" : "Copy",
     "Upload file" : "Upload file",

@@ -16,7 +16,6 @@ OC.L10N.register(
     "Start recording" : "Lançar l'enregistrament",
     "Dismiss recording" : "Anullar l’enregistrament",
     "End recording and send" : "Acabar àudio e enviar",
-    "Share" : "Partejar",
     "Reset" : "Reïnicializar",
     "Stop recording" : "Arrestar l'enregistrament",
     "Unknown error" : "Error desconeguda",

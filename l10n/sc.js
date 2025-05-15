@@ -25,7 +25,6 @@ OC.L10N.register(
     "Choose a file" : "Sèbera un'archìviu",
     "No file selected" : "Perunu documentu seletzionadu",
     "Upload from device" : "Càrriga dae su dispositivu",
-    "Share" : "Cumpartzidura",
     "Advanced" : "Connoschèntzia avantzada",
     "Copy" : "Còpia",
     "Upload file" : "Càrriga archìviu",

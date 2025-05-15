@@ -24,7 +24,6 @@ OC.L10N.register(
     "Choose a file" : "Selecciona un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Upload from device" : "Cargar desde el dispositivo",
-    "Share" : "Compartir",
     "Advanced" : "Avanzado",
     "Copy" : "Copiar",
     "Writes text in a given style based on the provided source material." : "Escribe el texto en un estilo dado basándose en el material fuente proporcionado.",

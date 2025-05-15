@@ -22,8 +22,6 @@ OC.L10N.register(
     "End recording and send" : "Završi snimak i pošalji",
     "Choose a file" : "Odaberi datoteku",
     "No file selected" : "Nije odabrana nijedna datoteka",
-    "Could not copy to clipboard" : "Kopiranje u međuspremnik nije uspjelo",
-    "Share" : "Dijeli",
     "Advanced" : "Napredno",
     "Copy" : "Kopirajte",
     "Reset" : "Resetiraj",

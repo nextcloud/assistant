@@ -12,7 +12,6 @@ OC.L10N.register(
     "Cancelled" : "U anulua",
     "Choose a file" : "Zgjidh një Skedar",
     "No file selected" : "S’u përzgjodh skedar",
-    "Share" : "Ndaj",
     "Advanced" : "Të avancuara",
     "Copy" : "Kopjoni",
     "Reset" : "Rivendos",
