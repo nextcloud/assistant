@@ -15,6 +15,8 @@
 				:optional-shape="selectedTaskType.optionalInputShape ?? null"
 				:shape-options="selectedTaskType.inputShapeEnumValues ?? null"
 				:optional-shape-options="selectedTaskType.optionalInputShapeEnumValues ?? null"
+				:defaults="selectedTaskType.inputShapeDefaults"
+				:optional-defaults="selectedTaskType.optionalInputShapeDefaults"
 				:values="inputs"
 				:show-advanced="showAdvanced"
 				@submit="$emit('submit', $event)"

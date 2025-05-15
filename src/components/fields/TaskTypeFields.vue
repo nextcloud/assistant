@@ -11,6 +11,7 @@
 			:value="values[key] ?? null"
 			:options="getInputFieldOptions(field, key)"
 			:is-output="isOutput"
+			:defaults="defaults"
 			@submit="onSubmit"
 			@update:value="onValueChange(key, $event)" />
 		<!--NcButton v-if="hasOptionalShape"
@@ -30,6 +31,7 @@
 				:value="values[key] ?? null"
 				:options="getOptionalInputFieldOptions(field, key)"
 				:is-output="isOutput"
+				:defaults="optionalDefaults"
 				@update:value="onValueChange(key, $event)" />
 		</div>
 	</div>
@@ -63,6 +65,14 @@ export default {
 			default: null,
 		},
 		optionalShapeOptions: {
+			type: [Object, Array, null],
+			default: null,
+		},
+		defaults: {
+			type: [Object, Array, null],
+			default: null,
+		},
+		optionalDefaults: {
 			type: [Object, Array, null],
 			default: null,
 		},
