@@ -11,6 +11,7 @@
 			<NcButton v-for="n in [1, 2, 3, 4, 5]"
 				:key="n"
 				:title="n"
+				:type="n === parseFloat(value) ? 'primary' : 'secondary'"
 				@click="onUpdateValue(n)">
 				{{ n }}
 			</NcButton>
