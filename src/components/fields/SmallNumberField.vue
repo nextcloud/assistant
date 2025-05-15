@@ -12,11 +12,16 @@
 				:key="n"
 				:title="n"
 				:type="n === parseFloat(value) ? 'primary' : 'secondary'"
-				@click="onUpdateValue(n)">
+				@click="onButtonClick(n)">
 				{{ n }}
 			</NcButton>
-			<NcInputField
+			<NcButton v-if="!customValue"
+				@click="onCustomClicked">
+				{{ t('assistant', 'Custom value') }}
+			</NcButton>
+			<NcInputField v-else
 				:id="'input-' + fieldKey"
+				ref="input-field"
 				class="number-input-field"
 				:value="value ?? ''"
 				type="text"
@@ -25,7 +30,7 @@
 				:placeholder="field.placeholder ?? (field.description || t('assistant','Type some number'))"
 				:error="!isValid"
 				:helper-text="isValid ? '' : t('assistant', 'The current value is not a number')"
-				@update:value="onUpdateValue" />
+				@update:value="onUpdateInputField" />
 		</div>
 	</div>
 </template>
@@ -33,6 +38,12 @@
 <script>
 import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+let timeout
+const debounce = (fn, ms = 2000) => {
+	clearTimeout(timeout)
+	timeout = setTimeout(fn, ms)
+}
 
 export default {
 	name: 'SmallNumberField',
@@ -63,6 +74,7 @@ export default {
 
 	data() {
 		return {
+			customValue: ![1, 2, 3, 4, 5].includes(parseFloat(this.value)),
 		}
 	},
 
@@ -73,12 +85,31 @@ export default {
 	},
 
 	watch: {
+		value(newValue) {
+			this.customValue = ![1, 2, 3, 4, 5].includes(parseFloat(newValue))
+		},
 	},
 
 	mounted() {
 	},
 
 	methods: {
+		onCustomClicked() {
+			this.customValue = true
+			this.$nextTick(() => {
+				this.$refs['input-field'].focus()
+				this.$refs['input-field'].select()
+			})
+		},
+		onButtonClick(value) {
+			this.customValue = false
+			this.onUpdateValue(value)
+		},
+		onUpdateInputField(value) {
+			debounce(() => {
+				this.onUpdateValue(value)
+			})
+		},
 		onUpdateValue(value) {
 			const numberValue = parseFloat(value)
 			if (isNaN(numberValue)) {
