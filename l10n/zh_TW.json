@@ -210,6 +210,7 @@
     "Clear value" : "清除值",
     "Type some number" : "輸入一些數字",
     "The current value is not a number" : "目前值不是數字",
+    "Custom value" : "自訂值",
     "Advanced" : "進階",
     "Choose a text file" : "選擇文字檔案",
     "Unexpected response from text parser" : "來自文字解析程式的意外回應",

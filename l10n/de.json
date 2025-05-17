@@ -210,6 +210,7 @@
     "Clear value" : "Wert löschen",
     "Type some number" : "Eine Zahl eingeben",
     "The current value is not a number" : "Der aktuelle Wert ist keine Zahl",
+    "Custom value" : "Benutzerdefinierter Wert",
     "Advanced" : "Fortgeschritten",
     "Choose a text file" : "Textdatei auswählen",
     "Unexpected response from text parser" : "Unerwartete Antwort vom Textparser",
