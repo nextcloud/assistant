@@ -212,6 +212,7 @@ OC.L10N.register(
     "Clear value" : "清除數值",
     "Type some number" : "輸入某些號碼",
     "The current value is not a number" : "目前數值不是數字",
+    "Custom value" : "自訂值",
     "Advanced" : "進階",
     "Choose a text file" : "選擇文字檔案",
     "Unexpected response from text parser" : "文字解析程式回應異常。",
