@@ -212,6 +212,7 @@ OC.L10N.register(
     "Clear value" : "Clear value",
     "Type some number" : "Type some number",
     "The current value is not a number" : "The current value is not a number",
+    "Custom value" : "Custom value",
     "Advanced" : "Advanced",
     "Choose a text file" : "Choose a text file",
     "Unexpected response from text parser" : "Unexpected response from text parser",
