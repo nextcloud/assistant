@@ -211,6 +211,7 @@ OC.L10N.register(
     "Clear value" : "Vyčistit hodnotu",
     "Type some number" : "Zadejte nějaké číslo",
     "The current value is not a number" : "Stávající hodnota není číslo",
+    "Custom value" : "Uživatelsky určená hodnota",
     "Advanced" : "Pokročilé",
     "Choose a text file" : "Zvolte textový soubor",
     "Unexpected response from text parser" : "Neočekávaná odpověď ze zpracovávání textu",
