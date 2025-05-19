@@ -212,6 +212,7 @@ OC.L10N.register(
     "Clear value" : "Luach soiléir",
     "Type some number" : "Clóscríobh uimhir éigin",
     "The current value is not a number" : "Ní uimhir é an luach reatha",
+    "Custom value" : "Luach saincheaptha",
     "Advanced" : "Casta",
     "Choose a text file" : "Roghnaigh comhad téacs",
     "Unexpected response from text parser" : "Freagra gan choinne ó pharsálaí téacs",
