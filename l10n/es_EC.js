@@ -31,22 +31,6 @@ OC.L10N.register(
     "No file selected" : "No se ha seleccionado algún archivo",
     "Upload from device" : "Subir desde el dispositivo",
     "Advanced" : "Avanzado",
-    "Copy" : "Copiar",
-    "Transcribe" : "Transcribir",
-    "Reset" : "Restablecer",
-    "Result" : "Resultado",
-    "Prompt" : "Promoción",
-    "Result {index}" : "Resultado {índice}",
-    "Stop recording" : "Detener grabación",
-    "Unknown error" : "Error desconocido",
-    "Image generation" : "Generación de imágenes",
-    "Generated image" : "Imagen generada",
-    "Include the prompt in the result" : "Incluir el inicio en el resultado",
-    "Regenerate" : "Regenerar",
-    "Preview" : "Previsualizar",
-    "Send" : "Enviar",
-    "Show/hide advanced options" : "Mostrar/ocultar opciones avanzadas",
-    "Advanced options" : "Opciones avanzadas",
-    "Copy link to clipboard" : "Copiar enlace al portapapeles"
+    "Copy" : "Copiar"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

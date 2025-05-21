@@ -13,12 +13,6 @@ OC.L10N.register(
     "Choose a file" : "Zgjidh një Skedar",
     "No file selected" : "S’u përzgjodh skedar",
     "Advanced" : "Të avancuara",
-    "Copy" : "Kopjoni",
-    "Reset" : "Rivendos",
-    "Result" : "Rezultatet",
-    "Unknown error" : "Gabim i panjohur",
-    "Preview" : "Parapamje ",
-    "Send" : "Dërgo",
-    "Advanced options" : "Opsione të avancuara"
+    "Copy" : "Kopjoni"
 },
 "nplurals=2; plural=(n != 1);");

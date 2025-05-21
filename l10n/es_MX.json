@@ -23,23 +23,6 @@
     "No file selected" : "No se ha seleccionado algún archivo",
     "Upload from device" : "Cargar desde el dispositivo",
     "Advanced" : "Avanzado",
-    "Copy" : "Copiar",
-    "Writes text in a given style based on the provided source material." : "Escribe el texto en un estilo dado basándose en el material fuente proporcionado.",
-    "Generate image" : "Generar imagen",
-    "Writing style" : "Estilo de escritura",
-    "Source material" : "Material fuente",
-    "Input" : "Entrada",
-    "Type some text" : "Escriba algo de texto",
-    "Output" : "Salida",
-    "Reset" : "Reiniciar",
-    "Result" : "Resultado",
-    "Prompt" : "Prompt",
-    "Audio input" : "Entrada de audio",
-    "Unknown error" : "Se presentó un error desconocido",
-    "Image generation" : "Generación de imágenes",
-    "Preview" : "Previsualizar",
-    "Send" : "Enviar",
-    "Advanced options" : "Opciones avanzadas",
-    "Copy link to clipboard" : "Copiar enlace al portapapeles"
+    "Copy" : "Copiar"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

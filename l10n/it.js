@@ -35,21 +35,6 @@ OC.L10N.register(
     "No file selected" : "Nessun file selezionato",
     "Upload from device" : "Carica dal dispositivo",
     "Advanced" : "Avanzate",
-    "Copy" : "Copia",
-    "Failed to process prompt; unknown user" : "Processamento del prompt fallito, utente sconosciuto",
-    "Input" : "Input",
-    "Type some text" : "Aggiungi del testo",
-    "Audio transcription" : "Trascrizione audio",
-    "Output" : "Output",
-    "Reset" : "Ripristina",
-    "Result" : "Risultato",
-    "Unknown error" : "Errore sconosciuto",
-    "Image generation" : "Generazione di immagini",
-    "Preview" : "Anteprima",
-    "Successfully scheduled transcription" : "Pianificazione della trascrizione eseguita correttamente",
-    "Unknown image generation error" : "Errore di generazione dell'immagine sconosciuto",
-    "Send" : "Invia",
-    "Advanced options" : "Opzioni avanzate",
-    "Copy link to clipboard" : "Copia collegamento negli appunti"
+    "Copy" : "Copia"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

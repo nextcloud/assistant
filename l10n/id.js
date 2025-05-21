@@ -13,14 +13,6 @@ OC.L10N.register(
     "Scheduled" : "Dijadwalkan",
     "No file selected" : "Tidak ada berkas yang dipilih",
     "Advanced" : "Lanjutan",
-    "Copy" : "Salin",
-    "Input" : "Input",
-    "Type some text" : "Tulis beberapa teks",
-    "Output" : "Output",
-    "Reset" : "Setel ulang",
-    "Unknown error" : "Kesalahan tidak diketahui",
-    "Preview" : "Pratinjau",
-    "Send" : "Kirim",
-    "Advanced options" : "Opsi lanjutan"
+    "Copy" : "Salin"
 },
 "nplurals=1; plural=0;");

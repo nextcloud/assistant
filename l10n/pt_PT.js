@@ -17,14 +17,6 @@ OC.L10N.register(
     "No file selected" : "Nenhum ficheiro selecionado",
     "Advanced" : "Avançado",
     "Copy" : "copiar",
-    "Upload file" : "Enviar ficheiro",
-    "Input" : "Entrada",
-    "Type some text" : "Digite algum texto",
-    "Output" : "Saída",
-    "Reset" : "Reiniciar",
-    "Unknown error" : "Erro desconhecido",
-    "Preview" : "Pré-visualizar",
-    "Send" : "Enviar",
-    "Advanced options" : "Opções avançadas"
+    "Upload file" : "Enviar ficheiro"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

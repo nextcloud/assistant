@@ -38,17 +38,6 @@ OC.L10N.register(
     "No file selected" : "Geen bestand geselecteerd",
     "Upload from device" : "Uploaden vanaf apparaat",
     "Advanced" : "Geavanceerd",
-    "Copy" : "Kopiëren",
-    "Input" : "Input",
-    "Type some text" : "Geef wat tekst in",
-    "Output" : "Output",
-    "Reset" : "Herstellen",
-    "Result" : "Resultaat",
-    "Stop recording" : "Beëindig opname",
-    "Unknown error" : "Onbekende fout",
-    "Preview" : "Voorbeeld",
-    "Send" : "Verzenden",
-    "Advanced options" : "Geavanceerde opties",
-    "Copy link to clipboard" : "Kopieer link naar klembord"
+    "Copy" : "Kopiëren"
 },
 "nplurals=2; plural=(n != 1);");

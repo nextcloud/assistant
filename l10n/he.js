@@ -20,13 +20,6 @@ OC.L10N.register(
     "No file selected" : "לא נבחר קובץ",
     "Advanced" : "מתקדם",
     "Copy" : "העתקה",
-    "Upload file" : "העלאת קובץ",
-    "Reset" : "איפוס",
-    "Result" : "תוצאה",
-    "Unknown error" : "שגיאה בלתי ידועה",
-    "Preview" : "תצוגה מקדימה",
-    "Send" : "שליחה",
-    "Advanced options" : "אפשרויות מתקדמות",
-    "Copy link to clipboard" : "העתקת קישור ללוח הגזירים"
+    "Upload file" : "העלאת קובץ"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

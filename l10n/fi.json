@@ -34,26 +34,6 @@
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
     "Copy" : "Kopioi",
-    "Upload file" : "Lähetä tiedosto",
-    "Audio file not found." : "Äänitiedostoa ei löytynyt.",
-    "Generate image" : "Luo kuva",
-    "Type some text" : "Syötä tekstiä",
-    "Reset" : "Palauta",
-    "Result" : "Tulos",
-    "Prompt" : "Kehote",
-    "This can take a while…" : "Tämä saattaa kestää hetken…",
-    "Choose Audio File" : "Valitse äänitiedosto",
-    "Record Audio" : "Tallenna ääntä",
-    "Stop recording" : "Lopeta tallennus",
-    "Selected Audio File:" : "Valitse äänitiedosto:",
-    "Unknown error" : "Tuntematon virhe",
-    "Image generation" : "Kuvien generointi",
-    "Preview" : "Esikatselu",
-    "Notify when ready" : "Ilmoita kun valmis",
-    "Unknown API error" : "Tuntematon API-virhe",
-    "Send" : "Lähetä",
-    "Show/hide advanced options" : "Näytä/piilota lisäasetukset",
-    "Advanced options" : "Lisävalinnat",
-    "Copy link to clipboard" : "Kopioi linkki leikepöydälle"
+    "Upload file" : "Lähetä tiedosto"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

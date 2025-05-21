@@ -14,15 +14,6 @@ OC.L10N.register(
     "Choose a file" : "Selecciona un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Advanced" : "Avanzado",
-    "Upload file" : "Cargar archivo",
-    "Input" : "Entrada",
-    "Type some text" : "Escribe un texto",
-    "Output" : "Salida",
-    "Reset" : "Restablecer",
-    "Result" : "Resultado",
-    "Unknown error" : "Se presentó un error desconocido",
-    "Preview" : "Previsualizar",
-    "Send" : "Enviar",
-    "Advanced options" : "Opciones avanzadas"
+    "Upload file" : "Cargar archivo"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

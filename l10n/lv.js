@@ -26,11 +26,6 @@ OC.L10N.register(
     "Share this media" : "Kopīgot šo informācijas nesēju",
     "Clear value" : "Notīrīt vērtību",
     "Advanced" : "Paplašināti",
-    "Copy" : "Kopēt",
-    "Reset" : "Atiestatīt",
-    "Unknown error" : "Nezināma kļūda",
-    "Preview" : "Priekšskatīt",
-    "Send" : "Sūtīt",
-    "Advanced options" : "Papildu iespējas"
+    "Copy" : "Kopēt"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

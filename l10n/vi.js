@@ -21,12 +21,6 @@ OC.L10N.register(
     "Choose file" : "Choose file",
     "No file selected" : "Không có tập tin nào được chọn",
     "Advanced" : "Nâng cao",
-    "Upload file" : "Tải lên tập tin",
-    "Reset" : "Đặt lại",
-    "Unknown error" : "Lỗi không xác định",
-    "Image generation" : "Tạo hình ảnh",
-    "Preview" : "Xem trước",
-    "Send" : "Gửi",
-    "Advanced options" : "Tùy chọn nâng cao"
+    "Upload file" : "Tải lên tập tin"
 },
 "nplurals=1; plural=0;");

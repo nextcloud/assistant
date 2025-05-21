@@ -23,12 +23,6 @@ OC.L10N.register(
     "Choose a file" : "Odaberi datoteku",
     "No file selected" : "Nije odabrana nijedna datoteka",
     "Advanced" : "Napredno",
-    "Copy" : "Kopirajte",
-    "Reset" : "Resetiraj",
-    "Result" : "Rezultat",
-    "Unknown error" : "Nepoznata pogreška",
-    "Send" : "Pošaljite",
-    "Advanced options" : "Napredne opcije",
-    "Copy link to clipboard" : "Kopiraj poveznicu u međuspremnik"
+    "Copy" : "Kopirajte"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

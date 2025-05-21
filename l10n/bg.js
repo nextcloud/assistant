@@ -32,21 +32,6 @@ OC.L10N.register(
     "No file selected" : "Не сте избрали файл",
     "Upload from device" : "Качване от устройство",
     "Advanced" : "Допълнителни",
-    "Copy" : "Копие",
-    "Transcribe" : "Транскрибиране",
-    "Reset" : "Възстановяване",
-    "Result" : "Резултат",
-    "Prompt" : "Подкана",
-    "Result {index}" : "Резултат {index}",
-    "Stop recording" : "Спиране на записването",
-    "Unknown error" : "Неизвестна грешка",
-    "Generated image" : "Генерирано изображение",
-    "Include the prompt in the result" : "Включване на подканата в резултата",
-    "Regenerate" : "Регенериране",
-    "Preview" : "Визуализация",
-    "Send" : "Изпращане",
-    "Show/hide advanced options" : "Показване/скриване на разширени опции",
-    "Advanced options" : "Допълнителни опции",
-    "Copy link to clipboard" : "Копиране на връзката в клипборда"
+    "Copy" : "Копие"
 },
 "nplurals=2; plural=(n != 1);");

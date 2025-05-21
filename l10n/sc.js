@@ -28,12 +28,6 @@ OC.L10N.register(
     "Advanced" : "Connoschèntzia avantzada",
     "Copy" : "Còpia",
     "Upload file" : "Càrriga archìviu",
-    "Could not upload the files" : "Impossìbile carrigare is archìvios",
-    "Reset" : "Riprìstinu",
-    "Result" : "Resurtadu",
-    "Unknown error" : "Errore disconnotu",
-    "Image generation" : "Generatzione de immàgines",
-    "Advanced options" : "Sèberos avantzados",
-    "Copy link to clipboard" : "Còpia su ligòngiu in punta de billete"
+    "Could not upload the files" : "Impossìbile carrigare is archìvios"
 },
 "nplurals=2; plural=(n != 1);");

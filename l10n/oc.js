@@ -15,12 +15,6 @@ OC.L10N.register(
     "Error while recording audio" : "Error en enregistrant l’àudio",
     "Start recording" : "Lançar l'enregistrament",
     "Dismiss recording" : "Anullar l’enregistrament",
-    "End recording and send" : "Acabar àudio e enviar",
-    "Reset" : "Reïnicializar",
-    "Stop recording" : "Arrestar l'enregistrament",
-    "Unknown error" : "Error desconeguda",
-    "Preview" : "Apercebut",
-    "Send" : "Enviar",
-    "Advanced options" : "Opcions avançadas"
+    "End recording and send" : "Acabar àudio e enviar"
 },
 "nplurals=2; plural=(n > 1);");

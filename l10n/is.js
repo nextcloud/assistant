@@ -27,19 +27,6 @@ OC.L10N.register(
     "No file selected" : "Engin skrá valin",
     "Upload from device" : "Senda inn frá tæki",
     "Advanced" : "Ítarlegt",
-    "Copy" : "Afrita",
-    "Input" : "Inntak",
-    "Type some text" : "Skrifaðu einhvern texta",
-    "Output" : "Frálag",
-    "Reset" : "Endurstilla",
-    "Result" : "Niðurstöður",
-    "Prompt" : "Kvaðning",
-    "Audio input" : "Hljóðinntak",
-    "Unknown error" : "Óþekkt villa",
-    "Image generation" : "Gerð mynda",
-    "Preview" : "Forskoðun",
-    "Send" : "Senda",
-    "Advanced options" : "Ítarlegir valkostir",
-    "Copy link to clipboard" : "Afrita tengil á klippispjald"
+    "Copy" : "Afrita"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

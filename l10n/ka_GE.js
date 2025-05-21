@@ -14,12 +14,6 @@ OC.L10N.register(
     "Cancelled" : "უარყოფილია",
     "Choose a file" : "აირჩიეთ ფაილი",
     "No file selected" : "ფაილი არაა არჩეული",
-    "Advanced" : "მოწინავე",
-    "Reset" : "საწყის მდოგმარეობაში დაბრუნება",
-    "Result" : "შედეგი",
-    "Unknown error" : "უცნობი შეცდომა",
-    "Preview" : "წინასწარი ჩვენება",
-    "Send" : "გაგზავნა",
-    "Advanced options" : "დამატებითი ოპციონები"
+    "Advanced" : "მოწინავე"
 },
 "nplurals=2; plural=(n!=1);");
