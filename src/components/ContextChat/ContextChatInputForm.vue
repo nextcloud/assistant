@@ -20,7 +20,9 @@
 			{{ t('assistant', 'Selective context') }}
 		</NcCheckboxRadioSwitch>
 		<div v-if="sccEnabled" class="line spaced">
-			<div class="radios">
+			<!-- We can only select providers with the search task type -->
+			<div v-if="!isSearch"
+				class="radios">
 				<NcCheckboxRadioSwitch
 					type="radio"
 					:checked="inputs.scopeType"
@@ -213,6 +215,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		isSearch: {
+			type: Boolean,
+			required: true,
+		},
 	},
 
 	emits: ['update:inputs'],
@@ -325,10 +331,17 @@ export default {
 		onUpdateSccEnabled(enabled) {
 			this.$emit('update:inputs', {
 				prompt: this.inputs.prompt,
-				scopeType: enabled ? _ScopeType.SOURCE : _ScopeType.NONE,
+				scopeType: enabled
+					? this.isSearch
+						? _ScopeType.PROVIDER
+						: _ScopeType.SOURCE
+					: _ScopeType.NONE,
 				scopeList: [],
 				scopeListMeta: '[]',
 			})
+			if (enabled && this.isSearch && this.providerOptions.length === 0) {
+				this.fetchProviders()
+			}
 		},
 		onScopeTypeChanged(value) {
 			if (value === this.ScopeType.PROVIDER && this.providerOptions.length === 0) {

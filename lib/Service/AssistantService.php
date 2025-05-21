@@ -65,13 +65,14 @@ class AssistantService {
 		TextToText::ID => 2,
 		'context_chat:context_chat' => 3,
 		'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType' => 3,
-		AudioToText::ID => 4,
-		TextToTextTranslate::ID => 5,
-		ContextWrite::ID => 6,
-		TextToImage::ID => 7,
-		TextToTextSummary::ID => 8,
-		TextToTextHeadline::ID => 9,
-		TextToTextTopics::ID => 10,
+		'context_chat:context_chat_search' => 4,
+		AudioToText::ID => 5,
+		TextToTextTranslate::ID => 6,
+		ContextWrite::ID => 7,
+		TextToImage::ID => 8,
+		TextToTextSummary::ID => 9,
+		TextToTextHeadline::ID => 10,
+		TextToTextTopics::ID => 11,
 	];
 
 	public array $informationSources;

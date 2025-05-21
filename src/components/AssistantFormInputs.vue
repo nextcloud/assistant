@@ -3,9 +3,10 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<ContextChatInputForm v-if="selectedTaskTypeId === 'context_chat:context_chat'"
+	<ContextChatInputForm v-if="['context_chat:context_chat', 'context_chat:context_chat_search'].includes(selectedTaskTypeId)"
 		:inputs="inputs"
 		:task-type="selectedTaskType"
+		:is-search="selectedTaskTypeId === 'context_chat:context_chat_search'"
 		@update:inputs="$emit('update:inputs', $event)" />
 	<div v-else class="assistant-inputs">
 		<div class="input-container">
