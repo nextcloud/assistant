@@ -16,6 +16,11 @@
 			:is-output="false"
 			:show-choose-button="false"
 			@update:value="onInputsChanged({ prompt: $event })" />
+		<SmallNumberField v-if="isSearch"
+			:field="taskType.inputShape?.limit"
+			field-key="limit"
+			:value="inputs.limit"
+			@update:value="onInputsChanged({ limit: $event })" />
 		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}
 		</NcCheckboxRadioSwitch>
@@ -136,6 +141,7 @@ import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 import TextInput from '../fields/TextInput.vue'
+import SmallNumberField from '../fields/SmallNumberField.vue'
 
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
@@ -196,6 +202,7 @@ export default {
 	name: 'ContextChatInputForm',
 
 	components: {
+		SmallNumberField,
 		TextInput,
 		FileDocumentIcon,
 		NcAvatar,
@@ -272,6 +279,7 @@ export default {
 					scopeType: _ScopeType.NONE,
 					scopeList: [],
 					scopeListMeta: '[]',
+					limit: this.isSearch ? this.taskType.inputShapeDefaults?.limit : undefined,
 				})
 			})
 		}
@@ -331,6 +339,7 @@ export default {
 		onUpdateSccEnabled(enabled) {
 			this.$emit('update:inputs', {
 				prompt: this.inputs.prompt,
+				limit: this.isSearch ? this.inputs.limit : undefined,
 				scopeType: enabled
 					? this.isSearch
 						? _ScopeType.PROVIDER
