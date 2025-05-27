@@ -65,6 +65,12 @@ export async function openAssistantForm({
 		const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
 		document.querySelector('body').insertBefore(modalElement, content.nextSibling)
 
+		// just in case, move the picker before the assistant modal if it exists
+		const referencePickerModal = document.querySelector('body .reference-picker-modal')
+		if (referencePickerModal) {
+			document.querySelector('body').insertBefore(referencePickerModal, content.nextSibling)
+		}
+
 		const View = Vue.extend(AssistantTextProcessingModal)
 		const view = new View({
 			propsData: {
