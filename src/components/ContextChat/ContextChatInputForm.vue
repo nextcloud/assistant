@@ -16,7 +16,7 @@
 			:is-output="false"
 			:show-choose-button="false"
 			@update:value="onInputsChanged({ prompt: $event })" />
-		<SmallNumberField v-if="isSearch"
+		<NumberField v-if="isSearch"
 			:field="taskType.inputShape?.limit"
 			field-key="limit"
 			:value="inputs.limit"
@@ -141,7 +141,7 @@ import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 import TextInput from '../fields/TextInput.vue'
-import SmallNumberField from '../fields/SmallNumberField.vue'
+import NumberField from '../fields/NumberField.vue'
 
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
@@ -202,7 +202,7 @@ export default {
 	name: 'ContextChatInputForm',
 
 	components: {
-		SmallNumberField,
+		NumberField,
 		TextInput,
 		FileDocumentIcon,
 		NcAvatar,
