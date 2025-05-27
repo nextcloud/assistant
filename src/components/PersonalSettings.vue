@@ -5,7 +5,7 @@
 <template>
 	<div id="assistant_prefs" class="section">
 		<h2>
-			<AssistantIcon class="icon" />
+			<AssistantIcon />
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
@@ -44,7 +44,7 @@
 				</span>
 			</div>
 			<div v-else>
-				<h3>{{ t('assistant', 'Configured Backends') }}</h3>
+				<h3>{{ t('assistant', 'Configured backends') }}</h3>
 				<p>{{ t('assistant', 'The following services are used as backends for Nextcloud Assistant:') }}</p>
 				<ul>
 					<li v-for="(providerName, taskName) in providers" :key="taskName">
@@ -129,7 +129,14 @@ export default {
 	#assistant-content {
 		margin-left: 40px;
 	}
-	h2,
+
+	h2 {
+		display: flex;
+		align-items: center;
+		justify-content: start;
+		gap: 8px;
+	}
+
 	.line,
 	.settings-hint {
 		display: flex;
@@ -148,10 +155,6 @@ export default {
 			margin-right: 8px;
 			margin-left: 24px;
 		}
-	}
-
-	h2 .icon {
-		margin-right: 8px;
 	}
 
 	.line {
