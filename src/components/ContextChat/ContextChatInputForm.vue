@@ -16,11 +16,18 @@
 			:is-output="false"
 			:show-choose-button="false"
 			@update:value="onInputsChanged({ prompt: $event })" />
+		<NumberField v-if="isSearch"
+			:field="taskType.inputShape?.limit"
+			field-key="limit"
+			:value="inputs.limit"
+			@update:value="onInputsChanged({ limit: $event })" />
 		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}
 		</NcCheckboxRadioSwitch>
 		<div v-if="sccEnabled" class="line spaced">
-			<div class="radios">
+			<!-- We can only select providers with the search task type -->
+			<div v-if="!isSearch"
+				class="radios">
 				<NcCheckboxRadioSwitch
 					type="radio"
 					:checked="inputs.scopeType"
@@ -134,6 +141,7 @@ import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 import TextInput from '../fields/TextInput.vue'
+import NumberField from '../fields/NumberField.vue'
 
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
@@ -194,6 +202,7 @@ export default {
 	name: 'ContextChatInputForm',
 
 	components: {
+		NumberField,
 		TextInput,
 		FileDocumentIcon,
 		NcAvatar,
@@ -243,6 +252,14 @@ export default {
 				return []
 			}
 		},
+		isSearch() {
+			return this.taskType.id === 'context_chat:context_chat_search'
+		},
+	},
+	watch: {
+		taskType(newValue) {
+			this.onTaskTypeChange()
+		},
 	},
 
 	mounted() {
@@ -258,17 +275,18 @@ export default {
 				showError(t('assistant', 'Error fetching default provider key'))
 			})
 
-		// initialize the inputs if necessary
-		if (Object.keys(this.inputs).length === 0) {
-			this.$nextTick(() => {
-				this.$emit('update:inputs', {
-					prompt: '',
-					scopeType: _ScopeType.NONE,
-					scopeList: [],
-					scopeListMeta: '[]',
-				})
+		// initialize each input if necessary
+		this.$nextTick(() => {
+			this.$emit('update:inputs', {
+				prompt: this.inputs.prompt ?? '',
+				limit: this.isSearch
+					? (this.inputs.limit ?? this.taskType.inputShapeDefaults?.limit)
+					: undefined,
+				scopeType: this.inputs.scopeType ?? _ScopeType.NONE,
+				scopeList: this.inputs.scopeList ?? [],
+				scopeListMeta: this.inputs.scopeListMeta ?? '[]',
 			})
-		}
+		})
 	},
 
 	methods: {
@@ -325,10 +343,18 @@ export default {
 		onUpdateSccEnabled(enabled) {
 			this.$emit('update:inputs', {
 				prompt: this.inputs.prompt,
-				scopeType: enabled ? _ScopeType.SOURCE : _ScopeType.NONE,
+				limit: this.isSearch ? this.inputs.limit : undefined,
+				scopeType: enabled
+					? this.isSearch
+						? _ScopeType.PROVIDER
+						: _ScopeType.SOURCE
+					: _ScopeType.NONE,
 				scopeList: [],
 				scopeListMeta: '[]',
 			})
+			if (enabled && this.isSearch && this.providerOptions.length === 0) {
+				this.fetchProviders()
+			}
 		},
 		onScopeTypeChanged(value) {
 			if (value === this.ScopeType.PROVIDER && this.providerOptions.length === 0) {
@@ -353,6 +379,16 @@ export default {
 				...this.inputs,
 				...changedInputs,
 			})
+		},
+		onTaskTypeChange() {
+			this.$emit('update:inputs', {
+				prompt: this.inputs.prompt ?? '',
+				limit: this.isSearch ? this.taskType.inputShapeDefaults?.limit : undefined,
+				scopeType: _ScopeType.NONE,
+				scopeList: [],
+				scopeListMeta: '[]',
+			})
+			this.sccEnabled = false
 		},
 	},
 }

@@ -8,6 +8,10 @@
 			class="output-fields"
 			:output-shape="selectedTaskType.outputShape"
 			:output="outputs" />
+		<ContextChatSearchOutputForm v-else-if="selectedTaskTypeId === 'context_chat:context_chat_search'"
+			class="output-fields"
+			:output-shape="selectedTaskType.outputShape"
+			:output="outputs" />
 		<TaskTypeFields v-else
 			class="output-fields"
 			:is-output="true"
@@ -36,6 +40,7 @@
 import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
 
 import ContextChatOutputForm from './ContextChat/ContextChatOutputForm.vue'
+import ContextChatSearchOutputForm from './ContextChat/ContextChatSearchOutputForm.vue'
 import TaskTypeFields from './fields/TaskTypeFields.vue'
 
 export default {
@@ -43,6 +48,7 @@ export default {
 
 	components: {
 		ContextChatOutputForm,
+		ContextChatSearchOutputForm,
 		TaskTypeFields,
 		NcNoteCard,
 	},
