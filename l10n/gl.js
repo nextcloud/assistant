@@ -157,7 +157,6 @@ OC.L10N.register(
     "AI image generation smart picker" : "Selector intelixente de xeración de imaxes mediante IA",
     "AI transcription smart picker" : "Selector intelixente de transcrición mediante IA",
     "No suitable providers are available. They must first be enabled by your administrator." : "Non hai provedores axeitados dispoñíbeis. Primeiro debe ser activado pola administración do sitio.",
-    "Configured Backends" : "Infraestruturas configuradas",
     "The following services are used as backends for Nextcloud Assistant:" : "Os seguintes servizos están a empregarse como infraestruturas para o Asistente de Nextcloud:",
     "{providerName} for {taskName}" : "{providerName} para {taskName}",
     "This may take a few seconds…" : "Isto pode levar uns segundos…",

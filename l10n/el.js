@@ -75,7 +75,6 @@ OC.L10N.register(
     "AI image generation smart picker" : "Έξυπνος επιλογέας δημιουργίας εικόνων AI",
     "AI transcription smart picker" : "Έξυπνος επιλογέας μεταγραφής AI",
     "No suitable providers are available. They must first be enabled by your administrator." : "Δεν υπάρχουν διαθέσιμοι κατάλληλοι πάροχοι. Πρέπει πρώτα να ενεργοποιηθούν από τον διαχειριστή σας.",
-    "Configured Backends" : "Ρυθμισμένοι Backends",
     "The following services are used as backends for Nextcloud Assistant:" : "Οι ακόλουθες υπηρεσίες χρησιμοποιούνται ως backends για τον Βοηθό Nextcloud:",
     "{providerName} for {taskName}" : "{providerName} για {taskName}",
     "This may take a few seconds…" : "Χρειάζονται λίγα δευτερόλεπτα...",

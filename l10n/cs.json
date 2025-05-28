@@ -165,7 +165,6 @@
     "AI image generation smart picker" : "Inteligentní výběr pro vytváření obrázků pomocí AI",
     "AI transcription smart picker" : "Inteligentní výběr pro přepisování textu z nahrávky pomocí AI",
     "No suitable providers are available. They must first be enabled by your administrator." : "Nejsou k dispozici příhodní poskytovatelé. Je třeba, aby tito byli nejprve zapnutí vaším správcem.",
-    "Configured Backends" : "Nastavené podpůrné vrstvy",
     "The following services are used as backends for Nextcloud Assistant:" : "Následující služby slouží jako podpůrné vrstvy pro Nextcloud Asistenta:",
     "{providerName} for {taskName}" : "{providerName} pro {taskName}",
     "This may take a few seconds…" : "Může to pár sekund trvat…",

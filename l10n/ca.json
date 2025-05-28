@@ -153,7 +153,6 @@
     "AI image generation smart picker" : "Selector intel·ligent de generació d'imatge amb IA",
     "AI transcription smart picker" : "Selector intel·ligent de transcripció d'IA",
     "No suitable providers are available. They must first be enabled by your administrator." : "No hi ha proveïdors adequats disponibles. Primer els ha d'habilitar el vostre administrador.",
-    "Configured Backends" : "Rerefons configurats",
     "The following services are used as backends for Nextcloud Assistant:" : "Els serveis següents s'utilitzen com a backend per a Nextcloud Assistant:",
     "{providerName} for {taskName}" : "{providerName} per a {taskName}",
     "This may take a few seconds…" : "Això podria trigar uns quants segons...",

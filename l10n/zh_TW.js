@@ -168,7 +168,6 @@ OC.L10N.register(
     "AI image generation smart picker" : "人工智慧影像產生智慧型挑選程式",
     "AI transcription smart picker" : "人工智慧轉錄智慧型挑選程式",
     "No suitable providers are available. They must first be enabled by your administrator." : "沒有可用的合適提供者。它們必須先由您的管理緣起用。",
-    "Configured Backends" : "已設定的後端",
     "The following services are used as backends for Nextcloud Assistant:" : "以下服務用作 Nextcloud 小幫手的後端：",
     "{providerName} for {taskName}" : "供 {taskName} 使用的 {providerName}",
     "This may take a few seconds…" : "這可能需要幾秒鐘……",

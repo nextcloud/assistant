@@ -137,7 +137,6 @@
     "AI image generation smart picker" : "سۈنئىي ئەقىل تەسۋىر ھاسىل قىلغۇچى ئەقلىي ئىقتىدارلىق",
     "AI transcription smart picker" : "سۈنئىي ئەقىل ترانسكرىپسىيەسى ئەقلىي ئىقتىدارلىق تاللىغۇچ",
     "No suitable providers are available. They must first be enabled by your administrator." : "ماس كېلىدىغان تەمىنلىگۈچىلەر يوق. ئۇلارنى ئالدى بىلەن باشقۇرغۇچىڭىز قوزغىتىشى كېرەك.",
-    "Configured Backends" : "ئارقا سەپ سەپلەنگەن",
     "The following services are used as backends for Nextcloud Assistant:" : "Nextcloud ياردەمچىسى ئۈچۈن تۆۋەندىكى مۇلازىمەتلەر ئىشلىتىلىدۇ:",
     "{providerName} for {taskName}" : "{providerName} ئۈچۈن تەمىنلىگۈچى {taskName}",
     "Getting results…" : "نەتىجىگە ئېرىشىش…",

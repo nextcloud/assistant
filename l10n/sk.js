@@ -116,7 +116,6 @@ OC.L10N.register(
     "complete AI documentation" : "kompletná dokumentácia k AI",
     "No provider found" : "Nenašiel sa žiadny poskytovateľ",
     "AI Providers need to be installed to use the Assistant" : "Poskytovateľ AI musí byť nainštalovaný pre používanie Asistenta",
-    "Configured Backends" : "Nastavené backendy",
     "This may take a few seconds…" : "Toto zaberie pár sekúnd…",
     "Getting results…" : "Získavam výsledky...",
     "Back to the Assistant" : "Naspäť do Asistenta",
