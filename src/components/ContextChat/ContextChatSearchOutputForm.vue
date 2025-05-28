@@ -53,6 +53,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+ol {
+	margin-left: 2em;
+}
+
 .cc-output__sources {
 	display: flex;
 	flex-direction: column;
@@ -61,6 +65,7 @@ export default {
 
 	&__line {
 		border-radius: var(--border-radius-large);
+		padding: 12px 16px 4px 12px;
 		&:hover {
 			background-color: var(--color-background-hover);
 		}
