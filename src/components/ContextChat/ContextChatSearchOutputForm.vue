@@ -7,9 +7,14 @@
 		<label class="cc-output__sources__label">
 			{{ outputShape.sources.description }}
 		</label>
-		<ContextChatSource v-for="(source, i) in sources"
-			:key="'source-' + i + '-' + source.url"
-			:source="source" />
+		<ol>
+			<li v-for="(source, i) in sources"
+				:key="'source-' + i + '-' + source.url"
+				class="cc-output__sources__line">
+				<ContextChatSource
+					:source="source" />
+			</li>
+		</ol>
 	</div>
 </template>
 
@@ -53,5 +58,12 @@ export default {
 	flex-direction: column;
 	align-items: start;
 	gap: 8px;
+
+	&__line {
+		border-radius: var(--border-radius-large);
+		&:hover {
+			background-color: var(--color-background-hover);
+		}
+	}
 }
 </style>
