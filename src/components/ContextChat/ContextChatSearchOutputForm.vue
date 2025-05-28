@@ -7,23 +7,20 @@
 		<label class="cc-output__sources__label">
 			{{ outputShape.sources.description }}
 		</label>
-		<NcRichText v-for="(source, i) in sources"
-			:key="'source-' + i"
-			:text="source.url"
-			:use-markdown="false"
-			:reference-limit="1"
-			:autolink="true" />
+		<ContextChatSource v-for="(source, i) in sources"
+			:key="'source-' + i + '-' + source.url"
+			:source="source" />
 	</div>
 </template>
 
 <script>
-import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import ContextChatSource from './ContextChatSource.vue'
 
 export default {
 	name: 'ContextChatSearchOutputForm',
 
 	components: {
-		NcRichText,
+		ContextChatSource,
 	},
 
 	props: {
