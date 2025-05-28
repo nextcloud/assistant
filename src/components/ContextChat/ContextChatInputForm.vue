@@ -222,10 +222,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-		isSearch: {
-			type: Boolean,
-			required: true,
-		},
 	},
 
 	emits: ['update:inputs'],
@@ -256,6 +252,14 @@ export default {
 				return []
 			}
 		},
+		isSearch() {
+			return this.taskType.id === 'context_chat:context_chat_search'
+		},
+	},
+	watch: {
+		taskType(newValue) {
+			this.onTaskTypeChange()
+		},
 	},
 
 	mounted() {
@@ -271,18 +275,18 @@ export default {
 				showError(t('assistant', 'Error fetching default provider key'))
 			})
 
-		// initialize the inputs if necessary
-		if (Object.keys(this.inputs).length === 0) {
-			this.$nextTick(() => {
-				this.$emit('update:inputs', {
-					prompt: '',
-					scopeType: _ScopeType.NONE,
-					scopeList: [],
-					scopeListMeta: '[]',
-					limit: this.isSearch ? this.taskType.inputShapeDefaults?.limit : undefined,
-				})
+		// initialize each input if necessary
+		this.$nextTick(() => {
+			this.$emit('update:inputs', {
+				prompt: this.inputs.prompt ?? '',
+				limit: this.isSearch
+					? (this.inputs.limit ?? this.taskType.inputShapeDefaults?.limit)
+					: undefined,
+				scopeType: this.inputs.scopeType ?? _ScopeType.NONE,
+				scopeList: this.inputs.scopeList ?? [],
+				scopeListMeta: this.inputs.scopeListMeta ?? '[]',
 			})
-		}
+		})
 	},
 
 	methods: {
@@ -375,6 +379,16 @@ export default {
 				...this.inputs,
 				...changedInputs,
 			})
+		},
+		onTaskTypeChange() {
+			this.$emit('update:inputs', {
+				prompt: this.inputs.prompt ?? '',
+				limit: this.isSearch ? this.taskType.inputShapeDefaults?.limit : undefined,
+				scopeType: _ScopeType.NONE,
+				scopeList: [],
+				scopeListMeta: '[]',
+			})
+			this.sccEnabled = false
 		},
 	},
 }
