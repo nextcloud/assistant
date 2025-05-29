@@ -166,6 +166,7 @@
     "AI image generation smart picker" : "人工智慧圖像產生智慧型挑選程式",
     "AI transcription smart picker" : "人工智能轉錄智能挑選程式",
     "No suitable providers are available. They must first be enabled by your administrator." : "沒有可用的合適提供者。它們必須先由您的管理員啟用。",
+    "Configured backends" : "已配置的後端",
     "The following services are used as backends for Nextcloud Assistant:" : "以下服務用作 Nextcloud 小幫手的後端：",
     "{providerName} for {taskName}" : "供 {taskName} 使用的 {providerName}",
     "This may take a few seconds…" : "此操作可能需要花幾秒鐘 ...",
