@@ -8,6 +8,7 @@
 		:can-close="false"
 		:name="t('assistant', 'Nextcloud Assistant')"
 		dark
+		:container="null"
 		class="assistant-modal"
 		@close="onCancel">
 		<div ref="modal_content"

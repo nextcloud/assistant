@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="assistant-picker-content-wrapper" />
+	<div ref="mp" class="assistant-picker-content-wrapper" />
 </template>
 
 <script>
@@ -61,6 +61,7 @@ export default {
 					},
 				},
 			],
+			mountPoint: this.$refs.mp,
 		}).catch(error => {
 			console.debug('[assistant picker] assistant was closed', error)
 			this.$emit('cancel')
