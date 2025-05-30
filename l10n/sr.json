@@ -166,6 +166,7 @@
     "AI image generation smart picker" : "Паметни бирач AI генерисања слике",
     "AI transcription smart picker" : "Паметни бирач AI транскрибовања",
     "No suitable providers are available. They must first be enabled by your administrator." : "Није доступан ниједан пригодни пружалац услуге. Ваш администратор најпре треба да их укључи.",
+    "Configured backends" : "Конфигурисани позадински механизми",
     "The following services are used as backends for Nextcloud Assistant:" : "Следећи сервиси се користе као позадински механизми за Nextcloud Асистент:",
     "{providerName} for {taskName}" : "{providerName} за {taskName}",
     "This may take a few seconds…" : "Ово може потрајати пар секунди…",
