@@ -44,12 +44,13 @@ window.assistantPollTimerId = null
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
  * @param {boolean} params.closeOnResult If true, the modal will be closed when getting a sync result
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form (only if closeOnResult is false)
+ * @param {HTMLElement} params.mountPoint The DOM element in which the assistant modal will be mounted
  * @return {Promise<unknown>}
  */
 export async function openAssistantForm({
 	appId, taskType = null, input = '', inputs = {},
 	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
-	customId = '', identifier = '',
+	customId = '', identifier = '', mountPoint = null,
 }) {
 	const { default: Vue } = await import('vue')
 	const { default: AssistantTextProcessingModal } = await import('./components/AssistantTextProcessingModal.vue')
@@ -59,11 +60,26 @@ export async function openAssistantForm({
 	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
 
 	return new Promise((resolve, reject) => {
-		const modalId = 'assistantTextProcessingModal'
-		const modalElement = document.createElement('div')
-		modalElement.id = modalId
+		let modalMountPoint
 		const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
-		document.querySelector('body').insertBefore(modalElement, content.nextSibling)
+
+		if (mountPoint === null) {
+			const modalId = 'assistantTextProcessingModal'
+			modalMountPoint = document.createElement('div')
+			modalMountPoint.id = modalId
+			document.querySelector('body').insertBefore(modalMountPoint, content.nextSibling)
+		} else {
+			modalMountPoint = mountPoint
+		}
+
+		/*
+		// just in case, if the smart picker exists, move it right after #content (before the assistant modal)
+		// to make sure things get displayed in this order: picker, assistant modal, viewer
+		const referencePickerModal = document.querySelector('body .reference-picker-modal')
+		if (referencePickerModal) {
+			document.querySelector('body').insertBefore(referencePickerModal, content.nextSibling)
+		}
+		*/
 
 		const View = Vue.extend(AssistantTextProcessingModal)
 		const view = new View({
@@ -75,7 +91,7 @@ export async function openAssistantForm({
 				showSyncTaskRunning: false,
 				actionButtons,
 			},
-		}).$mount(modalElement)
+		}).$mount(modalMountPoint)
 		let lastTask = null
 
 		view.$on('cancel', () => {
