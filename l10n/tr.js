@@ -2,7 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Hazır olduğunda bildirilemedi. Kullanıcı bilinmiyor",
-    "Send a message to a Talk conversation" : "Bir Konuş görüşmesine bir ileti gönder",
+    "Send a message to a Talk conversation" : "Bir Talk görüşmesine bir ileti gönder",
     "Create a conversation" : "Bir görüşme oluştur",
     "Send an email" : "E-posta gönder",
     "Schedule a calendar event" : "Bir takvim etkinliği zamanlayın",
