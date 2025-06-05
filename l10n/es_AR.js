@@ -9,6 +9,7 @@ OC.L10N.register(
     "Close" : "Cerrar",
     "Less" : "Menos",
     "More" : "Más",
+    "Cancel" : "Cancel",
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
     "Choose" : "Elige",

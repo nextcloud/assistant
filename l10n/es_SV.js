@@ -6,6 +6,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Correo Nextcloud",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
+    "Cancel" : "Cancel",
     "Delete" : "Borrar",
     "Submit" : "Enviar",
     "Choose" : "Seleccionar",

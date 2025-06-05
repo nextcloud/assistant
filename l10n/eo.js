@@ -6,6 +6,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud-retpoŝtilo",
     "Close" : "Malfermi",
     "Less" : "Malpli",
+    "Cancel" : "Cancel",
     "Delete" : "Forigi",
     "Submit" : "Sendi",
     "Choose" : "Elekti",
