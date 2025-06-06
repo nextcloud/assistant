@@ -63,23 +63,26 @@ export async function openAssistantForm({
 		let modalMountPoint
 		const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
 
-		if (mountPoint === null) {
+		if (mountPoint !== null) {
+			// if a mount point is specified, always use it
+			modalMountPoint = mountPoint
+		} else {
 			const modalId = 'assistantTextProcessingModal'
 			modalMountPoint = document.createElement('div')
 			modalMountPoint.id = modalId
-			document.querySelector('body').insertBefore(modalMountPoint, content.nextSibling)
-		} else {
-			modalMountPoint = mountPoint
+			// the default mount point location is different whether the assistant is opened from the viewer or not
+			if (isInsideViewer) {
+				// so the assistant modal is opened on top of the current viewer
+				document.querySelector('body').append(modalMountPoint)
+			} else {
+				// so the viewer can be later opened on top of the assistant
+				document.querySelector('body').insertBefore(modalMountPoint, content.nextSibling)
+			}
 		}
 
-		/*
-		// just in case, if the smart picker exists, move it right after #content (before the assistant modal)
-		// to make sure things get displayed in this order: picker, assistant modal, viewer
-		const referencePickerModal = document.querySelector('body .reference-picker-modal')
-		if (referencePickerModal) {
-			document.querySelector('body').insertBefore(referencePickerModal, content.nextSibling)
-		}
-		*/
+		// TODO remaining issue: we can't open output files in the viewer if the assistant is displayed in the viewer
+		// because the new viewer will replace the existing one...
+		// Maybe that's an acceptable limitation
 
 		const View = Vue.extend(AssistantTextProcessingModal)
 		const view = new View({
@@ -410,19 +413,40 @@ async function showAssistantTaskResult(taskId) {
  * @param {object} params parameters for the assistant
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
  * @param {Array} params.actionButtons List of extra buttons to show in the assistant result form
+ * @param {HTMLElement} params.mountPoint The DOM element in which the assistant modal will be mounted
  * @return {Promise<void>}
  */
-export async function openAssistantTask(task, { isInsideViewer = undefined, actionButtons = undefined } = {}) {
+export async function openAssistantTask(
+	task,
+	{
+		isInsideViewer = undefined,
+		actionButtons = undefined,
+		mountPoint = null,
+	} = {}) {
 	const { default: Vue } = await import('vue')
 	Vue.mixin({ methods: { t, n } })
 	const { showError } = await import('@nextcloud/dialogs')
 	const { default: AssistantTextProcessingModal } = await import('./components/AssistantTextProcessingModal.vue')
 
-	const modalId = 'assistantTextProcessingModal'
-	const modalElement = document.createElement('div')
-	modalElement.id = modalId
+	let modalMountPoint
 	const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
-	document.querySelector('body').insertBefore(modalElement, content.nextSibling)
+
+	if (mountPoint !== null) {
+		// if a mount point is specified, always use it
+		modalMountPoint = mountPoint
+	} else {
+		const modalId = 'assistantTextProcessingModal'
+		modalMountPoint = document.createElement('div')
+		modalMountPoint.id = modalId
+		// the default mount point location is different whether the assistant is opened from the viewer or not
+		if (isInsideViewer) {
+			// so the assistant modal is opened on top of the current viewer
+			document.querySelector('body').append(modalMountPoint)
+		} else {
+			// so the viewer can be later opened on top of the assistant
+			document.querySelector('body').insertBefore(modalMountPoint, content.nextSibling)
+		}
+	}
 
 	const View = Vue.extend(AssistantTextProcessingModal)
 	const view = new View({
@@ -435,7 +459,7 @@ export async function openAssistantTask(task, { isInsideViewer = undefined, acti
 			showScheduleConfirmation: false,
 			actionButtons,
 		},
-	}).$mount(modalElement)
+	}).$mount(modalMountPoint)
 	let lastTask = task
 
 	view.$on('cancel', () => {
