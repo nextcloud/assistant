@@ -31,12 +31,6 @@
 					@background-notify="$emit('background-notify')"
 					@cancel="$emit('cancel-task')"
 					@back="onBackToAssistant" />
-				<ScheduledEmptyContent
-					v-else-if="showScheduleConfirmation"
-					:description="shortInput"
-					:show-close-button="true"
-					@close="onCancel"
-					@back="onBackToAssistant" />
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
@@ -64,14 +58,12 @@ import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
 import RunningEmptyContent from './RunningEmptyContent.vue'
-import ScheduledEmptyContent from './ScheduledEmptyContent.vue'
 
 import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AssistantTextProcessingModal',
 	components: {
-		ScheduledEmptyContent,
 		RunningEmptyContent,
 		AssistantTextProcessingForm,
 		NcModal,
@@ -117,10 +109,6 @@ export default {
 		expectedRuntime: {
 			type: [Number, null],
 			default: null,
-		},
-		showScheduleConfirmation: {
-			type: Boolean,
-			required: true,
 		},
 		actionButtons: {
 			type: Array,

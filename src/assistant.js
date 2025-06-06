@@ -90,7 +90,6 @@ export async function openAssistantForm({
 				isInsideViewer,
 				inputs: input ? { prompt: input } : inputs,
 				selectedTaskTypeId,
-				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
 				actionButtons,
 			},
@@ -215,7 +214,6 @@ export async function openAssistantForm({
 		})
 		view.$on('background-notify', () => {
 			cancelTaskPolling()
-			view.showScheduleConfirmation = true
 			view.showSyncTaskRunning = false
 			view.loading = false
 			setNotifyReady(lastTask.id)
@@ -236,7 +234,6 @@ export async function openAssistantForm({
 		})
 		view.$on('back-to-assistant', () => {
 			cancelTaskPolling()
-			view.showScheduleConfirmation = false
 			view.showSyncTaskRunning = false
 			view.loading = false
 			view.outputs = null
@@ -456,7 +453,6 @@ export async function openAssistantTask(
 			inputs: task.input,
 			outputs: task.output ?? {},
 			selectedTaskTypeId: task.type,
-			showScheduleConfirmation: false,
 			actionButtons,
 		},
 	}).$mount(modalMountPoint)
@@ -468,7 +464,6 @@ export async function openAssistantTask(
 	view.$on('submit', (data) => {
 		scheduleTask(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
-				view.showScheduleConfirmation = true
 				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
@@ -580,7 +575,6 @@ export async function openAssistantTask(
 	})
 	view.$on('background-notify', () => {
 		cancelTaskPolling()
-		view.showScheduleConfirmation = true
 		view.showSyncTaskRunning = false
 		setNotifyReady(lastTask.id)
 	})
@@ -599,7 +593,6 @@ export async function openAssistantTask(
 	})
 	view.$on('back-to-assistant', () => {
 		cancelTaskPolling()
-		view.showScheduleConfirmation = false
 		view.showSyncTaskRunning = false
 		view.loading = false
 		view.outputs = null

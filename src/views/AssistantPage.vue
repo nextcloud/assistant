@@ -14,11 +14,6 @@
 					@background-notify="onBackgroundNotify"
 					@cancel="onCancel"
 					@back="onBackToAssistant" />
-				<ScheduledEmptyContent
-					v-else-if="showScheduleConfirmation"
-					:description="shortInput"
-					:show-close-button="false"
-					@back="onBackToAssistant" />
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
@@ -42,7 +37,6 @@ import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
 import AssistantTextProcessingForm from '../components/AssistantTextProcessingForm.vue'
 import RunningEmptyContent from '../components/RunningEmptyContent.vue'
-import ScheduledEmptyContent from '../components/ScheduledEmptyContent.vue'
 
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
@@ -59,7 +53,6 @@ export default {
 	name: 'AssistantPage',
 
 	components: {
-		ScheduledEmptyContent,
 		RunningEmptyContent,
 		AssistantTextProcessingForm,
 		NcContent,
@@ -74,7 +67,6 @@ export default {
 			task: loadState('assistant', 'task'),
 			showSyncTaskRunning: false,
 			progress: null,
-			showScheduleConfirmation: false,
 			loading: false,
 		}
 	},
@@ -104,13 +96,11 @@ export default {
 	methods: {
 		onBackgroundNotify() {
 			cancelTaskPolling()
-			this.showScheduleConfirmation = true
 			this.showSyncTaskRunning = false
 			setNotifyReady(this.task.id)
 		},
 		onBackToAssistant() {
 			this.showSyncTaskRunning = false
-			this.showScheduleConfirmation = false
 			this.task.output = null
 		},
 		onCancel() {
