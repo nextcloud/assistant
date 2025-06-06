@@ -6,25 +6,23 @@
 	<NcContent app-name="assistant">
 		<NcAppContent>
 			<div class="assistant-wrapper">
-				<RunningEmptyContent
-					v-if="showSyncTaskRunning"
-					:description="shortInput"
-					:progress="progress"
-					:expected-runtime="expectedRuntime"
-					@background-notify="onBackgroundNotify"
-					@cancel="onCancel" />
 				<AssistantTextProcessingForm
-					v-else
 					class="form"
 					:selected-task-id="task.id"
 					:inputs="task.input"
 					:outputs="task.output"
 					:selected-task-type-id="task.type"
 					:loading="loading"
+					:show-sync-task-running="showSyncTaskRunning"
+					:short-input="shortInput"
+					:progress="progress"
+					:expected-runtime="expectedRuntime"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
 					@load-task="onLoadTask"
-					@new-task="onNewTask" />
+					@new-task="onNewTask"
+					@background-notify="onBackgroundNotify"
+					@cancel-task="onCancel" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -35,7 +33,6 @@ import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
 import AssistantTextProcessingForm from '../components/AssistantTextProcessingForm.vue'
-import RunningEmptyContent from '../components/RunningEmptyContent.vue'
 
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
@@ -52,7 +49,6 @@ export default {
 	name: 'AssistantPage',
 
 	components: {
-		RunningEmptyContent,
 		AssistantTextProcessingForm,
 		NcContent,
 		NcAppContent,
