@@ -46,11 +46,12 @@
 			<div v-else>
 				<h3>{{ t('assistant', 'Configured backends') }}</h3>
 				<p>{{ t('assistant', 'The following services are used as backends for Nextcloud Assistant:') }}</p>
-				<ul>
-					<li v-for="(providerName, taskName) in providers" :key="taskName">
-						{{ t('assistant', '{providerName} for {taskName}', { providerName, taskName }, null, { escape: false }) }}
-					</li>
-				</ul>
+				<template v-for="(taskNames, providerName) in providers">
+					<h5 :key="providerName">
+						{{ providerName }}
+					</h5>
+					{{ taskNames.join(', ') }}
+				</template>
 			</div>
 		</div>
 	</div>
