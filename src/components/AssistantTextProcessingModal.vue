@@ -23,15 +23,7 @@
 						<CloseIcon />
 					</template>
 				</NcButton>
-				<RunningEmptyContent
-					v-if="showSyncTaskRunning"
-					:description="shortInput"
-					:progress="progress"
-					:expected-runtime="expectedRuntime"
-					@background-notify="$emit('background-notify')"
-					@cancel="$emit('cancel-task')" />
 				<AssistantTextProcessingForm
-					v-else
 					class="form"
 					:selected-task-id="selectedTaskId"
 					:inputs="inputs"
@@ -39,11 +31,17 @@
 					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
 					:action-buttons="actionButtons"
+					:show-sync-task-running="showSyncTaskRunning"
+					:short-input="shortInput"
+					:progress="progress"
+					:expected-runtime="expectedRuntime"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="$emit('try-again', $event)"
 					@load-task="$emit('load-task', $event)"
-					@new-task="$emit('new-task')" />
+					@new-task="$emit('new-task')"
+					@background-notify="$emit('background-notify')"
+					@cancel-task="$emit('cancel-task')" />
 			</div>
 		</div>
 	</NcModal>
@@ -56,14 +54,12 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
-import RunningEmptyContent from './RunningEmptyContent.vue'
 
 import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AssistantTextProcessingModal',
 	components: {
-		RunningEmptyContent,
 		AssistantTextProcessingForm,
 		NcModal,
 		NcButton,
