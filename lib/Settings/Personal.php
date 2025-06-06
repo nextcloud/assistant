@@ -69,8 +69,8 @@ class Personal implements ISettings {
 		$availableProviders = [];
 		foreach ($availableTaskTypes as $taskTypeId => $availableTaskType) {
 			try {
-				$provider = $this->taskProcessingManager->getPreferredProvider($taskTypeId);
-				$availableProviders[$availableTaskType['name']] = $provider->getName();
+				$providerName = $this->taskProcessingManager->getPreferredProvider($taskTypeId)->getName();
+				$availableProviders[$providerName][] = $availableTaskType['name'];
 			} catch (Exception $e) {
 				// pass
 			}
