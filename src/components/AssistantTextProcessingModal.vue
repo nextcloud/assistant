@@ -29,8 +29,7 @@
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
 					@background-notify="$emit('background-notify')"
-					@cancel="$emit('cancel-task')"
-					@back="onBackToAssistant" />
+					@cancel="$emit('cancel-task')" />
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
@@ -125,7 +124,6 @@ export default {
 		'try-again',
 		'load-task',
 		'new-task',
-		'back-to-assistant',
 	],
 	data() {
 		return {
@@ -155,9 +153,6 @@ export default {
 		}
 	},
 	methods: {
-		onBackToAssistant() {
-			this.$emit('back-to-assistant')
-		},
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')

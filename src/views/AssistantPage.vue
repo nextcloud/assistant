@@ -12,8 +12,7 @@
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
 					@background-notify="onBackgroundNotify"
-					@cancel="onCancel"
-					@back="onBackToAssistant" />
+					@cancel="onCancel" />
 				<AssistantTextProcessingForm
 					v-else
 					class="form"
@@ -98,10 +97,6 @@ export default {
 			cancelTaskPolling()
 			this.showSyncTaskRunning = false
 			setNotifyReady(this.task.id)
-		},
-		onBackToAssistant() {
-			this.showSyncTaskRunning = false
-			this.task.output = null
 		},
 		onCancel() {
 			cancelTaskPolling()

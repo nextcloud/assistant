@@ -25,13 +25,6 @@
 					{{ t('assistant', 'Run task in the background and get notified') }}
 				</NcButton>
 				<NcButton
-					@click="$emit('back')">
-					<template #icon>
-						<ArrowLeftIcon />
-					</template>
-					{{ t('assistant', 'Back to the Assistant') }}
-				</NcButton>
-				<NcButton
 					@click="$emit('cancel')">
 					<template #icon>
 						<CloseIcon />
@@ -47,7 +40,6 @@
 </template>
 
 <script>
-import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
 
@@ -64,7 +56,6 @@ export default {
 		NcEmptyContent,
 		NcLoadingIcon,
 		NcProgressBar,
-		ArrowLeftIcon,
 		CloseIcon,
 		ProgressClockIcon,
 	},
@@ -87,7 +78,6 @@ export default {
 	emits: [
 		'cancel',
 		'background-notify',
-		'back',
 	],
 
 	data() {

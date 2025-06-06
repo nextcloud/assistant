@@ -232,13 +232,6 @@ export async function openAssistantForm({
 			}
 			view.$destroy()
 		})
-		view.$on('back-to-assistant', () => {
-			cancelTaskPolling()
-			view.showSyncTaskRunning = false
-			view.loading = false
-			view.outputs = null
-			lastTask = null
-		})
 	})
 }
 
@@ -590,13 +583,6 @@ export async function openAssistantTask(
 			data.button.onClick(lastTask)
 		}
 		view.$destroy()
-	})
-	view.$on('back-to-assistant', () => {
-		cancelTaskPolling()
-		view.showSyncTaskRunning = false
-		view.loading = false
-		view.outputs = null
-		lastTask = null
 	})
 }
 
