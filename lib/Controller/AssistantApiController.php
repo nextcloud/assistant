@@ -78,6 +78,36 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
+	 * Cancel an existing notification when a task has finished
+	 *
+	 * Does not need bruteforce protection since we respond with success anyways
+	 * as we don't want to keep the front-end waiting.
+	 * However, we still use rate limiting to prevent timing attacks.
+	 *
+	 * @param int $ocpTaskId ID of the target task
+	 * @return DataResponse<Http::STATUS_OK, '', array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
+	 * @throws MultipleObjectsReturnedException
+	 *
+	 * 200: Ready notification deleted successfully
+	 */
+	#[NoAdminRequired]
+	#[NoCSRFRequired]
+	#[AnonRateLimit(limit: 10, period: 60)]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assistant_api'])]
+	public function cancelNotifyWhenReady(int $ocpTaskId): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse(['error' => $this->l10n->t('Failed to cancel notification; unknown user')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		try {
+			$this->assistantService->cancelNotifyWhenReady($ocpTaskId, $this->userId);
+		} catch (Exception $e) {
+			// Ignore
+		}
+		return new DataResponse('', Http::STATUS_OK);
+	}
+
+	/**
 	 * Get available task types
 	 *
 	 * Get all available task types that the assistant can handle.
