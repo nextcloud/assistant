@@ -156,6 +156,34 @@ class AssistantService {
 	}
 
 	/**
+	 * Cancel notification when task is finished
+	 *
+	 * @param int $taskId
+	 * @param string $userId
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function cancelNotifyWhenReady(int $taskId, string $userId): void {
+		try {
+			$task = $this->taskProcessingManager->getTask($taskId);
+		} catch (NotFoundException $e) {
+			// task may be already deleted, so delete any dangling notifications
+			$this->taskNotificationMapper->deleteByTaskId($taskId);
+			return;
+		} catch (TaskProcessingException $e) {
+			$this->logger->debug('Task request error : ' . $e->getMessage());
+			throw new Exception('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		if ($task->getUserId() !== $userId) {
+			$this->logger->info('A user attempted deleting notifications of another user\'s task');
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
+		}
+
+		$this->taskNotificationMapper->deleteByTaskId($taskId);
+	}
+
+	/**
 	 * @return array<AssistantTaskProcessingTaskType>
 	 */
 	public function getAvailableTaskTypes(): array {

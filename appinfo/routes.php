@@ -25,6 +25,7 @@ return [
 		['name' => 'assistantApi#getUserTasks', 'url' => '/api/{apiVersion}/tasks', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#parseTextFromFile', 'url' => '/api/{apiVersion}/parse-file', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#notifyWhenReady', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/notify', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#cancelNotifyWhenReady', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/notify', 'verb' => 'DELETE', 'requirements' => $requirements],
 		['name' => 'assistantApi#uploadInputFile', 'url' => '/api/{apiVersion}/input-file', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#displayUserFile', 'url' => '/api/{apiVersion}/file/{fileId}/display', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#getUserFileInfo', 'url' => '/api/{apiVersion}/file/{fileId}/info', 'verb' => 'GET', 'requirements' => $requirements],
