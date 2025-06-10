@@ -103,6 +103,7 @@ export async function openAssistantForm({
 		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 			view.loading = true
 			view.showSyncTaskRunning = true
+			view.isNotifyEnabled = false
 			view.progress = null
 			view.expectedRuntime = null
 			view.inputs = inputs
@@ -212,11 +213,10 @@ export async function openAssistantForm({
 			view.selectedTaskId = null
 			lastTask = null
 		})
-		view.$on('background-notify', () => {
-			cancelTaskPolling()
-			view.showSyncTaskRunning = false
-			view.loading = false
-			setNotifyReady(lastTask.id)
+		view.$on('background-notify', (enable) => {
+			setNotifyReady(lastTask.id, enable).then(res => {
+				view.isNotifyEnabled = enable
+			})
 		})
 		view.$on('cancel-task', () => {
 			cancelTaskPolling()
@@ -275,11 +275,13 @@ export async function getTask(taskId) {
 	return axios.get(url, { signal: window.assistantAbortController.signal })
 }
 
-export async function setNotifyReady(taskId) {
+export async function setNotifyReady(taskId, enable) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
-	const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/notify', { taskId })
-	return axios.post(url, {})
+	return axios({
+		method: enable ? 'post' : 'delete',
+		url: generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/notify', { taskId }),
+	})
 }
 
 export async function cancelTask(taskId) {
@@ -468,6 +470,7 @@ export async function openAssistantTask(
 	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 		view.loading = true
 		view.showSyncTaskRunning = true
+		view.isNotifyEnabled = false
 		view.expectedRuntime = null
 		view.inputs = inputs
 		view.selectedTaskTypeId = taskTypeId
@@ -566,10 +569,10 @@ export async function openAssistantTask(
 		view.selectedTaskId = null
 		lastTask = null
 	})
-	view.$on('background-notify', () => {
-		cancelTaskPolling()
-		view.showSyncTaskRunning = false
-		setNotifyReady(lastTask.id)
+	view.$on('background-notify', (enable) => {
+		setNotifyReady(lastTask.id, enable).then(res => {
+			view.isNotifyEnabled = enable
+		})
 	})
 	view.$on('cancel-task', () => {
 		cancelTaskPolling()

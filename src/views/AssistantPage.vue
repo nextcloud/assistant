@@ -17,6 +17,7 @@
 					:short-input="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
+					:is-notify-enabled="isNotifyEnabled"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
 					@load-task="onLoadTask"
@@ -63,6 +64,7 @@ export default {
 			showSyncTaskRunning: false,
 			progress: null,
 			loading: false,
+			isNotifyEnabled: false,
 		}
 	},
 
@@ -89,10 +91,10 @@ export default {
 	},
 
 	methods: {
-		onBackgroundNotify() {
-			cancelTaskPolling()
-			this.showSyncTaskRunning = false
-			setNotifyReady(this.task.id)
+		onBackgroundNotify(enable) {
+			setNotifyReady(this.task.id, enable).then(res => {
+				this.isNotifyEnabled = enable
+			})
 		},
 		onCancel() {
 			cancelTaskPolling()
@@ -101,6 +103,7 @@ export default {
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
+			this.isNotifyEnabled = false
 			this.progress = null
 			this.task.completionExpectedAt = null
 			this.task.scheduledAt = null
