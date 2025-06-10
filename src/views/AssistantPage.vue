@@ -147,13 +147,14 @@ export default {
 			this.syncSubmit(task.input, task.type)
 		},
 		onLoadTask(task) {
-			if (this.loading === false) {
-				this.task.type = task.type
-				this.task.input = task.input
-				this.task.status = task.status
-				this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
-				this.task.id = task.id
-			}
+			cancelTaskPolling()
+			this.showSyncTaskRunning = false
+
+			this.task.type = task.type
+			this.task.input = task.input
+			this.task.status = task.status
+			this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
+			this.task.id = task.id
 		},
 		onNewTask() {
 			this.task.status = TASK_STATUS_STRING.unknown
