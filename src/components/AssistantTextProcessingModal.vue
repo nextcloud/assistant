@@ -35,12 +35,13 @@
 					:short-input="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
+					:is-notify-enabled="isNotifyEnabled"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="$emit('try-again', $event)"
 					@load-task="$emit('load-task', $event)"
 					@new-task="$emit('new-task')"
-					@background-notify="$emit('background-notify')"
+					@background-notify="$emit('background-notify', $event)"
 					@cancel-task="$emit('cancel-task')" />
 			</div>
 		</div>
@@ -104,6 +105,10 @@ export default {
 		expectedRuntime: {
 			type: [Number, null],
 			default: null,
+		},
+		isNotifyEnabled: {
+			type: Boolean,
+			default: false,
 		},
 		actionButtons: {
 			type: Array,

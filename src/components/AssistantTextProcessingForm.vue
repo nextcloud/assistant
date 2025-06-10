@@ -43,7 +43,8 @@
 					:description="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
-					@background-notify="$emit('background-notify')"
+					:is-notify-enabled="isNotifyEnabled"
+					@background-notify="$emit('background-notify', $event)"
 					@cancel="$emit('cancel-task')" />
 				<NcAppContent v-else class="session-area">
 					<div class="session-area__top-bar">
@@ -226,6 +227,10 @@ export default {
 		expectedRuntime: {
 			type: [Number, null],
 			default: null,
+		},
+		isNotifyEnabled: {
+			type: Boolean,
+			default: false,
 		},
 		actionButtons: {
 			type: Array,
