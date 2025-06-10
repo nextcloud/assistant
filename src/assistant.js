@@ -154,57 +154,56 @@ export async function openAssistantForm({
 			syncSubmit(task.input, task.type)
 		})
 		view.$on('load-task', (task) => {
-			if (!view.loading) {
-				console.debug('[assistant] loading task', task)
-				cancelTaskPolling()
+			console.debug('[assistant] loading task', task)
+			cancelTaskPolling()
+			view.showSyncTaskRunning = false
 
-				view.selectedTaskTypeId = task.type
-				view.inputs = task.input
-				view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
-				view.selectedTaskId = task.id
-				lastTask = task
+			view.selectedTaskTypeId = task.type
+			view.inputs = task.input
+			view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
+			view.selectedTaskId = task.id
+			lastTask = task
 
-				if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
-					getTask(task.id).then(response => {
-						const updatedTask = response.data?.ocs?.data?.task
+			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
+				getTask(task.id).then(response => {
+					const updatedTask = response.data?.ocs?.data?.task
 
-						if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
-							view.selectedTaskTypeId = updatedTask.type
-							view.inputs = updatedTask.input
-							view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
-							view.selectedTaskId = updatedTask.id
-							lastTask = updatedTask
-							return
+					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
+						view.selectedTaskTypeId = updatedTask.type
+						view.inputs = updatedTask.input
+						view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
+						view.selectedTaskId = updatedTask.id
+						lastTask = updatedTask
+						return
+					}
+
+					view.loading = true
+					view.showSyncTaskRunning = true
+					view.progress = null
+					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+
+					const setProgress = (progress) => {
+						view.progress = progress
+					}
+					pollTask(updatedTask.id, setProgress).then(finishedTask => {
+						console.debug('pollTask.then', finishedTask)
+						if (finishedTask.status === TASK_STATUS_STRING.successful) {
+							view.outputs = finishedTask?.output
+							view.selectedTaskId = finishedTask?.id
+						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+							console.error('[assistant] Task failed', finishedTask)
+							view.outputs = null
 						}
-
-						view.loading = true
-						view.showSyncTaskRunning = true
-						view.progress = null
-						view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
-
-						const setProgress = (progress) => {
-							view.progress = progress
-						}
-						pollTask(updatedTask.id, setProgress).then(finishedTask => {
-							console.debug('pollTask.then', finishedTask)
-							if (finishedTask.status === TASK_STATUS_STRING.successful) {
-								view.outputs = finishedTask?.output
-								view.selectedTaskId = finishedTask?.id
-							} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-								showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
-								console.error('[assistant] Task failed', finishedTask)
-								view.outputs = null
-							}
-							// resolve(finishedTask)
-							view.loading = false
-							view.showSyncTaskRunning = false
-						}).catch(error => {
-							console.debug('[assistant] poll error', error)
-						})
+						// resolve(finishedTask)
+						view.loading = false
+						view.showSyncTaskRunning = false
 					}).catch(error => {
-						console.error(error)
+						console.debug('[assistant] poll error', error)
 					})
-				}
+				}).catch(error => {
+					console.error(error)
+				})
 			}
 		})
 		view.$on('new-task', () => {
@@ -511,56 +510,55 @@ export async function openAssistantTask(
 		syncSubmit(task.input, task.type)
 	})
 	view.$on('load-task', (task) => {
-		if (!view.loading) {
-			cancelTaskPolling()
+		cancelTaskPolling()
+		view.showSyncTaskRunning = false
 
-			view.selectedTaskTypeId = task.type
-			view.inputs = task.input
-			view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
-			view.selectedTaskId = task.id
-			lastTask = task
+		view.selectedTaskTypeId = task.type
+		view.inputs = task.input
+		view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
+		view.selectedTaskId = task.id
+		lastTask = task
 
-			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
-				getTask(task.id).then(response => {
-					const updatedTask = response.data?.ocs?.data?.task
+		if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
+			getTask(task.id).then(response => {
+				const updatedTask = response.data?.ocs?.data?.task
 
-					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
-						view.selectedTaskTypeId = updatedTask.type
-						view.inputs = updatedTask.input
-						view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
-						view.selectedTaskId = updatedTask.id
-						lastTask = updatedTask
-						return
+				if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
+					view.selectedTaskTypeId = updatedTask.type
+					view.inputs = updatedTask.input
+					view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
+					view.selectedTaskId = updatedTask.id
+					lastTask = updatedTask
+					return
+				}
+
+				view.loading = true
+				view.showSyncTaskRunning = true
+				view.progress = null
+				view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+
+				const setProgress = (progress) => {
+					view.progress = progress
+				}
+				pollTask(updatedTask.id, setProgress).then(finishedTask => {
+					console.debug('pollTask.then', finishedTask)
+					if (finishedTask.status === TASK_STATUS_STRING.successful) {
+						view.outputs = finishedTask?.output
+						view.selectedTaskId = finishedTask?.id
+					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+						console.error('[assistant] Task failed', finishedTask)
+						view.outputs = null
 					}
-
-					view.loading = true
-					view.showSyncTaskRunning = true
-					view.progress = null
-					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
-
-					const setProgress = (progress) => {
-						view.progress = progress
-					}
-					pollTask(updatedTask.id, setProgress).then(finishedTask => {
-						console.debug('pollTask.then', finishedTask)
-						if (finishedTask.status === TASK_STATUS_STRING.successful) {
-							view.outputs = finishedTask?.output
-							view.selectedTaskId = finishedTask?.id
-						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
-							console.error('[assistant] Task failed', finishedTask)
-							view.outputs = null
-						}
-						// resolve(finishedTask)
-						view.loading = false
-						view.showSyncTaskRunning = false
-					}).catch(error => {
-						console.debug('[assistant] poll error', error)
-					})
+					// resolve(finishedTask)
+					view.loading = false
+					view.showSyncTaskRunning = false
 				}).catch(error => {
-					console.error(error)
+					console.debug('[assistant] poll error', error)
 				})
-			}
+			}).catch(error => {
+				console.error(error)
+			})
 		}
 	})
 	view.$on('new-task', () => {
