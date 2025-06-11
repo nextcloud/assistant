@@ -58,6 +58,7 @@ export default {
 					iconSvg: checkSvg,
 					onClick: (task) => {
 						this.$emit('submit', task.output[this.outputKey] ?? '')
+						this.$el.dispatchEvent(new CustomEvent('submit', { detail: task.output[this.outputKey] ?? '', bubbles: true }))
 					},
 				},
 			],

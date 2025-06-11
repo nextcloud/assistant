@@ -11,21 +11,21 @@
 			</span>
 			<AgencyActions :actions="actions" />
 			<div class="footer">
-				<NcButton type="tertiary"
+				<NcButton variant="tertiary"
 					:title="hint"
 					class="help">
 					<template #icon>
 						<InformationOutlineIcon :size="20" />
 					</template>
 				</NcButton>
-				<NcButton type="secondary"
+				<NcButton variant="secondary"
 					@click="$emit('reject')">
 					{{ t('assistant', 'Cancel') }}
 					<template #icon>
 						<CloseIcon :size="20" />
 					</template>
 				</NcButton>
-				<NcButton type="primary"
+				<NcButton variant="primary"
 					@click="$emit('confirm')">
 					{{ t('assistant', 'Confirm those actions') }}
 					<template #icon>
@@ -44,8 +44,8 @@ import AssistantIcon from '../icons/AssistantIcon.vue'
 
 import AgencyActions from './AgencyActions.vue'
 
-import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 export default {
 	name: 'AgencyConfirmation',

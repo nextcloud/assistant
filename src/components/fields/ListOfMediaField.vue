@@ -4,7 +4,7 @@
 -->
 <template>
 	<div class="media-list-field">
-		<div ref="copyContainer" class="label-row">
+		<div class="label-row">
 			<label class="field-label"
 				:title="field.description">
 				{{ field.name }}
@@ -13,11 +13,11 @@
 		<div v-if="!isOutput"
 			class="select-media">
 			<UploadInputFileButton
+				v-model:is-uploading="isUploading"
 				:accept="acceptedMimeTypes"
 				:label="t('assistant', 'Upload from device')"
 				:multiple="true"
 				:disabled="isRecording || isUploading"
-				:is-uploading.sync="isUploading"
 				@files-uploaded="onFilesUploaded" />
 			<ChooseInputFileButton
 				:label="t('assistant', 'Select from Nextcloud')"
@@ -27,8 +27,8 @@
 				:disabled="isRecording || isUploading"
 				@files-chosen="onFilesChosen" />
 			<AudioRecorderWrapper v-if="isAudioList"
+				v-model:is-recording="isRecording"
 				:disabled="isUploading"
-				:is-recording.sync="isRecording"
 				@new-recording="onNewRecording" />
 		</div>
 		<div v-if="value !== null"
@@ -49,7 +49,7 @@
 					@click.native="onPreviewClick(isOutput, fileId)" />
 				<div class="buttons">
 					<NcButton v-if="!isOutput"
-						type="tertiary"
+						variant="tertiary"
 						:aria-label="t('assistant', 'Remove this media')"
 						@click="onDelete(fileId)">
 						<template #icon>
@@ -90,7 +90,7 @@ import DownloadIcon from 'vue-material-design-icons/Download.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import DeleteIcon from '../icons/DeleteIcon.vue'
 
@@ -104,8 +104,6 @@ import AudioRecorderWrapper from './AudioRecorderWrapper.vue'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import VueClipboard from 'vue-clipboard2'
-import Vue from 'vue'
 
 import {
 	SHAPE_TYPE_NAMES,
@@ -113,8 +111,6 @@ import {
 	VALID_IMAGE_MIME_TYPES,
 	VALID_AUDIO_MIME_TYPES,
 } from '../../constants.js'
-
-Vue.use(VueClipboard)
 
 export default {
 	name: 'ListOfMediaField',
@@ -298,8 +294,7 @@ export default {
 		},
 		async copyString(content, message) {
 			try {
-				const container = this.$refs.copyContainer
-				await this.$copyText(content, container)
+				await navigator.clipboard.writeText(content)
 				showSuccess(message)
 			} catch (error) {
 				console.error(error)

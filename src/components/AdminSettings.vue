@@ -96,14 +96,14 @@
 					<p>{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}</p>
 				</NcNoteCard>
 				<NcRichContenteditable id="chat_user_instructions"
+					v-model="state.chat_user_instructions"
 					class="text-field"
-					:value.sync="state.chat_user_instructions"
 					:auto-complete="() => {}"
 					:link-auto-complete="false"
 					:placeholder="t('assistant', 'Chat User Instructions for Chat Completions')"
 					:aria-label="t('assistant', 'Chat User Instructions for Chat Completions')"
 					dir="auto"
-					@update:value="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')"
+					@update:model-value="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')"
 					@submit="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')" />
 				<div class="line">
 					<label for="chat_user_instructions_title">
@@ -115,14 +115,14 @@
 					<p>{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}</p>
 				</NcNoteCard>
 				<NcRichContenteditable id="chat_user_instructions_title"
+					v-model="state.chat_user_instructions_title"
 					class="text-field"
-					:value.sync="state.chat_user_instructions_title"
 					:auto-complete="() => {}"
 					:link-auto-complete="false"
 					:placeholder="t('assistant', 'Chat User Instructions for Title Generation')"
 					:aria-label="t('assistant', 'Chat User Instructions for Title Generation')"
 					dir="auto"
-					@update:value="delayedValueUpdate(state.chat_user_instructions_title, 'chat_user_instructions_title')"
+					@update:model-value="delayedValueUpdate(state.chat_user_instructions_title, 'chat_user_instructions_title')"
 					@submit="delayedValueUpdate(state.chat_user_instructions_title, 'chat_user_instructions_title')" />
 				<div class="line">
 					<label for="chat_last_n_messages">
@@ -133,12 +133,12 @@
 					<p>{{ t('assistant', 'This includes the user instructions and the LLM\'s messages') }}</p>
 				</NcNoteCard>
 				<NcTextField id="chat_last_n_messages"
-					class="text-field"
+					v-model="state.chat_last_n_messages"
 					type="number"
-					:value.sync="state.chat_last_n_messages"
+					class="text-field"
 					:error="!isUnsignedIntStr(state.chat_last_n_messages)"
 					:title="t('assistant', 'Number of messages to consider for chat completions (excluding the user instructions, which is always considered)')"
-					@update:value="delayedValueUpdate(state.chat_last_n_messages, 'chat_last_n_messages')" />
+					@update:model-value="delayedValueUpdate(state.chat_last_n_messages, 'chat_last_n_messages')" />
 			</div>
 		</div>
 	</div>
@@ -147,10 +147,10 @@
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
 
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
-import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
-import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'

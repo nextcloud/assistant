@@ -45,10 +45,10 @@ import BellOutlineIcon from 'vue-material-design-icons/BellOutline.vue'
 import BellRingOutlineIcon from 'vue-material-design-icons/BellRingOutline.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcProgressBar from '@nextcloud/vue/dist/Components/NcProgressBar.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcProgressBar from '@nextcloud/vue/components/NcProgressBar'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 export default {
 	name: 'RunningEmptyContent',

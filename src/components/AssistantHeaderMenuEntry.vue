@@ -7,7 +7,7 @@
 		class="header-menu">
 		<NcButton
 			class="trigger"
-			type="secondary"
+			variant="secondary"
 			:title="t('assistant', 'Nextcloud Assistant')"
 			@click="$emit('click')">
 			<AssistantIcon class="menu-icon" :size="20" />
@@ -18,7 +18,7 @@
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 export default {
 	name: 'AssistantHeaderMenuEntry',

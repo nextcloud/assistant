@@ -5,7 +5,7 @@
 <template>
 	<NcButton
 		v-bind="$attrs"
-		type="secondary"
+		variant="secondary"
 		@click="onButtonClick">
 		<template #icon>
 			<FolderPlusIcon />
@@ -17,7 +17,7 @@
 <script>
 import FolderPlusIcon from 'vue-material-design-icons/FolderPlus.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 

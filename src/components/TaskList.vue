@@ -33,7 +33,7 @@ import HistoryIcon from 'vue-material-design-icons/History.vue'
 
 import TaskListItem from './TaskListItem.vue'
 
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 import axios from '@nextcloud/axios'
 import { subscribe, unsubscribe } from '@nextcloud/event-bus'
