@@ -382,6 +382,8 @@ export default {
 						if (text2textType) {
 							this.parseTextFileInputs(text2textType)
 							this.mySelectedTaskTypeId = TEXT2TEXT_TASK_TYPE_ID
+						} else if (taskTypes.length > 0) {
+							this.mySelectedTaskTypeId = taskTypes[0]?.id
 						} else {
 							this.mySelectedTaskTypeId = null
 						}
