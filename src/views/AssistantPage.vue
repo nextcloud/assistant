@@ -99,8 +99,10 @@ export default {
 		},
 		onCancel() {
 			cancelTaskPolling()
-			cancelTask(this.task.id)
-			this.showSyncTaskRunning = false
+			cancelTask(this.task.id).then(res => {
+				this.showSyncTaskRunning = false
+				this.task.id = null
+			})
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
