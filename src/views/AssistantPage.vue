@@ -38,11 +38,12 @@ import AssistantTextProcessingForm from '../components/AssistantTextProcessingFo
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import {
-	scheduleTask,
-	cancelTaskPolling,
 	cancelTask,
-	setNotifyReady,
+	cancelTaskPolling,
+	getTask,
 	pollTask,
+	scheduleTask,
+	setNotifyReady,
 } from '../assistant.js'
 import { TASK_STATUS_STRING } from '../constants.js'
 
@@ -155,6 +156,48 @@ export default {
 			this.task.status = task.status
 			this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
 			this.task.id = task.id
+
+			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
+				getTask(task.id).then(response => {
+					const updatedTask = response.data?.ocs?.data?.task
+
+					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
+						this.selectedTaskTypeId = updatedTask.type
+						this.task.input = updatedTask.input
+						this.task.output = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
+						this.task.id = updatedTask.id
+						return
+					}
+
+					this.loading = true
+					this.showSyncTaskRunning = true
+					this.progress = null
+					this.task.completionExpectedAt = updatedTask.completionExpectedAt
+					this.task.scheduledAt = updatedTask.scheduledAt
+
+					const setProgress = (progress) => {
+						this.progress = progress
+					}
+					pollTask(updatedTask.id, setProgress).then(finishedTask => {
+						console.debug('pollTask.then', finishedTask)
+						if (finishedTask.status === TASK_STATUS_STRING.successful) {
+							this.task.output = finishedTask?.output
+							this.task.id = finishedTask?.id
+						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+							console.error('Assistant task failed', finishedTask)
+							this.task.output = null
+						}
+						// resolve(finishedTask)
+						this.loading = false
+						this.showSyncTaskRunning = false
+					}).catch(error => {
+						console.debug('Assistant poll error', error)
+					})
+				}).catch(error => {
+					console.error(error)
+				})
+			}
 		},
 		onNewTask() {
 			this.task.status = TASK_STATUS_STRING.unknown
