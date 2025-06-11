@@ -113,6 +113,7 @@ export async function openAssistantForm({
 				.then((response) => {
 					const task = response.data?.ocs?.data?.task
 					lastTask = task
+					view.selectedTaskId = lastTask?.id
 					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 					const setProgress = (progress) => {
 						view.progress = progress
@@ -124,7 +125,6 @@ export async function openAssistantForm({
 								view.$destroy()
 							} else {
 								view.outputs = finishedTask?.output
-								view.selectedTaskId = finishedTask?.id
 							}
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
@@ -478,11 +478,11 @@ export async function openAssistantTask(
 			.then((response) => {
 				const task = response.data?.ocs?.data?.task
 				lastTask = task
+				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 				pollTask(task.id).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
-						view.selectedTaskId = finishedTask?.id
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
 						console.error('[assistant] Task failed', finishedTask)
