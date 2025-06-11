@@ -6,7 +6,7 @@
 	<div class="input-area">
 		<NcRichContenteditable ref="richContenteditable"
 			:class="{ 'input-area__thinking': loading.llmGeneration }"
-			:value="chatContent"
+			:model-value="chatContent"
 			:auto-complete="() => {}"
 			:link-auto-complete="false"
 			:disabled="disabled"
@@ -15,13 +15,13 @@
 			:maxlength="1600"
 			:multiline="isMobile"
 			dir="auto"
-			@update:value="$emit('update:chatContent', $event)"
+			@update:model-value="$emit('update:chatContent', $event)"
 			@submit="$emit('submit', $event)" />
 		<div class="input-area__button-box">
 			<NcButton class="input-area__button-box__button"
 				:aria-label="submitBtnAriaText"
 				:disabled="disabled || !chatContent.trim()"
-				type="primary"
+				variant="primary"
 				@click="$emit('submit', $event)">
 				<template #icon>
 					<SendIcon :size="20" />
@@ -36,8 +36,8 @@ import SendIcon from 'vue-material-design-icons/Send.vue'
 
 import isMobile from '../../mixins/isMobile.js'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -117,13 +117,8 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-:deep .rich-contenteditable {
+:deep(.rich-contenteditable) {
 	width: 100% !important;
-
-	&__input--disabled {
-		border-radius: var(--border-radius-large) !important;
-		cursor: default !important;
-	}
 
 	.rich-contenteditable__input {
 		// TODO or fix in nc/vue
@@ -135,6 +130,11 @@ export default {
 	}
 }
 
+:deep(.rich-contenteditable__input--disabled) {
+	border-radius: var(--border-radius-large) !important;
+	cursor: default !important;
+}
+
 .input-area {
 	display: flex;
 	flex-direction: row;
@@ -142,7 +142,7 @@ export default {
 	align-items: end;
 	gap: 4px;
 
-	:deep &__thinking > div {
+	:deep(&__thinking > div) {
 		font-style: italic;
 		animation: breathing 2s linear infinite normal;
 	}

@@ -16,7 +16,7 @@
 			<div class="assistant-modal--content">
 				<NcButton :aria-label="closeButtonLabel"
 					:title="closeButtonTitle"
-					type="tertiary"
+					variant="tertiary"
 					class="close-button"
 					@click="onCancel">
 					<template #icon>
@@ -38,11 +38,11 @@
 					:is-notify-enabled="isNotifyEnabled"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
-					@try-again="$emit('try-again', $event)"
-					@load-task="$emit('load-task', $event)"
-					@new-task="$emit('new-task')"
-					@background-notify="$emit('background-notify', $event)"
-					@cancel-task="$emit('cancel-task')" />
+					@try-again="onTryAgain"
+					@load-task="onLoadTask"
+					@new-task="onNewTask"
+					@background-notify="onBackgroundNotify"
+					@cancel-task="onCancelTask" />
 			</div>
 		</div>
 	</NcModal>
@@ -51,8 +51,8 @@
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
 
@@ -74,41 +74,21 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		loading: {
-			type: Boolean,
-			default: false,
-		},
-		selectedTaskId: {
+		initSelectedTaskId: {
 			type: [Number, null],
 			default: null,
 		},
-		inputs: {
+		initInputs: {
 			type: Object,
 			default: () => {},
 		},
-		outputs: {
+		initOutputs: {
 			type: [Object, null],
 			default: null,
 		},
-		selectedTaskTypeId: {
+		initSelectedTaskTypeId: {
 			type: [String, null],
 			default: null,
-		},
-		showSyncTaskRunning: {
-			type: Boolean,
-			default: false,
-		},
-		progress: {
-			type: [Number, null],
-			default: null,
-		},
-		expectedRuntime: {
-			type: [Number, null],
-			default: null,
-		},
-		isNotifyEnabled: {
-			type: Boolean,
-			default: false,
 		},
 		actionButtons: {
 			type: Array,
@@ -132,6 +112,17 @@ export default {
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
 			modalSize: 'full',
+			progress: null,
+			loading: false,
+			expectedRuntime: null,
+			isNotifyEnabled: false,
+			showSyncTaskRunning: false,
+			showScheduleConfirmation: false,
+			// from props
+			selectedTaskId: this.initSelectedTaskId,
+			inputs: this.initInputs,
+			outputs: this.initOutputs,
+			selectedTaskTypeId: this.initSelectedTaskTypeId,
 		}
 	},
 	computed: {
@@ -157,12 +148,27 @@ export default {
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')
+			this.$el.dispatchEvent(new CustomEvent('cancel', { bubbles: true }))
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
+			this.$el.dispatchEvent(new CustomEvent('sync-submit', { detail: params, bubbles: true }))
 		},
 		onActionButtonClicked(data) {
 			this.$emit('action-button-clicked', data)
+			this.$el.dispatchEvent(new CustomEvent('action-button-clicked', { detail: data, bubbles: true }))
+		},
+		onNewTask() {
+			this.$emit('new-task')
+			this.$el.dispatchEvent(new CustomEvent('new-task', { bubbles: true }))
+		},
+		onTryAgain(data) {
+			this.$emit('try-again', data)
+			this.$el.dispatchEvent(new CustomEvent('try-again', { detail: data, bubbles: true }))
+		},
+		onLoadTask(data) {
+			this.$emit('load-task', data)
+			this.$el.dispatchEvent(new CustomEvent('load-task', { detail: data, bubbles: true }))
 		},
 	},
 }

@@ -52,8 +52,8 @@
 </template>
 
 <script>
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 
 import TextField from '../fields/TextField.vue'
 
@@ -109,7 +109,7 @@ export default {
 		display: flex;
 		flex-direction: column;
 
-		:deep .v-select {
+		:deep(.v-select) {
 			min-width: 400px !important;
 
 			> div {

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 import ContextChatOutputForm from './ContextChat/ContextChatOutputForm.vue'
 import ContextChatSearchOutputForm from './ContextChat/ContextChatSearchOutputForm.vue'

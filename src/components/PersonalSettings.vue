@@ -61,7 +61,7 @@
 import AssistantIcon from './icons/AssistantIcon.vue'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'

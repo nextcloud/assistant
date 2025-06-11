@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Vue from 'vue'
+import { createApp } from 'vue'
 import AssistantPage from './views/AssistantPage.vue'
-Vue.mixin({ methods: { t, n } })
 
-const View = Vue.extend(AssistantPage)
-new View().$mount('#content')
+const app = createApp(AssistantPage)
+app.mixin({ methods: { t, n } })
+app.mount('#content')

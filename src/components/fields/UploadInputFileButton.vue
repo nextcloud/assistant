@@ -12,7 +12,7 @@
 			@change="onUploadFileSelected">
 		<NcButton
 			v-bind="$attrs"
-			type="secondary"
+			variant="secondary"
 			@click="onUploadFile">
 			<template #icon>
 				<NcLoadingIcon v-if="isUploading" />
@@ -26,8 +26,8 @@
 <script>
 import UploadIcon from 'vue-material-design-icons/Upload.vue'
 
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'

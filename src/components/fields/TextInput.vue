@@ -10,7 +10,7 @@
 		<NcRichContenteditable
 			:id="id"
 			ref="input"
-			:value="value ?? ''"
+			:model-value="value ?? ''"
 			:link-autocomplete="false"
 			:multiline="isMobile"
 			class="editable-input"
@@ -18,10 +18,10 @@
 			:placeholder="placeholder"
 			:title="title"
 			@submit="hasValue && $emit('submit', $event)"
-			@update:value="$emit('update:value', $event)" />
+			@update:model-value="$emit('update:value', $event)" />
 		<NcButton v-if="isOutput && hasValue"
 			class="copy-button"
-			type="secondary"
+			variant="secondary"
 			:title="t('assistant', 'Copy output')"
 			@click="onCopy">
 			<template #icon>
@@ -32,7 +32,7 @@
 		</NcButton>
 		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
-			type="secondary"
+			variant="secondary"
 			@click="onChooseFile">
 			<template #icon>
 				<FileDocumentIcon />
@@ -46,8 +46,8 @@
 import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 
 import isMobile from '../../mixins/isMobile.js'
 import CopyIcon from '../icons/CopyIcon.vue'
@@ -55,9 +55,6 @@ import CopyIcon from '../icons/CopyIcon.vue'
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
-import VueClipboard from 'vue-clipboard2'
-import Vue from 'vue'
-Vue.use(VueClipboard)
 
 const VALID_MIME_TYPES = [
 	'text/rtf',
@@ -186,8 +183,7 @@ export default {
 		},
 		async onCopy() {
 			try {
-				const container = this.$refs.input.$el ?? this.$refs.input
-				await this.$copyText(this.formattedValue, container)
+				await navigator.clipboard.writeText(this.formattedValue)
 				this.copied = true
 				setTimeout(() => {
 					this.copied = false

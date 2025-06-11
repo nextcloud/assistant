@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
-import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 
 import AssistantTextProcessingForm from '../components/AssistantTextProcessingForm.vue'
 

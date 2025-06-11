@@ -9,20 +9,20 @@
 		</label>
 		<NcInputField
 			:id="'input-' + fieldKey"
+			:model-value="value ?? ''"
 			class="number-input-field"
-			:value="value ?? ''"
 			type="text"
 			:label-outside="true"
 			:title="field.name"
 			:placeholder="field.placeholder ?? (field.description || t('assistant','Type some number'))"
 			:error="!isValid"
 			:helper-text="isValid ? '' : t('assistant', 'The current value is not a number')"
-			@update:value="onUpdateValue" />
+			@update:model-value="onUpdateValue" />
 	</div>
 </template>
 
 <script>
-import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
 
 export default {
 	name: 'NumberField',

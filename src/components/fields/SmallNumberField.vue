@@ -11,7 +11,7 @@
 			<NcButton v-for="n in [1, 2, 3, 4, 5]"
 				:key="n"
 				:title="n"
-				:type="n === parseFloat(value) ? 'primary' : 'secondary'"
+				:variant="n === parseFloat(value) ? 'primary' : 'secondary'"
 				@click="onButtonClick(n)">
 				{{ n }}
 			</NcButton>
@@ -22,22 +22,22 @@
 			<NcInputField v-else
 				:id="'input-' + fieldKey"
 				ref="input-field"
+				:model-value="value ?? ''"
 				class="number-input-field"
-				:value="value ?? ''"
 				type="text"
 				:label-outside="true"
 				:title="field.name"
 				:placeholder="field.placeholder ?? (field.description || t('assistant','Type some number'))"
 				:error="!isValid"
 				:helper-text="isValid ? '' : t('assistant', 'The current value is not a number')"
-				@update:value="onUpdateInputField" />
+				@update:model-value="onUpdateInputField" />
 		</div>
 	</div>
 </template>
 
 <script>
-import NcInputField from '@nextcloud/vue/dist/Components/NcInputField.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcInputField from '@nextcloud/vue/components/NcInputField'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 let timeout
 const debounce = (fn, ms = 2000) => {

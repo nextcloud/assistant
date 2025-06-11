@@ -3,22 +3,25 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { registerCustomPickerElement, NcCustomPickerRenderResult } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { registerCustomPickerElement, NcCustomPickerRenderResult } from '@nextcloud/vue/components/NcRichText'
 
 registerCustomPickerElement('assistant_text', async (el, { providerId, accessible }) => {
-	const { default: Vue } = await import('vue')
-	Vue.mixin({ methods: { t, n } })
+	const { createApp } = await import('vue')
 	const { default: TextResultCustomPickerElement } = await import('./views/TextResultCustomPickerElement.vue')
-	const Element = Vue.extend(TextResultCustomPickerElement)
-	const vueElement = new Element({
-		propsData: {
+
+	const app = createApp(
+		TextResultCustomPickerElement,
+		{
 			providerId,
 			accessible,
 			taskType: 'core:text2text',
 			outputKey: 'output',
 		},
-	}).$mount(el)
-	return new NcCustomPickerRenderResult(vueElement.$el, vueElement)
+	)
+	app.mixin({ methods: { t, n } })
+	app.mount(el)
+
+	return new NcCustomPickerRenderResult(el, app)
 }, (el, renderResult) => {
-	renderResult.object.$destroy()
+	renderResult.object.unmount()
 })

@@ -32,8 +32,8 @@
 import ChevronDoubleDownIcon from 'vue-material-design-icons/ChevronDoubleDown.vue'
 import ChevronDoubleUpIcon from 'vue-material-design-icons/ChevronDoubleUp.vue'
 
-import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 const maxDisplayedArgs = 3
 

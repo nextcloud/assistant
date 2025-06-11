@@ -68,22 +68,16 @@ import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
 import AlertCircleOutlineIcon from 'vue-material-design-icons/AlertCircleOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
-import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 
 import DeleteIcon from './icons/DeleteIcon.vue'
 
 import moment from '@nextcloud/moment'
 
-import VueClipboard from 'vue-clipboard2'
-import Vue from 'vue'
-
 import { TASK_STATUS_STRING, SHAPE_TYPE_NAMES } from '../constants.js'
 import ImageDisplay from './fields/ImageDisplay.vue'
-
-Vue.use(VueClipboard)
 
 const statusIcons = {
 	[TASK_STATUS_STRING.successful]: CheckIcon,
@@ -116,7 +110,6 @@ export default {
 		CheckIcon,
 		AlertCircleOutlineIcon,
 		ReloadIcon,
-		ContentCopyIcon,
 	},
 
 	props: {
@@ -225,7 +218,7 @@ export default {
 </script>
 
 <style lang="scss">
-:deep .task-list-item {
+:deep(.task-list-item) {
 	.list-item {
 		width: 99% !important;
 		// TODO fix in NcListItem
