@@ -219,10 +219,12 @@ export async function openAssistantForm({
 		})
 		view.$on('cancel-task', () => {
 			cancelTaskPolling()
-			cancelTask(lastTask.id)
-			view.showSyncTaskRunning = false
-			view.loading = false
-			lastTask = null
+			cancelTask(lastTask.id).then(res => {
+				view.loading = false
+				view.showSyncTaskRunning = false
+				view.selectedTaskId = null
+				lastTask = null
+			})
 		})
 		view.$on('action-button-clicked', (data) => {
 			if (data.button?.onClick) {
@@ -574,9 +576,12 @@ export async function openAssistantTask(
 	})
 	view.$on('cancel-task', () => {
 		cancelTaskPolling()
-		cancelTask(lastTask.id)
-		view.showSyncTaskRunning = false
-		lastTask = null
+		cancelTask(lastTask.id).then(res => {
+			view.loading = false
+			view.showSyncTaskRunning = false
+			view.selectedTaskId = null
+			lastTask = null
+		})
 	})
 	view.$on('action-button-clicked', (data) => {
 		if (data.button?.onClick) {
