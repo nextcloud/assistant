@@ -219,6 +219,7 @@ export async function openAssistantForm({
 		})
 		view.$on('cancel-task', () => {
 			cancelTaskPolling()
+			setNotifyReady(lastTask.id, false)
 			cancelTask(lastTask.id).then(res => {
 				view.loading = false
 				view.showSyncTaskRunning = false
@@ -576,6 +577,7 @@ export async function openAssistantTask(
 	})
 	view.$on('cancel-task', () => {
 		cancelTaskPolling()
+		setNotifyReady(lastTask.id, false)
 		cancelTask(lastTask.id).then(res => {
 			view.loading = false
 			view.showSyncTaskRunning = false

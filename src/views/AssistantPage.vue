@@ -99,6 +99,7 @@ export default {
 		},
 		onCancel() {
 			cancelTaskPolling()
+			setNotifyReady(this.task.id, false)
 			cancelTask(this.task.id).then(res => {
 				this.loading = false
 				this.showSyncTaskRunning = false
