@@ -157,6 +157,7 @@ export async function openAssistantForm({
 			console.debug('[assistant] loading task', task)
 			cancelTaskPolling()
 			view.showSyncTaskRunning = false
+			view.isNotifyEnabled = false
 
 			view.selectedTaskTypeId = task.type
 			view.inputs = task.input
@@ -176,6 +177,12 @@ export async function openAssistantForm({
 						lastTask = updatedTask
 						return
 					}
+
+					getNotifyReady(task.id).then(response => {
+						view.isNotifyEnabled = !!response.data?.ocs?.data?.id
+					}).catch(error => {
+						console.error('[assistant] get task notification status error', error)
+					})
 
 					view.loading = true
 					view.showSyncTaskRunning = true
@@ -275,6 +282,13 @@ export async function getTask(taskId) {
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	const url = generateOcsUrl('taskprocessing/task/{taskId}', { taskId })
 	return axios.get(url, { signal: window.assistantAbortController.signal })
+}
+
+export async function getNotifyReady(taskId) {
+	const { default: axios } = await import('@nextcloud/axios')
+	const { generateOcsUrl } = await import('@nextcloud/router')
+	const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/notify', { taskId })
+	return axios.get(url, {})
 }
 
 export async function setNotifyReady(taskId, enable) {
@@ -515,6 +529,7 @@ export async function openAssistantTask(
 	view.$on('load-task', (task) => {
 		cancelTaskPolling()
 		view.showSyncTaskRunning = false
+		view.isNotifyEnabled = false
 
 		view.selectedTaskTypeId = task.type
 		view.inputs = task.input
@@ -534,6 +549,12 @@ export async function openAssistantTask(
 					lastTask = updatedTask
 					return
 				}
+
+				getNotifyReady(task.id).then(response => {
+					view.isNotifyEnabled = !!response.data?.ocs?.data?.id
+				}).catch(error => {
+					console.error('[assistant] get task notification status error', error)
+				})
 
 				view.loading = true
 				view.showSyncTaskRunning = true
