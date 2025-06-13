@@ -36,8 +36,8 @@ import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
 
 import AssistantIcon from './icons/AssistantIcon.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 export default {
 	name: 'ScheduledEmptyContent',

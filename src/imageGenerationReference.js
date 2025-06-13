@@ -3,24 +3,26 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { registerCustomPickerElement, NcCustomPickerRenderResult } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { registerCustomPickerElement, NcCustomPickerRenderResult } from '@nextcloud/vue/components/NcRichText'
 
 registerCustomPickerElement('assistant_image_generation', async (el, { providerId, accessible }) => {
-	const { default: Vue } = await import('vue')
-	Vue.mixin({ methods: { t, n } })
+	const { createApp } = await import('vue')
 	const { default: ImageResultCustomPickerElement } = await import('./views/ImageResultCustomPickerElement.vue')
-	const Element = Vue.extend(ImageResultCustomPickerElement)
 
-	const vueElement = new Element({
-		propsData: {
+	const app = createApp(
+		ImageResultCustomPickerElement,
+		{
 			providerId,
 			accessible,
 			taskType: 'core:text2image',
 			outputKey: 'images',
 			multipleImages: true,
 		},
-	}).$mount(el)
-	return new NcCustomPickerRenderResult(vueElement.$el, vueElement)
+	)
+	app.mixin({ methods: { t, n } })
+	app.mount(el)
+
+	return new NcCustomPickerRenderResult(el, app)
 }, (el, renderResult) => {
-	renderResult.object.$destroy()
+	renderResult.object.unmount()
 })

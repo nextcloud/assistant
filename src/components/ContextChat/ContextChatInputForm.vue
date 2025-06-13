@@ -21,7 +21,7 @@
 			field-key="limit"
 			:value="inputs.limit"
 			@update:value="onInputsChanged({ limit: $event })" />
-		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
+		<NcCheckboxRadioSwitch v-model="sccEnabled" @update:model-value="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}
 		</NcCheckboxRadioSwitch>
 		<div v-if="sccEnabled" class="line spaced">
@@ -50,7 +50,7 @@
 				</NcCheckboxRadioSwitch>
 			</div>
 			<NcButton
-				type="secondary"
+				variant="secondary"
 				:disabled="scopeListMetaArray.length === 0"
 				@click="onInputsChanged({ scopeListMeta: '[]'})">
 				<template #icon>
@@ -62,7 +62,7 @@
 		<div v-if="sccEnabled" class="selector-form">
 			<div v-if="inputs.scopeType === ScopeType.SOURCE" class="sources-form">
 				<NcButton
-					type="secondary"
+					variant="secondary"
 					@click="onChooseSourceClicked">
 					<template #icon>
 						<FileDocumentIcon />
@@ -134,11 +134,11 @@
 import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import PlaylistRemoveIcon from 'vue-material-design-icons/PlaylistRemove.vue'
 
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 import TextInput from '../fields/TextInput.vue'
 import NumberField from '../fields/NumberField.vue'
@@ -423,7 +423,7 @@ export default {
 
 	.selector-form {
 		margin-top: 16px;
-		:deep .avatardiv {
+		:deep(.avatardiv) {
 			border-radius: 50%;
 
 			&> img {
@@ -436,7 +436,7 @@ export default {
 				min-width: 400px;
 			}
 
-			:deep .avatardiv>img {
+			:deep(.avatardiv > img) {
 				filter: var(--background-invert-if-dark) !important;
 			}
 		}
@@ -444,7 +444,7 @@ export default {
 		.sources-form {
 			min-width: 400px;
 
-			:deep .vs__actions {
+			:deep(.vs__actions) {
 				display: none !important;
 			}
 		}

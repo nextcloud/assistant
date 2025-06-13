@@ -7,7 +7,7 @@
 		<NcAppNavigation>
 			<NcAppNavigationList>
 				<NcAppNavigationNew :text="t('assistant', 'New conversation')"
-					type="secondary"
+					variant="secondary"
 					@click="newSession">
 					<template #icon>
 						<PlusIcon :size="20" />
@@ -47,15 +47,15 @@
 			<div class="session-area__top-bar">
 				<div class="session-area__top-bar__title">
 					<EditableTextField v-if="active != null"
+						v-model:editing="editingTitle"
 						:initial-text="getSessionTitle(active)"
-						:editing.sync="editingTitle"
 						:placeholder="t('assistant', 'Conversation title')"
 						:loading="loading.updateTitle"
 						:max-length="100"
 						@submit-text="onEditSessionTitle" />
 				</div>
 				<div v-if="active != null" class="session-area__top-bar__actions">
-					<NcActions :open.sync="titleActionsOpen">
+					<NcActions v-model:open="titleActionsOpen">
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
 							<template #icon>
 								<PencilIcon :size="20" />
@@ -94,7 +94,7 @@
 						<NcButton
 							:aria-label="t('assistant', 'Load older messages')"
 							:disabled="loading.initialMessages || loading.olderMessages"
-							type="secondary"
+							variant="secondary"
 							@click="onLoadOlderMessages">
 							<template v-if="loading.olderMessages">
 								<NcLoadingIcon />
@@ -112,7 +112,7 @@
 						<NcButton
 							:aria-label="t('assistant', 'Retry response generation')"
 							:disabled="loading.initialMessages || loading.llmGeneration"
-							type="secondary"
+							variant="secondary"
 							@click="runGenerationTask(active.id)">
 							{{ t('assistant', 'Retry response generation') }}
 						</NcButton>
@@ -125,8 +125,8 @@
 				@confirm="onAgencyAnswer(true)"
 				@reject="onAgencyAnswer(false)" />
 			<InputArea ref="inputComponent"
+				v-model:chat-content="chatContent"
 				class="session-area__input-area"
-				:chat-content.sync="chatContent"
 				:loading="loading"
 				@submit="handleSubmit" />
 		</NcAppContent>
@@ -141,7 +141,7 @@
 					{{ t('assistant', 'Cancel') }}
 				</NcButton>
 				<NcButton
-					type="warning"
+					variant="warning"
 					@click="deleteSession(sessionIdToDelete)">
 					<template #icon>
 						<DeleteIcon />
@@ -161,16 +161,16 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import AssistantIcon from '../icons/AssistantIcon.vue'
 import DeleteIcon from '../icons/DeleteIcon.vue'
 
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
-import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
-import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
-import NcAppNavigationList from '@nextcloud/vue/dist/Components/NcAppNavigationList.js'
-import NcAppNavigationNew from '@nextcloud/vue/dist/Components/NcAppNavigationNew.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcAppNavigationList from '@nextcloud/vue/components/NcAppNavigationList'
+import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 import ConversationBox from './ConversationBox.vue'
 import EditableTextField from './EditableTextField.vue'
@@ -780,7 +780,7 @@ export default {
 	display: flex;
 	height: 100%;
 
-	:deep .app-navigation-new {
+	:deep(.app-navigation-new) {
 		padding: 0;
 	}
 
@@ -794,7 +794,7 @@ export default {
 		height: 100%;
 	}
 
-	:deep .app-navigation {
+	:deep(.app-navigation) {
 		--app-navigation-max-width: calc(100vw - (var(--app-navigation-padding) + 24px + var(--default-grid-baseline)));
 		background-color: var(--color-primary-element-light);
 		color: var(--color-primary-element-light-text);
@@ -808,24 +808,24 @@ export default {
 			margin-right: -49px !important;
 			top: var(--default-grid-baseline);
 		}
+	}
 
-		&--close {
-			.app-navigation-toggle-wrapper {
-				margin-right: -33px !important;
-			}
-		}
-
-		&--close ~ .session-area {
-			.session-area__chat-area, .session-area__input-area {
-				padding-left: 0 !important;
-			}
-			.session-area__top-bar {
-				padding-left: 36px !important;
-			}
+	:deep(.app-navigation--close) {
+		.app-navigation-toggle-wrapper {
+			margin-right: -33px !important;
 		}
 	}
 
-	:deep .app-navigation-list {
+	:deep(.app-navigation--close ~ .session-area) {
+		.session-area__chat-area, .session-area__input-area {
+			padding-left: 0 !important;
+		}
+		.session-area__top-bar {
+			padding-left: 36px !important;
+		}
+	}
+
+	:deep(.app-navigation-list) {
 		padding: var(--default-grid-baseline) !important;
 		box-sizing: border-box;
 		height: 100%;
