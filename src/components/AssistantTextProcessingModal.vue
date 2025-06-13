@@ -228,4 +228,13 @@ export default {
 		height: 100%;
 	}
 }
+
+// TODO: upstream the following by adding a `HideHeader` prop to the NcModal component
+:deep(.modal-header) {
+	display: none !important;
+}
+:deep(.modal-container) {
+	top: 0 !important;
+	height: 100% !important;
+}
 </style>
