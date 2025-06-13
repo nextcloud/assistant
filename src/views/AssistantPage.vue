@@ -36,6 +36,7 @@ import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 import AssistantTextProcessingForm from '../components/AssistantTextProcessingForm.vue'
 
 import { showError } from '@nextcloud/dialogs'
+import { emit } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
 import {
 	cancelTask,
@@ -131,6 +132,7 @@ export default {
 						}
 						this.loading = false
 						this.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 					})
@@ -195,6 +197,7 @@ export default {
 						// resolve(finishedTask)
 						this.loading = false
 						this.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('Assistant poll error', error)
 					})

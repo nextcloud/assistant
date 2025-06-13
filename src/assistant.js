@@ -5,6 +5,7 @@
 
 import { TASK_STATUS_STRING } from './constants.js'
 import { showError } from '@nextcloud/dialogs'
+import { emit } from '@nextcloud/event-bus'
 
 window.assistantPollTimerId = null
 
@@ -134,6 +135,7 @@ export async function openAssistantForm({
 						resolve(finishedTask)
 						view.loading = false
 						view.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 					})
@@ -205,6 +207,7 @@ export async function openAssistantForm({
 						// resolve(finishedTask)
 						view.loading = false
 						view.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 					})
@@ -508,6 +511,7 @@ export async function openAssistantTask(
 					// resolve(finishedTask)
 					view.loading = false
 					view.showSyncTaskRunning = false
+					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
 					view.outputs = null
@@ -577,6 +581,7 @@ export async function openAssistantTask(
 					// resolve(finishedTask)
 					view.loading = false
 					view.showSyncTaskRunning = false
+					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
 				})
