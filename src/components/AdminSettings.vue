@@ -18,7 +18,7 @@
 					:checked="state.assistant_enabled"
 					@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 					<div class="checkbox-text">
-						{{ t('assistant', 'Top-right assistant') }}
+						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
 					</div>
 				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.text_processing_available" type="info">
@@ -29,7 +29,7 @@
 					:disabled="!state.free_prompt_task_type_available"
 					@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 					<div class="checkbox-text">
-						{{ t('assistant', 'AI text generation smart picker') }}
+						{{ t('assistant', 'Enable AI text generation in smart picker') }}
 					</div>
 				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="info">
@@ -48,7 +48,7 @@
 					:disabled="!state.text_to_image_picker_available"
 					@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 					<div class="checkbox-text">
-						{{ t('assistant', 'Text-to-image smart picker') }}
+						{{ t('assistant', 'Enable text-to-image in smart picker') }}
 					</div>
 				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.text_to_image_picker_available" type="info">
@@ -67,7 +67,7 @@
 					:disabled="!state.speech_to_text_picker_available"
 					@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 					<div class="checkbox-text">
-						{{ t('assistant', 'Speech-to-text smart picker') }}
+						{{ t('assistant', 'Enable speech-to-text in smart picker') }}
 					</div>
 				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="info">
