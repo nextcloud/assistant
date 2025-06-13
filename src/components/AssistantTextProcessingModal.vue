@@ -23,22 +23,7 @@
 						<CloseIcon />
 					</template>
 				</NcButton>
-				<RunningEmptyContent
-					v-if="showSyncTaskRunning"
-					:description="shortInput"
-					:progress="progress"
-					:expected-runtime="expectedRuntime"
-					@background-notify="$emit('background-notify')"
-					@cancel="$emit('cancel-task')"
-					@back="onBackToAssistant" />
-				<ScheduledEmptyContent
-					v-else-if="showScheduleConfirmation"
-					:description="shortInput"
-					:show-close-button="true"
-					@close="onCancel"
-					@back="onBackToAssistant" />
 				<AssistantTextProcessingForm
-					v-else
 					class="form"
 					:selected-task-id="selectedTaskId"
 					:inputs="inputs"
@@ -46,11 +31,18 @@
 					:selected-task-type-id="selectedTaskTypeId"
 					:loading="loading"
 					:action-buttons="actionButtons"
+					:show-sync-task-running="showSyncTaskRunning"
+					:short-input="shortInput"
+					:progress="progress"
+					:expected-runtime="expectedRuntime"
+					:is-notify-enabled="isNotifyEnabled"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="$emit('try-again', $event)"
 					@load-task="$emit('load-task', $event)"
-					@new-task="$emit('new-task')" />
+					@new-task="$emit('new-task')"
+					@background-notify="$emit('background-notify', $event)"
+					@cancel-task="$emit('cancel-task')" />
 			</div>
 		</div>
 	</NcModal>
@@ -63,16 +55,12 @@ import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
-import RunningEmptyContent from './RunningEmptyContent.vue'
-import ScheduledEmptyContent from './ScheduledEmptyContent.vue'
 
 import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AssistantTextProcessingModal',
 	components: {
-		ScheduledEmptyContent,
-		RunningEmptyContent,
 		AssistantTextProcessingForm,
 		NcModal,
 		NcButton,
@@ -118,9 +106,9 @@ export default {
 			type: [Number, null],
 			default: null,
 		},
-		showScheduleConfirmation: {
+		isNotifyEnabled: {
 			type: Boolean,
-			required: true,
+			default: false,
 		},
 		actionButtons: {
 			type: Array,
@@ -137,7 +125,6 @@ export default {
 		'try-again',
 		'load-task',
 		'new-task',
-		'back-to-assistant',
 	],
 	data() {
 		return {
@@ -167,9 +154,6 @@ export default {
 		}
 	},
 	methods: {
-		onBackToAssistant() {
-			this.$emit('back-to-assistant')
-		},
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')
