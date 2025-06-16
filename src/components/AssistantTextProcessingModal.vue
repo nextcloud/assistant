@@ -28,8 +28,8 @@
 					:description="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
-					@background-notify="$emit('background-notify')"
-					@cancel="$emit('cancel-task')"
+					@background-notify="onBackgroundNotify"
+					@cancel="onCancelTask"
 					@back="onBackToAssistant" />
 				<ScheduledEmptyContent
 					v-else-if="showScheduleConfirmation"
@@ -165,6 +165,14 @@ export default {
 			this.show = false
 			this.$emit('cancel')
 			this.$el.dispatchEvent(new CustomEvent('cancel', { bubbles: true }))
+		},
+		onCancelTask() {
+			this.$emit('cancel-task')
+			this.$el.dispatchEvent(new CustomEvent('cancel-task', { bubbles: true }))
+		},
+		onBackgroundNotify() {
+			this.$emit('background-notify')
+			this.$el.dispatchEvent(new CustomEvent('background-notify', { bubbles: true }))
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
