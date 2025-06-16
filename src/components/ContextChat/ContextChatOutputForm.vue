@@ -16,7 +16,7 @@
 				{{ outputShape.sources.description }}
 			</label>
 			<NcSelect
-				:value="sources"
+				:model-value="sources"
 				:placeholder="t('assistant', 'No sources referenced')"
 				:multiple="true"
 				:close-on-select="false"

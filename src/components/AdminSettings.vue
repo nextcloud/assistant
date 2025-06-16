@@ -15,8 +15,8 @@
 					{{ t('assistant', 'Select which features you want to enable') }}
 				</h3>
 				<NcCheckboxRadioSwitch
-					:checked="state.assistant_enabled"
-					@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
+					:model-value="state.assistant_enabled"
+					@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
 					</div>
@@ -25,9 +25,9 @@
 					{{ t('assistant', 'To be able to use this feature, please install at least one AI task processing provider.') }}
 				</NcNoteCard>
 				<NcCheckboxRadioSwitch
-					:checked="state.free_prompt_picker_enabled"
+					:model-value="state.free_prompt_picker_enabled"
 					:disabled="!state.free_prompt_task_type_available"
-					@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+					@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Enable AI text generation in smart picker') }}
 					</div>
@@ -44,9 +44,9 @@
 					</div>
 				</NcNoteCard>
 				<NcCheckboxRadioSwitch
-					:checked="state.text_to_image_picker_enabled"
+					:model-value="state.text_to_image_picker_enabled"
 					:disabled="!state.text_to_image_picker_available"
-					@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+					@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Enable text-to-image in smart picker') }}
 					</div>
@@ -63,9 +63,9 @@
 					</div>
 				</NcNoteCard>
 				<NcCheckboxRadioSwitch
-					:checked="state.speech_to_text_picker_enabled"
+					:model-value="state.speech_to_text_picker_enabled"
 					:disabled="!state.speech_to_text_picker_available"
-					@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+					@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 					<div class="checkbox-text">
 						{{ t('assistant', 'Enable speech-to-text in smart picker') }}
 					</div>
