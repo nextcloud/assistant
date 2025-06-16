@@ -3,7 +3,9 @@ OC.L10N.register(
     {
     "Send an email" : "Изпращане на имейл",
     "User not found" : "Потребителят не е намерен ",
+    "Nextcloud Assistant" : "Асистент на \"Nextcloud\"",
     "AI image generation" : "Генериране на изображение с помощта на изкуствен интелект",
+    "Nextcloud Deck" : "Nextcloud Deck",
     "OpenStreetMap" : "Приложение OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud Имейл",
     "OpenProject" : "OpenProject",
