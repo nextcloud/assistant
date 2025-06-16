@@ -30,22 +30,22 @@
 				class="radios">
 				<NcCheckboxRadioSwitch
 					type="radio"
-					:checked="inputs.scopeType"
+					:model-value="inputs.scopeType"
 					:value="ScopeType.SOURCE"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
 					name="scopeType"
-					@update:checked="onScopeTypeChanged(ScopeType.SOURCE)">
+					@update:model-value="onScopeTypeChanged(ScopeType.SOURCE)">
 					{{ tStrings[ScopeType.SOURCE] }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					type="radio"
-					:checked="inputs.scopeType"
+					:model-value="inputs.scopeType"
 					:value="ScopeType.PROVIDER"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
 					name="scopeType"
-					@update:checked="onScopeTypeChanged(ScopeType.PROVIDER)">
+					@update:model-value="onScopeTypeChanged(ScopeType.PROVIDER)">
 					{{ tStrings[ScopeType.PROVIDER] }}
 				</NcCheckboxRadioSwitch>
 			</div>
@@ -70,7 +70,7 @@
 					{{ tStrings['Choose Files/Folders'] }}
 				</NcButton>
 				<NcSelect v-if="scopeListMetaArray.length > 0"
-					:value="scopeListMetaArray"
+					:model-value="scopeListMetaArray"
 					class="line"
 					:placeholder="tStrings[ScopeType.SOURCE]"
 					:multiple="true"
@@ -78,7 +78,7 @@
 					:dropdown-should-open="() => false"
 					:label-outside="true"
 					:no-wrap="false"
-					@input="onScopeListChange">
+					@update:model-value="onScopeListChange">
 					<template #selected-option="option">
 						<NcAvatar
 							:size="24"
@@ -92,7 +92,7 @@
 			</div>
 			<div v-else class="providers-form">
 				<NcSelect
-					:value="scopeListMetaArray"
+					:model-value="scopeListMetaArray"
 					:placeholder="tStrings[ScopeType.PROVIDER]"
 					:multiple="true"
 					:close-on-select="false"
@@ -101,7 +101,7 @@
 					:label-outside="true"
 					:append-to-body="false"
 					:options="providerOptions"
-					@input="onScopeListChange">
+					@update:model-value="onScopeListChange">
 					<template #option="option">
 						<div class="select-option">
 							<NcAvatar

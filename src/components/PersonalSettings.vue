@@ -10,29 +10,29 @@
 		</h2>
 		<div id="assistant-content">
 			<NcCheckboxRadioSwitch v-if="state.assistant_available"
-				:checked="state.assistant_enabled"
-				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
+				:model-value="state.assistant_enabled"
+				@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Top-right assistant') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.free_prompt_picker_available"
-				:checked="state.free_prompt_picker_enabled"
-				@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+				:model-value="state.free_prompt_picker_enabled"
+				@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'AI text generation smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
-				:checked="state.text_to_image_picker_enabled"
-				@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+				:model-value="state.text_to_image_picker_enabled"
+				@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'AI image generation smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.speech_to_text_picker_available"
-				:checked="state.speech_to_text_picker_enabled"
-				@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+				:model-value="state.speech_to_text_picker_enabled"
+				@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'AI transcription smart picker') }}
 				</div>
