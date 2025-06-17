@@ -435,18 +435,24 @@ export default {
 				|| this.myInputs?.source_input // used in context write
 				|| this.myInputs?.text // used in document generation
 
+			if (typeof lastInput === 'string' || lastInput instanceof String) {
+				OCA.Assistant.last_text_input = lastInput
+			}
+
 			this.$refs?.translateForm?.setDefaultValues(true)
 			this.$refs?.assistantFormInputs?.setDefaultValues(true)
 
-			// keep last prompt if new task type has text input
-			if (lastInput && this.selectedTaskType?.inputShape?.input) {
-				this.myInputs.input = lastInput
-			}
-			if (lastInput && this.selectedTaskType?.inputShape?.source_input) {
-				this.myInputs.source_input = lastInput
-			}
-			if (lastInput && this.selectedTaskType?.inputShape?.text) {
-				this.myInputs.text = lastInput
+			// keep last prompt if it's a string and if the new task type has text input
+			if (OCA.Assistant.last_text_input) {
+				if (this.selectedTaskType?.inputShape?.input && this.selectedTaskType?.inputShape?.input.type === SHAPE_TYPE_NAMES.Text) {
+					this.myInputs.input = OCA.Assistant.last_text_input
+				}
+				if (this.selectedTaskType?.inputShape?.source_input && this.selectedTaskType?.inputShape?.source_input.type === SHAPE_TYPE_NAMES.Text) {
+					this.myInputs.source_input = OCA.Assistant.last_text_input
+				}
+				if (this.selectedTaskType?.inputShape?.text && this.selectedTaskType?.inputShape?.text.type === SHAPE_TYPE_NAMES.Text) {
+					this.myInputs.text = OCA.Assistant.last_text_input
+				}
 			}
 		},
 		onSyncSubmit() {
