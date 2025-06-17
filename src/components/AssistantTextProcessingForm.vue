@@ -153,6 +153,7 @@ import { SHAPE_TYPE_NAMES } from '../constants.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
+import '@nextcloud/dialogs/style.css'
 
 const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
 
