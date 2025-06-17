@@ -9,6 +9,7 @@
 			:accept="fileInputAccept"
 			:multiple="multiple"
 			style="display: none;"
+			@cancel.stop="onCancel"
 			@change="onUploadFileSelected">
 		<NcButton
 			v-bind="$attrs"
@@ -87,6 +88,9 @@ export default {
 	},
 
 	methods: {
+		onCancel() {
+			console.debug('[assistant] file upload cancel')
+		},
 		onUploadFile() {
 			this.$refs.fileInput.click()
 		},
