@@ -76,7 +76,7 @@ OCA.Assistant.openAssistantForm({
 		{
 			label: 'Label 1',
 			title: 'Title 1',
-			type: 'warning',
+			variant: 'warning',
 			iconSvg: cogSvg,
 			onClick: (output) => { console.debug('first button clicked', output) },
 		},

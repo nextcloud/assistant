@@ -23,7 +23,7 @@ window.assistantPollTimerId = null
  *    {
  *      label: 'Label 1',
  *      title: 'Title 1',
- *      type: 'warning',
+ *      variant: 'warning',
  *      iconSvg: cogSvg,
  *      onClick: (outputs) => { console.debug('first button clicked', outputs) },
  *    },
