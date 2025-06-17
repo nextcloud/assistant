@@ -21,7 +21,7 @@
 			field-key="limit"
 			:value="inputs.limit"
 			@update:value="onInputsChanged({ limit: $event })" />
-		<NcCheckboxRadioSwitch :checked.sync="sccEnabled" @update:checked="onUpdateSccEnabled">
+		<NcCheckboxRadioSwitch v-model="sccEnabled" @update:model-value="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}
 		</NcCheckboxRadioSwitch>
 		<div v-if="sccEnabled" class="line spaced">
@@ -30,27 +30,27 @@
 				class="radios">
 				<NcCheckboxRadioSwitch
 					type="radio"
-					:checked="inputs.scopeType"
+					:model-value="inputs.scopeType"
 					:value="ScopeType.SOURCE"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
 					name="scopeType"
-					@update:checked="onScopeTypeChanged(ScopeType.SOURCE)">
+					@update:model-value="onScopeTypeChanged(ScopeType.SOURCE)">
 					{{ tStrings[ScopeType.SOURCE] }}
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					type="radio"
-					:checked="inputs.scopeType"
+					:model-value="inputs.scopeType"
 					:value="ScopeType.PROVIDER"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
 					name="scopeType"
-					@update:checked="onScopeTypeChanged(ScopeType.PROVIDER)">
+					@update:model-value="onScopeTypeChanged(ScopeType.PROVIDER)">
 					{{ tStrings[ScopeType.PROVIDER] }}
 				</NcCheckboxRadioSwitch>
 			</div>
 			<NcButton
-				type="secondary"
+				variant="secondary"
 				:disabled="scopeListMetaArray.length === 0"
 				@click="onInputsChanged({ scopeListMeta: '[]'})">
 				<template #icon>
@@ -62,7 +62,7 @@
 		<div v-if="sccEnabled" class="selector-form">
 			<div v-if="inputs.scopeType === ScopeType.SOURCE" class="sources-form">
 				<NcButton
-					type="secondary"
+					variant="secondary"
 					@click="onChooseSourceClicked">
 					<template #icon>
 						<FileDocumentIcon />
@@ -70,7 +70,7 @@
 					{{ tStrings['Choose Files/Folders'] }}
 				</NcButton>
 				<NcSelect v-if="scopeListMetaArray.length > 0"
-					:value="scopeListMetaArray"
+					:model-value="scopeListMetaArray"
 					class="line"
 					:placeholder="tStrings[ScopeType.SOURCE]"
 					:multiple="true"
@@ -78,7 +78,7 @@
 					:dropdown-should-open="() => false"
 					:label-outside="true"
 					:no-wrap="false"
-					@input="onScopeListChange">
+					@update:model-value="onScopeListChange">
 					<template #selected-option="option">
 						<NcAvatar
 							:size="24"
@@ -92,7 +92,7 @@
 			</div>
 			<div v-else class="providers-form">
 				<NcSelect
-					:value="scopeListMetaArray"
+					:model-value="scopeListMetaArray"
 					:placeholder="tStrings[ScopeType.PROVIDER]"
 					:multiple="true"
 					:close-on-select="false"
@@ -101,7 +101,7 @@
 					:label-outside="true"
 					:append-to-body="false"
 					:options="providerOptions"
-					@input="onScopeListChange">
+					@update:model-value="onScopeListChange">
 					<template #option="option">
 						<div class="select-option">
 							<NcAvatar
@@ -134,11 +134,11 @@
 import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import PlaylistRemoveIcon from 'vue-material-design-icons/PlaylistRemove.vue'
 
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcNoteCard from '@nextcloud/vue/dist/Components/NcNoteCard.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 import TextInput from '../fields/TextInput.vue'
 import NumberField from '../fields/NumberField.vue'
@@ -193,7 +193,7 @@ const picker = (callback) => getFilePickerBuilder(_tStrings[_ScopeType.SOURCE])
 	.addButton({
 		id: 'choose-ff',
 		label: _tStrings.Choose,
-		type: 'primary',
+		variant: 'primary',
 		callback,
 	})
 	.build()
@@ -423,7 +423,7 @@ export default {
 
 	.selector-form {
 		margin-top: 16px;
-		:deep .avatardiv {
+		:deep(.avatardiv) {
 			border-radius: 50%;
 
 			&> img {
@@ -436,7 +436,7 @@ export default {
 				min-width: 400px;
 			}
 
-			:deep .avatardiv>img {
+			:deep(.avatardiv > img) {
 				filter: var(--background-invert-if-dark) !important;
 			}
 		}
@@ -444,7 +444,7 @@ export default {
 		.sources-form {
 			min-width: 400px;
 
-			:deep .vs__actions {
+			:deep(.vs__actions) {
 				display: none !important;
 			}
 		}

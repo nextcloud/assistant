@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 import AssistantIcon from './icons/AssistantIcon.vue'
 

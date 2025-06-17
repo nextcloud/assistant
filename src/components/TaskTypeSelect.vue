@@ -7,7 +7,7 @@
 		class="task-type-select">
 		<NcButton v-for="(t, i) in buttonTypes"
 			:key="i + t.id"
-			:type="getButtonType(t)"
+			:variant="getButtonType(t)"
 			:title="t.description"
 			@click="onTaskSelected(t)">
 			{{ t.name }}
@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 
 export default {
 	name: 'TaskTypeSelect',
@@ -45,7 +45,7 @@ export default {
 	},
 
 	props: {
-		value: {
+		modelValue: {
 			type: [String, null],
 			default: null,
 		},
@@ -64,7 +64,7 @@ export default {
 	},
 
 	emits: [
-		'update:value',
+		'update:model-value',
 	],
 
 	data() {
@@ -94,7 +94,7 @@ export default {
 			if (this.extraButtonType !== null) {
 				// the extra button replaces the last one so we need the last one as an action
 				// take all non-inline options that are not selected and that are not the extra button
-				const types = this.options.slice(this.inline).filter(t => t.id !== this.value && t.id !== this.extraButtonType.id)
+				const types = this.options.slice(this.inline).filter(t => t.id !== this.modelValue && t.id !== this.extraButtonType.id)
 				// add the one that was a button and that has been replaced
 				if (this.extraButtonType.id !== this.options[this.inline - 1].id) {
 					types.unshift(this.options[this.inline - 1])
@@ -122,18 +122,18 @@ export default {
 				return
 			}
 			// if the initially selected value is in the dropdown, get it out
-			const selectedAction = this.actionTypes.find(a => a.id === this.value)
-			if (this.actionTypes.find(a => a.id === this.value)) {
+			const selectedAction = this.actionTypes.find(a => a.id === this.modelValue)
+			if (this.actionTypes.find(a => a.id === this.modelValue)) {
 				this.extraButtonType = selectedAction
 			}
 		},
 		getButtonType(taskType) {
-			return taskType.id === this.value
+			return taskType.id === this.modelValue
 				? 'primary'
 				: 'secondary'
 		},
 		onTaskSelected(taskType) {
-			this.$emit('update:value', taskType.id)
+			this.$emit('update:model-value', taskType.id)
 		},
 		onMenuTaskSelected(taskType) {
 			this.extraButtonType = taskType

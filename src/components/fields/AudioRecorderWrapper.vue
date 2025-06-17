@@ -14,7 +14,7 @@
 			{{ t('assistant', 'Start recording') }}
 		</NcButton>
 		<NcButton v-if="isRecording"
-			type="error"
+			variant="error"
 			:title="t('assistant', 'Dismiss recording')"
 			@click="abortRecording">
 			<template #icon>
@@ -28,7 +28,7 @@
 			</span>
 		</div>
 		<NcButton v-if="isRecording"
-			type="success"
+			variant="success"
 			:title="t('assistant', 'End recording and send')"
 			@click="stop">
 			<template #icon>
@@ -43,7 +43,7 @@ import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { showError } from '@nextcloud/dialogs'
 

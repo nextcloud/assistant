@@ -61,7 +61,7 @@ export default {
 				{
 					label: t('assistant', 'Submit'),
 					title: t('assistant', 'Submit the current task\'s result'),
-					type: 'primary',
+					variant: 'primary',
 					iconSvg: checkSvg,
 					onClick: (task) => {
 						this.submit(task)
@@ -93,7 +93,8 @@ export default {
 						const token = r.data.ocs.data.shareToken
 						return window.location.protocol + '//' + window.location.host + generateUrl('/s/{token}', { token })
 					})
-					this.$emit('submit', shareLinks.join('\n'))
+					this.$emit('submit', shareLinks.join('\n\n'))
+					this.$el.dispatchEvent(new CustomEvent('submit', { detail: shareLinks.join('\n\n'), bubbles: true }))
 				})
 		},
 		shareFile(fileId, taskId) {

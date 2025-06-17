@@ -12,9 +12,9 @@
 			:use-extended-markdown="true" />
 		<NcTextField v-else
 			ref="ncTextField"
-			v-tooltip="t('assistant', 'The text must be shorter than or equal to {maxLength} characters, currently {length}', { maxLength, length: text.length })"
+			v-model="text"
+			:title="t('assistant', 'The text must be shorter than or equal to {maxLength} characters, currently {length}', { maxLength, length: text.length })"
 			dir="auto"
-			:value.sync="text"
 			:maxlength="maxLength"
 			:disabled="loading"
 			:placeholder="placeholder"
@@ -23,14 +23,14 @@
 			@keydown.esc="handleCancelEditing" />
 		<template v-if="!loading">
 			<template v-if="editing">
-				<NcButton type="tertiary"
+				<NcButton variant="tertiary"
 					:aria-label="t('assistant', 'Cancel editing')"
 					@click="handleCancelEditing">
 					<template #icon>
 						<Close :size="20" />
 					</template>
 				</NcButton>
-				<NcButton type="primary"
+				<NcButton variant="primary"
 					:aria-label="t('assistant', 'Submit')"
 					:disabled="!canSubmit"
 					@click="handleSubmitText">
@@ -48,10 +48,9 @@
 import Check from 'vue-material-design-icons/Check.vue'
 import Close from 'vue-material-design-icons/Close.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
-import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
-import Tooltip from '@nextcloud/vue/dist/Directives/Tooltip.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import { NcRichText } from '@nextcloud/vue/components/NcRichText'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 import { parseSpecialSymbols } from '../../utils.js'
 
@@ -63,10 +62,6 @@ export default {
 		NcButton,
 		NcTextField,
 		NcRichText,
-	},
-
-	directives: {
-		Tooltip,
 	},
 
 	props: {
@@ -186,6 +181,9 @@ export default {
 		padding: 10px;
 		margin: 0 !important;
 		line-height: var(--default-line-height) !important;
+		:deep(p) {
+			margin-block-end: unset !important;
+		}
 	}
 
 }

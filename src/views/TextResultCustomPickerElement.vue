@@ -54,10 +54,11 @@ export default {
 				{
 					label: t('assistant', 'Submit'),
 					title: t('assistant', 'Submit the current task\'s result'),
-					type: 'primary',
+					variant: 'primary',
 					iconSvg: checkSvg,
 					onClick: (task) => {
 						this.$emit('submit', task.output[this.outputKey] ?? '')
+						this.$el.dispatchEvent(new CustomEvent('submit', { detail: task.output[this.outputKey] ?? '', bubbles: true }))
 					},
 				},
 			],
