@@ -218,6 +218,10 @@ export async function openAssistantForm({
 		})
 		view.$on('new-task', () => {
 			console.debug('[assistant] new task')
+			cancelTaskPolling()
+			view.loading = false
+			view.showSyncTaskRunning = false
+			view.isNotifyEnabled = false
 			view.outputs = null
 			view.selectedTaskId = null
 			lastTask = null
@@ -592,6 +596,10 @@ export async function openAssistantTask(
 	})
 	view.$on('new-task', () => {
 		console.debug('[assistant] new task')
+		cancelTaskPolling()
+		view.loading = false
+		view.showSyncTaskRunning = false
+		view.isNotifyEnabled = false
 		view.outputs = null
 		view.selectedTaskId = null
 		lastTask = null

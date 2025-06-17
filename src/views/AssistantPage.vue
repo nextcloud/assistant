@@ -207,6 +207,10 @@ export default {
 			}
 		},
 		onNewTask() {
+			cancelTaskPolling()
+			this.loading = false
+			this.showSyncTaskRunning = false
+			this.isNotifyEnabled = false
 			this.task.status = TASK_STATUS_STRING.unknown
 			this.task.output = null
 			this.task.id = null
