@@ -193,7 +193,7 @@ const picker = (callback) => getFilePickerBuilder(_tStrings[_ScopeType.SOURCE])
 	.addButton({
 		id: 'choose-ff',
 		label: _tStrings.Choose,
-		type: 'primary',
+		variant: 'primary',
 		callback,
 	})
 	.build()
