@@ -61,7 +61,7 @@ export default {
 				{
 					label: t('assistant', 'Submit'),
 					title: t('assistant', 'Submit the current task\'s result'),
-					type: 'primary',
+					variant: 'primary',
 					iconSvg: checkSvg,
 					onClick: (task) => {
 						this.submit(task)

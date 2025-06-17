@@ -106,7 +106,7 @@
 							<NcButton
 								v-for="(b, i) in actionButtonsToShow"
 								:key="i"
-								:variant="b.type ?? 'secondary'"
+								:variant="b.variant ?? b.type ?? 'secondary'"
 								:title="b.title"
 								@click="onActionButtonClick(b)">
 								{{ b.label }}
