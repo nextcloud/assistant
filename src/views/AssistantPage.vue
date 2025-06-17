@@ -156,6 +156,7 @@ export default {
 		onLoadTask(task) {
 			cancelTaskPolling()
 			this.showSyncTaskRunning = false
+			this.loading = false
 
 			this.task.type = task.type
 			this.task.input = task.input

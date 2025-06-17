@@ -160,6 +160,7 @@ export async function openAssistantForm({
 			cancelTaskPolling()
 			view.showSyncTaskRunning = false
 			view.isNotifyEnabled = false
+			view.loading = false
 
 			view.selectedTaskTypeId = task.type
 			view.inputs = task.input
@@ -538,6 +539,7 @@ export async function openAssistantTask(
 		cancelTaskPolling()
 		view.showSyncTaskRunning = false
 		view.isNotifyEnabled = false
+		view.loading = false
 
 		view.selectedTaskTypeId = task.type
 		view.inputs = task.input
