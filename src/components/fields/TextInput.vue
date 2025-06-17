@@ -73,7 +73,7 @@ const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose
 	.addButton({
 		id: 'choose-input-file',
 		label: t('assistant', 'Choose'),
-		type: 'primary',
+		variant: 'primary',
 		callback: callback(target),
 	})
 	.build()

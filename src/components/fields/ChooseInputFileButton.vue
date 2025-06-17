@@ -61,7 +61,7 @@ export default {
 				.addButton({
 					id: 'choose-input-file',
 					label: t('assistant', 'Choose'),
-					type: 'primary',
+					variant: 'primary',
 					callback: callback(),
 				})
 				.build(),
