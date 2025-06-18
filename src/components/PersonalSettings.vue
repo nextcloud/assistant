@@ -13,28 +13,28 @@
 				:checked="state.assistant_enabled"
 				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'Top-right assistant') }}
+					{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.free_prompt_picker_available"
 				:checked="state.free_prompt_picker_enabled"
 				@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'AI text generation smart picker') }}
+					{{ t('assistant', 'Enable AI text generation in smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
 				:checked="state.text_to_image_picker_enabled"
 				@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'AI image generation smart picker') }}
+					{{ t('assistant', 'Enable AI image generation in smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.speech_to_text_picker_available"
 				:checked="state.speech_to_text_picker_enabled"
 				@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 				<div class="checkbox-text">
-					{{ t('assistant', 'AI transcription smart picker') }}
+					{{ t('assistant', 'Enable AI transcription in smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<div v-if="noProvidersAvailable" class="settings-hint">
@@ -46,11 +46,12 @@
 			<div v-else>
 				<h3>{{ t('assistant', 'Configured backends') }}</h3>
 				<p>{{ t('assistant', 'The following services are used as backends for Nextcloud Assistant:') }}</p>
-				<ul>
-					<li v-for="(providerName, taskName) in providers" :key="taskName">
-						{{ t('assistant', '{providerName} for {taskName}', { providerName, taskName }, null, { escape: false }) }}
-					</li>
-				</ul>
+				<template v-for="(taskNames, providerName) in providers">
+					<h5 :key="providerName">
+						{{ providerName }}
+					</h5>
+					{{ taskNames.join(', ') }}
+				</template>
 			</div>
 		</div>
 	</div>
