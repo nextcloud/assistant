@@ -36,6 +36,7 @@ import TaskListItem from './TaskListItem.vue'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 import axios from '@nextcloud/axios'
+import { subscribe, unsubscribe } from '@nextcloud/event-bus'
 import { generateOcsUrl } from '@nextcloud/router'
 
 import { TASK_STATUS_STRING } from '../constants.js'
@@ -105,6 +106,11 @@ export default {
 
 	mounted() {
 		this.getTasks()
+		subscribe('assistant:task:updated', this.updateTask)
+	},
+
+	beforeDestroy() {
+		unsubscribe('assistant:task:updated', this.updateTask)
 	},
 
 	methods: {
@@ -123,6 +129,12 @@ export default {
 			}).then(() => {
 				this.$emit('update:loading', false)
 			})
+		},
+		updateTask(task) {
+			const taskToUpdate = this.tasks.find(t => t.id === task.id)
+			if (taskToUpdate) {
+				Object.assign(taskToUpdate, task)
+			}
 		},
 		onTaskDelete(task) {
 			const url = generateOcsUrl('taskprocessing/task/{id}', { id: task.id })

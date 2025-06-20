@@ -5,6 +5,7 @@
 
 import { TASK_STATUS_STRING } from './constants.js'
 import { showError } from '@nextcloud/dialogs'
+import { emit } from '@nextcloud/event-bus'
 
 window.assistantPollTimerId = null
 
@@ -90,7 +91,6 @@ export async function openAssistantForm({
 				isInsideViewer,
 				inputs: input ? { prompt: input } : inputs,
 				selectedTaskTypeId,
-				showScheduleConfirmation: false,
 				showSyncTaskRunning: false,
 				actionButtons,
 			},
@@ -104,6 +104,7 @@ export async function openAssistantForm({
 		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 			view.loading = true
 			view.showSyncTaskRunning = true
+			view.isNotifyEnabled = false
 			view.progress = null
 			view.expectedRuntime = null
 			view.inputs = inputs
@@ -113,6 +114,7 @@ export async function openAssistantForm({
 				.then((response) => {
 					const task = response.data?.ocs?.data?.task
 					lastTask = task
+					view.selectedTaskId = lastTask?.id
 					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 					const setProgress = (progress) => {
 						view.progress = progress
@@ -124,7 +126,6 @@ export async function openAssistantForm({
 								view.$destroy()
 							} else {
 								view.outputs = finishedTask?.output
-								view.selectedTaskId = finishedTask?.id
 							}
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
@@ -134,6 +135,7 @@ export async function openAssistantForm({
 						resolve(finishedTask)
 						view.loading = false
 						view.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 					})
@@ -154,78 +156,91 @@ export async function openAssistantForm({
 			syncSubmit(task.input, task.type)
 		})
 		view.$on('load-task', (task) => {
-			if (!view.loading) {
-				console.debug('[assistant] loading task', task)
-				cancelTaskPolling()
+			console.debug('[assistant] loading task', task)
+			cancelTaskPolling()
+			view.showSyncTaskRunning = false
+			view.isNotifyEnabled = false
+			view.loading = false
 
-				view.selectedTaskTypeId = task.type
-				view.inputs = task.input
-				view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
-				view.selectedTaskId = task.id
-				lastTask = task
+			view.selectedTaskTypeId = task.type
+			view.inputs = task.input
+			view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
+			view.selectedTaskId = task.id
+			lastTask = task
 
-				if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
-					getTask(task.id).then(response => {
-						const updatedTask = response.data?.ocs?.data?.task
+			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
+				getTask(task.id).then(response => {
+					const updatedTask = response.data?.ocs?.data?.task
 
-						if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
-							view.selectedTaskTypeId = updatedTask.type
-							view.inputs = updatedTask.input
-							view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
-							view.selectedTaskId = updatedTask.id
-							lastTask = updatedTask
-							return
-						}
+					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
+						view.selectedTaskTypeId = updatedTask.type
+						view.inputs = updatedTask.input
+						view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
+						view.selectedTaskId = updatedTask.id
+						lastTask = updatedTask
+						return
+					}
 
-						view.loading = true
-						view.showSyncTaskRunning = true
-						view.progress = null
-						view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
-
-						const setProgress = (progress) => {
-							view.progress = progress
-						}
-						pollTask(updatedTask.id, setProgress).then(finishedTask => {
-							console.debug('pollTask.then', finishedTask)
-							if (finishedTask.status === TASK_STATUS_STRING.successful) {
-								view.outputs = finishedTask?.output
-								view.selectedTaskId = finishedTask?.id
-							} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-								showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
-								console.error('[assistant] Task failed', finishedTask)
-								view.outputs = null
-							}
-							// resolve(finishedTask)
-							view.loading = false
-							view.showSyncTaskRunning = false
-						}).catch(error => {
-							console.debug('[assistant] poll error', error)
-						})
+					getNotifyReady(task.id).then(response => {
+						view.isNotifyEnabled = !!response.data?.ocs?.data?.id
 					}).catch(error => {
-						console.error(error)
+						console.error('[assistant] get task notification status error', error)
 					})
-				}
+
+					view.loading = true
+					view.showSyncTaskRunning = true
+					view.progress = null
+					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+
+					const setProgress = (progress) => {
+						view.progress = progress
+					}
+					pollTask(updatedTask.id, setProgress).then(finishedTask => {
+						console.debug('pollTask.then', finishedTask)
+						if (finishedTask.status === TASK_STATUS_STRING.successful) {
+							view.outputs = finishedTask?.output
+							view.selectedTaskId = finishedTask?.id
+						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+							console.error('[assistant] Task failed', finishedTask)
+							view.outputs = null
+						}
+						// resolve(finishedTask)
+						view.loading = false
+						view.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
+					}).catch(error => {
+						console.debug('[assistant] poll error', error)
+					})
+				}).catch(error => {
+					console.error(error)
+				})
 			}
 		})
 		view.$on('new-task', () => {
 			console.debug('[assistant] new task')
+			cancelTaskPolling()
+			view.loading = false
+			view.showSyncTaskRunning = false
+			view.isNotifyEnabled = false
 			view.outputs = null
 			view.selectedTaskId = null
 			lastTask = null
 		})
-		view.$on('background-notify', () => {
-			cancelTaskPolling()
-			view.showScheduleConfirmation = true
-			view.showSyncTaskRunning = false
-			view.loading = false
-			setNotifyReady(lastTask.id)
+		view.$on('background-notify', (enable) => {
+			setNotifyReady(lastTask.id, enable).then(res => {
+				view.isNotifyEnabled = enable
+			})
 		})
 		view.$on('cancel-task', () => {
 			cancelTaskPolling()
-			cancelTask(lastTask.id)
-			view.showSyncTaskRunning = false
-			view.loading = false
-			lastTask = null
+			setNotifyReady(lastTask.id, false)
+			cancelTask(lastTask.id).then(res => {
+				view.loading = false
+				view.showSyncTaskRunning = false
+				view.selectedTaskId = null
+				lastTask = null
+			})
 		})
 		view.$on('action-button-clicked', (data) => {
 			if (data.button?.onClick) {
@@ -233,14 +248,6 @@ export async function openAssistantForm({
 				data.button.onClick(lastTask)
 			}
 			view.$destroy()
-		})
-		view.$on('back-to-assistant', () => {
-			cancelTaskPolling()
-			view.showScheduleConfirmation = false
-			view.showSyncTaskRunning = false
-			view.loading = false
-			view.outputs = null
-			lastTask = null
 		})
 	})
 }
@@ -285,11 +292,20 @@ export async function getTask(taskId) {
 	return axios.get(url, { signal: window.assistantAbortController.signal })
 }
 
-export async function setNotifyReady(taskId) {
+export async function getNotifyReady(taskId) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/notify', { taskId })
-	return axios.post(url, {})
+	return axios.get(url, {})
+}
+
+export async function setNotifyReady(taskId, enable) {
+	const { default: axios } = await import('@nextcloud/axios')
+	const { generateOcsUrl } = await import('@nextcloud/router')
+	return axios({
+		method: enable ? 'post' : 'delete',
+		url: generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/notify', { taskId }),
+	})
 }
 
 export async function cancelTask(taskId) {
@@ -456,7 +472,6 @@ export async function openAssistantTask(
 			inputs: task.input,
 			outputs: task.output ?? {},
 			selectedTaskTypeId: task.type,
-			showScheduleConfirmation: false,
 			actionButtons,
 		},
 	}).$mount(modalMountPoint)
@@ -468,7 +483,6 @@ export async function openAssistantTask(
 	view.$on('submit', (data) => {
 		scheduleTask(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
 			.then((response) => {
-				view.showScheduleConfirmation = true
 				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
@@ -480,6 +494,7 @@ export async function openAssistantTask(
 	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 		view.loading = true
 		view.showSyncTaskRunning = true
+		view.isNotifyEnabled = false
 		view.expectedRuntime = null
 		view.inputs = inputs
 		view.selectedTaskTypeId = taskTypeId
@@ -488,11 +503,11 @@ export async function openAssistantTask(
 			.then((response) => {
 				const task = response.data?.ocs?.data?.task
 				lastTask = task
+				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 				pollTask(task.id).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
-						view.selectedTaskId = finishedTask?.id
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
 						console.error('[assistant] Task failed', finishedTask)
@@ -501,6 +516,7 @@ export async function openAssistantTask(
 					// resolve(finishedTask)
 					view.loading = false
 					view.showSyncTaskRunning = false
+					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
 					view.outputs = null
@@ -520,75 +536,90 @@ export async function openAssistantTask(
 		syncSubmit(task.input, task.type)
 	})
 	view.$on('load-task', (task) => {
-		if (!view.loading) {
-			cancelTaskPolling()
+		cancelTaskPolling()
+		view.showSyncTaskRunning = false
+		view.isNotifyEnabled = false
+		view.loading = false
 
-			view.selectedTaskTypeId = task.type
-			view.inputs = task.input
-			view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
-			view.selectedTaskId = task.id
-			lastTask = task
+		view.selectedTaskTypeId = task.type
+		view.inputs = task.input
+		view.outputs = task.status === TASK_STATUS_STRING.successful ? task.output : null
+		view.selectedTaskId = task.id
+		lastTask = task
 
-			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
-				getTask(task.id).then(response => {
-					const updatedTask = response.data?.ocs?.data?.task
+		if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
+			getTask(task.id).then(response => {
+				const updatedTask = response.data?.ocs?.data?.task
 
-					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
-						view.selectedTaskTypeId = updatedTask.type
-						view.inputs = updatedTask.input
-						view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
-						view.selectedTaskId = updatedTask.id
-						lastTask = updatedTask
-						return
-					}
+				if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
+					view.selectedTaskTypeId = updatedTask.type
+					view.inputs = updatedTask.input
+					view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
+					view.selectedTaskId = updatedTask.id
+					lastTask = updatedTask
+					return
+				}
 
-					view.loading = true
-					view.showSyncTaskRunning = true
-					view.progress = null
-					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
-
-					const setProgress = (progress) => {
-						view.progress = progress
-					}
-					pollTask(updatedTask.id, setProgress).then(finishedTask => {
-						console.debug('pollTask.then', finishedTask)
-						if (finishedTask.status === TASK_STATUS_STRING.successful) {
-							view.outputs = finishedTask?.output
-							view.selectedTaskId = finishedTask?.id
-						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
-							console.error('[assistant] Task failed', finishedTask)
-							view.outputs = null
-						}
-						// resolve(finishedTask)
-						view.loading = false
-						view.showSyncTaskRunning = false
-					}).catch(error => {
-						console.debug('[assistant] poll error', error)
-					})
+				getNotifyReady(task.id).then(response => {
+					view.isNotifyEnabled = !!response.data?.ocs?.data?.id
 				}).catch(error => {
-					console.error(error)
+					console.error('[assistant] get task notification status error', error)
 				})
-			}
+
+				view.loading = true
+				view.showSyncTaskRunning = true
+				view.progress = null
+				view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+
+				const setProgress = (progress) => {
+					view.progress = progress
+				}
+				pollTask(updatedTask.id, setProgress).then(finishedTask => {
+					console.debug('pollTask.then', finishedTask)
+					if (finishedTask.status === TASK_STATUS_STRING.successful) {
+						view.outputs = finishedTask?.output
+						view.selectedTaskId = finishedTask?.id
+					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+						console.error('[assistant] Task failed', finishedTask)
+						view.outputs = null
+					}
+					// resolve(finishedTask)
+					view.loading = false
+					view.showSyncTaskRunning = false
+					emit('assistant:task:updated', finishedTask)
+				}).catch(error => {
+					console.debug('[assistant] poll error', error)
+				})
+			}).catch(error => {
+				console.error(error)
+			})
 		}
 	})
 	view.$on('new-task', () => {
 		console.debug('[assistant] new task')
+		cancelTaskPolling()
+		view.loading = false
+		view.showSyncTaskRunning = false
+		view.isNotifyEnabled = false
 		view.outputs = null
 		view.selectedTaskId = null
 		lastTask = null
 	})
-	view.$on('background-notify', () => {
-		cancelTaskPolling()
-		view.showScheduleConfirmation = true
-		view.showSyncTaskRunning = false
-		setNotifyReady(lastTask.id)
+	view.$on('background-notify', (enable) => {
+		setNotifyReady(lastTask.id, enable).then(res => {
+			view.isNotifyEnabled = enable
+		})
 	})
 	view.$on('cancel-task', () => {
 		cancelTaskPolling()
-		cancelTask(lastTask.id)
-		view.showSyncTaskRunning = false
-		lastTask = null
+		setNotifyReady(lastTask.id, false)
+		cancelTask(lastTask.id).then(res => {
+			view.loading = false
+			view.showSyncTaskRunning = false
+			view.selectedTaskId = null
+			lastTask = null
+		})
 	})
 	view.$on('action-button-clicked', (data) => {
 		if (data.button?.onClick) {
@@ -596,14 +627,6 @@ export async function openAssistantTask(
 			data.button.onClick(lastTask)
 		}
 		view.$destroy()
-	})
-	view.$on('back-to-assistant', () => {
-		cancelTaskPolling()
-		view.showScheduleConfirmation = false
-		view.showSyncTaskRunning = false
-		view.loading = false
-		view.outputs = null
-		lastTask = null
 	})
 }
 

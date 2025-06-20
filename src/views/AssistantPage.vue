@@ -6,31 +6,24 @@
 	<NcContent app-name="assistant">
 		<NcAppContent>
 			<div class="assistant-wrapper">
-				<RunningEmptyContent
-					v-if="showSyncTaskRunning"
-					:description="shortInput"
-					:progress="progress"
-					:expected-runtime="expectedRuntime"
-					@background-notify="onBackgroundNotify"
-					@cancel="onCancel"
-					@back="onBackToAssistant" />
-				<ScheduledEmptyContent
-					v-else-if="showScheduleConfirmation"
-					:description="shortInput"
-					:show-close-button="false"
-					@back="onBackToAssistant" />
 				<AssistantTextProcessingForm
-					v-else
 					class="form"
 					:selected-task-id="task.id"
 					:inputs="task.input"
 					:outputs="task.output"
 					:selected-task-type-id="task.type"
 					:loading="loading"
+					:show-sync-task-running="showSyncTaskRunning"
+					:short-input="shortInput"
+					:progress="progress"
+					:expected-runtime="expectedRuntime"
+					:is-notify-enabled="isNotifyEnabled"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
 					@load-task="onLoadTask"
-					@new-task="onNewTask" />
+					@new-task="onNewTask"
+					@background-notify="onBackgroundNotify"
+					@cancel-task="onCancel" />
 			</div>
 		</NcAppContent>
 	</NcContent>
@@ -41,17 +34,17 @@ import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
 
 import AssistantTextProcessingForm from '../components/AssistantTextProcessingForm.vue'
-import RunningEmptyContent from '../components/RunningEmptyContent.vue'
-import ScheduledEmptyContent from '../components/ScheduledEmptyContent.vue'
 
 import { showError } from '@nextcloud/dialogs'
+import { emit } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
 import {
-	scheduleTask,
-	cancelTaskPolling,
 	cancelTask,
-	setNotifyReady,
+	cancelTaskPolling,
+	getTask,
 	pollTask,
+	scheduleTask,
+	setNotifyReady,
 } from '../assistant.js'
 import { TASK_STATUS_STRING } from '../constants.js'
 
@@ -59,8 +52,6 @@ export default {
 	name: 'AssistantPage',
 
 	components: {
-		ScheduledEmptyContent,
-		RunningEmptyContent,
 		AssistantTextProcessingForm,
 		NcContent,
 		NcAppContent,
@@ -74,8 +65,8 @@ export default {
 			task: loadState('assistant', 'task'),
 			showSyncTaskRunning: false,
 			progress: null,
-			showScheduleConfirmation: false,
 			loading: false,
+			isNotifyEnabled: false,
 		}
 	},
 
@@ -102,24 +93,23 @@ export default {
 	},
 
 	methods: {
-		onBackgroundNotify() {
-			cancelTaskPolling()
-			this.showScheduleConfirmation = true
-			this.showSyncTaskRunning = false
-			setNotifyReady(this.task.id)
-		},
-		onBackToAssistant() {
-			this.showSyncTaskRunning = false
-			this.showScheduleConfirmation = false
-			this.task.output = null
+		onBackgroundNotify(enable) {
+			setNotifyReady(this.task.id, enable).then(res => {
+				this.isNotifyEnabled = enable
+			})
 		},
 		onCancel() {
 			cancelTaskPolling()
-			cancelTask(this.task.id)
-			this.showSyncTaskRunning = false
+			setNotifyReady(this.task.id, false)
+			cancelTask(this.task.id).then(res => {
+				this.loading = false
+				this.showSyncTaskRunning = false
+				this.task.id = null
+			})
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.showSyncTaskRunning = true
+			this.isNotifyEnabled = false
 			this.progress = null
 			this.task.completionExpectedAt = null
 			this.task.scheduledAt = null
@@ -142,6 +132,7 @@ export default {
 						}
 						this.loading = false
 						this.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 					})
@@ -163,15 +154,64 @@ export default {
 			this.syncSubmit(task.input, task.type)
 		},
 		onLoadTask(task) {
-			if (this.loading === false) {
-				this.task.type = task.type
-				this.task.input = task.input
-				this.task.status = task.status
-				this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
-				this.task.id = task.id
+			cancelTaskPolling()
+			this.showSyncTaskRunning = false
+			this.loading = false
+
+			this.task.type = task.type
+			this.task.input = task.input
+			this.task.status = task.status
+			this.task.output = task.status === TASK_STATUS_STRING.successful ? task.output : null
+			this.task.id = task.id
+
+			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
+				getTask(task.id).then(response => {
+					const updatedTask = response.data?.ocs?.data?.task
+
+					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
+						this.selectedTaskTypeId = updatedTask.type
+						this.task.input = updatedTask.input
+						this.task.output = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
+						this.task.id = updatedTask.id
+						return
+					}
+
+					this.loading = true
+					this.showSyncTaskRunning = true
+					this.progress = null
+					this.task.completionExpectedAt = updatedTask.completionExpectedAt
+					this.task.scheduledAt = updatedTask.scheduledAt
+
+					const setProgress = (progress) => {
+						this.progress = progress
+					}
+					pollTask(updatedTask.id, setProgress).then(finishedTask => {
+						console.debug('pollTask.then', finishedTask)
+						if (finishedTask.status === TASK_STATUS_STRING.successful) {
+							this.task.output = finishedTask?.output
+							this.task.id = finishedTask?.id
+						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
+							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+							console.error('Assistant task failed', finishedTask)
+							this.task.output = null
+						}
+						// resolve(finishedTask)
+						this.loading = false
+						this.showSyncTaskRunning = false
+						emit('assistant:task:updated', finishedTask)
+					}).catch(error => {
+						console.debug('Assistant poll error', error)
+					})
+				}).catch(error => {
+					console.error(error)
+				})
 			}
 		},
 		onNewTask() {
+			cancelTaskPolling()
+			this.loading = false
+			this.showSyncTaskRunning = false
+			this.isNotifyEnabled = false
 			this.task.status = TASK_STATUS_STRING.unknown
 			this.task.output = null
 			this.task.id = null

@@ -37,7 +37,16 @@
 							@load-task="onHistoryLoadTask" />
 					</NcAppNavigationList>
 				</NcAppNavigation>
-				<NcAppContent class="session-area">
+				<RunningEmptyContent
+					v-if="showSyncTaskRunning"
+					class="running-area"
+					:description="shortInput"
+					:progress="progress"
+					:expected-runtime="expectedRuntime"
+					:is-notify-enabled="isNotifyEnabled"
+					@background-notify="$emit('background-notify', $event)"
+					@cancel="$emit('cancel-task')" />
+				<NcAppContent v-else class="session-area">
 					<div class="session-area__top-bar">
 						<div class="session-area__top-bar__title">
 							<EditableTextField :initial-text="selectedTaskType.name ?? ''" />
@@ -134,6 +143,7 @@ import AssistantFormOutputs from './AssistantFormOutputs.vue'
 import ChattyLLMInputForm from './ChattyLLM/ChattyLLMInputForm.vue'
 import EditableTextField from './ChattyLLM/EditableTextField.vue'
 import NoProviderEmptyContent from './NoProviderEmptyContent.vue'
+import RunningEmptyContent from './RunningEmptyContent.vue'
 import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import TranslateForm from './Translate/TranslateForm.vue'
@@ -154,6 +164,7 @@ export default {
 	name: 'AssistantTextProcessingForm',
 	components: {
 		NoProviderEmptyContent,
+		RunningEmptyContent,
 		TaskList,
 		TaskTypeSelect,
 		TranslateForm,
@@ -201,6 +212,26 @@ export default {
 			type: [String, null],
 			default: null,
 		},
+		showSyncTaskRunning: {
+			type: Boolean,
+			default: false,
+		},
+		shortInput: {
+			type: String,
+			required: true,
+		},
+		progress: {
+			type: [Number, null],
+			default: null,
+		},
+		expectedRuntime: {
+			type: [Number, null],
+			default: null,
+		},
+		isNotifyEnabled: {
+			type: Boolean,
+			default: false,
+		},
 		actionButtons: {
 			type: Array,
 			default: () => [],
@@ -212,6 +243,8 @@ export default {
 		'try-again',
 		'load-task',
 		'new-task',
+		'cancel-task',
+		'background-notify',
 	],
 	data() {
 		return {
@@ -743,6 +776,11 @@ export default {
 			position: sticky;
 			bottom: 0;
 		}
+	}
+
+	.running-area {
+		width: 100%;
+		padding: 16px;
 	}
 }
 </style>

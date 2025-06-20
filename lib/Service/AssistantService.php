@@ -11,6 +11,7 @@ use DateTime;
 use Html2Text\Html2Text;
 use OC\User\NoUserException;
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\TaskNotification;
 use OCA\Assistant\Db\TaskNotificationMapper;
 use OCA\Assistant\ResponseDefinitions;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -124,6 +125,34 @@ class AssistantService {
 	}
 
 	/**
+	 * Get notification request for a task
+	 *
+	 * @param int $taskId
+	 * @param string $userId
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function getNotifyWhenReady(int $taskId, string $userId): array {
+		try {
+			$task = $this->taskProcessingManager->getTask($taskId);
+		} catch (NotFoundException $e) {
+			// task may already be deleted, return an empty notification
+			return (new TaskNotification())->jsonSerialize();
+		} catch (TaskProcessingException $e) {
+			$this->logger->debug('Task request error : ' . $e->getMessage());
+			throw new Exception('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		if ($task->getUserId() !== $userId) {
+			$this->logger->info('A user attempted viewing notifications of another user\'s task');
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
+		}
+
+		$notification = $this->taskNotificationMapper->getByTaskId($taskId) ?: new TaskNotification();
+		return $notification->jsonSerialize();
+	}
+
+	/**
 	 * Notify when image generation is ready
 	 *
 	 * @param int $taskId
@@ -153,6 +182,34 @@ class AssistantService {
 		} else {
 			$this->taskNotificationMapper->createTaskNotification($taskId);
 		}
+	}
+
+	/**
+	 * Cancel notification when task is finished
+	 *
+	 * @param int $taskId
+	 * @param string $userId
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function cancelNotifyWhenReady(int $taskId, string $userId): void {
+		try {
+			$task = $this->taskProcessingManager->getTask($taskId);
+		} catch (NotFoundException $e) {
+			// task may be already deleted, so delete any dangling notifications
+			$this->taskNotificationMapper->deleteByTaskId($taskId);
+			return;
+		} catch (TaskProcessingException $e) {
+			$this->logger->debug('Task request error : ' . $e->getMessage());
+			throw new Exception('Internal server error.', Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		if ($task->getUserId() !== $userId) {
+			$this->logger->info('A user attempted deleting notifications of another user\'s task');
+			throw new Exception('Unauthorized', Http::STATUS_UNAUTHORIZED);
+		}
+
+		$this->taskNotificationMapper->deleteByTaskId($taskId);
 	}
 
 	/**

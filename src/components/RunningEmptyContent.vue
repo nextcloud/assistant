@@ -18,18 +18,12 @@
 					{{ formattedRuntime }}
 				</div>
 				<NcButton
-					@click="$emit('background-notify')">
+					@click="$emit('background-notify', !isNotifyEnabled)">
 					<template #icon>
-						<ProgressClockIcon />
+						<BellRingOutlineIcon v-if="isNotifyEnabled" />
+						<BellOutlineIcon v-else />
 					</template>
-					{{ t('assistant', 'Run task in the background and get notified') }}
-				</NcButton>
-				<NcButton
-					@click="$emit('back')">
-					<template #icon>
-						<ArrowLeftIcon />
-					</template>
-					{{ t('assistant', 'Back to the Assistant') }}
+					{{ t('assistant', 'Get notified when the task finishes') }}
 				</NcButton>
 				<NcButton
 					@click="$emit('cancel')">
@@ -47,9 +41,9 @@
 </template>
 
 <script>
-import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue'
+import BellOutlineIcon from 'vue-material-design-icons/BellOutline.vue'
+import BellRingOutlineIcon from 'vue-material-design-icons/BellRingOutline.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
 
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
@@ -64,9 +58,9 @@ export default {
 		NcEmptyContent,
 		NcLoadingIcon,
 		NcProgressBar,
-		ArrowLeftIcon,
+		BellOutlineIcon,
+		BellRingOutlineIcon,
 		CloseIcon,
-		ProgressClockIcon,
 	},
 
 	props: {
@@ -82,12 +76,15 @@ export default {
 			type: [Number, null],
 			default: null,
 		},
+		isNotifyEnabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'cancel',
 		'background-notify',
-		'back',
 	],
 
 	data() {
