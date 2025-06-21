@@ -129,8 +129,6 @@ OC.L10N.register(
     "Failed to save assistant options" : "Kunne ikke lagre assistentalternativer",
     "No suitable providers are available. They must first be enabled by your administrator." : "Ingen egnede leverandører er tilgjengelige. De må først aktiveres av administratoren.",
     "Getting results…" : "Får resultater...",
-    "Your task has been scheduled" : "Oppgaven er planlagt",
-    "You will receive a notification when it has finished" : "Du vil motta et varsel når det er ferdig",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Du har ikke sendt inn noen {taskTypeName}-oppgave enda",
     "Nothing yet" : "Ingenting enda",
     "Succeeded" : "Vellykket",

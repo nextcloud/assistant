@@ -114,7 +114,6 @@ OC.L10N.register(
     "AI Providers need to be installed to use the Assistant" : "Poskytovateľ AI musí byť nainštalovaný pre používanie Asistenta",
     "This may take a few seconds…" : "Toto zaberie pár sekúnd…",
     "Getting results…" : "Získavam výsledky...",
-    "Back to the Assistant" : "Naspäť do Asistenta",
     "Cancel task" : "Zrušíť úlohu",
     "Succeeded" : "Úspešné",
     "Cancelled" : "Zrušené",
