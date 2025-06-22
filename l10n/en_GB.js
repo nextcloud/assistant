@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Failed to notify when ready; unknown user",
+    "Failed to cancel notification; unknown user" : "Failed to cancel notification; unknown user",
     "Send a message to a Talk conversation" : "Send a message to a Talk conversation",
     "Create a conversation" : "Create a conversation",
     "Send an email" : "Send an email",
@@ -175,6 +176,7 @@ OC.L10N.register(
     "This may take a few seconds…" : "This may take a few seconds…",
     "This may take a few minutes…" : "This may take a few minutes…",
     "Getting results…" : "Getting results…",
+    "Get notified when the task finishes" : "Get notified when the task finishes",
     "Cancel task" : "Cancel task",
     "You have not submitted any \"{taskTypeName}\" task yet" : "You have not submitted any \"{taskTypeName}\" task yet",
     "Nothing yet" : "Nothing yet",

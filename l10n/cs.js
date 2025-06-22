@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
+    "Failed to cancel notification; unknown user" : "Nepodařilo se zrušit notifikaci – neznámý uživatel",
     "Send a message to a Talk conversation" : "Odeslat zprávu do konverzace v Talk",
     "Create a conversation" : "Vytvořit konverzaci",
     "Send an email" : "Odeslat e-mail",
@@ -174,6 +175,7 @@ OC.L10N.register(
     "This may take a few seconds…" : "Může to pár sekund trvat…",
     "This may take a few minutes…" : "Může to pár minut trvat…",
     "Getting results…" : "Získávání výsledků",
+    "Get notified when the task finishes" : "Dostat upozornění až bude úloha dokončena",
     "Cancel task" : "Zrušit úkol",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Zatím jste ještě neposkytli žádný úkol „{taskTypeName}“",
     "Nothing yet" : "Zatím nic",

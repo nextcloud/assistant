@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "就緒時通知失敗；用戶不詳",
+    "Failed to cancel notification; unknown user" : "取消通知失敗：用戶不詳",
     "Send a message to a Talk conversation" : "傳送訊息到 Talk 對話",
     "Create a conversation" : "創建對話",
     "Send an email" : "傳送電子郵件",
@@ -175,6 +176,7 @@ OC.L10N.register(
     "This may take a few seconds…" : "此操作可能需要花幾秒鐘 ...",
     "This may take a few minutes…" : "這可能需要幾分鐘…",
     "Getting results…" : "正在取得結果…",
+    "Get notified when the task finishes" : "任務完成通知",
     "Cancel task" : "取消任務",
     "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未提交任何 \"{taskTypeName}\" 任務",
     "Nothing yet" : "暫無資料",

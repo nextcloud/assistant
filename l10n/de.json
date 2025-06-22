@@ -1,5 +1,6 @@
 { "translations": {
     "Failed to notify when ready; unknown user" : "Fehler bei der Benachrichtigung der Fertigstellung; unbekannter Benutzer",
+    "Failed to cancel notification; unknown user" : "Benachrichtigung konnte verworfen werden: Unbekannter Benutzer",
     "Send a message to a Talk conversation" : "Nachricht an eine Talk-Unterhaltung senden",
     "Create a conversation" : "Eine Unterhaltung erstellen",
     "Send an email" : "E-Mail senden",
@@ -173,6 +174,7 @@
     "This may take a few seconds…" : "Das kann einige Sekunden dauern …",
     "This may take a few minutes…" : "Das kann einige Minuten dauern…",
     "Getting results…" : "Ergebnisse holen…",
+    "Get notified when the task finishes" : "Benachrichtigung erhalten, wenn die Aufgabe abgeschlossen ist",
     "Cancel task" : "Aufgabe abbrechen",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Du hast noch keine \"{taskTypeName}\"-Aufgabe übermittelt",
     "Nothing yet" : "Noch nichts vorhanden",
