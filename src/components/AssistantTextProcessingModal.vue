@@ -154,9 +154,9 @@ export default {
 			this.$emit('cancel-task')
 			this.$el.dispatchEvent(new CustomEvent('cancel-task', { bubbles: true }))
 		},
-		onBackgroundNotify() {
-			this.$emit('background-notify')
-			this.$el.dispatchEvent(new CustomEvent('background-notify', { bubbles: true }))
+		onBackgroundNotify(enable) {
+			this.$emit('background-notify', enable)
+			this.$el.dispatchEvent(new CustomEvent('background-notify', { detail: enable, bubbles: true }))
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
