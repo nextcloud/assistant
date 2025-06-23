@@ -46,6 +46,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud E-mail",
     "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "DuckDuckGo web search" : "Pesquisa web DuckDuckGo",
     "Chat with AI" : "Bate-papo com IA",
     "Chat with an AI model." : "Converse com um modelo de IA.",
     "Generate text" : "Gerar texto",

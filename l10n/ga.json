@@ -1,5 +1,6 @@
 { "translations": {
     "Failed to notify when ready; unknown user" : "Theip ar an eolas nuair a bhí sé réidh; úsáideoir anaithnid",
+    "Failed to cancel notification; unknown user" : "Theip ar an bhfógra a chealú; úsáideoir anaithnid",
     "Send a message to a Talk conversation" : "Seol teachtaireacht chuig comhrá Caint",
     "Create a conversation" : "Cruthaigh comhrá",
     "Send an email" : "Seol ríomhphost",
@@ -173,6 +174,7 @@
     "This may take a few seconds…" : "D’fhéadfadh sé seo cúpla soicind a thógáil…",
     "This may take a few minutes…" : "D’fhéadfadh sé seo cúpla nóiméad a thógáil…",
     "Getting results…" : "Torthaí á bhfáil…",
+    "Get notified when the task finishes" : "Faigh fógra nuair a bheidh an tasc críochnaithe",
     "Cancel task" : "Cealaigh tasc",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Níl aon tasc \"{taskTypeName}\" curtha isteach agat fós",
     "Nothing yet" : "Ní dhéanfaidh aon ní go fóill",
