@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Failed to notify when ready; unknown user" : "Није успело обавештавање када је спремно; корисник није познат",
+    "Failed to cancel notification; unknown user" : "Није успело отказивање обавештења; корисник није познат",
     "Send a message to a Talk conversation" : "Пошаљи поруку у Talk разговор",
     "Create a conversation" : "Креирај разговор",
     "Send an email" : "Пошаљи е-пошту",
@@ -175,6 +176,7 @@ OC.L10N.register(
     "This may take a few seconds…" : "Ово може потрајати пар секунди…",
     "This may take a few minutes…" : "Ово може потрајати неколико минута…",
     "Getting results…" : "Преузимање резултата",
+    "Get notified when the task finishes" : "Прими обавештење када се задатак заврши",
     "Cancel task" : "Откажи задатак",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Још увек нисте предали ниједан \"{taskTypeName}\" задатак",
     "Nothing yet" : "Још увек ништа",
