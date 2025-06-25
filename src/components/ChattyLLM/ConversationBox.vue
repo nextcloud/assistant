@@ -81,6 +81,8 @@ export default {
 		},
 	},
 
+	emits: ['delete', 'regenerate'],
+
 	data: () => {
 		return {
 			regenerateFromId: null,

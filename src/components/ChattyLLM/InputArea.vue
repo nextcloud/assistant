@@ -80,7 +80,7 @@ export default {
 		},
 	},
 
-	emits: ['update:chatContent'],
+	emits: ['update:chatContent', 'submit'],
 
 	data: () => {
 		return {

@@ -75,6 +75,7 @@ export default {
 
 	emits: [
 		'new-recording',
+		'update:is-recording',
 	],
 
 	data() {

@@ -131,6 +131,8 @@ export default {
 		},
 	},
 
+	emits: ['delete', 'regenerate'],
+
 	data: () => {
 		return {
 			displayName: getCurrentUser()?.displayName ?? getCurrentUser()?.uid ?? t('assistant', 'You'),
