@@ -74,6 +74,7 @@ export default {
 
 	emits: [
 		'update:outputs',
+		'update:show-advanced',
 	],
 
 	computed: {

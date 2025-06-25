@@ -99,7 +99,6 @@ export default {
 		'cancel',
 		'cancel-task',
 		'background-notify',
-		'submit',
 		'sync-submit',
 		'action-button-clicked',
 		'try-again',

@@ -103,6 +103,7 @@ export default {
 
 	emits: [
 		'update:inputs',
+		'update:outputs',
 	],
 
 	data() {

@@ -66,6 +66,7 @@ export default {
 
 	emits: [
 		'files-uploaded',
+		'update:is-uploading',
 	],
 
 	data() {

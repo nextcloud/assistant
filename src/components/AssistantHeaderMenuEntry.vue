@@ -28,6 +28,8 @@ export default {
 		NcButton,
 	},
 
+	emits: ['click'],
+
 	data() {
 		return {
 		}

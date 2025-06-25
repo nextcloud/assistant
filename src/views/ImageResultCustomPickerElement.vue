@@ -41,6 +41,8 @@ export default {
 		},
 	},
 
+	emits: ['cancel', 'submit'],
+
 	data() {
 		return {
 		}
@@ -72,6 +74,7 @@ export default {
 		}).catch(error => {
 			console.debug('[assistant picker] assistant was closed', error)
 			this.$emit('cancel')
+			this.$el.dispatchEvent(new CustomEvent('cancel', { bubbles: true }))
 		})
 	},
 

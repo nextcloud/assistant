@@ -77,6 +77,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['copy', 'delete', 'regenerate'],
 }
 </script>
 

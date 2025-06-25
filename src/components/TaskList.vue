@@ -68,6 +68,7 @@ export default {
 	emits: [
 		'load-task',
 		'try-again',
+		'update:loading',
 	],
 
 	data() {
