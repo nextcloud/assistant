@@ -12,6 +12,7 @@ OC.L10N.register(
     "Submit" : "Submeter",
     "You" : "Vovê",
     "Choose" : "Escolher",
+    "Clear Selection" : "Limpar seleção",
     "Cancelled" : "Cancelado",
     "Running" : "Correr",
     "No file selected" : "Nenhum ficheiro selecionado",
