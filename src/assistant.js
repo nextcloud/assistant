@@ -39,7 +39,8 @@ window.assistantPollTimerId = null
  * @param {string} params.appId the scheduling app id
  * @param {string} params.customId the task custom identifier
  * @param {string} params.identifier DEPRECATED the task custom identifier
- * @param {string} params.taskType the text processing task type class
+ * @param {string} params.taskType the selected task type ID
+ * @param {Array} params.taskTypeIdList the task types to display (all if not specified)
  * @param {string} params.input DEPRECATED optional initial input text
  * @param {object} params.inputs optional initial named inputs
  * @param {boolean} params.isInsideViewer Should be true if this function is called while the Viewer is displayed
@@ -49,7 +50,7 @@ window.assistantPollTimerId = null
  * @return {Promise<unknown>}
  */
 export async function openAssistantForm({
-	appId, taskType = null, input = '', inputs = {},
+	appId, taskType = null, taskTypeIdList = null, input = '', inputs = {},
 	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
 	customId = '', identifier = '', mountPoint = null,
 }) {
@@ -92,6 +93,7 @@ export async function openAssistantForm({
 				initSelectedTaskTypeId: selectedTaskTypeId,
 				showSyncTaskRunning: false,
 				actionButtons,
+				taskTypeIdList,
 				/*
 				// events emitted by the root component can be listened to this way
 				// this is a handler for the 'load-task' event
