@@ -92,6 +92,12 @@ export async function openAssistantForm({
 				initSelectedTaskTypeId: selectedTaskTypeId,
 				showSyncTaskRunning: false,
 				actionButtons,
+				/*
+				// events emitted by the root component can be listened to this way
+				// this is a handler for the 'load-task' event
+				onLoadTask(data) {
+				},
+				*/
 			},
 		)
 		app.mixin({ methods: { t, n } })
