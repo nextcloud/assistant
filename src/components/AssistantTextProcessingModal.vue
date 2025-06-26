@@ -5,7 +5,7 @@
 <template>
 	<NcModal v-if="show"
 		:size="modalSize"
-		:can-close="false"
+		:no-close="true"
 		:name="t('assistant', 'Nextcloud Assistant')"
 		dark
 		:container="null"
