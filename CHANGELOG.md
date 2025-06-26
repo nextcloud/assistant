@@ -10,6 +10,46 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.5.0 – 2025-06-26
+
+### Added
+
+- Add warning if Context chat indexing is not complete yet @marcelklehr [#199](https://github.com/nextcloud/assistant/pull/199)
+- Support importing the content of PDF files in text inputs @julien-nc [#204](https://github.com/nextcloud/assistant/pull/204)
+- Task output file download link reference, open files in the Viewer @julien-nc [#228](https://github.com/nextcloud/assistant/pull/228) [#236](https://github.com/nextcloud/assistant/pull/236)
+- Display expected task runtime when running @edward-ly [#220](https://github.com/nextcloud/assistant/pull/220)
+- Information Source info in Chat UI @janepie [#230](https://github.com/nextcloud/assistant/pull/230)
+- Custom translation input/output form @edward-ly [#232](https://github.com/nextcloud/assistant/pull/232)
+- New task form layout with the history in a sidebar @edward-ly [#227](https://github.com/nextcloud/assistant/pull/227)
+- Support for Context chat search (custom input/output form) @julien-nc [#241](https://github.com/nextcloud/assistant/pull/241)
+- More agency tool descriptions @janepie [#261](https://github.com/nextcloud/assistant/pull/261)
+
+### Changed
+
+- Convert all chat endpoints to OCS ones @julien-nc [#207](https://github.com/nextcloud/assistant/pull/207)
+- Use Psalm 6 @julien-nc [#219](https://github.com/nextcloud/assistant/pull/219)
+- Automatic naming of output files based on mime type detection @julien-nc [#218](https://github.com/nextcloud/assistant/pull/218)
+- Chatty UI: replace loading spinner with skeleton message @edward-ly [#226](https://github.com/nextcloud/assistant/pull/226)
+- Schedule task on text prompt input submit event @edward-ly [#222](https://github.com/nextcloud/assistant/pull/222)
+- Keep input prompt when switching task types @edward-ly [#238](https://github.com/nextcloud/assistant/pull/238)
+- Change how small number inputs are rendered @julien-nc [#237](https://github.com/nextcloud/assistant/pull/237)
+- Refactor information display in personal settings @edward-ly [#254](https://github.com/nextcloud/assistant/pull/254)
+- Show loading screen in task area only @edward-ly [#256](https://github.com/nextcloud/assistant/pull/256)
+
+### Fixed
+
+- Use session id in retry generation in chatty llm @kyteinsky [#201](https://github.com/nextcloud/assistant/pull/201)
+- Save Chat with AI as last task type @janepie [#206](https://github.com/nextcloud/assistant/pull/206)
+- Do not overwrite default translation origin language @janepie [#205](https://github.com/nextcloud/assistant/pull/205)
+- Override NcRichText link resolving to support markdown links in the chatty UI @julien-nc [#221](https://github.com/nextcloud/assistant/pull/221)
+- Hide empty chat messages @janepie [#231](https://github.com/nextcloud/assistant/pull/231)
+- Disappearing messages in the chatty UI @marcelklehr [#234](https://github.com/nextcloud/assistant/pull/234)
+- Flashing loading placeholder when switching chat conversations @edward-ly [#235](https://github.com/nextcloud/assistant/pull/235)
+- Style issues in personal settings @julien-nc [#244](https://github.com/nextcloud/assistant/pull/244)
+- Issues when mixing the smart picker + the assistant modal + the viewer @julien-nc [#246](https://github.com/nextcloud/assistant/pull/246) [#253](https://github.com/nextcloud/assistant/pull/253)
+- Assistant failed to load when text2text disabled but other task exists @lukasdotcom [#255](https://github.com/nextcloud/assistant/pull/255)
+- Preserve inputs when switching task type only if it was text and it goes to a text field @julien-nc [#262](https://github.com/nextcloud/assistant/pull/262)
+
 ## 2.4.0 – 2025-02-25
 
 ### Changed
