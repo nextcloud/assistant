@@ -36,6 +36,7 @@
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
 					:is-notify-enabled="isNotifyEnabled"
+					:task-type-id-list="taskTypeIdList"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="onTryAgain"
@@ -93,6 +94,10 @@ export default {
 		actionButtons: {
 			type: Array,
 			default: () => [],
+		},
+		taskTypeIdList: {
+			type: [Array, null],
+			default: null,
 		},
 	},
 	emits: [
