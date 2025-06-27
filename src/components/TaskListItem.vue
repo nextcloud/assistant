@@ -51,7 +51,7 @@
 			</NcActionButton>
 			<NcActionButton @click="$emit('delete')">
 				<template #icon>
-					<DeleteIcon />
+					<TrashCanOutlineIcon />
 				</template>
 				{{ t('assistant', 'Delete') }}
 			</NcActionButton>
@@ -68,11 +68,10 @@ import ProgressClockIcon from 'vue-material-design-icons/ProgressClock.vue'
 import AlertCircleOutlineIcon from 'vue-material-design-icons/AlertCircleOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 
 import NcListItem from '@nextcloud/vue/components/NcListItem'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
-
-import DeleteIcon from './icons/DeleteIcon.vue'
 
 import moment from '@nextcloud/moment'
 
@@ -103,7 +102,7 @@ export default {
 		NcListItem,
 		NcActionButton,
 		CloseIcon,
-		DeleteIcon,
+		TrashCanOutlineIcon,
 		ProgressClockIcon,
 		ProgressCheckIcon,
 		ProgressQuestionIcon,
