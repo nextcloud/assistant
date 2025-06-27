@@ -9,7 +9,7 @@
 			:disabled="disabled"
 			@click="start">
 			<template #icon>
-				<MicrophoneIcon />
+				<MicrophoneOutlineIcon />
 			</template>
 			{{ t('assistant', 'Start recording') }}
 		</NcButton>
@@ -41,7 +41,7 @@
 <script>
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-import MicrophoneIcon from 'vue-material-design-icons/Microphone.vue'
+import MicrophoneOutlineIcon from 'vue-material-design-icons/MicrophoneOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 
@@ -57,7 +57,7 @@ export default {
 
 	components: {
 		NcButton,
-		MicrophoneIcon,
+		MicrophoneOutlineIcon,
 		CheckIcon,
 		CloseIcon,
 	},

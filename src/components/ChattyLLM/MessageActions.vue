@@ -10,7 +10,7 @@
 			:title="t('assistant', 'Copy message')"
 			@click="$emit('copy', $event)">
 			<template #icon>
-				<CopyIcon :size="20" />
+				<ContentCopyIcon :size="20" />
 			</template>
 		</NcButton>
 		<NcButton v-if="showRegenerate"
@@ -36,7 +36,7 @@
 				<NcLoadingIcon :size="20" />
 			</template>
 			<template v-else #icon>
-				<DeleteIcon :size="20" />
+				<TrashCanOutlineIcon :size="20" />
 			</template>
 		</NcButton>
 	</div>
@@ -44,9 +44,8 @@
 
 <script>
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
-
-import CopyIcon from '../icons/CopyIcon.vue'
-import DeleteIcon from '../icons/DeleteIcon.vue'
+import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
@@ -55,10 +54,9 @@ export default {
 	name: 'MessageActions',
 
 	components: {
-		CopyIcon,
-		DeleteIcon,
+		ContentCopyIcon,
+		TrashCanOutlineIcon,
 		ReloadIcon,
-
 		NcButton,
 		NcLoadingIcon,
 	},
