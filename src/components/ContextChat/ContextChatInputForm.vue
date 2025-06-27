@@ -65,7 +65,7 @@
 					variant="secondary"
 					@click="onChooseSourceClicked">
 					<template #icon>
-						<FileDocumentIcon />
+						<FileDocumentOutlineIcon />
 					</template>
 					{{ tStrings['Choose Files/Folders'] }}
 				</NcButton>
@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
 import PlaylistRemoveIcon from 'vue-material-design-icons/PlaylistRemove.vue'
 
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
@@ -204,7 +204,7 @@ export default {
 	components: {
 		NumberField,
 		TextInput,
-		FileDocumentIcon,
+		FileDocumentOutlineIcon,
 		NcAvatar,
 		NcButton,
 		NcCheckboxRadioSwitch,

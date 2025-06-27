@@ -19,7 +19,7 @@
 				:disabled="value !== null || isRecording || isUploading"
 				@files-uploaded="onFileUploaded" />
 			<ChooseInputFileButton
-				:label="t('assistant', 'Select from Nextcloud')"
+				:label="t('assistant', 'Select from storage')"
 				:picker-title="t('assistant', 'Pick a file')"
 				:accept="acceptedMimeTypes"
 				:disabled="value !== null || isRecording || isUploading"
@@ -47,7 +47,7 @@
 					target="_blank">
 					<NcButton :title="t('assistant', 'Download this media')">
 						<template #icon>
-							<DownloadIcon />
+							<DownloadOutlineIcon />
 						</template>
 					</NcButton>
 				</a>
@@ -55,7 +55,7 @@
 					:title="t('assistant', 'Save this media')"
 					@click="onSave">
 					<template #icon>
-						<ContentSaveIcon />
+						<ContentSaveOutlineIcon />
 					</template>
 				</NcButton>
 				<NcButton
@@ -83,9 +83,9 @@
 
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-import DownloadIcon from 'vue-material-design-icons/Download.vue'
+import DownloadOutlineIcon from 'vue-material-design-icons/DownloadOutline.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
-import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
+import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 
@@ -110,10 +110,10 @@ export default {
 		AudioRecorderWrapper,
 		ChooseInputFileButton,
 		UploadInputFileButton,
-		DownloadIcon,
+		DownloadOutlineIcon,
 		ShareVariantIcon,
 		CloseIcon,
-		ContentSaveIcon,
+		ContentSaveOutlineIcon,
 		NcButton,
 	},
 

@@ -53,7 +53,7 @@
 						:aria-label="t('assistant', 'Remove this media')"
 						@click="onDelete(fileId)">
 						<template #icon>
-							<DeleteIcon />
+							<TrashCanOutlineIcon />
 						</template>
 					</NcButton>
 					<a v-if="isOutput"
@@ -61,7 +61,7 @@
 						target="_blank">
 						<NcButton :title="t('assistant', 'Download this media')">
 							<template #icon>
-								<DownloadIcon />
+								<DownloadOutlineIcon />
 							</template>
 						</NcButton>
 					</a>
@@ -69,7 +69,7 @@
 						:title="t('assistant', 'Save this media')"
 						@click="onSave(fileId)">
 						<template #icon>
-							<ContentSaveIcon />
+							<ContentSaveOutlineIcon />
 						</template>
 					</NcButton>
 					<NcButton v-if="isOutput"
@@ -86,13 +86,12 @@
 </template>
 
 <script>
-import DownloadIcon from 'vue-material-design-icons/Download.vue'
+import DownloadOutlineIcon from 'vue-material-design-icons/DownloadOutline.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
-import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
+import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
+import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
-
-import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import AudioDisplay from './AudioDisplay.vue'
 import ImageDisplay from './ImageDisplay.vue'
@@ -119,10 +118,10 @@ export default {
 		AudioRecorderWrapper,
 		ChooseInputFileButton,
 		UploadInputFileButton,
-		DeleteIcon,
-		DownloadIcon,
+		TrashCanOutlineIcon,
+		DownloadOutlineIcon,
 		ShareVariantIcon,
-		ContentSaveIcon,
+		ContentSaveOutlineIcon,
 		NcButton,
 	},
 

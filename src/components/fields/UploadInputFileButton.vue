@@ -17,7 +17,7 @@
 			@click="onUploadFile">
 			<template #icon>
 				<NcLoadingIcon v-if="isUploading" />
-				<UploadIcon v-else />
+				<UploadOutlineIcon v-else />
 			</template>
 			{{ label }}
 		</NcButton>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import UploadIcon from 'vue-material-design-icons/Upload.vue'
+import UploadOutlineIcon from 'vue-material-design-icons/UploadOutline.vue'
 
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -41,7 +41,7 @@ export default {
 
 	components: {
 		NcButton,
-		UploadIcon,
+		UploadOutlineIcon,
 		NcLoadingIcon,
 	},
 

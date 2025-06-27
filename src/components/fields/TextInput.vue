@@ -26,7 +26,7 @@
 			@click="onCopy">
 			<template #icon>
 				<ClipboardCheckOutlineIcon v-if="copied" />
-				<CopyIcon v-else />
+				<ContentCopyIcon v-else />
 			</template>
 			{{ t('assistant', 'Copy') }}
 		</NcButton>
@@ -35,7 +35,7 @@
 			variant="secondary"
 			@click="onChooseFile">
 			<template #icon>
-				<FileDocumentIcon />
+				<FileDocumentOutlineIcon />
 			</template>
 			{{ t('assistant','Choose file') }}
 		</NcButton>
@@ -43,14 +43,14 @@
 </template>
 
 <script>
-import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 
 import isMobile from '../../mixins/isMobile.js'
-import CopyIcon from '../icons/CopyIcon.vue'
 
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
@@ -84,9 +84,9 @@ export default {
 	components: {
 		NcRichContenteditable,
 		NcButton,
-		FileDocumentIcon,
+		FileDocumentOutlineIcon,
 		ClipboardCheckOutlineIcon,
-		CopyIcon,
+		ContentCopyIcon,
 	},
 
 	mixins: [

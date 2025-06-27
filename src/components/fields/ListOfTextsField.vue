@@ -25,7 +25,7 @@
 					variant="secondary"
 					@click="onDeleteItem(i)">
 					<template #icon>
-						<DeleteIcon />
+						<TrashCanOutlineIcon />
 					</template>
 				</NcButton>
 			</div>
@@ -43,10 +43,9 @@
 
 <script>
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
-
-import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import TextInput from './TextInput.vue'
 
@@ -57,7 +56,7 @@ export default {
 		TextInput,
 		NcButton,
 		PlusIcon,
-		DeleteIcon,
+		TrashCanOutlineIcon,
 	},
 
 	props: {
