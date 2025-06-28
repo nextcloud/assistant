@@ -182,6 +182,7 @@
     "Could not upload the recorded file" : "Nie można przesłać nagranego pliku",
     "Output file share link copied to clipboard" : "Link do udostępnionego pliku wyjściowego został skopiowany do schowka",
     "Click this to open the file" : "Kliknij tutaj, aby otworzyć plik",
+    "Could not copy to clipboard" : "Nie można skopiować do schowka",
     "Upload from device" : "Wyślij z urządzenia",
     "Select from Nextcloud" : "Wybierz z Nextcloud",
     "Pick one or multiple files" : "Wybierz jeden lub wiele plików",

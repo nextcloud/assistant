@@ -88,6 +88,7 @@ OC.L10N.register(
     "Choose file" : "Vælg fil",
     "Choose a file" : "Vælg en fil",
     "No file selected" : "Ingen fil valgt",
+    "Could not copy to clipboard" : "Kunne ikke kopiere til udklipsholderen",
     "Upload from device" : "Upload fra enhed",
     "Advanced" : "Avanceret",
     "Copy" : "Kopier",

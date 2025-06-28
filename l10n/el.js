@@ -94,6 +94,7 @@ OC.L10N.register(
     "No file selected" : "Δεν επιλέχθηκε αρχείο",
     "Choose a value" : "Επιλέξτε μια τιμή",
     "Could not upload the recorded file" : "Δεν ήταν δυνατή η μεταφόρτωση του ηχογραφημένου αρχείου",
+    "Could not copy to clipboard" : "Δεν μπορεί να αντιγραφή στο πρόχειρο",
     "Upload from device" : "Μεταφόρτωση από συσκευή",
     "Advanced" : "Για προχωρημένους",
     "Result could not be copied to clipboard" : "Δεν ήταν δυνατή η αντιγραφή του αποτελέσματος στο πρόχειρο",

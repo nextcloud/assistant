@@ -99,6 +99,7 @@ OC.L10N.register(
     "Choose file" : "Kies bestand",
     "Choose a file" : "Kies een bestand",
     "No file selected" : "Geen bestand geselecteerd",
+    "Could not copy to clipboard" : "Kon niet kopiëren naar het klembord",
     "Upload from device" : "Uploaden vanaf apparaat",
     "Advanced" : "Geavanceerd",
     "Copy" : "Kopiëren"

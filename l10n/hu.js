@@ -51,6 +51,7 @@ OC.L10N.register(
     "Choose file" : "Válasszon fájlt",
     "Choose a file" : "Válasszon egy fájlt",
     "No file selected" : "Nincs fájl kiválasztva",
+    "Could not copy to clipboard" : "Nem sikerült a vágólapra másolni",
     "Upload from device" : "Feltöltés az eszközről",
     "Advanced" : "Speciális",
     "Result could not be copied to clipboard" : "Az eredményt nem lehet a vágólapra másolni",

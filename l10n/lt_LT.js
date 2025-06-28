@@ -35,6 +35,7 @@ OC.L10N.register(
     "Unknown status" : "Nežinoma būsena",
     "Choose a file" : "Pasirinkti failą",
     "No file selected" : "Neįkeltas joks failas",
+    "Could not copy to clipboard" : "Nepavyko nukopijuoti į iškarpinę",
     "Advanced" : "Išplėstiniai",
     "Could not parse file" : "Nepavyko išnagrinėti failo",
     "Copy output" : "Kopijuoti išvestį",

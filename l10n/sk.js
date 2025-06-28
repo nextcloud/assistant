@@ -129,6 +129,7 @@ OC.L10N.register(
     "Choose a file" : "Vyberte súbor",
     "No file selected" : "Nebol vybraný súbor",
     "Choose a value" : "Vybrať hodnotu",
+    "Could not copy to clipboard" : "Nepodarilo sa skopírovať do schránky",
     "Upload from device" : "Nahrať zo zariadenia",
     "Select from Nextcloud" : "Vybrať z Nextcloudu",
     "Pick a file" : "Vybrať súbor",

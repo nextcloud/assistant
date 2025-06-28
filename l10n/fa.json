@@ -47,6 +47,7 @@
     "End recording and send" : "End recording and send",
     "Choose a file" : "پرونده ای را انتخاب کردن",
     "No file selected" : "هیچ فایلی انتخاب نشده",
+    "Could not copy to clipboard" : "به کلیپ بورد کپی نشد",
     "Upload from device" : "Upload from device",
     "Advanced" : "پیشرفته",
     "Result could not be copied to clipboard" : "نتیجه را نمی توان در کلیپ بورد کپی کرد",

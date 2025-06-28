@@ -38,6 +38,7 @@ OC.L10N.register(
     "Choose file" : "Вибрати файл",
     "Choose a file" : "Виберіть файл",
     "No file selected" : "Жодного файлу обрано",
+    "Could not copy to clipboard" : "Неможливо скопіювати",
     "Upload from device" : "Завантажити з пристрою",
     "Advanced" : "Додатково",
     "Copy" : "Копія",

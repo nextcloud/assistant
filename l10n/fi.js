@@ -33,6 +33,7 @@ OC.L10N.register(
     "Choose file" : "Valitse tiedosto",
     "Choose a file" : "Valitse tiedosto",
     "No file selected" : "Tiedostoa ei ole valittu",
+    "Could not copy to clipboard" : "Ei voitu kopioida leikepöydälle",
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
     "Copy" : "Kopioi",

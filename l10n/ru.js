@@ -78,6 +78,7 @@ OC.L10N.register(
     "Choose file" : "Выберите файл",
     "Choose a file" : "Выберите файл",
     "No file selected" : "Файлы не выбраны",
+    "Could not copy to clipboard" : "Не удалось скопировать в буфер обмена.",
     "Upload from device" : "Загрузить с устройства",
     "Select from Nextcloud" : "Выбрать из Nextcloud",
     "Pick one or multiple files" : "Выберите один или несколько файлов",

@@ -18,6 +18,7 @@ OC.L10N.register(
     "Running" : "ריצה",
     "Choose a file" : "נא לבחור קובץ",
     "No file selected" : "לא נבחר קובץ",
+    "Could not copy to clipboard" : "לא ניתן להעתיק ללוח הגזירים",
     "Advanced" : "מתקדם",
     "Copy" : "העתקה",
     "Upload file" : "העלאת קובץ"

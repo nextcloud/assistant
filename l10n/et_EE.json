@@ -190,6 +190,7 @@
     "Could not upload the recorded file" : "Salvestatud faili polnud võimalik üles laadida",
     "Output file share link copied to clipboard" : "Väljundfaili jagamislink on kopeeritud lõikelauale",
     "Click this to open the file" : "Faili avamiseks klõpsi seda",
+    "Could not copy to clipboard" : "Kopeerimine lõikelauale ei õnnestunud",
     "Upload from device" : "Laadi üles seadmest",
     "Select from Nextcloud" : "Vali Nextcloudist",
     "Pick one or multiple files" : "Vali üks või mitu faili",

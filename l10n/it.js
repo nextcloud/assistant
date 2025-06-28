@@ -33,6 +33,7 @@ OC.L10N.register(
     "Choose file" : "Scegli file",
     "Choose a file" : "Scegli un file",
     "No file selected" : "Nessun file selezionato",
+    "Could not copy to clipboard" : "Impossibile copiare negli appunti",
     "Upload from device" : "Carica dal dispositivo",
     "Advanced" : "Avanzate",
     "Copy" : "Copia"

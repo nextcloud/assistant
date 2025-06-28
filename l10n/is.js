@@ -25,6 +25,7 @@ OC.L10N.register(
     "Choose file" : "Veldu skrá",
     "Choose a file" : "Veldu skrá",
     "No file selected" : "Engin skrá valin",
+    "Could not copy to clipboard" : "Gat ekki afritað á klippispjald",
     "Upload from device" : "Senda inn frá tæki",
     "Advanced" : "Ítarlegt",
     "Copy" : "Afrita"
