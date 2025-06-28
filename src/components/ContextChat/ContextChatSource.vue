@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'

@@ -23,7 +23,7 @@ window.assistantPollTimerId = null
  *    {
  *      label: 'Label 1',
  *      title: 'Title 1',
- *      type: 'warning',
+ *      variant: 'warning',
  *      iconSvg: cogSvg,
  *      onClick: (outputs) => { console.debug('first button clicked', outputs) },
  *    },
@@ -53,9 +53,8 @@ export async function openAssistantForm({
 	isInsideViewer = undefined, closeOnResult = false, actionButtons = undefined,
 	customId = '', identifier = '', mountPoint = null,
 }) {
-	const { default: Vue } = await import('vue')
+	const { createApp } = await import('vue')
 	const { default: AssistantTextProcessingModal } = await import('./components/AssistantTextProcessingModal.vue')
-	Vue.mixin({ methods: { t, n } })
 
 	// fallback to the last used one
 	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
@@ -85,20 +84,28 @@ export async function openAssistantForm({
 		// because the new viewer will replace the existing one...
 		// Maybe that's an acceptable limitation
 
-		const View = Vue.extend(AssistantTextProcessingModal)
-		const view = new View({
-			propsData: {
+		const app = createApp(
+			AssistantTextProcessingModal,
+			{
 				isInsideViewer,
-				inputs: input ? { prompt: input } : inputs,
-				selectedTaskTypeId,
+				initInputs: input ? { prompt: input } : inputs,
+				initSelectedTaskTypeId: selectedTaskTypeId,
 				showSyncTaskRunning: false,
 				actionButtons,
+				/*
+				// events emitted by the root component can be listened to this way
+				// this is a handler for the 'load-task' event
+				onLoadTask(data) {
+				},
+				*/
 			},
-		}).$mount(modalMountPoint)
+		)
+		app.mixin({ methods: { t, n } })
+		const view = app.mount(modalMountPoint)
 		let lastTask = null
 
-		view.$on('cancel', () => {
-			view.$destroy()
+		modalMountPoint.addEventListener('cancel', () => {
+			app.unmount()
 			reject(new Error('User cancellation'))
 		})
 		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
@@ -123,7 +130,7 @@ export async function openAssistantForm({
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							if (closeOnResult) {
-								view.$destroy()
+								app.unmount()
 							} else {
 								view.outputs = finishedTask?.output
 							}
@@ -141,21 +148,23 @@ export async function openAssistantForm({
 					})
 				})
 				.catch(error => {
-					view.$destroy()
+					app.unmount()
 					console.error('Assistant scheduling error', error)
 					showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
 					reject(new Error('Assistant scheduling error'))
 				})
 		}
-		view.$on('sync-submit', (data) => {
+		modalMountPoint.addEventListener('sync-submit', (data) => {
 			console.debug('[assistant] submit', data)
-			syncSubmit(data.inputs, data.selectedTaskTypeId, customId || identifier)
+			syncSubmit(data.detail.inputs, data.detail.selectedTaskTypeId, customId || identifier)
 		})
-		view.$on('try-again', (task) => {
+		modalMountPoint.addEventListener('try-again', (data) => {
+			const task = data.detail
 			console.debug('[assistant] try again', task)
 			syncSubmit(task.input, task.type)
 		})
-		view.$on('load-task', (task) => {
+		modalMountPoint.addEventListener('load-task', (data) => {
+			const task = data.detail
 			console.debug('[assistant] loading task', task)
 			cancelTaskPolling()
 			view.showSyncTaskRunning = false
@@ -217,7 +226,7 @@ export async function openAssistantForm({
 				})
 			}
 		})
-		view.$on('new-task', () => {
+		modalMountPoint.addEventListener('new-task', () => {
 			console.debug('[assistant] new task')
 			cancelTaskPolling()
 			view.loading = false
@@ -227,12 +236,12 @@ export async function openAssistantForm({
 			view.selectedTaskId = null
 			lastTask = null
 		})
-		view.$on('background-notify', (enable) => {
-			setNotifyReady(lastTask.id, enable).then(res => {
-				view.isNotifyEnabled = enable
+		modalMountPoint.addEventListener('background-notify', (data) => {
+			setNotifyReady(lastTask.id, data.detail).then(res => {
+				view.isNotifyEnabled = data.detail
 			})
 		})
-		view.$on('cancel-task', () => {
+		modalMountPoint.addEventListener('cancel-task', () => {
 			cancelTaskPolling()
 			setNotifyReady(lastTask.id, false)
 			cancelTask(lastTask.id).then(res => {
@@ -242,12 +251,12 @@ export async function openAssistantForm({
 				lastTask = null
 			})
 		})
-		view.$on('action-button-clicked', (data) => {
-			if (data.button?.onClick) {
-				lastTask.output = data.output
-				data.button.onClick(lastTask)
+		modalMountPoint.addEventListener('action-button-clicked', (data) => {
+			if (data.detail.button?.onClick) {
+				lastTask.output = data.detail.output
+				data.detail.button.onClick(lastTask)
 			}
-			view.$destroy()
+			app.unmount()
 		})
 	})
 }
@@ -439,9 +448,7 @@ export async function openAssistantTask(
 		actionButtons = undefined,
 		mountPoint = null,
 	} = {}) {
-	const { default: Vue } = await import('vue')
-	Vue.mixin({ methods: { t, n } })
-	const { showError } = await import('@nextcloud/dialogs')
+	const { createApp } = await import('vue')
 	const { default: AssistantTextProcessingModal } = await import('./components/AssistantTextProcessingModal.vue')
 
 	let modalMountPoint
@@ -464,29 +471,31 @@ export async function openAssistantTask(
 		}
 	}
 
-	const View = Vue.extend(AssistantTextProcessingModal)
-	const view = new View({
-		propsData: {
+	const app = createApp(
+		AssistantTextProcessingModal,
+		{
 			isInsideViewer,
-			selectedTaskId: task.id,
-			inputs: task.input,
-			outputs: task.output ?? {},
-			selectedTaskTypeId: task.type,
+			initSelectedTaskId: task.id,
+			initInputs: task.input,
+			initOutputs: task.output ?? {},
+			initSelectedTaskTypeId: task.type,
 			actionButtons,
 		},
-	}).$mount(modalMountPoint)
+	)
+	app.mixin({ methods: { t, n } })
+	const view = app.mount(modalMountPoint)
 	let lastTask = task
 
-	view.$on('cancel', () => {
-		view.$destroy()
+	modalMountPoint.addEventListener('cancel', () => {
+		view.unmount()
 	})
-	view.$on('submit', (data) => {
-		scheduleTask(task.appId, task.identifier ?? '', data.selectedTaskTypeId, data.inputs)
+	modalMountPoint.addEventListener('submit', (data) => {
+		scheduleTask(task.appId, task.identifier ?? '', data.detail.selectedTaskTypeId, data.detail.inputs)
 			.then((response) => {
 				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
-				view.$destroy()
+				view.unmount()
 				console.error('Assistant scheduling error', error)
 				showError(t('assistant', 'Failed to schedule the task'))
 			})
@@ -523,19 +532,21 @@ export async function openAssistantTask(
 				})
 			})
 			.catch(error => {
-				view.$destroy()
+				view.unmount()
 				console.error('Assistant scheduling error', error)
 				showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
 				// reject(new Error('Assistant scheduling error'))
 			})
 	}
-	view.$on('sync-submit', (data) => {
-		syncSubmit(data.inputs, data.selectedTaskTypeId, task.identifier ?? '')
+	modalMountPoint.addEventListener('sync-submit', (data) => {
+		syncSubmit(data.detail.inputs, data.detail.selectedTaskTypeId, task.identifier ?? '')
 	})
-	view.$on('try-again', (task) => {
+	modalMountPoint.addEventListener('try-again', (data) => {
+		const task = data.detail
 		syncSubmit(task.input, task.type)
 	})
-	view.$on('load-task', (task) => {
+	modalMountPoint.addEventListener('load-task', (data) => {
+		const task = data.detail
 		cancelTaskPolling()
 		view.showSyncTaskRunning = false
 		view.isNotifyEnabled = false
@@ -596,7 +607,7 @@ export async function openAssistantTask(
 			})
 		}
 	})
-	view.$on('new-task', () => {
+	modalMountPoint.addEventListener('new-task', () => {
 		console.debug('[assistant] new task')
 		cancelTaskPolling()
 		view.loading = false
@@ -606,12 +617,12 @@ export async function openAssistantTask(
 		view.selectedTaskId = null
 		lastTask = null
 	})
-	view.$on('background-notify', (enable) => {
-		setNotifyReady(lastTask.id, enable).then(res => {
-			view.isNotifyEnabled = enable
+	modalMountPoint.addEventListener('background-notify', (data) => {
+		setNotifyReady(lastTask.id, data.detail).then(res => {
+			view.isNotifyEnabled = data.detail
 		})
 	})
-	view.$on('cancel-task', () => {
+	modalMountPoint.addEventListener('cancel-task', () => {
 		cancelTaskPolling()
 		setNotifyReady(lastTask.id, false)
 		cancelTask(lastTask.id).then(res => {
@@ -621,12 +632,12 @@ export async function openAssistantTask(
 			lastTask = null
 		})
 	})
-	view.$on('action-button-clicked', (data) => {
-		if (data.button?.onClick) {
-			lastTask.output = data.output
-			data.button.onClick(lastTask)
+	modalMountPoint.addEventListener('action-button-clicked', (data) => {
+		if (data.detail.button?.onClick) {
+			lastTask.output = data.detail.output
+			data.detail.button.onClick(lastTask)
 		}
-		view.$destroy()
+		view.unmount()
 	})
 }
 
@@ -637,16 +648,14 @@ export async function addAssistantMenuEntry() {
 	menuEntry.id = 'assistant'
 	headerRight.prepend(menuEntry)
 
-	const { default: Vue } = await import('vue')
+	const { createApp } = await import('vue')
 	const { default: AssistantHeaderMenuEntry } = await import('./components/AssistantHeaderMenuEntry.vue')
-	Vue.mixin({ methods: { t, n } })
 
-	const View = Vue.extend(AssistantHeaderMenuEntry)
-	const view = new View({
-		propsData: {},
-	}).$mount(menuEntry)
+	const view = createApp(AssistantHeaderMenuEntry, {})
+	view.mixin({ methods: { t, n } })
+	view.mount(menuEntry)
 
-	view.$on('click', () => {
+	menuEntry.addEventListener('click', () => {
 		openAssistantForm({ appId: 'assistant' })
 			.then(r => {
 				console.debug('scheduled task', r)

@@ -39,7 +39,7 @@
 <script>
 import AlertOutlineIcon from 'vue-material-design-icons/AlertOutline.vue'
 
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 
 import LoadingPlaceholder from './LoadingPlaceholder.vue'
 import Message from './Message.vue'
@@ -80,6 +80,8 @@ export default {
 			}),
 		},
 	},
+
+	emits: ['delete', 'regenerate'],
 
 	data: () => {
 		return {

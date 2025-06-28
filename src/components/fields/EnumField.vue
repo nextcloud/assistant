@@ -9,8 +9,8 @@
 		</label>
 		<NcSelect
 			:id="'input-' + fieldKey"
+			:model-value="selectValue"
 			class="enum-field-input"
-			:value="selectValue"
 			:options="options"
 			:clearable="true"
 			label="name"
@@ -18,12 +18,12 @@
 			:title="field.name"
 			:placeholder="field.placeholder ?? (field.description || t('assistant','Choose a value'))"
 			:no-wrap="false"
-			@input="onUpdateValue" />
+			@update:model-value="onUpdateValue" />
 	</div>
 </template>
 
 <script>
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 
 export default {
 	name: 'EnumField',

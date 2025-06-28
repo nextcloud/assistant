@@ -5,7 +5,7 @@
 <template>
 	<div class="message-actions">
 		<NcButton
-			type="tertiary"
+			variant="tertiary"
 			:aria-label="t('assistant', 'Copy message')"
 			:title="t('assistant', 'Copy message')"
 			@click="$emit('copy', $event)">
@@ -14,7 +14,7 @@
 			</template>
 		</NcButton>
 		<NcButton v-if="showRegenerate"
-			type="tertiary"
+			variant="tertiary"
 			:aria-label="t('assistant', 'Regenerate message')"
 			:title="t('assistant', 'Regenerate message')"
 			:disabled="regenerateLoading"
@@ -27,7 +27,7 @@
 			</template>
 		</NcButton>
 		<NcButton
-			type="tertiary"
+			variant="tertiary"
 			:aria-label="t('assistant', 'Delete message')"
 			:title="t('assistant', 'Delete message')"
 			:disabled="regenerateLoading"
@@ -48,8 +48,8 @@ import ReloadIcon from 'vue-material-design-icons/Reload.vue'
 import CopyIcon from '../icons/CopyIcon.vue'
 import DeleteIcon from '../icons/DeleteIcon.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 
 export default {
 	name: 'MessageActions',
@@ -77,6 +77,8 @@ export default {
 			default: false,
 		},
 	},
+
+	emits: ['copy', 'delete', 'regenerate'],
 }
 </script>
 
