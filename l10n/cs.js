@@ -201,6 +201,7 @@ OC.L10N.register(
     "Could not upload the recorded file" : "Soubor s nahrávkou nebylo možné odeslat na server",
     "Output file share link copied to clipboard" : "Odkaz na sdílení výstupního souboru zkopírován do schránky",
     "Click this to open the file" : "Kliknutím na toto otevřete soubor",
+    "This output file has been saved in {path}" : "Tento výstupní soubor byl uložen v {path}",
     "Could not copy to clipboard" : "Nedaří se zkopírovat do schránky",
     "Upload from device" : "Nahrát ze zařízení",
     "Select from Nextcloud" : "Vybrat z Nextcloud",

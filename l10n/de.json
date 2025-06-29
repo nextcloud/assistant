@@ -200,6 +200,7 @@
     "Could not upload the recorded file" : "Die aufgezeichnete Datei konnte nicht hochgeladen werden",
     "Output file share link copied to clipboard" : "Link zum Teilen der Ausgabedatei in die Zwischenablage kopiert",
     "Click this to open the file" : "Hier klicken, um die Datei zu öffnen",
+    "This output file has been saved in {path}" : "Diese Ausgabedatei wurde gespeichert in {path}",
     "Could not copy to clipboard" : "Konnte nicht in die Zwischenablage kopieren",
     "Upload from device" : "Von Gerät hochladen",
     "Select from Nextcloud" : "Aus Nextcloud auswählen",
