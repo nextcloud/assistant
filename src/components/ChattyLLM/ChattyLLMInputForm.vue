@@ -34,7 +34,7 @@
 					<template #actions>
 						<NcActionButton @click="sessionIdToDelete = session.id">
 							<template #icon>
-								<DeleteIcon v-if="!loading.sessionDelete" :size="20" />
+								<TrashCanOutlineIcon v-if="!loading.sessionDelete" :size="20" />
 								<NcLoadingIcon v-else :size="20" />
 							</template>
 							{{ t('assistant', 'Delete') }}
@@ -58,7 +58,7 @@
 					<NcActions v-model:open="titleActionsOpen">
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
 							<template #icon>
-								<PencilIcon :size="20" />
+								<PencilOutlineIcon :size="20" />
 							</template>
 							{{ t('assistant', 'Edit title') }}
 						</NcActionButton>
@@ -144,7 +144,7 @@
 					variant="warning"
 					@click="deleteSession(sessionIdToDelete)">
 					<template #icon>
-						<DeleteIcon />
+						<TrashCanOutlineIcon />
 					</template>
 					{{ t('assistant', 'Delete') }}
 				</NcButton>
@@ -155,11 +155,11 @@
 
 <script>
 import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
-import PencilIcon from 'vue-material-design-icons/Pencil.vue'
+import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
-import DeleteIcon from '../icons/DeleteIcon.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -197,8 +197,8 @@ export default {
 	components: {
 		AgencyConfirmation,
 		AutoFixIcon,
-		DeleteIcon,
-		PencilIcon,
+		TrashCanOutlineIcon,
+		PencilOutlineIcon,
 		PlusIcon,
 
 		AssistantIcon,

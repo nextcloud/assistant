@@ -209,7 +209,7 @@ export default {
 		gap: 16px;
 
 		.col {
-			width: 100%;
+			width: 50%;
 		}
 	}
 

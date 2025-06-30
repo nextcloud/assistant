@@ -8,14 +8,14 @@
 		variant="secondary"
 		@click="onButtonClick">
 		<template #icon>
-			<FolderPlusIcon />
+			<FolderPlusOutlineIcon />
 		</template>
 		{{ label }}
 	</NcButton>
 </template>
 
 <script>
-import FolderPlusIcon from 'vue-material-design-icons/FolderPlus.vue'
+import FolderPlusOutlineIcon from 'vue-material-design-icons/FolderPlusOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 
@@ -26,7 +26,7 @@ export default {
 
 	components: {
 		NcButton,
-		FolderPlusIcon,
+		FolderPlusOutlineIcon,
 	},
 
 	props: {
