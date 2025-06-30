@@ -200,6 +200,7 @@
     "Could not upload the recorded file" : "Could not upload the recorded file",
     "Output file share link copied to clipboard" : "Output file share link copied to clipboard",
     "Click this to open the file" : "Click this to open the file",
+    "This output file has been saved in {path}" : "This output file has been saved in {path}",
     "Could not copy to clipboard" : "Could not copy to clipboard",
     "Upload from device" : "Upload from device",
     "Select from Nextcloud" : "Select from Nextcloud",

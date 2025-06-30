@@ -202,6 +202,7 @@ OC.L10N.register(
     "Could not upload the recorded file" : "無法上傳錄製檔案",
     "Output file share link copied to clipboard" : "輸出檔案分享連結已複製到剪貼簿",
     "Click this to open the file" : "點擊此處以打開文件",
+    "This output file has been saved in {path}" : "此輸出檔案已保存至 {path}",
     "Could not copy to clipboard" : "無法複製到剪貼簿",
     "Upload from device" : "從裝置上傳",
     "Select from Nextcloud" : "從 Nextcloud 選擇",
