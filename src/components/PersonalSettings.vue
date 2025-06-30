@@ -10,29 +10,29 @@
 		</h2>
 		<div id="assistant-content">
 			<NcCheckboxRadioSwitch v-if="state.assistant_available"
-				:checked="state.assistant_enabled"
-				@update:checked="onCheckboxChanged($event, 'assistant_enabled')">
+				:model-value="state.assistant_enabled"
+				@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.free_prompt_picker_available"
-				:checked="state.free_prompt_picker_enabled"
-				@update:checked="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+				:model-value="state.free_prompt_picker_enabled"
+				@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Enable AI text generation in smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
-				:checked="state.text_to_image_picker_enabled"
-				@update:checked="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+				:model-value="state.text_to_image_picker_enabled"
+				@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Enable AI image generation in smart picker') }}
 				</div>
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.speech_to_text_picker_available"
-				:checked="state.speech_to_text_picker_enabled"
-				@update:checked="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+				:model-value="state.speech_to_text_picker_enabled"
+				@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Enable AI transcription in smart picker') }}
 				</div>
@@ -46,12 +46,12 @@
 			<div v-else>
 				<h3>{{ t('assistant', 'Configured backends') }}</h3>
 				<p>{{ t('assistant', 'The following services are used as backends for Nextcloud Assistant:') }}</p>
-				<template v-for="(taskNames, providerName) in providers">
-					<h5 :key="providerName">
+				<div v-for="(taskNames, providerName) in providers" :key="providerName">
+					<h5>
 						{{ providerName }}
 					</h5>
 					{{ taskNames.join(', ') }}
-				</template>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -61,7 +61,7 @@
 import AssistantIcon from './icons/AssistantIcon.vue'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'

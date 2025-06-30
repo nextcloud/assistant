@@ -67,12 +67,12 @@
 <script>
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcDateTime from '@nextcloud/vue/dist/Components/NcDateTime.js'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
-import NcPopover from '@nextcloud/vue/dist/Components/NcPopover.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import { NcRichText } from '@nextcloud/vue/dist/Components/NcRichText.js'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcDateTime from '@nextcloud/vue/components/NcDateTime'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
 import InformationBox from 'vue-material-design-icons/InformationBox.vue'
 
@@ -131,6 +131,8 @@ export default {
 		},
 	},
 
+	emits: ['delete', 'regenerate'],
+
 	data: () => {
 		return {
 			displayName: getCurrentUser()?.displayName ?? getCurrentUser()?.uid ?? t('assistant', 'You'),
@@ -146,6 +148,9 @@ export default {
 
 	computed: {
 		parsedSources() {
+			if (!this.message.sources || ['', '[]'].includes(this.message.sources)) {
+				return []
+			}
 			let parsedSources = JSON.parse(this.message.sources)
 			parsedSources = parsedSources.map((source) => this.getSourceString(source))
 			return [...new Set(parsedSources)]
@@ -223,11 +228,11 @@ export default {
 		margin-left: 2.6em;
 		overflow: auto;
 
-		:deep ol {
+		:deep(ol) {
 			margin-left: 1em;
 		}
 
-		:deep .widget-default, :deep .widget-custom {
+		:deep(.widget-default), :deep(.widget-custom) {
 			width: auto !important;
 		}
 	}

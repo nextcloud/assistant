@@ -22,7 +22,7 @@
 					@update:value="onItemValueChanged(i, $event)" />
 				<NcButton v-if="!isOutput"
 					class="delete-button"
-					type="secondary"
+					variant="secondary"
 					@click="onDeleteItem(i)">
 					<template #icon>
 						<DeleteIcon />
@@ -32,7 +32,7 @@
 		</div>
 		<NcButton v-if="!isOutput"
 			class="more-button"
-			type="secondary"
+			variant="secondary"
 			@click="onAddItem">
 			<template #icon>
 				<PlusIcon />
@@ -44,7 +44,7 @@
 <script>
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import DeleteIcon from '../icons/DeleteIcon.vue'
 

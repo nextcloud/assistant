@@ -33,7 +33,7 @@ import HistoryIcon from 'vue-material-design-icons/History.vue'
 
 import TaskListItem from './TaskListItem.vue'
 
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 import axios from '@nextcloud/axios'
 import { subscribe, unsubscribe } from '@nextcloud/event-bus'
@@ -68,6 +68,8 @@ export default {
 	emits: [
 		'load-task',
 		'try-again',
+		'update:loading',
+		'task-deleted',
 	],
 
 	data() {
@@ -143,6 +145,7 @@ export default {
 				if (index !== -1) {
 					this.tasks.splice(index, 1)
 				}
+				this.$emit('task-deleted', task)
 			}).catch(error => {
 				console.error(error)
 			})

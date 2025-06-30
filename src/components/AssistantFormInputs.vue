@@ -54,6 +54,11 @@ export default {
 			default: false,
 		},
 	},
+	emits: [
+		'update:inputs',
+		'submit',
+		'update:show-advanced',
+	],
 	data() {
 		return {
 		}

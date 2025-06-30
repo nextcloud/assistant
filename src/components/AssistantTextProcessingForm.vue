@@ -12,29 +12,30 @@
 			<span>{{ t('assistant', 'Nextcloud Assistant') }}</span>
 		</span>
 		<TaskTypeSelect
-			:value.sync="mySelectedTaskTypeId"
+			v-model="mySelectedTaskTypeId"
 			class="task-custom-select"
 			:options="sortedTaskTypes"
-			@update:value="onTaskTypeUserChange" />
+			@update:model-value="onTaskTypeUserChange" />
 		<div class="task-input-output-form">
 			<ChattyLLMInputForm v-if="mySelectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
 			<div v-else class="container chatty-inputs">
 				<NcAppNavigation>
 					<NcAppNavigationList>
 						<NcAppNavigationNew :text="t('assistant', 'New task')"
-							type="secondary"
+							variant="secondary"
 							@click="onHistoryNewTask">
 							<template #icon>
 								<PlusIcon :size="20" />
 							</template>
 						</NcAppNavigationNew>
 						<TaskList
-							class="history--list"
+							v-model:loading="historyLoading"
 							:task-type="selectedTaskType"
 							:selected-task-id="selectedTaskId"
-							:loading.sync="historyLoading"
+							class="history--list"
 							@try-again="onHistoryTryAgain"
-							@load-task="onHistoryLoadTask" />
+							@load-task="onHistoryLoadTask"
+							@task-deleted="onHistoryTaskDeleted" />
 					</NcAppNavigationList>
 				</NcAppNavigation>
 				<RunningEmptyContent
@@ -56,25 +57,25 @@
 						class="session-area__chat-area">
 						<TranslateForm v-if="selectedTaskType"
 							ref="translateForm"
-							:inputs.sync="myInputs"
-							:outputs.sync="myOutputs"
+							v-model:inputs="myInputs"
+							v-model:outputs="myOutputs"
+							v-model:show-advanced="showAdvanced"
 							:translate-task-id="selectedTaskId"
-							:translate-task-type="selectedTaskType"
-							:show-advanced.sync="showAdvanced" />
+							:translate-task-type="selectedTaskType" />
 					</div>
 					<div v-else class="session-area__chat-area">
 						<AssistantFormInputs v-if="selectedTaskType"
 							ref="assistantFormInputs"
-							:inputs.sync="myInputs"
+							v-model:inputs="myInputs"
+							v-model:show-advanced="showAdvanced"
 							:selected-task-id="selectedTaskId"
 							:selected-task-type="selectedTaskType"
-							:show-advanced.sync="showAdvanced"
 							@submit="onSyncSubmit" />
 						<AssistantFormOutputs v-if="hasOutput"
+							v-model:show-advanced="showAdvanced"
+							v-model:outputs="myOutputs"
 							:inputs="myInputs"
-							:outputs.sync="myOutputs"
-							:selected-task-type="selectedTaskType"
-							:show-advanced.sync="showAdvanced" />
+							:selected-task-type="selectedTaskType" />
 					</div>
 					<div class="footer">
 						<div class="footer--action-buttons">
@@ -92,7 +93,7 @@
 							</NcActions>
 							<NcButton
 								v-if="showSubmit"
-								type="primary"
+								variant="primary"
 								class="submit-button"
 								:disabled="!canSubmit"
 								:title="syncSubmitButtonTitle"
@@ -106,7 +107,7 @@
 							<NcButton
 								v-for="(b, i) in actionButtonsToShow"
 								:key="i"
-								:type="b.type ?? 'secondary'"
+								:variant="b.variant ?? b.type ?? 'secondary'"
 								:title="b.title"
 								@click="onActionButtonClick(b)">
 								{{ b.label }}
@@ -128,15 +129,15 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
-import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
-import NcAppNavigationList from '@nextcloud/vue/dist/Components/NcAppNavigationList.js'
-import NcAppNavigationNew from '@nextcloud/vue/dist/Components/NcAppNavigationNew.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcIconSvgWrapper from '@nextcloud/vue/dist/Components/NcIconSvgWrapper.js'
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationList from '@nextcloud/vue/components/NcAppNavigationList'
+import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import AssistantFormOutputs from './AssistantFormOutputs.vue'
@@ -153,10 +154,7 @@ import { SHAPE_TYPE_NAMES } from '../constants.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
-import Vue from 'vue'
-import VueClipboard from 'vue-clipboard2'
-
-Vue.use(VueClipboard)
+import '@nextcloud/dialogs/style.css'
 
 const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
 
@@ -508,6 +506,13 @@ export default {
 			this.$refs?.translateForm?.setDefaultValues(true)
 			this.$refs?.assistantFormInputs?.setDefaultValues(true)
 		},
+		onHistoryTaskDeleted(task) {
+			// if the currently selected task is deleted, simulate a click on "new task"
+			// this will stop the task status polling and display the form again
+			if (task.id === this.selectedTaskId) {
+				this.onHistoryNewTask()
+			}
+		},
 	},
 }
 </script>
@@ -622,7 +627,7 @@ export default {
 	display: flex;
 	height: 100%;
 
-	:deep .app-navigation-new {
+	:deep(.app-navigation-new) {
 		padding: 0;
 	}
 
@@ -636,7 +641,7 @@ export default {
 		height: 100%;
 	}
 
-	:deep .app-navigation {
+	:deep(.app-navigation) {
 		--app-navigation-max-width: calc(100vw - (var(--app-navigation-padding) + 24px + var(--default-grid-baseline)));
 		background-color: var(--color-primary-element-light);
 		color: var(--color-primary-element-light-text);
@@ -650,24 +655,24 @@ export default {
 			margin-right: -49px !important;
 			top: var(--default-grid-baseline);
 		}
+	}
 
-		&--close {
-			.app-navigation-toggle-wrapper {
-				margin-right: -33px !important;
-			}
-		}
-
-		&--close ~ .session-area {
-			.session-area__chat-area, .session-area__input-area {
-				padding-left: 0 !important;
-			}
-			.session-area__top-bar {
-				padding-left: 36px !important;
-			}
+	:deep(.app-navigation--close) {
+		.app-navigation-toggle-wrapper {
+			margin-right: -33px !important;
 		}
 	}
 
-	:deep .app-navigation-list {
+	:deep(.app-navigation--close ~ .session-area) {
+		.session-area__chat-area, .session-area__input-area {
+			padding-left: 0 !important;
+		}
+		.session-area__top-bar {
+			padding-left: 36px !important;
+		}
+	}
+
+	:deep(.app-navigation-list) {
 		padding: var(--default-grid-baseline) !important;
 		box-sizing: border-box;
 		height: 100%;
