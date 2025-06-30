@@ -217,6 +217,10 @@ export default {
 			&__name {
 				font-weight: bold;
 			}
+
+			:deep(.assistant-icon) {
+				height: 100%;
+			}
 		}
 
 		&__timestamp {
