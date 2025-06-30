@@ -69,6 +69,7 @@ export default {
 		'load-task',
 		'try-again',
 		'update:loading',
+		'task-deleted',
 	],
 
 	data() {
@@ -144,6 +145,7 @@ export default {
 				if (index !== -1) {
 					this.tasks.splice(index, 1)
 				}
+				this.$emit('task-deleted', task)
 			}).catch(error => {
 				console.error(error)
 			})

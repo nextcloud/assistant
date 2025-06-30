@@ -34,7 +34,8 @@
 							:selected-task-id="selectedTaskId"
 							class="history--list"
 							@try-again="onHistoryTryAgain"
-							@load-task="onHistoryLoadTask" />
+							@load-task="onHistoryLoadTask"
+							@task-deleted="onHistoryTaskDeleted" />
 					</NcAppNavigationList>
 				</NcAppNavigation>
 				<RunningEmptyContent
@@ -504,6 +505,13 @@ export default {
 
 			this.$refs?.translateForm?.setDefaultValues(true)
 			this.$refs?.assistantFormInputs?.setDefaultValues(true)
+		},
+		onHistoryTaskDeleted(task) {
+			// if the currently selected task is deleted, simulate a click on "new task"
+			// this will stop the task status polling and display the form again
+			if (task.id === this.selectedTaskId) {
+				this.onHistoryNewTask()
+			}
 		},
 	},
 }
