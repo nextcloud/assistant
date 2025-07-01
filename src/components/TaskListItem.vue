@@ -16,6 +16,12 @@
 				style="margin-right: 8px;"
 				:title="statusTitle" />
 		</template>
+		<template v-if="onlyHasAudioInput" #name>
+			<div class="item-audio-io">
+				<MicrophoneMessageIcon class="item-mic-icon" />
+				<span>{{ t('assistant', 'Audio input') }}</span>
+			</div>
+		</template>
 		<template #subname>
 			<div v-if="isSuccessful && isText2Image"
 				class="inline-images">
@@ -26,6 +32,10 @@
 					:task-id="task.id"
 					:is-output="true"
 					:border-radius="3" />
+			</div>
+			<div v-else-if="isSuccessful && onlyHasAudioOutput" class="item-audio-io">
+				<MicrophoneMessageIcon />
+				<span>{{ t('assistant', 'Audio output') }}</span>
 			</div>
 			<span v-else>
 				{{ subName }}
@@ -69,6 +79,7 @@ import AlertCircleOutlineIcon from 'vue-material-design-icons/AlertCircleOutline
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import MicrophoneMessageIcon from 'vue-material-design-icons/MicrophoneMessage.vue'
 
 import NcListItem from '@nextcloud/vue/components/NcListItem'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -109,6 +120,7 @@ export default {
 		CheckIcon,
 		AlertCircleOutlineIcon,
 		ReloadIcon,
+		MicrophoneMessageIcon,
 	},
 
 	props: {
@@ -151,6 +163,14 @@ export default {
 		},
 		isText2Image() {
 			return this.task.type === 'core:text2image'
+		},
+		onlyHasAudioInput() {
+			return Object.values(this.taskType.inputShape)
+				.every(field => field.type === SHAPE_TYPE_NAMES.Audio)
+		},
+		onlyHasAudioOutput() {
+			return Object.values(this.taskType.outputShape)
+				.every(field => field.type === SHAPE_TYPE_NAMES.Audio)
 		},
 		mainName() {
 			return this.textInputPreview
@@ -234,5 +254,11 @@ export default {
 		height: 28px;
 		width: 28px;
 	}
+}
+
+.item-audio-io {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 </style>
