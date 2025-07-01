@@ -38,6 +38,7 @@
 		"npm": "^10.0.0"
 	},
 	"dependencies": {
+		"@breezystack/lamejs": "^1.2.7",
 		"@mdi/js": "^7.4.47",
 		"@mdi/svg": "^7.4.47",
 		"@nextcloud/auth": "^2.0.0",
