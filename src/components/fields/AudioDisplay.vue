@@ -4,7 +4,8 @@
 -->
 <template>
 	<audio :src="audioUrl"
-		controls />
+		controls
+		:class="{ shadowed: isOutput }" />
 </template>
 
 <script>
@@ -67,5 +68,8 @@ export default {
 <style scoped lang="scss">
 audio {
 	border-radius: 16px;
+	&.shadowed {
+		border: 2px solid var(--color-primary-element);
+	}
 }
 </style>
