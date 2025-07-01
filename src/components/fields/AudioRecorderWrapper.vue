@@ -118,7 +118,7 @@ export default {
 	mounted() {
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		this.killStreams()
 	},
 
