@@ -135,7 +135,7 @@ export async function openAssistantForm({
 								view.outputs = finishedTask?.output
 							}
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+							showError(t('assistant', 'The server failed to process your task with ID {id}. Please inform the server administrators of this issue.', { id: finishedTask.id }))
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
 						}
@@ -210,7 +210,7 @@ export async function openAssistantForm({
 							view.outputs = finishedTask?.output
 							view.selectedTaskId = finishedTask?.id
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+							showError(t('assistant', 'The server failed to process your task with ID {id}. Please inform the server administrators of this issue.', { id: finishedTask.id }))
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
 						}
@@ -497,7 +497,7 @@ export async function openAssistantTask(
 			.catch(error => {
 				view.unmount()
 				console.error('Assistant scheduling error', error)
-				showError(t('assistant', 'Failed to schedule the task'))
+				showError(t('assistant', 'Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists.'))
 			})
 	})
 	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
@@ -518,7 +518,7 @@ export async function openAssistantTask(
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+						showError(t('assistant', 'The server failed to process your task with ID {id}. Please inform the server administrators of this issue.', { id: finishedTask.id }))
 						console.error('[assistant] Task failed', finishedTask)
 						view.outputs = null
 					}
@@ -591,7 +591,7 @@ export async function openAssistantTask(
 						view.outputs = finishedTask?.output
 						view.selectedTaskId = finishedTask?.id
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-						showError(t('assistant', 'Your task with ID {id} has failed', { id: finishedTask.id }))
+						showError(t('assistant', 'The server failed to process your task with ID {id}. Please inform the server administrators of this issue.', { id: finishedTask.id }))
 						console.error('[assistant] Task failed', finishedTask)
 						view.outputs = null
 					}
