@@ -111,7 +111,7 @@ export default {
 		subscribe('assistant:task:updated', this.updateTask)
 	},
 
-	beforeDestroy() {
+	beforeUnmount() {
 		unsubscribe('assistant:task:updated', this.updateTask)
 	},
 
