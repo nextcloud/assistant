@@ -47,7 +47,8 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { showError } from '@nextcloud/dialogs'
 
-import { MediaRecorder } from 'extendable-media-recorder'
+import { MediaRecorder, register } from 'extendable-media-recorder'
+import { connect } from 'extendable-media-recorder-wav-encoder'
 
 /**
  * Slightly simpler than the talk NewMessageAudioRecorder
@@ -123,8 +124,12 @@ export default {
 
 	methods: {
 		async start() {
+			if (!OCA.Assistant.encoderRegistered) {
+				await register(await connect())
+				OCA.Assistant.encoderRegistered = true
+			}
 			const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-			this.mediaRecorder = new MediaRecorder(stream)
+			this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' })
 
 			// Add event handler to onstop
 			this.mediaRecorder.onstop = this.generateFile
