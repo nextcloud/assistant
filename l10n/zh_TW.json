@@ -200,6 +200,7 @@
     "Could not upload the recorded file" : "無法上傳錄製的檔案",
     "Output file share link copied to clipboard" : "輸出檔案分享連結已分享至剪貼簿",
     "Click this to open the file" : "點選此處以開啟檔案",
+    "This output file has been saved in {path}" : "此輸出檔案已儲存至 {path}",
     "Could not copy to clipboard" : "無法複製到剪貼簿",
     "Upload from device" : "從裝置上傳",
     "Select from Nextcloud" : "從 Nextcloud 選取",

@@ -171,6 +171,7 @@ OC.L10N.register(
     "Choose a value" : "Tria un valor",
     "Could not upload the recorded file" : "No s'ha pogut carregar el fitxer gravat",
     "Output file share link copied to clipboard" : "S'ha copiat l'enllaç de compartició de fitxers de sortida al porta-retalls",
+    "Could not copy to clipboard" : "No s'ha pogut copiar al porta-retalls",
     "Upload from device" : "Pujada des del dispositiu",
     "Select from Nextcloud" : "Seleccioneu de Nextcloud",
     "Pick one or multiple files" : "Trieu un o diversos fitxers",
