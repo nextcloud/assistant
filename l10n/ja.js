@@ -182,7 +182,6 @@ OC.L10N.register(
     "Submit the current task's result" : "現在のタスクの結果を提出",
     "Assistant error" : "アシスタントエラー",
     "Please log in to view the task result" : "タスクの結果を表示するにはログインしてください",
-    "This task does not exist or has been cleaned up" : "このタスクは存在していません。または削除されています。",
-    "Failed to schedule the task" : "タスクの予定が失敗しました"
+    "This task does not exist or has been cleaned up" : "このタスクは存在していません。または削除されています。"
 },
 "nplurals=1; plural=0;");

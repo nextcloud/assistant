@@ -229,7 +229,6 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "Fichier de sortie pour la tâche {taskId} ({taskTypeName})",
     "Assistant error" : "Erreur de l'assistant",
     "Please log in to view the task result" : "Veuillez vous connecter pour voir le résultat de la tâche",
-    "This task does not exist or has been cleaned up" : "Cette tâche n'existe pas ou a été supprimée",
-    "Failed to schedule the task" : "Échec de la planification de la tâche"
+    "This task does not exist or has been cleaned up" : "Cette tâche n'existe pas ou a été supprimée"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

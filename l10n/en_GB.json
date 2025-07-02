@@ -230,7 +230,6 @@
     "Output file for task {taskId} ({taskTypeName})" : "Output file for task {taskId} ({taskTypeName})",
     "Assistant error" : "Assistant error",
     "Please log in to view the task result" : "Please log in to view the task result",
-    "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
-    "Failed to schedule the task" : "Failed to schedule the task"
+    "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

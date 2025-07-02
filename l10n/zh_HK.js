@@ -232,7 +232,6 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "任務 {taskId} 的輸出檔案（{taskTypeName}）",
     "Assistant error" : "Assistant 錯誤",
     "Please log in to view the task result" : "請登入查看任務結果",
-    "This task does not exist or has been cleaned up" : "任務不存在或已被刪除",
-    "Failed to schedule the task" : "無法安排任務"
+    "This task does not exist or has been cleaned up" : "任務不存在或已被刪除"
 },
 "nplurals=1; plural=0;");

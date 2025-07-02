@@ -81,7 +81,6 @@
     "Upload file" : "Igo fitxategia",
     "Failed to schedule your task" : "Ezin izan da zure zeregina programatu",
     "Assistant error" : "Laguntzailearen errorea",
-    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da",
-    "Failed to schedule the task" : "Ezin izan da zeregina programatu"
+    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

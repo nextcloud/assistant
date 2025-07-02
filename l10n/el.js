@@ -100,7 +100,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Δεν ήταν δυνατή η αντιγραφή του αποτελέσματος στο πρόχειρο",
     "Copy" : "Αντιγραφή",
     "Failed to schedule your task" : "Απέτυχε ο προγραμματισμός της εργασίας σας",
-    "This task does not exist or has been cleaned up" : "Αυτή η εργασία δεν υπάρχει ή έχει καθαριστεί",
-    "Failed to schedule the task" : "Ο προγραμματισμός της εργασίας απέτυχε"
+    "This task does not exist or has been cleaned up" : "Αυτή η εργασία δεν υπάρχει ή έχει καθαριστεί"
 },
 "nplurals=2; plural=(n != 1);");

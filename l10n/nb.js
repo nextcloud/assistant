@@ -174,7 +174,6 @@ OC.L10N.register(
     "Submit the current task's result" : "Send inn resultatet for gjeldende aktivitet",
     "Assistant error" : "Assistentfeil",
     "Please log in to view the task result" : "Logg inn for å se oppgaveresultatet",
-    "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp",
-    "Failed to schedule the task" : "Kunne ikke planlegge oppgaven"
+    "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp"
 },
 "nplurals=2; plural=(n != 1);");

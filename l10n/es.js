@@ -184,7 +184,6 @@ OC.L10N.register(
     "Submit the current task's result" : "Enviar el resultado de la tarea actual",
     "Assistant error" : "Error del asistente",
     "Please log in to view the task result" : "Por favor, inicie sesión para ver el resultado de la tarea",
-    "This task does not exist or has been cleaned up" : "Esta tarea no existe o no ha sido limpiada",
-    "Failed to schedule the task" : "Fallo al agendar la tarea"
+    "This task does not exist or has been cleaned up" : "Esta tarea no existe o no ha sido limpiada"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

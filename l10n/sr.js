@@ -231,7 +231,6 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "Излазни фајл за задатак {taskId} ({taskTypeName})",
     "Assistant error" : "Грешка Асистента",
     "Please log in to view the task result" : "Да бисте видели резултат задатка, молимо вас да се пријавите",
-    "This task does not exist or has been cleaned up" : "Овај задатак не постоји или је обрисан",
-    "Failed to schedule the task" : "Није успело заказивање задатка"
+    "This task does not exist or has been cleaned up" : "Овај задатак не постоји или је обрисан"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

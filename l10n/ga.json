@@ -229,7 +229,6 @@
     "Output file for task {taskId} ({taskTypeName})" : "Comhad aschuir don tasc{taskId}({taskTypeName})",
     "Assistant error" : "Earráid Assistant",
     "Please log in to view the task result" : "Logáil isteach le do thoil chun toradh an taisc a fheiceáil",
-    "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
-    "Failed to schedule the task" : "Theip ar an tasc a sceidealú"
+    "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

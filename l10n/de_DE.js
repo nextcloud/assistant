@@ -211,6 +211,7 @@ OC.L10N.register(
     "Download this media" : "Dieses Medium herunterladen",
     "Save this media" : "Dieses Medium speichern",
     "Share this media" : "Dieses Medium teilen",
+    "Select from storage" : "Aus dem Speicher auswählen",
     "Pick a file" : "Eine Datei auswählen",
     "Clear value" : "Wert löschen",
     "Type some number" : "Eine Zahl eingeben",
@@ -232,7 +233,6 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "Ausgabedatei für die Aufgabe {taskId} ({taskTypeName})",
     "Assistant error" : "Fehler des Assistenten",
     "Please log in to view the task result" : "Bitte anmelden um das Aufgabenergebnis anzusehen",
-    "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt",
-    "Failed to schedule the task" : "Die Aufgabe konnte nicht geplant werden"
+    "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt"
 },
 "nplurals=2; plural=(n != 1);");

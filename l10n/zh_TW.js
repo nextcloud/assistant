@@ -211,6 +211,7 @@ OC.L10N.register(
     "Download this media" : "下載此媒體",
     "Save this media" : "儲存此媒體",
     "Share this media" : "分享此媒體",
+    "Select from storage" : "從儲存空間選取",
     "Pick a file" : "挑選檔案",
     "Clear value" : "清除值",
     "Type some number" : "輸入一些數字",
@@ -232,7 +233,6 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "任務 {taskId} 的輸出檔案（{taskTypeName}）",
     "Assistant error" : "Assistant 錯誤",
     "Please log in to view the task result" : "請登入以檢視任務結果",
-    "This task does not exist or has been cleaned up" : "此任務不存在或已被清除",
-    "Failed to schedule the task" : "安排任務失敗"
+    "This task does not exist or has been cleaned up" : "此任務不存在或已被清除"
 },
 "nplurals=1; plural=0;");

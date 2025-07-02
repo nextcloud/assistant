@@ -203,6 +203,7 @@ OC.L10N.register(
     "Download this media" : "Laadi see meedium alla",
     "Save this media" : "Salvesta meedium",
     "Share this media" : "Jaga seda meediumi",
+    "Select from storage" : "Vali andmeruumist",
     "Pick a file" : "Vali fail",
     "Clear value" : "Eemalda väärtus",
     "Type some number" : "Kirjuta mõni number",
@@ -224,7 +225,6 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "{taskId} ülesande väljund ({taskTypeName})",
     "Assistant error" : "Viga Abilise töös",
     "Please log in to view the task result" : "Ülesande tulemuse nägemiseks logi palun sisse",
-    "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud",
-    "Failed to schedule the task" : "Ülesande ajastamine ei õnnestunud"
+    "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud"
 },
 "nplurals=2; plural=(n != 1);");

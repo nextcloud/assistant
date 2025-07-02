@@ -179,7 +179,6 @@ OC.L10N.register(
     "Submit the current task's result" : "提交当前任务的结果",
     "Assistant error" : "助手错误",
     "Please log in to view the task result" : "请登录以查看任务的结果",
-    "This task does not exist or has been cleaned up" : "此任务不存在或已删除",
-    "Failed to schedule the task" : "任务排期失败"
+    "This task does not exist or has been cleaned up" : "此任务不存在或已删除"
 },
 "nplurals=1; plural=0;");

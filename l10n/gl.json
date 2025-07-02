@@ -199,7 +199,6 @@
     "Submit the current task's result" : "Enviar o resultado da tarefa actual",
     "Assistant error" : "Produciuse un erro do asistente",
     "Please log in to view the task result" : "Acceda para ver o resultado da tarefa",
-    "This task does not exist or has been cleaned up" : "Esta tarefa non existe ou foi limpada",
-    "Failed to schedule the task" : "Produciuse un fallo ao programar a tarefa"
+    "This task does not exist or has been cleaned up" : "Esta tarefa non existe ou foi limpada"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
