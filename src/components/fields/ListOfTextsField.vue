@@ -10,14 +10,13 @@
 		<div class="text-list-field--items">
 			<div v-for="(v, i) in arrayValue"
 				:key="fieldKey + '-' + i"
-				class="text-list--item">
+				class="text-list-field--items--item">
 				<TextInput
 					:id="fieldKey + '-input' + '-' + i"
 					class="text-input"
 					:value="v ?? ''"
 					:is-output="isOutput"
-					:label="field.description"
-					:placeholder="field.description"
+					placeholder="…"
 					:title="field.name"
 					@update:value="onItemValueChanged(i, $event)" />
 				<NcButton v-if="!isOutput"
@@ -111,9 +110,10 @@ export default {
 				this.$emit('update:value', [])
 				return
 			}
-			const newValue = this.arrayValue.slice().splice(i - 1, 1)
+			const newValue = this.arrayValue.slice()
+			newValue.splice(i, 1)
 			this.$emit('update:value', newValue)
-			console.debug('delete', i)
+			console.debug('[Assistant] Delete', i, 'newValue', newValue)
 		},
 		onAddItem() {
 			const newValue = [...this.arrayValue, '']
@@ -125,11 +125,23 @@ export default {
 
 <style lang="scss">
 .text-list-field {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 
 	&--items {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
+
+		&--item {
+			display: flex;
+			gap: 4px;
+			align-items: center;
+			.text-input {
+				flex-grow: 1;
+			}
+		}
 	}
 }
 </style>
