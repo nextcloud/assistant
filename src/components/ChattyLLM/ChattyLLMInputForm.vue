@@ -128,7 +128,8 @@
 				v-model:chat-content="chatContent"
 				class="session-area__input-area"
 				:loading="loading"
-				@submit="handleSubmit" />
+				@submit="handleSubmit"
+				@submit-audio="handleSubmitAudio" />
 		</NcAppContent>
 		<NcDialog :open="sessionIdToDelete !== null"
 			:name="t('assistant', 'Conversation deletion')"
@@ -415,9 +416,31 @@ export default {
 				return
 			}
 
-			console.debug('submit:', event)
 			const role = Roles.HUMAN
 			const content = this.chatContent.trim()
+			const timestamp = +new Date() / 1000 | 0
+			console.debug('[Assistant] submit text', content)
+
+			if (this.active === null) {
+				await this.newSession()
+			}
+
+			// sending a message if there are pending actions means the user rejected the actions
+			// so we can consider the agency confirmation answered
+			if (this.active.sessionAgencyPendingActions) {
+				this.active.agencyAnswered = true
+			}
+
+			this.messages.push({ role, content, timestamp })
+			this.chatContent = ''
+			this.scrollToBottom()
+			await this.newMessage(role, content, timestamp, this.active.id)
+		},
+
+		async handleSubmitAudio(fileId) {
+			console.debug('[Assistant] submit audio', fileId)
+			const role = Roles.HUMAN
+			const content = 'lala' + fileId
 			const timestamp = +new Date() / 1000 | 0
 
 			if (this.active === null) {
@@ -679,7 +702,7 @@ export default {
 		async pollGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollMessageGenerationTimerId = setInterval(() => {
-					if (sessionId !== this.active.id) {
+					if (this.active === null || sessionId !== this.active.id) {
 						console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
 						clearInterval(this.pollMessageGenerationTimerId)
 						return
@@ -715,7 +738,7 @@ export default {
 		async pollTitleGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollTitleGenerationTimerId = setInterval(() => {
-					if (sessionId !== this.active.id) {
+					if (this.active === null || sessionId !== this.active.id) {
 						console.debug('Stop polling title for session ' + sessionId + ' because it is not selected anymore')
 						clearInterval(this.pollTitleGenerationTimerId)
 						return

@@ -38,7 +38,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 	}
 
 	public function getName(): string {
-		return $this->l->t('Generic Assistant');
+		return $this->l->t('Assistant fallback');
 	}
 
 	public function getTaskTypeId(): string {
