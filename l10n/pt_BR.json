@@ -229,8 +229,10 @@
     "Failed to schedule your task" : "Falha ao agendar sua tarefa",
     "Submit the current task's result" : "Enviar o resultado da tarefa atual",
     "Output file for task {taskId} ({taskTypeName})" : "Arquivo da saída para tarefa {taskId} ({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "O servidor não conseguiu processar sua tarefa com o ID {id}. Informe os administradores do servidor sobre este problema.",
     "Assistant error" : "Erro do assistente",
     "Please log in to view the task result" : "Faça login para ver o resultado da tarefa",
-    "This task does not exist or has been cleaned up" : "Esta tarefa não existe ou foi limpa"
+    "This task does not exist or has been cleaned up" : "Esta tarefa não existe ou foi limpa",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "O Assistente não conseguiu agendar sua tarefa. Tente novamente e informe os administradores do servidor se o problema persistir."
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

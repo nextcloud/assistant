@@ -209,6 +209,7 @@
     "Download this media" : "下載此媒體",
     "Save this media" : "保存此媒體",
     "Share this media" : "分享此媒體",
+    "Select from storage" : "從儲存空間選取",
     "Pick a file" : "挑選一個檔案",
     "Clear value" : "清除數值",
     "Type some number" : "輸入某些號碼",
@@ -228,8 +229,10 @@
     "Failed to schedule your task" : "無法安排您的任務",
     "Submit the current task's result" : "遞交目前任務的結果",
     "Output file for task {taskId} ({taskTypeName})" : "任務 {taskId} 的輸出檔案（{taskTypeName}）",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "伺服器無法處理您 ID 為 {id} 的任務。請通知伺服器管理員此問題。",
     "Assistant error" : "Assistant 錯誤",
     "Please log in to view the task result" : "請登入查看任務結果",
-    "This task does not exist or has been cleaned up" : "任務不存在或已被刪除"
+    "This task does not exist or has been cleaned up" : "任務不存在或已被刪除",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "小幫手排程您的任務失敗。請再試一次，如果問題仍然存在，請通知伺服器管理員。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

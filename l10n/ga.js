@@ -202,6 +202,7 @@ OC.L10N.register(
     "Could not upload the recorded file" : "Níorbh fhéidir an comhad taifeadta a uaslódáil",
     "Output file share link copied to clipboard" : "Nasc comhroinnte aschuir arna chóipeáil chuig an ngearrthaisce",
     "Click this to open the file" : "Cliceáil seo chun an comhad a oscailt",
+    "This output file has been saved in {path}" : "Tá an comhad aschuir seo sábháilte i {path}",
     "Could not copy to clipboard" : "Níorbh fhéidir cóip a dhéanamh chuig an ngearrthaisce",
     "Upload from device" : "Íosluchtaigh ó gléas",
     "Select from Nextcloud" : "Roghnaigh ó Nextcloud",
@@ -210,6 +211,7 @@ OC.L10N.register(
     "Download this media" : "Íosluchtaigh meáin seo",
     "Save this media" : "Sábháil an meán seo",
     "Share this media" : "Roinn na meáin seo",
+    "Select from storage" : "Roghnaigh ón stóras",
     "Pick a file" : "Pioc comhad",
     "Clear value" : "Luach soiléir",
     "Type some number" : "Clóscríobh uimhir éigin",
@@ -229,8 +231,10 @@ OC.L10N.register(
     "Failed to schedule your task" : "Theip ar do thasc a sceidealú",
     "Submit the current task's result" : "Cuir isteach toradh an taisc reatha",
     "Output file for task {taskId} ({taskTypeName})" : "Comhad aschuir don tasc{taskId}({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "Theip ar an bhfreastalaí do thasc leis an ID {id} a phróiseáil. Cuir riarthóirí an fhreastalaí ar an eolas faoin gceist seo, le do thoil.",
     "Assistant error" : "Earráid Assistant",
     "Please log in to view the task result" : "Logáil isteach le do thoil chun toradh an taisc a fheiceáil",
-    "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas"
+    "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Theip ar an gCúntóir do thasc a sceidealú. Déan iarracht arís agus cuir na riarthóirí freastalaí ar an eolas má leanann an fhadhb seo ar aghaidh."
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

@@ -211,6 +211,7 @@ OC.L10N.register(
     "Download this media" : "Download this media",
     "Save this media" : "Save this media",
     "Share this media" : "Share this media",
+    "Select from storage" : "Select from storage",
     "Pick a file" : "Pick a file",
     "Clear value" : "Clear value",
     "Type some number" : "Type some number",
@@ -230,8 +231,10 @@ OC.L10N.register(
     "Failed to schedule your task" : "Failed to schedule your task",
     "Submit the current task's result" : "Submit the current task's result",
     "Output file for task {taskId} ({taskTypeName})" : "Output file for task {taskId} ({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "The server failed to process your task with ID {id}. Please inform the server administrators of this issue.",
     "Assistant error" : "Assistant error",
     "Please log in to view the task result" : "Please log in to view the task result",
-    "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up"
+    "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists."
 },
 "nplurals=2; plural=(n != 1);");

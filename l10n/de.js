@@ -231,8 +231,10 @@ OC.L10N.register(
     "Failed to schedule your task" : "Die Planung deiner Aufgabe ist fehlgeschlagen",
     "Submit the current task's result" : "Das Ergebnis der aktuellen Aufgabe übermitteln",
     "Output file for task {taskId} ({taskTypeName})" : "Ausgabedatei für die Aufgabe {taskId} ({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "Der Server konnte deine Aufgabe mit der ID {id} nicht verarbeiten. Bitte informiere die Serveradministration über dieses Problem.",
     "Assistant error" : "Fehler des Assistenten",
     "Please log in to view the task result" : "Bitte anmelden um das Aufgabenergebnis anzusehen",
-    "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt"
+    "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Der Assistent konnte deine Aufgabe nicht planen. Bitte versuche es erneut und informiere die Serveradministration, falls das Problem weiterhin besteht."
 },
 "nplurals=2; plural=(n != 1);");

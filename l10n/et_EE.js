@@ -87,6 +87,7 @@ OC.L10N.register(
     "Launch a task" : "Käivita ülesanne",
     "Failed to parse some files" : "Ei õnnestunud töödelda mõnda faili",
     "Generate a first draft for a blog post about privacy" : "Koosta esimene privaatsusteemalise blogipostituse kavand",
+    "What is the venue for the team retreat this quarter?" : "Missuguse koha me valime selle kvartali tiimiürituseks?",
     "Type or paste the text to summarize" : "Ülevaate koostamiseks kirjuta või aseta tekst",
     "Type or paste the text to generate a headline for" : "Alapealkirja koostamiseks kirjuta või aseta tekst",
     "Type or paste the text to extract the topics from" : "Sisesta või kopeeri siia tekst, kust tahad teemasid tuvastada",
@@ -223,8 +224,10 @@ OC.L10N.register(
     "Failed to schedule your task" : "Sinu ülesande ajastamine ei õnnestunud",
     "Submit the current task's result" : "Saada praeguse ülesande tulemus",
     "Output file for task {taskId} ({taskTypeName})" : "{taskId} ülesande väljund ({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "Serveril ei õnnestunud ülesande nr {id} töötlemine. Palun teavita sellest serveri haldajat.",
     "Assistant error" : "Viga Abilise töös",
     "Please log in to view the task result" : "Ülesande tulemuse nägemiseks logi palun sisse",
-    "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud"
+    "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Abiline ei suutnud sinu lisatud ülesannet ajastada. Palun proovi uuesti ja kui viga kestab, siis palun teavita sellest serveri haldajat."
 },
 "nplurals=2; plural=(n != 1);");
