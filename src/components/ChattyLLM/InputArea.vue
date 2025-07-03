@@ -18,7 +18,8 @@
 			@update:model-value="$emit('update:chatContent', $event)"
 			@submit="$emit('submit', $event)" />
 		<div class="input-area__button-box">
-			<NcButton class="input-area__button-box__button"
+			<NcButton v-if="chatContent"
+				class="input-area__button-box__button"
 				:aria-label="submitBtnAriaText"
 				:disabled="disabled || !chatContent.trim()"
 				variant="primary"
@@ -27,6 +28,11 @@
 					<SendIcon :size="20" />
 				</template>
 			</NcButton>
+			<AudioRecorderWrapper v-else
+				v-model:is-recording="isRecording"
+				:compact="true"
+				:disabled="disabled"
+				@new-recording="onNewRecording" />
 		</div>
 	</div>
 </template>
@@ -34,10 +40,15 @@
 <script>
 import SendIcon from 'vue-material-design-icons/Send.vue'
 
-import isMobile from '../../mixins/isMobile.js'
-
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
+
+import AudioRecorderWrapper from '../fields/AudioRecorderWrapper.vue'
+
+import isMobile from '../../mixins/isMobile.js'
+import { generateOcsUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
+import { showError } from '@nextcloud/dialogs'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -50,8 +61,8 @@ export default {
 	name: 'InputArea',
 
 	components: {
+		AudioRecorderWrapper,
 		SendIcon,
-
 		NcButton,
 		NcRichContenteditable,
 	},
@@ -80,13 +91,18 @@ export default {
 		},
 	},
 
-	emits: ['update:chatContent', 'submit'],
+	emits: [
+		'update:chatContent',
+		'submit',
+		'submit-audio',
+	],
 
 	data: () => {
 		return {
 			placeholderText: t('assistant', 'Type a message…'),
 			thinkingText: t('assistant', 'Processing…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
+			isRecording: false,
 		}
 	},
 
@@ -104,6 +120,18 @@ export default {
 		focus() {
 			this.$nextTick(() => {
 				this.$refs.richContenteditable.focus()
+			})
+		},
+		onNewRecording(blob) {
+			const url = generateOcsUrl('/apps/assistant/api/v1/input-file')
+			const formData = new FormData()
+			formData.append('data', blob)
+			formData.append('filename', 'chat-input.mp3')
+			axios.post(url, formData).then(response => {
+				this.$emit('submit-audio', response.data.ocs.data.fileId)
+			}).catch(error => {
+				showError(t('assistant', 'Could not upload the recorded file'))
+				console.error(error)
 			})
 		},
 	},
