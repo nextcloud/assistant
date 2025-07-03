@@ -22,6 +22,8 @@ use OCA\Assistant\Reference\FreePromptReferenceProvider;
 use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
 use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
+use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
+use OCA\Assistant\TaskProcessing\AudioToAudioChatTaskType;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 
@@ -70,6 +72,9 @@ class Application extends App implements IBootstrap {
 		$context->registerNotifierService(Notifier::class);
 
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
+
+		$context->registerTaskProcessingTaskType(AudioToAudioChatTaskType::class);
+		$context->registerTaskProcessingProvider(AudioToAudioChatProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {
