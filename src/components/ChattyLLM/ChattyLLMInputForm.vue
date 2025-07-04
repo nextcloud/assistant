@@ -128,7 +128,8 @@
 				v-model:chat-content="chatContent"
 				class="session-area__input-area"
 				:loading="loading"
-				@submit="handleSubmit" />
+				@submit="handleSubmit"
+				@submit-audio="handleSubmitAudio" />
 		</NcAppContent>
 		<NcDialog :open="sessionIdToDelete !== null"
 			:name="t('assistant', 'Conversation deletion')"
@@ -182,6 +183,7 @@ import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import moment from 'moment'
+import { SHAPE_TYPE_NAMES } from '../../constants.js'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -415,10 +417,10 @@ export default {
 				return
 			}
 
-			console.debug('submit:', event)
 			const role = Roles.HUMAN
 			const content = this.chatContent.trim()
 			const timestamp = +new Date() / 1000 | 0
+			console.debug('[Assistant] submit text', content)
 
 			if (this.active === null) {
 				await this.newSession()
@@ -430,10 +432,33 @@ export default {
 				this.active.agencyAnswered = true
 			}
 
-			this.messages.push({ role, content, timestamp })
+			this.messages.push({ role, content, timestamp, session_id: this.active.id })
 			this.chatContent = ''
 			this.scrollToBottom()
 			await this.newMessage(role, content, timestamp, this.active.id)
+		},
+
+		async handleSubmitAudio(fileId) {
+			console.debug('[Assistant] submit audio', fileId)
+			const role = Roles.HUMAN
+			const content = ''
+			const timestamp = +new Date() / 1000 | 0
+			const attachments = [{ type: SHAPE_TYPE_NAMES.Audio, fileId }]
+
+			if (this.active === null) {
+				await this.newSession()
+			}
+
+			// sending a message if there are pending actions means the user rejected the actions
+			// so we can consider the agency confirmation answered
+			if (this.active.sessionAgencyPendingActions) {
+				this.active.agencyAnswered = true
+			}
+
+			this.messages.push({ role, content, timestamp, session_id: this.active.id, attachments })
+			this.chatContent = ''
+			this.scrollToBottom()
+			await this.newMessage(role, content, timestamp, this.active.id, attachments)
 		},
 
 		onLoadOlderMessages() {
@@ -573,7 +598,7 @@ export default {
 			}
 		},
 
-		async newMessage(role, content, timestamp, sessionId, replaceLastMessage = true, agencyConfirm = null) {
+		async newMessage(role, content, timestamp, sessionId, attachments = null, replaceLastMessage = true, agencyConfirm = null) {
 			try {
 				this.loading.newHumanMessage = true
 				const firstHumanMessage = this.messages.length === 1 && this.messages[0].role === Roles.HUMAN
@@ -582,12 +607,16 @@ export default {
 					sessionId,
 					role,
 					content,
+					attachments,
 					timestamp,
 					firstHumanMessage,
 				})
 				const newMessageResponseData = newMessageResponse.data
 				console.debug('newMessage response:', newMessageResponseData)
 				this.loading.newHumanMessage = false
+
+				// we need the ID of the messages, even right after they have been added
+				this.messages[this.messages.length - 1].id = newMessageResponseData.id
 
 				if (replaceLastMessage) {
 					// replace the last message with the response that contains the id
@@ -679,7 +708,7 @@ export default {
 		async pollGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollMessageGenerationTimerId = setInterval(() => {
-					if (sessionId !== this.active.id) {
+					if (this.active === null || sessionId !== this.active.id) {
 						console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
 						clearInterval(this.pollMessageGenerationTimerId)
 						return
@@ -693,6 +722,12 @@ export default {
 						if (sessionId === this.active.id) {
 							this.active.sessionAgencyPendingActions = responseData.sessionAgencyPendingActions
 							this.active.agencyAnswered = false
+							// update content of previous message if we receive an audio message from the assistant
+							if (responseData.role === Roles.ASSISTANT && responseData.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio)) {
+								this.updateLastHumanMessageContent()
+							}
+							// auto play fresh messages
+							responseData.autoPlay = true
 							resolve(responseData)
 						} else {
 							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')
@@ -712,10 +747,22 @@ export default {
 			})
 		},
 
+		async updateLastHumanMessageContent() {
+			const lastHumanMessage = this.messages
+				.filter(m => m.role === Roles.HUMAN)
+				.pop()
+			if (lastHumanMessage) {
+				const updatedMessage = await axios.get(
+					getChatURL(`/sessions/${lastHumanMessage.session_id}/messages/${lastHumanMessage.id}`),
+				)
+				lastHumanMessage.content = updatedMessage.data.content
+			}
+		},
+
 		async pollTitleGenerationTask(taskId, sessionId) {
 			return new Promise((resolve, reject) => {
 				this.pollTitleGenerationTimerId = setInterval(() => {
-					if (sessionId !== this.active.id) {
+					if (this.active === null || sessionId !== this.active.id) {
 						console.debug('Stop polling title for session ' + sessionId + ' because it is not selected anymore')
 						clearInterval(this.pollTitleGenerationTimerId)
 						return
@@ -758,7 +805,7 @@ export default {
 			// this.messages.push({ role, content, timestamp })
 			this.chatContent = ''
 			this.scrollToBottom()
-			await this.newMessage(role, content, timestamp, this.active.id, false, confirm)
+			await this.newMessage(role, content, timestamp, this.active.id, null, false, confirm)
 		},
 
 		async saveLastSelectedTaskType(taskType) {

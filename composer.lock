@@ -776,12 +776,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-deps/ocp.git",
-                "reference": "e2304c4f0f5ecf7fe16a3d3745c63b5f019dc718"
+                "reference": "833fdb31f00799d699dcc4ac65b057dd89588891"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/e2304c4f0f5ecf7fe16a3d3745c63b5f019dc718",
-                "reference": "e2304c4f0f5ecf7fe16a3d3745c63b5f019dc718",
+                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/833fdb31f00799d699dcc4ac65b057dd89588891",
+                "reference": "833fdb31f00799d699dcc4ac65b057dd89588891",
                 "shasum": ""
             },
             "require": {
@@ -817,7 +817,7 @@
                 "issues": "https://github.com/nextcloud-deps/ocp/issues",
                 "source": "https://github.com/nextcloud-deps/ocp/tree/master"
             },
-            "time": "2025-04-09T00:48:03+00:00"
+            "time": "2025-07-01T15:03:36+00:00"
         },
         {
             "name": "nextcloud/openapi-extractor",
@@ -2823,7 +2823,7 @@
     "platform": {
         "php": "^8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1"
     },
