@@ -25,6 +25,8 @@ use OCP\DB\Types;
  * @method \void setOcpTaskId(int $ocpTaskId)
  * @method \string getSources()
  * @method \void setSources(string $sources)
+ * @method \string getAttachments()
+ * @method \void setAttachments(string $attachments)
  */
 class Message extends Entity implements \JsonSerializable {
 	/** @var int */
@@ -39,6 +41,8 @@ class Message extends Entity implements \JsonSerializable {
 	protected $ocpTaskId;
 	/** @var string */
 	protected $sources;
+	/** @var string */
+	protected $attachments;
 
 	public static $columns = [
 		'id',
@@ -48,6 +52,7 @@ class Message extends Entity implements \JsonSerializable {
 		'timestamp',
 		'ocp_task_id',
 		'sources',
+		'attachments',
 	];
 	public static $fields = [
 		'id',
@@ -57,6 +62,7 @@ class Message extends Entity implements \JsonSerializable {
 		'timestamp',
 		'ocpTaskId',
 		'sources',
+		'attachments',
 	];
 
 	public function __construct() {
@@ -66,6 +72,7 @@ class Message extends Entity implements \JsonSerializable {
 		$this->addType('timestamp', Types::INTEGER);
 		$this->addType('ocp_task_id', Types::INTEGER);
 		$this->addType('sources', Types::STRING);
+		$this->addType('attachments', Types::STRING);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -78,6 +85,7 @@ class Message extends Entity implements \JsonSerializable {
 			'timestamp' => $this->timestamp,
 			'ocp_task_id' => $this->ocpTaskId,
 			'sources' => $this->sources,
+			'attachments' => json_decode($this->attachments, true) ?: [],
 		];
 	}
 }

@@ -250,6 +250,7 @@ class ChattyLLMController extends OCSController {
 	 * @param string $role Role of the message (human, assistant etc...)
 	 * @param string $content Content of the message
 	 * @param int $timestamp Date of the message
+	 * @param ?array $attachments List of attachment objects
 	 * @param bool $firstHumanMessage Is it the first human message of the session?
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
@@ -260,7 +261,9 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function newMessage(int $sessionId, string $role, string $content, int $timestamp, bool $firstHumanMessage = false): JSONResponse {
+	public function newMessage(
+		int $sessionId, string $role, string $content, int $timestamp, ?array $attachments = null, bool $firstHumanMessage = false,
+	): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -271,10 +274,13 @@ class ChattyLLMController extends OCSController {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
+			// refuse empty text content if context agent is not available (we do classic chat) AND there is no attachment
+			// in other words: accept empty content if we are using agency OR there are attachments
 			$content = trim($content);
 			if (empty($content)
 				&& (!class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
 					|| !isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]))
+				&& $attachments === null
 			) {
 				return new JSONResponse(['error' => $this->l10n->t('Message content is empty')], Http::STATUS_BAD_REQUEST);
 			}
@@ -285,6 +291,13 @@ class ChattyLLMController extends OCSController {
 			$message->setContent($content);
 			$message->setTimestamp($timestamp);
 			$message->setSources('[]');
+			$message->setAttachments('[]');
+			if ($attachments !== null) {
+				$encodedAttachments = json_encode($attachments);
+				if ($encodedAttachments !== false) {
+					$message->setAttachments($encodedAttachments);
+				}
+			}
 			$this->messageMapper->insert($message);
 
 			if ($firstHumanMessage) {
@@ -340,6 +353,44 @@ class ChattyLLMController extends OCSController {
 		} catch (\OCP\DB\Exception $e) {
 			$this->logger->warning('Failed to get chat messages', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to get chat messages')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Get a message
+	 *
+	 * Get a chat message in a session
+	 *
+	 * @param int $sessionId The session ID
+	 * @param int $messageId The message ID
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 * 200: The message has been successfully obtained
+	 * 401: Not logged in
+	 * 404: The session or the message was not found
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function getMessage(int $sessionId, int $messageId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
+			if (!$sessionExists) {
+				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
+			}
+
+			$message = $this->messageMapper->getMessageById($messageId);
+			if ($message->getSessionId() !== $sessionId) {
+				return new JSONResponse(['error' => $this->l10n->t('Message not found')], Http::STATUS_NOT_FOUND);
+			}
+
+			return new JSONResponse($message->jsonSerialize());
+		} catch (\OCP\DB\Exception $e) {
+			$this->logger->warning('Failed to get chat messages', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get chat message')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -431,16 +482,39 @@ class ChattyLLMController extends OCSController {
 				$lastUserMessage = array_pop($history);
 			} while ($lastUserMessage->getRole() !== 'human');
 			// history is a list of JSON strings
+			// we ignore audio attachments here because they are supposed to have been transcribed, the content is the transcription
+			// this makes the history smaller
 			$history = array_map(static function (Message $message) {
 				return json_encode([
 					'role' => $message->getRole(),
 					'content' => $message->getContent(),
 				]);
 			}, $history);
-			try {
-				$taskId = $this->scheduleLLMChatTask($lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
-			} catch (\Exception $e) {
-				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+
+			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
+			$audioAttachment = $lastAttachments[0] ?? null;
+			$audioAttachment = $audioAttachment['type'] === 'Audio' ? $audioAttachment : null;
+			/* php 8.4 allows:
+			$audioAttachment = array_find($lastAttachments, static function (array $attachment) {
+				return $attachment['type'] === 'Audio';
+			});
+			*/
+			if ($audioAttachment !== null
+				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
+				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID])
+			) {
+				$fileId = $audioAttachment['fileId'];
+				try {
+					$taskId = $this->scheduleAudioChatTask($fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
+			} else {
+				try {
+					$taskId = $this->scheduleLLMChatTask($lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
 			}
 		}
 
@@ -845,6 +919,27 @@ class ChattyLLMController extends OCSController {
 			Application::APP_ID . ':chatty-llm',
 			$this->userId,
 			$customId
+		);
+		$this->taskProcessingManager->scheduleTask($task);
+		return $task->getId() ?? 0;
+	}
+
+	private function scheduleAudioChatTask(
+		int $audioFileId, string $systemPrompt, array $history, int $sessionId, int $queryMessageId,
+	): int {
+		$customId = 'chatty-llm:' . $sessionId . ':' . $queryMessageId;
+		$this->checkIfSessionIsThinking($customId);
+		$input = [
+			'input' => $audioFileId,
+			'system_prompt' => $systemPrompt,
+			'history' => $history,
+		];
+		$task = new Task(
+			\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID,
+			$input,
+			Application::APP_ID . ':chatty-llm',
+			$this->userId,
+			$customId,
 		);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId() ?? 0;

@@ -43,6 +43,7 @@
 				:class="{ row: isAudioList }">
 				<component :is="displayComponent"
 					:file-id="fileId"
+					:task-id="providedCurrentTaskId()"
 					:is-output="isOutput"
 					:clickable="isOutput"
 					@delete="onDelete(fileId)"

@@ -52,17 +52,30 @@ class ChattyLLMTaskListener implements IEventListener {
 		}
 
 		// message generation
-		if (preg_match('/^chatty-llm:(\d+)$/', $customId, $matches)) {
+		if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
 
 			$message = new Message();
 			$message->setSessionId($sessionId);
 			$message->setOcpTaskId($task->getId());
 			$message->setRole('assistant');
-			$message->setContent(trim($task->getOutput()['output'] ?? ''));
 			$message->setTimestamp(time());
 			$sources = json_encode($task->getOutput()['sources'] ?? []);
-			$message->setSources($sources ? $sources : '[]');
+			$message->setSources($sources ?: '[]');
+			if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID) {
+				$message->setContent(trim($task->getOutput()['output_transcript'] ?? ''));
+				$message->setAttachments('[{"type":"Audio","fileId":' . $task->getOutput()['output'] . '}]');
+				// now we have the transcription of the user audio input
+				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
+					$queryMessageId = (int)$matches[1];
+					$queryMessage = $this->messageMapper->getMessageById($queryMessageId);
+					$queryMessage->setContent(trim($task->getOutput()['input_transcript'] ?? ''));
+					$this->messageMapper->update($queryMessage);
+				}
+			} else {
+				$message->setContent(trim($task->getOutput()['output'] ?? ''));
+			}
 			try {
 				$this->messageMapper->insert($message);
 			} catch (\OCP\DB\Exception $e) {
