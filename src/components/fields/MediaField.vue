@@ -37,6 +37,7 @@
 			</div-->
 			<component :is="displayComponent"
 				:file-id="value"
+				:task-id="providedCurrentTaskId()"
 				:show-delete="false"
 				:is-output="isOutput"
 				:clickable="true"
