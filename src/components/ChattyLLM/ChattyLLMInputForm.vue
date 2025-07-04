@@ -726,6 +726,8 @@ export default {
 							if (responseData.role === Roles.ASSISTANT && responseData.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio)) {
 								this.updateLastHumanMessageContent()
 							}
+							// auto play fresh messages
+							responseData.autoPlay = true
 							resolve(responseData)
 						} else {
 							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')
