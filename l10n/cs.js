@@ -230,8 +230,10 @@ OC.L10N.register(
     "Failed to schedule your task" : "Nepodařilo se naplánovat vaši úlohu",
     "Submit the current task's result" : "Odeslat výsledek stávajícího úkolu",
     "Output file for task {taskId} ({taskTypeName})" : "Výstupní soubor pro úkol {taskId} ({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "Serveru se nepodařilo zpracovat úkol od vás, který má identifikátor {id}. Sdělte tento problém správcům serveru, který využíváte.",
     "Assistant error" : "Chyba asistenta",
     "Please log in to view the task result" : "Pro zobrazení výsledku úkolu se přihlaste",
-    "This task does not exist or has been cleaned up" : "Tato úloha neexistuje nebo byla vyčištěna"
+    "This task does not exist or has been cleaned up" : "Tato úloha neexistuje nebo byla vyčištěna",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Asistentovi se nepodařilo naplánovat úkol od vás. Zkuste to znovu a pokud problém přetrvá, informujte o tom správce vámi využívaného serveru."
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");
