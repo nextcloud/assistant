@@ -281,6 +281,10 @@ class AssistantService {
 					&& $typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
 					continue;
 				}
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
+					&& $typeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID) {
+					continue;
+				}
 			}
 			if ($typeId === TextToTextChat::ID) {
 				// add the chattyUI virtual task type
