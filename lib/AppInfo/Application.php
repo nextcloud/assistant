@@ -23,6 +23,7 @@ use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
 use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
+use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 
@@ -74,6 +75,9 @@ class Application extends App implements IBootstrap {
 
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
 			$context->registerTaskProcessingProvider(AudioToAudioChatProvider::class);
+		}
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')) {
+			$context->registerTaskProcessingProvider(ContextAgentAudioInteractionProvider::class);
 		}
 	}
 
