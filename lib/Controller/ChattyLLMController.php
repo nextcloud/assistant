@@ -250,7 +250,7 @@ class ChattyLLMController extends OCSController {
 	 * @param string $role Role of the message (human, assistant etc...)
 	 * @param string $content Content of the message
 	 * @param int $timestamp Date of the message
-	 * @param ?array $attachments List of attachment objects
+	 * @param ?list<array{type: string, fileId: int}> $attachments List of attachment objects
 	 * @param bool $firstHumanMessage Is it the first human message of the session?
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
