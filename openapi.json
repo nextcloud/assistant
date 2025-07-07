@@ -49,6 +49,7 @@
                     "role",
                     "content",
                     "timestamp",
+                    "attachments",
                     "ocp_task_id",
                     "sources"
                 ],
@@ -70,6 +71,25 @@
                     "timestamp": {
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "attachments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "type",
+                                "fileId"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "fileId": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                }
+                            }
+                        }
                     },
                     "ocp_task_id": {
                         "type": "integer",
@@ -2479,6 +2499,27 @@
                                         "format": "int64",
                                         "description": "Date of the message"
                                     },
+                                    "attachments": {
+                                        "type": "array",
+                                        "nullable": true,
+                                        "description": "List of attachment objects",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "type",
+                                                "fileId"
+                                            ],
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "fileId": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                }
+                                            }
+                                        }
+                                    },
                                     "firstHumanMessage": {
                                         "type": "boolean",
                                         "default": false,
@@ -2813,6 +2854,122 @@
                     },
                     "404": {
                         "description": "The session was not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/assistant/chat/sessions/{sessionId}/messages/{messageId}": {
+            "get": {
+                "operationId": "chattyllm-get-message",
+                "summary": "Get a message",
+                "description": "Get a chat message in a session",
+                "tags": [
+                    "chat_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sessionId",
+                        "in": "path",
+                        "description": "The session ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "messageId",
+                        "in": "path",
+                        "description": "The message ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The message has been successfully obtained",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ChatMessage"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The session or the message was not found",
                         "content": {
                             "application/json": {
                                 "schema": {
