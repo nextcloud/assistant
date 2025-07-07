@@ -723,7 +723,10 @@ export default {
 							this.active.sessionAgencyPendingActions = responseData.sessionAgencyPendingActions
 							this.active.agencyAnswered = false
 							// update content of previous message if we receive an audio message from the assistant
-							if (responseData.role === Roles.ASSISTANT && responseData.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio)) {
+							// or if the last human message had an audio attachment
+							if (this.doesLastHumanMessageHasAudio()
+								|| (responseData.role === Roles.ASSISTANT && responseData.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio))
+							) {
 								this.updateLastHumanMessageContent()
 							}
 							// auto play fresh messages
@@ -747,10 +750,22 @@ export default {
 			})
 		},
 
-		async updateLastHumanMessageContent() {
-			const lastHumanMessage = this.messages
+		getLastHumanMessage() {
+			return this.messages
 				.filter(m => m.role === Roles.HUMAN)
 				.pop()
+		},
+
+		doesLastHumanMessageHasAudio() {
+			const lastHumanMessage = this.getLastHumanMessage()
+			if (lastHumanMessage) {
+				return lastHumanMessage.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio)
+			}
+			return false
+		},
+
+		async updateLastHumanMessageContent() {
+			const lastHumanMessage = this.getLastHumanMessage()
 			if (lastHumanMessage) {
 				const updatedMessage = await axios.get(
 					getChatURL(`/sessions/${lastHumanMessage.session_id}/messages/${lastHumanMessage.id}`),

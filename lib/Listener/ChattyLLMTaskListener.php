@@ -55,6 +55,13 @@ class ChattyLLMTaskListener implements IEventListener {
 		if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
 
+			$isAgency = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID;
+			$isAudioChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID;
+			$isAgencyAudioChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID;
+
 			$message = new Message();
 			$message->setSessionId($sessionId);
 			$message->setOcpTaskId($task->getId());
@@ -62,10 +69,13 @@ class ChattyLLMTaskListener implements IEventListener {
 			$message->setTimestamp(time());
 			$sources = json_encode($task->getOutput()['sources'] ?? []);
 			$message->setSources($sources ?: '[]');
-			if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
-				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID) {
-				$message->setContent(trim($task->getOutput()['output_transcript'] ?? ''));
-				$message->setAttachments('[{"type":"Audio","fileId":' . $task->getOutput()['output'] . '}]');
+			if ($isAudioChat || $isAgencyAudioChat) {
+				$outputTranscript = trim($task->getOutput()['output_transcript'] ?? '');
+				$message->setContent($outputTranscript);
+				// agency might not return any output but just ask for confirmation
+				if ($outputTranscript !== '') {
+					$message->setAttachments('[{"type":"Audio","fileId":' . $task->getOutput()['output'] . '}]');
+				}
 				// now we have the transcription of the user audio input
 				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
 					$queryMessageId = (int)$matches[1];
@@ -83,8 +93,7 @@ class ChattyLLMTaskListener implements IEventListener {
 			}
 
 			// store the conversation token and the actions if we are using the agency feature
-			if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
-				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+			if ($isAgency || $isAgencyAudioChat) {
 				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 				$conversationToken = ($task->getOutput()['conversation_token'] ?? null) ?: null;
 				$pendingActions = ($task->getOutput()['actions'] ?? null) ?: null;

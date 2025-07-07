@@ -145,6 +145,7 @@ class ChattyLLMController extends OCSController {
 			$systemMsg = new Message();
 			$systemMsg->setSessionId($session->getId());
 			$systemMsg->setRole('system');
+			$systemMsg->setAttachments('[]');
 			$systemMsg->setContent($userInstructions);
 			$systemMsg->setTimestamp($session->getTimestamp());
 			$systemMsg->setSources('[]');
@@ -461,14 +462,32 @@ class ChattyLLMController extends OCSController {
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
 			&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID])
 		) {
-			$message = $this->messageMapper->getLastHumanMessage($sessionId);
-			$prompt = $message->getContent();
+			$lastUserMessage = $this->messageMapper->getLastHumanMessage($sessionId);
 			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
 			$lastConversationToken = $session->getAgencyConversationToken() ?? '{}';
-			try {
-				$taskId = $this->scheduleAgencyTask($prompt, $agencyConfirm, $lastConversationToken, $sessionId);
-			} catch (\Exception $e) {
-				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+
+			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
+			$audioAttachment = $lastAttachments[0] ?? null;
+			$audioAttachment = $audioAttachment['type'] === 'Audio' ? $audioAttachment : null;
+			if ($audioAttachment !== null
+				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
+				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID])
+			) {
+				// audio agency
+				$fileId = $audioAttachment['fileId'];
+				try {
+					$taskId = $this->scheduleAgencyAudioTask($fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId());
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
+			} else {
+				// classic agency
+				$prompt = $lastUserMessage->getContent();
+				try {
+					$taskId = $this->scheduleAgencyTask($prompt, $agencyConfirm, $lastConversationToken, $sessionId);
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
 			}
 		} else {
 			// classic chat
@@ -940,6 +959,27 @@ class ChattyLLMController extends OCSController {
 			Application::APP_ID . ':chatty-llm',
 			$this->userId,
 			$customId,
+		);
+		$this->taskProcessingManager->scheduleTask($task);
+		return $task->getId() ?? 0;
+	}
+
+	private function scheduleAgencyAudioTask(
+		int $audioFileId, int $confirmation, string $conversationToken, int $sessionId, int $queryMessageId,
+	): int {
+		$customId = 'chatty-llm:' . $sessionId . ':' . $queryMessageId;
+		$this->checkIfSessionIsThinking($customId);
+		$taskInput = [
+			'input' => $audioFileId,
+			'confirmation' => $confirmation,
+			'conversation_token' => $conversationToken,
+		];
+		$task = new Task(
+			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,
+			$taskInput,
+			Application::APP_ID . ':chatty-llm',
+			$this->userId,
+			$customId
 		);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId() ?? 0;
