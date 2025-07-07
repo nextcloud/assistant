@@ -14,10 +14,9 @@ use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
 use OCP\IL10N;
-use OCP\TaskProcessing\EShapeType;
 use OCP\TaskProcessing\ISynchronousProvider;
-use OCP\TaskProcessing\ShapeDescriptor;
 use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\AudioToAudioChat;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToSpeech;
 use OCP\TaskProcessing\TaskTypes\TextToTextChat;
@@ -42,10 +41,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 	}
 
 	public function getTaskTypeId(): string {
-		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
-			return \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID;
-		}
-		return AudioToAudioChatTaskType::ID;
+		return AudioToAudioChat::ID;
 	}
 
 	public function getExpectedRuntime(): int {
@@ -78,13 +74,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 	}
 
 	public function getOptionalOutputShape(): array {
-		return [
-			'input_transcript' => new ShapeDescriptor(
-				$this->l->t('Input transcript'),
-				$this->l->t('Input transcription'),
-				EShapeType::Text,
-			),
-		];
+		return [];
 	}
 
 	public function getOptionalOutputShapeEnumValues(): array {
