@@ -13,9 +13,12 @@ use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\TaskProcessingService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
+use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\TextToSpeech;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -26,6 +29,7 @@ class ChattyLLMTaskListener implements IEventListener {
 	public function __construct(
 		private MessageMapper $messageMapper,
 		private SessionMapper $sessionMapper,
+		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -75,7 +79,7 @@ class ChattyLLMTaskListener implements IEventListener {
 				$message->setContent($outputTranscript);
 				// agency might not return any output but just ask for confirmation
 				if ($outputTranscript !== '') {
-					$message->setAttachments('[{"type":"Audio","fileId":' . $task->getOutput()['output'] . '}]');
+					$message->setAttachments('[{"type":"Audio","file_id":' . $task->getOutput()['output'] . '}]');
 				}
 				// now we have the transcription of the user audio input
 				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
@@ -85,7 +89,9 @@ class ChattyLLMTaskListener implements IEventListener {
 					$this->messageMapper->update($queryMessage);
 				}
 			} else {
-				$message->setContent(trim($task->getOutput()['output'] ?? ''));
+				$content = trim($task->getOutput()['output'] ?? '');
+				$message->setContent($content);
+				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());
 			}
 			try {
 				$this->messageMapper->insert($message);
@@ -103,5 +109,49 @@ class ChattyLLMTaskListener implements IEventListener {
 				$this->sessionMapper->update($session);
 			}
 		}
+	}
+
+	/**
+	 * Run TTS on the response of an agency confirmation message
+	 *
+	 * @param int $sessionId
+	 * @param Message $message
+	 * @param string $taskTypeId
+	 * @param string|null $userId
+	 * @return void
+	 */
+	private function runTtsIfNeeded(int $sessionId, Message $message, string $taskTypeId, ?string $userId): void {
+		if ($taskTypeId !== \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+			return;
+		}
+		// is the last non-empty user message an audio one?
+		$lastNonEmptyMessage = $this->messageMapper->getLastNonEmptyHumanMessage($sessionId);
+		$attachments = $lastNonEmptyMessage->jsonSerialize()['attachments'] ?? [];
+		foreach ($attachments as $attachment) {
+			if ($attachment['type'] === 'Audio') {
+				// we found an audio attachment
+				$this->runTtsTask($message, $userId);
+				return;
+			}
+		}
+	}
+
+	/**
+	 * @param Message $message
+	 * @param string|null $userId
+	 * @return void
+	 */
+	private function runTtsTask(Message $message, ?string $userId): void {
+		$task = new Task(
+			TextToSpeech::ID,
+			['input' => $message->getContent()],
+			Application::APP_ID . ':internal',
+			$userId,
+		);
+		$ttsTaskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
+		$speechFileId = $ttsTaskOutput['speech'];
+		// we need to set "ocp_task_id" here because the file is not an output of the task that produced the message
+		// and we need the task ID + the file ID to load the audio file in the frontend
+		$message->setAttachments('[{"type":"Audio","file_id":' . $speechFileId . ',"ocp_task_id":' . $task->getId() . '}]');
 	}
 }

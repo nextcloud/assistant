@@ -62,11 +62,11 @@
 			:references="references"
 			:autolink="true" />
 		<AudioDisplay v-for="a in audioAttachments"
-			:key="a.type + '-' + a.fileId"
+			:key="a.type + '-' + a.file_id"
 			class="message__content"
 			:autoplay="message.autoPlay"
-			:file-id="a.fileId"
-			:task-id="message.role === 'human' ? undefined : message.ocp_task_id"
+			:file-id="a.file_id"
+			:task-id="message.role === 'human' ? undefined : (a.ocp_task_id ?? message.ocp_task_id)"
 			:is-output="message.role === 'assistant'" />
 	</div>
 </template>

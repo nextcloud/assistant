@@ -2507,13 +2507,13 @@
                                             "type": "object",
                                             "required": [
                                                 "type",
-                                                "fileId"
+                                                "file_id"
                                             ],
                                             "properties": {
                                                 "type": {
                                                     "type": "string"
                                                 },
-                                                "fileId": {
+                                                "file_id": {
                                                     "type": "integer",
                                                     "format": "int64"
                                                 }
