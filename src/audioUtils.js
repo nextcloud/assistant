@@ -13,11 +13,9 @@ export function convertWavToMp3(wavBlob) {
 			const arrayBuffer = this.result
 
 			// Create a WAV decoder
-			// @ts-expect-error - No idea
 			const wavDecoder = lamejs.WavHeader.readHeader(new DataView(arrayBuffer))
 
 			// Get the WAV audio data as an array of samples
-			// const wavSamples = new Int16Array(arrayBuffer as ArrayBuffer, wavDecoder.dataOffset, wavDecoder.dataLen / 2)
 			const wavSamples = new Int16Array(arrayBuffer, wavDecoder.dataOffset, wavDecoder.dataLen / 2)
 
 			// Create an MP3 encoder
