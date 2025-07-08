@@ -147,6 +147,7 @@ class ChattyLLMController extends OCSController {
 			$systemMsg->setRole('system');
 			$systemMsg->setContent($userInstructions);
 			$systemMsg->setTimestamp($session->getTimestamp());
+			$systemMsg->setSources('[]');
 			$this->messageMapper->insert($systemMsg);
 
 			return new JSONResponse([
