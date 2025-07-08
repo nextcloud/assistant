@@ -132,7 +132,7 @@ class ChattyLLMController extends OCSController {
 			Application::APP_ID,
 			'chat_user_instructions',
 			Application::CHAT_USER_INSTRUCTIONS,
-		);
+		) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 
 		try {
@@ -654,7 +654,7 @@ class ChattyLLMController extends OCSController {
 				Application::APP_ID,
 				'chat_user_instructions_title',
 				Application::CHAT_USER_INSTRUCTIONS_TITLE,
-			);
+			) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
 			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 
 			$systemPrompt = '';
@@ -733,7 +733,7 @@ class ChattyLLMController extends OCSController {
 					Application::APP_ID,
 					'chat_user_instructions_title',
 					Application::CHAT_USER_INSTRUCTIONS_TITLE,
-				);
+				) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
 				$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 				$title = str_replace($userInstructions, '', $taskOutput);
 				$title = str_replace('"', '', $title);
