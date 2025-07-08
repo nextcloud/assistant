@@ -69,6 +69,7 @@ class ChattyLLMTaskListener implements IEventListener {
 			$message->setTimestamp(time());
 			$sources = json_encode($task->getOutput()['sources'] ?? []);
 			$message->setSources($sources ?: '[]');
+			$message->setAttachments('[]');
 			if ($isAudioChat || $isAgencyAudioChat) {
 				$outputTranscript = trim($task->getOutput()['output_transcript'] ?? '');
 				$message->setContent($outputTranscript);
