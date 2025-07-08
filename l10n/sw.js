@@ -12,6 +12,7 @@ OC.L10N.register(
     "You" : "Wewe",
     "Choose" : "Chagua",
     "Failed" : "Imeshindwa",
+    "Scheduled" : "Scheduled",
     "Unknown status" : "Hadhi haijulikani",
     "Start recording" : "Anza kurekodi",
     "Upload from device" : "Pakia kutoka katika kifaa",
