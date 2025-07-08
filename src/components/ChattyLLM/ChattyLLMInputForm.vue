@@ -182,6 +182,7 @@ import AgencyConfirmation from './AgencyConfirmation.vue'
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
 import moment from 'moment'
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
 
@@ -250,6 +251,7 @@ export default {
 			editingTitle: false,
 			pollMessageGenerationTimerId: null,
 			pollTitleGenerationTimerId: null,
+			autoplayAudioChat: loadState('assistant', 'autoplayAudioChat', true),
 		}
 	},
 
@@ -729,8 +731,10 @@ export default {
 							) {
 								this.updateLastHumanMessageContent()
 							}
-							// auto play fresh messages
-							responseData.autoPlay = true
+							if (this.autoplayAudioChat) {
+								// auto play fresh messages
+								responseData.autoPlay = true
+							}
 							resolve(responseData)
 						} else {
 							console.debug('Ignoring received message for session ' + sessionId + ' that is not selected anymore')
