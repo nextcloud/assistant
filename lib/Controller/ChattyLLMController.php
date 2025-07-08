@@ -132,7 +132,7 @@ class ChattyLLMController extends OCSController {
 			Application::APP_ID,
 			'chat_user_instructions',
 			Application::CHAT_USER_INSTRUCTIONS,
-		);
+		) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 
 		try {
