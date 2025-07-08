@@ -251,7 +251,7 @@ class ChattyLLMController extends OCSController {
 	 * @param string $role Role of the message (human, assistant etc...)
 	 * @param string $content Content of the message
 	 * @param int $timestamp Date of the message
-	 * @param ?list<array{type: string, fileId: int}> $attachments List of attachment objects
+	 * @param ?list<array{type: string, file_id: int}> $attachments List of attachment objects
 	 * @param bool $firstHumanMessage Is it the first human message of the session?
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
@@ -474,7 +474,7 @@ class ChattyLLMController extends OCSController {
 				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID])
 			) {
 				// audio agency
-				$fileId = $audioAttachment['fileId'];
+				$fileId = $audioAttachment['file_id'];
 				try {
 					$taskId = $this->scheduleAgencyAudioTask($fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId());
 				} catch (\Exception $e) {
@@ -522,7 +522,7 @@ class ChattyLLMController extends OCSController {
 				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
 				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID])
 			) {
-				$fileId = $audioAttachment['fileId'];
+				$fileId = $audioAttachment['file_id'];
 				try {
 					$taskId = $this->scheduleAudioChatTask($fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
 				} catch (\Exception $e) {
@@ -589,7 +589,6 @@ class ChattyLLMController extends OCSController {
 	 * @param int $taskId The message generation task ID
 	 * @param int $sessionId The chat session ID
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
-	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
 	 *
@@ -631,8 +630,11 @@ class ChattyLLMController extends OCSController {
 				// do not insert here, it is done by the listener
 				return new JSONResponse($jsonMessage);
 			} catch (\OCP\DB\Exception $e) {
-				$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
+				$this->logger->warning('Failed to add a chat message into the DB', ['exception' => $e]);
 				return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message into DB')], Http::STATUS_INTERNAL_SERVER_ERROR);
+			} catch (DoesNotExistException $e) {
+				$this->logger->debug('Task finished successfully but failed to find the chat message in the DB. It should be created soon.', ['exception' => $e]);
+				return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
 			}
 		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
 			return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);

@@ -33,7 +33,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 	}
 
 	public function getId(): string {
-		return Application::APP_ID . '-audio2audio:chat';
+		return Application::APP_ID . '-contextagent:audio-interaction';
 	}
 
 	public function getName(): string {

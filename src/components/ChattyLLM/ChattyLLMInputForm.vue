@@ -445,7 +445,7 @@ export default {
 			const role = Roles.HUMAN
 			const content = ''
 			const timestamp = +new Date() / 1000 | 0
-			const attachments = [{ type: SHAPE_TYPE_NAMES.Audio, fileId }]
+			const attachments = [{ type: SHAPE_TYPE_NAMES.Audio, file_id: fileId }]
 
 			if (this.active === null) {
 				await this.newSession()
