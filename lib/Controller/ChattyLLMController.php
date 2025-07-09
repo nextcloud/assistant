@@ -500,15 +500,6 @@ class ChattyLLMController extends OCSController {
 			do {
 				$lastUserMessage = array_pop($history);
 			} while ($lastUserMessage->getRole() !== 'human');
-			// history is a list of JSON strings
-			// we ignore audio attachments here because they are supposed to have been transcribed, the content is the transcription
-			// this makes the history smaller
-			$history = array_map(static function (Message $message) {
-				return json_encode([
-					'role' => $message->getRole(),
-					'content' => $message->getContent(),
-				]);
-			}, $history);
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
@@ -522,6 +513,8 @@ class ChattyLLMController extends OCSController {
 				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
 				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID])
 			) {
+				// for an audio chat task, let's try to get the remote audio IDs for all the previous audio messages
+				$history = $this->getAudioHistory($history);
 				$fileId = $audioAttachment['file_id'];
 				try {
 					$taskId = $this->scheduleAudioChatTask($fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
@@ -529,6 +522,13 @@ class ChattyLLMController extends OCSController {
 					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 				}
 			} else {
+				// for a text chat task, let's only use text in the history
+				$history = array_map(static function (Message $message) {
+					return json_encode([
+						'role' => $message->getRole(),
+						'content' => $message->getContent(),
+					]);
+				}, $history);
 				try {
 					$taskId = $this->scheduleLLMChatTask($lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
 				} catch (\Exception $e) {
@@ -538,6 +538,27 @@ class ChattyLLMController extends OCSController {
 		}
 
 		return new JSONResponse(['taskId' => $taskId]);
+	}
+
+	private function getAudioHistory(array $history): array {
+		// history is a list of JSON strings
+		// the content is the remote audio ID (or the transcription as fallback)
+		return array_map(static function (Message $message) {
+			$entry = [
+				'role' => $message->getRole(),
+			];
+			$attachments = $message->jsonSerialize()['attachments'];
+			if ($message->getRole() === 'assistant'
+				&& count($attachments) > 0
+				&& $attachments[0]['type'] === 'Audio'
+				&& isset($attachments[0]['remote_audio_id'])
+			) {
+				$entry['audio'] = ['id' => $attachments[0]['remote_audio_id']];
+			} else {
+				$entry['content'] = $message->getContent();
+			}
+			return json_encode($entry);
+		}, $history);
 	}
 
 	/**
