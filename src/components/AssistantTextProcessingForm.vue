@@ -234,6 +234,10 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		taskTypeIdList: {
+			type: [Array, null],
+			default: null,
+		},
 	},
 	emits: [
 		'sync-submit',
@@ -267,7 +271,11 @@ export default {
 			return null
 		},
 		sortedTaskTypes() {
-			return this.taskTypes.slice().sort((a, b) => {
+			const filteredTaskTypes = this.taskTypeIdList !== null
+				? this.taskTypes.slice().filter(t => this.taskTypeIdList.find(tt => tt === t.id))
+				: this.taskTypes.slice()
+
+			return filteredTaskTypes.sort((a, b) => {
 				const prioA = a.priority
 				const prioB = b.priority
 				return prioA > prioB
