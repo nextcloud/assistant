@@ -79,7 +79,11 @@ class ChattyLLMTaskListener implements IEventListener {
 				$message->setContent($outputTranscript);
 				// agency might not return any output but just ask for confirmation
 				if ($outputTranscript !== '') {
-					$message->setAttachments('[{"type":"Audio","file_id":' . $task->getOutput()['output'] . '}]');
+					$attachment = ['type' => 'Audio', 'file_id' => $task->getOutput()['output']];
+					if (isset($task->getOutput()['audio_id'])) {
+						$attachment['remote_audio_id'] = $task->getOutput()['audio_id'];
+					}
+					$message->setAttachments(json_encode([$attachment]));
 				}
 				// now we have the transcription of the user audio input
 				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
@@ -152,6 +156,11 @@ class ChattyLLMTaskListener implements IEventListener {
 		$speechFileId = $ttsTaskOutput['speech'];
 		// we need to set "ocp_task_id" here because the file is not an output of the task that produced the message
 		// and we need the task ID + the file ID to load the audio file in the frontend
-		$message->setAttachments('[{"type":"Audio","file_id":' . $speechFileId . ',"ocp_task_id":' . $task->getId() . '}]');
+		$attachment = [
+			'type' => 'Audio',
+			'file_id' => $speechFileId,
+			'ocp_task_id' => $task->getId(),
+		];
+		$message->setAttachments(json_encode([$attachment]));
 	}
 }
