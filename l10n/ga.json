@@ -189,6 +189,8 @@
     "_{n} image scheduled_::_{n} images scheduled_" : ["Íomhá {n} sceidealaithe","{n} íomhánna sceidealaithe","{n} íomhánna sceidealaithe","{n} íomhánna sceidealaithe","{n} íomhánna sceidealaithe"],
     "Task scheduled" : "Tasc sceidealaithe",
     "Unknown status" : "Stádas anaithnid",
+    "Audio input" : "Ionchur fuaime",
+    "Audio output" : "Aschur fuaime",
     "Error while recording audio" : "Earráid agus an fhuaim á taifeadadh",
     "Start recording" : "Tosaigh taifeadadh",
     "Dismiss recording" : "Ruaig an taifeadadh",

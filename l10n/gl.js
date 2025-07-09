@@ -165,6 +165,8 @@ OC.L10N.register(
     "Running" : "En execución",
     "Scheduled" : "Programado",
     "Unknown status" : "Estado descoñecido",
+    "Audio input" : "Entrada de son",
+    "Audio output" : "Saída de son",
     "Error while recording audio" : "Produciuse un erro ao gravar o son",
     "Start recording" : "Comezar a gravar",
     "Dismiss recording" : "Rexeitar a gravación",

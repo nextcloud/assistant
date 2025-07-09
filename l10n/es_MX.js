@@ -20,6 +20,7 @@ OC.L10N.register(
     "Failed" : "Falló",
     "Running" : "Correr",
     "Scheduled" : "Programado",
+    "Audio input" : "Entrada de audio",
     "Choose file" : "Elegir archivo",
     "Choose a file" : "Selecciona un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",

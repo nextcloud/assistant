@@ -64,6 +64,8 @@ OC.L10N.register(
     "Running" : "Exekutatzen",
     "Scheduled" : "Antolatuta",
     "Unknown status" : "Egoera ezezaguna",
+    "Audio input" : "Audio sarrera",
+    "Audio output" : "Audio irteera",
     "Error while recording audio" : "Errorea audioa grabatzean",
     "Start recording" : "Hasi grabatzen",
     "Dismiss recording" : "Baztertu grabazioa",

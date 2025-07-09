@@ -117,6 +117,8 @@ OC.L10N.register(
     "Running" : "달리기",
     "Scheduled" : "예정됨",
     "Unknown status" : "알 수 없는 상태",
+    "Audio input" : "음성 입력",
+    "Audio output" : "오디오 출력",
     "Error while recording audio" : "녹음 중 오류",
     "Start recording" : "녹음/녹화 시작",
     "Dismiss recording" : "녹음 무시",

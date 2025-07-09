@@ -139,6 +139,8 @@ OC.L10N.register(
     "Running" : "Løping",
     "Scheduled" : "Planlagt",
     "Unknown status" : "Ukjent status",
+    "Audio input" : "Lydinndata",
+    "Audio output" : "Lydutgang",
     "Error while recording audio" : "Feil under innspilling av lyd",
     "Start recording" : "Start opptak",
     "Dismiss recording" : "Avvis opptak",

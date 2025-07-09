@@ -121,6 +121,8 @@ OC.L10N.register(
     "Running" : "Beh",
     "Scheduled" : "Naplánované",
     "Unknown status" : "Neznámy stav",
+    "Audio input" : "Audio vstup",
+    "Audio output" : "Zvukový výstup",
     "Error while recording audio" : "Chyba pri nahrávaní zvuku",
     "Start recording" : "Spustiť nahrávanie",
     "Dismiss recording" : "Zrušiť nahrávanie",

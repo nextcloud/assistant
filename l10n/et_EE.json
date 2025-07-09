@@ -182,6 +182,8 @@
     "_{n} image scheduled_::_{n} images scheduled_" : ["{n} pilt on ajastatud","{n} pilti on ajastatud"],
     "Task scheduled" : "Ülesanne on ajastatud",
     "Unknown status" : "Tundmatu olek",
+    "Audio input" : "Helisisend",
+    "Audio output" : "Heliväljund",
     "Error while recording audio" : "Viga heli salvestamisel",
     "Start recording" : "Alusta salvestamist",
     "Dismiss recording" : "Loobu salvestamisest",

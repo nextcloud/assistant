@@ -39,6 +39,7 @@ OC.L10N.register(
     "Failed" : "Opravilo je spodletelo!",
     "Running" : "V teku",
     "Scheduled" : "Načrtovano",
+    "Audio output" : "Odvod zvoka",
     "Error while recording audio" : "Prišlo je do napake med snemanjem zvoka",
     "Start recording" : "Začni s snemanjem",
     "Dismiss recording" : "Opusti posnetek",

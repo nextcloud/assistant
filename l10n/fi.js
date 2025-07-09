@@ -26,6 +26,7 @@ OC.L10N.register(
     "Failed" : "Epäonnistui",
     "Running" : "Juoksu",
     "Scheduled" : "Aikataulutettu",
+    "Audio output" : "Äänen ulostulo",
     "Error while recording audio" : "Virhe äänittäessä",
     "Start recording" : "Käynnistä tallennus",
     "Dismiss recording" : "Hylkää äänitallenne",

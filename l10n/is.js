@@ -22,6 +22,7 @@ OC.L10N.register(
     "Nothing yet" : "Ekkert ennþá",
     "Cancelled" : "Hætt við",
     "Running" : "Hlaup",
+    "Audio input" : "Hljóðinntak",
     "Choose file" : "Veldu skrá",
     "Choose a file" : "Veldu skrá",
     "No file selected" : "Engin skrá valin",

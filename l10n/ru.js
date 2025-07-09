@@ -71,6 +71,8 @@ OC.L10N.register(
     "Running" : "Бег",
     "Scheduled" : "Запланированное",
     "Unknown status" : "Неизвестный статус",
+    "Audio input" : "Аудиовход",
+    "Audio output" : "Аудиовыход",
     "Error while recording audio" : "Не удалось записать звук",
     "Start recording" : "Начать запись",
     "Dismiss recording" : "Отменить запись",

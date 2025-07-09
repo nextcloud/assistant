@@ -92,6 +92,7 @@ OC.L10N.register(
     "Running" : "Hardlopen",
     "Scheduled" : "Ingepland",
     "Unknown status" : "Onbekende status",
+    "Audio output" : "Audio output",
     "Error while recording audio" : "Fout tijdens opnemen audio",
     "Start recording" : "Begin opname",
     "Dismiss recording" : "Opname sluiten",

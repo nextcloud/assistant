@@ -84,6 +84,8 @@ OC.L10N.register(
     "Failed" : "Mislykkede",
     "Running" : "Løber",
     "Scheduled" : "Planlagt",
+    "Audio input" : "Lydinput",
+    "Audio output" : "Lydudgang",
     "Start recording" : "Start optagelse",
     "Choose file" : "Vælg fil",
     "Choose a file" : "Vælg en fil",

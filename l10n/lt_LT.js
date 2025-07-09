@@ -33,6 +33,7 @@ OC.L10N.register(
     "Failed" : "Nepavyko",
     "Running" : "Bėgimas",
     "Unknown status" : "Nežinoma būsena",
+    "Audio output" : "Garso išvestis",
     "Choose a file" : "Pasirinkti failą",
     "No file selected" : "Neįkeltas joks failas",
     "Could not copy to clipboard" : "Nepavyko nukopijuoti į iškarpinę",

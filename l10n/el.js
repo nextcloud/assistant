@@ -85,6 +85,7 @@ OC.L10N.register(
     "Running" : "Τρέξιμο",
     "Scheduled" : "Προγραμματισμένο",
     "Unknown status" : "Άγνωστη κατάσταση",
+    "Audio output" : "Έξοδος ήχου",
     "Error while recording audio" : "Σφάλμα κατά την εγγραφή ήχου",
     "Start recording" : "Έναρξη εγγραφής",
     "Dismiss recording" : "Απόρριψη εγγραφής",

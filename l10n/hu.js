@@ -45,6 +45,7 @@ OC.L10N.register(
     "Failed" : "Sikertelen",
     "Running" : "Futás",
     "Scheduled" : "Ütemezve",
+    "Audio output" : "Hangkimenet",
     "Error while recording audio" : "Hiba a hang felvétele során",
     "Dismiss recording" : "Felvétel elvetése",
     "End recording and send" : "Felvétel befejezése és küldés",

@@ -189,6 +189,8 @@
     "_{n} image scheduled_::_{n} images scheduled_" : ["{n} Bild geplant","{n} Bilder geplant"],
     "Task scheduled" : "Aufgabe geplant",
     "Unknown status" : "Unbekannter Status",
+    "Audio input" : "Audioeingang",
+    "Audio output" : "Benötigt keine Übersetzung. Hier wird nur die formelle Übersetzung verwendet (de_DE).",
     "Error while recording audio" : "Fehler bei der Audioaufnahme",
     "Start recording" : "Aufnahme beginnen",
     "Dismiss recording" : "Aufnahme verwerfen",

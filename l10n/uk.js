@@ -34,6 +34,8 @@ OC.L10N.register(
     "Failed" : "Не вдалося",
     "Running" : "Бігаю",
     "Scheduled" : "Заплановано",
+    "Audio input" : "Аудіовхід",
+    "Audio output" : "Вивід аудіо",
     "Start recording" : "Почати запис",
     "Choose file" : "Вибрати файл",
     "Choose a file" : "Виберіть файл",

@@ -191,6 +191,8 @@ OC.L10N.register(
     "_{n} image scheduled_::_{n} images scheduled_" : ["Заказана је {n} слика","Заказане су {n} слике","Заказано је {n} слика"],
     "Task scheduled" : "Задатак је заказан",
     "Unknown status" : "Статус се не зна",
+    "Audio input" : "Аудио улаз",
+    "Audio output" : "Аудио излаз",
     "Error while recording audio" : "Грешка приликом снимања звука",
     "Start recording" : "Почни снимање",
     "Dismiss recording" : "Одбаци снимак",

@@ -190,6 +190,7 @@ OC.L10N.register(
     "_{n} image scheduled_::_{n} images scheduled_" : ["{n} obrázek naplánován","{n} obrázky naplánovány","{n} obrázků naplánováno","{n} obrázky naplánovány"],
     "Task scheduled" : "Úkol naplánován",
     "Unknown status" : "Neznámý stav",
+    "Audio input" : "Zvukový vstup",
     "Error while recording audio" : "Chyba při pořizování zvukového záznamu",
     "Start recording" : "Zahájit nahrávání",
     "Dismiss recording" : "Zahodit nahrávku",

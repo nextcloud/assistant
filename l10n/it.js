@@ -28,6 +28,7 @@ OC.L10N.register(
     "Running" : "Corsa",
     "Scheduled" : "Programmato",
     "Unknown status" : "Status sconosciuto",
+    "Audio output" : "Uscita audio",
     "Error while recording audio" : "Errore durante la registrazione dell'audio",
     "Dismiss recording" : "Annulla la registrazione",
     "End recording and send" : "Termina la registrazione e invia",

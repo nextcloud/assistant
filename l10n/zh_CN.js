@@ -143,6 +143,8 @@ OC.L10N.register(
     "Running" : "运行中",
     "Scheduled" : "已排期",
     "Unknown status" : "未知状态",
+    "Audio input" : "音频输入",
+    "Audio output" : "音频输出",
     "Error while recording audio" : "录制音频时出错",
     "Start recording" : "开始录制",
     "Dismiss recording" : "取消录音",

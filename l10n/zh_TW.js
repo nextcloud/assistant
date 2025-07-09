@@ -191,6 +191,8 @@ OC.L10N.register(
     "_{n} image scheduled_::_{n} images scheduled_" : ["已排定產生 {n} 張圖片"],
     "Task scheduled" : "已排定任務",
     "Unknown status" : "未知狀態",
+    "Audio input" : "音訊輸入",
+    "Audio output" : "音訊輸入",
     "Error while recording audio" : "錄製音訊時發生錯誤",
     "Start recording" : "開始錄音",
     "Dismiss recording" : "取消錄音",

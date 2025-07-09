@@ -191,6 +191,8 @@ OC.L10N.register(
     "_{n} image scheduled_::_{n} images scheduled_" : ["{n} görsel zamanlandı","{n} görsel zamanlandı"],
     "Task scheduled" : "Görev zamanlandı",
     "Unknown status" : "Durum bilinmiyor",
+    "Audio input" : "Ses girişi",
+    "Audio output" : "Ses çıkışı",
     "Error while recording audio" : "Ses kaydedilirken sorun çıktı",
     "Start recording" : "Kaydı başlat",
     "Dismiss recording" : "Kaydı sil",

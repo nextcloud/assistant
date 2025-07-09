@@ -80,6 +80,8 @@ OC.L10N.register(
     "Running" : "Löpning",
     "Scheduled" : "Schemalagd",
     "Unknown status" : "Okänd status",
+    "Audio input" : "Ljudinmatning",
+    "Audio output" : "Ljudutgång",
     "Error while recording audio" : "Fel vid inspelning av ljud",
     "Start recording" : "Starta inspelning",
     "Dismiss recording" : "Stäng inspelningen",

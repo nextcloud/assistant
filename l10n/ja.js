@@ -146,6 +146,8 @@ OC.L10N.register(
     "Running" : "ランニング",
     "Scheduled" : "予定済み",
     "Unknown status" : "不明なステータス",
+    "Audio input" : "音声入力",
+    "Audio output" : "音声の出力",
     "Error while recording audio" : "音声録音中にエラーが発生しました",
     "Start recording" : "レコーディングを開始する",
     "Dismiss recording" : "録音をキャンセルする",
