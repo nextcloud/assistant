@@ -163,6 +163,8 @@ OC.L10N.register(
     "Running" : "ركض",
     "Scheduled" : "مُجدول",
     "Unknown status" : "الحالة غير معروفة",
+    "Audio input" : "المدخلات الصوتية",
+    "Audio output" : "مَخِرج الصوت",
     "Error while recording audio" : "خطأ أثناء تسجيل الصوت",
     "Start recording" : "بدء التسجيل",
     "Dismiss recording" : "رفض التسجيل",
