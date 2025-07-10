@@ -226,8 +226,11 @@ class ChattyLLMController extends OCSController {
 		foreach ($messages as $message) {
 			$ocpTaskId = $message->getOcpTaskId();
 			if ($ocpTaskId !== 0) {
-				$task = $this->taskProcessingManager->getTask($ocpTaskId);
-				$this->taskProcessingManager->deleteTask($task);
+				try {
+					$task = $this->taskProcessingManager->getTask($ocpTaskId);
+					$this->taskProcessingManager->deleteTask($task);
+				} catch (\OCP\TaskProcessing\Exception\Exception) {
+				}
 			}
 		}
 	}
@@ -445,8 +448,11 @@ class ChattyLLMController extends OCSController {
 			// delete the related task
 			$ocpTaskId = $message->getOcpTaskId();
 			if ($ocpTaskId !== 0) {
-				$task = $this->taskProcessingManager->getTask($ocpTaskId);
-				$this->taskProcessingManager->deleteTask($task);
+				try {
+					$task = $this->taskProcessingManager->getTask($ocpTaskId);
+					$this->taskProcessingManager->deleteTask($task);
+				} catch (\OCP\TaskProcessing\Exception\Exception) {
+				}
 			}
 
 			$this->messageMapper->deleteMessageById($messageId);
