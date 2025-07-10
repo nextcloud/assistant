@@ -571,6 +571,7 @@ class ChattyLLMController extends OCSController {
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings
 		// the content is the remote audio ID (or the transcription as fallback)
+		// we only use the audio ID for assistant messages, if we have one and if it's not expired
 		return array_map(static function (Message $message) {
 			$entry = [
 				'role' => $message->getRole(),
@@ -581,10 +582,15 @@ class ChattyLLMController extends OCSController {
 				&& $attachments[0]['type'] === 'Audio'
 				&& isset($attachments[0]['remote_audio_id'])
 			) {
-				$entry['audio'] = ['id' => $attachments[0]['remote_audio_id']];
-			} else {
-				$entry['content'] = $message->getContent();
+				if (!isset($attachments[0]['remote_audio_expires_at'])
+					|| time() < $attachments[0]['remote_audio_expires_at']
+				) {
+					$entry['audio'] = ['id' => $attachments[0]['remote_audio_id']];
+					return json_encode($entry);
+				}
 			}
+
+			$entry['content'] = $message->getContent();
 			return json_encode($entry);
 		}, $history);
 	}

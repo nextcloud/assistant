@@ -66,22 +66,27 @@ class ChattyLLMTaskListener implements IEventListener {
 			$isAgencyAudioChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID;
 
+			$taskOutput = $task->getOutput();
+
 			$message = new Message();
 			$message->setSessionId($sessionId);
 			$message->setOcpTaskId($task->getId());
 			$message->setRole('assistant');
 			$message->setTimestamp(time());
-			$sources = json_encode($task->getOutput()['sources'] ?? []);
+			$sources = json_encode($taskOutput['sources'] ?? []);
 			$message->setSources($sources ?: '[]');
 			$message->setAttachments('[]');
 			if ($isAudioChat || $isAgencyAudioChat) {
-				$outputTranscript = trim($task->getOutput()['output_transcript'] ?? '');
+				$outputTranscript = trim($taskOutput['output_transcript'] ?? '');
 				$message->setContent($outputTranscript);
 				// agency might not return any output but just ask for confirmation
 				if ($outputTranscript !== '') {
-					$attachment = ['type' => 'Audio', 'file_id' => $task->getOutput()['output']];
-					if (isset($task->getOutput()['audio_id'])) {
-						$attachment['remote_audio_id'] = $task->getOutput()['audio_id'];
+					$attachment = ['type' => 'Audio', 'file_id' => $taskOutput['output']];
+					if (isset($taskOutput['audio_id'])) {
+						$attachment['remote_audio_id'] = $taskOutput['audio_id'];
+						if (isset($taskOutput['audio_expires_at'])) {
+							$attachment['remote_audio_expires_at'] = $taskOutput['audio_expires_at'];
+						}
 					}
 					$message->setAttachments(json_encode([$attachment]));
 				}
@@ -89,11 +94,11 @@ class ChattyLLMTaskListener implements IEventListener {
 				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
 					$queryMessageId = (int)$matches[1];
 					$queryMessage = $this->messageMapper->getMessageById($queryMessageId);
-					$queryMessage->setContent(trim($task->getOutput()['input_transcript'] ?? ''));
+					$queryMessage->setContent(trim($taskOutput['input_transcript'] ?? ''));
 					$this->messageMapper->update($queryMessage);
 				}
 			} else {
-				$content = trim($task->getOutput()['output'] ?? '');
+				$content = trim($taskOutput['output'] ?? '');
 				$message->setContent($content);
 				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());
 			}
@@ -106,8 +111,8 @@ class ChattyLLMTaskListener implements IEventListener {
 			// store the conversation token and the actions if we are using the agency feature
 			if ($isAgency || $isAgencyAudioChat) {
 				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
-				$conversationToken = ($task->getOutput()['conversation_token'] ?? null) ?: null;
-				$pendingActions = ($task->getOutput()['actions'] ?? null) ?: null;
+				$conversationToken = ($taskOutput['conversation_token'] ?? null) ?: null;
+				$pendingActions = ($taskOutput['actions'] ?? null) ?: null;
 				$session->setAgencyConversationToken($conversationToken);
 				$session->setAgencyPendingActions($pendingActions);
 				$this->sessionMapper->update($session);
