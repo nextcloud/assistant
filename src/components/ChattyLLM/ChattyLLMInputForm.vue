@@ -726,7 +726,7 @@ export default {
 							this.active.agencyAnswered = false
 							// update content of previous message if we receive an audio message from the assistant
 							// or if the last human message had an audio attachment
-							if (this.doesLastHumanMessageHasAudio()
+							if (this.doesLastHumanMessageHaveAudio()
 								|| (responseData.role === Roles.ASSISTANT && responseData.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio))
 							) {
 								this.updateLastHumanMessageContent()
@@ -760,7 +760,7 @@ export default {
 				.pop()
 		},
 
-		doesLastHumanMessageHasAudio() {
+		doesLastHumanMessageHaveAudio() {
 			const lastHumanMessage = this.getLastHumanMessage()
 			if (lastHumanMessage) {
 				return lastHumanMessage.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio)

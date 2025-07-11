@@ -154,7 +154,7 @@ export default {
 				console.debug(exception)
 				this.killStreams()
 				this.audioStream = null
-				showError(t('spreed', 'Error while recording audio'))
+				showError(t('assistant', 'Error while recording audio'))
 				return
 			}
 
