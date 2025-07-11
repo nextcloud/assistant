@@ -251,7 +251,7 @@ export default {
 			editingTitle: false,
 			pollMessageGenerationTimerId: null,
 			pollTitleGenerationTimerId: null,
-			autoplayAudioChat: loadState('assistant', 'autoplayAudioChat', true),
+			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
 		}
 	},
 

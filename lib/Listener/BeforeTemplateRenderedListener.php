@@ -66,9 +66,9 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			$indexingComplete = $this->appConfig->getValueInt('context_chat', 'last_indexed_time', 0) !== 0;
 			$this->initialStateService->provideInitialState('contextChatIndexingComplete', $indexingComplete);
 			$this->initialStateService->provideInitialState('contextAgentToolSources', $this->assistantService->informationSources);
-			$this->initialStateService->provideInitialState('isAudioChatAvailable', $this->assistantService->isAudioChatAvailable());
+			$this->initialStateService->provideInitialState('audio_chat_available', $this->assistantService->isAudioChatAvailable());
 			$autoplayAudioChat = $this->config->getUserValue($this->userId, Application::APP_ID, 'autoplay_audio_chat', '1') === '1';
-			$this->initialStateService->provideInitialState('autoplayAudioChat', $autoplayAudioChat);
+			$this->initialStateService->provideInitialState('autoplay_audio_chat', $autoplayAudioChat);
 		}
 		if (class_exists(\OCA\Viewer\Event\LoadViewer::class)) {
 			$this->eventDispatcher->dispatchTyped(new \OCA\Viewer\Event\LoadViewer());
