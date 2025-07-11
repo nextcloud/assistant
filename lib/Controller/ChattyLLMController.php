@@ -569,8 +569,10 @@ class ChattyLLMController extends OCSController {
 
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings
-		// the content is the remote audio ID (or the transcription as fallback)
-		// we only use the audio ID for assistant messages, if we have one and if it's not expired
+		// The content is the remote audio ID (or the transcription as fallback)
+		// We only use the audio ID for assistant messages, if we have one and if it's not expired
+		// The audio ID is found in integration_openai's AudioToAudioChat response for example
+		// It is an optional output of AudioToAudioChat tasks
 		return array_map(static function (Message $message) {
 			$entry = [
 				'role' => $message->getRole(),

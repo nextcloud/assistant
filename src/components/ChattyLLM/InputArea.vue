@@ -18,7 +18,7 @@
 			@update:model-value="$emit('update:chatContent', $event)"
 			@submit="$emit('submit', $event)" />
 		<div class="input-area__button-box">
-			<NcButton v-if="!isAudioChatAvailable || chatContent"
+			<NcButton v-if="!audioChatAvailable || chatContent"
 				class="input-area__button-box__button"
 				:aria-label="submitBtnAriaText"
 				:disabled="disabled || !chatContent.trim()"
@@ -104,7 +104,7 @@ export default {
 			thinkingText: t('assistant', 'Processing…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
 			isRecording: false,
-			isAudioChatAvailable: loadState('assistant', 'isAudioChatAvailable', false),
+			audioChatAvailable: loadState('assistant', 'audio_chat_available', false),
 		}
 	},
 
