@@ -92,7 +92,7 @@ class ChattyLLMTaskListener implements IEventListener {
 				// now we have the transcription of the user audio input
 				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
 					$queryMessageId = (int)$matches[1];
-					$queryMessage = $this->messageMapper->getMessageById($queryMessageId);
+					$queryMessage = $this->messageMapper->getMessageById($sessionId, $queryMessageId);
 					$queryMessage->setContent(trim($taskOutput['input_transcript'] ?? ''));
 					$this->messageMapper->update($queryMessage);
 					// TODO update session title if it's the first message

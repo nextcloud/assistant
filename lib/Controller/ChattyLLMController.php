@@ -402,10 +402,7 @@ class ChattyLLMController extends OCSController {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
-			$message = $this->messageMapper->getMessageById($messageId);
-			if ($message->getSessionId() !== $sessionId) {
-				return new JSONResponse(['error' => $this->l10n->t('Message not found')], Http::STATUS_NOT_FOUND);
-			}
+			$message = $this->messageMapper->getMessageById($sessionId, $messageId);
 
 			return new JSONResponse($message->jsonSerialize());
 		} catch (\OCP\DB\Exception $e) {
@@ -439,14 +436,12 @@ class ChattyLLMController extends OCSController {
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
-			$message = $this->messageMapper->getMessageById($messageId);
-			// otherwise one can delete a message from other sessions
-			if ($message->getSessionId() !== $sessionId) {
-				return new JSONResponse(['error' => $this->l10n->t('Message not found')], Http::STATUS_NOT_FOUND);
-			}
+			$message = $this->messageMapper->getMessageById($sessionId, $messageId);
+			$ocpTaskId = $message->getOcpTaskId();
+
+			$this->messageMapper->deleteMessageById($sessionId, $messageId);
 
 			// delete the related task
-			$ocpTaskId = $message->getOcpTaskId();
 			if ($ocpTaskId !== 0) {
 				try {
 					$task = $this->taskProcessingManager->getTask($ocpTaskId);
@@ -454,8 +449,6 @@ class ChattyLLMController extends OCSController {
 				} catch (\OCP\TaskProcessing\Exception\Exception) {
 				}
 			}
-
-			$this->messageMapper->deleteMessageById($messageId);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete a chat message', ['exception' => $e]);
@@ -633,7 +626,7 @@ class ChattyLLMController extends OCSController {
 		}
 
 		try {
-			$this->messageMapper->deleteMessageById($messageId);
+			$this->messageMapper->deleteMessageById($sessionId, $messageId);
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete the last message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
