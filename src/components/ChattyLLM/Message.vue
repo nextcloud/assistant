@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="message.content"
+	<div v-if="message.content || hasAttachments"
 		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
@@ -61,6 +61,13 @@
 			:reference-limit="1"
 			:references="references"
 			:autolink="true" />
+		<AudioDisplay v-for="a in audioAttachments"
+			:key="a.type + '-' + a.file_id"
+			class="message__content"
+			:autoplay="message.autoPlay"
+			:file-id="a.file_id"
+			:task-id="message.role === 'human' ? undefined : (a.ocp_task_id ?? message.ocp_task_id)"
+			:is-output="message.role === 'assistant'" />
 	</div>
 </template>
 
@@ -77,11 +84,13 @@ import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 import InformationBox from 'vue-material-design-icons/InformationBox.vue'
 
 import MessageActions from './MessageActions.vue'
+import AudioDisplay from '../fields/AudioDisplay.vue'
 
 import { getCurrentUser } from '@nextcloud/auth'
 import { showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { SHAPE_TYPE_NAMES } from '../../constants.js'
 
 const PLAIN_URL_PATTERN = /(?:\s|^|\()((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;()]*)*))(?:\s|$|\))/ig
 const MARKDOWN_LINK_PATTERN = /\[[-A-Z0-9+&@#%?=~_|!:,.;()]+\]\(((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;]*)*))\)/ig
@@ -90,6 +99,7 @@ export default {
 	name: 'Message',
 
 	components: {
+		AudioDisplay,
 		AssistantIcon,
 
 		NcAvatar,
@@ -154,6 +164,12 @@ export default {
 			let parsedSources = JSON.parse(this.message.sources)
 			parsedSources = parsedSources.map((source) => this.getSourceString(source))
 			return [...new Set(parsedSources)]
+		},
+		hasAttachments() {
+			return this.message.attachments?.length > 0
+		},
+		audioAttachments() {
+			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.Audio) ?? []
 		},
 	},
 

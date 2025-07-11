@@ -12,6 +12,7 @@ namespace OCA\Assistant\Db\ChattyLLM;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\Exception;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -62,6 +63,19 @@ class MessageMapper extends QBMapper {
 		return $this->findEntity($qb);
 	}
 
+	public function getLastNonEmptyHumanMessage(int $sessionId): Message {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Message::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter('human', IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->nonEmptyString('content'))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+
+		return $this->findEntity($qb);
+	}
+
 	/**
 	 * @param int $sessionId
 	 * @param int $cursor
@@ -86,17 +100,37 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
-	 * @param integer $messageId
-	 * @return Message
-	 * @throws \OCP\DB\Exception
-	 * @throws MultipleObjectsReturnedException
-	 * @throws DoesNotExistException
+	 * @param int $sessionId
+	 * @param int $maxTimestamp
+	 * @return array
+	 * @throws Exception
 	 */
-	public function getMessageById(int $messageId): Message {
+	public function getMessagesBefore(int $sessionId, int $maxTimestamp): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->lt('timestamp', $qb->createPositionalParameter($maxTimestamp, IQueryBuilder::PARAM_INT)))
+			->orderBy('id', 'DESC');
+
+		$messages = $this->findEntities($qb);
+		return array_reverse($messages);
+	}
+
+	/**
+	 * @param int $sessionId
+	 * @param integer $messageId
+	 * @return Message
+	 * @throws DoesNotExistException
+	 * @throws Exception
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function getMessageById(int $sessionId, int $messageId): Message {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Message::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
 
 		return $this->findEntity($qb);
 	}
@@ -134,15 +168,16 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param int $sessionId
 	 * @param integer $messageId
-	 * @throws \OCP\DB\Exception
-	 * @throws \RuntimeException
 	 * @return void
+	 * @throws Exception
 	 */
-	public function deleteMessageById(int $messageId): void {
+	public function deleteMessageById(int $sessionId, int $messageId): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)));
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
 
 		$qb->executeStatement();
 	}

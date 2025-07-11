@@ -16,6 +16,13 @@
 					{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
 				</div>
 			</NcCheckboxRadioSwitch>
+			<NcCheckboxRadioSwitch v-if="state.audio_chat_available"
+				:model-value="state.autoplay_audio_chat"
+				@update:model-value="onCheckboxChanged($event, 'autoplay_audio_chat')">
+				<div class="checkbox-text">
+					{{ t('assistant', 'Auto-play audio chat responses') }}
+				</div>
+			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.free_prompt_picker_available"
 				:model-value="state.free_prompt_picker_enabled"
 				@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">

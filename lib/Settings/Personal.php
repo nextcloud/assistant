@@ -38,9 +38,13 @@ class Personal implements ISettings {
 
 		$taskProcessingAvailable = $this->taskProcessingManager->hasProviders();
 
-		$freePromptTaskTypeAvailable = in_array(TextToText::ID, $availableTaskTypes);
-		$speechToTextAvailable = in_array(AudioToText::ID, $availableTaskTypes);
-		$textToImageAvailable = in_array(TextToImage::ID, $availableTaskTypes);
+		$freePromptTaskTypeAvailable = array_key_exists(TextToText::ID, $availableTaskTypes);
+		$speechToTextAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
+		$textToImageAvailable = array_key_exists(TextToImage::ID, $availableTaskTypes);
+
+		$audioChatAvailable = (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat') && array_key_exists(\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID, $availableTaskTypes))
+			|| (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $availableTaskTypes));
+		$autoplayAudioChat = $this->config->getUserValue($this->userId, Application::APP_ID, 'autoplay_audio_chat', '1') === '1';
 
 		$assistantAvailable = $taskProcessingAvailable && $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1') === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
@@ -63,6 +67,8 @@ class Personal implements ISettings {
 			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 			'speech_to_text_picker_available' => $speechToTextPickerAvailable,
 			'speech_to_text_picker_enabled' => $speechToTextPickerEnabled,
+			'audio_chat_available' => $audioChatAvailable,
+			'autoplay_audio_chat' => $autoplayAudioChat,
 		];
 		$this->initialStateService->provideInitialState('config', $userConfig);
 
