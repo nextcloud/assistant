@@ -775,6 +775,14 @@ export default {
 					getChatURL(`/sessions/${lastHumanMessage.session_id}/messages/${lastHumanMessage.id}`),
 				)
 				lastHumanMessage.content = updatedMessage.data.content
+				// TODO update session title (just i the frontend data, the db session is updated in the backend listener)
+				/*
+				const firstHumanMessage = this.messages.length === 1 && this.messages[0].role === Roles.HUMAN
+				if (firstHumanMessage) {
+					const session = this.sessions.find((session) => session.id === sessionId)
+					session.title = content
+				}
+				*/
 			}
 		},
 
