@@ -191,7 +191,7 @@ OC.L10N.register(
     "_{n} image scheduled_::_{n} images scheduled_" : ["{n} Bild geplant","{n} Bilder geplant"],
     "Task scheduled" : "Aufgabe geplant",
     "Unknown status" : "Unbekannter Status",
-    "Audio input" : "Audioeingang",
+    "Audio input" : "Audioeingabe",
     "Audio output" : "Audio-Ausgabe",
     "Error while recording audio" : "Fehler bei der Audioaufnahme",
     "Start recording" : "Aufnahme beginnen",
