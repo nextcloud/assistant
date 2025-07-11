@@ -625,11 +625,23 @@ class ChattyLLMController extends OCSController {
 			return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 		}
 
+		$message = $this->messageMapper->getMessageById($sessionId, $messageId);
+		$ocpTaskId = $message->getOcpTaskId();
+
 		try {
 			$this->messageMapper->deleteMessageById($sessionId, $messageId);
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete the last message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		// delete the related task
+		if ($ocpTaskId !== 0) {
+			try {
+				$task = $this->taskProcessingManager->getTask($ocpTaskId);
+				$this->taskProcessingManager->deleteTask($task);
+			} catch (\OCP\TaskProcessing\Exception\Exception) {
+			}
 		}
 
 		return $this->generateForSession($sessionId);
