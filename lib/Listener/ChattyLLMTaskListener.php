@@ -93,9 +93,14 @@ class ChattyLLMTaskListener implements IEventListener {
 				if (preg_match('/^chatty-llm:\d+:(\d+)$/', $customId, $matches)) {
 					$queryMessageId = (int)$matches[1];
 					$queryMessage = $this->messageMapper->getMessageById($sessionId, $queryMessageId);
-					$queryMessage->setContent(trim($taskOutput['input_transcript'] ?? ''));
+					$queryMessageContent = trim($taskOutput['input_transcript'] ?? '');
+					$queryMessage->setContent($queryMessageContent);
 					$this->messageMapper->update($queryMessage);
-					// TODO update session title if it's the first message
+					// update session title if it's the first message
+					$olderMessages = $this->messageMapper->getMessagesBefore($sessionId, $queryMessage->getTimestamp());
+					if (count($olderMessages) === 0) {
+						$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $queryMessageContent);
+					}
 				}
 			} else {
 				$content = trim($taskOutput['output'] ?? '');
