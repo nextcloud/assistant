@@ -101,6 +101,24 @@ class MessageMapper extends QBMapper {
 
 	/**
 	 * @param int $sessionId
+	 * @param int $maxTimestamp
+	 * @return array
+	 * @throws Exception
+	 */
+	public function getMessagesBefore(int $sessionId, int $maxTimestamp): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Message::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->lt('timestamp', $qb->createPositionalParameter($maxTimestamp, IQueryBuilder::PARAM_INT)))
+			->orderBy('id', 'DESC');
+
+		$messages = $this->findEntities($qb);
+		return array_reverse($messages);
+	}
+
+	/**
+	 * @param int $sessionId
 	 * @param integer $messageId
 	 * @return Message
 	 * @throws DoesNotExistException
