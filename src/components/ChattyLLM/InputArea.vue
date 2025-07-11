@@ -18,7 +18,7 @@
 			@update:model-value="$emit('update:chatContent', $event)"
 			@submit="$emit('submit', $event)" />
 		<div class="input-area__button-box">
-			<NcButton v-if="chatContent"
+			<NcButton v-if="!isAudioChatAvailable || chatContent"
 				class="input-area__button-box__button"
 				:aria-label="submitBtnAriaText"
 				:disabled="disabled || !chatContent.trim()"
@@ -49,6 +49,7 @@ import isMobile from '../../mixins/isMobile.js'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -103,6 +104,7 @@ export default {
 			thinkingText: t('assistant', 'Processing…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
 			isRecording: false,
+			isAudioChatAvailable: loadState('assistant', 'isAudioChatAvailable', false),
 		}
 	},
 

@@ -212,6 +212,17 @@ class AssistantService {
 		$this->taskNotificationMapper->deleteByTaskId($taskId);
 	}
 
+	public function isAudioChatAvailable(): bool {
+		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		// we have at least the simple audio chat task type and the 3 sub task types available
+		return class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
+			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID, $availableTaskTypes)
+			&& array_key_exists(AudioToText::ID, $availableTaskTypes)
+			&& class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')
+			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID, $availableTaskTypes)
+			&& array_key_exists(TextToTextChat::ID, $availableTaskTypes);
+	}
+
 	/**
 	 * @return array<AssistantTaskProcessingTaskType>
 	 */
@@ -279,6 +290,10 @@ class AssistantService {
 				}
 				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
 					&& $typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+					continue;
+				}
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
+					&& $typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID) {
 					continue;
 				}
 				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')

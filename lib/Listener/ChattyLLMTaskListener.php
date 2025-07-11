@@ -18,7 +18,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\Task;
-use OCP\TaskProcessing\TaskTypes\TextToSpeech;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -96,6 +95,7 @@ class ChattyLLMTaskListener implements IEventListener {
 					$queryMessage = $this->messageMapper->getMessageById($queryMessageId);
 					$queryMessage->setContent(trim($taskOutput['input_transcript'] ?? ''));
 					$this->messageMapper->update($queryMessage);
+					// TODO update session title if it's the first message
 				}
 			} else {
 				$content = trim($taskOutput['output'] ?? '');
@@ -138,7 +138,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		$attachments = $lastNonEmptyMessage->jsonSerialize()['attachments'] ?? [];
 		foreach ($attachments as $attachment) {
 			if ($attachment['type'] === 'Audio') {
-				// we found an audio attachment
+				// we found an audio attachment, response should be audio
 				$this->runTtsTask($message, $userId);
 				return;
 			}
@@ -152,7 +152,7 @@ class ChattyLLMTaskListener implements IEventListener {
 	 */
 	private function runTtsTask(Message $message, ?string $userId): void {
 		$task = new Task(
-			TextToSpeech::ID,
+			\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
 			['input' => $message->getContent()],
 			Application::APP_ID . ':internal',
 			$userId,
