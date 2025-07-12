@@ -202,6 +202,7 @@
     "Could not upload the recorded file" : "Није могао да се отпреми снимљени фајл",
     "Output file share link copied to clipboard" : "Линк за дељење излазног фајла је копиран у клипборд",
     "Click this to open the file" : "Кликните ово да отворите фајл",
+    "This output file has been saved in {path}" : "Овај излазни фајл је сачуван у {path}",
     "Could not copy to clipboard" : "Не могу да копирам у оставу",
     "Upload from device" : "Отпреми са уређаја",
     "Select from Nextcloud" : "Изабери из Nextcloud",
@@ -210,6 +211,7 @@
     "Download this media" : "Преузми овај медиј",
     "Save this media" : "Сачувај овај медиј",
     "Share this media" : "Дели овај медиј",
+    "Select from storage" : "Изаберите из складишта",
     "Pick a file" : "Изаберите фајл",
     "Clear value" : "Обриши вредност",
     "Type some number" : "Откуцајте неки број",
@@ -229,8 +231,10 @@
     "Failed to schedule your task" : "Није успело заказивање вашег задатка",
     "Submit the current task's result" : "Поднеси резултат текућег задатка",
     "Output file for task {taskId} ({taskTypeName})" : "Излазни фајл за задатак {taskId} ({taskTypeName})",
+    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "Сервер није успео да обради ваш задатак чији је ID {id}. Молимо вас да обавестите администраторе о овом проблему.",
     "Assistant error" : "Грешка Асистента",
     "Please log in to view the task result" : "Да бисте видели резултат задатка, молимо вас да се пријавите",
-    "This task does not exist or has been cleaned up" : "Овај задатак не постоји или је обрисан"
+    "This task does not exist or has been cleaned up" : "Овај задатак не постоји или је обрисан",
+    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Асистент није успео да закаже ваш задатак. Молимо вас покушајте поново и обавестите администраторе сервера ако се овај проблем понавља."
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }
