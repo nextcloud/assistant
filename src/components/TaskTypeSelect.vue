@@ -38,7 +38,7 @@ import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import TextLongIcon from 'vue-material-design-icons/TextLong.vue'
 import ImageOutlineIcon from 'vue-material-design-icons/ImageOutline.vue'
 import WebIcon from 'vue-material-design-icons/Web.vue'
-import WaveformIcon from 'vue-material-design-icons/Waveform.vue'
+import WaveformIcon from './icons/Waveform.vue'
 import FileIcon from 'vue-material-design-icons/File.vue'
 
 export default {
