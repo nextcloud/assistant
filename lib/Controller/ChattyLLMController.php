@@ -140,6 +140,8 @@ class ChattyLLMController extends OCSController {
 			$session->setUserId($this->userId);
 			$session->setTitle($title);
 			$session->setTimestamp($timestamp);
+			$session->setAgencyConversationToken(null);
+			$session->setAgencyPendingActions(null);
 			$this->sessionMapper->insert($session);
 
 			$systemMsg = new Message();
