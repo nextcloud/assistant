@@ -9,6 +9,7 @@ namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\ResponseDefinitions;
 use OCA\Assistant\Service\AssistantService;
+use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\AnonRateLimit;
@@ -41,6 +42,7 @@ class AssistantApiController extends OCSController {
 		IRequest $request,
 		private IL10N $l10n,
 		private AssistantService $assistantService,
+		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
 		private ?string $userId,
 	) {
@@ -406,6 +408,28 @@ class AssistantApiController extends OCSController {
 		} catch (Exception|Throwable $e) {
 			$this->logger->error('getOutputFile error', ['exception' => $e]);
 			return new DataResponse('', Http::STATUS_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * Run a file action
+	 *
+	 * Launch a task to process a file and store the result in a new file in the same directory
+	 *
+	 * @param int $fileId The input file ID
+	 * @param string $taskTypeId The task type of the operation to perform
+	 * @return DataResponse<Http::STATUS_OK, array{taskId: int}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 *
+	 * 200: The task has been scheduled successfully
+	 * 400: There was an issue while scheduling the task
+	 */
+	#[NoAdminRequired]
+	public function runFileAction(int $fileId, string $taskTypeId): DataResponse {
+		try {
+			$taskId = $this->taskProcessingService->runFileAction($this->userId, $fileId, $taskTypeId);
+			return new DataResponse(['taskId' => $taskId]);
+		} catch (Exception|Throwable $e) {
+			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
 	}
 }
