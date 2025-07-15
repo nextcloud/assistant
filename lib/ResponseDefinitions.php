@@ -63,6 +63,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     role: string,
  *     content: string,
  *     timestamp: int,
+ *     attachments: list<array{type: string, fileId: int}>,
  *     ocp_task_id: int,
  *     sources: string,
  * }

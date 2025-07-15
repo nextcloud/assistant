@@ -5,13 +5,15 @@
 <template>
 	<div class="assistant-audio-recorder-wrapper">
 		<NcButton v-if="!isRecording"
-			ref="startRecordingButton"
 			:disabled="disabled"
+			:title="compact ? t('assistant', 'Start recording') : undefined"
 			@click="start">
 			<template #icon>
 				<MicrophoneOutlineIcon />
 			</template>
-			{{ t('assistant', 'Start recording') }}
+			<template v-if="!compact" #default>
+				{{ t('assistant', 'Start recording') }}
+			</template>
 		</NcButton>
 		<NcButton v-if="isRecording"
 			variant="error"
@@ -73,6 +75,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		compact: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
@@ -127,8 +133,33 @@ export default {
 				await register(await connect())
 				OCA.Assistant.encoderRegistered = true
 			}
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-			this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' })
+			// Create new audio stream
+			try {
+				this.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+			} catch (exception) {
+				console.debug(exception)
+				this.killStreams()
+				if (exception.name === 'NotAllowedError') {
+					showError(t('assistant', 'Access to the microphone was denied. Please check you allowed this page to access the microphone.'))
+				} else {
+					showError(t('assistant', 'Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings.'))
+				}
+				return
+			}
+
+			// Create a media recorder to capture the stream
+			try {
+				this.mediaRecorder = new MediaRecorder(this.audioStream, { mimeType: 'audio/wav' })
+			} catch (exception) {
+				console.debug(exception)
+				this.killStreams()
+				this.audioStream = null
+				showError(
+					t('assistant', 'Error while recording audio')
+						+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
+				)
+				return
+			}
 
 			// Add event handler to onstop
 			this.mediaRecorder.onstop = this.generateFile

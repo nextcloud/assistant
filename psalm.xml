@@ -38,6 +38,9 @@
 				<referencedClass name="OCP\TaskProcessing\EShapeType" />
 				<referencedClass name="OCP\TaskProcessing\TaskTypes\ContextAgentInteraction" />
 				<referencedClass name="OCP\TaskProcessing\TaskTypes\TextToTextChatWithTools" />
+				<referencedClass name="OCP\TaskProcessing\TaskTypes\TextToSpeech" />
+				<referencedClass name="OCP\TaskProcessing\TaskTypes\AudioToAudioChat" />
+				<referencedClass name="OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>

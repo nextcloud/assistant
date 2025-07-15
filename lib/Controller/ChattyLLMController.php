@@ -145,6 +145,7 @@ class ChattyLLMController extends OCSController {
 			$systemMsg = new Message();
 			$systemMsg->setSessionId($session->getId());
 			$systemMsg->setRole('system');
+			$systemMsg->setAttachments('[]');
 			$systemMsg->setContent($userInstructions);
 			$systemMsg->setTimestamp($session->getTimestamp());
 			$systemMsg->setSources('[]');
@@ -206,12 +207,34 @@ class ChattyLLMController extends OCSController {
 		}
 
 		try {
+			$this->deleteSessionTasks($this->userId, $sessionId);
 			$this->sessionMapper->deleteSession($this->userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to delete the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private function deleteSessionTasks(string $userId, int $sessionId): void {
+		$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
+		if (!$sessionExists) {
+			return;
+		}
+		$messages = $this->messageMapper->getMessages($sessionId, 0, 0);
+		foreach ($messages as $message) {
+			$ocpTaskId = $message->getOcpTaskId();
+			if ($ocpTaskId !== 0) {
+				try {
+					$task = $this->taskProcessingManager->getTask($ocpTaskId);
+					$this->taskProcessingManager->deleteTask($task);
+				} catch (\OCP\TaskProcessing\Exception\Exception) {
+					// silent failure here because:
+					// if the task is not found: all good nothing to delete
+					// if the task couldn't be deleted, it will be deleted by the task processing cleanup job later anyway
+				}
+			}
 		}
 	}
 
@@ -250,6 +273,7 @@ class ChattyLLMController extends OCSController {
 	 * @param string $role Role of the message (human, assistant etc...)
 	 * @param string $content Content of the message
 	 * @param int $timestamp Date of the message
+	 * @param ?list<array{type: string, file_id: int}> $attachments List of attachment objects
 	 * @param bool $firstHumanMessage Is it the first human message of the session?
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
@@ -260,7 +284,9 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function newMessage(int $sessionId, string $role, string $content, int $timestamp, bool $firstHumanMessage = false): JSONResponse {
+	public function newMessage(
+		int $sessionId, string $role, string $content, int $timestamp, ?array $attachments = null, bool $firstHumanMessage = false,
+	): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -271,10 +297,13 @@ class ChattyLLMController extends OCSController {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 
+			// refuse empty text content if context agent is not available (we do classic chat) AND there is no attachment
+			// in other words: accept empty content if we are using agency OR there are attachments
 			$content = trim($content);
 			if (empty($content)
 				&& (!class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
 					|| !isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]))
+				&& $attachments === null
 			) {
 				return new JSONResponse(['error' => $this->l10n->t('Message content is empty')], Http::STATUS_BAD_REQUEST);
 			}
@@ -285,6 +314,13 @@ class ChattyLLMController extends OCSController {
 			$message->setContent($content);
 			$message->setTimestamp($timestamp);
 			$message->setSources('[]');
+			$message->setAttachments('[]');
+			if ($attachments !== null) {
+				$encodedAttachments = json_encode($attachments);
+				if ($encodedAttachments !== false) {
+					$message->setAttachments($encodedAttachments);
+				}
+			}
 			$this->messageMapper->insert($message);
 
 			if ($firstHumanMessage) {
@@ -344,6 +380,41 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
+	 * Get a message
+	 *
+	 * Get a chat message in a session
+	 *
+	 * @param int $sessionId The session ID
+	 * @param int $messageId The message ID
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 *
+	 * 200: The message has been successfully obtained
+	 * 401: Not logged in
+	 * 404: The session or the message was not found
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function getMessage(int $sessionId, int $messageId): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
+			if (!$sessionExists) {
+				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
+			}
+
+			$message = $this->messageMapper->getMessageById($sessionId, $messageId);
+
+			return new JSONResponse($message->jsonSerialize());
+		} catch (\OCP\DB\Exception $e) {
+			$this->logger->warning('Failed to get chat messages', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get chat message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
 	 * Delete a message
 	 *
 	 * Delete a chat message by ID
@@ -368,8 +439,19 @@ class ChattyLLMController extends OCSController {
 			if (!$sessionExists) {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
+			$message = $this->messageMapper->getMessageById($sessionId, $messageId);
+			$ocpTaskId = $message->getOcpTaskId();
 
-			$this->messageMapper->deleteMessageById($messageId);
+			$this->messageMapper->deleteMessageById($sessionId, $messageId);
+
+			// delete the related task
+			if ($ocpTaskId !== 0) {
+				try {
+					$task = $this->taskProcessingManager->getTask($ocpTaskId);
+					$this->taskProcessingManager->deleteTask($task);
+				} catch (\OCP\TaskProcessing\Exception\Exception) {
+				}
+			}
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete a chat message', ['exception' => $e]);
@@ -410,14 +492,32 @@ class ChattyLLMController extends OCSController {
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
 			&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID])
 		) {
-			$message = $this->messageMapper->getLastHumanMessage($sessionId);
-			$prompt = $message->getContent();
+			$lastUserMessage = $this->messageMapper->getLastHumanMessage($sessionId);
 			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
 			$lastConversationToken = $session->getAgencyConversationToken() ?? '{}';
-			try {
-				$taskId = $this->scheduleAgencyTask($prompt, $agencyConfirm, $lastConversationToken, $sessionId);
-			} catch (\Exception $e) {
-				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+
+			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
+			$audioAttachment = $lastAttachments[0] ?? null;
+			$audioAttachment = $audioAttachment['type'] === 'Audio' ? $audioAttachment : null;
+			if ($audioAttachment !== null
+				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
+				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID])
+			) {
+				// audio agency
+				$fileId = $audioAttachment['file_id'];
+				try {
+					$taskId = $this->scheduleAgencyAudioTask($fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId());
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
+			} else {
+				// classic agency
+				$prompt = $lastUserMessage->getContent();
+				try {
+					$taskId = $this->scheduleAgencyTask($prompt, $agencyConfirm, $lastConversationToken, $sessionId);
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
 			}
 		} else {
 			// classic chat
@@ -430,21 +530,73 @@ class ChattyLLMController extends OCSController {
 			do {
 				$lastUserMessage = array_pop($history);
 			} while ($lastUserMessage->getRole() !== 'human');
-			// history is a list of JSON strings
-			$history = array_map(static function (Message $message) {
-				return json_encode([
-					'role' => $message->getRole(),
-					'content' => $message->getContent(),
-				]);
-			}, $history);
-			try {
-				$taskId = $this->scheduleLLMChatTask($lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
-			} catch (\Exception $e) {
-				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+
+			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
+			$audioAttachment = $lastAttachments[0] ?? null;
+			$audioAttachment = $audioAttachment['type'] === 'Audio' ? $audioAttachment : null;
+			/* php 8.4 allows:
+			$audioAttachment = array_find($lastAttachments, static function (array $attachment) {
+				return $attachment['type'] === 'Audio';
+			});
+			*/
+			if ($audioAttachment !== null
+				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
+				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID])
+			) {
+				// for an audio chat task, let's try to get the remote audio IDs for all the previous audio messages
+				$history = $this->getAudioHistory($history);
+				$fileId = $audioAttachment['file_id'];
+				try {
+					$taskId = $this->scheduleAudioChatTask($fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
+			} else {
+				// for a text chat task, let's only use text in the history
+				$history = array_map(static function (Message $message) {
+					return json_encode([
+						'role' => $message->getRole(),
+						'content' => $message->getContent(),
+					]);
+				}, $history);
+				try {
+					$taskId = $this->scheduleLLMChatTask($lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
+				} catch (\Exception $e) {
+					return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+				}
 			}
 		}
 
 		return new JSONResponse(['taskId' => $taskId]);
+	}
+
+	private function getAudioHistory(array $history): array {
+		// history is a list of JSON strings
+		// The content is the remote audio ID (or the transcription as fallback)
+		// We only use the audio ID for assistant messages, if we have one and if it's not expired
+		// The audio ID is found in integration_openai's AudioToAudioChat response for example
+		// It is an optional output of AudioToAudioChat tasks
+		return array_map(static function (Message $message) {
+			$entry = [
+				'role' => $message->getRole(),
+			];
+			$attachments = $message->jsonSerialize()['attachments'];
+			if ($message->getRole() === 'assistant'
+				&& count($attachments) > 0
+				&& $attachments[0]['type'] === 'Audio'
+				&& isset($attachments[0]['remote_audio_id'])
+			) {
+				if (!isset($attachments[0]['remote_audio_expires_at'])
+					|| time() < $attachments[0]['remote_audio_expires_at']
+				) {
+					$entry['audio'] = ['id' => $attachments[0]['remote_audio_id']];
+					return json_encode($entry);
+				}
+			}
+
+			$entry['content'] = $message->getContent();
+			return json_encode($entry);
+		}, $history);
 	}
 
 	/**
@@ -478,11 +630,23 @@ class ChattyLLMController extends OCSController {
 			return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 		}
 
+		$message = $this->messageMapper->getMessageById($sessionId, $messageId);
+		$ocpTaskId = $message->getOcpTaskId();
+
 		try {
-			$this->messageMapper->deleteMessageById($messageId);
+			$this->messageMapper->deleteMessageById($sessionId, $messageId);
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete the last message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		// delete the related task
+		if ($ocpTaskId !== 0) {
+			try {
+				$task = $this->taskProcessingManager->getTask($ocpTaskId);
+				$this->taskProcessingManager->deleteTask($task);
+			} catch (\OCP\TaskProcessing\Exception\Exception) {
+			}
 		}
 
 		return $this->generateForSession($sessionId);
@@ -496,7 +660,6 @@ class ChattyLLMController extends OCSController {
 	 * @param int $taskId The message generation task ID
 	 * @param int $sessionId The chat session ID
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
-	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
 	 *
@@ -538,8 +701,11 @@ class ChattyLLMController extends OCSController {
 				// do not insert here, it is done by the listener
 				return new JSONResponse($jsonMessage);
 			} catch (\OCP\DB\Exception $e) {
-				$this->logger->warning('Failed to add a chat message into DB', ['exception' => $e]);
+				$this->logger->warning('Failed to add a chat message into the DB', ['exception' => $e]);
 				return new JSONResponse(['error' => $this->l10n->t('Failed to add a chat message into DB')], Http::STATUS_INTERNAL_SERVER_ERROR);
+			} catch (DoesNotExistException $e) {
+				$this->logger->debug('Task finished successfully but failed to find the chat message in the DB. It should be created soon.', ['exception' => $e]);
+				return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
 			}
 		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
 			return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
@@ -841,6 +1007,48 @@ class ChattyLLMController extends OCSController {
 		];
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
+			$taskInput,
+			Application::APP_ID . ':chatty-llm',
+			$this->userId,
+			$customId
+		);
+		$this->taskProcessingManager->scheduleTask($task);
+		return $task->getId() ?? 0;
+	}
+
+	private function scheduleAudioChatTask(
+		int $audioFileId, string $systemPrompt, array $history, int $sessionId, int $queryMessageId,
+	): int {
+		$customId = 'chatty-llm:' . $sessionId . ':' . $queryMessageId;
+		$this->checkIfSessionIsThinking($customId);
+		$input = [
+			'input' => $audioFileId,
+			'system_prompt' => $systemPrompt,
+			'history' => $history,
+		];
+		$task = new Task(
+			\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID,
+			$input,
+			Application::APP_ID . ':chatty-llm',
+			$this->userId,
+			$customId,
+		);
+		$this->taskProcessingManager->scheduleTask($task);
+		return $task->getId() ?? 0;
+	}
+
+	private function scheduleAgencyAudioTask(
+		int $audioFileId, int $confirmation, string $conversationToken, int $sessionId, int $queryMessageId,
+	): int {
+		$customId = 'chatty-llm:' . $sessionId . ':' . $queryMessageId;
+		$this->checkIfSessionIsThinking($customId);
+		$taskInput = [
+			'input' => $audioFileId,
+			'confirmation' => $confirmation,
+			'conversation_token' => $conversationToken,
+		];
+		$task = new Task(
+			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,
 			$taskInput,
 			Application::APP_ID . ':chatty-llm',
 			$this->userId,

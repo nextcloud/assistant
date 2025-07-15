@@ -280,9 +280,11 @@ export default {
 		hasOptionalInputOutputShape() {
 			const taskType = this.selectedTaskType
 			console.debug('[assistant] selected taskType', taskType)
+			console.debug('[assistant] selected taskType', Object.keys(taskType.optionalInputShape).length)
+			console.debug('[assistant] selected taskType', Object.keys(taskType.optionalOutputShape).length)
 			if (taskType) {
 				return (taskType.optionalInputShape && Object.keys(taskType.optionalInputShape).length > 0)
-					|| (taskType.optionalOutputShape && Object.keys(taskType.optionalOutputShape.length) > 0)
+					|| (taskType.optionalOutputShape && Object.keys(taskType.optionalOutputShape).length > 0)
 			}
 			return false
 		},
