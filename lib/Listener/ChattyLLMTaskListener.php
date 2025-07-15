@@ -156,13 +156,21 @@ class ChattyLLMTaskListener implements IEventListener {
 	 * @return void
 	 */
 	private function runTtsTask(Message $message, ?string $userId): void {
-		$task = new Task(
-			\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
-			['input' => $message->getContent()],
-			Application::APP_ID . ':internal',
-			$userId,
-		);
-		$ttsTaskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
+		try {
+			$task = new Task(
+				\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
+				['input' => $message->getContent()],
+				Application::APP_ID . ':internal',
+				$userId,
+			);
+			$ttsTaskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			$this->logger->warning('TTS sub-task failed for chat message.', [
+				'exception' => $e,
+				'messageId' => $message->getId(),
+			]);
+			return;
+		}
 		$speechFileId = $ttsTaskOutput['speech'];
 		// we need to set "ocp_task_id" here because the file is not an output of the task that produced the message
 		// and we need the task ID + the file ID to load the audio file in the frontend
