@@ -38,8 +38,9 @@ import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import TextLongIcon from 'vue-material-design-icons/TextLong.vue'
 import ImageOutlineIcon from 'vue-material-design-icons/ImageOutline.vue'
 import WebIcon from 'vue-material-design-icons/Web.vue'
-import WaveformIcon from './icons/Waveform.vue'
 import FileIcon from 'vue-material-design-icons/File.vue'
+import ContentPasteSearchIcon from './icons/ContentPasteSearch.vue'
+import WaveformIcon from './icons/Waveform.vue'
 
 export default {
 	name: 'TaskTypeSelect',
@@ -141,6 +142,8 @@ export default {
 		getTaskCategory(id) {
 			if (id.startsWith('chatty')) {
 				return 'chat'
+			} else if (id.startsWith('context_chat')) {
+				return 'context'
 			} else if (id.includes('translate')) {
 				return 'translate'
 			} else if (id.startsWith('richdocuments')) {
@@ -158,6 +161,8 @@ export default {
 			switch (category) {
 			case 'chat':
 				return t('assistant', 'Chat with AI')
+			case 'context':
+				return t('assistant', 'Context Chat')
 			case 'text':
 				return t('assistant', 'Work with text')
 			case 'image':
@@ -176,6 +181,8 @@ export default {
 			switch (category) {
 			case 'chat':
 				return MessageOutlineIcon
+			case 'context':
+				return ContentPasteSearchIcon
 			case 'text':
 				return TextLongIcon
 			case 'image':
