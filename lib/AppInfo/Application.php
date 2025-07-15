@@ -11,7 +11,9 @@ use OCA\Assistant\Capabilities;
 use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
 use OCA\Assistant\Listener\CSPListener;
+use OCA\Assistant\Listener\FileActionTaskListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
+use OCA\Assistant\Listener\LoadAdditionalScriptsListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
 use OCA\Assistant\Listener\TaskFailedListener;
 use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
@@ -24,6 +26,7 @@ use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 
@@ -64,10 +67,12 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(RenderReferenceEvent::class, TaskOutputFileReferenceListener::class);
 
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
+		$context->registerEventListener(LoadAdditionalScriptsEvent::class, LoadAdditionalScriptsListener::class);
 
 		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, ChattyLLMTaskListener::class);
+		$context->registerEventListener(TaskSuccessfulEvent::class, FileActionTaskListener::class);
 
 		$context->registerNotifierService(Notifier::class);
 
