@@ -5,10 +5,10 @@
 <template>
 	<div ref="taskTypeSelect"
 		class="task-type-select">
-		<NcActions v-for="variants in buttonTypes"
+		<NcActions v-for="variants in buttonTypesByInlineStatus.inline"
 			:key="variants.id"
-			:menu-name="variants.text"
 			:force-menu="true"
+			:menu-name="variants.text"
 			:container="$refs.taskTypeSelect"
 			:primary="selectedCategory(variants)"
 			@click="onMenuCategorySelected(variants.id, variants.tasks)">
@@ -25,6 +25,36 @@
 			</NcActionButton>
 			<template #icon>
 				<component :is="variants.icon" />
+			</template>
+		</NcActions>
+		<NcActions
+			:force-menu="true"
+			:container="$refs.taskTypeSelect"
+			@close="categorySubmenu = null">
+			<template v-if="!categorySubMenuTaskType">
+				<NcActionButton v-for="variant in buttonTypesByInlineStatus.overflow"
+					:key="variant.id"
+					:is-menu="variant.tasks.length > 1 || variant.id === 'other'"
+					:title="variant.text"
+					@click="onMenuCategorySelected(variant.id, variant.tasks)">
+					<template #icon>
+						<component :is="variant.icon" />
+					</template>
+					{{ variant.text }}
+				</NcActionButton>
+			</template>
+			<template v-else>
+				<NcActionButton v-for="t in categorySubMenuTaskType.tasks"
+					:key="t.id"
+					:disabled="selectedTask(t)"
+					:title="t.description"
+					:close-after-click="true"
+					@click="onTaskSelected(t)">
+					<template #icon>
+						<div style="width: 16px" />
+					</template>
+					{{ t.name }}
+				</NcActionButton>
 			</template>
 		</NcActions>
 	</div>
@@ -60,6 +90,14 @@ export default {
 			type: Array,
 			required: true,
 		},
+		/**
+		 * Number of inline elements
+		 * All elements are inline if this prop is null
+		 */
+		inline: {
+			type: [Number, null],
+			default: null,
+		},
 	},
 
 	emits: [
@@ -68,11 +106,14 @@ export default {
 
 	data() {
 		return {
-			extraButtonType: null,
+			categorySubmenu: null,
 		}
 	},
 
 	computed: {
+		onlyInline() {
+			return this.inline === null
+		},
 		buttonTypes() {
 			const taskTypes = {}
 			for (const task of this.options) {
@@ -105,19 +146,27 @@ export default {
 			}
 			return result
 		},
-		actionTypes() {
-			if (this.extraButtonType !== null) {
-				// the extra button replaces the last one so we need the last one as an action
-				// take all non-inline options that are not selected and that are not the extra button
-				const types = this.options.slice(this.inline).filter(t => t.id !== this.modelValue && t.id !== this.extraButtonType.id)
-				// add the one that was a button and that has been replaced
-				if (this.extraButtonType.id !== this.options[this.inline - 1].id) {
-					types.unshift(this.options[this.inline - 1])
-				}
-				return types
-			} else {
-				return this.options.slice(this.inline)
+		buttonTypesByInlineStatus() {
+			if (this.onlyInline) {
+				return { inline: this.buttonTypes, overflow: [] }
 			}
+			const inline = this.buttonTypes.slice(0, this.inline)
+			let overflow = this.buttonTypes.slice(this.inline)
+
+			// Ensure that the selection is never inline otherwise swap with the last uninlined category
+			const selection = overflow.find(t => this.selectedCategory(t))
+			if (selection) {
+				const removal = inline.pop()
+				inline.push(selection)
+				overflow = overflow.filter(t => t.id !== selection.id)
+				if (removal) {
+					overflow.unshift(removal)
+				}
+			}
+			return { overflow, inline }
+		},
+		categorySubMenuTaskType() {
+			return this.buttonTypesByInlineStatus.overflow.find(t => t.id === this.categorySubmenu)
 		},
 	},
 
@@ -135,9 +184,10 @@ export default {
 			this.$emit('update:model-value', taskType.id)
 		},
 		onMenuCategorySelected(category, tasks) {
-			if (tasks.length === 1) {
+			if (tasks.length === 1 && category !== 'other') {
 				this.onTaskSelected(tasks[0])
 			}
+			this.categorySubmenu = category
 		},
 		getTaskCategory(id) {
 			if (id.startsWith('chatty')) {
