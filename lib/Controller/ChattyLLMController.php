@@ -230,6 +230,9 @@ class ChattyLLMController extends OCSController {
 					$task = $this->taskProcessingManager->getTask($ocpTaskId);
 					$this->taskProcessingManager->deleteTask($task);
 				} catch (\OCP\TaskProcessing\Exception\Exception) {
+					// silent failure here because:
+					// if the task is not found: all good nothing to delete
+					// if the task couldn't be deleted, it will be deleted by the task processing cleanup job later anyway
 				}
 			}
 		}

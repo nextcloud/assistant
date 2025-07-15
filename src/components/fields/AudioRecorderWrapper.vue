@@ -140,9 +140,9 @@ export default {
 				console.debug(exception)
 				this.killStreams()
 				if (exception.name === 'NotAllowedError') {
-					showError(t('assistant', 'Access to the microphone was denied'))
+					showError(t('assistant', 'Access to the microphone was denied. Please check you allowed this page to access the microphone.'))
 				} else {
-					showError(t('assistant', 'Microphone either not available or disabled in settings'))
+					showError(t('assistant', 'Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings.'))
 				}
 				return
 			}
@@ -154,7 +154,10 @@ export default {
 				console.debug(exception)
 				this.killStreams()
 				this.audioStream = null
-				showError(t('assistant', 'Error while recording audio'))
+				showError(
+					t('assistant', 'Error while recording audio')
+						+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
+				)
 				return
 			}
 

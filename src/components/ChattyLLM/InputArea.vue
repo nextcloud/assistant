@@ -132,7 +132,10 @@ export default {
 			axios.post(url, formData).then(response => {
 				this.$emit('submit-audio', response.data.ocs.data.fileId)
 			}).catch(error => {
-				showError(t('assistant', 'Could not upload the recorded file'))
+				showError(
+					t('assistant', 'Could not upload the recorded file')
+						+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
+				)
 				console.error(error)
 			})
 		},
