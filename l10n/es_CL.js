@@ -4,6 +4,7 @@ OC.L10N.register(
     "Send an email" : "Enviar correo electrónico",
     "User not found" : "No se encontró el usuario",
     "Nextcloud Mail" : "Correo Nextcloud",
+    "Assistant" : "Asistente",
     "Try again" : "Reintentar",
     "Cancel" : "Cancel",
     "Delete" : "Borrar",

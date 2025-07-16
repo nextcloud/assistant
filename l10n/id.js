@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Assistant" : "Asisten",
     "Close" : "Tutup",
     "Less" : "Ciutkan",
     "More" : "Lainnya",

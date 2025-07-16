@@ -58,6 +58,9 @@
     "Generate text" : "Vytvořit text",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Odeslat požadavek do Asistenta, například: napiš koncept prezentace, dej mi doporučení pro prezentaci, napiš koncept odpovědi kolegovi.",
     "Artificial Intelligence" : "Umělá inteligence",
+    "The history of chat messages before the current message, starting with a message by the user" : "Historie zpráv v chatu před stávající zprávou, počínaje zprávou od uživatele",
+    "Response voice message" : "Odpovědět na zvukovou zprávu",
+    "The generated voice response as part of the conversation" : "Vytvořená hlasová odpověď jako součást konverzace",
     "Process and transform text" : "Zpracovat a přetvořit text",
     "Assistant admin options saved" : "Předvolby správy pro Asistenta uloženy",
     "Failed to save assistant admin options" : "Předvolby správy pro asistenta se nepodařilo uložit",
@@ -142,6 +145,7 @@
     "Submit" : "Odeslat",
     "Type a message…" : "Napište zprávu…",
     "Processing…" : "Zpracovávání…",
+    "Could not upload the recorded file" : "Soubor s nahrávkou nebylo možné odeslat na server",
     "You" : "Vy",
     "Message copied to clipboard" : "Zpráva zkopírována do schránky",
     "Information sources" : "Zdroje informací",
@@ -189,6 +193,7 @@
     "Task scheduled" : "Úkol naplánován",
     "Unknown status" : "Neznámý stav",
     "Audio input" : "Zvukový vstup",
+    "Audio output" : "Zvukový výstup",
     "Error while recording audio" : "Chyba při pořizování zvukového záznamu",
     "Start recording" : "Zahájit nahrávání",
     "Dismiss recording" : "Zahodit nahrávku",
@@ -197,7 +202,6 @@
     "Choose a file" : "Vyberte soubor",
     "No file selected" : "Nevybrán žádný soubor",
     "Choose a value" : "Zvolte hodnotu",
-    "Could not upload the recorded file" : "Soubor s nahrávkou nebylo možné odeslat na server",
     "Output file share link copied to clipboard" : "Odkaz na sdílení výstupního souboru zkopírován do schránky",
     "Click this to open the file" : "Kliknutím na toto otevřete soubor",
     "This output file has been saved in {path}" : "Tento výstupní soubor byl uložen v {path}",
@@ -229,10 +233,8 @@
     "Failed to schedule your task" : "Nepodařilo se naplánovat vaši úlohu",
     "Submit the current task's result" : "Odeslat výsledek stávajícího úkolu",
     "Output file for task {taskId} ({taskTypeName})" : "Výstupní soubor pro úkol {taskId} ({taskTypeName})",
-    "The server failed to process your task with ID {id}. Please inform the server administrators of this issue." : "Serveru se nepodařilo zpracovat úkol od vás, který má identifikátor {id}. Sdělte tento problém správcům serveru, který využíváte.",
     "Assistant error" : "Chyba asistenta",
     "Please log in to view the task result" : "Pro zobrazení výsledku úkolu se přihlaste",
-    "This task does not exist or has been cleaned up" : "Tato úloha neexistuje nebo byla vyčištěna",
-    "Assistant failed to schedule your task. Please try again and inform the server administrators if this issue persists." : "Asistentovi se nepodařilo naplánovat úkol od vás. Zkuste to znovu a pokud problém přetrvá, informujte o tom správce vámi využívaného serveru."
+    "This task does not exist or has been cleaned up" : "Tato úloha neexistuje nebo byla vyčištěna"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

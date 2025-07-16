@@ -8,6 +8,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud-póstur",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Artificial Intelligence" : "Gervigreind",
+    "Assistant" : "Meðhjálpari",
     "Close" : "Loka",
     "Less" : "Minna",
     "More" : "Meira",
