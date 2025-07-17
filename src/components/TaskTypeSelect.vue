@@ -5,28 +5,40 @@
 <template>
 	<div ref="taskTypeSelect"
 		class="task-type-select">
-		<NcActions v-for="variants in buttonTypesByInlineStatus.inline"
-			:key="variants.id"
-			:force-menu="true"
-			:menu-name="variants.text"
-			:container="$refs.taskTypeSelect"
-			:primary="selectedCategory(variants)"
-			@click="onMenuCategorySelected(variants.id, variants.tasks)">
-			<NcActionButton v-for="t in variants.tasks"
-				:key="t.id"
-				:disabled="selectedTask(t)"
-				:title="t.description"
-				:close-after-click="true"
-				@click="onTaskSelected(t)">
+		<template v-for="variants in buttonTypesByInlineStatus.inline">
+			<NcActions v-if="hasSubMenu(variants)"
+				:key="variants.id"
+				:force-menu="true"
+				:menu-name="variants.text"
+				:container="$refs.taskTypeSelect"
+				:primary="isCategorySelected(variants)"
+				@click="onMenuCategorySelected(variants)">
+				<NcActionButton v-for="t in variants.tasks"
+					:key="t.id"
+					:disabled="selectedTask(t)"
+					:title="t.description"
+					:close-after-click="true"
+					@click="onTaskSelected(t)">
+					<template #icon>
+						<div style="width: 16px" />
+					</template>
+					{{ t.name }}
+				</NcActionButton>
 				<template #icon>
-					<div style="width: 16px" />
+					<component :is="variants.icon" />
 				</template>
-				{{ t.name }}
-			</NcActionButton>
-			<template #icon>
-				<component :is="variants.icon" />
-			</template>
-		</NcActions>
+			</NcActions>
+			<NcButton v-else
+				:key="variants.id + '-button'"
+				:variant="isCategorySelected(variants) ? 'primary' : 'secondary'"
+				:title="variants.text"
+				@click="onMenuCategorySelected(variants)">
+				<template #icon>
+					<component :is="variants.icon" />
+				</template>
+				{{ variants.text }}
+			</NcButton>
+		</template>
 		<NcActions
 			:force-menu="true"
 			:container="$refs.taskTypeSelect"
@@ -36,7 +48,7 @@
 					:key="variant.id"
 					:is-menu="variant.tasks.length > 1 || variant.id === 'other'"
 					:title="variant.text"
-					@click="onMenuCategorySelected(variant.id, variant.tasks)">
+					@click="onMenuCategorySelected(variant)">
 					<template #icon>
 						<component :is="variant.icon" />
 					</template>
@@ -62,6 +74,7 @@
 
 <script>
 import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import MessageOutlineIcon from 'vue-material-design-icons/MessageOutline.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
@@ -79,6 +92,7 @@ export default {
 		NcActions,
 		NcActionButton,
 		MessageOutlineIcon,
+		NcButton,
 	},
 
 	props: {
@@ -124,15 +138,15 @@ export default {
 				taskTypes[type].push(task)
 			}
 			const result = []
-			for (const part of Object.entries(taskTypes)) {
-				if (part[0] === 'other') {
+			for (const entry of Object.entries(taskTypes)) {
+				if (entry[0] === 'other') {
 					continue
 				}
 				result.push({
-					id: part[0],
-					text: this.getTextForCategory(part[0]),
-					icon: this.getCategoryIcon(part[0]),
-					tasks: part[1],
+					id: entry[0],
+					text: this.getTextForCategory(entry[0]),
+					icon: this.getCategoryIcon(entry[0]),
+					tasks: entry[1],
 				})
 			}
 			// Ensure the "other" category is always last
@@ -150,20 +164,20 @@ export default {
 			if (this.onlyInline) {
 				return { inline: this.buttonTypes, overflow: [] }
 			}
-			const inline = this.buttonTypes.slice(0, this.inline)
-			let overflow = this.buttonTypes.slice(this.inline)
+			const inlineButtonTypes = this.buttonTypes.slice(0, this.inline)
+			let overflowButtonTypes = this.buttonTypes.slice(this.inline)
 
 			// Ensure that the selection is never inline otherwise swap with the last uninlined category
-			const selection = overflow.find(t => this.selectedCategory(t))
+			const selection = overflowButtonTypes.find(t => this.isCategorySelected(t))
 			if (selection) {
-				const removal = inline.pop()
-				inline.push(selection)
-				overflow = overflow.filter(t => t.id !== selection.id)
+				const removal = inlineButtonTypes.pop()
+				inlineButtonTypes.push(selection)
+				overflowButtonTypes = overflowButtonTypes.filter(t => t.id !== selection.id)
 				if (removal) {
-					overflow.unshift(removal)
+					overflowButtonTypes.unshift(removal)
 				}
 			}
-			return { overflow, inline }
+			return { overflow: overflowButtonTypes, inline: inlineButtonTypes }
 		},
 		categorySubMenuTaskType() {
 			return this.buttonTypesByInlineStatus.overflow.find(t => t.id === this.categorySubmenu)
@@ -177,17 +191,22 @@ export default {
 		selectedTask(taskType) {
 			return taskType.id === this.modelValue
 		},
-		selectedCategory(category) {
+		isCategorySelected(category) {
 			return category.id === this.getTaskCategory(this.modelValue || '')
 		},
 		onTaskSelected(taskType) {
 			this.$emit('update:model-value', taskType.id)
 		},
-		onMenuCategorySelected(category, tasks) {
-			if (tasks.length === 1 && category !== 'other') {
-				this.onTaskSelected(tasks[0])
+		hasSubMenu(taskType) {
+			return taskType.tasks.length > 1 || taskType.id === 'other'
+		},
+		onMenuCategorySelected(taskType) {
+			if (this.hasSubMenu(taskType)) {
+				this.categorySubmenu = taskType.id
+			} else {
+				this.onTaskSelected(taskType.tasks[0])
+				this.categorySubmenu = null
 			}
-			this.categorySubmenu = category
 		},
 		getTaskCategory(id) {
 			if (id.startsWith('chatty')) {
