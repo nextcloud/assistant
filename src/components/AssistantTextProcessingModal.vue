@@ -37,6 +37,8 @@
 					:expected-runtime="expectedRuntime"
 					:is-notify-enabled="isNotifyEnabled"
 					:task-type-id-list="taskTypeIdList"
+					:task-status="taskStatus"
+					:scheduled-at="scheduledAt"
 					@sync-submit="onSyncSubmit"
 					@action-button-clicked="onActionButtonClicked"
 					@try-again="onTryAgain"
@@ -117,6 +119,8 @@ export default {
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
 			modalSize: 'large',
 			progress: null,
+			taskStatus: null,
+			scheduledAt: null,
 			loading: false,
 			expectedRuntime: null,
 			isNotifyEnabled: false,
