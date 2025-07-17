@@ -115,7 +115,7 @@ export default {
 			show: true,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
-			modalSize: 'full',
+			modalSize: 'large',
 			progress: null,
 			loading: false,
 			expectedRuntime: null,
@@ -191,6 +191,11 @@ export default {
 .modal-container__content .assistant-modal--wrapper {
 	height: 100%;
 }
+
+// make large modal a bit larger
+.assistant-modal .modal-container {
+	width: 1220px !important;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -210,7 +215,6 @@ export default {
 
 .assistant-modal--content {
 	width: 100%;
-	max-width: 1220px;
 	margin: 0 auto;
 	padding: 16px;
 	display: flex;
