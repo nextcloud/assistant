@@ -23,6 +23,7 @@ OC.L10N.register(
     "Generate text" : "Sortu testua",
     "Artificial Intelligence" : "Adimen artifiziala",
     "System prompt" : "Sistemaren gonbita",
+    "Define rules and assumptions that the assistant should follow during the conversation." : "Definitu elkarrizketan zehar txat laguntzaileak jarraitu beharko lituzkeen arau eta suposizioak.",
     "Describe a task that you want the assistant to do or ask a question" : "Deskribatu laguntzaileak egitea nahi duzun zeregina edo galdera bat egin",
     "Chat history" : "Txat historia",
     "The history of chat messages before the current message, starting with a message by the user" : "Uneko mezuaren aurreko txat mezuen historia, erabiltzailearen mezu batetik hasita",

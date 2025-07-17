@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Nextcloud Talk" : "Flap Nextcloud",
+    "Assistant" : "Skoazeller",
     "Close" : "Serriñ",
     "More" : "Muioc'h",
     "Cancel" : "Nullañ",
