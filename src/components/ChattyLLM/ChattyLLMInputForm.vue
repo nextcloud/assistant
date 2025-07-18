@@ -751,7 +751,7 @@ export default {
 							reject(new Error('Message generation task check failed'))
 						} else {
 							console.debug('checkTaskPolling, task is still scheduled or running')
-							this.slowPickup = error.response.data.slowPickup
+							this.slowPickup = error.response.data.slow_pickup
 						}
 					})
 				}, 2000)

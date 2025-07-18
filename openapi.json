@@ -3607,12 +3607,16 @@
                                 "schema": {
                                     "type": "object",
                                     "required": [
-                                        "task_status"
+                                        "task_status",
+                                        "slow_pickup"
                                     ],
                                     "properties": {
                                         "task_status": {
                                             "type": "integer",
                                             "format": "int64"
+                                        },
+                                        "slow_pickup": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
