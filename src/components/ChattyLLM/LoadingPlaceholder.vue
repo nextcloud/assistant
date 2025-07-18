@@ -14,10 +14,17 @@
 			</div>
 			<div v-if="type === 'messages'" class="placeholder-item__info" />
 		</li>
+		<NcNoteCard
+			v-if="slowPickup"
+			type="warning">
+			{{ t('assistant', 'This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that this is correctly configured.') }}
+		</NcNoteCard>
 	</ul>
 </template>
 
 <script>
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+
 const AVATAR = {
 	SIZE: {
 		EXTRA_SMALL: 22,
@@ -34,6 +41,10 @@ const AVATAR = {
 export default {
 	name: 'LoadingPlaceholder',
 
+	components: {
+		NcNoteCard,
+	},
+
 	props: {
 		type: {
 			type: String,
@@ -45,6 +56,10 @@ export default {
 		count: {
 			type: Number,
 			default: 1,
+		},
+		slowPickup: {
+			type: Boolean,
+			default: false,
 		},
 	},
 

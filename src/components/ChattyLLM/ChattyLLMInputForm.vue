@@ -106,6 +106,7 @@
 					</div>
 					<ConversationBox :messages="messages"
 						:loading="loading"
+						:slow-pickup="slowPickup"
 						@regenerate="runRegenerationTask"
 						@delete="deleteMessage" />
 					<div v-if="messages != null && messages.length > 0 && !loading.llmGeneration && !loading.newHumanMessage && messages[messages.length - 1]?.role === 'human'" class="session-area__chat-area__active-session__utility-button">
@@ -252,6 +253,7 @@ export default {
 			pollMessageGenerationTimerId: null,
 			pollTitleGenerationTimerId: null,
 			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
+			slowPickup: false,
 		}
 	},
 
@@ -665,6 +667,7 @@ export default {
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
 			try {
+				this.slowPickup = false
 				this.loading.llmGeneration = true
 				const params = {
 					sessionId,
@@ -748,6 +751,7 @@ export default {
 							reject(new Error('Message generation task check failed'))
 						} else {
 							console.debug('checkTaskPolling, task is still scheduled or running')
+							this.slowPickup = error.response.data.slowPickup
 						}
 					})
 				}, 2000)
