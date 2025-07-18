@@ -59,6 +59,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Cuir iarratas chuig an gCúntóir, mar shampla: scríobh an chéad dréacht de chur i láthair, tabhair moltaí dom le haghaidh cur i láthair, scríobh dréachtfhreagra chuig mo chomhghleacaí.",
     "Artificial Intelligence" : "Intleacht Shaorga",
     "System prompt" : "Leid córais",
+    "Define rules and assumptions that the assistant should follow during the conversation." : "Sainmhínigh na rialacha agus na toimhdí ba chóir don chúntóir a leanúint le linn an chomhrá.",
     "Describe a task that you want the assistant to do or ask a question" : "Déan cur síos ar thasc a theastaíonn uait don chúntóir a dhéanamh nó ceist a chur",
     "Chat history" : "Stair comhrá",
     "The history of chat messages before the current message, starting with a message by the user" : "Stair na dteachtaireachtaí comhrá roimh an teachtaireacht reatha, ag tosú le teachtaireacht ón úsáideoir",

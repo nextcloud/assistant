@@ -18,6 +18,7 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Artificial Intelligence" : "هوش مصنوعی",
     "System prompt" : "درخواست سیستمی",
+    "Define rules and assumptions that the assistant should follow during the conversation." : "قوانین و فرضیاتی را که دستیار باید در طول مکالمه رعایت کند، تعریف کنید.",
     "Describe a task that you want the assistant to do or ask a question" : "وظیفه‌ای که می‌خواهید دستیار انجام دهد را توصیف کنید یا سؤالی بپرسید",
     "Chat history" : "تاریخچه چت",
     "The history of chat messages before the current message, starting with a message by the user" : "تاریخچه پیام‌های چت قبل از پیام فعلی، با شروع از یک پیام توسط کاربر",

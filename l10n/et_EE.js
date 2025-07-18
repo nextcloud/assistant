@@ -67,6 +67,7 @@ OC.L10N.register(
     "System prompt" : "Süsteemi viip",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Määratle reeglid ja eeldused, mida Abiline peaks vestluse kestel järgima.",
     "Chat voice message" : "Vestluse häälsõnum",
+    "Describe a task that you want the assistant to do or ask a question" : "Kirjelda seda, mida soovid Abilisele ülesandeks teha või lihtsalt küsi midagi.",
     "Chat history" : "Vestluse ajalugu",
     "The history of chat messages before the current message, starting with a message by the user" : "Kasutaja sõnumiga algav vestluse ajalugu enne praegust sõnumit",
     "Input transcript" : "Sisendi üleskirjutus",

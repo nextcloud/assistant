@@ -57,6 +57,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Envoyez une requête à l’Assistant, par exemple : écris un premier brouillon de présentation, donne-moi des suggestions pour une présentation, écris un brouillon de réponse à mon collègue.",
     "Artificial Intelligence" : "Intelligence artificielle",
     "System prompt" : "Invite du système",
+    "Define rules and assumptions that the assistant should follow during the conversation." : "Définir les règles et les hypothèses que l'assistant doit suivre pendant la conversation.",
     "Describe a task that you want the assistant to do or ask a question" : "Décrivez une tâche que vous voulez que l'assistant effectue ou posez une question",
     "Chat history" : "Historique de la discussion",
     "The history of chat messages before the current message, starting with a message by the user" : "Historique des messages de discussion avant le message actuel, commençant par un message de l'utilisateur",
