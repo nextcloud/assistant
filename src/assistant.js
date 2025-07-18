@@ -137,7 +137,7 @@ export async function openAssistantForm({
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 							showError(
 								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
-									+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
+								+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
 							)
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
@@ -221,7 +221,7 @@ export async function openAssistantForm({
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
 							showError(
 								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
-									+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
+								+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
 							)
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
@@ -290,7 +290,7 @@ function updateTask(task, object) {
 	object.scheduledAt = task?.scheduledAt
 }
 
-export async function pollTask(taskId, obj) {
+export async function pollTask(taskId, obj, callback = updateTask) {
 	return new Promise((resolve, reject) => {
 		window.assistantPollTimerId = setInterval(() => {
 			getTask(taskId).then(response => {
@@ -300,7 +300,7 @@ export async function pollTask(taskId, obj) {
 					return
 				}
 				if (obj) {
-					updateTask(task, obj)
+					callback(task, obj)
 				}
 				if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
 					// stop polling
@@ -551,7 +551,7 @@ export async function openAssistantTask(
 				lastTask = task
 				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
-				pollTask(task.id).then(finishedTask => {
+				pollTask(task.id, view).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {

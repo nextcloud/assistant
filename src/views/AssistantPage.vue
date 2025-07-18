@@ -15,8 +15,8 @@
 					:loading="loading"
 					:show-sync-task-running="showSyncTaskRunning"
 					:short-input="shortInput"
-					:task-status="taskStatus"
-					:scheduled-at="scheduledAt"
+					:task-status="task.status"
+					:scheduled-at="task.scheduledAt"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
 					:is-notify-enabled="isNotifyEnabled"
@@ -69,8 +69,6 @@ export default {
 			progress: null,
 			loading: false,
 			isNotifyEnabled: false,
-			taskStatus: null,
-			scheduledAt: null,
 		}
 	},
 
@@ -126,7 +124,7 @@ export default {
 					this.task.id = task.id
 					this.task.completionExpectedAt = task.completionExpectedAt
 					this.task.scheduledAt = task.scheduledAt
-					pollTask(task.id, this).then(finishedTask => {
+					pollTask(task.id, this, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
@@ -156,6 +154,12 @@ export default {
 				})
 				.then(() => {
 				})
+		},
+		updateTask(task) {
+			if (task.status === TASK_STATUS_STRING.running) {
+				this.progress = task.progress
+			}
+			this.task = task
 		},
 		onSyncSubmit(data) {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
