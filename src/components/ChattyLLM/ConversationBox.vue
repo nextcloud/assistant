@@ -31,7 +31,7 @@
 				:information-source-names="informationSourceNames"
 				@regenerate="regenerate(message.id)"
 				@delete="deleteMessage(message.id)" />
-			<LoadingPlaceholder v-if="loading.llmGeneration" />
+			<LoadingPlaceholder v-if="loading.llmGeneration" :slow-pickup="slowPickup" />
 		</div>
 	</div>
 </template>
@@ -78,6 +78,10 @@ export default {
 				messageDelete: false,
 				sessionDelete: false,
 			}),
+		},
+		slowPickup: {
+			type: Boolean,
+			default: false,
 		},
 	},
 
