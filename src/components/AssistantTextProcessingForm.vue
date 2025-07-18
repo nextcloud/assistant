@@ -45,6 +45,8 @@
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
 					:is-notify-enabled="isNotifyEnabled"
+					:task-status="taskStatus"
+					:scheduled-at="scheduledAt"
 					@background-notify="$emit('background-notify', $event)"
 					@cancel="$emit('cancel-task')" />
 				<NcAppContent v-else class="session-area">
@@ -236,6 +238,14 @@ export default {
 		},
 		taskTypeIdList: {
 			type: [Array, null],
+			default: null,
+		},
+		taskStatus: {
+			type: [String, null],
+			default: null,
+		},
+		scheduledAt: {
+			type: [Number, null],
 			default: null,
 		},
 	},
