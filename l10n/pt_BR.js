@@ -211,6 +211,8 @@ OC.L10N.register(
     "Unknown status" : "Status desconhecido",
     "Audio input" : "Entrada de áudio",
     "Audio output" : "Saída de áudio",
+    "Translate" : "Traduzir",
+    "Other" : "Outro",
     "Access to the microphone was denied. Please check you allowed this page to access the microphone." : "O acesso ao microfone foi negado. Verifique se você permitiu que esta página acessasse o microfone.",
     "Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings." : "O microfone não está disponível ou está desativado nas configurações. Verifique se você está acessando esta página com HTTPS ou ajuste as configurações do seu navegador.",
     "Error while recording audio" : "Erro ao gravar áudio",

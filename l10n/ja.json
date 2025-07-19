@@ -153,6 +153,8 @@
     "Unknown status" : "不明なステータス",
     "Audio input" : "音声入力",
     "Audio output" : "音声の出力",
+    "Translate" : "翻訳",
+    "Other" : "その他",
     "Error while recording audio" : "音声録音中にエラーが発生しました",
     "Start recording" : "レコーディングを開始する",
     "Dismiss recording" : "録音をキャンセルする",

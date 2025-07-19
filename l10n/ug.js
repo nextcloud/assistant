@@ -155,6 +155,8 @@ OC.L10N.register(
     "Unknown status" : "نامەلۇم ھالەت",
     "Audio input" : "ئاۋاز كىرگۈزۈش",
     "Audio output" : "ئاۋاز چىقىرىش",
+    "Translate" : "تەرجىمە قىلىڭ",
+    "Other" : "باشقىلىرى",
     "Error while recording audio" : "ئاۋاز خاتىرىلەۋاتقاندا خاتالىق",
     "Start recording" : "خاتىرىلەشنى باشلاڭ",
     "Dismiss recording" : "خاتىرىسىنى ئەمەلدىن قالدۇرۇش",

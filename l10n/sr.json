@@ -211,6 +211,8 @@
     "Unknown status" : "Статус се не зна",
     "Audio input" : "Аудио улаз",
     "Audio output" : "Аудио излаз",
+    "Translate" : "Превођење",
+    "Other" : "Остали",
     "Access to the microphone was denied. Please check you allowed this page to access the microphone." : "Одбијен је приступ микрофону. Проверите да ли сте дозволили овој страници приступ микрофону.",
     "Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings." : "Микрофон или није доступан или је искључен у подешавањима. Проверите да ли овој страници приступате преко HTTPS протокола или подесите поставке вашег интернет прегледача.",
     "Error while recording audio" : "Грешка приликом снимања звука",

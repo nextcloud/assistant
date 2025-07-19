@@ -129,6 +129,8 @@ OC.L10N.register(
     "Unknown status" : "Neznámy stav",
     "Audio input" : "Audio vstup",
     "Audio output" : "Zvukový výstup",
+    "Translate" : "Preložiť",
+    "Other" : "Iné",
     "Error while recording audio" : "Chyba pri nahrávaní zvuku",
     "Start recording" : "Spustiť nahrávanie",
     "Dismiss recording" : "Zrušiť nahrávanie",

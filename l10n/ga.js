@@ -200,6 +200,8 @@ OC.L10N.register(
     "Unknown status" : "Stádas anaithnid",
     "Audio input" : "Ionchur fuaime",
     "Audio output" : "Aschur fuaime",
+    "Translate" : "Aistrigh",
+    "Other" : "Eile",
     "Error while recording audio" : "Earráid agus an fhuaim á taifeadadh",
     "Start recording" : "Tosaigh taifeadadh",
     "Dismiss recording" : "Ruaig an taifeadadh",

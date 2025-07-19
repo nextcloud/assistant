@@ -200,6 +200,8 @@ OC.L10N.register(
     "Unknown status" : "Durum bilinmiyor",
     "Audio input" : "Ses girişi",
     "Audio output" : "Ses çıkışı",
+    "Translate" : "Çevir",
+    "Other" : "Diğer",
     "Error while recording audio" : "Ses kaydedilirken sorun çıktı",
     "Start recording" : "Kaydı başlat",
     "Dismiss recording" : "Kaydı sil",

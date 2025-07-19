@@ -206,6 +206,8 @@ OC.L10N.register(
     "Unknown status" : "Tundmatu olek",
     "Audio input" : "Helisisend",
     "Audio output" : "Heliväljund",
+    "Translate" : "Tõlgi",
+    "Other" : "Muu",
     "Error while recording audio" : "Viga heli salvestamisel",
     "Start recording" : "Alusta salvestamist",
     "Dismiss recording" : "Loobu salvestamisest",

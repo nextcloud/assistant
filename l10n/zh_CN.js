@@ -160,6 +160,8 @@ OC.L10N.register(
     "Unknown status" : "未知状态",
     "Audio input" : "音频输入",
     "Audio output" : "音频输出",
+    "Translate" : "翻译",
+    "Other" : "其他",
     "Error while recording audio" : "录制音频时出错",
     "Start recording" : "开始录制",
     "Dismiss recording" : "取消录音",

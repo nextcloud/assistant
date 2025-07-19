@@ -17,6 +17,8 @@ OC.L10N.register(
     "This may take a few seconds…" : "To može potrajati nekoliko sekundi...",
     "Cancelled" : "Otkazano",
     "Running" : "Trčanje",
+    "Translate" : "Prevedi",
+    "Other" : "Drugo",
     "Error while recording audio" : "Pogreška tijekom snimanja zvuka",
     "Dismiss recording" : "Odbaci snimak",
     "End recording and send" : "Završi snimak i pošalji",

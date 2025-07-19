@@ -213,6 +213,8 @@ OC.L10N.register(
     "Unknown status" : "狀態不詳",
     "Audio input" : "音頻輸入",
     "Audio output" : "音頻輸出",
+    "Translate" : "翻譯",
+    "Other" : "其它",
     "Access to the microphone was denied. Please check you allowed this page to access the microphone." : "存取米高風被拒。請檢查您是否允許此頁面存取米高風。",
     "Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings." : "米高風無法使用或在設定中停用。請檢查您是否使用 HTTPS 存取此頁面，或調整您的瀏覽器設定。",
     "Error while recording audio" : "錄音時出錯",

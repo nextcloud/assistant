@@ -20,6 +20,8 @@ OC.L10N.register(
     "Failed" : "Eșuat",
     "Running" : "Alergat",
     "Scheduled" : "Programat",
+    "Translate" : "Tradu",
+    "Other" : "Altele",
     "No file selected" : "Niciun fișier selectat",
     "Upload from device" : "Încarcă din dispozitiv",
     "Advanced" : "Avansat",

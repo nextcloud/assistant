@@ -12,6 +12,8 @@ OC.L10N.register(
     "Cancelled" : "Dibatalkan",
     "Failed" : "Gagal",
     "Scheduled" : "Dijadwalkan",
+    "Translate" : "Terjemahkan",
+    "Other" : "Lainnya",
     "No file selected" : "Tidak ada berkas yang dipilih",
     "Advanced" : "Lanjutan",
     "Copy" : "Salin"

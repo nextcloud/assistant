@@ -20,6 +20,8 @@ OC.L10N.register(
     "Cancelled" : "Cancelled",
     "Failed" : "Failed",
     "Running" : "Running",
+    "Translate" : "გადათარგმნე",
+    "Other" : "Other",
     "Error while recording audio" : "Error while recording audio",
     "Start recording" : "Start recording",
     "Dismiss recording" : "Dismiss recording",

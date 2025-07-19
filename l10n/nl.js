@@ -94,6 +94,8 @@ OC.L10N.register(
     "Scheduled" : "Ingepland",
     "Unknown status" : "Onbekende status",
     "Audio output" : "Audio output",
+    "Translate" : "Vertaal",
+    "Other" : "Andere",
     "Error while recording audio" : "Fout tijdens opnemen audio",
     "Start recording" : "Begin opname",
     "Dismiss recording" : "Opname sluiten",

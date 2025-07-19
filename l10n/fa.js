@@ -50,6 +50,8 @@ OC.L10N.register(
     "Unknown status" : "وضعیت نامشخص",
     "Audio input" : "ورودی صوتی",
     "Audio output" : "خروجی صدا",
+    "Translate" : "ترجمه",
+    "Other" : "دیگر",
     "Error while recording audio" : "Error while recording audio",
     "Start recording" : "Start recording",
     "Dismiss recording" : "Dismiss recording",

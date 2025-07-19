@@ -47,6 +47,8 @@ OC.L10N.register(
     "Running" : "Futás",
     "Scheduled" : "Ütemezve",
     "Audio output" : "Hangkimenet",
+    "Translate" : "Lefordítás",
+    "Other" : "Egyebek",
     "Error while recording audio" : "Hiba a hang felvétele során",
     "Dismiss recording" : "Felvétel elvetése",
     "End recording and send" : "Felvétel befejezése és küldés",

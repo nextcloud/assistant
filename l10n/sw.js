@@ -16,6 +16,8 @@ OC.L10N.register(
     "Scheduled" : "Scheduled",
     "Unknown status" : "Hadhi haijulikani",
     "Audio output" : "Kitolea sauti",
+    "Translate" : "Tafsiri",
+    "Other" : "Mengine",
     "Start recording" : "Anza kurekodi",
     "Upload from device" : "Pakia kutoka katika kifaa",
     "Advanced" : "a daraja la juu",

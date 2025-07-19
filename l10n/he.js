@@ -16,6 +16,8 @@ OC.L10N.register(
     "This may take a few seconds…" : "פעולה זו עשויה לארוך מספר שניות…",
     "Cancelled" : "בוטל",
     "Running" : "ריצה",
+    "Translate" : "תרגום",
+    "Other" : "אחר",
     "Choose a file" : "נא לבחור קובץ",
     "No file selected" : "לא נבחר קובץ",
     "Could not copy to clipboard" : "לא ניתן להעתיק ללוח הגזירים",

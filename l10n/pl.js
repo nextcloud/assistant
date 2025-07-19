@@ -190,6 +190,8 @@ OC.L10N.register(
     "Unknown status" : "Nieznany stan",
     "Audio input" : "Wejście dźwięku",
     "Audio output" : "Wyjście audio",
+    "Translate" : "Tłumaczenie",
+    "Other" : "Inne",
     "Error while recording audio" : "Błąd podczas nagrywania dźwięku",
     "Start recording" : "Rozpocznij nagrywanie",
     "Dismiss recording" : "Odrzuć nagranie",

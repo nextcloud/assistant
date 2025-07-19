@@ -18,6 +18,8 @@ OC.L10N.register(
     "This may take a few seconds…" : "S'at a istentare calicunu segundu...",
     "Cancelled" : "Annulladu",
     "Running" : "Cursa",
+    "Translate" : "Borta",
+    "Other" : "Àteru",
     "Error while recording audio" : "Errore in sa registratzione de s'àudio",
     "Dismiss recording" : "Iscarta sa registratzione",
     "End recording and send" : "Agabba sa registratzione e imbia",

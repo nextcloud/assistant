@@ -40,6 +40,8 @@ OC.L10N.register(
     "Running" : "V teku",
     "Scheduled" : "Načrtovano",
     "Audio output" : "Odvod zvoka",
+    "Translate" : "Prevedi",
+    "Other" : "Drugo",
     "Error while recording audio" : "Prišlo je do napake med snemanjem zvoka",
     "Start recording" : "Začni s snemanjem",
     "Dismiss recording" : "Opusti posnetek",

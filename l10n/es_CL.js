@@ -13,6 +13,7 @@ OC.L10N.register(
     "Cancelled" : "Cancelado",
     "Failed" : "Falló",
     "Scheduled" : "Programado",
+    "Other" : "Otro",
     "Choose a file" : "Selecciona un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Advanced" : "Avanzado",

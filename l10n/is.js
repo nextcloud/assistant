@@ -24,6 +24,8 @@ OC.L10N.register(
     "Cancelled" : "Hætt við",
     "Running" : "Hlaup",
     "Audio input" : "Hljóðinntak",
+    "Translate" : "Þýða",
+    "Other" : "Annað",
     "Choose file" : "Veldu skrá",
     "Choose a file" : "Veldu skrá",
     "No file selected" : "Engin skrá valin",

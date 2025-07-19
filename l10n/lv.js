@@ -20,6 +20,8 @@ OC.L10N.register(
     "Cancelled" : "Atcelts",
     "Failed" : "Neizdevās",
     "Running" : "Skriešana",
+    "Translate" : "Tulkot",
+    "Other" : "Cits",
     "Start recording" : "Uzsākt ierakstīšanu",
     "Choose a file" : "Izvēlieties datni",
     "No file selected" : "Nav atlasīta neviena datne",

@@ -20,6 +20,8 @@ OC.L10N.register(
     "Cancelled" : "Откажано",
     "Failed" : "Неуспешно",
     "Running" : "Трчање",
+    "Translate" : "Преведи",
+    "Other" : "Останато",
     "Error while recording audio" : "Грешка при снимање звук",
     "Dismiss recording" : "Отфрли снимање",
     "End recording and send" : "Заврши снимање и испрати",

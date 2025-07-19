@@ -24,6 +24,7 @@ OC.L10N.register(
     "Running" : "Correr",
     "Scheduled" : "Programado",
     "Audio output" : "Salida de audio",
+    "Other" : "Otro",
     "Error while recording audio" : "Error al grabar audio",
     "Start recording" : "Iniciar grabación",
     "Dismiss recording" : "Descartar grabación",

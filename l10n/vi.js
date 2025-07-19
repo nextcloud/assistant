@@ -18,6 +18,8 @@ OC.L10N.register(
     "Cancelled" : "Đã hủy",
     "Running" : "Chạy bộ",
     "Scheduled" : "Lên kế hoạch",
+    "Translate" : "Dịch thuật",
+    "Other" : "Khác",
     "Choose file" : "Choose file",
     "No file selected" : "Không có tập tin nào được chọn",
     "Advanced" : "Nâng cao",

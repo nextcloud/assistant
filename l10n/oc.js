@@ -12,6 +12,7 @@ OC.L10N.register(
     "Choose" : "Causir",
     "Cancelled" : "Anullat",
     "Failed" : "Fracàs",
+    "Translate" : "Tradurre",
     "Error while recording audio" : "Error en enregistrant l’àudio",
     "Start recording" : "Lançar l'enregistrament",
     "Dismiss recording" : "Anullar l’enregistrament",

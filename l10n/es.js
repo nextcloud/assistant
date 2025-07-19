@@ -157,6 +157,7 @@ OC.L10N.register(
     "Unknown status" : "Estado desconocido",
     "Audio input" : "Entrada de audio",
     "Audio output" : "Salida de audio",
+    "Other" : "Otro",
     "Error while recording audio" : "Error al grabar el audio",
     "Start recording" : "Empezar la grabación",
     "Dismiss recording" : "Descartar grabación",

@@ -35,6 +35,8 @@ OC.L10N.register(
     "Running" : "Bėgimas",
     "Unknown status" : "Nežinoma būsena",
     "Audio output" : "Garso išvestis",
+    "Translate" : "Verskite",
+    "Other" : "Kita",
     "Choose a file" : "Pasirinkti failą",
     "No file selected" : "Neįkeltas joks failas",
     "Could not copy to clipboard" : "Nepavyko nukopijuoti į iškarpinę",

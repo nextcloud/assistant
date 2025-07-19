@@ -39,6 +39,8 @@ OC.L10N.register(
     "Scheduled" : "Заплановано",
     "Audio input" : "Аудіовхід",
     "Audio output" : "Вивід аудіо",
+    "Translate" : "Перекласти",
+    "Other" : "Інше",
     "Start recording" : "Почати запис",
     "Choose file" : "Вибрати файл",
     "Choose a file" : "Виберіть файл",

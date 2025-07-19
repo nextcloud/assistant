@@ -72,6 +72,8 @@ OC.L10N.register(
     "Unknown status" : "Egoera ezezaguna",
     "Audio input" : "Audio sarrera",
     "Audio output" : "Audio irteera",
+    "Translate" : "Itzuli",
+    "Other" : "Besteak",
     "Error while recording audio" : "Errorea audioa grabatzean",
     "Start recording" : "Hasi grabatzen",
     "Dismiss recording" : "Baztertu grabazioa",

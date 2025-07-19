@@ -16,6 +16,8 @@ OC.L10N.register(
     "Clear Selection" : "Limpar seleção",
     "Cancelled" : "Cancelado",
     "Running" : "Correr",
+    "Translate" : "Traduzir",
+    "Other" : "Outro",
     "No file selected" : "Nenhum ficheiro selecionado",
     "Advanced" : "Avançado",
     "Copy" : "copiar",

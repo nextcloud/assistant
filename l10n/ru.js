@@ -87,6 +87,8 @@ OC.L10N.register(
     "Unknown status" : "Неизвестный статус",
     "Audio input" : "Аудиовход",
     "Audio output" : "Аудиовыход",
+    "Translate" : "Перевести",
+    "Other" : "Другое",
     "Error while recording audio" : "Не удалось записать звук",
     "Start recording" : "Начать запись",
     "Dismiss recording" : "Отменить запись",

@@ -88,6 +88,8 @@ OC.L10N.register(
     "Unknown status" : "Okänd status",
     "Audio input" : "Ljudinmatning",
     "Audio output" : "Ljudutgång",
+    "Translate" : "Översätt",
+    "Other" : "Annat",
     "Error while recording audio" : "Fel vid inspelning av ljud",
     "Start recording" : "Starta inspelning",
     "Dismiss recording" : "Stäng inspelningen",

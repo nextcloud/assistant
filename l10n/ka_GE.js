@@ -12,6 +12,8 @@ OC.L10N.register(
     "Submit" : "გაგზავნა",
     "Choose" : "აირჩიეთ",
     "Cancelled" : "უარყოფილია",
+    "Translate" : "გადათარგმნეთ",
+    "Other" : "სხვა",
     "Choose a file" : "აირჩიეთ ფაილი",
     "No file selected" : "ფაილი არაა არჩეული",
     "Advanced" : "მოწინავე"
