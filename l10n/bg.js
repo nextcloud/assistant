@@ -27,6 +27,8 @@ OC.L10N.register(
     "Running" : "Бягане",
     "Scheduled" : "Планирано",
     "Audio output" : "Аудио изход",
+    "Translate" : "Превод",
+    "Other" : "Други",
     "Error while recording audio" : "Грешка при запис на аудио",
     "Start recording" : "Започване на запис",
     "Dismiss recording" : "Отхвърляне на записа",

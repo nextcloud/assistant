@@ -213,6 +213,7 @@ OC.L10N.register(
     "Unknown status" : "Unknown status",
     "Audio input" : "Audio input",
     "Audio output" : "Audio output",
+    "Translate" : "Translate",
     "Other" : "Other",
     "Access to the microphone was denied. Please check you allowed this page to access the microphone." : "Access to the microphone was denied. Please check you allowed this page to access the microphone.",
     "Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings." : "Microphone either not available or disabled in settings. Check you are accessing this page with HTTPS or adjust your browser settings.",

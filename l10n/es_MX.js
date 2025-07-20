@@ -27,6 +27,7 @@ OC.L10N.register(
     "Running" : "Correr",
     "Scheduled" : "Programado",
     "Audio input" : "Entrada de audio",
+    "Translate" : "Traducir",
     "Other" : "Otro",
     "Choose file" : "Elegir archivo",
     "Choose a file" : "Selecciona un archivo",

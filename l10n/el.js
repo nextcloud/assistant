@@ -87,6 +87,8 @@ OC.L10N.register(
     "Scheduled" : "Προγραμματισμένο",
     "Unknown status" : "Άγνωστη κατάσταση",
     "Audio output" : "Έξοδος ήχου",
+    "Translate" : "Μετάφραση",
+    "Other" : "Άλλο",
     "Error while recording audio" : "Σφάλμα κατά την εγγραφή ήχου",
     "Start recording" : "Έναρξη εγγραφής",
     "Dismiss recording" : "Απόρριψη εγγραφής",

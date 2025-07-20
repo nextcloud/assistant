@@ -13,6 +13,7 @@ OC.L10N.register(
     "Failed" : "C'hwitet",
     "Running" : "O redek",
     "Scheduled" : "Raktreset",
+    "Translate" : "Treiñ",
     "No file selected" : "Restr choazet ebet",
     "Advanced" : "Araokadennet",
     "Upload file" : "Pellgas ur restr"

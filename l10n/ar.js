@@ -172,6 +172,8 @@ OC.L10N.register(
     "Unknown status" : "الحالة غير معروفة",
     "Audio input" : "المدخلات الصوتية",
     "Audio output" : "مَخِرج الصوت",
+    "Translate" : "ترجِم",
+    "Other" : "آخَر",
     "Error while recording audio" : "خطأ أثناء تسجيل الصوت",
     "Start recording" : "بدء التسجيل",
     "Dismiss recording" : "رفض التسجيل",

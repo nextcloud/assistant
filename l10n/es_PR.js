@@ -10,6 +10,7 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "Choose" : "Seleccionar",
     "Cancelled" : "Cancelado",
+    "Translate" : "Traducir",
     "Choose a file" : "Selecciona un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Advanced" : "Avanzado",

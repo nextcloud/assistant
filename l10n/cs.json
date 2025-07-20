@@ -205,6 +205,8 @@
     "Unknown status" : "Neznámý stav",
     "Audio input" : "Zvukový vstup",
     "Audio output" : "Zvukový výstup",
+    "Translate" : "Překládání",
+    "Other" : "Ostatní",
     "Error while recording audio" : "Chyba při pořizování zvukového záznamu",
     "Start recording" : "Zahájit nahrávání",
     "Dismiss recording" : "Zahodit nahrávku",

@@ -39,6 +39,7 @@ OC.L10N.register(
     "Failed" : "Falló",
     "Scheduled" : "Planificóse",
     "Audio output" : "Salida d'audiu",
+    "Translate" : "Traducir",
     "Start recording" : "Aniciar la grabación",
     "Choose file" : "Escoyer un ficheru",
     "No file selected" : "Nun s'esbillaron ficheros",

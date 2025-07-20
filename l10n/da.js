@@ -92,6 +92,8 @@ OC.L10N.register(
     "Scheduled" : "Planlagt",
     "Audio input" : "Lydinput",
     "Audio output" : "Lydudgang",
+    "Translate" : "Oversæt",
+    "Other" : "Andet",
     "Start recording" : "Start optagelse",
     "Choose file" : "Vælg fil",
     "Choose a file" : "Vælg en fil",

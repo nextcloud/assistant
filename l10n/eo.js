@@ -12,6 +12,7 @@ OC.L10N.register(
     "Choose" : "Elekti",
     "Cancelled" : "Nuligita",
     "Running" : "Kuras",
+    "Translate" : "Traduku",
     "Other" : "Alia",
     "No file selected" : "Neniu dosiero elektita",
     "Advanced" : "Progresinta",
