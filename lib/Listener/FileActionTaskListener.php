@@ -69,12 +69,12 @@ class FileActionTaskListener implements IEventListener {
 				if ($extension === 'mpga') {
 					$extension = 'mp3';
 				}
-				$targetFileName = $sourceFile->getName() . '_tts.' . $extension;
+				$targetFileName = $sourceFile->getName() . ' - text to speech.' . $extension;
 				$sourceFileParent->newFile($targetFileName, $speechFile->fopen('rb'));
 			} else {
 				$textResult = $task->getOutput()['output'];
 				$suffix = $taskTypeId === TextToTextSummary::ID ? 'summarized' : 'transcribed';
-				$targetFileName = $sourceFile->getName() . '_' . $suffix . '.txt';
+				$targetFileName = $sourceFile->getName() . ' - ' . $suffix . '.txt';
 				$sourceFileParent->newFile($targetFileName, $textResult);
 				$this->logger->debug('FileActionTaskListener wrote file', ['target' => $targetFileName]);
 			}
