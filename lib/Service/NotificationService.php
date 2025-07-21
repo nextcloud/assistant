@@ -66,4 +66,36 @@ class NotificationService {
 	private function getDefaultTarget(Task $task): string {
 		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $task->getId()]);
 	}
+
+	public function sendFileActionNotification(
+		string $userId, string $taskTypeId,
+		int $sourceFileId, string $sourceFileName, string $sourceFilePath,
+		?int $targetFileId = null, ?string $targetFileName = null, ?string $targetFilePath = null,
+	): void {
+		$manager = $this->notificationManager;
+		$notification = $manager->createNotification();
+
+		$params = [
+			'source_file_id' => $sourceFileId,
+			'source_file_name' => $sourceFileName,
+			'source_file_path' => $sourceFilePath,
+			'target_file_id' => $targetFileId,
+			'target_file_name' => $targetFileName,
+			'target_file_path' => $targetFilePath,
+			'task_type_id' => $taskTypeId,
+		];
+		$taskSuccessful = $targetFileId !== null && $targetFileName !== null;
+
+		$subject = $taskSuccessful
+			? 'file_action_success'
+			: 'file_action_failure';
+
+		$notification->setApp(Application::APP_ID)
+			->setUser($userId)
+			->setDateTime(new DateTime())
+			->setObject('action', '0')
+			->setSubject($subject, $params);
+
+		$manager->notify($notification);
+	}
 }
