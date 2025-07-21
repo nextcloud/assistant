@@ -32,8 +32,8 @@
 					</template>
 					{{ t('assistant', 'Cancel task') }}
 				</NcButton>
-				<NcNoteCard v-if="taskStatus === TASK_STATUS_STRING.scheduled && toLongForScheduling" show-alert type="warning">
-					{{ t('assistant', 'This task is taking longer to start running than expected. Please contact your administrator to ensure that this is correctly configured.') }}
+				<NcNoteCard v-if="taskStatus === TASK_STATUS_STRING.scheduled && tooLongForScheduling" show-alert type="warning">
+					{{ t('assistant', 'This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured.') }}
 				</NcNoteCard>
 			</div>
 		</template>
@@ -109,7 +109,7 @@ export default {
 	},
 
 	computed: {
-		toLongForScheduling() {
+		tooLongForScheduling() {
 			return this.scheduledAt !== null && this.scheduledAt + 60 * 5 < this.now
 		},
 		TASK_STATUS_STRING() {

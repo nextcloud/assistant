@@ -17,7 +17,7 @@
 		<NcNoteCard
 			v-if="slowPickup"
 			type="warning">
-			{{ t('assistant', 'This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that this is correctly configured.') }}
+			{{ t('assistant', 'This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured.') }}
 		</NcNoteCard>
 	</ul>
 </template>
