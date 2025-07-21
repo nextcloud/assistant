@@ -7,9 +7,9 @@ import { registerFileAction, Permission, FileAction, FileType } from '@nextcloud
 import { loadState } from '@nextcloud/initial-state'
 
 import CreationSvgIcon from '@mdi/svg/svg/creation.svg?raw'
-import TextBoxOutlineSvgIcon from '@mdi/svg/svg/text-box-outline.svg?raw'
-import AccountVoiceSvgIcon from '@mdi/svg/svg/account-voice.svg?raw'
-import MicrophoneMessageSvgIcon from '@mdi/svg/svg/microphone-message.svg?raw'
+import SummarizeSymbol from '@material-symbols/svg-700/outlined/summarize.svg?raw'
+import TTSSymbol from '@material-symbols/svg-700/outlined/text_to_speech.svg?raw'
+import STTSymbol from '@material-symbols/svg-700/outlined/speech_to_text.svg?raw'
 
 const actionIgnoreLists = [
 	'trashbin',
@@ -52,7 +52,7 @@ function registerSummarizeAction() {
 				&& nodes.every(({ type }) => type === FileType.File)
 				&& nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
 		},
-		iconSvgInline: () => TextBoxOutlineSvgIcon,
+		iconSvgInline: () => SummarizeSymbol,
 		order: 0,
 		async exec(node) {
 			const { default: axios } = await import('@nextcloud/axios')
@@ -87,7 +87,7 @@ function registerTtsAction() {
 				&& nodes.every(({ type }) => type === FileType.File)
 				&& nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
 		},
-		iconSvgInline: () => MicrophoneMessageSvgIcon,
+		iconSvgInline: () => TTSSymbol,
 		order: 0,
 		async exec(node) {
 			const { default: axios } = await import('@nextcloud/axios')
@@ -122,7 +122,7 @@ function registerSttAction() {
 				&& nodes.every(({ type }) => type === FileType.File)
 				&& nodes.every(({ mime }) => ['audio/mpeg', 'audio/wav', 'audio/mp3'].includes(mime))
 		},
-		iconSvgInline: () => AccountVoiceSvgIcon,
+		iconSvgInline: () => STTSymbol,
 		order: 0,
 		async exec(node) {
 			const { default: axios } = await import('@nextcloud/axios')
