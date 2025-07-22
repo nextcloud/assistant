@@ -710,7 +710,8 @@ class ChattyLLMController extends OCSController {
 				return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
 			}
 		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
-			$slowPickup = $task->getstatus() === Task::STATUS_SCHEDULED && $task->getScheduledAt() + 60 * 5 < time();
+			$startTime = $task->getStartedAt() ?? time();
+			$slowPickup = $task->getScheduledAt() + 60 * 5 < $startTime;
 			return new JSONResponse(['task_status' => $task->getstatus(), 'slow_pickup' => $slowPickup], Http::STATUS_EXPECTATION_FAILED);
 		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
