@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "User not found" : "Mtumiaji hapatikani",
     "Close" : "Funga",
+    "More" : "Zaidi",
     "Cancel" : "Cancel",
     "New conversation" : "Mazungumzo mapya",
     "Delete" : "Futa",
