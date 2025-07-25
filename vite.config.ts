@@ -17,6 +17,7 @@ export default createAppConfig({
 	speechToTextReference: 'src/speechToTextReference.js',
 	taskOutputFileReference: 'src/taskOutputFileReference.js',
 	assistantPage: 'src/assistantPage.js',
+	fileActions: 'src/files/fileActions.js',
 }, {
 	config: {
 		css: {
