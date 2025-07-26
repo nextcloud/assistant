@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "User not found" : "Mtumiaji hapatikani",
+    "Nextcloud Assistant" : "Msaidizi wa Nextcloud",
     "Close" : "Funga",
     "More" : "Zaidi",
     "Cancel" : "Cancel",
