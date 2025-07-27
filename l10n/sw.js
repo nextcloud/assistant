@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "User not found" : "Mtumiaji hapatikani",
     "Nextcloud Assistant" : "Msaidizi wa Nextcloud",
+    "OpenStreetMap" : "OpenStreetMap",
     "Close" : "Funga",
     "More" : "Zaidi",
     "Cancel" : "Cancel",
