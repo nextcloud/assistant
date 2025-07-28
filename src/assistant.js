@@ -149,7 +149,16 @@ export async function openAssistantForm({
 						view.showSyncTaskRunning = false
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
-						console.debug('[assistant] poll error', error)
+						console.debug('[assistant] poll error', error.message)
+						if (error.message === 'task-not-found') {
+							view.loading = false
+							view.showSyncTaskRunning = false
+							view.isNotifyEnabled = false
+							view.outputs = null
+							view.selectedTaskId = null
+							lastTask = null
+							showError(t('assistant', 'The current Assistant task could not be found'))
+						}
 					})
 				})
 				.catch(error => {
@@ -228,6 +237,15 @@ export async function openAssistantForm({
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
+						if (error.message === 'task-not-found') {
+							view.loading = false
+							view.showSyncTaskRunning = false
+							view.isNotifyEnabled = false
+							view.outputs = null
+							view.selectedTaskId = null
+							lastTask = null
+							showError(t('assistant', 'The current Assistant task could not be found'))
+						}
 					})
 				}).catch(error => {
 					console.error(error)
@@ -289,6 +307,11 @@ export async function pollTask(taskId, setProgress) {
 				}
 			}).catch(error => {
 				console.debug('[assistant] poll request failed', error)
+				if (error.status === 404) {
+					clearInterval(window.assistantPollTimerId)
+					reject(new Error('task-not-found'))
+					return
+				}
 				reject(new Error('pollTask request failed'))
 			})
 		}, 2000)
@@ -543,6 +566,14 @@ export async function openAssistantTask(
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
 					view.outputs = null
+					if (error.message === 'task-not-found') {
+						view.loading = false
+						view.showSyncTaskRunning = false
+						view.isNotifyEnabled = false
+						view.selectedTaskId = null
+						lastTask = null
+						showError(t('assistant', 'The current Assistant task could not be found'))
+					}
 				})
 			})
 			.catch(error => {
@@ -618,6 +649,15 @@ export async function openAssistantTask(
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
+					if (error.message === 'task-not-found') {
+						view.loading = false
+						view.showSyncTaskRunning = false
+						view.isNotifyEnabled = false
+						view.outputs = null
+						view.selectedTaskId = null
+						lastTask = null
+						showError(t('assistant', 'The current Assistant task could not be found'))
+					}
 				})
 			}).catch(error => {
 				console.error(error)
