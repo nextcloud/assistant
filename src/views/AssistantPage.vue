@@ -135,6 +135,15 @@ export default {
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
+						if (error.message === 'task-not-found') {
+							this.loading = false
+							this.showSyncTaskRunning = false
+							this.isNotifyEnabled = false
+							this.task.status = TASK_STATUS_STRING.unknown
+							this.task.output = null
+							this.task.id = null
+							showError(t('assistant', 'The current Assistant task could not be found'))
+						}
 					})
 				})
 				.catch(error => {
@@ -201,6 +210,15 @@ export default {
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('Assistant poll error', error)
+						if (error.message === 'task-not-found') {
+							this.loading = false
+							this.showSyncTaskRunning = false
+							this.isNotifyEnabled = false
+							this.task.status = TASK_STATUS_STRING.unknown
+							this.task.output = null
+							this.task.id = null
+							showError(t('assistant', 'The current Assistant task could not be found'))
+						}
 					})
 				}).catch(error => {
 					console.error(error)
