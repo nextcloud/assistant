@@ -62,7 +62,11 @@ function registerSummarizeAction() {
 			try {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
-				showSuccess(t('assistant', 'The result file will be created soon'))
+				showSuccess(
+					t('assistant', 'Summarization task submitted successfully.') + ' '
+						+ t('assistant', 'You will be notified when it is ready.') + ' '
+						+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
+				)
 			} catch (error) {
 				console.error(error)
 				showError(t('assistant', 'Failed to launch the AI file action'))
@@ -97,7 +101,11 @@ function registerTtsAction() {
 			try {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
-				showSuccess(t('assistant', 'The result file will be created soon'))
+				showSuccess(
+					t('assistant', 'Text-to-speech task submitted successfully.') + ' '
+						+ t('assistant', 'You will be notified when it is ready.') + ' '
+						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
+				)
 			} catch (error) {
 				console.error(error)
 				showError(t('assistant', 'Failed to launch the AI file action'))
@@ -132,7 +140,11 @@ function registerSttAction() {
 			try {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
-				showSuccess(t('assistant', 'The result file will be created soon'))
+				showSuccess(
+					t('assistant', 'Transcription task submitted successfully.') + ' '
+						+ t('assistant', 'You will be notified when it is ready.') + ' '
+						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
+				)
 			} catch (error) {
 				console.error(error)
 				showError(t('assistant', 'Failed to launch the AI file action'))

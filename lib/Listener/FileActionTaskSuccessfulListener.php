@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Listener;
 
-use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\EventDispatcher\Event;
@@ -45,7 +44,7 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 			return;
 		}
 
-		if (!$this->taskProcessingService->isFileActionTaskTypeAuthorized($taskTypeId)) {
+		if (!$this->taskProcessingService->isFileActionTaskTypeSupported($taskTypeId)) {
 			return;
 		}
 

@@ -53,7 +53,7 @@
 	</issueHandlers>
 	<stubs>
 		<file name="tests/stubs/oc_core_command_base.php" />
-		<file name="tests/stubs/oc_hooks_emitter.php" />
+		<file name="tests/stubs/oc_hooks_oca_files.php" />
 		<file name="tests/stubs/oc_transcription.php" />
 	</stubs>
 </psalm>

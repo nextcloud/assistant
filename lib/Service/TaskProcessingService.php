@@ -23,6 +23,7 @@ use OCP\TaskProcessing\IManager;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class TaskProcessingService {
@@ -30,6 +31,7 @@ class TaskProcessingService {
 	public function __construct(
 		private IManager $taskProcessingManager,
 		private IRootFolder $rootFolder,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -68,12 +70,20 @@ class TaskProcessingService {
 		return $node;
 	}
 
+	/**
+	 * @param int $fileId
+	 * @return string
+	 * @throws GenericFileException
+	 * @throws LockedException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 */
 	public function getOutputFileContent(int $fileId): string {
 		$file = $this->getOutputFile($fileId);
 		return $file->getContent();
 	}
 
-	public function isFileActionTaskTypeAuthorized(string $taskTypeId): bool {
+	public function isFileActionTaskTypeSupported(string $taskTypeId): bool {
 		$authorizedTaskTypes = [AudioToText::ID, TextToTextSummary::ID];
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
 			$authorizedTaskTypes[] = \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID;
@@ -89,27 +99,31 @@ class TaskProcessingService {
 	 * @param string $taskTypeId
 	 * @return int The scheduled task ID
 	 * @throws Exception
-	 * @throws GenericFileException
-	 * @throws LockedException
 	 * @throws NotFoundException
-	 * @throws NotPermittedException
-	 * @throws PreConditionNotMetException
-	 * @throws UnauthorizedException
-	 * @throws ValidationException
-	 * @throws NoUserException
 	 */
 	public function runFileAction(string $userId, int $fileId, string $taskTypeId): int {
-		if (!$this->isFileActionTaskTypeAuthorized($taskTypeId)) {
-			throw new PreConditionNotMetException();
+		if (!$this->isFileActionTaskTypeSupported($taskTypeId)) {
+			throw new Exception('Invalid task type for file action');
 		}
-		$userFolder = $this->rootFolder->getUserFolder($userId);
+		try {
+			$userFolder = $this->rootFolder->getUserFolder($userId);
+		} catch (NoUserException|NotPermittedException $e) {
+			$this->logger->warning('Assistant runFileAction, the user folder could not be obtained', ['exception' => $e]);
+			throw new Exception('The user folder could not be obtained');
+		}
 		$file = $userFolder->getFirstNodeById($fileId);
 		if (!$file instanceof File) {
+			$this->logger->warning('Assistant runFileAction, the input file is not a file', ['file_id' => $fileId]);
 			throw new NotFoundException('File is not a file');
 		}
-		$input = $taskTypeId === AudioToText::ID
-			? ['input' => $fileId]
-			: ['input' => $file->getContent()];
+		try {
+			$input = $taskTypeId === AudioToText::ID
+				? ['input' => $fileId]
+				: ['input' => $file->getContent()];
+		} catch (NotPermittedException|GenericFileException|LockedException $e) {
+			$this->logger->warning('Assistant runFileAction, impossible to read the file action input file', ['exception' => $e]);
+			throw new Exception('Impossible to read the file action input file');
+		}
 		$task = new Task(
 			$taskTypeId,
 			$input,
@@ -117,7 +131,12 @@ class TaskProcessingService {
 			$userId,
 			'file-action:' . $fileId,
 		);
-		$this->taskProcessingManager->scheduleTask($task);
+		try {
+			$this->taskProcessingManager->scheduleTask($task);
+		} catch (PreConditionNotMetException|ValidationException|Exception|UnauthorizedException $e) {
+			$this->logger->warning('Assistant runFileAction, impossible to schedule the task', ['exception' => $e]);
+			throw new Exception('Impossible to schedule the task');
+		}
 		$taskId = $task->getId();
 		if ($taskId === null) {
 			throw new Exception('The task could not be scheduled');
