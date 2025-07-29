@@ -38,7 +38,7 @@ class NotificationService {
 			'appId' => $task->getAppId(),
 			'id' => $task->getId(),
 			'inputs' => $task->getInput(),
-			'target' => $customTarget ?? $this->getDefaultTarget($task),
+			'target' => $customTarget ?? $this->getDefaultTarget($task->getId()),
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
@@ -63,12 +63,12 @@ class NotificationService {
 		$manager->notify($notification);
 	}
 
-	private function getDefaultTarget(Task $task): string {
-		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $task->getId()]);
+	private function getDefaultTarget(int $taskId): string {
+		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $taskId]);
 	}
 
 	public function sendFileActionNotification(
-		string $userId, string $taskTypeId,
+		string $userId, string $taskTypeId, int $taskId,
 		int $sourceFileId, string $sourceFileName, string $sourceFilePath,
 		?int $targetFileId = null, ?string $targetFileName = null, ?string $targetFilePath = null,
 	): void {
@@ -83,6 +83,8 @@ class NotificationService {
 			'target_file_name' => $targetFileName,
 			'target_file_path' => $targetFilePath,
 			'task_type_id' => $taskTypeId,
+			'task_id' => $taskId,
+			'target' => $this->getDefaultTarget($taskId),
 		];
 		$taskSuccessful = $targetFileId !== null && $targetFileName !== null;
 
@@ -93,7 +95,7 @@ class NotificationService {
 		$notification->setApp(Application::APP_ID)
 			->setUser($userId)
 			->setDateTime(new DateTime())
-			->setObject('action', '0')
+			->setObject('task', $taskId)
 			->setSubject($subject, $params);
 
 		$manager->notify($notification);

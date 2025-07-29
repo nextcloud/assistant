@@ -113,7 +113,7 @@ class TaskProcessingService {
 		$task = new Task(
 			$taskTypeId,
 			$input,
-			Application::APP_ID . ':file-action',
+			Application::APP_ID,
 			$userId,
 			'file-action:' . $fileId,
 		);

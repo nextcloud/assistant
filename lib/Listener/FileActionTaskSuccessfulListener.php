@@ -39,10 +39,9 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 
 		$task = $event->getTask();
 		$customId = $task->getCustomId();
-		$appId = $task->getAppId();
 		$taskTypeId = $task->getTaskTypeId();
 
-		if ($customId === null || $appId !== (Application::APP_ID . ':file-action')) {
+		if ($customId === null) {
 			return;
 		}
 
@@ -82,7 +81,7 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 					$this->logger->debug('FileActionTaskListener wrote file', ['target' => $targetFileName]);
 				}
 				$this->notificationService->sendFileActionNotification(
-					$task->getUserId(), $taskTypeId,
+					$task->getUserId(), $taskTypeId, $task->getId(),
 					$sourceFileId, $sourceFile->getName(), $userFolder->getRelativePath($sourceFile->getPath()),
 					$targetFile->getId(), $targetFile->getName(), $userFolder->getRelativePath($targetFile->getPath()),
 				);
@@ -92,7 +91,7 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 					'exception' => $e,
 				]);
 				$this->notificationService->sendFileActionNotification(
-					$task->getUserId(), $taskTypeId,
+					$task->getUserId(), $taskTypeId, $task->getId(),
 					$sourceFileId, $sourceFile->getName(), $userFolder->getRelativePath($sourceFile->getPath()),
 				);
 			}

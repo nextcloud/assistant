@@ -38,10 +38,9 @@ class FileActionTaskFailedListener implements IEventListener {
 
 		$task = $event->getTask();
 		$customId = $task->getCustomId();
-		$appId = $task->getAppId();
 		$taskTypeId = $task->getTaskTypeId();
 
-		if ($customId === null || $appId !== (Application::APP_ID . ':file-action')) {
+		if ($customId === null) {
 			return;
 		}
 
@@ -51,11 +50,11 @@ class FileActionTaskFailedListener implements IEventListener {
 
 		if (preg_match('/^file-action:(\d+)$/', $customId, $matches)) {
 			$sourceFileId = (int)$matches[1];
-			$this->logger->debug('FileActionTaskListener', ['source file id' => $sourceFileId]);
+			$this->logger->debug('FileActionTaskListener', ['source_file_id' => $sourceFileId]);
 			$userFolder = $this->rootFolder->getUserFolder($task->getUserId());
 			$sourceFile = $userFolder->getFirstNodeById($sourceFileId);
 			$this->notificationService->sendFileActionNotification(
-				$task->getUserId(), $taskTypeId,
+				$task->getUserId(), $taskTypeId, $task->getId(),
 				$sourceFileId, $sourceFile->getName(), $userFolder->getRelativePath($sourceFile->getPath()),
 			);
 		}

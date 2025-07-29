@@ -189,42 +189,51 @@ class Notifier implements INotifier {
 			case 'file_action_success':
 				$subject = $l->t('File action has finished');
 
-				$link = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_file_id']]);
+				$sourceFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['source_file_id']]);
+				$targetFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_file_id']]);
+				$taskLink = $params['target'];
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 				switch ($params['task_type_id']) {
 					case TextToTextSummary::ID:
-						$message = $l->t('{file} has been summarized');
+						$message = $l->t('{sourceFile} has been summarized in {targetFile}');
 						break;
 					case AudioToText::ID:
-						$message = $l->t('{file} has been transcribed');
+						$message = $l->t('{sourceFile} has been transcribed in {targetFile}');
 						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
-						$message = $l->t('{file} has been transformed to audio');
+						$message = $l->t('{sourceFile} has been transformed to audio in {targetFile}');
 						break;
 					default:
-						$message = $l->t('{file} has been processed');
+						$message = $l->t('{sourceFile} has been processed, {targetFile} was created');
 				}
 
 				$notification
 					->setParsedSubject($subject)
 					->setRichMessage($message, [
-						'file' => [
+						'sourceFile' => [
 							'type' => 'file',
 							'id' => (string)$params['source_file_id'],
 							'name' => $params['source_file_name'],
 							'path' => $params['source_file_path'],
-							'link' => $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['source_file_id']]),
+							'link' => $sourceFileLink,
+						],
+						'targetFile' => [
+							'type' => 'file',
+							'id' => (string)$params['target_file_id'],
+							'name' => $params['target_file_name'],
+							'path' => $params['target_file_path'],
+							'link' => $targetFileLink,
 						],
 					])
-					->setLink($link)
+					->setLink($taskLink)
 					->setIcon($iconUrl);
 
-				$actionLabel = $l->t('View result file');
+				$actionLabel = $l->t('View results');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)
-					->setLink($notification->getLink(), IAction::TYPE_WEB)
+					->setLink($taskLink, IAction::TYPE_WEB)
 					->setPrimary(true);
 
 				$notification->addParsedAction($action);
@@ -238,22 +247,22 @@ class Notifier implements INotifier {
 
 				switch ($params['task_type_id']) {
 					case TextToTextSummary::ID:
-						$message = $l->t('Summarization of {file} has failed');
+						$message = $l->t('Summarization of {sourceFile} has failed');
 						break;
 					case AudioToText::ID:
-						$message = $l->t('Transcription of {file} has failed');
+						$message = $l->t('Transcription of {sourceFile} has failed');
 						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
-						$message = $l->t('The text-to-speech process for {file} has failed');
+						$message = $l->t('The text-to-speech process for {sourceFile} has failed');
 						break;
 					default:
-						$message = $l->t('The processing of {file} has failed');
+						$message = $l->t('The processing of {sourceFile} has failed');
 				}
 
 				$notification
 					->setParsedSubject($subject)
 					->setRichMessage($message, [
-						'file' => [
+						'sourceFile' => [
 							'type' => 'file',
 							'id' => (string)$params['source_file_id'],
 							'name' => $params['source_file_name'],
