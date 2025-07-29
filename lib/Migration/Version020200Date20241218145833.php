@@ -32,14 +32,12 @@ class Version020200Date20241218145833 extends SimpleMigrationStep {
 			if (!$table->hasColumn('conversation_token')) {
 				$table->addColumn('agency_conversation_token', Types::TEXT, [
 					'notnull' => false,
-					'default' => null,
 				]);
 				$schemaChanged = true;
 			}
 			if (!$table->hasColumn('agency_pending_actions')) {
 				$table->addColumn('agency_pending_actions', Types::TEXT, [
 					'notnull' => false,
-					'default' => null,
 				]);
 				$schemaChanged = true;
 			}
