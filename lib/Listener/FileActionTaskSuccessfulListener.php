@@ -77,7 +77,7 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 				} else {
 					$textResult = $task->getOutput()['output'];
 					$suffix = $taskTypeId === TextToTextSummary::ID ? 'summarized' : 'transcribed';
-					$targetFileName = $sourceFile->getName() . ' - ' . $suffix . '.txt';
+					$targetFileName = $sourceFile->getName() . ' - ' . $suffix . '.md';
 					$targetFile = $sourceFileParent->newFile($targetFileName, $textResult);
 					$this->logger->debug('FileActionTaskListener wrote file', ['target' => $targetFileName]);
 				}
