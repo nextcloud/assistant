@@ -18,6 +18,7 @@ export default createAppConfig({
 	taskOutputFileReference: 'src/taskOutputFileReference.js',
 	assistantPage: 'src/assistantPage.js',
 	fileActions: 'src/files/fileActions.js',
+	filesNewMenu: 'src/filesNewMenu.js',
 }, {
 	config: {
 		css: {
