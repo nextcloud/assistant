@@ -250,6 +250,7 @@
     "Could not upload the file" : "Faili polnud võimalik üles laadida",
     "Could not upload the files" : "Faile polnud võimalik üles laadida",
     "Your task with ID {id} has failed" : "Sinu „{id}“ ülesande täitmine ei õnnestunud.",
+    "The current Assistant task could not be found" : "Abilise praegust ülesannet ei õnnestu leida",
     "Failed to schedule your task" : "Sinu ülesande ajastamine ei õnnestunud",
     "Submit the current task's result" : "Saada praeguse ülesande tulemus",
     "Output file for task {taskId} ({taskTypeName})" : "{taskId} ülesande väljund ({taskTypeName})",

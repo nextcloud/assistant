@@ -257,6 +257,7 @@ OC.L10N.register(
     "Could not upload the file" : "無法上傳檔案",
     "Could not upload the files" : "無法上傳檔案",
     "Your task with ID {id} has failed" : "您的任務（ID 為 {id}）失敗",
+    "The current Assistant task could not be found" : "找不到目前的小幫手任務",
     "Failed to schedule your task" : "無法安排您的任務",
     "Submit the current task's result" : "遞交目前任務的結果",
     "Output file for task {taskId} ({taskTypeName})" : "任務 {taskId} 的輸出檔案（{taskTypeName}）",

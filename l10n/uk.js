@@ -257,6 +257,7 @@ OC.L10N.register(
     "Could not upload the file" : "Не вдалося завантажити файл",
     "Could not upload the files" : "Не вдалося завантажити файли",
     "Your task with ID {id} has failed" : "Ваше завдання з ідентифікатором {id} завершилося невдало",
+    "The current Assistant task could not be found" : "Поточне завдання асистента не вдалося знайти",
     "Failed to schedule your task" : "Не вдалося запланувати завдання",
     "Submit the current task's result" : "Надіслати результат поточного завдання",
     "Output file for task {taskId} ({taskTypeName})" : "Вихідний файл для завдання {taskId} ({taskTypeName})",

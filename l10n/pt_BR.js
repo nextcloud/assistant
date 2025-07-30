@@ -61,6 +61,7 @@ OC.L10N.register(
     "Generate text" : "Gerar texto",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Envie um pedido ao Assistente, por exemplo: escreva um primeiro rascunho de uma apresentação, dê-me sugestões de apresentação, escreva um rascunho de resposta ao meu colega.",
     "Artificial Intelligence" : "Inteligência Artificial",
+    "Assistant fallback" : "Fallback de assistente",
     "Voice chat" : "Bate-papo por voz",
     "Voice chat with the assistant" : "Bate-papo por voz com o assistente",
     "System prompt" : "Prompt do sistema",
