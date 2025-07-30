@@ -15,7 +15,6 @@ use OCA\Assistant\Listener\FileActionTaskFailedListener;
 use OCA\Assistant\Listener\FileActionTaskSuccessfulListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\Assistant\Listener\LoadAdditionalScriptsListener;
-use OCA\Assistant\Listener\LoadAdditionalScriptsListener2;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
 use OCA\Assistant\Listener\TaskFailedListener;
 use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
@@ -70,7 +69,6 @@ class Application extends App implements IBootstrap {
 
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
 		$context->registerEventListener(LoadAdditionalScriptsEvent::class, LoadAdditionalScriptsListener::class);
-		$context->registerEventListener(LoadAdditionalScriptsEvent::class, LoadAdditionalScriptsListener2::class);
 
 		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);

@@ -69,7 +69,7 @@ class TaskSuccessfulListener implements IEventListener {
 
 		if ($hasTargetDirectory) {
 			$directoryId = (int)$matches[1];
-			$fileId = (int) $task->getOutput()['images'][0];
+			$fileId = (int)$task->getOutput()['images'][0];
 			try {
 				$file = $this->assistantService->saveNewFileMenuActionFile($task->getUserId(), $task->getId(), $fileId, $directoryId);
 				$notificationTarget = $this->url->linkToRouteAbsolute(
