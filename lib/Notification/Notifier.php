@@ -20,6 +20,7 @@ use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
 
 class Notifier implements INotifier {
@@ -30,7 +31,6 @@ class Notifier implements INotifier {
 		private IAppManager $appManager,
 		private ITaskProcessingManager $taskProcessingManager,
 		private LoggerInterface $logger,
-		private ?string $userId,
 	) {
 	}
 
@@ -69,50 +69,52 @@ class Notifier implements INotifier {
 		$l = $this->factory->get(Application::APP_ID, $languageCode);
 
 		$params = $notification->getSubjectParameters();
-		// ignore old notifications (before meta tasks were introduced)
-		// isset returns false if null
-		if (!isset($params['target'], $params['inputs'])) {
-			throw new InvalidArgumentException();
-		}
-		$schedulingAppId = $params['appId'];
-		$schedulingAppInfo = $this->appManager->getAppInfo($schedulingAppId);
-		if ($schedulingAppInfo === null) {
-			throw new InvalidArgumentException();
-		}
-		$schedulingAppName = $schedulingAppInfo['name'];
 
-		$taskTypeName = null;
-		$taskInput = $params['inputs']['input'] ?? null;
-
-		try {
-			if (!isset($params['taskTypeId'])) {
-				$taskTypeName = $l->t('Assistant task');
-			} elseif ($params['taskTypeId'] === TextToText::ID) {
-				$taskTypeName = $l->t('AI text generation');
-			} elseif ($params['taskTypeId'] === TextToImage::ID) {
-				$taskTypeName = $l->t('AI image generation');
-			} elseif ($params['taskTypeId'] === AudioToText::ID) {
-				$taskTypeName = $l->t('AI audio transcription');
-			} elseif ($params['taskTypeId'] === 'copywriter') {
-				// TODO adjust that when we have copywriter back on its feet
-				// Catch the custom copywriter task type built on top of the FreePrompt task type.
-				$taskTypeName = $l->t('AI context writer');
-				$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
-			} elseif (
-				$params['taskTypeId'] === 'context_chat:context_chat'
-				|| $params['taskTypeId'] === 'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType'
-			) {
-				$taskInput = $params['inputs']['prompt'] ?? null;
-				$taskTypeName = $l->t('Context Chat');
-			} else {
-				$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
-				if (isset($availableTaskTypes[$params['taskTypeId']])) {
-					$taskType = $availableTaskTypes[$params['taskTypeId']];
-					$taskTypeName = $taskType['name'];
-				}
+		if (in_array($notification->getSubject(), ['success', 'failure'], true)) {
+			// ignore old notifications (before meta tasks were introduced)
+			if (!isset($params['target'], $params['inputs'])) {
+				throw new InvalidArgumentException();
 			}
-		} catch (\Exception|\Throwable $e) {
-			$this->logger->debug('Impossible to get task type ' . $params['taskTypeId'], ['exception' => $e]);
+			$schedulingAppId = $params['appId'];
+			$schedulingAppInfo = $this->appManager->getAppInfo($schedulingAppId);
+			if ($schedulingAppInfo === null) {
+				throw new InvalidArgumentException();
+			}
+			$schedulingAppName = $schedulingAppInfo['name'];
+
+			$taskTypeName = null;
+			$taskInput = $params['inputs']['input'] ?? null;
+
+			try {
+				if (!isset($params['taskTypeId'])) {
+					$taskTypeName = $l->t('Assistant task');
+				} elseif ($params['taskTypeId'] === TextToText::ID) {
+					$taskTypeName = $l->t('AI text generation');
+				} elseif ($params['taskTypeId'] === TextToImage::ID) {
+					$taskTypeName = $l->t('AI image generation');
+				} elseif ($params['taskTypeId'] === AudioToText::ID) {
+					$taskTypeName = $l->t('AI audio transcription');
+				} elseif ($params['taskTypeId'] === 'copywriter') {
+					// TODO adjust that when we have copywriter back on its feet
+					// Catch the custom copywriter task type built on top of the FreePrompt task type.
+					$taskTypeName = $l->t('AI context writer');
+					$taskInput = $l->t('Writing style: %1$s; Source material: %2$s', [$params['inputs']['writingStyle'], $params['inputs']['sourceMaterial']]);
+				} elseif (
+					$params['taskTypeId'] === 'context_chat:context_chat'
+					|| $params['taskTypeId'] === 'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType'
+				) {
+					$taskInput = $params['inputs']['prompt'] ?? null;
+					$taskTypeName = $l->t('Context Chat');
+				} else {
+					$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+					if (isset($availableTaskTypes[$params['taskTypeId']])) {
+						$taskType = $availableTaskTypes[$params['taskTypeId']];
+						$taskTypeName = $taskType['name'];
+					}
+				}
+			} catch (\Exception|\Throwable $e) {
+				$this->logger->debug('Impossible to get task type ' . $params['taskTypeId'], ['exception' => $e]);
+			}
 		}
 
 
@@ -181,6 +183,94 @@ class Notifier implements INotifier {
 					->setPrimary(true);
 
 				$notification->addParsedAction($action);
+
+				return $notification;
+
+			case 'file_action_success':
+				$subject = $l->t('File action has finished');
+
+				$sourceFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['source_file_id']]);
+				$targetFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_file_id']]);
+				$taskLink = $params['target'];
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
+
+				switch ($params['task_type_id']) {
+					case TextToTextSummary::ID:
+						$message = $l->t('{sourceFile} has been summarized in {targetFile}');
+						break;
+					case AudioToText::ID:
+						$message = $l->t('{sourceFile} has been transcribed in {targetFile}');
+						break;
+					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
+						$message = $l->t('{sourceFile} has been transformed to audio in {targetFile}');
+						break;
+					default:
+						$message = $l->t('{sourceFile} has been processed, {targetFile} was created');
+				}
+
+				$notification
+					->setParsedSubject($subject)
+					->setRichMessage($message, [
+						'sourceFile' => [
+							'type' => 'file',
+							'id' => (string)$params['source_file_id'],
+							'name' => $params['source_file_name'],
+							'path' => $params['source_file_path'],
+							'link' => $sourceFileLink,
+						],
+						'targetFile' => [
+							'type' => 'file',
+							'id' => (string)$params['target_file_id'],
+							'name' => $params['target_file_name'],
+							'path' => $params['target_file_path'],
+							'link' => $targetFileLink,
+						],
+					])
+					->setLink($taskLink)
+					->setIcon($iconUrl);
+
+				$actionLabel = $l->t('View results');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($taskLink, IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
+				return $notification;
+
+			case 'file_action_failure':
+				$subject = $l->t('File action has failed');
+
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
+
+				switch ($params['task_type_id']) {
+					case TextToTextSummary::ID:
+						$message = $l->t('Summarization of {sourceFile} has failed');
+						break;
+					case AudioToText::ID:
+						$message = $l->t('Transcription of {sourceFile} has failed');
+						break;
+					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
+						$message = $l->t('The text-to-speech process for {sourceFile} has failed');
+						break;
+					default:
+						$message = $l->t('The processing of {sourceFile} has failed');
+				}
+
+				$notification
+					->setParsedSubject($subject)
+					->setRichMessage($message, [
+						'sourceFile' => [
+							'type' => 'file',
+							'id' => (string)$params['source_file_id'],
+							'name' => $params['source_file_name'],
+							'path' => $params['source_file_path'],
+							'link' => $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['source_file_id']]),
+						],
+					])
+					->setIcon($iconUrl);
 
 				return $notification;
 
