@@ -65,6 +65,8 @@ OC.L10N.register(
     "Copy" : "رونوشت",
     "Upload file" : "بارگذاری پرونده",
     "Failed to schedule your task" : "برنامه ریزی کار شما انجام نشد",
-    "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است"
+    "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است",
+    "Summarize" : "خلاصه‌سازی",
+    "Transcribe audio" : "رونوشت صوتی"
 },
 "nplurals=2; plural=(n > 1);");

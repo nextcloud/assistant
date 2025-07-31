@@ -192,6 +192,8 @@ OC.L10N.register(
     "Submit the current task's result" : "نۆۋەتتىكى ۋەزىپە نەتىجىسىنى يوللاڭ",
     "Assistant error" : "ياردەمچى خاتالىق",
     "Please log in to view the task result" : "ۋەزىپە نەتىجىسىنى كۆرۈش ئۈچۈن كىرىڭ",
-    "This task does not exist or has been cleaned up" : "بۇ ۋەزىپە مەۋجۇت ئەمەس ياكى تازىلاندى"
+    "This task does not exist or has been cleaned up" : "بۇ ۋەزىپە مەۋجۇت ئەمەس ياكى تازىلاندى",
+    "Summarize" : "خۇلاسە",
+    "Transcribe audio" : "ئاۋازنى كۆچۈرۈڭ"
 },
 "nplurals=2; plural=(n != 1);");

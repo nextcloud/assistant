@@ -264,6 +264,9 @@
     "Assistant error" : "Помилка помічника",
     "Please log in to view the task result" : "Будь ласка, увійдіть, щоб переглянути результат завдання",
     "This task does not exist or has been cleaned up" : "Це завдання не існує або було видалено",
-    "Assistant failed to schedule your task" : "Асистент не зміг запланувати ваше завдання"
+    "Assistant failed to schedule your task" : "Асистент не зміг запланувати ваше завдання",
+    "Summarize" : "Підсумок",
+    "Text to speech" : "Текст на мову",
+    "Transcribe audio" : "Транскрибувати аудіо"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

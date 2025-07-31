@@ -265,6 +265,7 @@ OC.L10N.register(
     "Assistant error" : "Error del asistente",
     "Please log in to view the task result" : "Por favor, inicie sesión para ver el resultado de la tarea",
     "This task does not exist or has been cleaned up" : "Esta tarea no existe o no ha sido limpiada",
-    "Assistant failed to schedule your task" : "El Asistente falló al agendar su tarea"
+    "Assistant failed to schedule your task" : "El Asistente falló al agendar su tarea",
+    "Summarize" : "Resumir"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

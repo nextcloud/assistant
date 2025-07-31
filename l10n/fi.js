@@ -41,6 +41,7 @@ OC.L10N.register(
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
     "Copy" : "Kopioi",
-    "Upload file" : "Lähetä tiedosto"
+    "Upload file" : "Lähetä tiedosto",
+    "Summarize" : "Luo yhteenveto"
 },
 "nplurals=2; plural=(n != 1);");

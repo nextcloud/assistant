@@ -32,6 +32,7 @@ OC.L10N.register(
     "Upload from device" : "Upload from device",
     "Advanced" : "Advanced",
     "Copy" : "Copy",
-    "Upload file" : "Upload file"
+    "Upload file" : "Upload file",
+    "Summarize" : "Summarize"
 },
 "nplurals=2; plural=(n!=1);");

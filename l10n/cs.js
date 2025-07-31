@@ -256,6 +256,7 @@ OC.L10N.register(
     "Could not upload the file" : "Nepodařilo se nahrát soubor",
     "Could not upload the files" : "Nepodařilo se nahrát soubory",
     "Your task with ID {id} has failed" : "Vámi zadaný úkol s identifikátorem {id} se nezdařil",
+    "The current Assistant task could not be found" : "Stávající úkol asistenta nebylo možné nalézt",
     "Failed to schedule your task" : "Nepodařilo se naplánovat vaši úlohu",
     "Submit the current task's result" : "Odeslat výsledek stávajícího úkolu",
     "Output file for task {taskId} ({taskTypeName})" : "Výstupní soubor pro úkol {taskId} ({taskTypeName})",

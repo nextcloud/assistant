@@ -39,6 +39,7 @@
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
     "Copy" : "Kopioi",
-    "Upload file" : "Lähetä tiedosto"
+    "Upload file" : "Lähetä tiedosto",
+    "Summarize" : "Luo yhteenveto"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

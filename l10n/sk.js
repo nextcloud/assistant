@@ -153,6 +153,8 @@ OC.L10N.register(
     "Upload file" : "Nahrať súbor",
     "Could not upload the file" : "Nepodarilo sa nahrať súbor",
     "Could not upload the files" : "Nepodarilo sa nahrať súbory",
-    "Assistant error" : "Chyba Asistenta"
+    "Assistant error" : "Chyba Asistenta",
+    "Summarize" : "Zhrnutie",
+    "Transcribe audio" : "Prepísať zvuk"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

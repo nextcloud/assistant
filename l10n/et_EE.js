@@ -261,6 +261,9 @@ OC.L10N.register(
     "Assistant error" : "Viga Abilise töös",
     "Please log in to view the task result" : "Ülesande tulemuse nägemiseks logi palun sisse",
     "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud",
-    "Assistant failed to schedule your task" : "Abiline ei suutnud sinu ülesannet ajastada"
+    "Assistant failed to schedule your task" : "Abiline ei suutnud sinu ülesannet ajastada",
+    "Summarize" : "Teksti kokkuvõte",
+    "Text to speech" : "Kõnesüntees",
+    "Transcribe audio" : "Kirjuta heli üles"
 },
 "nplurals=2; plural=(n != 1);");

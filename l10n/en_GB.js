@@ -257,6 +257,7 @@ OC.L10N.register(
     "Could not upload the file" : "Could not upload the file",
     "Could not upload the files" : "Could not upload the files",
     "Your task with ID {id} has failed" : "Your task with ID {id} has failed",
+    "The current Assistant task could not be found" : "The current Assistant task could not be found",
     "Failed to schedule your task" : "Failed to schedule your task",
     "Submit the current task's result" : "Submit the current task's result",
     "Output file for task {taskId} ({taskTypeName})" : "Output file for task {taskId} ({taskTypeName})",
@@ -265,6 +266,7 @@ OC.L10N.register(
     "Assistant error" : "Assistant error",
     "Please log in to view the task result" : "Please log in to view the task result",
     "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
-    "Assistant failed to schedule your task" : "Assistant failed to schedule your task"
+    "Assistant failed to schedule your task" : "Assistant failed to schedule your task",
+    "Summarize" : "Summarise"
 },
 "nplurals=2; plural=(n != 1);");

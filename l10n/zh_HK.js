@@ -257,6 +257,7 @@ OC.L10N.register(
     "Could not upload the file" : "無法上傳檔案",
     "Could not upload the files" : "無法上傳檔案",
     "Your task with ID {id} has failed" : "您的任務（ID 為 {id}）失敗",
+    "The current Assistant task could not be found" : "找不到目前的小幫手任務",
     "Failed to schedule your task" : "無法安排您的任務",
     "Submit the current task's result" : "遞交目前任務的結果",
     "Output file for task {taskId} ({taskTypeName})" : "任務 {taskId} 的輸出檔案（{taskTypeName}）",
@@ -265,6 +266,9 @@ OC.L10N.register(
     "Assistant error" : "Assistant 錯誤",
     "Please log in to view the task result" : "請登入查看任務結果",
     "This task does not exist or has been cleaned up" : "任務不存在或已被刪除",
-    "Assistant failed to schedule your task" : "小幫手無法安排您的任務。"
+    "Assistant failed to schedule your task" : "小幫手無法安排您的任務。",
+    "Summarize" : "總結",
+    "Text to speech" : "文字轉語音",
+    "Transcribe audio" : "抄錄音頻為文字"
 },
 "nplurals=1; plural=0;");

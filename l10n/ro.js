@@ -26,6 +26,7 @@ OC.L10N.register(
     "Upload from device" : "Încarcă din dispozitiv",
     "Advanced" : "Avansat",
     "Copy" : "Copiază",
-    "Upload file" : "Încarcă fișier"
+    "Upload file" : "Încarcă fișier",
+    "Summarize" : "Rezumă"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

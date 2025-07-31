@@ -261,6 +261,9 @@ OC.L10N.register(
     "Assistant error" : "Грешка Асистента",
     "Please log in to view the task result" : "Да бисте видели резултат задатка, молимо вас да се пријавите",
     "This task does not exist or has been cleaned up" : "Овај задатак не постоји или је обрисан",
-    "Assistant failed to schedule your task" : "Асистент није успео да закаже ваш задатак"
+    "Assistant failed to schedule your task" : "Асистент није успео да закаже ваш задатак",
+    "Summarize" : "Резимирај",
+    "Text to speech" : "Текст у говор",
+    "Transcribe audio" : "Транскрибуј звук"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

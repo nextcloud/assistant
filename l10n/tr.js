@@ -251,6 +251,9 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "{taskId} ({taskTypeName}) görevinin çıktı dosyası",
     "Assistant error" : "Yardımcı sorunu",
     "Please log in to view the task result" : "Görev sonucunu görüntülemek için oturum açın",
-    "This task does not exist or has been cleaned up" : "Bu görev bulunamadı ya da temizlenmiş"
+    "This task does not exist or has been cleaned up" : "Bu görev bulunamadı ya da temizlenmiş",
+    "Summarize" : "Özetlensin",
+    "Text to speech" : "Yazıdan konuşmaya",
+    "Transcribe audio" : "Sesten yazıya dönüştür."
 },
 "nplurals=2; plural=(n > 1);");

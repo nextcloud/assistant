@@ -264,6 +264,9 @@
     "Assistant error" : "Assistant 錯誤",
     "Please log in to view the task result" : "請登入以檢視任務結果",
     "This task does not exist or has been cleaned up" : "此任務不存在或已被清除",
-    "Assistant failed to schedule your task" : "小幫手無法安排您的任務。"
+    "Assistant failed to schedule your task" : "小幫手無法安排您的任務。",
+    "Summarize" : "摘要",
+    "Text to speech" : "文字轉語音",
+    "Transcribe audio" : "轉錄音訊"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

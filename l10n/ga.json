@@ -255,6 +255,7 @@
     "Could not upload the file" : "Níorbh fhéidir an comhad a uaslódáil",
     "Could not upload the files" : "Níorbh fhéidir na comhaid a uaslódáil",
     "Your task with ID {id} has failed" : "Theip ar do thasc le haitheantas {id}",
+    "The current Assistant task could not be found" : "Níorbh fhéidir an tasc Cúnta reatha a aimsiú",
     "Failed to schedule your task" : "Theip ar do thasc a sceidealú",
     "Submit the current task's result" : "Cuir isteach toradh an taisc reatha",
     "Output file for task {taskId} ({taskTypeName})" : "Comhad aschuir don tasc{taskId}({taskTypeName})",
@@ -263,6 +264,9 @@
     "Assistant error" : "Earráid Assistant",
     "Please log in to view the task result" : "Logáil isteach le do thoil chun toradh an taisc a fheiceáil",
     "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
-    "Assistant failed to schedule your task" : "Theip ar an gCúntóir do thasc a sceidealú"
+    "Assistant failed to schedule your task" : "Theip ar an gCúntóir do thasc a sceidealú",
+    "Summarize" : "Achoimre",
+    "Text to speech" : "Téacs go cainte",
+    "Transcribe audio" : "Trascríobh fuaime"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

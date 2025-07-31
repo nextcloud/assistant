@@ -93,6 +93,8 @@ OC.L10N.register(
     "Upload file" : "Igo fitxategia",
     "Failed to schedule your task" : "Ezin izan da zure zeregina programatu",
     "Assistant error" : "Laguntzailearen errorea",
-    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da"
+    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da",
+    "Summarize" : "Laburtu",
+    "Transcribe audio" : "Audioa transkribatu"
 },
 "nplurals=2; plural=(n != 1);");
