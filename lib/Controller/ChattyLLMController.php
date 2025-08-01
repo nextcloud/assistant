@@ -655,13 +655,13 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
-	 * Check the status of a generation task
+	 * Check the status of a generation task. The value of slow_pickup will be set to true if the task is not being picked up.
 	 *
 	 * Used by the frontend to poll a generation task status. If the task succeeds, a new message is stored and returned.
 	 *
 	 * @param int $taskId The message generation task ID
 	 * @param int $sessionId The chat session ID
-	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int, slow_pickup: bool}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
 	 *
@@ -710,7 +710,9 @@ class ChattyLLMController extends OCSController {
 				return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
 			}
 		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
-			return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
+			$startTime = $task->getStartedAt() ?? time();
+			$slowPickup = ($task->getScheduledAt() + (60 * 5)) < $startTime;
+			return new JSONResponse(['task_status' => $task->getstatus(), 'slow_pickup' => $slowPickup], Http::STATUS_EXPECTATION_FAILED);
 		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
 		}
