@@ -110,7 +110,7 @@ export default {
 
 	computed: {
 		tooLongForScheduling() {
-			return this.scheduledAt !== null && this.scheduledAt + 60 * 5 < this.now
+			return this.scheduledAt !== null && (this.scheduledAt + (60 * 5)) < this.now
 		},
 		TASK_STATUS_STRING() {
 			return TASK_STATUS_STRING
@@ -133,6 +133,7 @@ export default {
 	},
 
 	mounted() {
+		// Need to use a timer to update the state for now otherwise the component won't re-render when the time changes
 		this.timer = setInterval(() => {
 			console.debug('scheduledAt', this.scheduledAt)
 			console.debug('status', this.taskStatus)

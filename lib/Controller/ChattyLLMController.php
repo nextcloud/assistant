@@ -655,7 +655,7 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
-	 * Check the status of a generation task
+	 * Check the status of a generation task. The value of slow_pickup will be set to true if the task is not being picked up.
 	 *
 	 * Used by the frontend to poll a generation task status. If the task succeeds, a new message is stored and returned.
 	 *
@@ -711,7 +711,7 @@ class ChattyLLMController extends OCSController {
 			}
 		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
 			$startTime = $task->getStartedAt() ?? time();
-			$slowPickup = $task->getScheduledAt() + 60 * 5 < $startTime;
+			$slowPickup = ($task->getScheduledAt() + (60 * 5)) < $startTime;
 			return new JSONResponse(['task_status' => $task->getstatus(), 'slow_pickup' => $slowPickup], Http::STATUS_EXPECTATION_FAILED);
 		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);

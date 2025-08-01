@@ -196,7 +196,7 @@ export default {
 					this.task.completionExpectedAt = updatedTask.completionExpectedAt
 					this.task.scheduledAt = updatedTask.scheduledAt
 
-					pollTask(updatedTask.id, this).then(finishedTask => {
+					pollTask(updatedTask.id, this, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output

@@ -3544,7 +3544,7 @@
         "/ocs/v2.php/apps/assistant/chat/check_generation": {
             "get": {
                 "operationId": "chattyllm-check-message-generation-task",
-                "summary": "Check the status of a generation task",
+                "summary": "Check the status of a generation task. The value of slow_pickup will be set to true if the task is not being picked up.",
                 "description": "Used by the frontend to poll a generation task status. If the task succeeds, a new message is stored and returned.",
                 "tags": [
                     "chat_api"
