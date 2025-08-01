@@ -102,6 +102,8 @@ OC.L10N.register(
     "Upload from device" : "Upload fra enhed",
     "Advanced" : "Avanceret",
     "Copy" : "Kopier",
-    "Upload file" : "Upload fil"
+    "Upload file" : "Upload fil",
+    "Summarize" : "Opsummer",
+    "Transcribe audio" : "Transskriber lyd"
 },
 "nplurals=2; plural=(n != 1);");

@@ -51,6 +51,7 @@ OC.L10N.register(
     "Copy" : "Copiar",
     "Upload file" : "Xubir un ficheru",
     "Assistant error" : "Error del asistente",
-    "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse"
+    "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse",
+    "Summarize" : "Resume"
 },
 "nplurals=2; plural=(n != 1);");

@@ -209,6 +209,8 @@ OC.L10N.register(
     "Submit the current task's result" : "أرسِل نتيجة المهمة الحالية",
     "Assistant error" : "حدث خطأ في عمل المُساعد",
     "Please log in to view the task result" : "أدُخل رجاءً لمشاهدة نتيجة المهمة",
-    "This task does not exist or has been cleaned up" : "هذه المهمة غير موجودة أو تمّ محوُها"
+    "This task does not exist or has been cleaned up" : "هذه المهمة غير موجودة أو تمّ محوُها",
+    "Summarize" : "تلخيص",
+    "Transcribe audio" : "تحويل الكلام لنص"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

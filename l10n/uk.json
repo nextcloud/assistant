@@ -38,6 +38,16 @@
     "Task for \"%1$s\" has failed" : "Завдання для \"%1$s\" не вдалося виконати",
     "\"%1$s\" task for \"%2$s\" has failed" : "Завдання \"%1$s\" для \"%2$s\" завершилося невдачею",
     "View task" : "Переглянути завдання",
+    "File action has finished" : "Дія з файлом завершена",
+    "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} було підсумовано в {targetFile}",
+    "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} було переписано в {targetFile}",
+    "{sourceFile} has been transformed to audio in {targetFile}" : "{sourceFile} було перетворено на аудіо в {targetFile}",
+    "{sourceFile} has been processed, {targetFile} was created" : "{sourceFile} було оброблено, {targetFile} було створено",
+    "File action has failed" : "Операція з файлом не вдалася",
+    "Summarization of {sourceFile} has failed" : "Підсумок {sourceFile} не вдався",
+    "Transcription of {sourceFile} has failed" : "Транскрипція {sourceFile} не вдалася",
+    "The text-to-speech process for {sourceFile} has failed" : "Процес перетворення тексту в мову для {sourceFile} не вдався",
+    "The processing of {sourceFile} has failed" : "Обробка {sourceFile} не вдалася",
     "Assistant audio transcription" : "Асистент аудіо транскрипції",
     "Assistant document generation" : "Асистент створення документів",
     "Nextcloud Calendar" : "Nextcloud Календар",
@@ -266,7 +276,15 @@
     "This task does not exist or has been cleaned up" : "Це завдання не існує або було видалено",
     "Assistant failed to schedule your task" : "Асистент не зміг запланувати ваше завдання",
     "Summarize" : "Підсумок",
+    "Summarization task submitted successfully." : "Завдання з узагальнення успішно відправлено.",
+    "You will be notified when it is ready." : "Ви отримаєте повідомлення, коли все буде готово.",
+    "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з текстом -> Підсумувати».",
+    "Failed to launch the AI file action" : "Не вдалося запустити дію файлу ШІ",
     "Text to speech" : "Текст на мову",
-    "Transcribe audio" : "Транскрибувати аудіо"
+    "Text-to-speech task submitted successfully." : "Завдання перетворення тексту в мову успішно відправлено.",
+    "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
+    "Transcribe audio" : "Транскрибувати аудіо",
+    "Transcription task submitted successfully." : "Завдання з транскрипції успішно відправлено.",
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо»."
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

@@ -207,6 +207,8 @@ OC.L10N.register(
     "Submit the current task's result" : "Envieu el resultat de la tasca actual",
     "Assistant error" : "Error de l'assistent",
     "Please log in to view the task result" : "Iniciar sessió per veure el resultat de la tasca",
-    "This task does not exist or has been cleaned up" : "Aquesta tasca no existeix o s'ha netejat"
+    "This task does not exist or has been cleaned up" : "Aquesta tasca no existeix o s'ha netejat",
+    "Summarize" : "Resumeix",
+    "Transcribe audio" : "Transcripció d'àudio"
 },
 "nplurals=2; plural=(n != 1);");

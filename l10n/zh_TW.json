@@ -38,6 +38,16 @@
     "Task for \"%1$s\" has failed" : "「%1$s」任務失敗",
     "\"%1$s\" task for \"%2$s\" has failed" : "「%2$s」的「%1$s」任務失敗",
     "View task" : "檢視任務",
+    "File action has finished" : "已結束檔案動作",
+    "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} 已總結為 {targetFile}",
+    "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} 已轉錄為 {targetFile}",
+    "{sourceFile} has been transformed to audio in {targetFile}" : "{sourceFile} 已在 {targetFile} 中轉換為語音",
+    "{sourceFile} has been processed, {targetFile} was created" : "已處理 {sourceFile} 完成。已建立 {targetFile}",
+    "File action has failed" : "檔案動作失敗",
+    "Summarization of {sourceFile} has failed" : "{sourceFile} 總結失敗",
+    "Transcription of {sourceFile} has failed" : "{sourceFile} 轉錄失敗",
+    "The text-to-speech process for {sourceFile} has failed" : "{sourceFile} 的文字轉語音流程失敗",
+    "The processing of {sourceFile} has failed" : "處理 {sourceFile} 失敗",
     "Assistant audio transcription" : "小幫手音訊轉錄",
     "Assistant document generation" : "小幫手文件產生",
     "Nextcloud Calendar" : "Nextcloud 日曆",
@@ -266,7 +276,15 @@
     "This task does not exist or has been cleaned up" : "此任務不存在或已被清除",
     "Assistant failed to schedule your task" : "小幫手無法安排您的任務。",
     "Summarize" : "摘要",
+    "Summarization task submitted successfully." : "總結任務已成功遞交。",
+    "You will be notified when it is ready." : "就緒時將會通知您。",
+    "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "也可以在小幫手的「處理文字」→「總結」選單中確認。",
+    "Failed to launch the AI file action" : "啟動人工智慧檔案動作失敗",
     "Text to speech" : "文字轉語音",
-    "Transcribe audio" : "轉錄音訊"
+    "Text-to-speech task submitted successfully." : "文字轉語音任務遞交成功。",
+    "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
+    "Transcribe audio" : "轉錄音訊",
+    "Transcription task submitted successfully." : "轉錄任務已成功遞交。",
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
