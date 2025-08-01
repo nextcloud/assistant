@@ -202,7 +202,7 @@ class Notifier implements INotifier {
 						$message = $l->t('{sourceFile} has been transcribed in {targetFile}');
 						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
-						$message = $l->t('{sourceFile} has been transformed to audio in {targetFile}');
+						$message = $l->t('{sourceFile} has been converted to audio in {targetFile}');
 						break;
 					default:
 						$message = $l->t('{sourceFile} has been processed, {targetFile} was created');
