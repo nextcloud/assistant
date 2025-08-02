@@ -22,7 +22,6 @@ OC.L10N.register(
     "File action has finished" : "Действие с файлом завершено",
     "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} обобщено в {targetFile}",
     "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} транскрибировано в {targetFile}",
-    "{sourceFile} has been transformed to audio in {targetFile}" : "{sourceFile} преобразовано в аудио в {targetFile}",
     "{sourceFile} has been processed, {targetFile} was created" : "{sourceFile} обработано, {targetFile} создано",
     "File action has failed" : "Действие с файлом не удалось",
     "Summarization of {sourceFile} has failed" : "Обобщение для {sourceFile} не удалось",

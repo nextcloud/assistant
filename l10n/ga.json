@@ -38,6 +38,15 @@
     "Task for \"%1$s\" has failed" : "Theip ar an tasc le haghaidh \"%1$s\".",
     "\"%1$s\" task for \"%2$s\" has failed" : "Theip ar \"%1$s\" tasc le haghaidh \"%2$s\".",
     "View task" : "Féach ar an tasc",
+    "File action has finished" : "Tá an gníomh comhaid críochnaithe",
+    "{sourceFile} has been summarized in {targetFile}" : "Tá achoimre déanta ar {sourceFile} i {targetFile}",
+    "{sourceFile} has been transcribed in {targetFile}" : "Tá {sourceFile} trascríofa i {targetFile}",
+    "{sourceFile} has been processed, {targetFile} was created" : "Tá {sourceFile} próiseáilte, cruthaíodh {targetFile}",
+    "File action has failed" : "Theip ar ghníomh comhaid",
+    "Summarization of {sourceFile} has failed" : "Theip ar achoimre {sourceFile}",
+    "Transcription of {sourceFile} has failed" : "Theip ar thras-scríobh {sourceFile}",
+    "The text-to-speech process for {sourceFile} has failed" : "Theip ar an bpróiseas téacs-go-hurlabhra do {sourceFile}",
+    "The processing of {sourceFile} has failed" : "Theip ar phróiseáil {sourceFile}",
     "Assistant audio transcription" : "Tras-scríobh fuaime Cúnta",
     "Assistant document generation" : "Giniúint doiciméad cúnta",
     "Nextcloud Calendar" : "Féilire Nextcloud",
@@ -266,7 +275,15 @@
     "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
     "Assistant failed to schedule your task" : "Theip ar an gCúntóir do thasc a sceidealú",
     "Summarize" : "Achoimre",
+    "Summarization task submitted successfully." : "Cuireadh an tasc achoimre isteach go rathúil.",
+    "You will be notified when it is ready." : "Cuirfear in iúl duit nuair a bheidh sé réidh.",
+    "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le téacs -> Achoimrigh\" freisin.",
+    "Failed to launch the AI file action" : "Theip ar an ngníomh comhaid AI a sheoladh",
     "Text to speech" : "Téacs go cainte",
-    "Transcribe audio" : "Trascríobh fuaime"
+    "Text-to-speech task submitted successfully." : "Cuireadh an tasc téacs-go-hurlabhra isteach go rathúil.",
+    "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
+    "Transcribe audio" : "Trascríobh fuaime",
+    "Transcription task submitted successfully." : "Cuireadh an tasc trascríobh isteach go rathúil.",
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

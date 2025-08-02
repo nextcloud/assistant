@@ -41,7 +41,6 @@
     "File action has finished" : "已結束檔案動作",
     "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} 已總結為 {targetFile}",
     "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} 已轉錄為 {targetFile}",
-    "{sourceFile} has been transformed to audio in {targetFile}" : "{sourceFile} 已在 {targetFile} 中轉換為語音",
     "{sourceFile} has been processed, {targetFile} was created" : "已處理 {sourceFile} 完成。已建立 {targetFile}",
     "File action has failed" : "檔案動作失敗",
     "Summarization of {sourceFile} has failed" : "{sourceFile} 總結失敗",

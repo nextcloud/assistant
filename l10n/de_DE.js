@@ -43,7 +43,6 @@ OC.L10N.register(
     "File action has finished" : "Dateiaktion wurde beendet",
     "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} wurde in {targetFile} zusammengefasst",
     "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} wurde in {targetFile} transkribiert",
-    "{sourceFile} has been transformed to audio in {targetFile}" : "{sourceFile} wurde in {targetFile} in Audio umgewandelt",
     "{sourceFile} has been processed, {targetFile} was created" : "{sourceFile} verarbeitet, {targetFile} wurde erstellt",
     "File action has failed" : "Dateiaktion fehlgeschlagen",
     "Summarization of {sourceFile} has failed" : "Zusammenfassung von {sourceFile} ist fehlgeschlagen",
