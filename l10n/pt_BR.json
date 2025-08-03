@@ -41,6 +41,7 @@
     "File action has finished" : "Ação de arquivo terminou",
     "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} foi resumido em {targetFile}",
     "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} foi transcrito em {targetFile}",
+    "{sourceFile} has been converted to audio in {targetFile}" : "{sourceFile} foi convertido para áudio em {targetFile}",
     "{sourceFile} has been processed, {targetFile} was created" : "{sourceFile} foi processado, {targetFile} foi criado",
     "File action has failed" : "Ação de arquivo falhou",
     "Summarization of {sourceFile} has failed" : "Resumo de {sourceFile} falhou",

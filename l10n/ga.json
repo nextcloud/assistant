@@ -41,6 +41,7 @@
     "File action has finished" : "Tá an gníomh comhaid críochnaithe",
     "{sourceFile} has been summarized in {targetFile}" : "Tá achoimre déanta ar {sourceFile} i {targetFile}",
     "{sourceFile} has been transcribed in {targetFile}" : "Tá {sourceFile} trascríofa i {targetFile}",
+    "{sourceFile} has been converted to audio in {targetFile}" : "Tá {sourceFile} tiontaithe go fuaim i {targetFile}",
     "{sourceFile} has been processed, {targetFile} was created" : "Tá {sourceFile} próiseáilte, cruthaíodh {targetFile}",
     "File action has failed" : "Theip ar ghníomh comhaid",
     "Summarization of {sourceFile} has failed" : "Theip ar achoimre {sourceFile}",
