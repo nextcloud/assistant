@@ -51,6 +51,14 @@
 						{{ t('assistant', 'Enable text-to-image in smart picker') }}
 					</div>
 				</NcCheckboxRadioSwitch>
+				<NcCheckboxRadioSwitch
+					:model-value="state.text_to_sticker_picker_enabled"
+					:disabled="!state.text_to_image_picker_available"
+					@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
+					<div class="checkbox-text">
+						{{ t('assistant', 'Enable text-to-sticker in smart picker') }}
+					</div>
+				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.text_to_image_picker_available" type="info">
 					<div class="checkbox-text">
 						<span>

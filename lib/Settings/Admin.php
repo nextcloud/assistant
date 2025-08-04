@@ -42,6 +42,7 @@ class Admin implements ISettings {
 
 		$freePromptPickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+		$textToStickerPickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1';
 
 		$speechToTextEnabled = $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS) ?: Application::CHAT_USER_INSTRUCTIONS;
@@ -53,6 +54,7 @@ class Admin implements ISettings {
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImageAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
+			'text_to_sticker_picker_enabled' => $textToStickerPickerEnabled,
 			'free_prompt_task_type_available' => $freePromptTaskTypeAvailable,
 			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 			'speech_to_text_picker_available' => $speechToTextAvailable,

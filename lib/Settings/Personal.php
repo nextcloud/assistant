@@ -52,6 +52,9 @@ class Personal implements ISettings {
 		$textToImagePickerAvailable = $textToImageAvailable && $this->appConfig->getValueString(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
 
+		$textToStickerPickerAvailable = $textToImageAvailable && $this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1';
+		$textToStickerPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1';
+
 		$freePromptPickerAvailable = $freePromptTaskTypeAvailable && $this->appConfig->getValueString(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$freePromptPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 
@@ -63,6 +66,8 @@ class Personal implements ISettings {
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImagePickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
+			'text_to_sticker_picker_available' => $textToStickerPickerAvailable,
+			'text_to_sticker_picker_enabled' => $textToStickerPickerEnabled,
 			'free_prompt_picker_available' => $freePromptPickerAvailable,
 			'free_prompt_picker_enabled' => $freePromptPickerEnabled,
 			'speech_to_text_picker_available' => $speechToTextPickerAvailable,
