@@ -15,6 +15,8 @@
 					:loading="loading"
 					:show-sync-task-running="showSyncTaskRunning"
 					:short-input="shortInput"
+					:task-status="task.status"
+					:scheduled-at="task.scheduledAt"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
 					:is-notify-enabled="isNotifyEnabled"
@@ -122,7 +124,7 @@ export default {
 					this.task.id = task.id
 					this.task.completionExpectedAt = task.completionExpectedAt
 					this.task.scheduledAt = task.scheduledAt
-					pollTask(task.id, this.setProgress).then(finishedTask => {
+					pollTask(task.id, this, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
@@ -153,8 +155,11 @@ export default {
 				.then(() => {
 				})
 		},
-		setProgress(progress) {
-			this.progress = progress
+		updateTask(task) {
+			if (task.status === TASK_STATUS_STRING.running) {
+				this.progress = task.progress
+			}
+			this.task = task
 		},
 		onSyncSubmit(data) {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
@@ -191,10 +196,7 @@ export default {
 					this.task.completionExpectedAt = updatedTask.completionExpectedAt
 					this.task.scheduledAt = updatedTask.scheduledAt
 
-					const setProgress = (progress) => {
-						this.progress = progress
-					}
-					pollTask(updatedTask.id, setProgress).then(finishedTask => {
+					pollTask(updatedTask.id, this, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
