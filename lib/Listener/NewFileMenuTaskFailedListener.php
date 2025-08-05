@@ -10,6 +10,7 @@ namespace OCA\Assistant\Listener;
 use OCA\Assistant\Service\NotificationService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\Files\IRootFolder;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 
 /**
@@ -19,6 +20,7 @@ class NewFileMenuTaskFailedListener implements IEventListener {
 
 	public function __construct(
 		private NotificationService $notificationService,
+		private IRootFolder $rootFolder,
 	) {
 	}
 
@@ -40,9 +42,12 @@ class NewFileMenuTaskFailedListener implements IEventListener {
 			return;
 		}
 
-		$notificationTarget = null;
-		$notificationActionLabel = null;
-
-		$this->notificationService->sendNotification($task, $notificationTarget, $notificationActionLabel);
+		$directoryId = (int)$matches[1];
+		$userFolder = $this->rootFolder->getUserFolder($task->getUserId());
+		$directory = $userFolder->getFirstNodeById($directoryId);
+		$this->notificationService->sendNewImageFileNotification(
+			$task->getUserId(), $task->getId(),
+			$directoryId, $directory->getName(), $userFolder->getRelativePath($directory->getPath()),
+		);
 	}
 }

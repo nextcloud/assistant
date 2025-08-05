@@ -100,4 +100,37 @@ class NotificationService {
 
 		$manager->notify($notification);
 	}
+
+	public function sendNewImageFileNotification(
+		string $userId, int $taskId,
+		?int $targetDirectoryId = null, ?string $targetDirectoryName = null, ?string $targetDirectoryPath = null,
+		?int $targetFileId = null, ?string $targetFileName = null, ?string $targetFilePath = null,
+	): void {
+		$manager = $this->notificationManager;
+		$notification = $manager->createNotification();
+
+		$params = [
+			'target_directory_id' => $targetDirectoryId,
+			'target_directory_name' => $targetDirectoryName,
+			'target_directory_path' => $targetDirectoryPath,
+			'target_file_id' => $targetFileId,
+			'target_file_name' => $targetFileName,
+			'target_file_path' => $targetFilePath,
+			'task_id' => $taskId,
+			'target' => $this->getDefaultTarget($taskId),
+		];
+		$taskSuccessful = $targetFileId !== null && $targetFileName !== null;
+
+		$subject = $taskSuccessful
+			? 'new_image_file_success'
+			: 'new_image_file_failure';
+
+		$notification->setApp(Application::APP_ID)
+			->setUser($userId)
+			->setDateTime(new DateTime())
+			->setObject('task', (string)$taskId)
+			->setSubject($subject, $params);
+
+		$manager->notify($notification);
+	}
 }

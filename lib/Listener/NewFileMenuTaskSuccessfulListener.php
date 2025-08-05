@@ -11,7 +11,7 @@ use OCA\Assistant\Service\AssistantService;
 use OCA\Assistant\Service\NotificationService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IURLGenerator;
+use OCP\Files\IRootFolder;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use Psr\Log\LoggerInterface;
 
@@ -24,7 +24,7 @@ class NewFileMenuTaskSuccessfulListener implements IEventListener {
 		private NotificationService $notificationService,
 		private AssistantService $assistantService,
 		private LoggerInterface $logger,
-		private IUrlGenerator $url,
+		private IRootFolder $rootFolder,
 	) {
 	}
 
@@ -49,16 +49,14 @@ class NewFileMenuTaskSuccessfulListener implements IEventListener {
 		$directoryId = (int)$matches[1];
 		$fileId = (int)$task->getOutput()['images'][0];
 		try {
-			$file = $this->assistantService->saveNewFileMenuActionFile($task->getUserId(), $task->getId(), $fileId, $directoryId);
-			$notificationTarget = $this->url->linkToRouteAbsolute(
-				'files.viewcontroller.showFile',
-				[
-					'fileid' => $file->getId(),
-					'opendetails' => 'true',
-					'openfile' => 'false',
-				],
+			$targetFile = $this->assistantService->saveNewFileMenuActionFile($task->getUserId(), $task->getId(), $fileId, $directoryId);
+			$userFolder = $this->rootFolder->getUserFolder($task->getUserId());
+			$directory = $targetFile->getParent();
+			$this->notificationService->sendNewImageFileNotification(
+				$task->getUserId(), $task->getId(),
+				$directoryId, $directory->getName(), $userFolder->getRelativePath($directory->getPath()),
+				$targetFile->getId(), $targetFile->getName(), $userFolder->getRelativePath($targetFile->getPath()),
 			);
-			$this->notificationService->sendNotification($task, $notificationTarget);
 		} catch (\Exception $e) {
 			$this->logger->error('TaskSuccessfulListener: Failed to save new file menu action file.', [
 				'task' => $task->jsonSerialize(),
