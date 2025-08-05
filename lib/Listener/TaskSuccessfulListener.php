@@ -10,14 +10,11 @@ namespace OCA\Assistant\Listener;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\TaskNotificationMapper;
 use OCA\Assistant\Event\BeforeAssistantNotificationEvent;
-use OCA\Assistant\Service\AssistantService;
 use OCA\Assistant\Service\NotificationService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IURLGenerator;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
-use Psr\Log\LoggerInterface;
 
 /**
  * @template-implements IEventListener<Event>
@@ -28,9 +25,6 @@ class TaskSuccessfulListener implements IEventListener {
 		private TaskNotificationMapper $taskNotificationMapper,
 		private NotificationService $notificationService,
 		private IEventDispatcher $eventDispatcher,
-		private AssistantService $assistantService,
-		private LoggerInterface $logger,
-		private IUrlGenerator $url,
 	) {
 	}
 
@@ -44,11 +38,7 @@ class TaskSuccessfulListener implements IEventListener {
 			return;
 		}
 
-		$customIdPattern = '/^new-image-file:(\d+)$/';
-		$hasTargetDirectory = preg_match($customIdPattern, $task->getCustomId(), $matches) === 1;
-
-		// For tasks with customId "new-image-file:<directoryIdNumber>" we always send a notification
-		if ($this->taskNotificationMapper->getByTaskId($task->getId()) === null && !$hasTargetDirectory) {
+		if ($this->taskNotificationMapper->getByTaskId($task->getId()) === null) {
 			return;
 		}
 
@@ -67,31 +57,7 @@ class TaskSuccessfulListener implements IEventListener {
 			$notificationActionLabel = $beforeAssistantNotificationEvent->getNotificationActionLabel();
 		}
 
-		if ($hasTargetDirectory) {
-			$directoryId = (int)$matches[1];
-			$fileId = (int)$task->getOutput()['images'][0];
-			try {
-				$file = $this->assistantService->saveNewFileMenuActionFile($task->getUserId(), $task->getId(), $fileId, $directoryId);
-				$notificationTarget = $this->url->linkToRouteAbsolute(
-					'files.viewcontroller.showFile',
-					[
-						'fileid' => $file->getId(),
-						'opendetails' => 'true',
-						'openfile' => 'false',
-					],
-				);
-			} catch (\Exception $e) {
-				$this->logger->error('TaskSuccessfulListener: Failed to save new file menu action file.', [
-					'task' => $task->jsonSerialize(),
-					'exception' => $e,
-				]);
-			}
-		}
-
 		$this->notificationService->sendNotification($task, $notificationTarget, $notificationActionLabel);
-
-		if (!$hasTargetDirectory) {
-			$this->taskNotificationMapper->deleteByTaskId($task->getId());
-		}
+		$this->taskNotificationMapper->deleteByTaskId($task->getId());
 	}
 }
