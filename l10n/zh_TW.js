@@ -43,6 +43,7 @@ OC.L10N.register(
     "File action has finished" : "已結束檔案動作",
     "{sourceFile} has been summarized in {targetFile}" : "{sourceFile} 已總結為 {targetFile}",
     "{sourceFile} has been transcribed in {targetFile}" : "{sourceFile} 已轉錄為 {targetFile}",
+    "{sourceFile} has been converted to audio in {targetFile}" : "{sourceFile} 已轉換為音訊，檔案為 {targetFile}",
     "{sourceFile} has been processed, {targetFile} was created" : "已處理 {sourceFile} 完成。已建立 {targetFile}",
     "File action has failed" : "檔案動作失敗",
     "Summarization of {sourceFile} has failed" : "{sourceFile} 總結失敗",
