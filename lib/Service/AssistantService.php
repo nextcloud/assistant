@@ -534,6 +534,25 @@ class AssistantService {
 	}
 
 	/**
+	 * @throws TaskProcessingException
+	 * @throws NotPermittedException
+	 * @throws NotFoundException
+	 * @throws Exception
+	 * @throws LockedException
+	 * @throws NoUserException
+	 */
+	public function saveNewFileMenuActionFile(string $userId, int $ocpTaskId, int $fileId, int $targetDirectoryId): File {
+		$taskOutputFile = $this->getTaskOutputFile($userId, $ocpTaskId, $fileId);
+		$userFolder = $this->rootFolder->getUserFolder($userId);
+		$targetDirectory = $userFolder->getFirstNodeById($targetDirectoryId);
+		if (!$targetDirectory instanceof Folder) {
+			throw new NotFoundException('Target directory not found: ' . $targetDirectoryId);
+		}
+		$targetFileName = $this->getTargetFileName($taskOutputFile);
+		return $targetDirectory->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+	}
+
+	/**
 	 * @param string $userId
 	 * @param int $ocpTaskId
 	 * @param int $fileId

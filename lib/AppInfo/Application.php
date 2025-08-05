@@ -15,6 +15,8 @@ use OCA\Assistant\Listener\FileActionTaskFailedListener;
 use OCA\Assistant\Listener\FileActionTaskSuccessfulListener;
 use OCA\Assistant\Listener\FreePrompt\FreePromptReferenceListener;
 use OCA\Assistant\Listener\LoadAdditionalScriptsListener;
+use OCA\Assistant\Listener\NewFileMenuTaskFailedListener;
+use OCA\Assistant\Listener\NewFileMenuTaskSuccessfulListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
 use OCA\Assistant\Listener\TaskFailedListener;
 use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
@@ -74,7 +76,9 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, ChattyLLMTaskListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, FileActionTaskSuccessfulListener::class);
+		$context->registerEventListener(TaskSuccessfulEvent::class, NewFileMenuTaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, FileActionTaskFailedListener::class);
+		$context->registerEventListener(TaskFailedEvent::class, NewFileMenuTaskFailedListener::class);
 
 		$context->registerNotifierService(Notifier::class);
 

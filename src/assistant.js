@@ -521,7 +521,7 @@ export async function openAssistantTask(
 	let lastTask = task
 
 	modalMountPoint.addEventListener('cancel', () => {
-		view.unmount()
+		app.unmount()
 	})
 	modalMountPoint.addEventListener('submit', (data) => {
 		scheduleTask(task.appId, task.identifier ?? '', data.detail.selectedTaskTypeId, data.detail.inputs)
@@ -529,7 +529,7 @@ export async function openAssistantTask(
 				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
-				view.unmount()
+				app.unmount()
 				console.error('Assistant scheduling error', error)
 				showError(
 					t('assistant', 'Assistant failed to schedule your task')
@@ -580,7 +580,7 @@ export async function openAssistantTask(
 				})
 			})
 			.catch(error => {
-				view.unmount()
+				app.unmount()
 				console.error('Assistant scheduling error', error)
 				showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
 				// reject(new Error('Assistant scheduling error'))
@@ -694,7 +694,7 @@ export async function openAssistantTask(
 			lastTask.output = data.detail.output
 			data.detail.button.onClick(lastTask)
 		}
-		view.unmount()
+		app.unmount()
 	})
 }
 

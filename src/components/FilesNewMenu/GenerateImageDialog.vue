@@ -1,0 +1,139 @@
+<!--
+  - SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
+<template>
+	<NcDialog can-close
+		class="assistant__generate-image-dialog"
+		:close-on-click-outside="false"
+		:name="t('assistant', 'Generate new image')"
+		size="normal">
+		<template v-if="isFeatureAvailable">
+			<NcNoteCard type="info" :text="t('assistant', 'The result image would be placed in the current folder.')" />
+			<form ref="form"
+				class="assistant__generate-image-dialog__form"
+				:aria-label="t('assistant', 'Generate new image')"
+				@submit.prevent.stop="">
+				<NcTextField v-model="prompt"
+					required
+					:label="t('assistant', 'Prompt')"
+					:aria-label="t('assistant', 'Prompt')"
+					:helper-text="t('assistant', 'Describe the image you want to generate')"
+					type="text"
+					autocomplete="off" />
+			</form>
+		</template>
+		<template v-else>
+			<NcNoteCard type="error"
+				:heading="t('assistant', 'No providers found')"
+				:text="t('assistant', 'Image generation is not available.')" />
+		</template>
+
+		<template #actions>
+			<NcButton
+				variant="secondary"
+				:aria-label="t('assistant', 'Cancel')"
+				@click="$emit('close')">
+				{{ t('assistant', 'Cancel') }}
+			</NcButton>
+			<NcButton
+				variant="primary"
+				:aria-label="t('assistant', 'Generate image')"
+				:disabled="!isFeatureAvailable || prompt.trim() === ''"
+				@click="submitPrompt">
+				<template #icon>
+					<Creation :size="20" />
+				</template>
+				{{ t('assistant', 'Generate image') }}
+			</NcButton>
+		</template>
+	</NcDialog>
+</template>
+
+<script>
+import axios from '@nextcloud/axios'
+import { generateOcsUrl } from '@nextcloud/router'
+import { translate as t } from '@nextcloud/l10n'
+import { showSuccess, showError } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
+
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
+import NcButton from '@nextcloud/vue/components/NcButton'
+
+import Creation from 'vue-material-design-icons/Creation.vue'
+
+export default {
+	name: 'GenerateImageDialog',
+
+	components: {
+		NcDialog,
+		NcNoteCard,
+		NcTextField,
+		NcButton,
+		Creation,
+	},
+
+	props: {
+		context: {
+			type: Object,
+			required: true,
+		},
+		content: {
+			type: Array,
+			required: true,
+		},
+	},
+
+	setup() {
+		return {
+			t,
+		}
+	},
+
+	data() {
+		return {
+			prompt: '',
+			state: loadState('assistant', 'new-file-generate-image'),
+		}
+	},
+
+	computed: {
+		isFeatureAvailable() {
+			return this.state?.hasText2Image ?? false
+		},
+	},
+
+	methods: {
+		submitPrompt() {
+			if (this.prompt.trim() === '') {
+				showError(t('assistant', 'Prompt cannot be empty.'))
+				return
+			}
+
+			const url = generateOcsUrl('taskprocessing/schedule')
+			const params = {
+				input: {
+					input: this.prompt,
+					numberOfImages: 1,
+				},
+				type: 'core:text2image',
+				appId: 'assistant',
+				customId: 'new-image-file:' + this.context.data.id,
+			}
+
+			axios.post(url, params)
+				.then(() => {
+					this.$emit('close')
+					showSuccess(t('assistant', 'Image generation task has been scheduled.'))
+				})
+				.catch((error) => {
+					console.error('[ERROR] GenerateImageDialog: Error scheduling image generation:', error)
+					showError(t('assistant', 'Failed to schedule image generation task.'))
+				})
+		},
+	},
+}
+</script>

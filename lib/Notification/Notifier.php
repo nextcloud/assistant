@@ -274,6 +274,70 @@ class Notifier implements INotifier {
 
 				return $notification;
 
+			case 'new_image_file_success':
+				$subject = $l->t('New image file has been generated');
+
+				$targetDirLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_directory_id']]);
+				$targetFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_file_id']]);
+				$taskLink = $params['target'];
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
+
+				$message = $l->t('{targetFile} has been generated in {targetDirectory}');
+
+				$notification
+					->setParsedSubject($subject)
+					->setRichMessage($message, [
+						'targetDirectory' => [
+							'type' => 'file',
+							'id' => (string)$params['target_directory_id'],
+							'name' => $params['target_directory_name'],
+							'path' => $params['target_directory_path'],
+							'link' => $targetDirLink,
+						],
+						'targetFile' => [
+							'type' => 'file',
+							'id' => (string)$params['target_file_id'],
+							'name' => $params['target_file_name'],
+							'path' => $params['target_file_path'],
+							'link' => $targetFileLink,
+						],
+					])
+					->setLink($taskLink)
+					->setIcon($iconUrl);
+
+				$actionLabel = $l->t('View results');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($taskLink, IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
+				return $notification;
+
+			case 'new_image_file_failure':
+				$subject = $l->t('Image file generation has failed');
+
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
+
+				$message = $l->t('Generation of a new image file in {targetDirectory} has failed');
+
+				$notification
+					->setParsedSubject($subject)
+					->setRichMessage($message, [
+						'targetDirectory' => [
+							'type' => 'file',
+							'id' => (string)$params['target_directory_id'],
+							'name' => $params['target_directory_name'],
+							'path' => $params['target_directory_path'],
+							'link' => $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_directory_id']]),
+						],
+					])
+					->setIcon($iconUrl);
+
+				return $notification;
+
 			default:
 				// Unknown subject => Unknown notification => throw
 				throw new InvalidArgumentException();
