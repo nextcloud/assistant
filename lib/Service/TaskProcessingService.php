@@ -7,7 +7,6 @@
 
 namespace OCA\Assistant\Service;
 
-use OC\User\NoUserException;
 use OCA\Assistant\AppInfo\Application;
 use OCP\Files\File;
 use OCP\Files\GenericFileException;
@@ -32,6 +31,7 @@ class TaskProcessingService {
 		private IManager $taskProcessingManager,
 		private IRootFolder $rootFolder,
 		private LoggerInterface $logger,
+		private AssistantService $assistantService,
 	) {
 	}
 
@@ -106,21 +106,10 @@ class TaskProcessingService {
 			throw new Exception('Invalid task type for file action');
 		}
 		try {
-			$userFolder = $this->rootFolder->getUserFolder($userId);
-		} catch (NoUserException|NotPermittedException $e) {
-			$this->logger->warning('Assistant runFileAction, the user folder could not be obtained', ['exception' => $e]);
-			throw new Exception('The user folder could not be obtained');
-		}
-		$file = $userFolder->getFirstNodeById($fileId);
-		if (!$file instanceof File) {
-			$this->logger->warning('Assistant runFileAction, the input file is not a file', ['file_id' => $fileId]);
-			throw new NotFoundException('File is not a file');
-		}
-		try {
 			$input = $taskTypeId === AudioToText::ID
 				? ['input' => $fileId]
-				: ['input' => $file->getContent()];
-		} catch (NotPermittedException|GenericFileException|LockedException $e) {
+				: ['input' => $this->assistantService->parseTextFromFile($userId, fileId: $fileId)];
+		} catch (NotPermittedException|GenericFileException|LockedException|\OCP\Files\NotFoundException|Exception $e) {
 			$this->logger->warning('Assistant runFileAction, impossible to read the file action input file', ['exception' => $e]);
 			throw new Exception('Impossible to read the file action input file');
 		}

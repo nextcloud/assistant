@@ -10,6 +10,7 @@ import CreationSvgIcon from '@mdi/svg/svg/creation.svg?raw'
 import SummarizeSymbol from '@material-symbols/svg-700/outlined/summarize.svg?raw'
 import TTSSymbol from '@material-symbols/svg-700/outlined/text_to_speech.svg?raw'
 import STTSymbol from '@material-symbols/svg-700/outlined/speech_to_text.svg?raw'
+import { VALID_AUDIO_MIME_TYPES, VALID_TEXT_MIME_TYPES } from '../constants.js'
 
 const actionIgnoreLists = [
 	'trashbin',
@@ -50,7 +51,7 @@ function registerSummarizeAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
+				&& nodes.every(({ mime }) => VALID_TEXT_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => SummarizeSymbol,
 		order: 0,
@@ -89,7 +90,7 @@ function registerTtsAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
+				&& nodes.every(({ mime }) => VALID_TEXT_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => TTSSymbol,
 		order: 0,
@@ -128,7 +129,7 @@ function registerSttAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => ['audio/mpeg', 'audio/wav', 'audio/mp3'].includes(mime))
+				&& nodes.every(({ mime }) => VALID_AUDIO_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => STTSymbol,
 		order: 0,
