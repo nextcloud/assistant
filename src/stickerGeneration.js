@@ -8,12 +8,11 @@ import { registerCustomPickerElement, NcCustomPickerRenderResult } from '@nextcl
 registerCustomPickerElement('assistant_sticker_generation', async (el, { providerId, accessible }) => {
 	const { createApp } = await import('vue')
 	const { default: ImageResultCustomPickerElement } = await import('./views/ImageResultCustomPickerElement.vue')
-
 	const app = createApp(
 		ImageResultCustomPickerElement,
 		{
 			inputs: {
-				input: 'cartoon, neutral background, sticker of ',
+				input: t('assistant', 'cartoon, neutral background, sticker of '),
 			},
 			providerId,
 			accessible,
