@@ -189,7 +189,7 @@ class Notifier implements INotifier {
 			case 'file_action_success':
 				$subject = $l->t('File action has finished');
 
-				$targetDirLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['source_file_id']]);
+				$sourceFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['source_file_id']]);
 				$targetFileLink = $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $params['target_file_id']]);
 				$taskLink = $params['target'];
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
@@ -216,7 +216,7 @@ class Notifier implements INotifier {
 							'id' => (string)$params['source_file_id'],
 							'name' => $params['source_file_name'],
 							'path' => $params['source_file_path'],
-							'link' => $targetDirLink,
+							'link' => $sourceFileLink,
 						],
 						'targetFile' => [
 							'type' => 'file',

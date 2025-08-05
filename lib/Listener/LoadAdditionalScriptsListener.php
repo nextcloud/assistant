@@ -49,7 +49,7 @@ class LoadAdditionalScriptsListener implements IEventListener {
 		Util::addInitScript(Application::APP_ID, Application::APP_ID . '-fileActions');
 
 		// New file menu to generate images
-		$isNewFileMenuEnabled = $this->appConfig->getValueInt(Application::APP_ID, 'newFileMenuPlugin', 1) === 1;
+		$isNewFileMenuEnabled = $this->appConfig->getValueInt(Application::APP_ID, 'new_image_file_menu_plugin', 1) === 1;
 		if ($isNewFileMenuEnabled) {
 			$hasText2Image = array_key_exists(TextToImage::ID, $availableTaskTypes);
 			$this->initialStateService->provideInitialState('new-file-generate-image', [

@@ -546,7 +546,7 @@ class AssistantService {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		$targetDirectory = $userFolder->getFirstNodeById($targetDirectoryId);
 		if (!$targetDirectory instanceof Folder) {
-			throw new NotFoundException('Target directory not found');
+			throw new NotFoundException('Target directory not found: ' . $targetDirectoryId);
 		}
 		$targetFileName = $this->getTargetFileName($taskOutputFile);
 		return $targetDirectory->newFile($targetFileName, $taskOutputFile->fopen('rb'));
