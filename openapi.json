@@ -533,7 +533,8 @@
                         "description": "Task type id. If null, tasks of all task types will be retrieved",
                         "schema": {
                             "type": "string",
-                            "nullable": true
+                            "nullable": true,
+                            "default": null
                         }
                     },
                     {
@@ -648,12 +649,14 @@
                                     "filePath": {
                                         "type": "string",
                                         "nullable": true,
+                                        "default": null,
                                         "description": "Path of the file to parse in the user's storage"
                                     },
                                     "fileId": {
                                         "type": "integer",
                                         "format": "int64",
                                         "nullable": true,
+                                        "default": null,
                                         "description": "Id of the file to parse in the user's storage"
                                     }
                                 }
@@ -1179,6 +1182,7 @@
                                     "filename": {
                                         "type": "string",
                                         "nullable": true,
+                                        "default": null,
                                         "description": "The input file name"
                                     }
                                 }
@@ -2238,6 +2242,7 @@
                                     "title": {
                                         "type": "string",
                                         "nullable": true,
+                                        "default": null,
                                         "description": "The session title"
                                     }
                                 }
@@ -2642,6 +2647,7 @@
                                     "attachments": {
                                         "type": "array",
                                         "nullable": true,
+                                        "default": null,
                                         "description": "List of attachment objects",
                                         "items": {
                                             "type": "object",
