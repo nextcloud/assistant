@@ -179,6 +179,7 @@ OC.L10N.register(
     "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "Kontextový chat zatím ještě nedokončil vytváření rejstříků všech vašich dokumentů a proto se může stát, že ještě nebude schopný zodpovídat vaše dotazy.",
     "Selective context" : "Selektivní kontext",
     "No sources referenced" : "Neodkazovány žádné zdroje",
+    "Generate image" : "Vytvořit obrázek",
     "tool" : "nástroj",
     "integration" : "napojení",
     "complete AI documentation" : "úplná dokumentace k AI",

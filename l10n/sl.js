@@ -34,6 +34,7 @@ OC.L10N.register(
     "Delete message" : "Izbriši sporočilo",
     "Choose" : "Izbor",
     "Clear Selection" : "Počisti izbor",
+    "Generate image" : "Ustvari sliko",
     "This may take a few seconds…" : "Opravilo se lahko izvaja nekaj sekund ...",
     "Cancelled" : "Preklicano",
     "Failed" : "Opravilo je spodletelo!",

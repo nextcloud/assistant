@@ -190,6 +190,7 @@ OC.L10N.register(
     "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet.",
     "Selective context" : "Selective context",
     "No sources referenced" : "No sources referenced",
+    "Generate image" : "Generate image",
     "tool" : "tool",
     "integration" : "integration",
     "complete AI documentation" : "complete AI documentation",

@@ -99,6 +99,8 @@ OC.L10N.register(
     "Error fetching default provider key" : "기본 공급자 키를 가져오는 중에 오류가 발생",
     "Error fetching providers" : "공급자를 가져오는 중에 오류가 발생",
     "Selective context" : "선택적 컨텍스트",
+    "Prompt" : "프롬프트",
+    "Generate image" : "이미지 생성",
     "tool" : "도구",
     "integration" : "통합",
     "complete AI documentation" : "완전한 AI 문서",

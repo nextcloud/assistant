@@ -19,6 +19,7 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "Delete message" : "Eliminar mensaje",
     "Choose" : "Seleccionar",
+    "Prompt" : "Promoción",
     "Cancelled" : "Cancelado",
     "Failed" : "Error",
     "Running" : "Correr",

@@ -22,6 +22,7 @@ OC.L10N.register(
     "Delete message" : "Elimina messaggio",
     "Choose" : "Scegli",
     "Clear Selection" : "Cancella selezione",
+    "Prompt" : "Prompt",
     "This may take a few seconds…" : "Potrebbe richiedere alcuni secondi...",
     "Nothing yet" : "Ancora niente",
     "Cancelled" : "Annullato",

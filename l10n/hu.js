@@ -38,6 +38,7 @@ OC.L10N.register(
     "Delete message" : "Üzenet törlése",
     "Choose" : "Válasszon",
     "Clear Selection" : "Kiválasztás törlése",
+    "Prompt" : "Prompt",
     "Assistant options saved" : "Asszisztens beállítások elmentve",
     "Failed to save assistant options" : "Nem sikerült az asszisztens beállításainak mentése",
     "This may take a few seconds…" : "Ez eltarthat néhány másodpercig ...",

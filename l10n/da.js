@@ -83,6 +83,7 @@ OC.L10N.register(
     "Choose Files/Folders" : "Vælg filer/mapper",
     "Choose" : "Vælg",
     "Clear Selection" : "Ryd markering",
+    "Generate image" : "Generer billede",
     "tool" : "værktøj",
     "integration" : "integration",
     "No provider found" : "Ingen leverandør fundet",
