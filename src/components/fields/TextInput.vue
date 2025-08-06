@@ -55,19 +55,10 @@ import isMobile from '../../mixins/isMobile.js'
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
-
-const VALID_MIME_TYPES = [
-	'text/rtf',
-	'text/plain',
-	'text/markdown',
-	'application/msword', // doc
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
-	'application/vnd.oasis.opendocument.text', // odt
-	'application/pdf', // pdf
-]
+import { VALID_TEXT_MIME_TYPES } from '../../constants.js'
 
 const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose a text file'))
-	.setMimeTypeFilter(VALID_MIME_TYPES)
+	.setMimeTypeFilter(VALID_TEXT_MIME_TYPES)
 	.setMultiSelect(false)
 	.allowDirectories(false)
 	.addButton({

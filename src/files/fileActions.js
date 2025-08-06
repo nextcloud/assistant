@@ -10,6 +10,7 @@ import CreationSvgIcon from '@mdi/svg/svg/creation.svg?raw'
 import SummarizeSymbol from '@material-symbols/svg-700/outlined/summarize.svg?raw'
 import TTSSymbol from '@material-symbols/svg-700/outlined/text_to_speech.svg?raw'
 import STTSymbol from '@material-symbols/svg-700/outlined/speech_to_text.svg?raw'
+import { VALID_AUDIO_MIME_TYPES, VALID_TEXT_MIME_TYPES } from '../constants.js'
 
 const actionIgnoreLists = [
 	'trashbin',
@@ -50,7 +51,7 @@ function registerSummarizeAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
+				&& nodes.every(({ mime }) => VALID_TEXT_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => SummarizeSymbol,
 		order: 0,
@@ -63,8 +64,8 @@ function registerSummarizeAction() {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
 				showSuccess(
-					t('assistant', 'Summarization task submitted successfully.') + ' '
-						+ t('assistant', 'You will be notified when it is ready.') + ' '
+					t('assistant', 'Summarization task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
 				)
 			} catch (error) {
@@ -89,7 +90,7 @@ function registerTtsAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
+				&& nodes.every(({ mime }) => VALID_TEXT_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => TTSSymbol,
 		order: 0,
@@ -102,8 +103,8 @@ function registerTtsAction() {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
 				showSuccess(
-					t('assistant', 'Text-to-speech task submitted successfully.') + ' '
-						+ t('assistant', 'You will be notified when it is ready.') + ' '
+					t('assistant', 'Text-to-speech task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
 				)
 			} catch (error) {
@@ -128,7 +129,7 @@ function registerSttAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => ['audio/mpeg', 'audio/wav', 'audio/mp3'].includes(mime))
+				&& nodes.every(({ mime }) => VALID_AUDIO_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => STTSymbol,
 		order: 0,
@@ -141,8 +142,8 @@ function registerSttAction() {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
 				showSuccess(
-					t('assistant', 'Transcription task submitted successfully.') + ' '
-						+ t('assistant', 'You will be notified when it is ready.') + ' '
+					t('assistant', 'Transcription task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
 				)
 			} catch (error) {
