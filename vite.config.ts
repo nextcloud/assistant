@@ -13,6 +13,7 @@ export default createAppConfig({
 	personalSettings: 'src/personalSettings.js',
 	adminSettings: 'src/adminSettings.js',
 	imageGenerationReference: 'src/imageGenerationReference.js',
+	stickerGeneration: 'src/stickerGeneration.js',
 	textGenerationReference: 'src/textGenerationReference.js',
 	speechToTextReference: 'src/speechToTextReference.js',
 	taskOutputFileReference: 'src/taskOutputFileReference.js',

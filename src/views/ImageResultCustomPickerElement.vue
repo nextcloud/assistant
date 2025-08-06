@@ -39,6 +39,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		inputs: {
+			type: Object,
+			default: () => ({}),
+			required: false,
+		},
 	},
 
 	emits: ['cancel', 'submit'],
@@ -56,6 +61,7 @@ export default {
 
 	mounted() {
 		OCA.Assistant.openAssistantForm({
+			inputs: this.inputs,
 			appId: 'assistant',
 			taskType: this.taskType,
 			closeOnResult: false,

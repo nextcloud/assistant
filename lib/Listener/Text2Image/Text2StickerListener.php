@@ -20,7 +20,7 @@ use OCP\Util;
 /**
  * @template-implements IEventListener<Event>
  */
-class Text2ImageReferenceListener implements IEventListener {
+class Text2StickerListener implements IEventListener {
 	public function __construct(
 		private IConfig $config,
 		private IAppConfig $appConfig,
@@ -35,14 +35,14 @@ class Text2ImageReferenceListener implements IEventListener {
 			return;
 		}
 
-		if ($this->appConfig->getValueString(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1'
-			&& $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1') {
+		if ($this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1'
+			&& $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1') {
 
 			// Double check that at least one provider is registered
 			$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 			$textToImageAvailable = array_key_exists(TextToImage::ID, $availableTaskTypes);
 			if ($textToImageAvailable) {
-				Util::addScript(Application::APP_ID, Application::APP_ID . '-imageGenerationReference');
+				Util::addScript(Application::APP_ID, Application::APP_ID . '-stickerGeneration');
 			}
 		}
 	}

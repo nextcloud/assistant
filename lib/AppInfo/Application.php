@@ -22,11 +22,13 @@ use OCA\Assistant\Listener\TaskFailedListener;
 use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
 use OCA\Assistant\Listener\TaskSuccessfulListener;
 use OCA\Assistant\Listener\Text2Image\Text2ImageReferenceListener;
+use OCA\Assistant\Listener\Text2Image\Text2StickerListener;
 use OCA\Assistant\Notification\Notifier;
 use OCA\Assistant\Reference\FreePromptReferenceProvider;
 use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
 use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
+use OCA\Assistant\Reference\Text2StickerProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
@@ -60,11 +62,13 @@ class Application extends App implements IBootstrap {
 		$context->registerCapability(Capabilities::class);
 
 		$context->registerReferenceProvider(Text2ImageReferenceProvider::class);
+		$context->registerReferenceProvider(Text2StickerProvider::class);
 		$context->registerReferenceProvider(FreePromptReferenceProvider::class);
 		$context->registerReferenceProvider(SpeechToTextReferenceProvider::class);
 		$context->registerReferenceProvider(TaskOutputFileReferenceProvider::class);
 
 		$context->registerEventListener(RenderReferenceEvent::class, Text2ImageReferenceListener::class);
+		$context->registerEventListener(RenderReferenceEvent::class, Text2StickerListener::class);
 		$context->registerEventListener(RenderReferenceEvent::class, FreePromptReferenceListener::class);
 		$context->registerEventListener(RenderReferenceEvent::class, SpeechToTextReferenceListener::class);
 		$context->registerEventListener(RenderReferenceEvent::class, TaskOutputFileReferenceListener::class);
