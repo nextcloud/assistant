@@ -64,8 +64,8 @@ function registerSummarizeAction() {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
 				showSuccess(
-					t('assistant', 'Summarization task submitted successfully.') + ' '
-						+ t('assistant', 'You will be notified when it is ready.') + ' '
+					t('assistant', 'Summarization task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
 				)
 			} catch (error) {
@@ -103,8 +103,8 @@ function registerTtsAction() {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
 				showSuccess(
-					t('assistant', 'Text-to-speech task submitted successfully.') + ' '
-						+ t('assistant', 'You will be notified when it is ready.') + ' '
+					t('assistant', 'Text-to-speech task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
 				)
 			} catch (error) {
@@ -142,8 +142,8 @@ function registerSttAction() {
 				const response = await axios.post(url)
 				console.debug('taskId', response.data.ocs.data.taskId)
 				showSuccess(
-					t('assistant', 'Transcription task submitted successfully.') + ' '
-						+ t('assistant', 'You will be notified when it is ready.') + ' '
+					t('assistant', 'Transcription task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
 				)
 			} catch (error) {
