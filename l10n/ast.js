@@ -33,6 +33,7 @@ OC.L10N.register(
     "You" : "Tu",
     "Delete message" : "Desaniciar el mensaxe",
     "Choose" : "Escoyer",
+    "Generate image" : "Xenerar una imaxe",
     "Assistant options saved" : "Guardáronse les opciones del asistente",
     "Getting results…" : "Consiguiendo los resultaos…",
     "Cancelled" : "Encaboxáu",

@@ -187,6 +187,8 @@
     "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "El Chat de contexto no ha terminado de indexar todos sus documentos, no será capaz de responder sus preguntas, todavía.",
     "Selective context" : "Contexto selectivo",
     "No sources referenced" : "No se citaron fuentes",
+    "Prompt" : "Prompt",
+    "Describe the image you want to generate" : "Describa la imagen que quiere generar",
     "Generate image" : "Generar imagen",
     "tool" : "herramienta",
     "integration" : "integración",

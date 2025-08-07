@@ -83,6 +83,8 @@ OC.L10N.register(
     "Choose Files/Folders" : "Vælg filer/mapper",
     "Choose" : "Vælg",
     "Clear Selection" : "Ryd markering",
+    "Prompt" : "Prompt",
+    "Describe the image you want to generate" : "Beskriv det billede du vil generere",
     "Generate image" : "Generer billede",
     "tool" : "værktøj",
     "integration" : "integration",

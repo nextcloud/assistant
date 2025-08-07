@@ -22,6 +22,7 @@ OC.L10N.register(
     "Submit" : "Изпращане",
     "Delete message" : "Изтриване на съобщението",
     "Choose" : "Изберете",
+    "Prompt" : "Подкана",
     "Cancelled" : "Отказано",
     "Failed" : "Неуспешно",
     "Running" : "Бягане",
