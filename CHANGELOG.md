@@ -10,6 +10,35 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.6.0 – 2025-08-07
+
+### Added
+- Audio chat for the Chat UI @julien-nc [#292] (https://github.com/nextcloud/assistant/pull/292)
+- Param in openAssistantForm to restrict which task types are displayed @julien-nc [#287] (https://github.com/nextcloud/assistant/pull/287)
+- Categories and icons for task types @lukasdotcom [#311] (https://github.com/nextcloud/assistant/pull/311)
+- File actions for text, audio and markdown files @julien-nc [#312] (https://github.com/nextcloud/assistant/pull/312)
+- UI hint when task is taking too long @lukasdotcom [#315] (https://github.com/nextcloud/assistant/pull/315)
+- Generate image action in "New file" menu @andrey18106 [#322] (https://github.com/nextcloud/assistant/pull/322)
+- Support for more file types to file actions @lukasdotcom [#326] (https://github.com/nextcloud/assistant/pull/326)
+- Sticker generation smart picker @lukasdotcom [#323] (https://github.com/nextcloud/assistant/pull/323)
+- AI hint in Chat with AI @lukasdotcom [#329] (https://github.com/nextcloud/assistant/pull/329)
+
+### Changed
+- Migrate to Vue 3 and nextcloud/vue 9 @julien-nc [#258] (https://github.com/nextcloud/assistant/pull/258)
+- Use outline icons where it makes sense @julien-nc [#288] (https://github.com/nextcloud/assistant/pull/288)
+- Improve error messages @marcelklehr [#242] (https://github.com/nextcloud/assistant/pull/242)
+- updated php dependencies
+
+### Fixed
+- UI adjustments @julien-nc [#291] (https://github.com/nextcloud/assistant/pull/291)
+- Chat user instruction handling @janepie [#297] (https://github.com/nextcloud/assistant/pull/297)
+- explicitly set default sources when creating new session @hamza221 [295] (https://github.com/nextcloud/assistant/pull/295)
+- Reset the assistant form when pollTask response is 404 @julien-nc [#320] (https://github.com/nextcloud/assistant/pull/320)
+- do not set a default for longtext db fields @kyteinsky [#309] (https://github.com/nextcloud/assistant/pull/309)
+
+
+
+
 ## 2.5.0 – 2025-06-26
 
 ### Added
