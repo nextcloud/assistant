@@ -52,6 +52,7 @@
     "{targetFile} has been generated in {targetDirectory}" : "{targetFile} було створено в {targetDirectory}",
     "Image file generation has failed" : "Помилка під час створення файлу зображення",
     "Generation of a new image file in {targetDirectory} has failed" : "Створення нового файлу зображення в {targetDirectory} не вдалося",
+    "AI sticker generation" : "Створення наклейок із штучним інтелектом",
     "Assistant audio transcription" : "Асистент аудіо транскрипції",
     "Assistant document generation" : "Асистент створення документів",
     "Nextcloud Calendar" : "Nextcloud Календар",
@@ -100,6 +101,7 @@
     "Enable AI text generation in smart picker" : "Ввімкніть генерацію тексту ШІ в розумному пікапі",
     "To enable this feature, please install an AI task processing provider for the free prompt task type:" : "Щоб увімкнути цю функцію, будь ласка, встановіть постачальника послуг з обробки завдань зі штучним інтелектом для безкоштовного типу підказок:",
     "Enable text-to-image in smart picker" : "Ввімкніть перетворення тексту на зображення в розумному пікері",
+    "Enable text-to-sticker in smart picker" : "Увімкнути перетворення тексту в наклейку в розумному виборі",
     "To enable this feature, please install a text-to-image provider:" : "Щоб увімкнути цю функцію, будь ласка, встановіть програму для перетворення тексту в зображення:",
     "Enable speech-to-text in smart picker" : "Ввімкніть перетворення мови на текст у розумному збирачі",
     "To enable this feature, please install a speech-to-text provider:" : "Щоб увімкнути цю функцію, будь ласка, встановіть постачальника послуг з перетворення мови на текст:",
@@ -214,6 +216,7 @@
     "Failed to save assistant options" : "Не вдалося зберегти параметри помічника",
     "Auto-play audio chat responses" : "Автоматичне відтворення відповідей у аудіочаті",
     "Enable AI image generation in smart picker" : "Ввімкніть генерацію зображень зі штучним інтелектом у розумному пікапі",
+    "Enable AI sticker generation in smart picker" : "Увімкнути генерацію AI-стікерів у смарт-пікері",
     "Enable AI transcription in smart picker" : "Ввімкніть ШІ-транскрипцію в розумному пікапі",
     "No suitable providers are available. They must first be enabled by your administrator." : "Немає відповідних провайдерів. Спочатку їх повинен увімкнути ваш адміністратор.",
     "Configured backends" : "Налаштовані бекенди",
@@ -301,6 +304,7 @@
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
     "Transcribe audio" : "Транскрибувати аудіо",
     "Transcription task submitted successfully." : "Завдання з транскрипції успішно відправлено.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо»."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо».",
+    "cartoon, neutral background, sticker of " : "мультфільм, нейтральний фон, наклейка"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

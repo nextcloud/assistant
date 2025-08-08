@@ -54,6 +54,7 @@ OC.L10N.register(
     "{targetFile} has been generated in {targetDirectory}" : "{targetFile} 已於 {targetDirectory} 產生",
     "Image file generation has failed" : "影像檔案產生失敗",
     "Generation of a new image file in {targetDirectory} has failed" : "在 {targetDirectory} 中產生新影像檔失敗",
+    "AI sticker generation" : "人工智慧貼圖產生",
     "Assistant audio transcription" : "小幫手音訊轉錄",
     "Assistant document generation" : "小幫手文件產生",
     "Nextcloud Calendar" : "Nextcloud 日曆",
@@ -102,6 +103,7 @@ OC.L10N.register(
     "Enable AI text generation in smart picker" : "在智慧型挑選程式中啟用人工智慧文字產生",
     "To enable this feature, please install an AI task processing provider for the free prompt task type:" : "要啟用此功能，請安裝免費提示任務類型的人工智慧任務處理提供者：",
     "Enable text-to-image in smart picker" : "在智慧型挑選程式中啟用文字轉影像",
+    "Enable text-to-sticker in smart picker" : "在智慧型挑選程式中啟用文字轉貼圖",
     "To enable this feature, please install a text-to-image provider:" : "要啟用此功能，請安裝文字轉影像提供者：",
     "Enable speech-to-text in smart picker" : "在智慧型挑選程式中啟用語音轉文字",
     "To enable this feature, please install a speech-to-text provider:" : "要啟用此功能，請安裝語音轉文字提供者：",
@@ -216,6 +218,7 @@ OC.L10N.register(
     "Failed to save assistant options" : "儲存小幫手選項失敗",
     "Auto-play audio chat responses" : "自動播放音訊聊天回應",
     "Enable AI image generation in smart picker" : "在智慧型挑選程式中啟用人工智慧影像產生",
+    "Enable AI sticker generation in smart picker" : "在智慧型挑選程式中啟用人工智慧貼圖產生",
     "Enable AI transcription in smart picker" : "在智慧型挑選程式中啟用人工智慧轉錄",
     "No suitable providers are available. They must first be enabled by your administrator." : "沒有可用的合適提供者。它們必須先由您的管理緣起用。",
     "Configured backends" : "已設定的後端",
@@ -303,6 +306,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
     "Transcribe audio" : "轉錄音訊",
     "Transcription task submitted successfully." : "轉錄任務已成功遞交。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。",
+    "cartoon, neutral background, sticker of " : "卡通、中性背景、……的貼圖"
 },
 "nplurals=1; plural=0;");
