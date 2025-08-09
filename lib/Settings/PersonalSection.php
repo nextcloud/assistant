@@ -35,7 +35,7 @@ class PersonalSection implements IIconSection {
 	 * @return string
 	 */
 	public function getName(): string {
-		return $this->l->t('Artificial Intelligence');
+		return $this->l->t('Assistant');
 	}
 
 	/**
