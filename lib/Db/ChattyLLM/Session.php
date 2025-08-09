@@ -13,27 +13,27 @@ use OCP\AppFramework\Db\Entity;
 use OCP\DB\Types;
 
 /**
- * @method string getUserId()
- * @method void setUserId(string $userId)
- * @method \string|\null getTitle()
- * @method \void setTitle(?\string $title)
- * @method \int|\null getTimestamp()
- * @method \void setTimestamp(?\int $timestamp)
- * @method string|null getAgencyConversationToken()
- * @method void setAgencyConversationToken(?string $agencyConversationToken)
- * @method string|null getAgencyPendingActions()
- * @method void setAgencyPendingActions(?string $agencyPendingActions)
+ * @method \string getUserId()
+ * @method \void setUserId(string $userId)
+ * @method \string|null getTitle()
+ * @method \void setTitle(?string $title)
+ * @method \int getTimestamp()
+ * @method \void setTimestamp(int $timestamp)
+ * @method \string|null getAgencyConversationToken()
+ * @method \void setAgencyConversationToken(?string $agencyConversationToken)
+ * @method \string|null getAgencyPendingActions()
+ * @method \void setAgencyPendingActions(?string $agencyPendingActions)
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */
 	protected $userId;
-	/** @var string */
+	/** @var ?string */
 	protected $title;
 	/** @var int */
 	protected $timestamp;
-	/** @var string */
+	/** @var ?string */
 	protected $agencyConversationToken;
-	/** @var string */
+	/** @var ?string */
 	protected $agencyPendingActions;
 
 	public static $columns = [

@@ -10,11 +10,10 @@ namespace OCA\Assistant\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
-use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version020600Date20250704145036 extends SimpleMigrationStep {
+class Version020601Date20250709130151 extends SimpleMigrationStep {
 
 	/**
 	 * @param IOutput $output
@@ -27,12 +26,18 @@ class Version020600Date20250704145036 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 		$schemaChanged = false;
 
+		// some MariaDB/MySQL instances upgraded successfully to 2.6.0 with notNull=true
+		// this makes sure we bring everybody to the same notNull value for sources and attachments
 		if ($schema->hasTable('assistant_chat_msgs')) {
 			$table = $schema->getTable('assistant_chat_msgs');
-			if (!$table->hasColumn('attachments')) {
-				$table->addColumn('attachments', Types::TEXT, [
-					'notnull' => false,
-				]);
+			if ($table->hasColumn('sources')) {
+				$column = $table->getColumn('sources');
+				$column->setNotnull(false);
+				$schemaChanged = true;
+			}
+			if ($table->hasColumn('attachments')) {
+				$column = $table->getColumn('attachments');
+				$column->setNotnull(false);
 				$schemaChanged = true;
 			}
 		}
