@@ -31,7 +31,7 @@ class Version020500Date20250425125359 extends SimpleMigrationStep {
 			$table = $schema->getTable('assistant_chat_msgs');
 			if (!$table->hasColumn('sources')) {
 				$table->addColumn('sources', Types::TEXT, [
-					'notnull' => true,
+					'notnull' => false,
 				]);
 				$schemaChanged = true;
 			}

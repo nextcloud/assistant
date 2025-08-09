@@ -85,7 +85,9 @@ class Message extends Entity implements \JsonSerializable {
 			'timestamp' => $this->timestamp,
 			'ocp_task_id' => $this->ocpTaskId,
 			'sources' => $this->sources,
-			'attachments' => json_decode($this->attachments, true) ?: [],
+			'attachments' => $this->attachments === null
+				? []
+				: (json_decode($this->attachments, true) ?: []),
 		];
 	}
 }
