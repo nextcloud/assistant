@@ -23,10 +23,10 @@ use OCP\DB\Types;
  * @method \void setTimestamp(int $timestamp)
  * @method \int getOcpTaskId()
  * @method \void setOcpTaskId(int $ocpTaskId)
- * @method \string getSources()
- * @method \void setSources(string $sources)
- * @method \string getAttachments()
- * @method \void setAttachments(string $attachments)
+ * @method \string|null getSources()
+ * @method \void setSources(?string $sources)
+ * @method \string|null getAttachments()
+ * @method \void setAttachments(?string $attachments)
  */
 class Message extends Entity implements \JsonSerializable {
 	/** @var int */
@@ -39,9 +39,9 @@ class Message extends Entity implements \JsonSerializable {
 	protected $timestamp;
 	/** @var int */
 	protected $ocpTaskId;
-	/** @var string */
+	/** @var ?string */
 	protected $sources;
-	/** @var string */
+	/** @var ?string */
 	protected $attachments;
 
 	public static $columns = [
