@@ -11,14 +11,11 @@ registerCustomPickerElement('assistant_sticker_generation', async (el, { provide
 	const app = createApp(
 		ImageResultCustomPickerElement,
 		{
-			inputs: {
-				input: t('assistant', 'cartoon, neutral background, sticker of '),
-			},
 			providerId,
 			accessible,
-			taskType: 'core:text2image',
-			outputKey: 'images',
-			multipleImages: true,
+			taskType: 'assistant:text2sticker',
+			outputKey: 'image',
+			multipleImages: false,
 		},
 	)
 	app.mixin({ methods: { t, n } })
