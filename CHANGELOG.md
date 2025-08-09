@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.6.1 – 2025-08-09
+
+### Fixed
+
+- Fix adding attachments and sources with notNull=true and no default value making the migration crash for postgres @julien-nc [#335](https://github.com/nextcloud/assistant/pull/335)
+
 ## 2.6.0 – 2025-08-07
 
 ### Added
