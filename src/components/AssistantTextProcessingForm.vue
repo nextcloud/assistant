@@ -281,9 +281,13 @@ export default {
 			return null
 		},
 		sortedTaskTypes() {
-			const filteredTaskTypes = this.taskTypeIdList !== null
+			let filteredTaskTypes = this.taskTypeIdList !== null
 				? this.taskTypes.slice().filter(t => this.taskTypeIdList.find(tt => tt === t.id))
 				: this.taskTypes.slice()
+			const hasImageTakType = filteredTaskTypes.find(tt => tt.id === 'core:text2image')
+			if (!hasImageTakType) {
+				filteredTaskTypes = filteredTaskTypes.filter(tt => tt.id !== 'assistant:text2sticker')
+			}
 
 			return filteredTaskTypes.sort((a, b) => {
 				const prioA = a.priority
