@@ -4,7 +4,6 @@ OC.L10N.register(
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "Nextcloud Mail" : "Correo de Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
-    "Artificial Intelligence" : "Inteligencia artificial",
     "Assistant" : "Asistente",
     "Try again" : "Inténtalo de nuevo",
     "Close" : "Cerrar",

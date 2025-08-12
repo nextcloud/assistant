@@ -13,7 +13,6 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Chat with AI" : "Klepet z UI",
     "Generate text" : "Ustvari besedilo",
-    "Artificial Intelligence" : "Umetna inteligenca",
     "Launch this task again" : "Znova zaženi nalogo",
     "Launch a task" : "Zaženi nalogo",
     "Close" : "Zapri",

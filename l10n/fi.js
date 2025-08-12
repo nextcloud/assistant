@@ -8,7 +8,6 @@ OC.L10N.register(
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud-sähköposti",
     "Nextcloud Talk" : "Nextcloud Talk",
-    "Artificial Intelligence" : "Tekoäly",
     "Assistant" : "Avustaja",
     "Close" : "Sulje",
     "Less" : "Vähemmän",

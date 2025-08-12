@@ -37,7 +37,6 @@ OC.L10N.register(
     "Chat with an AI model." : "AI 모델과 채팅하세요",
     "Generate text" : "텍스트 생성",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "예를 들어 프레젠테이션의 첫 번째 초안을 작성하고, 프레젠테이션에 대한 제안을 제공하고, 동료에게 답장 초안을 작성하는 등의 요청을 어시스턴트에게 보냅니다.",
-    "Artificial Intelligence" : "인공지능",
     "Assistant" : "어시스턴트",
     "Process and transform text" : "텍스트 처리 및 변환",
     "Assistant admin options saved" : "보조 관리 옵션이 저장됨",

@@ -9,7 +9,6 @@ OC.L10N.register(
     "Result: %1$s" : "Rezultatas: %1$s",
     "View results" : "Rodyti rezultatus",
     "Nextcloud Mail" : "Nextcloud el. paštas",
-    "Artificial Intelligence" : "Dirbtinis intelektas",
     "Assistant" : "Asistentas.",
     "Hide advanced options" : "Slėpti išplėstines parinktis",
     "Show advanced options" : "Rodyti išplėstines parinktis",

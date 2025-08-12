@@ -9,7 +9,6 @@ OC.L10N.register(
     "OpenStreetMap" : "Приложение OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud Имейл",
     "OpenProject" : "OpenProject",
-    "Artificial Intelligence" : "Изкуствен интелект",
     "Try again" : "Опитай отново",
     "Close" : "Затваряне",
     "Less" : "По-малко",

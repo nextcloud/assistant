@@ -15,7 +15,6 @@ OC.L10N.register(
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Αλληλογραφία Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
-    "Artificial Intelligence" : "Τεχνητή νοημοσύνη",
     "Process and transform text" : "Επεξεργασία και μετατροπή κειμένου",
     "Assistant admin options saved" : "Αποθηκεύτηκαν οι επιλογές βοηθού του διαχειριστή",
     "Failed to save assistant admin options" : "Αποτυχία αποθήκευσης επιλογών βοηθού διαχειριστή",

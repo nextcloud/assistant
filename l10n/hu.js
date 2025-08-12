@@ -18,7 +18,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Levelezés",
     "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Beszélgetés",
-    "Artificial Intelligence" : "Mesterséges Intelligencia",
     "Assistant" : "Asszisztens",
     "Process and transform text" : "Szöveg feldolgozása és átalakítása",
     "Assistant admin options saved" : "Asszisztens rendszergazdai beállítások elmentve",

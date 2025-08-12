@@ -9,7 +9,6 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Talk",
-    "Artificial Intelligence" : "Intelligenza artificiale",
     "Assistant" : "Assistente",
     "Close" : "Chiudi",
     "Less" : "Meno",
