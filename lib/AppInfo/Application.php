@@ -31,6 +31,8 @@ use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\Reference\Text2StickerProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
+use OCA\Assistant\TaskProcessing\TextToStickerProvider;
+use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -94,6 +96,8 @@ class Application extends App implements IBootstrap {
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')) {
 			$context->registerTaskProcessingProvider(ContextAgentAudioInteractionProvider::class);
 		}
+		$context->registerTaskProcessingTaskType(TextToStickerTaskType::class);
+		$context->registerTaskProcessingProvider(TextToStickerProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {
