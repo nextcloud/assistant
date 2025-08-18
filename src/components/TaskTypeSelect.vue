@@ -217,7 +217,7 @@ export default {
 				return 'translate'
 			} else if (id.startsWith('richdocuments')) {
 				return 'generate'
-			} else if (id.includes('image')) {
+			} else if (id.includes('image') || id.includes('sticker')) {
 				return 'image'
 			} else if (id.includes('audio') || id.includes('speech')) {
 				return 'audio'
