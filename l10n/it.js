@@ -42,6 +42,7 @@ OC.L10N.register(
     "Upload from device" : "Carica dal dispositivo",
     "Advanced" : "Avanzate",
     "Copy" : "Copia",
-    "Summarize" : "Riassumi"
+    "Summarize" : "Riassumi",
+    "Text to speech" : "Testo in voce"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
