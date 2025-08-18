@@ -64,7 +64,7 @@ class TextToStickerTaskType implements ITaskType {
 		return [
 			'image' => new ShapeDescriptor(
 				$this->l->t('Output stickers'),
-				$this->l->t('The generated stickers'),
+				$this->l->t('The generated sticker'),
 				EShapeType::Image,
 			),
 		];

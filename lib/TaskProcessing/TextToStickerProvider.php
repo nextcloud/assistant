@@ -33,7 +33,7 @@ class TextToStickerProvider implements ISynchronousProvider {
 	}
 
 	public function getName(): string {
-		return $this->l->t('Assistant fallback');
+		return $this->l->t('Assistant');
 	}
 
 	public function getTaskTypeId(): string {
@@ -97,13 +97,13 @@ class TextToStickerProvider implements ISynchronousProvider {
 			$taskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 			$images = $taskOutput['images'];
 			if (empty($images)) {
-				throw new RuntimeException('No images generated');
+				throw new RuntimeException('No sticker generated');
 			}
 			$outputImage = $this->taskProcessingService->getOutputFileContent($images[0]);
 			return ['image' => $outputImage];
 		} catch (Exception $e) {
-			$this->logger->warning('Generating image failed with: ' . $e->getMessage(), ['exception' => $e]);
-			throw new RuntimeException('Generating image failed with: ' . $e->getMessage());
+			$this->logger->warning('Generating sticker failed with: ' . $e->getMessage(), ['exception' => $e]);
+			throw new RuntimeException('Generating sticker failed with: ' . $e->getMessage());
 		}
 	}
 }
