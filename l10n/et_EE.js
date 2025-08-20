@@ -176,6 +176,8 @@ OC.L10N.register(
     "Selective context" : "Valikuline kontekst",
     "No sources referenced" : "Ühtegi allikat pole viidatud",
     "Describe the image you want to generate" : "Kirjelda loodavat pilti",
+    "No providers found" : "Teenusepakkujaid ei leidu",
+    "Image generation is not available." : "Pildiloome pole saadaval.",
     "Generate image" : "Pildiloome",
     "tool" : "tarvik",
     "integration" : "lõiming",
