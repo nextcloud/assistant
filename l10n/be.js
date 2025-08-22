@@ -1,0 +1,22 @@
+OC.L10N.register(
+    "assistant",
+    {
+    "User not found" : "Карыстальнік не знойдзены",
+    "Session not found" : "Сеанс не знойдзены",
+    "Assistant" : "Памочнік",
+    "Type or paste the text to generate a headline for" : "Увядзіце або ўстаўце тэкст, для якога трэба згенерыраваць загаловак",
+    "Close" : "Закрыць",
+    "More" : "Яшчэ",
+    "Cancel" : "Скасаваць",
+    "Delete" : "Выдаліць",
+    "Cancel editing" : "Скасаваць рэдагаванне",
+    "You" : "Вы",
+    "Delete message" : "Выдаліць паведамленне",
+    "Cancelled" : "Скасавана",
+    "Translate" : "Перакласці",
+    "Upload from device" : "Запампаваць з прылады",
+    "Clear value" : "Ачысціць значэнне",
+    "Copy" : "Капіяваць",
+    "Upload file" : "Запампаваць файл"
+},
+"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
