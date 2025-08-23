@@ -28,6 +28,7 @@ OC.L10N.register(
     "No file selected" : "Нема избрано датотека",
     "Upload from device" : "Прикачи од уред",
     "Advanced" : "Напредно",
+    "Copy" : "Копирај",
     "Upload file" : "Прикачи датотека"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");
