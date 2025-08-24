@@ -11,6 +11,7 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Assistente",
     "Prompt" : "Prompt",
+    "Try again" : "Riprova",
     "Close" : "Chiudi",
     "Less" : "Meno",
     "More" : "Altro",
