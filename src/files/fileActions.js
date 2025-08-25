@@ -17,7 +17,7 @@ const actionIgnoreLists = [
 	'files.public',
 ]
 
-function registerGroupAction() {
+function registerGroupAction(mimeTypes) {
 	const groupAction = new FileAction({
 		id: 'assistant-group',
 		displayName: (nodes) => {
@@ -28,7 +28,7 @@ function registerGroupAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-			// && nodes.every(({ mime }) => ['text/plain', 'text/markdown'].includes(mime))
+				&& nodes.every(({ mime }) => mimeTypes.includes(mime))
 		},
 		iconSvgInline: () => CreationSvgIcon,
 		order: 0,
@@ -163,7 +163,14 @@ const ttsAvailable = loadState('assistant', 'tts-available', false)
 
 if (assistantEnabled) {
 	if (summarizeAvailable || sttAvailable || ttsAvailable) {
-		registerGroupAction()
+		const groupMimeTypes = []
+		if (summarizeAvailable || ttsAvailable) {
+			groupMimeTypes.push(...VALID_TEXT_MIME_TYPES)
+		}
+		if (sttAvailable) {
+			groupMimeTypes.push(...VALID_AUDIO_MIME_TYPES)
+		}
+		registerGroupAction(groupMimeTypes)
 	}
 	if (sttAvailable) {
 		registerSttAction()
