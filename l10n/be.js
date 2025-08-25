@@ -14,6 +14,7 @@ OC.L10N.register(
     "Submit" : "Адправіць",
     "You" : "Вы",
     "Delete message" : "Выдаліць паведамленне",
+    "Choose" : "Выбраць",
     "Cancelled" : "Скасавана",
     "Translate" : "Перакласці",
     "Upload from device" : "Запампаваць з прылады",
