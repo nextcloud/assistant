@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Failed to notify when ready; unknown user" : "Neizdevās paziņot, kad gatavs; nezināms lietotāj",
     "Send an email" : "Sūtīt e-pasta ziņojumu",
     "Add a calendar task" : "Pievienot kalendāra uzdevumu",
     "User not found" : "Lietotājs nav atrasts",
@@ -32,6 +33,7 @@ OC.L10N.register(
     "Share this media" : "Kopīgot šo informācijas nesēju",
     "Clear value" : "Notīrīt vērtību",
     "Advanced" : "Paplašināti",
-    "Copy" : "Kopēt"
+    "Copy" : "Kopēt",
+    "Failed to launch the AI file action" : "Neizdevās palaist AI datnes darbību"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");
