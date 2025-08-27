@@ -16,6 +16,7 @@ OC.L10N.register(
     "Delete" : "Izdzēst",
     "Hello there! What can I help you with today?" : "Sveiciens! Ar ko šodien varu palīdzēt?",
     "Submit" : "Iesniegt",
+    "You" : "Tu",
     "Choose" : "Izvēlēties",
     "Clear Selection" : "Notīrīt atlasi",
     "Cancelled" : "Atcelts",

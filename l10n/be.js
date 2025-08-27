@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "User not found" : "Карыстальнік не знойдзены",
     "Session not found" : "Сеанс не знойдзены",
+    "OpenProject" : "OpenProject",
     "Assistant" : "Памочнік",
     "Try again" : "Паспрабаваць яшчэ раз",
     "Type or paste the text to generate a headline for" : "Увядзіце або ўстаўце тэкст, для якога трэба згенерыраваць загаловак",
