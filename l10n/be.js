@@ -17,6 +17,7 @@ OC.L10N.register(
     "You" : "Вы",
     "Delete message" : "Выдаліць паведамленне",
     "Choose" : "Выбраць",
+    "Clear Selection" : "Ачысціць выбар",
     "Cancelled" : "Скасавана",
     "Translate" : "Перакласці",
     "Start recording" : "Пачаць запіс",
