@@ -39,19 +39,17 @@ class Capabilities implements IPublicCapability {
 	 *         version: string,
 	 *         enabled?: bool
 	 *     },
-	 *     declarativeui?: array{
-	 *         hooks: list<array{
-	 *             type: 'context-menu',
-	 *             endpoints: list<array{
+	 *     declarativeui?: array<string, array{
+	 *         context-menu: list<array{
 	 *                 name: string,
 	 *                 url: string,
-	 *                 filter: string,
+	 *                 method: string,
+	 *                 mimetype_filters: string,
 	 *                 android_icon: string,
 	 *                 desktop_icon: string,
 	 *                 ios_icon: string,
-	 *             }>
 	 *         }>
-	 *	   },
+	 *	   }>,
 	 * }
 	 */
 	public function getCapabilities(): array {
@@ -80,60 +78,73 @@ class Capabilities implements IPublicCapability {
 
 		if ($summarizeAvailable || $sttAvailable || $ttsAvailable) {
 			$capabilities['declarativeui'] = [
-				'hooks' => [
-					[
-						'type' => 'context-menu',
-						'endpoints' => [],
-					],
+				Application::APP_ID => [
+					'context-menu' => [],
 				],
 			];
 
+			$textMimeTypes = [
+				'text/',
+				'application/msword',
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				'application/vnd.oasis.opendocument.text',
+				'application/pdf',
+			];
 			if ($summarizeAvailable) {
+				$url = $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
+					'apiVersion' => 'v1',
+					'fileId' => '123456789',
+					'taskTypeId' => TextToTextSummary::ID,
+				]);
+				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
 					'name' => $this->l->t('Summarize'),
-					'url' => $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
-						'apiVersion' => 'v1',
-						'fileId' => '{s}',
-						'taskTypeId' => TextToTextSummary::ID,
-					]),
-					'filter' => 'text/',
+					'url' => $url,
+					'method' => 'POST',
+					'mimetype_filters' => implode(', ', $textMimeTypes),
 					'android_icon' => 'creation',
 					'ios_icon' => 'creation',
 					'desktop_icon' => 'creation',
 				];
-				$capabilities['declarativeui']['hooks'][0]['endpoints'][] = $endpoint;
+				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
 
 			if ($sttAvailable) {
+				$url = $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
+					'apiVersion' => 'v1',
+					'fileId' => '123456789',
+					'taskTypeId' => \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
+				]);
+				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
 					'name' => $this->l->t('Transcribe audio'),
-					'url' => $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
-						'apiVersion' => 'v1',
-						'fileId' => '{s}',
-						'taskTypeId' => \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
-					]),
-					'filter' => 'audio/',
+					'url' => $url,
+					'method' => 'POST',
+					'mimetype_filters' => 'audio/',
 					'android_icon' => 'speech_to_text',
 					'ios_icon' => 'speech_to_text',
 					'desktop_icon' => 'speech_to_text',
 				];
-				$capabilities['declarativeui']['hooks'][0]['endpoints'][] = $endpoint;
+				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
 
 			if ($ttsAvailable) {
+				$url = $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
+					'apiVersion' => 'v1',
+					'fileId' => '123456789',
+					'taskTypeId' => AudioToText::ID,
+				]);
+				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
 					'name' => $this->l->t('Text to speech'),
-					'url' => $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
-						'apiVersion' => 'v1',
-						'fileId' => '{s}',
-						'taskTypeId' => AudioToText::ID,
-					]),
-					'filter' => 'text/',
+					'url' => $url,
+					'method' => 'POST',
+					'mimetype_filters' => implode(', ', $textMimeTypes),
 					'android_icon' => 'text_to_speech',
 					'ios_icon' => 'text_to_speech',
 					'desktop_icon' => 'text_to_speech',
 				];
-				$capabilities['declarativeui']['hooks'][0]['endpoints'][] = $endpoint;
+				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
 		}
 
