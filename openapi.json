@@ -212,6 +212,55 @@
                                 "type": "boolean"
                             }
                         }
+                    },
+                    "declarativeui": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                                "context-menu"
+                            ],
+                            "properties": {
+                                "context-menu": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "name",
+                                            "url",
+                                            "method",
+                                            "mimetype_filters",
+                                            "android_icon",
+                                            "desktop_icon",
+                                            "ios_icon"
+                                        ],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            },
+                                            "method": {
+                                                "type": "string"
+                                            },
+                                            "mimetype_filters": {
+                                                "type": "string"
+                                            },
+                                            "android_icon": {
+                                                "type": "string"
+                                            },
+                                            "desktop_icon": {
+                                                "type": "string"
+                                            },
+                                            "ios_icon": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
