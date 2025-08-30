@@ -25,7 +25,7 @@ OC.L10N.register(
     "Translate" : "Tulkot",
     "Other" : "Cits",
     "Start recording" : "Uzsākt ierakstīšanu",
-    "Choose a file" : "Izvēlieties datni",
+    "Choose a file" : "Izvēlēties datni",
     "No file selected" : "Nav atlasīta neviena datne",
     "Upload from device" : "Augšupielādēt no ierīces",
     "Remove this media" : "Noņemt šo informācijas nesēju",
