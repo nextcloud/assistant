@@ -84,7 +84,7 @@
 
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
-import DownloadOutlineIcon from 'vue-material-design-icons/DownloadOutline.vue'
+import DownloadOutlineIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
 
