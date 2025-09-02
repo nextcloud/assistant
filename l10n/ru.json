@@ -112,6 +112,8 @@
     "Choose file" : "Выберите файл",
     "Choose a file" : "Выберите файл",
     "No file selected" : "Файлы не выбраны",
+    "Click this to open the file" : "Нажмите здесь, чтобы открыть файл.",
+    "This output file has been saved in {path}" : "Этот выходной файл был сохранен в {path}",
     "Could not copy to clipboard" : "Не удалось скопировать в буфер обмена.",
     "Upload from device" : "Загрузить с устройства",
     "Select from Nextcloud" : "Выбрать из Nextcloud",
