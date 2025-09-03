@@ -12,7 +12,7 @@
 				:menu-name="variants.text"
 				:container="$refs.taskTypeSelect"
 				:primary="isCategorySelected(variants)"
-				:class="{ categoryWithSubSelected: isCategorySelected(variants) }"
+				:class="{ categoryWithSubSelected: useModernStyle && isCategorySelected(variants) }"
 				@click="onMenuCategorySelected(variants)">
 				<NcActionButton v-for="t in variants.tasks"
 					:key="t.id"
@@ -31,8 +31,8 @@
 			</NcActions>
 			<NcButton v-else
 				:key="variants.id + '-button'"
-				variant="secondary"
-				:class="{ categorySelected: isCategorySelected(variants) }"
+				:variant="isCategorySelected(variants) ? 'primary' : 'secondary'"
+				:class="{ categorySelected: useModernStyle && isCategorySelected(variants) }"
 				:title="variants.text"
 				@click="onMenuCategorySelected(variants)">
 				<template #icon>
@@ -90,6 +90,8 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcAssistantButton from '@nextcloud/vue/components/NcAssistantButton'
 
+import { loadState } from '@nextcloud/initial-state'
+
 export default {
 	name: 'TaskTypeSelect',
 
@@ -127,6 +129,7 @@ export default {
 	data() {
 		return {
 			categorySubmenu: null,
+			useModernStyle: loadState('assistant', 'use-modern-style', false),
 		}
 	},
 
