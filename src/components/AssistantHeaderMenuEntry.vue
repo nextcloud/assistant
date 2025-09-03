@@ -6,7 +6,7 @@
 	<NcHeaderButton
 		id="assistant"
 		:aria-label="t('assistant', 'Nextcloud Assistant')"
-		:description="t('assistant', 'Nextcloud Assistant desc')"
+		:description="t('assistant', 'Nextcloud Assistant header menu entry')"
 		@click="$emit('click')">
 		<template #icon>
 			<AssistantIcon :size="20" />

@@ -285,8 +285,7 @@ export default {
 	.categoryWithSubSelected button {
 		background: var(--color-element-assistant) !important;
 		color: white !important;
-		border: none !important;
-		padding-block: 0 !important;
+		border-color: #40519A !important;
 	}
 }
 </style>
