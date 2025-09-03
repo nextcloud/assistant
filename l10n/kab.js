@@ -1,0 +1,22 @@
+OC.L10N.register(
+    "assistant",
+    {
+    "Send an email" : "Azen imayl",
+    "Nextcloud Assistant" : "Amallal n Nextcloud",
+    "Nextcloud Mail" : "Imayl n Nextcloud",
+    "Assistant" : "Amallal",
+    "Close" : "Mdel",
+    "More" : "Ugar",
+    "Cancel" : "Cancel",
+    "New conversation" : "Adiwenni amaynut",
+    "Delete" : "Kkes",
+    "Choose" : "Fren",
+    "Cancelled" : "Ittwasefsex",
+    "Audio output" : "Anekcum n umeslaw",
+    "Translate" : "Suqel",
+    "Other" : "Wayeḍ",
+    "No file selected" : "Ulac afaylu yettwafernen",
+    "Advanced" : "Talqayt",
+    "Copy" : "Nɣel"
+},
+"nplurals=2; plural=(n != 1);");
