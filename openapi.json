@@ -230,9 +230,7 @@
                                             "url",
                                             "method",
                                             "mimetype_filters",
-                                            "android_icon",
-                                            "desktop_icon",
-                                            "ios_icon"
+                                            "icon"
                                         ],
                                         "properties": {
                                             "name": {
@@ -247,13 +245,7 @@
                                             "mimetype_filters": {
                                                 "type": "string"
                                             },
-                                            "android_icon": {
-                                                "type": "string"
-                                            },
-                                            "desktop_icon": {
-                                                "type": "string"
-                                            },
-                                            "ios_icon": {
+                                            "icon": {
                                                 "type": "string"
                                             }
                                         }

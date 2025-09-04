@@ -45,9 +45,7 @@ class Capabilities implements IPublicCapability {
 	 *                 url: string,
 	 *                 method: string,
 	 *                 mimetype_filters: string,
-	 *                 android_icon: string,
-	 *                 desktop_icon: string,
-	 *                 ios_icon: string,
+	 *                 icon: string,
 	 *         }>
 	 *	   }>,
 	 * }
@@ -96,15 +94,14 @@ class Capabilities implements IPublicCapability {
 					'fileId' => '123456789',
 					'taskTypeId' => TextToTextSummary::ID,
 				]);
+				$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
 				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
 					'name' => $this->l->t('Summarize'),
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => implode(', ', $textMimeTypes),
-					'android_icon' => 'creation',
-					'ios_icon' => 'creation',
-					'desktop_icon' => 'creation',
+					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'declarativeui/summarize.svg'),
 				];
 				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
@@ -113,17 +110,16 @@ class Capabilities implements IPublicCapability {
 				$url = $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
 					'apiVersion' => 'v1',
 					'fileId' => '123456789',
-					'taskTypeId' => \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
+					'taskTypeId' => AudioToText::ID,
 				]);
+				$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
 				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
 					'name' => $this->l->t('Transcribe audio'),
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => 'audio/',
-					'android_icon' => 'speech_to_text',
-					'ios_icon' => 'speech_to_text',
-					'desktop_icon' => 'speech_to_text',
+					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'declarativeui/speech_to_text.svg'),
 				];
 				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
@@ -132,17 +128,16 @@ class Capabilities implements IPublicCapability {
 				$url = $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
 					'apiVersion' => 'v1',
 					'fileId' => '123456789',
-					'taskTypeId' => AudioToText::ID,
+					'taskTypeId' => \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
 				]);
+				$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
 				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
 					'name' => $this->l->t('Text to speech'),
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => implode(', ', $textMimeTypes),
-					'android_icon' => 'text_to_speech',
-					'ios_icon' => 'text_to_speech',
-					'desktop_icon' => 'text_to_speech',
+					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'declarativeui/text_to_speech.svg'),
 				];
 				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
