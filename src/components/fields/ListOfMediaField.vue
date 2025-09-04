@@ -62,7 +62,7 @@
 						target="_blank">
 						<NcButton :title="t('assistant', 'Download this media')">
 							<template #icon>
-								<DownloadOutlineIcon />
+								<TrayArrowDownIcon />
 							</template>
 						</NcButton>
 					</a>
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import DownloadOutlineIcon from 'vue-material-design-icons/DownloadOutline.vue'
+import TrayArrowDownIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -120,7 +120,7 @@ export default {
 		ChooseInputFileButton,
 		UploadInputFileButton,
 		TrashCanOutlineIcon,
-		DownloadOutlineIcon,
+		TrayArrowDownIcon,
 		ShareVariantIcon,
 		ContentSaveOutlineIcon,
 		NcButton,
