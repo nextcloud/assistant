@@ -19,6 +19,7 @@ OC.L10N.register(
     "Choose" : "Выбраць",
     "Clear Selection" : "Ачысціць выбар",
     "Cancelled" : "Скасавана",
+    "Audio output" : "Аўдыё выхад",
     "Translate" : "Перакласці",
     "Start recording" : "Пачаць запіс",
     "Dismiss recording" : "Адхіліць запіс",

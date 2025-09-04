@@ -91,6 +91,7 @@ OC.L10N.register(
     "Less" : "更少",
     "More" : "更多",
     "Cancel" : "取消",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "是否确定要删除“{sessionTitle}”？",
     "Error generating a response" : "生成响应时发生错误",
     "Error updating title of conversation" : "更新对话标题时出错",
     "Untitled conversation" : "无标题对话",

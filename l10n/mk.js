@@ -9,6 +9,7 @@ OC.L10N.register(
     "Close" : "Затвори",
     "Less" : "Помалку",
     "Cancel" : "Откажи",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Дали сте сигурни дека сакате да го избришете \"{sessionTitle}\"?",
     "Delete" : "Избриши",
     "Edit title" : "Удери наслов",
     "Cancel editing" : "Откажи уредување",

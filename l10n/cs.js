@@ -81,6 +81,7 @@ OC.L10N.register(
     "Output transcript" : "Výstup přepisu",
     "Transcription of the audio output" : "Přepis zvukového výstupu",
     "Generate sticker" : "Vytvořit nálepku",
+    "Generate sticker from text" : "Vytvořit z textu nálepku",
     "Prompt" : "Výzva",
     "Output stickers" : "Výstupní nálepky",
     "The generated sticker" : "Vytvořená nálepka",
