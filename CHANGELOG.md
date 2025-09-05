@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.7.1 – 2025-09-05
+
+### Fixed
+
+- Prevent accessing array index on null @julien-nc [#351](https://github.com/nextcloud/assistant/pull/351)
+
 ## 2.7.0 – 2025-09-05
 
 ### Changed
