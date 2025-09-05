@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.7.0 – 2025-09-05
+
+### Changed
+
+- Rename ai settings to assistant @lukasdotcom [#333](https://github.com/nextcloud/assistant/pull/333)
+- Improve sticker generation @lukasdotcom [#331](https://github.com/nextcloud/assistant/pull/331)
+- Replace mdi download icon with Material Symbols variant @AndyScherzinger [#348](https://github.com/nextcloud/assistant/pull/348)
+- Improve style and use new assistant components @julien-nc [#349](https://github.com/nextcloud/assistant/pull/349)
+
+### Fixed
+
+- Only show the group file action if necessary @julien-nc [#342](https://github.com/nextcloud/assistant/pull/342)
+
 ## 2.6.1 – 2025-08-09
 
 ### Fixed
