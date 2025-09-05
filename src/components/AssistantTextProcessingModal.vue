@@ -6,7 +6,6 @@
 	<NcModal v-if="show"
 		:size="modalSize"
 		:no-close="true"
-		:name="t('assistant', 'Nextcloud Assistant')"
 		dark
 		:container="null"
 		class="assistant-modal"
@@ -220,7 +219,7 @@ export default {
 .assistant-modal--content {
 	width: 100%;
 	margin: 0 auto;
-	padding: 16px;
+	padding: 8px 16px 16px 16px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

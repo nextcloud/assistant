@@ -3,81 +3,28 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div id="assistant"
-		class="header-menu">
-		<NcButton
-			class="trigger"
-			variant="secondary"
-			:title="t('assistant', 'Nextcloud Assistant')"
-			@click="$emit('click')">
-			<AssistantIcon class="menu-icon" :size="20" />
-		</NcButton>
-	</div>
+	<NcHeaderButton
+		id="assistant"
+		:aria-label="t('assistant', 'Nextcloud Assistant')"
+		:description="t('assistant', 'Nextcloud Assistant header menu entry')"
+		@click="$emit('click')">
+		<template #icon>
+			<AssistantIcon :size="20" />
+		</template>
+	</NcHeaderButton>
 </template>
 
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
 
-import NcButton from '@nextcloud/vue/components/NcButton'
+import NcHeaderButton from '@nextcloud/vue/components/NcHeaderButton'
 
 export default {
 	name: 'AssistantHeaderMenuEntry',
-
 	components: {
 		AssistantIcon,
-		NcButton,
+		NcHeaderButton,
 	},
-
 	emits: ['click'],
-
-	data() {
-		return {
-		}
-	},
-
-	computed: {
-	},
-
-	mounted() {
-	},
-
-	beforeUnmount() {
-	},
-
-	methods: {
-	},
 }
 </script>
-
-<style scoped lang="scss">
-.header-menu {
-	width: var(--header-height);
-	height: var(--header-height);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	opacity: .85;
-	&:hover {
-		opacity: 1;
-	}
-
-	.trigger {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		background-color: rgba(0,0,0,0);
-		border: none;
-		filter: none !important;
-		color: var(--color-primary-text) !important;
-		&:hover {
-			background-color: rgba(0,0,0,0) !important;
-		}
-		.menu-icon {
-			color: var(--color-background-plain-text) !important;
-		}
-	}
-}
-</style>

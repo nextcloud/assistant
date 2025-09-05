@@ -61,6 +61,9 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
 		$this->initialStateService->provideInitialState('assistant-enabled', $assistantEnabled);
 		if ($assistantEnabled) {
+			$useModernStyle = version_compare($this->config->getSystemValueString('version', '0.0.0'), '32.0.0', '>=');
+			$this->initialStateService->provideInitialState('use-modern-style', $useModernStyle);
+
 			$lastTargetLanguage = $this->config->getUserValue($this->userId, Application::APP_ID, 'last_target_language', '');
 			$this->initialStateService->provideInitialState('last-target-language', $lastTargetLanguage);
 			$indexingComplete = $this->appConfig->getValueInt('context_chat', 'last_indexed_time', 0) !== 0;

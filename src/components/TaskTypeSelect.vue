@@ -12,6 +12,7 @@
 				:menu-name="variants.text"
 				:container="$refs.taskTypeSelect"
 				:primary="isCategorySelected(variants)"
+				:class="{ categoryWithSubSelected: useModernStyle && isCategorySelected(variants) }"
 				@click="onMenuCategorySelected(variants)">
 				<NcActionButton v-for="t in variants.tasks"
 					:key="t.id"
@@ -31,6 +32,7 @@
 			<NcButton v-else
 				:key="variants.id + '-button'"
 				:variant="isCategorySelected(variants) ? 'primary' : 'secondary'"
+				:class="{ categorySelected: useModernStyle && isCategorySelected(variants) }"
 				:title="variants.text"
 				@click="onMenuCategorySelected(variants)">
 				<template #icon>
@@ -73,17 +75,22 @@
 </template>
 
 <script>
-import NcActions from '@nextcloud/vue/components/NcActions'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import MessageOutlineIcon from 'vue-material-design-icons/MessageOutline.vue'
 import DotsHorizontalIcon from 'vue-material-design-icons/DotsHorizontal.vue'
 import TextLongIcon from 'vue-material-design-icons/TextLong.vue'
 import ImageOutlineIcon from 'vue-material-design-icons/ImageOutline.vue'
 import WebIcon from 'vue-material-design-icons/Web.vue'
 import FileIcon from 'vue-material-design-icons/File.vue'
+
 import ContentPasteSearchIcon from './icons/ContentPasteSearch.vue'
 import WaveformIcon from './icons/Waveform.vue'
+
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcAssistantButton from '@nextcloud/vue/components/NcAssistantButton'
+
+import { loadState } from '@nextcloud/initial-state'
 
 export default {
 	name: 'TaskTypeSelect',
@@ -93,6 +100,7 @@ export default {
 		NcActionButton,
 		MessageOutlineIcon,
 		NcButton,
+		NcAssistantButton,
 	},
 
 	props: {
@@ -121,6 +129,7 @@ export default {
 	data() {
 		return {
 			categorySubmenu: null,
+			useModernStyle: loadState('assistant', 'use-modern-style', false),
 		}
 	},
 
@@ -271,6 +280,17 @@ export default {
 </script>
 
 <style lang="scss">
+.task-type-select {
+	.categorySelected,
+	.categoryWithSubSelected button {
+		background: var(--color-element-assistant) !important;
+		color: white !important;
+		border-color: #40519A !important;
+	}
+}
+</style>
+
+<style scoped lang="scss">
 .task-type-select {
 	display: flex;
 	align-items: center;

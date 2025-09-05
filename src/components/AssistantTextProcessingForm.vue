@@ -8,8 +8,8 @@
 	<div v-else
 		class="assistant-form">
 		<span class="assistant-bubble">
-			<CreationIcon :size="16" class="icon" />
-			<span>{{ t('assistant', 'Nextcloud Assistant') }}</span>
+			<NcAssistantIcon />
+			<strong class="assistant-bubble__label">{{ t('assistant', 'Nextcloud Assistant') }}</strong>
 		</span>
 		<TaskTypeSelect
 			v-model="mySelectedTaskTypeId"
@@ -140,6 +140,7 @@ import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import AssistantFormOutputs from './AssistantFormOutputs.vue'
@@ -177,6 +178,7 @@ export default {
 		NcAppNavigation,
 		NcAppNavigationList,
 		NcAppNavigationNew,
+		NcAssistantIcon,
 		CreationIcon,
 		PlusIcon,
 		UnfoldLessHorizontalIcon,
@@ -571,14 +573,16 @@ export default {
 	}
 
 	.assistant-bubble {
-		align-self: start;
+		align-self: center;
 		display: flex;
-		gap: 8px;
-		background-color: var(--color-primary-element-light);
-		border-radius: var(--border-radius-rounded);
+		align-items: center;
 		padding: 2px 8px;
-		.icon {
-			color: var(--color-primary);
+		&__label {
+			// this is only effective if --color-element-assistant-icon is not set (in NC < 32)
+			background: var(--color-main-text);
+			background-image: var(--color-element-assistant-icon);
+			color: transparent;
+			background-clip: text;
 		}
 	}
 
