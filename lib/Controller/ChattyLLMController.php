@@ -500,8 +500,9 @@ class ChattyLLMController extends OCSController {
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
-			$audioAttachment = $audioAttachment['type'] === 'Audio' ? $audioAttachment : null;
 			if ($audioAttachment !== null
+				&& isset($audioAttachment['type'])
+				&& $audioAttachment['type'] === 'Audio'
 				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
 				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID])
 			) {
@@ -535,13 +536,9 @@ class ChattyLLMController extends OCSController {
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
-			$audioAttachment = $audioAttachment['type'] === 'Audio' ? $audioAttachment : null;
-			/* php 8.4 allows:
-			$audioAttachment = array_find($lastAttachments, static function (array $attachment) {
-				return $attachment['type'] === 'Audio';
-			});
-			*/
 			if ($audioAttachment !== null
+				&& isset($audioAttachment['type'])
+				&& $audioAttachment['type'] === 'Audio'
 				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
 				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID])
 			) {
