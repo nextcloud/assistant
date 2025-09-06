@@ -61,6 +61,7 @@ OC.L10N.register(
     "Less" : "Mindre",
     "More" : "Mer",
     "Cancel" : "Avbryt",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Är du säker på att du vill ta bort \"{sessionTitle}\"?",
     "Error fetching conversations" : "Kunde inte hämta konversationer",
     "Invalid response received for a new conversation request" : "Ogiltigt svar mottaget för en ny konversationsförfrågan",
     "Error creating a new conversation" : "Det gick inte att skapa en ny konversation",
