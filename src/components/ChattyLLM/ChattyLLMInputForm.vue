@@ -345,7 +345,7 @@ export default {
 		},
 	},
 
-	onDestroy() {
+	beforeUnmount() {
 		if (this.pollMessageGenerationTimerId) {
 			clearInterval(this.pollMessageGenerationTimerId)
 		}
