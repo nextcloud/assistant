@@ -107,6 +107,7 @@ export async function openAssistantForm({
 		let lastTask = null
 
 		modalMountPoint.addEventListener('cancel', () => {
+			cancelTaskPolling()
 			app.unmount()
 			reject(new Error('User cancellation'))
 		})
@@ -521,6 +522,7 @@ export async function openAssistantTask(
 	let lastTask = task
 
 	modalMountPoint.addEventListener('cancel', () => {
+		cancelTaskPolling()
 		app.unmount()
 	})
 	modalMountPoint.addEventListener('submit', (data) => {
