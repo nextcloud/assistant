@@ -183,7 +183,7 @@ import InputArea from './InputArea.vue'
 import NoSession from './NoSession.vue'
 import AgencyConfirmation from './AgencyConfirmation.vue'
 
-import axios from '@nextcloud/axios'
+import axios, { isCancel } from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
@@ -591,7 +591,7 @@ export default {
 				this.loading.initialMessages = false
 				this.messagesAxiosController = null
 			} catch (error) {
-				if (axios.isCancel(error)) {
+				if (isCancel(error)) {
 					console.debug('fetchMessages cancelled')
 					return
 				}
