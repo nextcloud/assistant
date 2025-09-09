@@ -313,6 +313,7 @@ export async function pollTask(taskId, obj, callback = updateTask) {
 				console.debug('[assistant] poll request failed', error)
 				if (error.status === 404) {
 					clearInterval(window.assistantPollTimerId)
+					window.assistantPollTimerId = null
 					reject(new Error('task-not-found'))
 					return
 				}
