@@ -50,13 +50,13 @@ OC.L10N.register(
     "Define rules and assumptions that the assistant should follow during the conversation." : "Definer regler og antagelser, som assistenten skal følge under samtalen.",
     "Chat voice message" : "Chatstemme beskeder",
     "Describe a task that you want the assistant to do or ask a question" : "Beskriv en opgave, som du ønsker at assistenten udføre eller stil et spørgsmål",
-    "Chat history" : "Chathistorik",
+    "Chat history" : "Chat-historik",
     "The history of chat messages before the current message, starting with a message by the user" : "Historikken for chatbeskeder før den aktuelle besked, startende med en besked fra brugeren",
-    "Input transcript" : "Input transkribering",
+    "Input transcript" : "Input transskribering",
     "Transcription of the audio input" : "Transskription af lydinput",
     "Response voice message" : "Respons lydbesked",
     "The generated voice response as part of the conversation" : "Den genererede lydrespons som del af samtalen",
-    "Output transcript" : "Output transkription",
+    "Output transcript" : "Output transskription",
     "Transcription of the audio output" : "Transskriptionen af lydoutputtet ",
     "Prompt" : "Prompt",
     "To be able to use this feature, please install at least one AI task processing provider." : "For at kunne anvende denne funktion, så skal du installere mindst en udbyder af AI opgavebehandling.",
@@ -113,7 +113,7 @@ OC.L10N.register(
     "Advanced" : "Avanceret",
     "Copy" : "Kopier",
     "Upload file" : "Upload fil",
-    "Summarize" : "Opsummer",
-    "Transcribe audio" : "Transskriber lyd"
+    "Summarize" : "Opsummér",
+    "Transcribe audio" : "Transskribér lyd"
 },
 "nplurals=2; plural=(n != 1);");
