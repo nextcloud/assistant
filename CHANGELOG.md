@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.8.0 – 2025-09-09
+
+### Changed
+
+- Add support for Nextcloud 33
+
+### Fixed
+
+- Fix stop polling when needed @julien-nc [#356](https://github.com/nextcloud/assistant/pull/356)
+
 ## 2.7.1 – 2025-09-05
 
 ### Fixed
