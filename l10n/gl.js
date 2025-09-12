@@ -155,7 +155,7 @@ OC.L10N.register(
     "Clear Selection" : "Limpar a selección",
     "Error fetching default provider key" : "Produciuse un erro ao recuperar a chave predeterminada do provedor",
     "Error fetching providers" : "Produciuse un erro ao recuperar provedores",
-    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "A parola de contexto aínda non rematou de indexar todos os seus documentos; pode que aínda non sexa quen de responder ás súas preguntas.",
+    "Context Chat has not finished indexing all your documents yet, it may not be able to answer your questions, yet." : "A Parola de contexto aínda non rematou de indexar todos os seus documentos; pode que aínda non sexa quen de responder ás súas preguntas.",
     "Selective context" : "Contexto selectivo",
     "No sources referenced" : "Non hai ningunha orixe referenciada",
     "Describe the image you want to generate" : "Describa a imaxe que quere xerar",

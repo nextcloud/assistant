@@ -27,6 +27,7 @@ OC.L10N.register(
     "Choose" : "Выбраць",
     "Clear Selection" : "Ачысціць выбар",
     "Cancelled" : "Скасавана",
+    "Unknown status" : "Невядомы статус",
     "Audio output" : "Аўдыявыхад",
     "Translate" : "Перакласці",
     "Other" : "Іншае",
@@ -34,6 +35,7 @@ OC.L10N.register(
     "Dismiss recording" : "Адхіліць запіс",
     "Upload from device" : "Запампаваць з прылады",
     "Clear value" : "Ачысціць значэнне",
+    "Advanced" : "Пашыраныя",
     "Copy" : "Капіяваць",
     "Upload file" : "Запампаваць файл"
 },
