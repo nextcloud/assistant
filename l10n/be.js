@@ -23,6 +23,7 @@ OC.L10N.register(
     "Submit" : "Адправіць",
     "Type a message…" : "Увядзіце паведамленне…",
     "You" : "Вы",
+    "Copy message" : "Скапіяваць паведамленне",
     "Delete message" : "Выдаліць паведамленне",
     "Choose" : "Выбраць",
     "Clear Selection" : "Ачысціць выбар",
