@@ -28,6 +28,7 @@ OC.L10N.register(
     "Choose" : "Выбраць",
     "Clear Selection" : "Ачысціць выбар",
     "Cancelled" : "Скасавана",
+    "Failed" : "Не ўдалося",
     "Unknown status" : "Невядомы статус",
     "Audio output" : "Аўдыявыхад",
     "Translate" : "Перакласці",
