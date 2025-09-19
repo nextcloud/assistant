@@ -70,6 +70,7 @@ OC.L10N.register(
     "Less" : "Mindre",
     "More" : "Mere",
     "Cancel" : "Annuller",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Er du sikker på at du ønsker at slette \"{sessionTitle}\"?",
     "No conversations yet" : "Endnu ingen samtaler",
     "Delete" : "Slet",
     "Conversation title" : "Samtaletitel",
