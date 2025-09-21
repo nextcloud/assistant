@@ -4,6 +4,7 @@ OC.L10N.register(
     "Send an email" : "Αποστολή ηλεκτρονικού ταχυδρομείου",
     "User not found" : "Ο/Η χρήστης δεν βρέθηκε",
     "Nextcloud Assistant" : "Βοηθός Nextcloud",
+    "AI text generation" : "Δημιουργία κειμένου με ΤΝ",
     "AI image generation" : "Δημιουργία εικόνων AI",
     "Task for \"%1$s\" has finished" : "Η εργασία για το \"%1$s\" ολοκληρώθηκε",
     "\"%1$s\" task for \"%2$s\" has finished" : "Η εργασία \"%1$s\" για το \"%2$s\" ολοκληρώθηκε",
