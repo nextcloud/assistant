@@ -199,6 +199,11 @@ export default {
 .assistant-modal .modal-container {
 	width: 1220px !important;
 }
+
+// the smart picker provider selector is not visible in 33
+div[role='listbox'] {
+	z-index: 100000;
+}
 </style>
 
 <style lang="scss" scoped>
