@@ -40,6 +40,7 @@ OC.L10N.register(
     "Less" : "Λιγότερα",
     "More" : "Περισσότερα",
     "Cancel" : "Ακύρωση",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Είστε σίγουρος/η ότι θέλετε να διαγράψετε το \"{sessionTitle}\";",
     "Error fetching messages" : "Σφάλμα κατά τη λήψη μηνυμάτων",
     "Error creating a new message" : "Σφάλμα κατά τη δημιουργία νέου μηνύματος",
     "Invalid response received for a new conversation request" : "Λήφθηκε μη έγκυρη απάντηση για αίτημα νέας συνομιλίας",

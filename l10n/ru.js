@@ -66,6 +66,7 @@ OC.L10N.register(
     "Less" : "Меньше",
     "More" : "Ещё",
     "Cancel" : "Отмена",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Вы действительно хотите удалить \"{sessionTitle}\"?",
     "Error creating a new message" : "Ошибка при создании нового сообщения",
     "Invalid response received for a new conversation request" : "Получен неверный ответ на новый запрос на беседу",
     "Error creating a new conversation" : "Ошибка при создании нового диалога",
