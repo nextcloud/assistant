@@ -716,6 +716,13 @@ export async function addAssistantMenuEntry() {
 	view.mount(menuEntry)
 
 	menuEntry.addEventListener('click', () => {
+		if (OCA.Assistant.openingAssistant) {
+			return
+		}
+		OCA.Assistant.openingAssistant = true
+		setTimeout(() => {
+			OCA.Assistant.openingAssistant = false
+		}, 1000)
 		openAssistantForm({ appId: 'assistant' })
 			.then(r => {
 				console.debug('scheduled task', r)
