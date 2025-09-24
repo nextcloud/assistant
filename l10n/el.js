@@ -16,6 +16,7 @@ OC.L10N.register(
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Αλληλογραφία Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "Assistant" : "Βοηθός",
     "Voice chat with the assistant" : "Φωνητική συνομιλία με τον βοηθό",
     "System prompt" : "Προτροπή συστήματος",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Ορίστε κανόνες και υποθέσεις που ο βοηθός πρέπει να ακολουθεί κατά τη διάρκεια της συνομιλίας.",

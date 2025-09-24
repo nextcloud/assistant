@@ -135,7 +135,7 @@ OC.L10N.register(
     "Generate a first draft for a blog post about privacy" : "Generar el primer borrador de una entrada de blog acerca de la privacidad",
     "What is the venue for the team retreat this quarter?" : "¿Cuál es la sede del retiro del equipo este trimestre?",
     "Type or paste the text to summarize" : "Escriba o pegue el texto a resumir",
-    "Type or paste the text to generate a headline for" : "Escriba o pegue el texto para el cual se generará un titular",
+    "Type or paste the text to generate a headline for" : "Escriba o pegue el texto para el cual se generará un título",
     "Type or paste the text to extract the topics from" : "Escriba o pegue el texto del cual se extraerán los tópicos",
     "landscape trees forest peaceful" : "paisaje arboles bosque pacífico",
     "a number" : "un número",

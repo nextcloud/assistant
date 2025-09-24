@@ -80,6 +80,7 @@ OC.L10N.register(
     "Hello there! What can I help you with today?" : "Hej! Hvad kan jeg hjælpe dig med i dag?",
     "Try sending a message to spark a conversation." : "Prøv at sende en besked for at starte en samtale.",
     "Load older messages" : "Indlæs ældre beskeder",
+    "Cancel editing" : "Annuller redigering",
     "Submit" : "Tilføj",
     "Type a message…" : "Indtast en besked...",
     "You" : "Dig",
