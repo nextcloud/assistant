@@ -10,6 +10,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "New conversation" : "Adiwenni amaynut",
     "Delete" : "Kkes",
+    "You" : "Kemm·čč",
     "Choose" : "Fren",
     "Cancelled" : "Ittwasefsex",
     "Audio output" : "Anekcum n umeslaw",
