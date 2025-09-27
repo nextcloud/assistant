@@ -30,6 +30,7 @@ OC.L10N.register(
     "Less" : "Kevesebb",
     "More" : "Továbbiak",
     "Cancel" : "Mégse",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Biztos, hogy törli ezt: „{sessionTitle}”?",
     "Delete" : "Törlés",
     "Edit title" : "Cím szerkesztése",
     "Cancel editing" : "Szerkesztés megszakítása",
