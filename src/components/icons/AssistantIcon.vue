@@ -72,6 +72,22 @@ export default {
   animation: pulse 0.6s ease 0.2s forwards;
 }
 
+/* No animation to avoid vestibular motion triggers. */
+@media (prefers-reduced-motion: reduce) {
+  .assistant-icon:hover .star1 {
+    animation: none;
+  }
+
+  .assistant-icon:hover .star2 {
+    animation: none;
+  }
+
+  .assistant-icon:hover .star3 {
+    animation: none;
+  }
+
+}
+
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.4); }
