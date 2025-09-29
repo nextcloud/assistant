@@ -47,6 +47,7 @@
     "Less" : "Gutxiago",
     "More" : "Gehiago",
     "Cancel" : "Utzi",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Ziur zaude \"{sessionTitle}\" ezabatu nahi duzula?",
     "New conversation" : "Elkarrizketa berria",
     "Delete" : "Ezabatu",
     "Edit title" : "Editatu izenburua",
