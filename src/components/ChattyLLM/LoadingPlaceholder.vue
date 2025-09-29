@@ -189,6 +189,15 @@ export default {
 	will-change: background-position;
 }
 
+/* No animation to avoid vestibular motion triggers. */
+@media (prefers-reduced-motion: reduce) {
+  .placeholder-item__avatar-circle,
+  .placeholder-item__content-line,
+  .placeholder-item__info {
+	animation: none;
+	}
+}
+
 @keyframes loading-animation {
 	0% {
 		background-position: 0;
