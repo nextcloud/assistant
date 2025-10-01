@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "User not found" : "Карыстальнік не знойдзены",
     "Session not found" : "Сеанс не знойдзены",
+    "Nextcloud Assistant" : "Памочнік Nextcloud",
     "OpenProject" : "OpenProject",
     "Assistant" : "Памочнік",
     "Voice chat with the assistant" : "Галасавы чат з памочнікам",
