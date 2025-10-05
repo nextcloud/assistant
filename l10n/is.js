@@ -9,6 +9,7 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Meðhjálpari",
     "Prompt" : "Kvaðning",
+    "Try again" : "Reyndu aftur",
     "Close" : "Loka",
     "Less" : "Minna",
     "More" : "Meira",
