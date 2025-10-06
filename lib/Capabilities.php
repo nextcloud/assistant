@@ -40,6 +40,7 @@ class Capabilities implements IPublicCapability {
 	 *         enabled?: bool
 	 *     },
 	 *     client_integration?: array<string, array{
+	 *         version: float,
 	 *         context-menu: list<array{
 	 *                 name: string,
 	 *                 url: string,
