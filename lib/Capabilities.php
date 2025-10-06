@@ -39,7 +39,7 @@ class Capabilities implements IPublicCapability {
 	 *         version: string,
 	 *         enabled?: bool
 	 *     },
-	 *     declarativeui?: array<string, array{
+	 *     client_integration?: array<string, array{
 	 *         context-menu: list<array{
 	 *                 name: string,
 	 *                 url: string,
@@ -67,7 +67,7 @@ class Capabilities implements IPublicCapability {
 		$assistantEnabled = $adminAssistantEnabled && $userAssistantEnabled;
 		$capabilities[Application::APP_ID]['enabled'] = $assistantEnabled;
 
-		// declarative UI
+		// client integration UI
 		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 		$summarizeAvailable = array_key_exists(TextToTextSummary::ID, $availableTaskTypes);
 		$sttAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
@@ -75,8 +75,9 @@ class Capabilities implements IPublicCapability {
 			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID, $availableTaskTypes);
 
 		if ($summarizeAvailable || $sttAvailable || $ttsAvailable) {
-			$capabilities['declarativeui'] = [
+			$capabilities['client_integration'] = [
 				Application::APP_ID => [
+					'version' => 0.1,
 					'context-menu' => [],
 				],
 			];
@@ -101,9 +102,9 @@ class Capabilities implements IPublicCapability {
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => implode(', ', $textMimeTypes),
-					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'declarativeui/summarize.svg'),
+					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'client_integration/summarize.svg'),
 				];
-				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
+				$capabilities['client_integration'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
 
 			if ($sttAvailable) {
@@ -119,9 +120,9 @@ class Capabilities implements IPublicCapability {
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => 'audio/',
-					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'declarativeui/speech_to_text.svg'),
+					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'client_integration/speech_to_text.svg'),
 				];
-				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
+				$capabilities['client_integration'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
 
 			if ($ttsAvailable) {
@@ -137,9 +138,9 @@ class Capabilities implements IPublicCapability {
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => implode(', ', $textMimeTypes),
-					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'declarativeui/text_to_speech.svg'),
+					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'client_integration/text_to_speech.svg'),
 				];
-				$capabilities['declarativeui'][Application::APP_ID]['context-menu'][] = $endpoint;
+				$capabilities['client_integration'][Application::APP_ID]['context-menu'][] = $endpoint;
 			}
 		}
 
