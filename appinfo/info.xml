@@ -70,6 +70,7 @@ More details on how to set this up in the [admin docs](https://docs.nextcloud.co
 		<developer>https://github.com/nextcloud/assistant</developer>
 	</documentation>
 	<category>integration</category>
+	<category>ai</category>
 	<website>https://github.com/nextcloud/assistant</website>
 	<bugs>https://github.com/nextcloud/assistant/issues</bugs>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot1.jpg</screenshot>
