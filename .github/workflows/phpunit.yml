@@ -35,9 +35,12 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['8.2']
+        php-versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
         databases: ['sqlite']
-        server-versions: ['master']
+        server-versions: ['master', 'stable32', 'stable31', 'stable30']
+        exclude:
+          - php-versions: '8.1'
+            server-versions: 'master'
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
