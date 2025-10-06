@@ -213,14 +213,19 @@
                             }
                         }
                     },
-                    "declarativeui": {
+                    "client_integration": {
                         "type": "object",
                         "additionalProperties": {
                             "type": "object",
                             "required": [
+                                "version",
                                 "context-menu"
                             ],
                             "properties": {
+                                "version": {
+                                    "type": "number",
+                                    "format": "double"
+                                },
                                 "context-menu": {
                                     "type": "array",
                                     "items": {
