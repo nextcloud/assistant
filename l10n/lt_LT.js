@@ -13,6 +13,7 @@ OC.L10N.register(
     "Hide advanced options" : "Slėpti išplėstines parinktis",
     "Show advanced options" : "Rodyti išplėstines parinktis",
     "Try again" : "Bandyti dar kartą",
+    "New task" : "Nauja užduotis",
     "Close" : "Užverti",
     "Less" : "Mažiau",
     "More" : "Daugiau",
@@ -39,9 +40,11 @@ OC.L10N.register(
     "Choose a file" : "Pasirinkti failą",
     "No file selected" : "Neįkeltas joks failas",
     "Could not copy to clipboard" : "Nepavyko nukopijuoti į iškarpinę",
+    "Upload from device" : "Įkelti iš įrenginio",
     "Advanced" : "Išplėstiniai",
     "Could not parse file" : "Nepavyko išnagrinėti failo",
     "Copy output" : "Kopijuoti išvestį",
-    "Copy" : "Kopija"
+    "Copy" : "Kopija",
+    "Upload file" : "Įkelti failą"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");
