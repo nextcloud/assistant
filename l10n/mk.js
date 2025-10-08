@@ -5,6 +5,7 @@ OC.L10N.register(
     "User not found" : "Корисникот не е пронајден",
     "Nextcloud Mail" : "Електронска пошта",
     "Nextcloud Talk" : "Talk",
+    "Assistant" : "Асистент",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",
     "Less" : "Помалку",
