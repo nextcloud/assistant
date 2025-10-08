@@ -230,6 +230,7 @@ div[role='listbox'] {
 	align-items: center;
 	justify-content: center;
 	overflow-y: auto;
+	min-height: 500px;
 
 	> h2 {
 		display: flex;
