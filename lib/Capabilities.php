@@ -72,8 +72,12 @@ class Capabilities implements IPublicCapability {
 		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 		$summarizeAvailable = array_key_exists(TextToTextSummary::ID, $availableTaskTypes);
 		$sttAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
-		$ttsAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')
-			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID, $availableTaskTypes);
+		$ttsAvailable = false;
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
+			if (array_key_exists(\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID, $availableTaskTypes)) {
+				$ttsAvailable = true;
+			}
+		}
 
 		if ($summarizeAvailable || $sttAvailable || $ttsAvailable) {
 			$capabilities['client_integration'] = [

@@ -61,8 +61,7 @@ function registerSummarizeAction() {
 			const { showError, showSuccess } = await import('@nextcloud/dialogs')
 			const url = generateOcsUrl('/apps/assistant/api/v1/file-action/{fileId}/core:text2text:summary', { fileId: node.fileid })
 			try {
-				const response = await axios.post(url)
-				console.debug('taskId', response.data.ocs.data.taskId)
+				await axios.post(url)
 				showSuccess(
 					t('assistant', 'Summarization task submitted successfully.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
@@ -100,8 +99,7 @@ function registerTtsAction() {
 			const { showError, showSuccess } = await import('@nextcloud/dialogs')
 			const url = generateOcsUrl('/apps/assistant/api/v1/file-action/{fileId}/core:text2speech', { fileId: node.fileid })
 			try {
-				const response = await axios.post(url)
-				console.debug('taskId', response.data.ocs.data.taskId)
+				await axios.post(url)
 				showSuccess(
 					t('assistant', 'Text-to-speech task submitted successfully.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
@@ -139,8 +137,7 @@ function registerSttAction() {
 			const { showError, showSuccess } = await import('@nextcloud/dialogs')
 			const url = generateOcsUrl('/apps/assistant/api/v1/file-action/{fileId}/core:audio2text', { fileId: node.fileid })
 			try {
-				const response = await axios.post(url)
-				console.debug('taskId', response.data.ocs.data.taskId)
+				await axios.post(url)
 				showSuccess(
 					t('assistant', 'Transcription task submitted successfully.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'

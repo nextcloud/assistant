@@ -28,6 +28,8 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Lock\LockedException;
 use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\AudioToText;
+use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -418,7 +420,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param int $fileId The input file ID
 	 * @param string $taskTypeId The task type of the operation to perform
-	 * @return DataResponse<Http::STATUS_OK, array{taskId: int}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: The task has been scheduled successfully
 	 * 400: There was an issue while scheduling the task
@@ -426,8 +428,18 @@ class AssistantApiController extends OCSController {
 	#[NoAdminRequired]
 	public function runFileAction(int $fileId, string $taskTypeId): DataResponse {
 		try {
-			$taskId = $this->taskProcessingService->runFileAction($this->userId, $fileId, $taskTypeId);
-			return new DataResponse(['taskId' => $taskId]);
+			$this->taskProcessingService->runFileAction($this->userId, $fileId, $taskTypeId);
+			$message = $this->l10n->t('Assistant task submitted successfully');
+			if ($taskTypeId === AudioToText::ID) {
+				$message = $this->l10n->t('Transcription task submitted successfully');
+			} elseif ($taskTypeId === TextToTextSummary::ID) {
+				$message = $this->l10n->t('Summarization task submitted successfully');
+			} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
+				if ($taskTypeId === \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID) {
+					$message = $this->l10n->t('Text-to-speech task submitted successfully');
+				}
+			}
+			return new DataResponse($message);
 		} catch (Exception|Throwable $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}

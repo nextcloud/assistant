@@ -2559,16 +2559,7 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "taskId"
-                                                    ],
-                                                    "properties": {
-                                                        "taskId": {
-                                                            "type": "integer",
-                                                            "format": "int64"
-                                                        }
-                                                    }
+                                                    "type": "string"
                                                 }
                                             }
                                         }
