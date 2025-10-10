@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Add a calendar task" : "Дадаць заданне календара",
     "User not found" : "Карыстальнік не знойдзены",
     "Session not found" : "Сеанс не знойдзены",
     "Nextcloud Assistant" : "Памочнік Nextcloud",
@@ -16,7 +17,9 @@ OC.L10N.register(
     "\"{user}\" is a placeholder for the user's display name." : "\"{user}\" – гэта запаўняльнік для імені карыстальніка для паказу.",
     "\"{user}\" is a placeholder for the user's display name here as well." : "\"{user}\" – гэта таксама запаўняльнік для імені карыстальніка для паказу.",
     "Try again" : "Паспрабаваць яшчэ раз",
+    "Launch a task" : "Запусціць заданне",
     "Type or paste the text to generate a headline for" : "Увядзіце або ўстаўце тэкст, для якога трэба згенерыраваць загаловак",
+    "New task" : "Новае заданне",
     "Close" : "Закрыць",
     "More" : "Яшчэ",
     "Cancel" : "Скасаваць",
