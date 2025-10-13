@@ -284,6 +284,13 @@ class AssistantService {
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
 			// skip chat, chat with tools and ContextAgent task types (not directly useful to the end user)
 			if (!self::DEBUG) {
+				// this appeared in 33, this is true if the task type class extends the IInternalTaskType
+				/**
+				 * @psalm-suppress InvalidArrayOffset,TypeDoesNotContainType
+				 */
+				if ($taskTypeArray['isInternal'] ?? false) {
+					continue;
+				}
 				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToTextChatWithTools')
 					&& $typeId === \OCP\TaskProcessing\TaskTypes\TextToTextChatWithTools::ID) {
 					continue;
