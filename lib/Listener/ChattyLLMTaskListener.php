@@ -105,6 +105,8 @@ class ChattyLLMTaskListener implements IEventListener {
 			} else {
 				$content = trim($taskOutput['output'] ?? '');
 				$message->setContent($content);
+				// the task is not an audio one, but we might still need to Tts the answer
+				// if it is a response to a ContextAgentInteraction confirmation that was asked about an audio message
 				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());
 			}
 			try {
@@ -135,7 +137,8 @@ class ChattyLLMTaskListener implements IEventListener {
 	 * @return void
 	 */
 	private function runTtsIfNeeded(int $sessionId, Message $message, string $taskTypeId, ?string $userId): void {
-		if ($taskTypeId !== \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+		if (!class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+			|| $taskTypeId !== \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
 			return;
 		}
 		// is the last non-empty user message an audio one?
