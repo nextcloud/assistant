@@ -160,6 +160,7 @@ class ChattyLLMTaskListener implements IEventListener {
 	 */
 	private function runTtsTask(Message $message, ?string $userId): void {
 		try {
+			/** @psalm-suppress UndefinedClass */
 			$task = new Task(
 				\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID,
 				['input' => $message->getContent()],

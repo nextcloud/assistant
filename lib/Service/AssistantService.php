@@ -214,12 +214,19 @@ class AssistantService {
 
 	public function isAudioChatAvailable(): bool {
 		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		$ttsAvailable = false;
+		// see https://github.com/vimeo/psalm/issues/7980
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
+			$ttsAvailable = array_key_exists(\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID, $availableTaskTypes);
+		}
+		$audioToAudioAvailable = false;
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
+			$audioToAudioAvailable = array_key_exists(\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID, $availableTaskTypes);
+		}
 		// we have at least the simple audio chat task type and the 3 sub task types available
-		return class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
-			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID, $availableTaskTypes)
+		return $audioToAudioAvailable
+			&& $ttsAvailable
 			&& array_key_exists(AudioToText::ID, $availableTaskTypes)
-			&& class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')
-			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\TextToSpeech::ID, $availableTaskTypes)
 			&& array_key_exists(TextToTextChat::ID, $availableTaskTypes);
 	}
 
@@ -291,21 +298,26 @@ class AssistantService {
 				if ($taskTypeArray['isInternal'] ?? false) {
 					continue;
 				}
-				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToTextChatWithTools')
-					&& $typeId === \OCP\TaskProcessing\TaskTypes\TextToTextChatWithTools::ID) {
-					continue;
+				// see https://github.com/vimeo/psalm/issues/7980
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToTextChatWithTools')) {
+					if ($typeId === \OCP\TaskProcessing\TaskTypes\TextToTextChatWithTools::ID) {
+						continue;
+					}
 				}
-				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
-					&& $typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
-					continue;
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')) {
+					if ($typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID) {
+						continue;
+					}
 				}
-				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
-					&& $typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID) {
-					continue;
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')) {
+					if ($typeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID) {
+						continue;
+					}
 				}
-				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
-					&& $typeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID) {
-					continue;
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
+					if ($typeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID) {
+						continue;
+					}
 				}
 			}
 			if ($typeId === TextToTextChat::ID) {

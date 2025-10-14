@@ -500,11 +500,15 @@ class ChattyLLMController extends OCSController {
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
+			// see https://github.com/vimeo/psalm/issues/7980
+			$isContextAgentAudioAvailable = false;
+			if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')) {
+				$isContextAgentAudioAvailable = isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]);
+			}
 			if ($audioAttachment !== null
 				&& isset($audioAttachment['type'])
 				&& $audioAttachment['type'] === 'Audio'
-				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
-				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID])
+				&& $isContextAgentAudioAvailable
 			) {
 				// audio agency
 				$fileId = $audioAttachment['file_id'];
@@ -536,11 +540,14 @@ class ChattyLLMController extends OCSController {
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
+			$isAudioToAudioAvailable = false;
+			if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
+				$isAudioToAudioAvailable = isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]);
+			}
 			if ($audioAttachment !== null
 				&& isset($audioAttachment['type'])
 				&& $audioAttachment['type'] === 'Audio'
-				&& class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')
-				&& isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID])
+				&& $isAudioToAudioAvailable
 			) {
 				// for an audio chat task, let's try to get the remote audio IDs for all the previous audio messages
 				$history = $this->getAudioHistory($history);
@@ -1006,6 +1013,7 @@ class ChattyLLMController extends OCSController {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
 			$taskInput,
@@ -1027,6 +1035,7 @@ class ChattyLLMController extends OCSController {
 			'system_prompt' => $systemPrompt,
 			'history' => $history,
 		];
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID,
 			$input,
@@ -1048,6 +1057,7 @@ class ChattyLLMController extends OCSController {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,
 			$taskInput,

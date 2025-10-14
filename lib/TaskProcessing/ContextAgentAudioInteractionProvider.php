@@ -41,6 +41,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 	}
 
 	public function getTaskTypeId(): string {
+		/** @psalm-suppress UndefinedClass */
 		return ContextAgentAudioInteraction::ID;
 	}
 
@@ -115,6 +116,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 
 		// context agent
 		try {
+			/** @psalm-suppress UndefinedClass */
 			$task = new Task(
 				ContextAgentInteraction::ID,
 				[
@@ -134,6 +136,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 		if ($agencyTaskOutput['output'] !== '') {
 			// text to speech
 			try {
+				/** @psalm-suppress UndefinedClass */
 				$task = new Task(
 					TextToSpeech::ID,
 					['input' => $agencyTaskOutput['output']],
