@@ -6,6 +6,8 @@ OC.L10N.register(
     "Session not found" : "Сеанс не знойдзены",
     "Nextcloud Assistant" : "Памочнік Nextcloud",
     "Assistant task" : "Заданне памочніка",
+    "Task for \"%1$s\" has finished" : "Заданне для \"%1$s\" выканана",
+    "\"%1$s\" task for \"%2$s\" has finished" : "Заданне \"%1$s\" для \"%2$s\" выканана",
     "View task" : "Праглядзець заданне",
     "Nextcloud Tasks" : "Заданні Nextcloud",
     "OpenProject" : "OpenProject",
