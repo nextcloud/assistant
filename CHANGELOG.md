@@ -10,6 +10,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.9.0 – 2025-10-15
+
+### Added
+- Hooks for each of the Assistant file actions (summarize, stt and tts) @julien-nc [#344](https://github.com/nextcloud/assistant/pull/344)
+- Filter out task types that are declared as internal with the new IInternalTaskType @julien-nc [#372](https://github.com/nextcloud/assistant/pull/372)
+- App added to AI app store category @janepie [#368](https://github.com/nextcloud/assistant/pull/368)
+- respect reduced-motion settings @janepie [#365](https://github.com/nextcloud/assistant/pull/365)
+- Pulse animation for Assistant icon @ marcoambrosini [#360](https://github.com/nextcloud/assistant/pull/360)
+
+### Fixed
+- Check if ContextAgentInteraction exists (fixes Assistant on NC30) @julien-nc [#378](https://github.com/nextcloud/assistant/pull/378)
+- set min-height on modal to prevent size jump @cnaples79 [#371](https://github.com/nextcloud/assistant/pull/371)
+- Fix smartpicker visibility @julien-nc [#363](https://github.com/nextcloud/assistant/pull/363)
+
 ## 2.8.0 – 2025-09-09
 
 ### Changed
