@@ -212,6 +212,52 @@
                                 "type": "boolean"
                             }
                         }
+                    },
+                    "client_integration": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                                "version",
+                                "context-menu"
+                            ],
+                            "properties": {
+                                "version": {
+                                    "type": "number",
+                                    "format": "double"
+                                },
+                                "context-menu": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "name",
+                                            "url",
+                                            "method",
+                                            "mimetype_filters",
+                                            "icon"
+                                        ],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            },
+                                            "method": {
+                                                "type": "string"
+                                            },
+                                            "mimetype_filters": {
+                                                "type": "string"
+                                            },
+                                            "icon": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -2513,16 +2559,7 @@
                                                     "$ref": "#/components/schemas/OCSMeta"
                                                 },
                                                 "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "taskId"
-                                                    ],
-                                                    "properties": {
-                                                        "taskId": {
-                                                            "type": "integer",
-                                                            "format": "int64"
-                                                        }
-                                                    }
+                                                    "type": "string"
                                                 }
                                             }
                                         }
