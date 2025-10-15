@@ -41,6 +41,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 	}
 
 	public function getTaskTypeId(): string {
+		/** @psalm-suppress UndefinedClass */
 		return AudioToAudioChat::ID;
 	}
 
@@ -134,6 +135,8 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 
 		// text to speech
 		try {
+			// this provider is not declared if TextToSpeech does not exist so we know it's fine
+			/** @psalm-suppress UndefinedClass */
 			$task = new Task(
 				TextToSpeech::ID,
 				['input' => $llmResult],
