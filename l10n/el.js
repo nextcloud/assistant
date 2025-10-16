@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Σύνοψη",
+    "Transcribe audio" : "Αποτύπωση ήχου",
+    "Text to speech" : "Κείμενο σε ομιλία",
     "Failed to notify when ready; unknown user" : "Αποτυχία ειδοποίησης όταν είναι έτοιμο· άγνωστος χρήστης",
     "Failed to cancel notification; unknown user" : "Αποτυχία ακύρωσης ειδοποίησης· άγνωστος χρήστης",
     "Send a message to a Talk conversation" : "Αποστολή μηνύματος σε συνομιλία Talk",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Παρακαλώ συνδεθείτε για να δείτε το αποτέλεσμα της εργασίας",
     "This task does not exist or has been cleaned up" : "Αυτή η εργασία δεν υπάρχει ή έχει καθαριστεί",
     "Assistant failed to schedule your task" : "Ο Βοηθός απέτυχε να προγραμματίσει την εργασία σας",
-    "Summarize" : "Σύνοψη",
     "Summarization task submitted successfully." : "Η εργασία σύνοψης υποβλήθηκε με επιτυχία.",
     "You will be notified when it is ready." : "Θα ειδοποιηθείτε όταν είναι έτοιμο.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με κείμενο -> Σύνοψη\".",
     "Failed to launch the AI file action" : "Αποτυχία εκκίνησης της ενέργειας AI αρχείου",
-    "Text to speech" : "Κείμενο σε ομιλία",
     "Text-to-speech task submitted successfully." : "Η εργασία μετατροπής κειμένου σε ομιλία υποβλήθηκε με επιτυχία.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Δημιουργία ομιλίας\".",
-    "Transcribe audio" : "Αποτύπωση ήχου",
     "Transcription task submitted successfully." : "Η εργασία μεταγραφής υποβλήθηκε με επιτυχία.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Αποτύπωση ήχου\"."
 },

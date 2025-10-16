@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Teksti kokkuvõte",
+    "Transcribe audio" : "Kirjuta heli üles",
+    "Text to speech" : "Kõnesüntees",
     "Failed to notify when ready; unknown user" : "Töö lõpetamisest polnud võimalik teada anda - kasutaja on tundmatu",
     "Failed to cancel notification; unknown user" : "Loomist polnud võimalik katkestada - kasutaja on tundmatu",
     "Send a message to a Talk conversation" : "Saada sõnum suhtlusrakendusse",
@@ -273,9 +276,6 @@ OC.L10N.register(
     "Assistant error" : "Viga Abilise töös",
     "Please log in to view the task result" : "Ülesande tulemuse nägemiseks logi palun sisse",
     "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud",
-    "Assistant failed to schedule your task" : "Abiline ei suutnud sinu ülesannet ajastada",
-    "Summarize" : "Teksti kokkuvõte",
-    "Text to speech" : "Kõnesüntees",
-    "Transcribe audio" : "Kirjuta heli üles"
+    "Assistant failed to schedule your task" : "Abiline ei suutnud sinu ülesannet ajastada"
 },
 "nplurals=2; plural=(n != 1);");

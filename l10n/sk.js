@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Zhrnutie",
+    "Transcribe audio" : "Prepísať zvuk",
     "Failed to notify when ready; unknown user" : "Nepodarilo sa oznámiť dokončenie; neznámy užívateľ",
     "Send a message to a Talk conversation" : "Poslať správu do konverzácie Talk",
     "Send an email" : "Odoslať e-mail",
@@ -155,8 +157,6 @@ OC.L10N.register(
     "Upload file" : "Nahrať súbor",
     "Could not upload the file" : "Nepodarilo sa nahrať súbor",
     "Could not upload the files" : "Nepodarilo sa nahrať súbory",
-    "Assistant error" : "Chyba Asistenta",
-    "Summarize" : "Zhrnutie",
-    "Transcribe audio" : "Prepísať zvuk"
+    "Assistant error" : "Chyba Asistenta"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

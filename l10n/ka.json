@@ -1,4 +1,5 @@
 { "translations": {
+    "Summarize" : "Summarize",
     "Send an email" : "Send an email",
     "User not found" : "User not found",
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
@@ -29,7 +30,6 @@
     "Upload from device" : "Upload from device",
     "Advanced" : "Advanced",
     "Copy" : "Copy",
-    "Upload file" : "Upload file",
-    "Summarize" : "Summarize"
+    "Upload file" : "Upload file"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

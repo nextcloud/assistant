@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Обобщить",
+    "Transcribe audio" : "Транскрибировать аудио",
+    "Text to speech" : "Озвучить",
     "Send a message to a Talk conversation" : "Отправить сообщение в конференцию",
     "Create a conversation" : "Создать обсуждение",
     "Send an email" : "Отправить по эл. почте",
@@ -129,15 +132,12 @@ OC.L10N.register(
     "The current Assistant task could not be found" : "Текущая задача Ассистента не найдена",
     "Failed to schedule your task" : "Сбой планирования задачи",
     "This task does not exist or has been cleaned up" : "Эта задача не существует или удалена",
-    "Summarize" : "Обобщить",
     "Summarization task submitted successfully." : "Задача обобщения успешно запущена.",
     "You will be notified when it is ready." : "Вы будете уведомлены по готовности.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Это также может быть в Ассистентах в меню \"Работа с текстом -> Обобщить\".",
     "Failed to launch the AI file action" : "Не удалось запустить AI действие с файлом",
-    "Text to speech" : "Озвучить",
     "Text-to-speech task submitted successfully." : "Задача озвучивания успешно запущена.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Это также может быть в Ассистентах в меню \"Работа с аудио -> Сгенерировать речь\".",
-    "Transcribe audio" : "Транскрибировать аудио",
     "Transcription task submitted successfully." : "Задача транскрибирования успешно запущена.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Это также может быть в Ассистентах в меню \"Работа с аудио -> Транскрибировать аудио\"."
 },

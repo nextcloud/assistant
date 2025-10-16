@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Summarise",
+    "Transcribe audio" : "Transcribe audio",
+    "Text to speech" : "Text to speech",
     "Failed to notify when ready; unknown user" : "Failed to notify when ready; unknown user",
     "Failed to cancel notification; unknown user" : "Failed to cancel notification; unknown user",
     "Send a message to a Talk conversation" : "Send a message to a Talk conversation",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Please log in to view the task result",
     "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
     "Assistant failed to schedule your task" : "Assistant failed to schedule your task",
-    "Summarize" : "Summarise",
     "Summarization task submitted successfully." : "Summarisation task submitted successfully.",
     "You will be notified when it is ready." : "You will be notified when it is ready.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "It can also be checked in the Assistant in the \"Work with text -> Summarise\" menu.",
     "Failed to launch the AI file action" : "Failed to launch the AI file action",
-    "Text to speech" : "Text to speech",
     "Text-to-speech task submitted successfully." : "Text-to-speech task submitted successfully.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu.",
-    "Transcribe audio" : "Transcribe audio",
     "Transcription task submitted successfully." : "Transcription task submitted successfully.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu."
 },

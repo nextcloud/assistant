@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Резимирај",
+    "Transcribe audio" : "Транскрибуј звук",
+    "Text to speech" : "Текст у говор",
     "Failed to notify when ready; unknown user" : "Није успело обавештавање када је спремно; корисник није познат",
     "Failed to cancel notification; unknown user" : "Није успело отказивање обавештења; корисник није познат",
     "Send a message to a Talk conversation" : "Пошаљи поруку у Talk разговор",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Да бисте видели резултат задатка, молимо вас да се пријавите",
     "This task does not exist or has been cleaned up" : "Овај задатак не постоји или је обрисан",
     "Assistant failed to schedule your task" : "Асистент није успео да закаже ваш задатак",
-    "Summarize" : "Резимирај",
     "Summarization task submitted successfully." : "Задатак резимирања је успешно предат.",
     "You will be notified when it is ready." : "Бићете обавештени када буде спреман.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Такође може да се провери у Асистенту у менију „Рад са текстом -> Резимирај”.",
     "Failed to launch the AI file action" : "Није успело покретање AI фајл акције",
-    "Text to speech" : "Текст у говор",
     "Text-to-speech task submitted successfully." : "Задатак претварања текста-у-говор је успешно предат.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Генериши говор”.",
-    "Transcribe audio" : "Транскрибуј звук",
     "Transcription task submitted successfully." : "Задатак транскрипције је успешно предат.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”."
 },

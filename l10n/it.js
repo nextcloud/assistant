@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Riassumi",
+    "Text to speech" : "Testo in voce",
     "Send an email" : "Invia un'email",
     "User not found" : "Utente non trovato",
     "Nextcloud Assistant" : "Assistente di Nextcloud",
@@ -45,8 +47,6 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Impossibile copiare negli appunti",
     "Upload from device" : "Carica dal dispositivo",
     "Advanced" : "Avanzate",
-    "Copy" : "Copia",
-    "Summarize" : "Riassumi",
-    "Text to speech" : "Testo in voce"
+    "Copy" : "Copia"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

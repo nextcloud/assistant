@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Summarize",
     "Send an email" : "Send an email",
     "User not found" : "User not found",
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
@@ -31,7 +32,6 @@ OC.L10N.register(
     "Upload from device" : "Upload from device",
     "Advanced" : "Advanced",
     "Copy" : "Copy",
-    "Upload file" : "Upload file",
-    "Summarize" : "Summarize"
+    "Upload file" : "Upload file"
 },
 "nplurals=2; plural=(n!=1);");

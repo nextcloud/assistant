@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Özetle",
+    "Transcribe audio" : "Sesten yazıya dönüştür",
+    "Text to speech" : "Yazıdan konuşmaya dönüştür",
     "Failed to notify when ready; unknown user" : "Hazır olduğunda bildirilemedi. Kullanıcı bilinmiyor",
     "Failed to cancel notification; unknown user" : "Bildirim iptal edilemedi. Kullanıcı bilinmiyor",
     "Send a message to a Talk conversation" : "Bir Konuş görüşmesine bir ileti gönder",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Görev sonucunu görüntülemek için oturum açın",
     "This task does not exist or has been cleaned up" : "Bu görev bulunamadı ya da temizlenmiş",
     "Assistant failed to schedule your task" : "Yardımcı görevinizi zamanlayamadı",
-    "Summarize" : "Özetle",
     "Summarization task submitted successfully." : "Özetleme görevi gönderildi.",
     "You will be notified when it is ready." : "Hazır olduğunda size bildirilecek.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Ayrıca Yardımcı içinde \"Yazı ile çalış -> Özetle\" menüsünde de bakabilirsiniz.",
     "Failed to launch the AI file action" : "Yapay zeka dosya işlemi başlatılamadı",
-    "Text to speech" : "Yazıdan konuşmaya dönüştür",
     "Text-to-speech task submitted successfully." : "Yazıdan konuşmaya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Konuşma oluştur\" menüsünde de bakabilirsiniz.",
-    "Transcribe audio" : "Sesten yazıya dönüştür",
     "Transcription task submitted successfully." : "Sesten yazıya dönüştürme görevi gönderildi. ",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz."
 },

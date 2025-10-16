@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Fanya muhtasari",
+    "Transcribe audio" : "Nakili sauti",
+    "Text to speech" : "Maandishi kwa hotuba",
     "Failed to notify when ready; unknown user" : "Imeshindwa kuarifu ikiwa tayari; mtumiaji asiyejulikana",
     "Failed to cancel notification; unknown user" : "Imeshindwa kughairi arifa; mtumiaji asiyejulikana",
     "Send a message to a Talk conversation" : "Tuma ujumbe kwa mazungumzo ya Talk",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Tafadhali ingia ili kuona matokeo ya kazi",
     "This task does not exist or has been cleaned up" : "Kazi hii haipo au imesafishwa",
     "Assistant failed to schedule your task" : "Mratibu ameshindwa kuratibu kazi yako",
-    "Summarize" : "Fanya muhtasari",
     "Summarization task submitted successfully." : "Jukumu la muhtasari limewasilishwa.",
     "You will be notified when it is ready." : "Utaarifiwa ikiwa tayari.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Inaweza pia kuangaliwa katika Mratibu katika menyu ya \"Fanya kazi na maandishi -> Futa\".",
     "Failed to launch the AI file action" : "Imeshindwa kuzindua kitendo cha faili cha AI",
-    "Text to speech" : "Maandishi kwa hotuba",
     "Text-to-speech task submitted successfully." : "Jukumu la kutuma maandishi hadi hotuba limewasilishwa.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Inaweza pia kuangaliwa katika Mratibu katika menyu ya \"Fanya kazi na sauti -> Tengeneza hotuba\"",
-    "Transcribe audio" : "Nakili sauti",
     "Transcription task submitted successfully." : "Jukumu la unukuzi limewasilishwa kwa mafanikio.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Inaweza pia kuangaliwa kwenye Mratibu katika menyu ya \"Fanya kazi na sauti -> Nukuu sauti\"."
 },

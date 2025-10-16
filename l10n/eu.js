@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Laburtu",
+    "Transcribe audio" : "Audioa transkribatu",
     "Failed to notify when ready; unknown user" : "Ezin izan da jakinarazi prest dagoenean; erabiltzaile ezezaguna",
     "Send a message to a Talk conversation" : "Bidali mezu bat Talk elkarrizketa batera",
     "Send an email" : "Bidali posta-mezu bat",
@@ -104,8 +106,6 @@ OC.L10N.register(
     "Upload file" : "Igo fitxategia",
     "Failed to schedule your task" : "Ezin izan da zure zeregina programatu",
     "Assistant error" : "Laguntzailearen errorea",
-    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da",
-    "Summarize" : "Laburtu",
-    "Transcribe audio" : "Audioa transkribatu"
+    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da"
 },
 "nplurals=2; plural=(n != 1);");

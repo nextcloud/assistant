@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Sammanfatta",
+    "Transcribe audio" : "Transkribera ljud",
     "Failed to notify when ready; unknown user" : "Det gick inte att meddela när det var klart; okänd användare",
     "Send an email" : "Skicka e-post",
     "User not logged in" : "Användaren är inte inloggad",
@@ -116,8 +118,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Resultatet kunde inte kopieras till urklipp",
     "Copy" : "Kopiera",
     "Failed to schedule your task" : "Det gick inte att schemalägga din uppgift",
-    "This task does not exist or has been cleaned up" : "Den här uppgiften finns inte eller har rensats",
-    "Summarize" : "Sammanfatta",
-    "Transcribe audio" : "Transkribera ljud"
+    "This task does not exist or has been cleaned up" : "Den här uppgiften finns inte eller har rensats"
 },
 "nplurals=2; plural=(n != 1);");

@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "خلاصه‌سازی",
+    "Transcribe audio" : "رونوشت صوتی",
     "Send an email" : "ارسال ایمیل",
     "User not found" : "کاربر یافت نشد",
     "Nextcloud Assistant" : "Nextcloud Assistant",
@@ -67,8 +69,6 @@ OC.L10N.register(
     "Copy" : "رونوشت",
     "Upload file" : "بارگذاری پرونده",
     "Failed to schedule your task" : "برنامه ریزی کار شما انجام نشد",
-    "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است",
-    "Summarize" : "خلاصه‌سازی",
-    "Transcribe audio" : "رونوشت صوتی"
+    "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است"
 },
 "nplurals=2; plural=(n > 1);");

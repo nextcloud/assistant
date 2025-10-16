@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Resumir",
+    "Transcribe audio" : "Transcribir son",
+    "Text to speech" : "Texto a voz",
     "Failed to notify when ready; unknown user" : "Produciuse un fallo ao notificar cando estaba listo; usuario descoñecido",
     "Failed to cancel notification; unknown user" : "Produciuse un fallo ao cancelar a notificación; usuario descoñecido",
     "Send a message to a Talk conversation" : "Enviar unha mensaxe a unha conversa en Parladoiro",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Acceda para ver o resultado da tarefa",
     "This task does not exist or has been cleaned up" : "Esta tarefa non existe ou foi limpada",
     "Assistant failed to schedule your task" : "Produciuse un fallo no Asistente ao programar a tarefa",
-    "Summarize" : "Resumir",
     "Summarization task submitted successfully." : "A tarefa de resumo foi enviada satisfactoriamente.",
     "You will be notified when it is ready." : "Recibirá unha notificación cando estea lista.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con texto -> Resumir».",
     "Failed to launch the AI file action" : "Produciuse un fallo ao iniciar a acción de ficheiro AI",
-    "Text to speech" : "Texto a voz",
     "Text-to-speech task submitted successfully." : "A tarefa de «texto a voz» foi enviada satisfactoriamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Xerar parrafeo».",
-    "Transcribe audio" : "Transcribir son",
     "Transcription task submitted successfully." : "A tarefa de transcrición foi enviada satisfactoriamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son»."
 },

@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Achoimre",
+    "Transcribe audio" : "Trascríobh fuaime",
+    "Text to speech" : "Téacs go cainte",
     "Failed to notify when ready; unknown user" : "Theip ar an eolas nuair a bhí sé réidh; úsáideoir anaithnid",
     "Failed to cancel notification; unknown user" : "Theip ar an bhfógra a chealú; úsáideoir anaithnid",
     "Send a message to a Talk conversation" : "Seol teachtaireacht chuig comhrá Caint",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Logáil isteach le do thoil chun toradh an taisc a fheiceáil",
     "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
     "Assistant failed to schedule your task" : "Theip ar an gCúntóir do thasc a sceidealú",
-    "Summarize" : "Achoimre",
     "Summarization task submitted successfully." : "Cuireadh an tasc achoimre isteach go rathúil.",
     "You will be notified when it is ready." : "Cuirfear in iúl duit nuair a bheidh sé réidh.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le téacs -> Achoimrigh\" freisin.",
     "Failed to launch the AI file action" : "Theip ar an ngníomh comhaid AI a sheoladh",
-    "Text to speech" : "Téacs go cainte",
     "Text-to-speech task submitted successfully." : "Cuireadh an tasc téacs-go-hurlabhra isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
-    "Transcribe audio" : "Trascríobh fuaime",
     "Transcription task submitted successfully." : "Cuireadh an tasc trascríobh isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
 },

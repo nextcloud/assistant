@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Resumeix",
+    "Transcribe audio" : "Transcripció d'àudio",
     "Failed to notify when ready; unknown user" : "No s'ha pogut notificar quan estigui llest; usuari desconegut",
     "Send a message to a Talk conversation" : "Envia un missatge a una conversa de Converses",
     "Create a conversation" : "Crea una conversa",
@@ -209,8 +211,6 @@ OC.L10N.register(
     "Submit the current task's result" : "Envieu el resultat de la tasca actual",
     "Assistant error" : "Error de l'assistent",
     "Please log in to view the task result" : "Iniciar sessió per veure el resultat de la tasca",
-    "This task does not exist or has been cleaned up" : "Aquesta tasca no existeix o s'ha netejat",
-    "Summarize" : "Resumeix",
-    "Transcribe audio" : "Transcripció d'àudio"
+    "This task does not exist or has been cleaned up" : "Aquesta tasca no existeix o s'ha netejat"
 },
 "nplurals=2; plural=(n != 1);");

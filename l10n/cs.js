@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Stručný souhrn",
+    "Transcribe audio" : "Vytvořit text ze zvukové nahrávky",
+    "Text to speech" : "Text na řeč",
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
     "Failed to cancel notification; unknown user" : "Nepodařilo se zrušit notifikaci – neznámý uživatel",
     "Send a message to a Talk conversation" : "Odeslat zprávu do konverzace v Talk",
@@ -302,15 +305,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Pro zobrazení výsledku úkolu se přihlaste",
     "This task does not exist or has been cleaned up" : "Tato úloha neexistuje nebo byla vyčištěna",
     "Assistant failed to schedule your task" : "Asistentovi se nepodařilo naplánovat váš úkol",
-    "Summarize" : "Stručný souhrn",
     "Summarization task submitted successfully." : "Úkol shrnutí úspěšně zadán.",
     "You will be notified when it is ready." : "Až bude připraveno, budete upozorněni.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce s textem -> Shrnout“",
     "Failed to launch the AI file action" : "Nepodařilo se spustit AI akci ohledně souboru",
-    "Text to speech" : "Text na řeč",
     "Text-to-speech task submitted successfully." : "Úkol převodu řeči na text úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Vytvořit řeč“.",
-    "Transcribe audio" : "Vytvořit text ze zvukové nahrávky",
     "Transcription task submitted successfully." : "Úkol přepisu ze zvuku úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“."
 },

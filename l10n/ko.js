@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "요약",
     "Failed to notify when ready; unknown user" : "준비 완료 알림을 전달하지 못함; 알 수 없는 사용자",
     "Send an email" : "이메일 보내기",
     "User not logged in" : "사용자가 로그인하지 않음",
@@ -142,7 +143,6 @@ OC.L10N.register(
     "Failed to schedule your task" : "작업을 예약하지 못함",
     "Assistant error" : "어시스턴트 오류",
     "Please log in to view the task result" : "작업 결과를 보려면 로그인하세요.",
-    "This task does not exist or has been cleaned up" : "이 작업은 존재하지 않거나 정리되었음",
-    "Summarize" : "요약"
+    "This task does not exist or has been cleaned up" : "이 작업은 존재하지 않거나 정리되었음"
 },
 "nplurals=1; plural=0;");

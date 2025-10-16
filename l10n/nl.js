@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Transcribe audio" : "Zet audio om in tekst",
     "Failed to notify when ready; unknown user" : "Gereedmelding mislukt; onbekende gebruiker",
     "Failed to cancel notification; unknown user" : "Annuleringsmelding mislukt; onbekende gebruiker",
     "Send a message to a Talk conversation" : "Wen bericht naar een Talk-gesprek versturen",
@@ -122,7 +123,6 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Kon niet kopiëren naar het klembord",
     "Upload from device" : "Uploaden vanaf apparaat",
     "Advanced" : "Geavanceerd",
-    "Copy" : "Kopiëren",
-    "Transcribe audio" : "Zet audio om in tekst"
+    "Copy" : "Kopiëren"
 },
 "nplurals=2; plural=(n != 1);");

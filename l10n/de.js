@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Zusammenfassen",
+    "Transcribe audio" : "Audio transkribieren",
+    "Text to speech" : "Text zu Sprache",
     "Failed to notify when ready; unknown user" : "Fehler bei der Benachrichtigung der Fertigstellung; unbekannter Benutzer",
     "Failed to cancel notification; unknown user" : "Benachrichtigung konnte verworfen werden: Unbekannter Benutzer",
     "Send a message to a Talk conversation" : "Nachricht an eine Talk-Unterhaltung senden",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Bitte anmelden um das Aufgabenergebnis anzusehen",
     "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt",
     "Assistant failed to schedule your task" : "Assistent konnte Ihre Aufgabe nicht planen",
-    "Summarize" : "Zusammenfassen",
     "Summarization task submitted successfully." : "Zusammenfassungsaufgabe erfolgreich übermittelt.",
     "You will be notified when it is ready." : "Du wirst bei Fertigstellung benachrichtigt.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Es kann auch im Assistenten im Menü „Mit Text arbeiten -> Zusammenfassen“ überprüft werden.",
     "Failed to launch the AI file action" : "KI-Dateiaktion konnte nicht gestartet werden",
-    "Text to speech" : "Text zu Sprache",
     "Text-to-speech task submitted successfully." : "Text-zu-Sprache-Aufgabe erfolgreich übermittelt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Es kann auch im Assistenten im Menü „Mit Audio arbeiten -> Sprachausgabe erstellen“ überprüft werden.",
-    "Transcribe audio" : "Audio transkribieren",
     "Transcription task submitted successfully." : "Übersetzungsaufgabe erfolgreich übermittelt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü „Mit Audio arbeiten -> Audio transkribieren“ überprüft werden."
 },

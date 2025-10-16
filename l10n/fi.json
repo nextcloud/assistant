@@ -1,4 +1,5 @@
 { "translations": {
+    "Summarize" : "Luo yhteenveto",
     "Send an email" : "Lähetä sähköposti",
     "User not found" : "Käyttäjää ei löydy",
     "Nextcloud Assistant" : "Nextcloud-avustaja",
@@ -44,7 +45,6 @@
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
     "Copy" : "Kopioi",
-    "Upload file" : "Lähetä tiedosto",
-    "Summarize" : "Luo yhteenveto"
+    "Upload file" : "Lähetä tiedosto"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

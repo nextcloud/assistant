@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Összesítés",
     "Send an email" : "E-mail küldése",
     "User not found" : "A felhasználó nem található",
     "Nextcloud Assistant" : "Nextcloud Asszisztens",
@@ -63,7 +64,6 @@ OC.L10N.register(
     "Copy" : "Másolás",
     "Upload file" : "Fájl feltöltése",
     "Failed to schedule your task" : "Nem sikerült a feladat ütemezése",
-    "This task does not exist or has been cleaned up" : "Ez a feladat nem létezik vagy már törlésre került",
-    "Summarize" : "Összesítés"
+    "This task does not exist or has been cleaned up" : "Ez a feladat nem létezik vagy már törlésre került"
 },
 "nplurals=2; plural=(n != 1);");

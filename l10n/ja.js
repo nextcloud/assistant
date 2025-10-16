@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "要約する",
+    "Transcribe audio" : "音声の書き起こし",
+    "Text to speech" : "スピーチの生成",
     "Failed to notify when ready; unknown user" : "準備完了時の通知に失敗しました;不明なユーザーです",
     "Create a conversation" : "会話を作成",
     "Send an email" : "メールを送信",
@@ -244,11 +247,8 @@ OC.L10N.register(
     "Please log in to view the task result" : "タスクの結果を表示するにはログインしてください",
     "This task does not exist or has been cleaned up" : "このタスクは存在していません。または削除されています。",
     "Assistant failed to schedule your task" : "アシスタントがタスクをスケジュールできませんでした",
-    "Summarize" : "要約する",
     "Summarization task submitted successfully." : "要約タスクが正常に送信されました。",
     "You will be notified when it is ready." : "準備ができたら通知されます。",
-    "Text to speech" : "スピーチの生成",
-    "Text-to-speech task submitted successfully." : "テキスト読み上げタスクが正常に送信されました。",
-    "Transcribe audio" : "音声の書き起こし"
+    "Text-to-speech task submitted successfully." : "テキスト読み上げタスクが正常に送信されました。"
 },
 "nplurals=1; plural=0;");

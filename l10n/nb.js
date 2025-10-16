@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Oppsummere",
+    "Transcribe audio" : "Transkriber lyd",
     "Failed to notify when ready; unknown user" : "Varsling når klar feilet; ukjent bruker",
     "Send an email" : "Send en e-post",
     "User not logged in" : "Bruker ikke logget inn",
@@ -186,8 +188,6 @@ OC.L10N.register(
     "Submit the current task's result" : "Send inn resultatet for gjeldende aktivitet",
     "Assistant error" : "Assistentfeil",
     "Please log in to view the task result" : "Logg inn for å se oppgaveresultatet",
-    "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp",
-    "Summarize" : "Oppsummere",
-    "Transcribe audio" : "Transkriber lyd"
+    "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp"
 },
 "nplurals=2; plural=(n != 1);");

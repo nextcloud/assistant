@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Resume",
     "User not found" : "Nun s'atopó l'usuariu",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "AI text generation" : "Xeneración de testos per IA",
@@ -51,7 +52,6 @@ OC.L10N.register(
     "Copy" : "Copiar",
     "Upload file" : "Xubir un ficheru",
     "Assistant error" : "Error del asistente",
-    "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse",
-    "Summarize" : "Resume"
+    "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse"
 },
 "nplurals=2; plural=(n != 1);");

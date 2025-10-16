@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Підсумок",
+    "Transcribe audio" : "Транскрибувати аудіо",
+    "Text to speech" : "Текст на мову",
     "Failed to notify when ready; unknown user" : "Не вдалося повідомити про готовність; невідомий користувач",
     "Failed to cancel notification; unknown user" : "Не вдалося скасувати сповіщення; невідомий користувач",
     "Send a message to a Talk conversation" : "Надіслати повідомлення до розмови Talk",
@@ -302,15 +305,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Будь ласка, увійдіть, щоб переглянути результат завдання",
     "This task does not exist or has been cleaned up" : "Це завдання не існує або було видалено",
     "Assistant failed to schedule your task" : "Асистент не зміг запланувати ваше завдання",
-    "Summarize" : "Підсумок",
     "Summarization task submitted successfully." : "Завдання з узагальнення успішно відправлено.",
     "You will be notified when it is ready." : "Ви отримаєте повідомлення, коли все буде готово.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з текстом -> Підсумувати».",
     "Failed to launch the AI file action" : "Не вдалося запустити дію файлу ШІ",
-    "Text to speech" : "Текст на мову",
     "Text-to-speech task submitted successfully." : "Завдання перетворення тексту в мову успішно відправлено.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
-    "Transcribe audio" : "Транскрибувати аудіо",
     "Transcription task submitted successfully." : "Завдання з транскрипції успішно відправлено.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо»."
 },

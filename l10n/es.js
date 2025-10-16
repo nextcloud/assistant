@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "Resumir",
+    "Transcribe audio" : "Transcribir audio",
+    "Text to speech" : "Texto a voz",
     "Failed to notify when ready; unknown user" : "Fallo al notificar al estar listo; usuario desconocido",
     "Failed to cancel notification; unknown user" : "Fallo al cancelar la notificación; usuario desconocido",
     "Send a message to a Talk conversation" : "Enviar un mensaje a una conversación de Talk",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "Por favor, inicie sesión para ver el resultado de la tarea",
     "This task does not exist or has been cleaned up" : "Esta tarea no existe o no ha sido limpiada",
     "Assistant failed to schedule your task" : "El Asistente falló al agendar su tarea",
-    "Summarize" : "Resumir",
     "Summarization task submitted successfully." : "La tarea de Resumir fue enviada exitosamente.",
     "You will be notified when it is ready." : "Será notificado cuando esta esté lista.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con texto -> Resumir\".",
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",
-    "Text to speech" : "Texto a voz",
     "Text-to-speech task submitted successfully." : "La tarea de texto a voz fue enviada exitosamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
-    "Transcribe audio" : "Transcribir audio",
     "Transcription task submitted successfully." : "La tarea de Transcripción fue enviada exitosamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\"."
 },

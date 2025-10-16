@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize" : "摘要",
+    "Transcribe audio" : "轉錄音訊",
+    "Text to speech" : "文字轉語音",
     "Failed to notify when ready; unknown user" : "就緒時通知失敗；未知的使用者",
     "Failed to cancel notification; unknown user" : "取消通知失敗；不明的使用者",
     "Send a message to a Talk conversation" : "傳送訊息到 Talk 對話",
@@ -303,15 +306,12 @@ OC.L10N.register(
     "Please log in to view the task result" : "請登入以檢視任務結果",
     "This task does not exist or has been cleaned up" : "此任務不存在或已被清除",
     "Assistant failed to schedule your task" : "小幫手無法安排您的任務。",
-    "Summarize" : "摘要",
     "Summarization task submitted successfully." : "總結任務已成功遞交。",
     "You will be notified when it is ready." : "就緒時將會通知您。",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "也可以在小幫手的「處理文字」→「總結」選單中確認。",
     "Failed to launch the AI file action" : "啟動人工智慧檔案動作失敗",
-    "Text to speech" : "文字轉語音",
     "Text-to-speech task submitted successfully." : "文字轉語音任務遞交成功。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
-    "Transcribe audio" : "轉錄音訊",
     "Transcription task submitted successfully." : "轉錄任務已成功遞交。",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
 },
