@@ -156,7 +156,7 @@ OC.L10N.register(
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "如果您不滿意小幫手要執行的動作，您可以傳送新訊息來調整您的要求，而非按「取消」按鈕。",
     "The Assistant wants to perform sensitive actions on your behalf." : "小幫手想要代表您執行敏感動作。",
     "Cancel" : "取消",
-    "Confirm those actions" : "確認這些動作",
+    "Confirm those actions" : "請確認這些動作",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "您確定您想要刪除「{sessionTitle}」嗎？",
     "Error generating a response" : "產生回應時發生錯誤",
     "Error getting the generated title for the conversation" : "取得對話產生的標題時發生錯誤",
