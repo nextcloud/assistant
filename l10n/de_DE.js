@@ -312,11 +312,11 @@ OC.L10N.register(
     "Assistant failed to schedule your task" : "Assistent konnte Ihre Aufgabe nicht planen",
     "Summarization task submitted successfully." : "Zusammenfassungsaufgabe erfolgreich übermittelt.",
     "You will be notified when it is ready." : "Sie werden bei Fertigstellung benachrichtigt.",
-    "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Es kann auch im Assistenten im Menü „Mit Text arbeiten -> Zusammenfassen“ überprüft werden.",
+    "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Es kann auch im Assistenten im Menü \"Mit Text arbeiten -> Zusammenfassen\" überprüft werden.",
     "Failed to launch the AI file action" : "KI-Dateiaktion konnte nicht gestartet werden",
     "Text-to-speech task submitted successfully." : "Text-zu-Sprache-Aufgabe erfolgreich übermittelt.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Es kann auch im Assistenten im Menü „Mit Audio arbeiten -> Sprachausgabe erstellen“ überprüft werden.",
+    "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Sprachausgabe erstellen\" überprüft werden.",
     "Transcription task submitted successfully." : "Übersetzungsaufgabe erfolgreich übermittelt.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü „Mit Audio arbeiten -> Audio transkribieren“ überprüft werden."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden."
 },
 "nplurals=2; plural=(n != 1);");
