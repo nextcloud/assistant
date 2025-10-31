@@ -13,6 +13,7 @@
     "Less" : "По-малко",
     "More" : "Повече ",
     "Cancel" : "Отказ",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Сигурни ли сте, че искате да изтриете  {sessionTitle}?",
     "New conversation" : "Нов разговор",
     "Delete" : "Изтриване",
     "Edit title" : "Редактиране на заглавието",
