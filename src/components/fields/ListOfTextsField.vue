@@ -137,7 +137,7 @@ export default {
 		&--item {
 			display: flex;
 			gap: 4px;
-			align-items: center;
+			align-items: end;
 			.text-input {
 				flex-grow: 1;
 			}
