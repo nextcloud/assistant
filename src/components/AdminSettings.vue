@@ -9,6 +9,9 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<p><a href="https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html">{{ t('assistant', 'Find more details on how to set up Assistant and recommended backends in the Administration documentation.') }}</a></p>
+		<NcNoteCard v-if="state.text_to_sticker_available && !state.text_to_image_picker_available" type="warning">
+			{{ t('assistant', 'The sticker generation feature won`t work without being able to generate images. Please install and enable a "Generate image" provider or disable the "Generate sticker" task type.') }}
+		</NcNoteCard>
 		<div id="assistant-content">
 			<div>
 				<h3>
