@@ -39,7 +39,7 @@
 			</NcCheckboxRadioSwitch>
 			<NcCheckboxRadioSwitch v-if="state.text_to_sticker_picker_available"
 				:model-value="state.text_to_sticker_picker_enabled"
-				@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+				@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
 				<div class="checkbox-text">
 					{{ t('assistant', 'Enable AI sticker generation in smart picker') }}
 				</div>
