@@ -42,11 +42,9 @@ class Admin implements ISettings {
 
 		$freePromptPickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+		// if we can't generate images, let's assume the sticker picker is disabled
+		// but when image generation will be available again, we have kept the value set by the admin
 		$textToStickerPickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1';
-		if ($textToStickerPickerEnabled && !$textToImageAvailable) {
-			$this->appConfig->setValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '0');
-			$textToStickerPickerEnabled = false;
-		}
 
 		$speechToTextEnabled = $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS) ?: Application::CHAT_USER_INSTRUCTIONS;
