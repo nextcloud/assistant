@@ -292,6 +292,9 @@ class ChattyLLMController extends OCSController {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
+		if (strlen($content) > 64_000) {
+			return new JSONResponse(['error' => $this->l10n->t('The new message is too long')], Http::STATUS_BAD_REQUEST);
+		}
 
 		try {
 			$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
