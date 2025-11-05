@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Listener\Text2Image;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -38,10 +39,13 @@ class Text2StickerListener implements IEventListener {
 		if ($this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1'
 			&& $this->config->getUserValue($this->userId, Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1') {
 
-			// Double check that at least one provider is registered
+			// Double check that all necessary task types are available
+			// For some reason, taskProcessingManager->getAvailableTaskTypeIds does not return all the task types here
+			// most likely because all providers are not registered when RenderReferenceEvent is fired
 			$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 			$textToImageAvailable = array_key_exists(TextToImage::ID, $availableTaskTypes);
-			if ($textToImageAvailable) {
+			$textToStickerAvailable = array_key_exists(TextToStickerTaskType::ID, $availableTaskTypes);
+			if ($textToImageAvailable && $textToStickerAvailable) {
 				Util::addScript(Application::APP_ID, Application::APP_ID . '-stickerGeneration');
 			}
 		}

@@ -89,6 +89,4 @@ class Text2StickerProvider extends ADiscoverableReferenceProvider {
 	public function invalidateUserCache(string $userId): void {
 		$this->referenceManager->invalidateCache($userId);
 	}
-
-
 }
