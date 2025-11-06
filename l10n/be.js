@@ -11,6 +11,7 @@ OC.L10N.register(
     "View task" : "Праглядзець заданне",
     "Nextcloud Tasks" : "Заданні Nextcloud",
     "OpenProject" : "OpenProject",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Памочнік",
     "Voice chat with the assistant" : "Галасавы чат з памочнікам",
     "Describe a task that you want the assistant to do or ask a question" : "Апішыце заданне для памочніка, або задайце пытанне",
