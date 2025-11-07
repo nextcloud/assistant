@@ -13,6 +13,7 @@ use Exception;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\IL10N;
+use OCP\TaskProcessing\IManager;
 use OCP\TaskProcessing\ISynchronousProvider;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
@@ -24,6 +25,7 @@ class TextToStickerProvider implements ISynchronousProvider {
 	public function __construct(
 		private IL10N $l,
 		private TaskProcessingService $taskProcessingService,
+		private IManager $taskProcessingManager,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -82,6 +84,11 @@ class TextToStickerProvider implements ISynchronousProvider {
 			throw new RuntimeException('Invalid prompt');
 		}
 		$input = $input['input'];
+
+		$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
+		if (!array_key_exists(TextToImage::ID, $availableTaskTypes)) {
+			throw new RuntimeException('Text to image task type not available');
+		}
 
 		// Generate Image with custom prompt
 		try {

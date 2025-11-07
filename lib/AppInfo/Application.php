@@ -45,6 +45,7 @@ use OCP\IAppConfig;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
+use OCP\TaskProcessing\IManager;
 
 class Application extends App implements IBootstrap {
 
@@ -56,11 +57,14 @@ class Application extends App implements IBootstrap {
 	public const CHAT_USER_INSTRUCTIONS_TITLE = 'Above is a chat session in a specific language between the user and you, Nextcloud Assistant. Generate a suitable title summarizing the conversation in the same language. Output only the title in plain text, nothing else.';
 
 	private IAppConfig $appConfig;
+	private IManager $taskProcessingManager;
+
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
 
 		$container = $this->getContainer();
 		$this->appConfig = $container->get(IAppConfig::class);
+		$this->taskProcessingManager = $container->get(IManager::class);
 	}
 
 	public function register(IRegistrationContext $context): void {
@@ -69,7 +73,6 @@ class Application extends App implements IBootstrap {
 		$context->registerCapability(Capabilities::class);
 
 		$context->registerReferenceProvider(Text2ImageReferenceProvider::class);
-		$context->registerReferenceProvider(Text2StickerProvider::class);
 		$context->registerReferenceProvider(FreePromptReferenceProvider::class);
 		$context->registerReferenceProvider(SpeechToTextReferenceProvider::class);
 		$context->registerReferenceProvider(TaskOutputFileReferenceProvider::class);
@@ -101,10 +104,12 @@ class Application extends App implements IBootstrap {
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')) {
 			$context->registerTaskProcessingProvider(ContextAgentAudioInteractionProvider::class);
 		}
-		if ($this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1') {
-			$context->registerTaskProcessingTaskType(TextToStickerTaskType::class);
-			$context->registerTaskProcessingProvider(TextToStickerProvider::class);
-		}
+
+		// TODO use this when we drop NC <= 31
+		// if (in_array(TextToImage::ID, $this->taskProcessingManager->getAvailableTaskTypeIds(), true)) {
+		$context->registerTaskProcessingTaskType(TextToStickerTaskType::class);
+		$context->registerTaskProcessingProvider(TextToStickerProvider::class);
+		$context->registerReferenceProvider(Text2StickerProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {

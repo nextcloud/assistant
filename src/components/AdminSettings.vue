@@ -9,6 +9,9 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<p><a href="https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html">{{ t('assistant', 'Find more details on how to set up Assistant and recommended backends in the Administration documentation.') }}</a></p>
+		<NcNoteCard v-if="state.text_to_sticker_available && !state.text_to_image_picker_available" type="warning">
+			{{ t('assistant', 'The sticker generation feature won`t work without being able to generate images. Please install and enable a "Generate image" provider or disable the "Generate sticker" task type.') }}
+		</NcNoteCard>
 		<div id="assistant-content">
 			<div>
 				<h3>
@@ -21,7 +24,7 @@
 						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
 					</div>
 				</NcCheckboxRadioSwitch>
-				<NcNoteCard v-if="!state.text_processing_available" type="info">
+				<NcNoteCard v-if="!state.text_processing_available" type="warning">
 					{{ t('assistant', 'To be able to use this feature, please install at least one AI task processing provider.') }}
 				</NcNoteCard>
 				<NcCheckboxRadioSwitch
@@ -35,7 +38,7 @@
 				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="info">
 					<div class="checkbox-text">
 						<span>
-							{{ t('assistant', 'To enable this feature, please install an AI task processing provider for the free prompt task type:') }}
+							{{ t('assistant', 'To enable text generation in the smart picker, please install an AI task processing provider for the "Free text to text prompt" task type:') }}
 						</span>
 						<ul>
 							<li><a href="https://github.com/nextcloud/llm2#readme">Local Large language model app</a></li>
@@ -59,10 +62,10 @@
 						{{ t('assistant', 'Enable text-to-sticker in smart picker') }}
 					</div>
 				</NcCheckboxRadioSwitch>
-				<NcNoteCard v-if="!state.text_to_image_picker_available" type="info">
+				<NcNoteCard v-if="!state.text_to_image_picker_available" type="warning">
 					<div class="checkbox-text">
 						<span>
-							{{ t('assistant', 'To enable this feature, please install a text-to-image provider:') }}
+							{{ t('assistant', 'To enable the sticker generation picker or the image generation picker, please install and enable a "Generate image" provider:') }}
 						</span>
 						<ul>
 							<li><a href="https://github.com/nextcloud/text2image_stablediffusion#readme">Local Text-To-Image StableDiffusion</a></li>
@@ -78,10 +81,10 @@
 						{{ t('assistant', 'Enable speech-to-text in smart picker') }}
 					</div>
 				</NcCheckboxRadioSwitch>
-				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="info">
+				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="warning">
 					<div class="checkbox-text">
 						<span>
-							{{ t('assistant', 'To enable this feature, please install a speech-to-text provider:') }}
+							{{ t('assistant', 'To enable speech-to-text in the smart picker, please install and enable a "Transcribe audio" provider:') }}
 						</span>
 						<ul>
 							<li><a href="https://github.com/nextcloud/stt_whisper2#readme">Local Speech-To-Text Whisper</a></li>

@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Settings;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IAppConfig;
@@ -37,16 +38,15 @@ class Admin implements ISettings {
 		$freePromptTaskTypeAvailable = array_key_exists(TextToText::ID, $availableTaskTypes);
 		$speechToTextAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
 		$textToImageAvailable = array_key_exists(TextToImage::ID, $availableTaskTypes);
+		$textToStickerAvailable = array_key_exists(TextToStickerTaskType::ID, $availableTaskTypes);
 
 		$assistantEnabled = $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1') === '1';
 
 		$freePromptPickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'free_prompt_picker_enabled', '1') === '1';
 		$textToImagePickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'text_to_image_picker_enabled', '1') === '1';
+		// if we can't generate images, let's assume the sticker picker is disabled
+		// but when image generation will be available again, we have kept the value set by the admin
 		$textToStickerPickerEnabled = $this->appConfig->getValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '1') === '1';
-		if ($textToStickerPickerEnabled && !$textToImageAvailable) {
-			$this->appConfig->setValueString(Application::APP_ID, 'text_to_sticker_picker_enabled', '0');
-			$textToStickerPickerEnabled = false;
-		}
 
 		$speechToTextEnabled = $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS) ?: Application::CHAT_USER_INSTRUCTIONS;
@@ -57,6 +57,7 @@ class Admin implements ISettings {
 			'text_processing_available' => $taskProcessingAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImageAvailable,
+			'text_to_sticker_available' => $textToStickerAvailable,
 			'text_to_image_picker_enabled' => $textToImagePickerEnabled,
 			'text_to_sticker_picker_enabled' => $textToStickerPickerEnabled,
 			'free_prompt_task_type_available' => $freePromptTaskTypeAvailable,
