@@ -53,8 +53,6 @@
     "Failed to save assistant admin options" : "ياردەمچى باشقۇرغۇچى تاللانمىلىرىنى ساقلىيالمىدى",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "ياردەمچى ۋە تەۋسىيە قىلىنغان ئارقا بەتلەرنى باشقۇرۇش ھۆججىتىدىن قانداق تەڭشەش توغرىسىدا تېخىمۇ كۆپ تەپسىلاتلارنى تېپىڭ.",
     "Select which features you want to enable" : "قايسى ئىقتىدارلارنى قوزغىتىشنى تاللاڭ",
-    "To enable this feature, please install a text-to-image provider:" : "بۇ ئىقتىدارنى قوزغىتىش ئۈچۈن تېكىستتىن رەسىمگە تەمىنلىگۈچىنى قاچىلاڭ:",
-    "To enable this feature, please install a speech-to-text provider:" : "بۇ ئىقتىدارنى قوزغىتىش ئۈچۈن ، تېكىستتىن تېكىست تەمىنلىگۈچىنى قاچىلاڭ:",
     "Chat User Instructions for Chat Completions" : "پاراڭلىشىش ئۈچۈن پاراڭ ئىشلەتكۈچى قوللانمىسى",
     "It is passed on to the LLM for it to better understand the context." : "ئۇ مەزمۇننى تېخىمۇ ياخشى چۈشىنىش ئۈچۈن LLM غا يەتكۈزۈلدى.",
     "\"{user}\" is a placeholder for the user's display name." : "\"{user}\" ئىشلەتكۈچىنىڭ كۆرسىتىش نامىنىڭ ئورۇن ئىگىسى.",

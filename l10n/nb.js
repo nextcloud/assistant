@@ -56,8 +56,6 @@ OC.L10N.register(
     "Failed to save assistant admin options" : "Kunne ikke lagre alternativer for assistentadministrator",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "Du finner mer informasjon om hvordan du konfigurerer assistent og anbefalte serverdeler i administrasjonsdokumentasjonen.",
     "Select which features you want to enable" : "Velg hvilke funksjoner du vil aktivere",
-    "To enable this feature, please install a text-to-image provider:" : "For å aktivere denne funksjonen, vennligst installer en tekst-til-bilde-leverandør:",
-    "To enable this feature, please install a speech-to-text provider:" : "For å aktivere denne funksjonen, vennligst installer en tale-til-tekst-leverandør:",
     "Chat User Instructions for Chat Completions" : "Brukerveiledning for chat for fullføring av chat",
     "It is passed on to the LLM for it to better understand the context." : "Det sendes videre til LLM for at det bedre skal forstå sammenhengen.",
     "\"{user}\" is a placeholder for the user's display name." : "\"{user}\" er en plassholder for brukerens visningsnavn.",
