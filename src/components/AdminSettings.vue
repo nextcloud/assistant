@@ -21,10 +21,8 @@
 		</NcNoteCard>
 		<div id="assistant-content">
 			<div>
-				<h4>
-					{{ t('assistant', 'Select which features you want to enable') }}
-				</h4>
-				<NcFormBox class="switch-group">
+				<NcFormGroup :label="t('assistant', 'Select which features you want to enable')"
+					class="switch-group">
 					<NcFormBoxSwitch :model-value="state.assistant_enabled"
 						@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
 						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
@@ -85,7 +83,7 @@
 							</ul>
 						</div>
 					</NcNoteCard>
-				</NcFormBox>
+				</NcFormGroup>
 			</div>
 			<div class="chat-with-ai">
 				<h4>
@@ -159,7 +157,7 @@ import AssistantIcon from './icons/AssistantIcon.vue'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
-import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 
 import axios from '@nextcloud/axios'
@@ -177,7 +175,7 @@ export default {
 		NcNoteCard,
 		NcRichContenteditable,
 		NcTextField,
-		NcFormBox,
+		NcFormGroup,
 		NcFormBoxSwitch,
 		OpenInNewIcon,
 	},

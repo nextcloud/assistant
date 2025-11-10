@@ -9,7 +9,8 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
-			<NcFormBox class="switch-group">
+			<NcFormGroup :label="t('assistant', 'Select which features you want to enable')"
+				class="switch-group">
 				<NcFormBoxSwitch v-if="state.assistant_available"
 					:model-value="state.assistant_enabled"
 					@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
@@ -40,7 +41,7 @@
 					@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 					{{ t('assistant', 'Enable AI transcription in smart picker') }}
 				</NcFormBoxSwitch>
-			</NcFormBox>
+			</NcFormGroup>
 			<NcNoteCard v-if="noProvidersAvailable" type="warning">
 				{{ t('assistant', 'No suitable providers are available. They must first be enabled by your administrator.') }}
 			</NcNoteCard>
@@ -61,7 +62,7 @@
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
 
-import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
@@ -75,7 +76,7 @@ export default {
 
 	components: {
 		AssistantIcon,
-		NcFormBox,
+		NcFormGroup,
 		NcFormBoxSwitch,
 		NcNoteCard,
 	},
