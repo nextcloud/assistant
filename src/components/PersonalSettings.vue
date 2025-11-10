@@ -153,7 +153,7 @@ export default {
 	}
 
 	.switch-group {
-		max-width: 500px;
+		max-width: 800px;
 	}
 
 	.checkbox-text {

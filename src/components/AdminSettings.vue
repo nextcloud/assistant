@@ -232,6 +232,7 @@ export default {
 
 <style scoped lang="scss">
 #assistant_prefs {
+	max-width: 800px;
 	.line,
 	.settings-hint {
 		display: flex;
@@ -240,10 +241,6 @@ export default {
 		.icon {
 			margin-right: 4px;
 		}
-	}
-
-	.switch-group {
-		max-width: 500px;
 	}
 
 	.link-with-icon {
