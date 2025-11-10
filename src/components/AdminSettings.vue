@@ -115,7 +115,7 @@
 					</label>
 				</div>
 				<NcNoteCard type="info">
-					{{ t('assistant', 'It is passed on to the LLMs to let it know what to do') }}
+					{{ t('assistant', 'It is passed on to the LLMs to better generate a chat title') }}
 					<br>
 					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}
 				</NcNoteCard>
