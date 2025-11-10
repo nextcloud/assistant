@@ -136,7 +136,7 @@ export default {
 			default: false,
 		},
 		informationSourceNames: {
-			type: Array,
+			type: Object,
 			default: null,
 		},
 	},
