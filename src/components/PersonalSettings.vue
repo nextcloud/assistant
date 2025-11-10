@@ -9,54 +9,41 @@
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
 		<div id="assistant-content">
-			<NcCheckboxRadioSwitch v-if="state.assistant_available"
-				:model-value="state.assistant_enabled"
-				@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
-				<div class="checkbox-text">
+			<NcFormBox class="switch-group">
+				<NcFormBoxSwitch v-if="state.assistant_available"
+					:model-value="state.assistant_enabled"
+					@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
 					{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
-				</div>
-			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch v-if="state.audio_chat_available"
-				:model-value="state.autoplay_audio_chat"
-				@update:model-value="onCheckboxChanged($event, 'autoplay_audio_chat')">
-				<div class="checkbox-text">
+				</NcFormBoxSwitch>
+				<NcFormBoxSwitch v-if="state.audio_chat_available"
+					:model-value="state.autoplay_audio_chat"
+					@update:model-value="onCheckboxChanged($event, 'autoplay_audio_chat')">
 					{{ t('assistant', 'Auto-play audio chat responses') }}
-				</div>
-			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch v-if="state.free_prompt_picker_available"
-				:model-value="state.free_prompt_picker_enabled"
-				@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
-				<div class="checkbox-text">
+				</NcFormBoxSwitch>
+				<NcFormBoxSwitch v-if="state.free_prompt_picker_available"
+					:model-value="state.free_prompt_picker_enabled"
+					@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
 					{{ t('assistant', 'Enable AI text generation in smart picker') }}
-				</div>
-			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch v-if="state.text_to_image_picker_available"
-				:model-value="state.text_to_image_picker_enabled"
-				@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
-				<div class="checkbox-text">
+				</NcFormBoxSwitch>
+				<NcFormBoxSwitch v-if="state.text_to_image_picker_available"
+					:model-value="state.text_to_image_picker_enabled"
+					@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
 					{{ t('assistant', 'Enable AI image generation in smart picker') }}
-				</div>
-			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch v-if="state.text_to_sticker_picker_available"
-				:model-value="state.text_to_sticker_picker_enabled"
-				@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
-				<div class="checkbox-text">
+				</NcFormBoxSwitch>
+				<NcFormBoxSwitch v-if="state.text_to_sticker_picker_available"
+					:model-value="state.text_to_sticker_picker_enabled"
+					@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
 					{{ t('assistant', 'Enable AI sticker generation in smart picker') }}
-				</div>
-			</NcCheckboxRadioSwitch>
-			<NcCheckboxRadioSwitch v-if="state.speech_to_text_picker_available"
-				:model-value="state.speech_to_text_picker_enabled"
-				@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
-				<div class="checkbox-text">
+				</NcFormBoxSwitch>
+				<NcFormBoxSwitch v-if="state.speech_to_text_picker_available"
+					:model-value="state.speech_to_text_picker_enabled"
+					@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
 					{{ t('assistant', 'Enable AI transcription in smart picker') }}
-				</div>
-			</NcCheckboxRadioSwitch>
-			<div v-if="noProvidersAvailable" class="settings-hint">
-				<InformationOutlineIcon class="icon" />
-				<span>
-					{{ t('assistant', 'No suitable providers are available. They must first be enabled by your administrator.') }}
-				</span>
-			</div>
+				</NcFormBoxSwitch>
+			</NcFormBox>
+			<NcNoteCard v-if="noProvidersAvailable" type="warning">
+				{{ t('assistant', 'No suitable providers are available. They must first be enabled by your administrator.') }}
+			</NcNoteCard>
 			<div v-else>
 				<h3>{{ t('assistant', 'Configured backends') }}</h3>
 				<p>{{ t('assistant', 'The following services are used as backends for Nextcloud Assistant:') }}</p>
@@ -73,9 +60,10 @@
 
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 
-import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
@@ -87,8 +75,9 @@ export default {
 
 	components: {
 		AssistantIcon,
-		NcCheckboxRadioSwitch,
-		InformationOutlineIcon,
+		NcFormBox,
+		NcFormBoxSwitch,
+		NcNoteCard,
 	},
 
 	props: [],
@@ -160,6 +149,10 @@ export default {
 		.icon {
 			margin-right: 4px;
 		}
+	}
+
+	.switch-group {
+		max-width: 500px;
 	}
 
 	.checkbox-text {
