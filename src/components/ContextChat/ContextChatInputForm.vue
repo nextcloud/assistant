@@ -260,12 +260,10 @@ export default {
 		taskType(newValue) {
 			this.onTaskTypeChange()
 		},
-		inputs: {
-			handler(newValue) {
-				if (Object.keys(newValue).length === 0) {
-					this.onInputsReset()
-				}
-			},
+		inputs(newValue) {
+			if (Object.keys(newValue).length === 0) {
+				this.onInputsReset()
+			}
 		},
 	},
 
