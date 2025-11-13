@@ -2545,23 +2545,15 @@
                                 "schema": {
                                     "type": "object",
                                     "required": [
-                                        "ocs"
+                                        "version",
+                                        "tooltip"
                                     ],
                                     "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "string"
-                                                }
-                                            }
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "tooltip": {
+                                            "type": "string"
                                         }
                                     }
                                 }
@@ -2575,31 +2567,11 @@
                                 "schema": {
                                     "type": "object",
                                     "required": [
-                                        "ocs"
+                                        "error"
                                     ],
                                     "properties": {
-                                        "ocs": {
-                                            "type": "object",
-                                            "required": [
-                                                "meta",
-                                                "data"
-                                            ],
-                                            "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "error"
-                                                    ],
-                                                    "properties": {
-                                                        "error": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                        "error": {
+                                            "type": "string"
                                         }
                                     }
                                 }

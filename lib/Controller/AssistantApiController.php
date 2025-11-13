@@ -18,6 +18,7 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataDownloadResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\OCSController;
 use OCP\DB\Exception;
@@ -420,13 +421,13 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param int $fileId The input file ID
 	 * @param string $taskTypeId The task type of the operation to perform
-	 * @return DataResponse<Http::STATUS_OK, string, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 * @return JSONResponse<Http::STATUS_OK, array{version: string, tooltip: string}, array{}>|JSONResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: The task has been scheduled successfully
 	 * 400: There was an issue while scheduling the task
 	 */
 	#[NoAdminRequired]
-	public function runFileAction(int $fileId, string $taskTypeId): DataResponse {
+	public function runFileAction(int $fileId, string $taskTypeId): JSONResponse {
 		try {
 			$this->taskProcessingService->runFileAction($this->userId, $fileId, $taskTypeId);
 			$message = $this->l10n->t('Assistant task submitted successfully');
@@ -439,9 +440,12 @@ class AssistantApiController extends OCSController {
 					$message = $this->l10n->t('Text-to-speech task submitted successfully');
 				}
 			}
-			return new DataResponse($message);
+			return new JSONResponse([
+				'version' => '0.1',
+				'tooltip' => $message,
+			]);
 		} catch (Exception|Throwable $e) {
-			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+			return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
 	}
 }
