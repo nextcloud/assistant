@@ -11,36 +11,38 @@
 		<div id="assistant-content">
 			<NcFormGroup :label="t('assistant', 'Select which features you want to enable')"
 				class="switch-group">
-				<NcFormBoxSwitch v-if="state.assistant_available"
-					:model-value="state.assistant_enabled"
-					@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
-					{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
-				</NcFormBoxSwitch>
-				<NcFormBoxSwitch v-if="state.audio_chat_available"
-					:model-value="state.autoplay_audio_chat"
-					@update:model-value="onCheckboxChanged($event, 'autoplay_audio_chat')">
-					{{ t('assistant', 'Auto-play audio chat responses') }}
-				</NcFormBoxSwitch>
-				<NcFormBoxSwitch v-if="state.free_prompt_picker_available"
-					:model-value="state.free_prompt_picker_enabled"
-					@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
-					{{ t('assistant', 'Enable AI text generation in smart picker') }}
-				</NcFormBoxSwitch>
-				<NcFormBoxSwitch v-if="state.text_to_image_picker_available"
-					:model-value="state.text_to_image_picker_enabled"
-					@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
-					{{ t('assistant', 'Enable AI image generation in smart picker') }}
-				</NcFormBoxSwitch>
-				<NcFormBoxSwitch v-if="state.text_to_sticker_picker_available"
-					:model-value="state.text_to_sticker_picker_enabled"
-					@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
-					{{ t('assistant', 'Enable AI sticker generation in smart picker') }}
-				</NcFormBoxSwitch>
-				<NcFormBoxSwitch v-if="state.speech_to_text_picker_available"
-					:model-value="state.speech_to_text_picker_enabled"
-					@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
-					{{ t('assistant', 'Enable AI transcription in smart picker') }}
-				</NcFormBoxSwitch>
+				<NcFormBox>
+					<NcFormBoxSwitch v-if="state.assistant_available"
+						:model-value="state.assistant_enabled"
+						@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
+						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
+					</NcFormBoxSwitch>
+					<NcFormBoxSwitch v-if="state.audio_chat_available"
+						:model-value="state.autoplay_audio_chat"
+						@update:model-value="onCheckboxChanged($event, 'autoplay_audio_chat')">
+						{{ t('assistant', 'Auto-play audio chat responses') }}
+					</NcFormBoxSwitch>
+					<NcFormBoxSwitch v-if="state.free_prompt_picker_available"
+						:model-value="state.free_prompt_picker_enabled"
+						@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+						{{ t('assistant', 'Enable AI text generation in smart picker') }}
+					</NcFormBoxSwitch>
+					<NcFormBoxSwitch v-if="state.text_to_image_picker_available"
+						:model-value="state.text_to_image_picker_enabled"
+						@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+						{{ t('assistant', 'Enable AI image generation in smart picker') }}
+					</NcFormBoxSwitch>
+					<NcFormBoxSwitch v-if="state.text_to_sticker_picker_available"
+						:model-value="state.text_to_sticker_picker_enabled"
+						@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
+						{{ t('assistant', 'Enable AI sticker generation in smart picker') }}
+					</NcFormBoxSwitch>
+					<NcFormBoxSwitch v-if="state.speech_to_text_picker_available"
+						:model-value="state.speech_to_text_picker_enabled"
+						@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+						{{ t('assistant', 'Enable AI transcription in smart picker') }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
 			</NcFormGroup>
 			<NcNoteCard v-if="noProvidersAvailable" type="warning">
 				{{ t('assistant', 'No suitable providers are available. They must first be enabled by your administrator.') }}
@@ -63,6 +65,7 @@
 import AssistantIcon from './icons/AssistantIcon.vue'
 
 import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
+import NcFormBox from '@nextcloud/vue/components/NcFormBox'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
@@ -77,6 +80,7 @@ export default {
 	components: {
 		AssistantIcon,
 		NcFormGroup,
+		NcFormBox,
 		NcFormBoxSwitch,
 		NcNoteCard,
 	},
