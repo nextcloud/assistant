@@ -26,6 +26,7 @@ OC.L10N.register(
     "AI audio transcription" : "AI ئاۋاز خاتىرىلەش",
     "AI context writer" : "AI مەزمۇن يازغۇچىسى",
     "Writing style: %1$s; Source material: %2$s" : "يېزىش ئۇسلۇبى:%1 $ s; مەنبە ماتېرىيالى:%2 $ s",
+    "Context Chat" : "مەزمۇن پاراڭ",
     "Task for \"%1$s\" has finished" : "«%1 $ s» نىڭ ۋەزىپىسى تاماملاندى",
     "\"%1$s\" task for \"%2$s\" has finished" : "\"%2 $ s\" نىڭ \"%1 $ s\" ۋەزىپىسى تاماملاندى",
     "Input: %1$s" : "كىرگۈزۈش:%1 $ s",
