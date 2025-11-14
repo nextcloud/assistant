@@ -8,103 +8,129 @@
 			<AssistantIcon class="icon" />
 			{{ t('assistant', 'Nextcloud Assistant') }}
 		</h2>
-		<p><a href="https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html">{{ t('assistant', 'Find more details on how to set up Assistant and recommended backends in the Administration documentation.') }}</a></p>
+		<NcNoteCard type="info">
+			{{ t('assistant', 'Find more details on how to set up Assistant and recommended backends in the Administration documentation.') }}
+			<br>
+			<a href="https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html" class="external link-with-icon" target="_blank">
+				{{ t('assistant', 'Administration documentation') }}
+				<OpenInNewIcon :size="16" />
+			</a>
+		</NcNoteCard>
 		<NcNoteCard v-if="state.text_to_sticker_available && !state.text_to_image_picker_available" type="warning">
 			{{ t('assistant', 'The sticker generation feature won`t work without being able to generate images. Please install and enable a "Generate image" provider or disable the "Generate sticker" task type.') }}
 		</NcNoteCard>
 		<div id="assistant-content">
 			<div>
-				<h3>
-					{{ t('assistant', 'Select which features you want to enable') }}
-				</h3>
-				<NcCheckboxRadioSwitch
-					:model-value="state.assistant_enabled"
-					@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
-					<div class="checkbox-text">
-						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
-					</div>
-				</NcCheckboxRadioSwitch>
-				<NcNoteCard v-if="!state.text_processing_available" type="warning">
-					{{ t('assistant', 'To be able to use this feature, please install at least one AI task processing provider.') }}
+				<NcFormGroup :label="t('assistant', 'Select which features you want to enable')"
+					:hide-label="true"
+					class="switch-group">
+					<NcFormBox>
+						<NcFormBoxSwitch :model-value="state.assistant_enabled"
+							@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
+							{{ t('assistant', 'Nextcloud Assistant in header') }}
+						</NcFormBoxSwitch>
+						<NcFormBoxSwitch :model-value="state.free_prompt_picker_enabled"
+							:disabled="!state.free_prompt_task_type_available"
+							@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
+							{{ t('assistant', 'AI text generation in the smart picker') }}
+						</NcFormBoxSwitch>
+						<NcFormBoxSwitch :model-value="state.text_to_image_picker_enabled"
+							:disabled="!state.text_to_image_picker_available"
+							@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
+							{{ t('assistant', 'Text-to-image in the smart picker') }}
+						</NcFormBoxSwitch>
+						<NcFormBoxSwitch :model-value="state.text_to_sticker_picker_enabled"
+							:disabled="!state.text_to_image_picker_available"
+							@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
+							{{ t('assistant', 'Text-to-sticker in the smart picker') }}
+						</NcFormBoxSwitch>
+						<NcFormBoxSwitch :model-value="state.speech_to_text_picker_enabled"
+							:disabled="!state.speech_to_text_picker_available"
+							@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
+							{{ t('assistant', 'Speech-to-text in the smart picker') }}
+						</NcFormBoxSwitch>
+					</NcFormBox>
+				</NcFormGroup>
+				<NcNoteCard v-if="!state.task_processing_available" type="warning">
+					{{ t('assistant', 'To be able to use the Assistant, please install at least one AI task processing provider.') }}
 				</NcNoteCard>
-				<NcCheckboxRadioSwitch
-					:model-value="state.free_prompt_picker_enabled"
-					:disabled="!state.free_prompt_task_type_available"
-					@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
-					<div class="checkbox-text">
-						{{ t('assistant', 'Enable AI text generation in smart picker') }}
-					</div>
-				</NcCheckboxRadioSwitch>
-				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="info">
+				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="warning">
 					<div class="checkbox-text">
 						<span>
 							{{ t('assistant', 'To enable text generation in the smart picker, please install an AI task processing provider for the "Free text to text prompt" task type:') }}
 						</span>
 						<ul>
-							<li><a href="https://github.com/nextcloud/llm2#readme">Local Large language model app</a></li>
-							<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+							<li>
+								<a href="https://github.com/nextcloud/llm2#readme" class="external link-with-icon" target="_blank">
+									Local Large language model app
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+							<li>
+								<a href="https://apps.nextcloud.com/apps/integration_openai" class="external link-with-icon" target="_blank">
+									OpenAI/LocalAI Integration
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
 						</ul>
 					</div>
 				</NcNoteCard>
-				<NcCheckboxRadioSwitch
-					:model-value="state.text_to_image_picker_enabled"
-					:disabled="!state.text_to_image_picker_available"
-					@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
-					<div class="checkbox-text">
-						{{ t('assistant', 'Enable text-to-image in smart picker') }}
-					</div>
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					:model-value="state.text_to_sticker_picker_enabled"
-					:disabled="!state.text_to_image_picker_available"
-					@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
-					<div class="checkbox-text">
-						{{ t('assistant', 'Enable text-to-sticker in smart picker') }}
-					</div>
-				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.text_to_image_picker_available" type="warning">
 					<div class="checkbox-text">
 						<span>
 							{{ t('assistant', 'To enable the sticker generation picker or the image generation picker, please install and enable a "Generate image" provider:') }}
 						</span>
 						<ul>
-							<li><a href="https://github.com/nextcloud/text2image_stablediffusion#readme">Local Text-To-Image StableDiffusion</a></li>
-							<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+							<li>
+								<a href="https://github.com/nextcloud/text2image_stablediffusion#readme" class="external link-with-icon" target="_blank">
+									Local Text-To-Image StableDiffusion
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+							<li>
+								<a href="https://apps.nextcloud.com/apps/integration_openai" class="external link-with-icon" target="_blank">
+									OpenAI/LocalAI Integration
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
 						</ul>
 					</div>
 				</NcNoteCard>
-				<NcCheckboxRadioSwitch
-					:model-value="state.speech_to_text_picker_enabled"
-					:disabled="!state.speech_to_text_picker_available"
-					@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
-					<div class="checkbox-text">
-						{{ t('assistant', 'Enable speech-to-text in smart picker') }}
-					</div>
-				</NcCheckboxRadioSwitch>
 				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="warning">
 					<div class="checkbox-text">
 						<span>
 							{{ t('assistant', 'To enable speech-to-text in the smart picker, please install and enable a "Transcribe audio" provider:') }}
 						</span>
 						<ul>
-							<li><a href="https://github.com/nextcloud/stt_whisper2#readme">Local Speech-To-Text Whisper</a></li>
-							<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
+							<li>
+								<a href="https://github.com/nextcloud/stt_whisper2#readme" class="external link-with-icon" target="_blank">
+									Local Speech-To-Text Whisper
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+							<li>
+								<a href="https://apps.nextcloud.com/apps/integration_openai" class="external link-with-icon" target="_blank">
+									OpenAI/LocalAI Integration
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
 						</ul>
 					</div>
 				</NcNoteCard>
 			</div>
 			<div class="chat-with-ai">
-				<h2>
+				<h4>
 					{{ t('assistant', 'Chat with AI') }}
-				</h2>
+				</h4>
 				<div class="line">
 					<label for="chat_user_instructions">
 						{{ t('assistant', 'Chat User Instructions for Chat Completions') }}
 					</label>
 				</div>
 				<NcNoteCard type="info">
-					<p>{{ t('assistant', 'It is passed on to the LLM for it to better understand the context.') }}</p>
-					<p>{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}</p>
+					{{ t('assistant', 'It is passed on to the LLM for it to better understand the context.') }}
+					<br>
+					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}
 				</NcNoteCard>
 				<NcRichContenteditable id="chat_user_instructions"
 					v-model="state.chat_user_instructions"
@@ -122,8 +148,9 @@
 					</label>
 				</div>
 				<NcNoteCard type="info">
-					<p>{{ t('assistant', 'It is passed on to the LLMs to let it know what to do') }}</p>
-					<p>{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}</p>
+					{{ t('assistant', 'It is passed on to the LLMs to better generate a chat title') }}
+					<br>
+					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}
 				</NcNoteCard>
 				<NcRichContenteditable id="chat_user_instructions_title"
 					v-model="state.chat_user_instructions_title"
@@ -141,7 +168,7 @@
 					</label>
 				</div>
 				<NcNoteCard type="info">
-					<p>{{ t('assistant', 'This includes the user instructions and the LLM\'s messages') }}</p>
+					{{ t('assistant', 'This includes the user instructions and the LLM\'s messages') }}
 				</NcNoteCard>
 				<NcTextField id="chat_last_n_messages"
 					v-model="state.chat_last_n_messages"
@@ -156,12 +183,16 @@
 </template>
 
 <script>
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+
 import AssistantIcon from './icons/AssistantIcon.vue'
 
-import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
+import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
+import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
@@ -175,10 +206,13 @@ export default {
 
 	components: {
 		AssistantIcon,
-		NcCheckboxRadioSwitch,
 		NcNoteCard,
 		NcRichContenteditable,
 		NcTextField,
+		NcFormGroup,
+		NcFormBox,
+		NcFormBoxSwitch,
+		OpenInNewIcon,
 	},
 
 	data() {
@@ -233,6 +267,7 @@ export default {
 
 <style scoped lang="scss">
 #assistant_prefs {
+	max-width: 800px;
 	.line,
 	.settings-hint {
 		display: flex;
@@ -241,6 +276,12 @@ export default {
 		.icon {
 			margin-right: 4px;
 		}
+	}
+
+	.link-with-icon {
+		display: flex;
+		align-items: center;
+		gap: 4px;
 	}
 
 	.checkbox-text {
