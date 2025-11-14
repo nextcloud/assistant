@@ -62,6 +62,7 @@ class Personal implements ISettings {
 		$speechToTextPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 
 		$userConfig = [
+			'task_processing_available' => $taskProcessingAvailable,
 			'assistant_available' => $assistantAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImagePickerAvailable,

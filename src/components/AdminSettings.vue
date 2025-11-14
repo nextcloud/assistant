@@ -12,7 +12,7 @@
 			{{ t('assistant', 'Find more details on how to set up Assistant and recommended backends in the Administration documentation.') }}
 			<br>
 			<a href="https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html" class="external link-with-icon" target="_blank">
-				{{ t('assistant', 'Open Administration documentation') }}
+				{{ t('assistant', 'Administration documentation') }}
 				<OpenInNewIcon :size="16" />
 			</a>
 		</NcNoteCard>
@@ -22,70 +22,101 @@
 		<div id="assistant-content">
 			<div>
 				<NcFormGroup :label="t('assistant', 'Select which features you want to enable')"
+					:hide-label="true"
 					class="switch-group">
 					<NcFormBox>
 						<NcFormBoxSwitch :model-value="state.assistant_enabled"
 							@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
-							{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
+							{{ t('assistant', 'Nextcloud Assistant in header') }}
 						</NcFormBoxSwitch>
-						<NcNoteCard v-if="!state.text_processing_available" type="warning">
-							{{ t('assistant', 'To be able to use this feature, please install at least one AI task processing provider.') }}
-						</NcNoteCard>
 						<NcFormBoxSwitch :model-value="state.free_prompt_picker_enabled"
 							:disabled="!state.free_prompt_task_type_available"
 							@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
-							{{ t('assistant', 'Enable AI text generation in smart picker') }}
+							{{ t('assistant', 'AI text generation in the smart picker') }}
 						</NcFormBoxSwitch>
-						<NcNoteCard v-if="!state.free_prompt_task_type_available" type="info">
-							<div class="checkbox-text">
-								<span>
-									{{ t('assistant', 'To enable text generation in the smart picker, please install an AI task processing provider for the "Free text to text prompt" task type:') }}
-								</span>
-								<ul>
-									<li><a href="https://github.com/nextcloud/llm2#readme">Local Large language model app</a></li>
-									<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
-								</ul>
-							</div>
-						</NcNoteCard>
 						<NcFormBoxSwitch :model-value="state.text_to_image_picker_enabled"
 							:disabled="!state.text_to_image_picker_available"
 							@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
-							{{ t('assistant', 'Enable text-to-image in smart picker') }}
+							{{ t('assistant', 'Text-to-image in the smart picker') }}
 						</NcFormBoxSwitch>
 						<NcFormBoxSwitch :model-value="state.text_to_sticker_picker_enabled"
 							:disabled="!state.text_to_image_picker_available"
 							@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
-							{{ t('assistant', 'Enable text-to-sticker in smart picker') }}
+							{{ t('assistant', 'Text-to-sticker in the smart picker') }}
 						</NcFormBoxSwitch>
-						<NcNoteCard v-if="!state.text_to_image_picker_available" type="warning">
-							<div class="checkbox-text">
-								<span>
-									{{ t('assistant', 'To enable the sticker generation picker or the image generation picker, please install and enable a "Generate image" provider:') }}
-								</span>
-								<ul>
-									<li><a href="https://github.com/nextcloud/text2image_stablediffusion#readme">Local Text-To-Image StableDiffusion</a></li>
-									<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
-								</ul>
-							</div>
-						</NcNoteCard>
 						<NcFormBoxSwitch :model-value="state.speech_to_text_picker_enabled"
 							:disabled="!state.speech_to_text_picker_available"
 							@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
-							{{ t('assistant', 'Enable speech-to-text in smart picker') }}
+							{{ t('assistant', 'Speech-to-text in the smart picker') }}
 						</NcFormBoxSwitch>
-						<NcNoteCard v-if="!state.speech_to_text_picker_available" type="warning">
-							<div class="checkbox-text">
-								<span>
-									{{ t('assistant', 'To enable speech-to-text in the smart picker, please install and enable a "Transcribe audio" provider:') }}
-								</span>
-								<ul>
-									<li><a href="https://github.com/nextcloud/stt_whisper2#readme">Local Speech-To-Text Whisper</a></li>
-									<li><a href="https://apps.nextcloud.com/apps/integration_openai">OpenAI/LocalAI Integration</a></li>
-								</ul>
-							</div>
-						</NcNoteCard>
 					</NcFormBox>
 				</NcFormGroup>
+				<NcNoteCard v-if="!state.task_processing_available" type="warning">
+					{{ t('assistant', 'To be able to use the Assistant, please install at least one AI task processing provider.') }}
+				</NcNoteCard>
+				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="warning">
+					<div class="checkbox-text">
+						<span>
+							{{ t('assistant', 'To enable text generation in the smart picker, please install an AI task processing provider for the "Free text to text prompt" task type:') }}
+						</span>
+						<ul>
+							<li>
+								<a href="https://github.com/nextcloud/llm2#readme" class="external link-with-icon" target="_blank">
+									Local Large language model app
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+							<li>
+								<a href="https://apps.nextcloud.com/apps/integration_openai" class="external link-with-icon" target="_blank">
+									OpenAI/LocalAI Integration
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+						</ul>
+					</div>
+				</NcNoteCard>
+				<NcNoteCard v-if="!state.text_to_image_picker_available" type="warning">
+					<div class="checkbox-text">
+						<span>
+							{{ t('assistant', 'To enable the sticker generation picker or the image generation picker, please install and enable a "Generate image" provider:') }}
+						</span>
+						<ul>
+							<li>
+								<a href="https://github.com/nextcloud/text2image_stablediffusion#readme" class="external link-with-icon" target="_blank">
+									Local Text-To-Image StableDiffusion
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+							<li>
+								<a href="https://apps.nextcloud.com/apps/integration_openai" class="external link-with-icon" target="_blank">
+									OpenAI/LocalAI Integration
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+						</ul>
+					</div>
+				</NcNoteCard>
+				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="warning">
+					<div class="checkbox-text">
+						<span>
+							{{ t('assistant', 'To enable speech-to-text in the smart picker, please install and enable a "Transcribe audio" provider:') }}
+						</span>
+						<ul>
+							<li>
+								<a href="https://github.com/nextcloud/stt_whisper2#readme" class="external link-with-icon" target="_blank">
+									Local Speech-To-Text Whisper
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+							<li>
+								<a href="https://apps.nextcloud.com/apps/integration_openai" class="external link-with-icon" target="_blank">
+									OpenAI/LocalAI Integration
+									<OpenInNewIcon :size="16" />
+								</a>
+							</li>
+						</ul>
+					</div>
+				</NcNoteCard>
 			</div>
 			<div class="chat-with-ai">
 				<h4>

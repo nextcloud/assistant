@@ -54,7 +54,7 @@ class Admin implements ISettings {
 		$chattyLLMLastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10');
 
 		$adminConfig = [
-			'text_processing_available' => $taskProcessingAvailable,
+			'task_processing_available' => $taskProcessingAvailable,
 			'assistant_enabled' => $assistantEnabled,
 			'text_to_image_picker_available' => $textToImageAvailable,
 			'text_to_sticker_available' => $textToStickerAvailable,

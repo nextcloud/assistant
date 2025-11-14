@@ -10,12 +10,13 @@
 		</h2>
 		<div id="assistant-content">
 			<NcFormGroup :label="t('assistant', 'Select which features you want to enable')"
+				:hide-label="true"
 				class="switch-group">
 				<NcFormBox>
 					<NcFormBoxSwitch v-if="state.assistant_available"
 						:model-value="state.assistant_enabled"
 						@update:model-value="onCheckboxChanged($event, 'assistant_enabled')">
-						{{ t('assistant', 'Enable Nextcloud Assistant in header') }}
+						{{ t('assistant', 'Nextcloud Assistant in header') }}
 					</NcFormBoxSwitch>
 					<NcFormBoxSwitch v-if="state.audio_chat_available"
 						:model-value="state.autoplay_audio_chat"
@@ -25,22 +26,22 @@
 					<NcFormBoxSwitch v-if="state.free_prompt_picker_available"
 						:model-value="state.free_prompt_picker_enabled"
 						@update:model-value="onCheckboxChanged($event, 'free_prompt_picker_enabled')">
-						{{ t('assistant', 'Enable AI text generation in smart picker') }}
+						{{ t('assistant', 'AI text generation in smart picker') }}
 					</NcFormBoxSwitch>
 					<NcFormBoxSwitch v-if="state.text_to_image_picker_available"
 						:model-value="state.text_to_image_picker_enabled"
 						@update:model-value="onCheckboxChanged($event, 'text_to_image_picker_enabled')">
-						{{ t('assistant', 'Enable AI image generation in smart picker') }}
+						{{ t('assistant', 'AI image generation in smart picker') }}
 					</NcFormBoxSwitch>
 					<NcFormBoxSwitch v-if="state.text_to_sticker_picker_available"
 						:model-value="state.text_to_sticker_picker_enabled"
 						@update:model-value="onCheckboxChanged($event, 'text_to_sticker_picker_enabled')">
-						{{ t('assistant', 'Enable AI sticker generation in smart picker') }}
+						{{ t('assistant', 'AI sticker generation in smart picker') }}
 					</NcFormBoxSwitch>
 					<NcFormBoxSwitch v-if="state.speech_to_text_picker_available"
 						:model-value="state.speech_to_text_picker_enabled"
 						@update:model-value="onCheckboxChanged($event, 'speech_to_text_picker_enabled')">
-						{{ t('assistant', 'Enable AI transcription in smart picker') }}
+						{{ t('assistant', 'AI transcription in smart picker') }}
 					</NcFormBoxSwitch>
 				</NcFormBox>
 			</NcFormGroup>
@@ -97,7 +98,7 @@ export default {
 	computed: {
 		noProvidersAvailable() {
 			return this.state.text_to_image_picker_available === false
-				&& this.state.text_processing_available === false
+				&& this.state.task_processing_available === false
 				&& this.state.speech_to_text_picker_available === false
 		},
 	},
