@@ -672,13 +672,37 @@ export default {
 			try {
 				this.slowPickup = false
 				this.loading.llmGeneration = true
+				this.saveLastSelectedTaskType('chatty-llm')
+
+				// Get the last message ID (the user's message)
+				const lastMessage = this.messages[this.messages.length - 1]
+				const messageId = lastMessage?.id
+
+				// Try streaming first if message ID is available
+				if (messageId && agencyConfirm === null) {
+					try {
+						console.debug('Attempting to use streaming for session:', sessionId)
+						const message = await this.streamGenerationTask(sessionId, messageId)
+						console.debug('Streaming result:', message)
+						// Message is already in the messages array from streamGenerationTask
+						this.scrollToBottom()
+						return
+					} catch (streamError) {
+						console.warn('Streaming failed, falling back to polling:', streamError)
+						// Remove the placeholder message that was added by streamGenerationTask
+						if (this.messages[this.messages.length - 1]?.id === null) {
+							this.messages.pop()
+						}
+					}
+				}
+
+				// Fall back to traditional polling method
 				const params = {
 					sessionId,
 				}
 				if (agencyConfirm !== null) {
 					params.agencyConfirm = agencyConfirm ? 1 : 0
 				}
-				this.saveLastSelectedTaskType('chatty-llm')
 				const generationResponse = await axios.get(getChatURL('/generate'), { params })
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
@@ -759,6 +783,89 @@ export default {
 					})
 				}, 2000)
 			})
+		},
+
+		async streamGenerationTask(sessionId, messageId) {
+			return new Promise((resolve, reject) => {
+				const url = generateUrl('/apps/assistant/chat/stream')
+				const params = new URLSearchParams({ sessionId, messageId })
+				const eventSource = new EventSource(`${url}?${params}`)
+
+				// Create a placeholder message for streaming content
+				const streamingMessage = {
+					id: null, // Will be set when complete
+					session_id: sessionId,
+					role: Roles.ASSISTANT,
+					content: '',
+					timestamp: Date.now() / 1000,
+					sources: [],
+					attachments: [],
+					ocp_task_id: 0,
+				}
+
+				// Add placeholder message to UI
+				this.messages.push(streamingMessage)
+				const messageIndex = this.messages.length - 1
+
+				eventSource.onmessage = (event) => {
+					if (this.active === null || sessionId !== this.active.id) {
+						console.debug('Stop streaming for session ' + sessionId + ' because it is not selected anymore')
+						eventSource.close()
+						reject(new Error('Session changed'))
+						return
+					}
+
+					try {
+						const data = JSON.parse(event.data)
+
+						if (data.error) {
+							console.error('Streaming error:', data.error)
+							eventSource.close()
+							reject(new Error(data.error))
+							return
+						}
+
+						if (data.done) {
+							console.debug('Streaming complete')
+							eventSource.close()
+							// Fetch the complete message from server to get the ID
+							this.fetchLatestMessage(sessionId).then(message => {
+								this.messages[messageIndex] = message
+								resolve(message)
+							}).catch(error => {
+								console.error('Failed to fetch complete message:', error)
+								reject(error)
+							})
+							return
+						}
+
+						if (data.chunk) {
+							// Append chunk to streaming message
+							this.messages[messageIndex].content += data.chunk
+							this.scrollToBottom()
+						}
+					} catch (error) {
+						console.error('Failed to parse streaming data:', error)
+					}
+				}
+
+				eventSource.onerror = (error) => {
+					console.error('EventSource error:', error)
+					eventSource.close()
+					reject(new Error('Streaming connection failed'))
+				}
+			})
+		},
+
+		async fetchLatestMessage(sessionId) {
+			// Fetch the latest message to get the complete data with ID
+			const response = await axios.get(getChatURL('/messages'), {
+				params: { sessionId, limit: 1 },
+			})
+			if (response.data && response.data.length > 0) {
+				return response.data[0]
+			}
+			throw new Error('No message found')
 		},
 
 		getLastHumanMessage() {

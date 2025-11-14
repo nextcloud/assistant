@@ -13,12 +13,14 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\StreamingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\StreamResponse;
 use OCP\AppFramework\OCSController;
 use OCP\Exceptions\AppConfigTypeConflictException;
 use OCP\IAppConfig;
@@ -54,6 +56,7 @@ class ChattyLLMController extends OCSController {
 		private ITaskProcessingManager $taskProcessingManager,
 		private IAppConfig $appConfig,
 		private IUserManager $userManager,
+		private StreamingService $streamingService,
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
@@ -1067,5 +1070,101 @@ class ChattyLLMController extends OCSController {
 		);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId() ?? 0;
+	}
+
+	/**
+	 * Stream LLM response in real-time using Server-Sent Events
+	 *
+	 * @param int $sessionId The chat session ID
+	 * @param int $messageId The user's message ID
+	 * @return StreamResponse|JSONResponse
+	 *
+	 * 200: Streaming response
+	 * 401: Not logged in
+	 * 404: Session not found
+	 * 400: Streaming not available
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function streamGenerate(int $sessionId, int $messageId): StreamResponse|JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+
+		// Check if session exists and belongs to user
+		try {
+			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
+		} catch (\Exception $e) {
+			$this->logger->error('Failed to get session', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get session')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		// Check if streaming is available
+		if (!$this->streamingService->isStreamingAvailable()) {
+			return new JSONResponse(['error' => $this->l10n->t('Streaming is not configured')], Http::STATUS_BAD_REQUEST);
+		}
+
+		// Get conversation history
+		try {
+			$messages = $this->messageMapper->getMessagesInSession($sessionId, null, null);
+			$formattedMessages = $this->streamingService->formatMessagesForProvider($messages);
+		} catch (\Exception $e) {
+			$this->logger->error('Failed to get conversation history', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get conversation history')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		// Create a response with SSE headers
+		$response = new StreamResponse(function () use ($sessionId, $formattedMessages, $messageId) {
+			// Set SSE headers
+			header('Content-Type: text/event-stream');
+			header('Cache-Control: no-cache');
+			header('Connection: keep-alive');
+			header('X-Accel-Buffering: no'); // Disable nginx buffering
+
+			$fullContent = '';
+
+			try {
+				// Stream chunks from provider
+				foreach ($this->streamingService->streamChatCompletion($formattedMessages) as $chunk) {
+					$fullContent .= $chunk;
+
+					// Send chunk as SSE
+					echo "data: " . json_encode(['chunk' => $chunk]) . "\n\n";
+
+					// Flush output buffer
+					if (ob_get_level() > 0) {
+						ob_flush();
+					}
+					flush();
+				}
+
+				// Send completion event
+				echo "data: " . json_encode(['done' => true]) . "\n\n";
+				if (ob_get_level() > 0) {
+					ob_flush();
+				}
+				flush();
+
+				// Save the complete message to database
+				$assistantMessage = new Message();
+				$assistantMessage->setSessionId($sessionId);
+				$assistantMessage->setRole('assistant');
+				$assistantMessage->setContent($fullContent);
+				$assistantMessage->setTimestamp(time());
+				$this->messageMapper->insert($assistantMessage);
+
+			} catch (\Exception $e) {
+				$this->logger->error('Streaming error', ['exception' => $e]);
+				echo "data: " . json_encode(['error' => 'Streaming failed: ' . $e->getMessage()]) . "\n\n";
+				if (ob_get_level() > 0) {
+					ob_flush();
+				}
+				flush();
+			}
+		});
+
+		return $response;
 	}
 }

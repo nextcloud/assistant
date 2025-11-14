@@ -48,6 +48,7 @@ return [
 		['name' => 'chattyLLM#regenerateForSession', 'url' => '/chat/regenerate', 'verb' => 'GET'],
 		['name' => 'chattyLLM#checkSession', 'url' => '/chat/check_session', 'verb' => 'GET'],
 		['name' => 'chattyLLM#checkMessageGenerationTask', 'url' => '/chat/check_generation', 'verb' => 'GET'],
+		['name' => 'chattyLLM#streamGenerate', 'url' => '/chat/stream', 'verb' => 'GET'],
 		['name' => 'chattyLLM#generateTitle', 'url' => '/chat/generate_title', 'verb' => 'GET'],
 		['name' => 'chattyLLM#checkTitleGenerationTask', 'url' => '/chat/check_title_generation', 'verb' => 'GET'],
 	],
