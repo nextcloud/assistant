@@ -15,6 +15,7 @@ OC.L10N.register(
     "Chat history" : "Historial de la conversación",
     "The history of chat messages before the current message, starting with a message by the user" : "El historial de mensajes del chat antes del mensaje actual, empezando con un mensaje de usuario",
     "Prompt" : "Prompt",
+    "Administration documentation" : "Documentación de administración",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
     "Less" : "Menos",

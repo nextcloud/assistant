@@ -11,6 +11,7 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Meðhjálpari",
     "Prompt" : "Kvaðning",
+    "Administration documentation" : "Hjálparskjöl fyrir stjórnendur",
     "Try again" : "Reyndu aftur",
     "Close" : "Loka",
     "Less" : "Minna",

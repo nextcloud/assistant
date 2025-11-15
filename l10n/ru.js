@@ -60,6 +60,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "Администраторские опции ассистента сохранены",
     "Failed to save assistant admin options" : "Сбой сохранения администраторских опций ассистента",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "Более подробную информацию о настройке Assistant и рекомендуемых бэкэндах можно найти в документации по администрированию.",
+    "Administration documentation" : "Документация администратора",
     "Select which features you want to enable" : "Выберите, какие функции вы хотите включить",
     "Number of messages to consider for chat completions (excluding the user instructions, which is always considered)" : "Количество сообщений, которые следует учитывать при завершении чата (исключая инструкции пользователя, которые всегда учитываются)",
     "Try again" : "Попытаться снова",

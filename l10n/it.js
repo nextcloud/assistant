@@ -13,6 +13,7 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Assistente",
     "Prompt" : "Prompt",
+    "Administration documentation" : "Documentazione di amministrazione",
     "Try again" : "Riprova",
     "Close" : "Chiudi",
     "Less" : "Meno",

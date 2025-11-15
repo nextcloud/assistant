@@ -41,6 +41,7 @@ OC.L10N.register(
     "Process and transform text" : "Testua prozesatu eta eraldatu",
     "Assistant admin options saved" : "Laguntzailearen administratzailearen aukerak gorde dira",
     "Failed to save assistant admin options" : "Ezin izan dira gorde laguntzailearen administratzaile aukerak",
+    "Administration documentation" : "Administrazioaren dokumentazioa",
     "Select which features you want to enable" : "Hautatu zeintzuk ezaugarri gaitu nahi dituzun",
     "Hide advanced options" : "Ezkutatu aukera aurreratuak",
     "Show advanced options" : "Erakutsi aukera aurreratuak",

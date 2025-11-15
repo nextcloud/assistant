@@ -7,6 +7,7 @@ OC.L10N.register(
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "Administration documentation" : "Administration documentation",
     "Close" : "Close",
     "More" : "More",
     "Cancel" : "Cancel",

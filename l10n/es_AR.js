@@ -5,6 +5,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Correo de Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Asistente",
+    "Administration documentation" : "Documentación de administración",
     "Try again" : "Inténtalo de nuevo",
     "Close" : "Cerrar",
     "Less" : "Menos",

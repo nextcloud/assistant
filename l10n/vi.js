@@ -4,6 +4,7 @@ OC.L10N.register(
     "User not found" : "Không tìm thấy người dùng",
     "Nextcloud Assistant" : "Trợ lý Nextcloud",
     "Nextcloud Mail" : "Thư vWorkspace",
+    "Administration documentation" : "Tài liệu hành chính",
     "Try again" : "Thử lại",
     "Close" : "Đóng",
     "Less" : "ít",
