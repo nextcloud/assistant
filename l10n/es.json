@@ -104,6 +104,7 @@
     "Assistant admin options saved" : "Opciones de administración del asistente guardadas",
     "Failed to save assistant admin options" : "Fallo al guardar las opciones de administración del asistente",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "Encuentre más detalles de como configurar Assistant y los backends recomendados en la Documentación de Administración.",
+    "Administration documentation" : "Documentación de administración",
     "Select which features you want to enable" : "Seleccione las características que desea habilitar",
     "Chat User Instructions for Chat Completions" : "Instrucciones para el usuario de chat para completar conversaciones",
     "It is passed on to the LLM for it to better understand the context." : "Se le pasa al Modelo largo de lenguaje (LLM) para que este entienda mejor el contexto.",

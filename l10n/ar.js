@@ -60,6 +60,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "تمّ حفظ خيارات المدير للمُساعد  ",
     "Failed to save assistant admin options" : "تعذّر حفظ خيارات المدير للمُساعد ",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "يمكنك العثور على مزيد من التفاصيل حول كيفية إعداد المساعد والواجهات الخلفية الموصى بها في دليل المدير.",
+    "Administration documentation" : "وثائق الإدارة",
     "Select which features you want to enable" : "اختر الميزات التي تريد تمكينها",
     "Chat User Instructions for Chat Completions" : "تعليمات مستخدم الدردشة لإكمال الدردشة",
     "It is passed on to the LLM for it to better understand the context." : "تمّ تمريره إلى \"النموذج اللغوي الوسيع\" LLM لفهم السياق بشكل أفضل.",

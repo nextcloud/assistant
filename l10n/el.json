@@ -104,6 +104,7 @@
     "Assistant admin options saved" : "Αποθηκεύτηκαν οι επιλογές βοηθού του διαχειριστή",
     "Failed to save assistant admin options" : "Αποτυχία αποθήκευσης επιλογών βοηθού διαχειριστή",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "Βρείτε περισσότερες λεπτομέρειες σχετικά με τον τρόπο ρύθμισης του Βοηθού και τις συνιστώμενες υποδομές στην τεκμηρίωση Διαχείρισης.",
+    "Administration documentation" : "Τεκμηρίωση Διαχειριστή",
     "Select which features you want to enable" : "Επιλέξτε ποιες λειτουργίες θέλετε να ενεργοποιήσετε",
     "Chat User Instructions for Chat Completions" : "Οδηγίες Χρήστη Συνομιλίας για Ολοκληρώσεις Συνομιλίας",
     "It is passed on to the LLM for it to better understand the context." : "Περνάει στο LLM για να κατανοήσει καλύτερα το πλαίσιο.",

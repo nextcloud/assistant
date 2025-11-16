@@ -57,6 +57,7 @@
     "Assistant admin options saved" : "S'han desat les opcions d'administrador de l'assistent",
     "Failed to save assistant admin options" : "No s'han pogut desar les opcions d'administrador de l'assistent",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "Trobeu més detalls sobre com configurar l'Assistent i els backend recomanats a la documentació d'administració.",
+    "Administration documentation" : "Documentació administrativa",
     "Select which features you want to enable" : "Habiliteu quines funcions voleu activar",
     "Chat User Instructions for Chat Completions" : "Instruccions per a l'usuari del xat per completar el xat",
     "It is passed on to the LLM for it to better understand the context." : "Es transmet al LLM perquè entengui millor el context.",

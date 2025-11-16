@@ -106,6 +106,7 @@ OC.L10N.register(
     "Assistant admin options saved" : "Assistent admin indstillinger gemt",
     "Failed to save assistant admin options" : "Kunne ikke gemme assistent admin indstillinger",
     "Find more details on how to set up Assistant and recommended backends in the Administration documentation." : "Find flere detaljer om hvordan du sætter assistenten op og anbefalede backends i administrations dokumentationen.",
+    "Administration documentation" : "Administrations dokumentation",
     "Select which features you want to enable" : "Vælg hvilke funktioner du ønsker at aktivere",
     "Chat User Instructions for Chat Completions" : "Chat brugerinstruktioner til chat færdiggørelser",
     "It is passed on to the LLM for it to better understand the context." : "Det leveres til LLM'en for at den bedre kan forstå konteksten.",

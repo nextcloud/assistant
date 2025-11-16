@@ -18,6 +18,7 @@ OC.L10N.register(
     "Assistant" : "Asistente",
     "Process and transform text" : "Procesa y tresforma testu",
     "Failed to save assistant admin options" : "Nun se puen guardar les opciones d'alministración del asistente",
+    "Administration documentation" : "Documentación de l'alministración",
     "The task ran successfully but the result is identical to the input." : "La xera executóse correutamente mas el resultáu ye idénticu al de la entrada.",
     "Try again" : "Retentar",
     "Send request" : "Unviar la solicitú",
