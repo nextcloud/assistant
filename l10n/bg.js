@@ -21,6 +21,7 @@ OC.L10N.register(
     "Edit title" : "Редактиране на заглавието",
     "Cancel editing" : "Отказ на редактирането",
     "Submit" : "Изпращане",
+    "You" : "Вие",
     "Delete message" : "Изтриване на съобщението",
     "Choose" : "Изберете",
     "Cancelled" : "Отказано",
