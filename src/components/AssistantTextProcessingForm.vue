@@ -159,6 +159,8 @@ import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/style.css'
 
+import { saveLastSelectedTaskType } from '../assistant.js'
+
 const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
 
 export default {
@@ -507,6 +509,7 @@ export default {
 					this.myInputs.text = OCA.Assistant.last_text_input
 				}
 			}
+			saveLastSelectedTaskType(this.mySelectedTaskTypeId)
 		},
 		onSyncSubmit() {
 			console.debug('[assistant] in form submit ---------', this.myInputs)
