@@ -210,6 +210,19 @@ export default {
 
 		.col {
 			width: 50%;
+			.text-field {
+				display: flex;
+				flex-direction: column;
+				:deep(.editable-input) {
+					flex-grow: 1;
+					display: flex;
+					flex-direction: column;
+				}
+				:deep(.editable-input div) {
+					height: 100% !important;
+					margin: 0 !important;
+				}
+			}
 		}
 	}
 
