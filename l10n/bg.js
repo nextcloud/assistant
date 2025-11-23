@@ -11,6 +11,7 @@ OC.L10N.register(
     "OpenProject" : "OpenProject",
     "Assistant" : "Асистент",
     "Prompt" : "Подкана",
+    "Administration documentation" : "Административна документация",
     "Try again" : "Опитай отново",
     "Close" : "Затваряне",
     "Less" : "По-малко",

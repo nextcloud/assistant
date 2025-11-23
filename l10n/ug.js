@@ -95,6 +95,7 @@ OC.L10N.register(
     "Less" : "ئاز",
     "More" : "تېخىمۇ كۆپ",
     "Cancel" : "بىكار قىلىش",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "\"{sessionTitle}\" نى ئۆچۈرۈشنى جەزىملەشتۈرەمسىز؟",
     "Error generating a response" : "جاۋاب ھاسىل قىلىشتا خاتالىق",
     "Error updating title of conversation" : "سۆھبەتنىڭ نامىنى يېڭىلاشتا خاتالىق",
     "Untitled conversation" : "نامسىز سۆھبەت",
