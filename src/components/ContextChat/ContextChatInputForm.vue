@@ -260,6 +260,11 @@ export default {
 		taskType(newValue) {
 			this.onTaskTypeChange()
 		},
+		inputs(newValue) {
+			if (Object.keys(newValue).length === 0) {
+				this.onInputsReset()
+			}
+		},
 	},
 
 	mounted() {
@@ -381,6 +386,12 @@ export default {
 			})
 		},
 		onTaskTypeChange() {
+			this.reinitializeInputs()
+		},
+		onInputsReset() {
+			this.reinitializeInputs()
+		},
+		reinitializeInputs() {
 			this.$emit('update:inputs', {
 				prompt: this.inputs.prompt ?? '',
 				limit: this.isSearch ? this.taskType.inputShapeDefaults?.limit : undefined,
