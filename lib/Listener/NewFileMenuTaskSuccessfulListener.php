@@ -9,9 +9,11 @@ namespace OCA\Assistant\Listener;
 
 use OCA\Assistant\Service\AssistantService;
 use OCA\Assistant\Service\NotificationService;
+use OCA\Assistant\Service\SystemTagService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\IRootFolder;
+use OCP\SystemTag\TagNotFoundException;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use Psr\Log\LoggerInterface;
 
@@ -25,6 +27,7 @@ class NewFileMenuTaskSuccessfulListener implements IEventListener {
 		private AssistantService $assistantService,
 		private LoggerInterface $logger,
 		private IRootFolder $rootFolder,
+		private SystemTagService  $systemTagService,
 	) {
 	}
 
@@ -50,6 +53,11 @@ class NewFileMenuTaskSuccessfulListener implements IEventListener {
 		$fileId = (int)$task->getOutput()['images'][0];
 		try {
 			$targetFile = $this->assistantService->saveNewFileMenuActionFile($task->getUserId(), $task->getId(), $fileId, $directoryId);
+			try {
+				$this->systemTagService->assignAiTagToFile((string)$targetFile->getId());
+			} catch (TagNotFoundException $e) {
+				$this->logger->warning('NewFileMenuTaskListener could not write AI tag to file', ['target' => $targetFile->getName(), 'exception' => $e]);
+			}
 			$userFolder = $this->rootFolder->getUserFolder($task->getUserId());
 			$directory = $targetFile->getParent();
 			$this->notificationService->sendNewImageFileNotification(
@@ -58,7 +66,7 @@ class NewFileMenuTaskSuccessfulListener implements IEventListener {
 				$targetFile->getId(), $targetFile->getName(), $userFolder->getRelativePath($targetFile->getPath()),
 			);
 		} catch (\Exception $e) {
-			$this->logger->error('TaskSuccessfulListener: Failed to save new file menu action file.', [
+			$this->logger->error('NewFileMenuTaskListener: Failed to save new file menu action file.', [
 				'task' => $task->jsonSerialize(),
 				'exception' => $e,
 			]);
