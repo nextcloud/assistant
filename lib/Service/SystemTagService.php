@@ -33,11 +33,11 @@ class SystemTagService {
 	}
 
 	/**
-	 * @param string|list<string> $fileId
+	 * @param string $fileId
 	 * @return void
 	 * @throws TagNotFoundException
 	 */
-	public function assignAiTagToFile(string|array $fileId) {
+	public function assignAiTagToFile(string $fileId) {
 		$this->systemTagObjectMapper->assignTags($fileId, 'files', $this->getAiTag()->getId());
 	}
 }
