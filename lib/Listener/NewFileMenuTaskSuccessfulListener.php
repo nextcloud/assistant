@@ -27,7 +27,7 @@ class NewFileMenuTaskSuccessfulListener implements IEventListener {
 		private AssistantService $assistantService,
 		private LoggerInterface $logger,
 		private IRootFolder $rootFolder,
-		private SystemTagService  $systemTagService,
+		private SystemTagService $systemTagService,
 	) {
 	}
 

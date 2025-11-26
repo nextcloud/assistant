@@ -16,7 +16,7 @@ use OCP\SystemTag\TagNotFoundException;
 
 class SystemTagService {
 
-	const AI_TAG_NAME = 'Generated using AI';
+	public const AI_TAG_NAME = 'Generated using AI';
 
 	public function __construct(
 		private ISystemTagManager $systemTagManager,
