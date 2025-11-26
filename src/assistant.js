@@ -373,7 +373,6 @@ export async function scheduleTask(appId, customId, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
-	saveLastSelectedTaskType(taskType)
 	if (taskType === 'core:text2text:translate') {
 		saveLastTargetLanguage(inputs.target_language)
 	}
@@ -387,7 +386,7 @@ export async function scheduleTask(appId, customId, taskType, inputs) {
 	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
 
-async function saveLastSelectedTaskType(taskType) {
+export async function saveLastSelectedTaskType(taskType) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateUrl } = await import('@nextcloud/router')
 
