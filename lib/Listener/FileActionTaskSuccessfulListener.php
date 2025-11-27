@@ -10,10 +10,12 @@ declare(strict_types=1);
 namespace OCA\Assistant\Listener;
 
 use OCA\Assistant\Service\NotificationService;
+use OCA\Assistant\Service\SystemTagService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\IRootFolder;
+use OCP\SystemTag\TagNotFoundException;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
@@ -28,6 +30,7 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 		private NotificationService $notificationService,
 		private IRootFolder $rootFolder,
 		private LoggerInterface $logger,
+		private SystemTagService $systemTagService,
 	) {
 	}
 
@@ -78,6 +81,11 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 					$targetFileName = $sourceFile->getName() . ' - ' . $suffix . '.md';
 					$targetFile = $sourceFileParent->newFile($targetFileName, $textResult);
 					$this->logger->debug('FileActionTaskListener wrote file', ['target' => $targetFileName]);
+				}
+				try {
+					$this->systemTagService->assignAiTagToFile((string)$targetFile->getId());
+				} catch (TagNotFoundException $e) {
+					$this->logger->warning('FileActionTaskListener could not write AI tag to file', ['target' => $targetFileName, 'exception' => $e]);
 				}
 				$this->notificationService->sendFileActionNotification(
 					$task->getUserId(), $taskTypeId, $task->getId(),
