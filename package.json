@@ -1,6 +1,6 @@
 {
   "name": "assistant",
-  "version": "0.0.1",
+  "version": "2.10.0",
   "description": "Nextcloud Assistant",
   "main": "index.js",
   "directories": {
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@breezystack/lamejs": "^1.2.7",
-    "@material-symbols/svg-700": "^0.36.0",
+    "@material-symbols/svg-700": "^0.40.0",
     "@mdi/js": "^7.4.47",
     "@mdi/svg": "^7.4.47",
     "@nextcloud/auth": "^2.0.0",
