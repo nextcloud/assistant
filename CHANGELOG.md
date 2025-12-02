@@ -10,6 +10,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.10.0 – 2025-12-02
+
+### Added
+- [settings] Use new components @julien-nc [#393](https://github.com/nextcloud/assistant/pull/393)
+- Limit the number of text input characters in the UI and the backend @julien-nc [#411](https://github.com/nextcloud/assistant/pull/411)
+- Save the last selected task type when switching @julien-nc [#402](https://github.com/nextcloud/assistant/pull/402)
+
+
+### Fixed
+- Register the sticker reference provider only if the related task type is available @julien-nc [#391](https://github.com/nextcloud/assistant/pull/391)
+- reinitialize inputs on New Task button click @rroma [#395](https://github.com/nextcloud/assistant/pull/395)
+- Fix wrong prop type for informationSourceNames in the chat UI @julien-nc [#390](https://github.com/nextcloud/assistant/pull/390)
+
+### Changed
+- [declarative-ui] Adjust the response value of the file action endpoint 
+ @julien-nc [#392](https://github.com/nextcloud/assistant/pull/392)
+- updated npm and composer dependencies
+
 ## 2.9.0 – 2025-10-15
 
 ### Added
