@@ -159,7 +159,10 @@ import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import { showError } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/style.css'
 
+import { saveLastSelectedTaskType } from '../assistant.js'
+
 const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
+const CHAT_TASK_TYPE_ID = 'chatty-llm'
 
 export default {
 	name: 'AssistantTextProcessingForm',
@@ -265,7 +268,7 @@ export default {
 			myInputs: this.inputs,
 			myOutputs: this.outputs,
 			taskTypes: [],
-			mySelectedTaskTypeId: this.selectedTaskTypeId || TEXT2TEXT_TASK_TYPE_ID,
+			mySelectedTaskTypeId: this.selectedTaskTypeId || CHAT_TASK_TYPE_ID,
 			loadingTaskTypes: false,
 			historyLoading: false,
 			showAdvanced: false,
@@ -440,7 +443,10 @@ export default {
 					const taskType = taskTypes.find(tt => tt.id === this.mySelectedTaskTypeId)
 					if (taskType === undefined) {
 						const text2textType = taskTypes.find(tt => tt.id === TEXT2TEXT_TASK_TYPE_ID)
-						if (text2textType) {
+						const chatType = taskTypes.find(tt => tt.id === CHAT_TASK_TYPE_ID)
+						if (chatType) {
+							this.mySelectedTaskTypeId = CHAT_TASK_TYPE_ID
+						} else if (text2textType) {
 							this.parseTextFileInputs(text2textType)
 							this.mySelectedTaskTypeId = TEXT2TEXT_TASK_TYPE_ID
 						} else if (taskTypes.length > 0) {
@@ -515,6 +521,7 @@ export default {
 					this.myInputs.text = OCA.Assistant.last_text_input
 				}
 			}
+			saveLastSelectedTaskType(this.mySelectedTaskTypeId)
 		},
 		onSyncSubmit() {
 			console.debug('[assistant] in form submit ---------', this.myInputs)
