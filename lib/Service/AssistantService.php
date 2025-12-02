@@ -244,6 +244,11 @@ class AssistantService {
 				'id' => 'core:inputList',
 				'priority' => 0,
 				'inputShape' => [
+					'textList' => new ShapeDescriptor(
+						'Input text list',
+						'plop',
+						EShapeType::ListOfTexts,
+					),
 					'fileList' => new ShapeDescriptor(
 						'Input file list',
 						'plop',

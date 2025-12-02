@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+export const MAX_TEXT_INPUT_LENGTH = 64_000
+
 export const TASK_STATUS_INT = {
 	cancelled: 5,
 	failed: 4,

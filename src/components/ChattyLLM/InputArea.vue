@@ -12,18 +12,18 @@
 			:disabled="disabled"
 			:placeholder="loading.llmGeneration ? thinkingText : placeholderText"
 			:aria-label="loading.llmGeneration ? thinkingText : placeholderText"
-			:maxlength="1600"
+			:maxlength="64_000"
 			:multiline="isMobile"
 			dir="auto"
 			@update:model-value="$emit('update:chatContent', $event)"
-			@submit="$emit('submit', $event)" />
+			@submit="onSubmitText" />
 		<div class="input-area__button-box">
 			<NcButton v-if="!audioChatAvailable || chatContent"
 				class="input-area__button-box__button"
 				:aria-label="submitBtnAriaText"
-				:disabled="disabled || !chatContent.trim()"
+				:disabled="disabled || !chatContent.trim() || chatContentTooLong"
 				variant="primary"
-				@click="$emit('submit', $event)">
+				@click="onSubmitText">
 				<template #icon>
 					<SendIcon :size="20" />
 				</template>
@@ -50,6 +50,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
+import { MAX_TEXT_INPUT_LENGTH } from '../../constants.js'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -112,6 +113,9 @@ export default {
 		disabled() {
 			return this.loading.llmGeneration || this.loading.olderMessages || this.loading.initialMessages || this.loading.titleGeneration || this.loading.newHumanMessage || this.loading.newSession
 		},
+		chatContentTooLong() {
+			return this.chatContent.length > MAX_TEXT_INPUT_LENGTH
+		},
 	},
 
 	mounted() {
@@ -138,6 +142,11 @@ export default {
 				)
 				console.error(error)
 			})
+		},
+		onSubmitText(e) {
+			if (!this.chatContentTooLong) {
+				this.$emit('submit', e)
+			}
 		},
 	},
 }

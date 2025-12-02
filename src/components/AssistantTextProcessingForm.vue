@@ -152,7 +152,7 @@ import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import TranslateForm from './Translate/TranslateForm.vue'
 
-import { SHAPE_TYPE_NAMES } from '../constants.js'
+import { SHAPE_TYPE_NAMES, MAX_TEXT_INPUT_LENGTH } from '../constants.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
@@ -330,7 +330,11 @@ export default {
 				}
 				const fieldType = taskType.inputShape[k].type
 				const value = this.myInputs[k]
-				return ([SHAPE_TYPE_NAMES.Text, SHAPE_TYPE_NAMES.Enum].includes(fieldType) && typeof value === 'string' && !!value?.trim())
+				return ([SHAPE_TYPE_NAMES.Text, SHAPE_TYPE_NAMES.Enum].includes(fieldType)
+						&& typeof value === 'string'
+						&& !!value?.trim()
+						// check that the input text is not too long for text fields
+						&& (fieldType === SHAPE_TYPE_NAMES.Enum || value.trim().length <= MAX_TEXT_INPUT_LENGTH))
 					|| ([
 						SHAPE_TYPE_NAMES.Number,
 						SHAPE_TYPE_NAMES.File,
@@ -338,7 +342,11 @@ export default {
 						SHAPE_TYPE_NAMES.Audio,
 						SHAPE_TYPE_NAMES.Video,
 					].includes(fieldType) && typeof value === 'number')
-					|| (fieldType === SHAPE_TYPE_NAMES.ListOfTexts && typeof value === 'object' && !!value && value.every(v => typeof v === 'string'))
+					|| (fieldType === SHAPE_TYPE_NAMES.ListOfTexts && typeof value === 'object' && !!value && value.every(v => {
+						return typeof v === 'string'
+							&& !!v?.trim()
+							&& v.trim().length <= MAX_TEXT_INPUT_LENGTH
+					}))
 					|| (fieldType === SHAPE_TYPE_NAMES.ListOfNumbers && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
 					|| ([
 						SHAPE_TYPE_NAMES.ListOfFiles,

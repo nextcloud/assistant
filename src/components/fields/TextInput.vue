@@ -6,6 +6,8 @@
 	<div class="text-input">
 		<label :for="id">
 			{{ label }}
+			<br v-if="limitLabel">
+			{{ limitLabel ?? '' }}
 		</label>
 		<NcRichContenteditable
 			:id="id"
@@ -13,6 +15,7 @@
 			:model-value="value ?? ''"
 			:link-autocomplete="false"
 			:multiline="isMobile"
+			:maxlength="maxLength"
 			class="editable-input"
 			:class="{ shadowed: isOutput }"
 			:placeholder="placeholder"
@@ -55,7 +58,7 @@ import isMobile from '../../mixins/isMobile.js'
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
-import { VALID_TEXT_MIME_TYPES } from '../../constants.js'
+import { VALID_TEXT_MIME_TYPES, MAX_TEXT_INPUT_LENGTH } from '../../constants.js'
 
 const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose a text file'))
 	.setMimeTypeFilter(VALID_TEXT_MIME_TYPES)
@@ -123,6 +126,7 @@ export default {
 	data() {
 		return {
 			copied: false,
+			maxLength: MAX_TEXT_INPUT_LENGTH,
 		}
 	},
 
@@ -135,6 +139,12 @@ export default {
 		},
 		hasValue() {
 			return this.formattedValue !== ''
+		},
+		limitLabel() {
+			const length = this.value?.length ?? 0
+			return length > this.maxLength
+				? t('assistant', 'Warning: The input text exceeds the maximum length of {limit} characters (currently {length}).', { length, limit: this.maxLength })
+				: undefined
 		},
 	},
 
