@@ -6,6 +6,7 @@
 	<div class="text-input">
 		<label :for="id">
 			{{ label }}
+			<br v-if="limitLabel">
 			{{ limitLabel ?? '' }}
 		</label>
 		<NcRichContenteditable

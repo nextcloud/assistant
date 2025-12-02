@@ -12,7 +12,7 @@
 			:disabled="disabled"
 			:placeholder="loading.llmGeneration ? thinkingText : placeholderText"
 			:aria-label="loading.llmGeneration ? thinkingText : placeholderText"
-			:maxlength="1600"
+			:maxlength="64_000"
 			:multiline="isMobile"
 			dir="auto"
 			@update:model-value="$emit('update:chatContent', $event)"
