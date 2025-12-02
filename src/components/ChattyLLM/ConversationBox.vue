@@ -91,7 +91,7 @@ export default {
 		return {
 			regenerateFromId: null,
 			deleteMessageId: null,
-			informationSourceNames: loadState('assistant', 'contextAgentToolSources'),
+			informationSourceNames: loadState('assistant', 'contextAgentToolSources', {}),
 		}
 	},
 
