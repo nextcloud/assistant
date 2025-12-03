@@ -218,7 +218,7 @@ export default {
 			const url = generateOcsUrl('/apps/assistant/api/v1/input-file')
 			const formData = new FormData()
 			formData.append('data', blob)
-			formData.append('filename', 'recording.mp3')
+			formData.append('filename', 'recording.wav')
 			axios.post(url, formData).then(response => {
 				const fileId = response.data.ocs.data.fileId
 				if (this.value === null) {

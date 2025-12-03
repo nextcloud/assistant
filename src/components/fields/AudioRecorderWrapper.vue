@@ -49,7 +49,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { showError } from '@nextcloud/dialogs'
 
-import { convertWavToMp3 } from '../../audioUtils.js'
 import { MediaRecorder, register } from 'extendable-media-recorder'
 import { connect } from 'extendable-media-recorder-wav-encoder'
 
@@ -210,8 +209,7 @@ export default {
 			this.killStreams()
 			if (!this.aborted) {
 				const wavBlob = new Blob(this.chunks, { type: this.mediaRecorder.mimeType })
-				const mp3Blob = await convertWavToMp3(wavBlob)
-				this.$emit('new-recording', mp3Blob)
+				this.$emit('new-recording', wavBlob)
 				this.$emit('update:is-recording', false)
 			}
 			this.resetComponentData()

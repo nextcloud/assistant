@@ -132,7 +132,7 @@ export default {
 			const url = generateOcsUrl('/apps/assistant/api/v1/input-file')
 			const formData = new FormData()
 			formData.append('data', blob)
-			formData.append('filename', 'chat-input.mp3')
+			formData.append('filename', 'chat-input.wav')
 			axios.post(url, formData).then(response => {
 				this.$emit('submit-audio', response.data.ocs.data.fileId)
 			}).catch(error => {
