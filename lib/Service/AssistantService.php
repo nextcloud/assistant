@@ -31,6 +31,7 @@ use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
+use OCP\SystemTag\TagNotFoundException;
 use OCP\TaskProcessing\EShapeType;
 use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
 use OCP\TaskProcessing\Exception\NotFoundException;
@@ -89,6 +90,7 @@ class AssistantService {
 		private ITempManager $tempManager,
 		private IConfig $config,
 		private IShareManager $shareManager,
+		private SystemTagService $systemTagService,
 	) {
 		$this->informationSources = [
 			'ask_context_chat' => $this->l10n->t('Context Chat'),
@@ -545,16 +547,24 @@ class AssistantService {
 			$existingTarget = $assistantDataFolder->get($targetFileName);
 			if ($existingTarget instanceof File) {
 				if ($existingTarget->getSize() === $taskOutputFile->getSize()) {
-					return $existingTarget;
+					$file = $existingTarget;
 				} else {
-					return $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+					$file = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
 				}
 			} else {
 				throw new Exception('Impossible to copy output file, a directory with this name already exists', Http::STATUS_UNAUTHORIZED);
 			}
 		} else {
-			return $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
+			$file = $assistantDataFolder->newFile($targetFileName, $taskOutputFile->fopen('rb'));
 		}
+
+		try {
+			$this->systemTagService->assignAiTagToFile((string)$file->getId());
+		} catch (TagNotFoundException $e) {
+			$this->logger->warning('Could not write AI tag to file', ['target' => $file->getName(), 'exception' => $e]);
+		}
+
+		return $file;
 	}
 
 	/**
