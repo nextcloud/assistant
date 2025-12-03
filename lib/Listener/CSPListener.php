@@ -30,6 +30,7 @@ class CSPListener implements IEventListener {
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedWorkerSrcDomain('blob:');
+		$csp->addAllowedConnectDomain('blob:');
 		$event->addPolicy($csp);
 	}
 }
