@@ -143,6 +143,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 					Application::APP_ID . ':internal',
 					$userId,
 				);
+				$task->setIncludeWatermark(false);
 				$ttsTaskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 				$outputAudioFileId = $ttsTaskOutput['speech'];
 				$outputAudioFileContent = $this->taskProcessingService->getOutputFileContent($outputAudioFileId);

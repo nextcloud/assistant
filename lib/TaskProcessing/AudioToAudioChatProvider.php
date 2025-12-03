@@ -143,6 +143,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 				Application::APP_ID . ':internal',
 				$userId,
 			);
+			$task->setIncludeWatermark(false);
 			$taskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 			$outputAudioFileId = $taskOutput['speech'];
 
