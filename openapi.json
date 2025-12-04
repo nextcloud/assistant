@@ -2566,7 +2566,8 @@
                                                     ],
                                                     "properties": {
                                                         "version": {
-                                                            "type": "string"
+                                                            "type": "number",
+                                                            "format": "double"
                                                         },
                                                         "tooltip": {
                                                             "type": "string"

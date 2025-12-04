@@ -420,7 +420,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param int $fileId The input file ID
 	 * @param string $taskTypeId The task type of the operation to perform
-	 * @return DataResponse<Http::STATUS_OK, array{version: string, tooltip: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{version: float, tooltip: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: The task has been scheduled successfully
 	 * 400: There was an issue while scheduling the task
@@ -440,7 +440,7 @@ class AssistantApiController extends OCSController {
 				}
 			}
 			return new DataResponse([
-				'version' => '0.1',
+				'version' => 0.1,
 				'tooltip' => $message,
 			]);
 		} catch (Exception|Throwable $e) {
