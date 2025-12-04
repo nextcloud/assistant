@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Add a calendar task" : "Дадаць заданне календара",
     "User not found" : "Карыстальнік не знойдзены",
+    "The new message is too long" : "Новае паведамленне занадта доўгае",
     "Session not found" : "Сеанс не знойдзены",
     "Nextcloud Assistant" : "Памочнік Nextcloud",
     "Assistant task" : "Заданне памочніка",
