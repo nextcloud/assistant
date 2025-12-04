@@ -143,6 +143,10 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 				Application::APP_ID . ':internal',
 				$userId,
 			);
+			// the setIncludeWatermark method was introduced in NC 33
+			if (method_exists($task, 'setIncludeWatermark')) {
+				$task->setIncludeWatermark(false);
+			}
 			$taskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 			$outputAudioFileId = $taskOutput['speech'];
 

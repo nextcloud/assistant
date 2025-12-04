@@ -143,6 +143,10 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 					Application::APP_ID . ':internal',
 					$userId,
 				);
+				// the setIncludeWatermark method was introduced in NC 33
+				if (method_exists($task, 'setIncludeWatermark')) {
+					$task->setIncludeWatermark(false);
+				}
 				$ttsTaskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 				$outputAudioFileId = $ttsTaskOutput['speech'];
 				$outputAudioFileContent = $this->taskProcessingService->getOutputFileContent($outputAudioFileId);
