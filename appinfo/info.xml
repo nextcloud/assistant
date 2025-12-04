@@ -62,7 +62,7 @@ Known providers:
 
 More details on how to set this up in the [admin docs](https://docs.nextcloud.com/server/latest/admin_manual/ai/index.html)
 ]]>	</description>
-	<version>3.0.0-dev</version>
+	<version>2.11.0-dev</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
 	<namespace>Assistant</namespace>
@@ -81,7 +81,7 @@ More details on how to set this up in the [admin docs](https://docs.nextcloud.co
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot6.jpg</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot7.jpg</screenshot>
 	<dependencies>
-		<nextcloud min-version="33" max-version="33"/>
+		<nextcloud min-version="30" max-version="33"/>
 	</dependencies>
 	<settings>
 		<admin>OCA\Assistant\Settings\Admin</admin>
