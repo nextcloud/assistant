@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.11.0 – 2025-12-09
+
+### Added
+- Add system tags to AI generated files @marcelklehr [#406](https://github.com/nextcloud/assistant/pull/406)
+
+### Fixed
+- Version number in the file action response is now a float @julien-nc [#414](https://github.com/nextcloud/assistant/pull/414)
+- Fix audio recording and deal with audio watermarking in sub tasks @julien-nc [#413](https://github.com/nextcloud/assistant/pull/413)
+- error handling for last used task type @janepie [#419](https://github.com/nextcloud/assistant/pull/419)
+
+
 ## 2.10.0 – 2025-12-02
 
 ### Added
