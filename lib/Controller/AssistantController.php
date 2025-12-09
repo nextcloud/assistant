@@ -63,7 +63,7 @@ class AssistantController extends Controller {
 	public function getAssistantStandalonePage(): TemplateResponse {
 		if ($this->userId !== null) {
 			$task = new Task(
-				$this->config->getUserValue($this->userId, Application::APP_ID, 'last_task_type'),
+				$this->config->getUserValue($this->userId, Application::APP_ID, 'last_task_type', 'chatty-llm'),
 				['something' => ''],
 				Application::APP_ID,
 				$this->userId,
