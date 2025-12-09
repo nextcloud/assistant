@@ -409,7 +409,14 @@ async function getLastSelectedTaskType() {
 		},
 	}
 	const url = generateUrl('/apps/assistant/config')
-	return axios.get(url, req)
+	return axios.get(url, req).catch(error => {
+		if (error.response?.status === 404) {
+			console.debug(t('assistant', 'No last task type available, falling back to default'))
+			return { data: 'chatty-llm' }
+		}
+
+		console.error(error)
+	})
 }
 
 async function saveLastTargetLanguage(targetLanguage) {
