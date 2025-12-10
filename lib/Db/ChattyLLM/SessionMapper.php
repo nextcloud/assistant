@@ -136,7 +136,7 @@ class SessionMapper extends QBMapper {
 		$qb->select(Session::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
-			->where($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->isNull('summary'))
 			->setMaxResults($limit)
 			->orderBy('timestamp', 'DESC');
