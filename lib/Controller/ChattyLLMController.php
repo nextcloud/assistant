@@ -1051,6 +1051,7 @@ class ChattyLLMController extends OCSController {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
+		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
 		}
@@ -1076,6 +1077,7 @@ class ChattyLLMController extends OCSController {
 			'system_prompt' => $systemPrompt,
 			'history' => $history,
 		];
+		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]['optionalInputShape']['memories'])) {
 			$input['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
 		}
@@ -1101,6 +1103,7 @@ class ChattyLLMController extends OCSController {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
+		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
 		}

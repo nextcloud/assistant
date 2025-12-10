@@ -131,6 +131,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 				'confirmation' => $confirmation,
 				'conversation_token' => $conversationToken,
 			];
+			/** @psalm-suppress UndefinedClass */
 			if (isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 				$contextAgentTaskInput['memories'] = $input['memories'];
 			}
