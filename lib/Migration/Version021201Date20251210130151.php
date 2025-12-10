@@ -10,9 +10,9 @@ namespace OCA\Assistant\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
+use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
-use OCP\DB\Types;
 
 class Version021201Date20251210130151 extends SimpleMigrationStep {
 

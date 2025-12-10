@@ -11,7 +11,6 @@ use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\TextToText;
-use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
 use Psr\Log\LoggerInterface;
 
 class SessionSummaryService {
@@ -23,7 +22,7 @@ class SessionSummaryService {
 		private MessageMapper $messageMapper,
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
-		private IJobList $jobList
+		private IJobList $jobList,
 	) {
 	}
 
@@ -48,7 +47,7 @@ class SessionSummaryService {
 				$session->setSummary($output['output']);
 				$session->setIsSummaryUpToDate(true);
 				$this->sessionMapper->update($session);
-			} catch(\Throwable $e) {
+			} catch (\Throwable $e) {
 				$this->logger->warning('Failed to generate summary for chat session ' . $session->getId(), ['exception' => $e]);
 			}
 		}
@@ -63,7 +62,7 @@ class SessionSummaryService {
 		}
 	}
 
-	public function generateSummariesForNewSessions(string $userId): void{
+	public function generateSummariesForNewSessions(string $userId): void {
 		try {
 			$sessions = $this->sessionMapper->getRememberedUserSessionsWithoutSummaries($userId, self::BAtCH_SIZE);
 			$this->generateSummaries($sessions);

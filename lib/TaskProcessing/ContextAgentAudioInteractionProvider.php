@@ -12,7 +12,6 @@ namespace OCA\Assistant\TaskProcessing;
 use Exception;
 use OC\TaskProcessing\Manager;
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Service\SessionSummaryService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
 use OCP\IL10N;

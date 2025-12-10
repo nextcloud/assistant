@@ -56,7 +56,7 @@ class ChattyLLMController extends OCSController {
 		private IAppConfig $appConfig,
 		private IUserManager $userManager,
 		private ?string $userId,
-		private SessionSummaryService $sessionSummaryService
+		private SessionSummaryService $sessionSummaryService,
 	) {
 		parent::__construct($appName, $request);
 		$this->agencyActionData = [

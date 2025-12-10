@@ -9,7 +9,7 @@ use OCP\BackgroundJob\TimedJob;
 class GenerateNewChatSummaries extends TimedJob {
 	public function __construct(
 		ITimeFactory $timeFactory,
-		private SessionSummaryService $sessionSummaryService
+		private SessionSummaryService $sessionSummaryService,
 	) {
 		parent::__construct($timeFactory);
 		$this->setInterval(60 * 10); // 10min
