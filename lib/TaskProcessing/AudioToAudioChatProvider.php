@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace OCA\Assistant\TaskProcessing;
 
 use Exception;
-use OC\TaskProcessing\Manager;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
 use OCP\IL10N;
 use OCP\TaskProcessing\EShapeType;
+use OCP\TaskProcessing\IManager;
 use OCP\TaskProcessing\ISynchronousProvider;
 use OCP\TaskProcessing\ShapeDescriptor;
 use OCP\TaskProcessing\Task;
@@ -32,7 +32,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 		private IL10N $l,
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
-		private Manager $taskProcessingManager,
+		private IManager $taskProcessingManager,
 	) {
 	}
 
@@ -131,9 +131,12 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 				'system_prompt' => $systemPrompt,
 				'history' => $history,
 			];
-			if (isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
+			if (
+				isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])
+			) {
 				$chatTaskInput['memories'] = $input['memories'];
 			}
+			/** @psalm-suppress InvalidArgument */
 			$task = new Task(
 				TextToTextChat::ID,
 				$chatTaskInput,

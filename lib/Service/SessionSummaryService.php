@@ -81,12 +81,12 @@ class SessionSummaryService {
 	}
 
 	/**
-	 * @return list<string>
+	 * @return array<string>
 	 */
 	public function getUserSessionSummaries(?string $userId): array {
 		try {
 			$sessions = $this->sessionMapper->getRememberedUserSessions($userId);
-			return array_map(fn (Session $session) => $session->getSummary(), $sessions);
+			return array_filter(array_map(fn (Session $session) => $session->getSummary(), $sessions), fn ($summary) => $summary !== null);
 		} catch (Exception $e) {
 			$this->logger->error('Failed to get remembered user sessions', ['exception' => $e]);
 			return [];

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace OCA\Assistant\TaskProcessing;
 
 use Exception;
-use OC\TaskProcessing\Manager;
+use OCP\TaskProcessing\IManager;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
@@ -32,7 +32,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 		private IL10N $l,
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
-		private Manager $taskProcessingManager,
+		private IManager $taskProcessingManager,
 	) {
 	}
 
@@ -134,7 +134,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 			if (isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 				$contextAgentTaskInput['memories'] = $input['memories'];
 			}
-			/** @psalm-suppress UndefinedClass */
+			/** @psalm-suppress UndefinedClass,InvalidArgument */
 			$task = new Task(
 				ContextAgentInteraction::ID,
 				$contextAgentTaskInput,

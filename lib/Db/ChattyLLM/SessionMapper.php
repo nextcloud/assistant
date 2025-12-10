@@ -80,7 +80,7 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
-	 * @return list<Session>
+	 * @return array<Session>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getRememberedUserSessions(string $userId): array {
@@ -95,7 +95,7 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
-	 * @return list<Session>
+	 * @return array<Session>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getRememberedUserSessionsWithOutdatedSummaries(string $userId, int $limit): array {
@@ -112,7 +112,7 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
-	 * @return list<Session>
+	 * @return array<Session>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getRememberedSessionsWithOutdatedSummaries(int $limit): array {
@@ -128,7 +128,7 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
-	 * @return list<Session>
+	 * @return array<Session>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getRememberedUserSessionsWithoutSummaries(string $userId, int $limit): array {
