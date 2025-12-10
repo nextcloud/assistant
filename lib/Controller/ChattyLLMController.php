@@ -13,6 +13,7 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\SessionSummaryService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
@@ -55,6 +56,7 @@ class ChattyLLMController extends OCSController {
 		private IAppConfig $appConfig,
 		private IUserManager $userManager,
 		private ?string $userId,
+		private SessionSummaryService $sessionSummaryService
 	) {
 		parent::__construct($appName, $request);
 		$this->agencyActionData = [
@@ -183,6 +185,36 @@ class ChattyLLMController extends OCSController {
 
 		try {
 			$this->sessionMapper->updateSessionTitle($this->userId, $sessionId, $title);
+			return new JSONResponse();
+		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
+			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to update the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Update session is_remembered status
+	 *
+	 * @param integer $sessionId The chat session ID
+	 * @param bool $is_remembered The new is_remembered status: Whether to remember the insights from this chat session across all chat sessiosn
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: The title has been updated successfully
+	 * 401: Not logged in
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function updateSessionIsRemembered(int $sessionId, bool $is_remembered): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+
+		try {
+			$this->sessionMapper->updateSessionIsRemembered($this->userId, $sessionId, $is_remembered);
+			// schedule summarizer jobs for this chat user
+			if ($is_remembered) {
+				$this->sessionSummaryService->scheduleJobsForUser($this->userId);
+			}
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);
@@ -990,6 +1022,9 @@ class ChattyLLMController extends OCSController {
 			'system_prompt' => $systemPrompt,
 			'history' => $history,
 		];
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
+			$input['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $this->userId, $customId);
 		$this->taskProcessingManager->scheduleTask($task);
 		return $task->getId() ?? 0;
@@ -1016,6 +1051,9 @@ class ChattyLLMController extends OCSController {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
+			$taskInput['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
@@ -1038,6 +1076,9 @@ class ChattyLLMController extends OCSController {
 			'system_prompt' => $systemPrompt,
 			'history' => $history,
 		];
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]['optionalInputShape']['memories'])) {
+			$input['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID,
@@ -1060,6 +1101,9 @@ class ChattyLLMController extends OCSController {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
+			$taskInput['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,

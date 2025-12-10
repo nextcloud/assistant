@@ -17,6 +17,8 @@ use OCP\DB\Types;
  * @method \void setUserId(string $userId)
  * @method \string|null getTitle()
  * @method \void setTitle(?string $title)
+ * @method \string|null getSummary()
+ * @method \void setSummary(?string $title)
  * @method \int getTimestamp()
  * @method \void setTimestamp(int $timestamp)
  * @method \string|null getAgencyConversationToken()
@@ -36,6 +38,16 @@ class Session extends Entity implements \JsonSerializable {
 	/** @var ?string */
 	protected $agencyPendingActions;
 
+	/** @var ?string */
+	protected $summary;
+
+	/** @var int */
+	protected $isSummaryUpToDate;
+
+	/** @var int */
+	protected $isRemembered;
+
+
 	public static $columns = [
 		'id',
 		'user_id',
@@ -43,6 +55,9 @@ class Session extends Entity implements \JsonSerializable {
 		'timestamp',
 		'agency_conversation_token',
 		'agency_pending_actions',
+		'summary',
+		'is_summary_up_to_date',
+		'is_remembered',
 	];
 	public static $fields = [
 		'id',
@@ -51,6 +66,9 @@ class Session extends Entity implements \JsonSerializable {
 		'timestamp',
 		'agencyConversationToken',
 		'agencyPendingActions',
+		'summary',
+		'isSummaryUpToDate',
+		'isRemembered',
 	];
 
 	public function __construct() {
@@ -59,6 +77,9 @@ class Session extends Entity implements \JsonSerializable {
 		$this->addType('timestamp', Types::INTEGER);
 		$this->addType('agency_conversation_token', Types::STRING);
 		$this->addType('agency_pending_actions', Types::STRING);
+		$this->addType('summary', Types::TEXT);
+		$this->addType('is_summary_up_to_date', Types::SMALLINT);
+		$this->addType('is_remembered', Types::SMALLINT);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -70,6 +91,25 @@ class Session extends Entity implements \JsonSerializable {
 			'timestamp' => $this->getTimestamp(),
 			'agency_conversation_token' => $this->getAgencyConversationToken(),
 			'agency_pending_actions' => $this->getAgencyPendingActions(),
+			'summary' => $this->getSummary(),
+			'is_summary_up_to_date' => $this->getIsSummaryUpToDate(),
+			'is_remembered' => $this->getIsRemembered(),
 		];
+	}
+
+	public function setIsSummaryUpToDate(bool $value): void {
+		$this->setter('isSummaryUpToDate', [$value ? 1 : 0]);
+	}
+
+	public function setIsRemembered(bool $value): void {
+		$this->setter('isRemembered', [$value ? 1 : 0]);
+	}
+
+	public function getIsSummaryUpToDate(): bool {
+		return $this->getter('isSummaryUpToDate') === 1;
+	}
+
+	public function getIsRemembered(): bool {
+		return $this->getter('isRemembered') === 1;
 	}
 }

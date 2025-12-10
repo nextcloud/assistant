@@ -38,6 +38,7 @@ return [
 
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/new_session', 'verb' => 'PUT'],
 		['name' => 'chattyLLM#updateSessionTitle', 'url' => '/chat/update_session', 'verb' => 'PATCH'],
+		['name' => 'chattyLLM#updateSessionIsRemembered', 'url' => '/chat/update_is_remembered', 'verb' => 'PATCH'],
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/delete_session', 'verb' => 'DELETE'],
 		['name' => 'chattyLLM#getSessions', 'url' => '/chat/sessions', 'verb' => 'GET'],
 		['name' => 'chattyLLM#newMessage', 'url' => '/chat/new_message', 'verb' => 'PUT'],

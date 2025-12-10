@@ -10,11 +10,15 @@ declare(strict_types=1);
 namespace OCA\Assistant\TaskProcessing;
 
 use Exception;
+use OC\TaskProcessing\Manager;
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\SessionSummaryService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
 use OCP\IL10N;
+use OCP\TaskProcessing\EShapeType;
 use OCP\TaskProcessing\ISynchronousProvider;
+use OCP\TaskProcessing\ShapeDescriptor;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction;
@@ -29,6 +33,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 		private IL10N $l,
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
+		private Manager $taskProcessingManager,
 	) {
 	}
 
@@ -59,7 +64,13 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 
 
 	public function getOptionalInputShape(): array {
-		return [];
+		return [
+			'memories' => new ShapeDescriptor(
+				$this->l->t('Memories'),
+				$this->l->t('The memories to be injected into the chat session.'),
+				EShapeType::ListOfTexts
+			),
+		];
 	}
 
 	public function getOptionalInputShapeEnumValues(): array {
@@ -116,14 +127,18 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 
 		// context agent
 		try {
+			$contextAgentTaskInput = [
+				'input' => $inputTranscription,
+				'confirmation' => $confirmation,
+				'conversation_token' => $conversationToken,
+			];
+			if (isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
+				$contextAgentTaskInput['memories'] = $input['memories'];
+			}
 			/** @psalm-suppress UndefinedClass */
 			$task = new Task(
 				ContextAgentInteraction::ID,
-				[
-					'input' => $inputTranscription,
-					'confirmation' => $confirmation,
-					'conversation_token' => $conversationToken,
-				],
+				$contextAgentTaskInput,
 				Application::APP_ID . ':internal',
 				$userId,
 			);
