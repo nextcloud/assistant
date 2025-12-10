@@ -108,7 +108,10 @@
                     "title",
                     "timestamp",
                     "agency_conversation_token",
-                    "agency_pending_actions"
+                    "agency_pending_actions",
+                    "summary",
+                    "is_remembered",
+                    "is_summary_up_to_date"
                 ],
                 "properties": {
                     "id": {
@@ -134,6 +137,16 @@
                     "agency_pending_actions": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "summary": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_remembered": {
+                        "type": "boolean"
+                    },
+                    "is_summary_up_to_date": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -2827,6 +2840,133 @@
                                     "title": {
                                         "type": "string",
                                         "description": "The new chat session title"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The title has been updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "error"
+                                            ],
+                                            "properties": {
+                                                "error": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "ocs"
+                                            ],
+                                            "properties": {
+                                                "ocs": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "meta",
+                                                        "data"
+                                                    ],
+                                                    "properties": {
+                                                        "meta": {
+                                                            "$ref": "#/components/schemas/OCSMeta"
+                                                        },
+                                                        "data": {}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ocs/v2.php/apps/assistant/chat/update_is_remembered": {
+            "patch": {
+                "operationId": "chattyllm-update-session-is-remembered",
+                "summary": "Update session is_remembered status",
+                "tags": [
+                    "chat_api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "sessionId",
+                                    "is_remembered"
+                                ],
+                                "properties": {
+                                    "sessionId": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "description": "The chat session ID"
+                                    },
+                                    "is_remembered": {
+                                        "type": "boolean",
+                                        "description": "The new is_remembered status: Whether to remember the insights from this chat session across all chat sessiosn"
                                     }
                                 }
                             }
