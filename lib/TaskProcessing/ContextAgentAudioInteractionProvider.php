@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace OCA\Assistant\TaskProcessing;
 
 use Exception;
-use OCP\TaskProcessing\IManager;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
 use OCP\IL10N;
 use OCP\TaskProcessing\EShapeType;
+use OCP\TaskProcessing\IManager;
 use OCP\TaskProcessing\ISynchronousProvider;
 use OCP\TaskProcessing\ShapeDescriptor;
 use OCP\TaskProcessing\Task;
