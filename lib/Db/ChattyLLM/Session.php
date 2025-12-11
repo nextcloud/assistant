@@ -38,13 +38,21 @@ class Session extends Entity implements \JsonSerializable {
 	/** @var ?string */
 	protected $agencyPendingActions;
 
-	/** @var ?string */
+	/**
+	 * Will be used to inject into assistant memories upon calling LLM
+	 *
+	 * @var ?string
+	 */
 	protected $summary;
 
 	/** @var int */
 	protected $isSummaryUpToDate;
 
-	/** @var int */
+	/**
+	 * Whether to remember the insights from this chat session across all chat sessions
+	 *
+	 * @var int
+	 */
 	protected $isRemembered;
 
 

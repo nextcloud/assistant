@@ -27,8 +27,6 @@ class Version021201Date20251210130151 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 		$schemaChanged = false;
 
-		// some MariaDB/MySQL instances upgraded successfully to 2.6.0 with notNull=true
-		// this makes sure we bring everybody to the same notNull value for sources and attachments
 		if ($schema->hasTable('assistant_chat_sns')) {
 			$table = $schema->getTable('assistant_chat_sns');
 			if (!$table->hasColumn('summary')) {
