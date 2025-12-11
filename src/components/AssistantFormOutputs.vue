@@ -88,10 +88,7 @@ export default {
 			return false
 		},
 		hasInitialOutput() {
-			if (typeof this.outputs?.output === 'string') {
-				return !!this.outputs.output?.trim()
-			}
-			return false
+			return Object.keys(this.outputs).filter(key => typeof this.outputs[key] !== 'undefined').length
 		},
 	},
 }
