@@ -14,7 +14,7 @@ export const EntryId = 'assistant-generate-image'
 
 export const entry = {
 	id: EntryId,
-	displayName: t('assistant', 'Generate image'),
+	displayName: t('assistant', 'Generate image using AI'),
 	iconSvgInline: Creation,
 	order: 100,
 	enabled() {

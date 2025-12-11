@@ -103,7 +103,7 @@ class Capabilities implements IPublicCapability {
 				$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
 				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
-					'name' => $this->l->t('Summarize'),
+					'name' => $this->l->t('Summarize using AI'),
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => implode(', ', $textMimeTypes),
@@ -121,7 +121,7 @@ class Capabilities implements IPublicCapability {
 				$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
 				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
-					'name' => $this->l->t('Transcribe audio'),
+					'name' => $this->l->t('Transcribe audio using AI'),
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => 'audio/',
@@ -139,7 +139,7 @@ class Capabilities implements IPublicCapability {
 				$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
 				$url = str_replace('123456789', '{fileId}', $url);
 				$endpoint = [
-					'name' => $this->l->t('Text to speech'),
+					'name' => $this->l->t('Text-To-Speech using AI'),
 					'url' => $url,
 					'method' => 'POST',
 					'mimetype_filters' => implode(', ', $textMimeTypes),
