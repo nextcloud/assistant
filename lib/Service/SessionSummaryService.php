@@ -20,9 +20,14 @@ use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use Psr\Log\LoggerInterface;
 
+/**
+ * We summarize chat sessions that are toggled to be remembered to inject the summaries as memories into LLM calls
+ */
 class SessionSummaryService {
 	public const BAtCH_SIZE = 10;
 	public const SUMMARY_MESSAGE_LIMIT = 150;
+
+	public const MAX_INJECTED_SUMMARIES = 10;
 
 	public function __construct(
 		private SessionMapper $sessionMapper,
@@ -92,7 +97,7 @@ class SessionSummaryService {
 	 */
 	public function getUserSessionSummaries(?string $userId): array {
 		try {
-			$sessions = $this->sessionMapper->getRememberedUserSessions($userId);
+			$sessions = $this->sessionMapper->getRememberedUserSessions($userId, self::MAX_INJECTED_SUMMARIES);
 			return array_filter(array_map(fn (Session $session) => $session->getSummary(), $sessions), fn ($summary) => $summary !== null);
 		} catch (Exception $e) {
 			$this->logger->error('Failed to get remembered user sessions', ['exception' => $e]);

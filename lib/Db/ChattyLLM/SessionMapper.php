@@ -83,13 +83,17 @@ class SessionMapper extends QBMapper {
 	 * @return array<Session>
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getRememberedUserSessions(string $userId): array {
+	public function getRememberedUserSessions(string $userId, int $limit = 0): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Session::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
 			->orderBy('timestamp', 'DESC');
+
+		if ($limit > 0) {
+			$qb->setMaxResults($limit);
+		}
 
 		return $this->findEntities($qb);
 	}
