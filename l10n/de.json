@@ -311,6 +311,7 @@
     "The server failed to process your task with ID {id}" : "Der Server konnte Deine Aufgabe mit der ID {id} nicht verarbeiten",
     "Please inform the server administrators of this issue." : "Bitte die Serveradministration über dieses Problem informieren.",
     "Assistant error" : "Fehler des Assistenten",
+    "No last task type available, falling back to default" : "Kein letzter Aufgabentyp verfügbar, Rückfall auf Standard",
     "Please log in to view the task result" : "Bitte anmelden um das Aufgabenergebnis anzusehen",
     "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt",
     "Assistant failed to schedule your task" : "Assistent konnte Ihre Aufgabe nicht planen",

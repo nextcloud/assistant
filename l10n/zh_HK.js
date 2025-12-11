@@ -313,6 +313,7 @@ OC.L10N.register(
     "The server failed to process your task with ID {id}" : "伺服器無法處理您 ID 為 {id} 的任務",
     "Please inform the server administrators of this issue." : "請通知伺服器管理員此問題。",
     "Assistant error" : "Assistant 錯誤",
+    "No last task type available, falling back to default" : "沒有可用的最後任務類型，回落到默認值。",
     "Please log in to view the task result" : "請登入查看任務結果",
     "This task does not exist or has been cleaned up" : "任務不存在或已被刪除",
     "Assistant failed to schedule your task" : "小幫手無法安排您的任務。",

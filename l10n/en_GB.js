@@ -313,6 +313,7 @@ OC.L10N.register(
     "The server failed to process your task with ID {id}" : "The server failed to process your task with ID {id}",
     "Please inform the server administrators of this issue." : "Please inform the server administrators of this issue.",
     "Assistant error" : "Assistant error",
+    "No last task type available, falling back to default" : "No last task type available, falling back to default",
     "Please log in to view the task result" : "Please log in to view the task result",
     "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
     "Assistant failed to schedule your task" : "Assistant failed to schedule your task",

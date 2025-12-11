@@ -311,6 +311,7 @@
     "The server failed to process your task with ID {id}" : "Seva imeshindwa kuchakata kazi yako kwa kutumia kitambulisho {id}",
     "Please inform the server administrators of this issue." : "Tafadhali wajulishe wasimamizi wa seva kuhusu suala hili.",
     "Assistant error" : "Hitilafu ya Mratibu",
+    "No last task type available, falling back to default" : "Hakuna aina ya mwisho ya kazi inayopatikana, ikirudi kwa chaguomsingi",
     "Please log in to view the task result" : "Tafadhali ingia ili kuona matokeo ya kazi",
     "This task does not exist or has been cleaned up" : "Kazi hii haipo au imesafishwa",
     "Assistant failed to schedule your task" : "Mratibu ameshindwa kuratibu kazi yako",
