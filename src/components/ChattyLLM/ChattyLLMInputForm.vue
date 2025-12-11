@@ -86,6 +86,14 @@
 					<template #icon>
 						<AssistantIcon />
 					</template>
+          <template #default>
+            <NcButton @click="chatContent = 'What\'s the weather in berlin, right now?'" :aria-label="t('assisant', 'Ask assistant, what\'s the weather in berlin right now')" variant="secondary">
+              {{ t('assistant', 'What\'s the weather in berlin, right now?') }}
+            </NcButton>
+            <NcButton @click="chatContent = 'Can you show me a map of Berlin?'" :aria-label="t('assisant', 'Ask assistant, to show you a map of Berlin')" variant="secondary">
+              {{ t('assistant', 'Can you show me a map of Berlin?') }}
+            </NcButton>
+          </template>
 				</NoSession>
 				<div v-else
 					class="session-area__chat-area__active-session"
