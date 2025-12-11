@@ -86,14 +86,18 @@
 					<template #icon>
 						<AssistantIcon />
 					</template>
-          <template #default>
-            <NcButton @click="chatContent = 'What\'s the weather in berlin, right now?'" :aria-label="t('assisant', 'Ask assistant, what\'s the weather in berlin right now')" variant="secondary">
-              {{ t('assistant', 'What\'s the weather in berlin, right now?') }}
-            </NcButton>
-            <NcButton @click="chatContent = 'Can you show me a map of Berlin?'" :aria-label="t('assisant', 'Ask assistant, to show you a map of Berlin')" variant="secondary">
-              {{ t('assistant', 'Can you show me a map of Berlin?') }}
-            </NcButton>
-          </template>
+					<template #action>
+						<div v-if="agencyAvailable" class="session-area__agency-suggestions">
+							<NcButton v-for="suggestion in agencySuggestions"
+								:key="suggestion.message"
+								class="session-area__agency-suggestion"
+								:aria-label="suggestion.aria"
+								variant="secondary"
+								@click="chatContent = suggestion.message">
+								{{ t('assistant', suggestion.message) }}
+							</NcButton>
+						</div>
+					</template>
 				</NoSession>
 				<div v-else
 					class="session-area__chat-area__active-session"
@@ -240,6 +244,7 @@ export default {
 	},
 
 	data: () => {
+		const agencyAvailable = loadState('assistant', 'agency_available', false)
 		return {
 			// { id: number, title: string, user_id: string, timestamp: number }
 			active: null,
@@ -269,6 +274,21 @@ export default {
 			pollTitleGenerationTimerId: null,
 			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
 			slowPickup: false,
+			agencyAvailable,
+			agencySuggestions: [
+				{
+					aria: t('assisant', 'Ask assistant, what\'s the weather in Berlin right now'),
+					message: t('assisant', 'What\'s the weather in Berlin right now?'),
+				},
+				{
+					aria: t('assisant', 'Ask assistant, to create a share link for a file'),
+					message: t('assisant', 'Can you create a share link for the following file in my documents? welcome.txt'),
+				},
+				{
+					aria: t('assisant', 'Ask assistant, which actions it can do for you'),
+					message: t('assisant', 'Which actions can you do for me?'),
+				},
+			],
 		}
 	},
 
@@ -1030,6 +1050,13 @@ export default {
 		&__input-area {
 			position: sticky;
 			bottom: 0;
+		}
+
+		&__agency-suggestions {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
 		}
 	}
 }
