@@ -193,10 +193,11 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
-	 * Update session is_remembered status
+	 * Update session
 	 *
 	 * @param integer $sessionId The chat session ID
-	 * @param bool $is_remembered The new is_remembered status: Whether to remember the insights from this chat session across all chat sessiosn
+	 * @param string $title The new chat session title
+	 * @param bool $is_remembered The new is_remembered status: Whether to remember the insights from this chat session across all chat session
 	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 *
 	 * 200: The title has been updated successfully
@@ -204,13 +205,15 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function updateSessionIsRemembered(int $sessionId, bool $is_remembered): JSONResponse {
+	public function updateChatSession(int $sessionId, string $title, bool $is_remembered): JSONResponse {
 		if ($this->userId === null) {
-			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+			return new JSONResponse(['error' => $this->l10n->t('Could not find session')], Http::STATUS_NOT_FOUND);
 		}
 
 		try {
-			$this->sessionMapper->updateSessionIsRemembered($this->userId, $sessionId, $is_remembered);
+			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
+			$session->setIsRemembered($is_remembered);
+			$session->setTitle($title);
 			// schedule summarizer jobs for this chat user
 			if ($is_remembered) {
 				$this->sessionSummaryService->scheduleJobsForUser($this->userId);
@@ -219,6 +222,8 @@ class ChattyLLMController extends OCSController {
 		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to update the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (DoesNotExistException|MultipleObjectsReturnedException $e) {
+			return new JSONResponse(['error' => $this->l10n->t('Could not find session')], Http::STATUS_NOT_FOUND);
 		}
 	}
 
