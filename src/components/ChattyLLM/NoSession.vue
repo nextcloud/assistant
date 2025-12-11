@@ -7,6 +7,7 @@
 		<template #icon>
 			<slot name="icon" />
 		</template>
+    <slot name="default" />
 	</NcEmptyContent>
 </template>
 
