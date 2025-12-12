@@ -2925,22 +2925,22 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "required": [
-                                    "title",
-                                    "is_remembered"
-                                ],
                                 "properties": {
                                     "title": {
                                         "type": "string",
+                                        "nullable": true,
+                                        "default": null,
                                         "description": "The new chat session title"
                                     },
                                     "is_remembered": {
                                         "type": "boolean",
+                                        "nullable": true,
+                                        "default": null,
                                         "description": "The new is_remembered status: Whether to remember the insights from this chat session across all chat session"
                                     }
                                 }
@@ -2999,45 +2999,48 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Not logged in",
+                    "404": {
+                        "description": "The session was not found",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "anyOf": [
-                                        {
+                                    "type": "object",
+                                    "required": [
+                                        "error"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
                                             "type": "object",
                                             "required": [
-                                                "error"
+                                                "meta",
+                                                "data"
                                             ],
                                             "properties": {
-                                                "error": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "type": "object",
-                                            "required": [
-                                                "ocs"
-                                            ],
-                                            "properties": {
-                                                "ocs": {
-                                                    "type": "object",
-                                                    "required": [
-                                                        "meta",
-                                                        "data"
-                                                    ],
-                                                    "properties": {
-                                                        "meta": {
-                                                            "$ref": "#/components/schemas/OCSMeta"
-                                                        },
-                                                        "data": {}
-                                                    }
-                                                }
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
                                             }
                                         }
-                                    ]
+                                    }
                                 }
                             }
                         }

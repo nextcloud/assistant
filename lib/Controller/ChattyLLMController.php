@@ -196,27 +196,34 @@ class ChattyLLMController extends OCSController {
 	 * Update session
 	 *
 	 * @param integer $sessionId The chat session ID
-	 * @param string $title The new chat session title
-	 * @param bool $is_remembered The new is_remembered status: Whether to remember the insights from this chat session across all chat session
-	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 * @param string|null $title The new chat session title
+	 * @param bool|null $is_remembered The new is_remembered status: Whether to remember the insights from this chat session across all chat session
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
 	 * 200: The title has been updated successfully
-	 * 401: Not logged in
+	 * 404: The session was not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function updateChatSession(int $sessionId, string $title, bool $is_remembered): JSONResponse {
+	public function updateChatSession(int $sessionId, ?string $title = null, ?bool $is_remembered = null): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('Could not find session')], Http::STATUS_NOT_FOUND);
+		}
+		if ($title === null && $is_remembered === null) {
+			return new JSONResponse();
 		}
 
 		try {
 			$session = $this->sessionMapper->getUserSession($this->userId, $sessionId);
-			$session->setIsRemembered($is_remembered);
-			$session->setTitle($title);
-			// schedule summarizer jobs for this chat user
-			if ($is_remembered) {
-				$this->sessionSummaryService->scheduleJobsForUser($this->userId);
+			if ($title !== null) {
+				$session->setTitle($title);
+			}
+			if ($is_remembered !== null) {
+				$session->setIsRemembered($is_remembered);
+				// schedule summarizer jobs for this chat user
+				if ($is_remembered) {
+					$this->sessionSummaryService->scheduleJobsForUser($this->userId);
+				}
 			}
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
