@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
  * We summarize chat sessions that are toggled to be remembered to inject the summaries as memories into LLM calls
  */
 class SessionSummaryService {
-	public const BAtCH_SIZE = 10;
+	public const BATCH_SIZE = 10;
 	public const SUMMARY_MESSAGE_LIMIT = 150;
 
 	public const MAX_INJECTED_SUMMARIES = 10;
@@ -67,7 +67,7 @@ class SessionSummaryService {
 
 	public function regenerateSummariesForOutdatedSessions(string $userId): void {
 		try {
-			$sessions = $this->sessionMapper->getRememberedUserSessionsWithOutdatedSummaries($userId, self::BAtCH_SIZE);
+			$sessions = $this->sessionMapper->getRememberedUserSessionsWithOutdatedSummaries($userId, self::BATCH_SIZE);
 			$this->generateSummaries($sessions);
 		} catch (Exception $e) {
 			$this->logger->warning('Failed to generate chat summaries for outdated sessions', ['exception' => $e]);
@@ -76,7 +76,7 @@ class SessionSummaryService {
 
 	public function generateSummariesForNewSessions(string $userId): void {
 		try {
-			$sessions = $this->sessionMapper->getRememberedUserSessionsWithoutSummaries($userId, self::BAtCH_SIZE);
+			$sessions = $this->sessionMapper->getRememberedUserSessionsWithoutSummaries($userId, self::BATCH_SIZE);
 			$this->generateSummaries($sessions);
 		} catch (Exception $e) {
 			$this->logger->warning('Failed to generate chat summaries for new sessions', ['exception' => $e]);
