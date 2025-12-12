@@ -823,6 +823,7 @@ class ChattyLLMController extends OCSController {
 			'messageTaskId' => null,
 			'titleTaskId' => null,
 			'sessionTitle' => $session->getTitle(),
+			'sessionIsRemembered' => $session->getIsRemembered(),
 			'sessionAgencyPendingActions' => $p,
 		];
 		if (!empty($messageTasks)) {
