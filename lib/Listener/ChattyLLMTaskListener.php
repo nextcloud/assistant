@@ -115,15 +115,19 @@ class ChattyLLMTaskListener implements IEventListener {
 				$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
 			}
 
+			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
+
 			// store the conversation token and the actions if we are using the agency feature
 			if ($isAgency || $isAgencyAudioChat) {
-				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 				$conversationToken = ($taskOutput['conversation_token'] ?? null) ?: null;
 				$pendingActions = ($taskOutput['actions'] ?? null) ?: null;
 				$session->setAgencyConversationToken($conversationToken);
 				$session->setAgencyPendingActions($pendingActions);
-				$this->sessionMapper->update($session);
 			}
+			// Set flag that the conversation summary needs to be regenerated
+			$session->setIsSummaryUpToDate(false);
+
+			$this->sessionMapper->update($session);
 		}
 	}
 

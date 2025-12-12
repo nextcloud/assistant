@@ -14,7 +14,10 @@ use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\Files\File;
 use OCP\IL10N;
+use OCP\TaskProcessing\EShapeType;
+use OCP\TaskProcessing\IManager;
 use OCP\TaskProcessing\ISynchronousProvider;
+use OCP\TaskProcessing\ShapeDescriptor;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\AudioToAudioChat;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
@@ -29,6 +32,7 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 		private IL10N $l,
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
+		private IManager $taskProcessingManager,
 	) {
 	}
 
@@ -57,9 +61,14 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 		return [];
 	}
 
-
 	public function getOptionalInputShape(): array {
-		return [];
+		return [
+			'memories' => new ShapeDescriptor(
+				$this->l->t('Memories'),
+				$this->l->t('The memories to be injected into the chat session.'),
+				EShapeType::ListOfTexts
+			),
+		];
 	}
 
 	public function getOptionalInputShapeEnumValues(): array {
@@ -117,13 +126,20 @@ class AudioToAudioChatProvider implements ISynchronousProvider {
 
 		// free prompt
 		try {
+			$chatTaskInput = [
+				'input' => $inputTranscription,
+				'system_prompt' => $systemPrompt,
+				'history' => $history,
+			];
+			if (
+				isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])
+			) {
+				$chatTaskInput['memories'] = $input['memories'];
+			}
+			/** @psalm-suppress InvalidArgument */
 			$task = new Task(
 				TextToTextChat::ID,
-				[
-					'input' => $inputTranscription,
-					'system_prompt' => $systemPrompt,
-					'history' => $history,
-				],
+				$chatTaskInput,
 				Application::APP_ID . ':internal',
 				$userId,
 			);
