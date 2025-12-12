@@ -149,8 +149,10 @@ export default {
 					})
 				})
 				.catch(error => {
-					console.error('Assistant scheduling error', error)
-					showError(t('assistant', 'Failed to schedule your task'))
+					this.loading = false
+					this.showSyncTaskRunning = false
+					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
+					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
 				})
 				.then(() => {
 				})
