@@ -313,6 +313,7 @@ OC.L10N.register(
     "The server failed to process your task with ID {id}" : "Theip ar an bhfreastalaí do thasc le ID {id} a phróiseáil",
     "Please inform the server administrators of this issue." : "Cuir na riarthóirí freastalaí ar an eolas faoin gceist seo, le do thoil.",
     "Assistant error" : "Earráid Assistant",
+    "No last task type available, falling back to default" : "Níl aon chineál tasc deireanach ar fáil, ag dul ar ais go dtí an réamhshocrú",
     "Please log in to view the task result" : "Logáil isteach le do thoil chun toradh an taisc a fheiceáil",
     "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
     "Assistant failed to schedule your task" : "Theip ar an gCúntóir do thasc a sceidealú",

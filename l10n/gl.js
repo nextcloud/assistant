@@ -313,6 +313,7 @@ OC.L10N.register(
     "The server failed to process your task with ID {id}" : "Produciuse un fallo no servidor ao procesar a tarefa co ID {id}",
     "Please inform the server administrators of this issue." : "Informe á administración do servidor deste problema.",
     "Assistant error" : "Produciuse un erro do asistente",
+    "No last task type available, falling back to default" : "Non hai ningún último tipo de tarefa dispoñíbel, recorrese ao predeterminado.",
     "Please log in to view the task result" : "Acceda para ver o resultado da tarefa",
     "This task does not exist or has been cleaned up" : "Esta tarefa non existe ou foi limpada",
     "Assistant failed to schedule your task" : "Produciuse un fallo no Asistente ao programar a tarefa",
