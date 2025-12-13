@@ -161,10 +161,10 @@ export async function openAssistantForm({
 					})
 				})
 				.catch(error => {
-					app.unmount()
-					console.error('Assistant scheduling error', error)
-					showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
-					reject(new Error('Assistant scheduling error'))
+					view.loading = false
+					view.showSyncTaskRunning = false
+					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
+					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
 				})
 		}
 		modalMountPoint.addEventListener('sync-submit', (data) => {
@@ -589,10 +589,10 @@ export async function openAssistantTask(
 				})
 			})
 			.catch(error => {
-				app.unmount()
-				console.error('Assistant scheduling error', error)
-				showError(t('assistant', 'Assistant error') + ': ' + error?.response?.data)
-				// reject(new Error('Assistant scheduling error'))
+				view.loading = false
+				view.showSyncTaskRunning = false
+				console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
+				showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
 			})
 	}
 	modalMountPoint.addEventListener('sync-submit', (data) => {
@@ -731,7 +731,10 @@ export async function addAssistantMenuEntry() {
 		}, 1000)
 		openAssistantForm({ appId: 'assistant' })
 			.then(r => {
-				console.debug('scheduled task', r)
+				console.debug('[Assistant header menu entry] scheduled task', r)
+			})
+			.catch(error => {
+				console.error('[Assistant header menu entry] Assistant openAssistantForm promise rejected:', error.message)
 			})
 	})
 }
