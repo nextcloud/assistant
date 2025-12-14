@@ -10,6 +10,8 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "New conversation" : "Adiwenni amaynut",
     "Delete" : "Kkes",
+    "Hello there! What can I help you with today?" : "Azul dagi! Deg wacu i zemreɣ ad k-ɛiwneɣ ass-a?",
+    "Try sending a message to spark a conversation." : "Ɛreḍ ad tazneḍ izen akken ad tessenkreḍ adiwenni.",
     "You" : "Kemm·čč",
     "Choose" : "Fren",
     "Cancelled" : "Ittwasefsex",
