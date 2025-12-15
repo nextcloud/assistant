@@ -156,7 +156,8 @@
                     "messageTaskId",
                     "titleTaskId",
                     "sessionTitle",
-                    "sessionAgencyPendingActions"
+                    "sessionAgencyPendingActions",
+                    "is_remembered"
                 ],
                 "properties": {
                     "messageTaskId": {
@@ -179,6 +180,10 @@
                         "additionalProperties": {
                             "type": "object"
                         }
+                    },
+                    "is_remembered": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 }
             },
