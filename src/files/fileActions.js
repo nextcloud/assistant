@@ -20,10 +20,10 @@ const actionIgnoreLists = [
 function registerGroupAction(mimeTypes) {
 	const groupAction = new FileAction({
 		id: 'assistant-group',
-		displayName: (nodes) => {
+		displayName: ({ nodes }) => {
 			return t('assistant', 'AI Assistant')
 		},
-		enabled(nodes, view) {
+		enabled({ nodes, view }) {
 			return !actionIgnoreLists.includes(view.id)
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
@@ -43,10 +43,10 @@ function registerSummarizeAction() {
 	const summarizeAction = new FileAction({
 		id: 'assistant-summarize',
 		parent: 'assistant-group',
-		displayName: (nodes) => {
+		displayName: ({ nodes }) => {
 			return t('approval', 'Summarize using AI')
 		},
-		enabled(nodes, view) {
+		enabled({ nodes, view }) {
 			return !actionIgnoreLists.includes(view.id)
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
@@ -55,7 +55,8 @@ function registerSummarizeAction() {
 		},
 		iconSvgInline: () => SummarizeSymbol,
 		order: 0,
-		async exec(node) {
+		async exec({ nodes }) {
+			const node = nodes[0]
 			const { default: axios } = await import('@nextcloud/axios')
 			const { generateOcsUrl } = await import('@nextcloud/router')
 			const { showError, showSuccess } = await import('@nextcloud/dialogs')
@@ -81,10 +82,10 @@ function registerTtsAction() {
 	const ttsAction = new FileAction({
 		id: 'assistant-tts',
 		parent: 'assistant-group',
-		displayName: (nodes) => {
+		displayName: ({ nodes }) => {
 			return t('assistant', 'Text-To-Speech using AI')
 		},
-		enabled(nodes, view) {
+		enabled({ nodes, view }) {
 			return !actionIgnoreLists.includes(view.id)
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
@@ -93,7 +94,8 @@ function registerTtsAction() {
 		},
 		iconSvgInline: () => TTSSymbol,
 		order: 0,
-		async exec(node) {
+		async exec({ nodes }) {
+			const node = nodes[0]
 			const { default: axios } = await import('@nextcloud/axios')
 			const { generateOcsUrl } = await import('@nextcloud/router')
 			const { showError, showSuccess } = await import('@nextcloud/dialogs')
@@ -119,10 +121,10 @@ function registerSttAction() {
 	const sttAction = new FileAction({
 		id: 'assistant-stt',
 		parent: 'assistant-group',
-		displayName: (nodes) => {
+		displayName: ({ nodes }) => {
 			return t('assistant', 'Transcribe audio using AI')
 		},
-		enabled(nodes, view) {
+		enabled({ nodes, view }) {
 			return !actionIgnoreLists.includes(view.id)
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
@@ -131,7 +133,8 @@ function registerSttAction() {
 		},
 		iconSvgInline: () => STTSymbol,
 		order: 0,
-		async exec(node) {
+		async exec({ nodes }) {
+			const node = nodes[0]
 			const { default: axios } = await import('@nextcloud/axios')
 			const { generateOcsUrl } = await import('@nextcloud/router')
 			const { showError, showSuccess } = await import('@nextcloud/dialogs')
