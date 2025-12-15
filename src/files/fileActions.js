@@ -21,7 +21,7 @@ function registerGroupAction(mimeTypes) {
 	const groupAction = new FileAction({
 		id: 'assistant-group',
 		displayName: (nodes) => {
-			return t('assistant', 'Assistant')
+			return t('assistant', 'AI Assistant')
 		},
 		enabled(nodes, view) {
 			return !actionIgnoreLists.includes(view.id)
@@ -44,7 +44,7 @@ function registerSummarizeAction() {
 		id: 'assistant-summarize',
 		parent: 'assistant-group',
 		displayName: (nodes) => {
-			return t('approval', 'Summarize')
+			return t('approval', 'Summarize using AI')
 		},
 		enabled(nodes, view) {
 			return !actionIgnoreLists.includes(view.id)
@@ -63,7 +63,7 @@ function registerSummarizeAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'Summarization task submitted successfully.') + '\n'
+					t('assistant', 'Summarization AI task submitted successfully.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
 				)
@@ -82,7 +82,7 @@ function registerTtsAction() {
 		id: 'assistant-tts',
 		parent: 'assistant-group',
 		displayName: (nodes) => {
-			return t('approval', 'Text to speech')
+			return t('assistant', 'Text-To-Speech using AI')
 		},
 		enabled(nodes, view) {
 			return !actionIgnoreLists.includes(view.id)
@@ -101,7 +101,7 @@ function registerTtsAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'Text-to-speech task submitted successfully.') + '\n'
+					t('assistant', 'Text-to-Speech AI task submitted successfully.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
 				)
@@ -120,7 +120,7 @@ function registerSttAction() {
 		id: 'assistant-stt',
 		parent: 'assistant-group',
 		displayName: (nodes) => {
-			return t('approval', 'Transcribe audio')
+			return t('assistant', 'Transcribe audio using AI')
 		},
 		enabled(nodes, view) {
 			return !actionIgnoreLists.includes(view.id)
@@ -139,7 +139,7 @@ function registerSttAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'Transcription task submitted successfully.') + '\n'
+					t('assistant', 'Transcription AI task submitted successfully.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
 				)
