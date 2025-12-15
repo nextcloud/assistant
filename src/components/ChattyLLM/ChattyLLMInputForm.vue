@@ -56,9 +56,9 @@
 				</div>
 				<div v-if="active != null" class="session-area__top-bar__actions">
 					<NcActions v-model:open="titleActionsOpen" :force-name="true" :inline="1">
-						<NcActionButton v-model="active.isRemembered" @update:modelValue="updateSession">
+						<NcActionButton v-model="active.is_remembered" @update:modelValue="updateSession">
 							<template #icon>
-								<ContentSaveIcon v-if="active.isRemembered" :size="20" />
+								<ContentSaveIcon v-if="active.is_remembered" :size="20" />
 								<ContentSaveOutlineIcon v-else :size="20" />
 							</template>
 							{{ t('assistant', 'Remember this') }}
@@ -316,7 +316,7 @@ export default {
 					console.debug('update session title with check result')
 				}
 				console.debug('check session response:', checkSessionResponseData)
-				this.active.isRemembered = checkSessionResponseData?.sessionIsRemembered
+				this.active.is_remembered = checkSessionResponseData?.is_remembered
 				// update the pending actions when switching conversations
 				this.active.sessionAgencyPendingActions = checkSessionResponseData?.sessionAgencyPendingActions
 				this.active.agencyAnswered = false
@@ -794,7 +794,7 @@ export default {
 		async updateSession() {
 			await axios.put(getChatURL(`/sessions/${this.active.id}`), {
 				title: this.active.title,
-				is_remembered: this.active.isRemembered,
+				is_remembered: this.active.is_remembered,
 			})
 
 		},
