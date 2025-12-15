@@ -92,7 +92,7 @@
 								:key="suggestion.message"
 								class="session-area__agency-suggestion"
 								:aria-label="suggestion.aria"
-								variant="secondary"
+								variant="tertiary"
 								@click="chatContent = suggestion.message">
 								{{ t('assistant', suggestion.message) }}
 							</NcButton>
@@ -1054,9 +1054,14 @@ export default {
 
 		&__agency-suggestions {
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			align-items: center;
 			gap: 10px;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		&__agency-suggestion {
+			flex-shrink: 0;
 		}
 	}
 }
