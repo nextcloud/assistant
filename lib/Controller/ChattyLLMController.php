@@ -225,9 +225,7 @@ class ChattyLLMController extends OCSController {
 					$this->sessionSummaryService->scheduleJobsForUser($this->userId);
 				}
 			}
-			if ($title !== null || $is_remembered !== null) {
-				$this->sessionMapper->update($session);
-			}
+			$this->sessionMapper->update($session);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);

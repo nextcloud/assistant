@@ -80,6 +80,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     titleTaskId: ?int,
  *     sessionTitle: ?string,
  *     sessionAgencyPendingActions: ?array<string, mixed>,
+ *     is_remembered: ?bool,
  * }
  */
 class ResponseDefinitions {
