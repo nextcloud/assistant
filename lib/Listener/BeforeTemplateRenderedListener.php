@@ -38,7 +38,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		private IEventDispatcher $eventDispatcher,
 		private AssistantService $assistantService,
 		private ?string $userId,
-        private IManager $taskProcessingManager,
+		private IManager $taskProcessingManager,
 	) {
 	}
 
@@ -74,9 +74,9 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			$this->initialStateService->provideInitialState('audio_chat_available', $this->assistantService->isAudioChatAvailable());
 			$autoplayAudioChat = $this->config->getUserValue($this->userId, Application::APP_ID, 'autoplay_audio_chat', '1') === '1';
 			$this->initialStateService->provideInitialState('autoplay_audio_chat', $autoplayAudioChat);
-            $agencyAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypes());
-            $this->initialStateService->provideInitialState('agency_available', $agencyAvailable);
-        }
+			$agencyAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypes());
+			$this->initialStateService->provideInitialState('agency_available', $agencyAvailable);
+		}
 		if (class_exists(\OCA\Viewer\Event\LoadViewer::class)) {
 			$this->eventDispatcher->dispatchTyped(new \OCA\Viewer\Event\LoadViewer());
 		}
