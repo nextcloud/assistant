@@ -80,14 +80,14 @@ class Session extends Entity implements \JsonSerializable {
 	];
 
 	public function __construct() {
-		$this->addType('user_id', Types::STRING);
+		$this->addType('userId', Types::STRING);
 		$this->addType('title', Types::STRING);
 		$this->addType('timestamp', Types::INTEGER);
-		$this->addType('agency_conversation_token', Types::STRING);
-		$this->addType('agency_pending_actions', Types::STRING);
+		$this->addType('agencyConversationToken', Types::STRING);
+		$this->addType('agencyPendingActions', Types::STRING);
 		$this->addType('summary', Types::TEXT);
-		$this->addType('is_summary_up_to_date', Types::SMALLINT);
-		$this->addType('is_remembered', Types::SMALLINT);
+		$this->addType('isSummaryUpToDate', Types::SMALLINT);
+		$this->addType('isRemembered', Types::SMALLINT);
 	}
 
 	#[\ReturnTypeWillChange]
