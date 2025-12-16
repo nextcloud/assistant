@@ -182,7 +182,7 @@ class SessionMapper extends QBMapper {
 
 	public function updateSessionIsRemembered(?string $userId, int $sessionId, bool $is_remembered) {
 		$session = $this->getUserSession($userId, $sessionId);
-		$session->setIsRemembered($is_remembered);
+		$session->setIsRemembered($is_remembered ? 1 : 0);
 		$this->update($session);
 	}
 }

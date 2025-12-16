@@ -57,7 +57,7 @@ class SessionSummaryService {
 				], 'assistant', $session->getUserId());
 				$output = $this->taskProcessingService->runTaskProcessingTask($task);
 				$session->setSummary($output['output']);
-				$session->setIsSummaryUpToDate(true);
+				$session->setIsSummaryUpToDate(1);
 				$this->sessionMapper->update($session);
 			} catch (\Throwable $e) {
 				$this->logger->warning('Failed to generate summary for chat session ' . $session->getId(), ['exception' => $e]);

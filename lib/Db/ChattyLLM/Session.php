@@ -25,6 +25,10 @@ use OCP\DB\Types;
  * @method \void setAgencyConversationToken(?string $agencyConversationToken)
  * @method \string|null getAgencyPendingActions()
  * @method \void setAgencyPendingActions(?string $agencyPendingActions)
+ * @method \int getIsRemembered()
+ * @method \void setIsRemembered(int $isRemembered)
+ * @method \int getIsSummaryUpToDate()
+ * @method \void setIsSummaryUpToDate(int $isSummaryUpToDate)
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */
@@ -100,24 +104,8 @@ class Session extends Entity implements \JsonSerializable {
 			'agency_conversation_token' => $this->getAgencyConversationToken(),
 			'agency_pending_actions' => $this->getAgencyPendingActions(),
 			'summary' => $this->getSummary(),
-			'is_summary_up_to_date' => $this->getIsSummaryUpToDate(),
-			'is_remembered' => $this->getIsRemembered(),
+			'is_summary_up_to_date' => $this->getIsSummaryUpToDate() !== 0,
+			'is_remembered' => $this->getIsRemembered() !== 0,
 		];
-	}
-
-	public function setIsSummaryUpToDate(bool $value): void {
-		$this->setter('isSummaryUpToDate', [$value ? 1 : 0]);
-	}
-
-	public function setIsRemembered(bool $value): void {
-		$this->setter('isRemembered', [$value ? 1 : 0]);
-	}
-
-	public function getIsSummaryUpToDate(): bool {
-		return $this->getter('isSummaryUpToDate') === 1;
-	}
-
-	public function getIsRemembered(): bool {
-		return $this->getter('isRemembered') === 1;
 	}
 }

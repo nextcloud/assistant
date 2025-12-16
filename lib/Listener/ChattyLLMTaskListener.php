@@ -125,7 +125,7 @@ class ChattyLLMTaskListener implements IEventListener {
 				$session->setAgencyPendingActions($pendingActions);
 			}
 			// Set flag that the conversation summary needs to be regenerated
-			$session->setIsSummaryUpToDate(false);
+			$session->setIsSummaryUpToDate(0);
 
 			$this->sessionMapper->update($session);
 		}
