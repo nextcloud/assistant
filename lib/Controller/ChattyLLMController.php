@@ -219,7 +219,7 @@ class ChattyLLMController extends OCSController {
 				$session->setTitle($title);
 			}
 			if ($is_remembered !== null) {
-				$session->setIsRemembered($is_remembered ? 1 : 0);
+				$session->setIsRemembered($is_remembered);
 				// schedule summarizer jobs for this chat user
 				if ($is_remembered) {
 					$this->sessionSummaryService->scheduleJobsForUser($this->userId);
@@ -824,7 +824,7 @@ class ChattyLLMController extends OCSController {
 			'messageTaskId' => null,
 			'titleTaskId' => null,
 			'sessionTitle' => $session->getTitle(),
-			'is_remembered' => $session->getIsRemembered() !== 0,
+			'is_remembered' => $session->getIsRemembered(),
 			'sessionAgencyPendingActions' => $p,
 		];
 		if (!empty($messageTasks)) {
