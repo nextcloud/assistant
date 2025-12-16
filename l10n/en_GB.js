@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Summarise",
-    "Transcribe audio" : "Transcribe audio",
-    "Text to speech" : "Text to speech",
     "Failed to notify when ready; unknown user" : "Failed to notify when ready; unknown user",
     "Failed to cancel notification; unknown user" : "Failed to cancel notification; unknown user",
     "Assistant task submitted successfully" : "Assistant task submitted successfully",
@@ -219,8 +216,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "Prompt cannot be empty.",
     "Image generation task has been scheduled." : "Image generation task has been scheduled.",
     "Failed to schedule image generation task." : "Failed to schedule image generation task.",
-    "Generate new image" : "Generate new image",
     "The result image would be placed in the current folder." : "The result image would be placed in the current folder.",
+    "Generate new image" : "Generate new image",
     "Describe the image you want to generate" : "Describe the image you want to generate",
     "No providers found" : "No providers found",
     "Image generation is not available." : "Image generation is not available.",
@@ -317,13 +314,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Please log in to view the task result",
     "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
     "Assistant failed to schedule your task" : "Assistant failed to schedule your task",
-    "Summarization task submitted successfully." : "Summarisation task submitted successfully.",
     "You will be notified when it is ready." : "You will be notified when it is ready.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "It can also be checked in the Assistant in the \"Work with text -> Summarise\" menu.",
     "Failed to launch the AI file action" : "Failed to launch the AI file action",
-    "Text-to-speech task submitted successfully." : "Text-to-speech task submitted successfully.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu.",
-    "Transcription task submitted successfully." : "Transcription task submitted successfully.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu."
 },
 "nplurals=2; plural=(n != 1);");

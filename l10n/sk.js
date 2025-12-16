@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Zhrnutie",
-    "Transcribe audio" : "Prepísať zvuk",
-    "Text to speech" : "Text na reč",
     "Failed to notify when ready; unknown user" : "Nepodarilo sa oznámiť dokončenie; neznámy užívateľ",
     "Failed to cancel notification; unknown user" : "Oznámenie sa nepodarilo zrušiť; neznámy používateľ",
     "Assistant task submitted successfully" : "Úloha asistenta bola úspešne odoslaná",
@@ -210,8 +207,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "Výzva nemôže byť prázdna.",
     "Image generation task has been scheduled." : "Úloha generovania obrázkov bola naplánovaná.",
     "Failed to schedule image generation task." : "Nepodarilo sa naplánovať úlohu generovania obrázka.",
-    "Generate new image" : "Vytvoriť nový obrázok",
     "The result image would be placed in the current folder." : "Výsledný obrázok bude umiestnený v aktuálnom priečinku.",
+    "Generate new image" : "Vytvoriť nový obrázok",
     "Describe the image you want to generate" : "Popíšte obrázok ktorý chcete vygenerovať",
     "No providers found" : "Nenašli sa žiadni poskytovatelia",
     "Image generation is not available." : "Generovanie obrázkov nie je k dispozícii.",
@@ -302,13 +299,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Prosím, prihláste sa na zobrazenie výsledku úlohy.",
     "This task does not exist or has been cleaned up" : "Táto úloha neexistuje alebo bola odstránená.",
     "Assistant failed to schedule your task" : "Asistentovi sa nepodarilo naplánovať vašu úlohu.",
-    "Summarization task submitted successfully." : "Úloha zhrnutia bola úspešne odoslaná.",
     "You will be notified when it is ready." : "Budete informovaný, keď to bude pripravené.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Môže sa to tiež skontrolovať v Asistentovi v ponuke \"Práca s textom -> Zhrnúť\".",
     "Failed to launch the AI file action" : "Nezabezpečené spustenie akcie AI súboru",
-    "Text-to-speech task submitted successfully." : "Úloha prevodu textu na reč bola úspešne odoslaná.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Môže sa to tiež skontrolovať v Asistentovi v ponuke \"Práca s audio -> Generovať reč\".",
-    "Transcription task submitted successfully." : "Úloha prepisu bola úspešne odoslaná.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Môže sa to tiež skontrolovať v Asistentovi v ponuke \"Práca s audiom -> Prepis zvuku\"."
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

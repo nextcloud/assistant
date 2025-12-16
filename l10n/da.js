@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Opsummér",
-    "Transcribe audio" : "Transskribér lyd",
-    "Text to speech" : "Tekst til tale",
     "Failed to notify when ready; unknown user" : "Kunne ikke underrette når klar; ukendt bruger",
     "Failed to cancel notification; unknown user" : "Kunne ikke annullere notifikation; ukendt bruger",
     "Send a message to a Talk conversation" : "Sendte en besked til en Snak samtale a message to a Talk conversation",
@@ -202,8 +199,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "Pompten kan ikke være tom",
     "Image generation task has been scheduled." : "Billedgenereringsopgave er blevet planlagt.",
     "Failed to schedule image generation task." : "Kunne ikke planlægge billedgenereringsopgave.",
-    "Generate new image" : "Generer nyt billede",
     "The result image would be placed in the current folder." : "Resultatbilledet bliver placeret i den aktuelle mappe.",
+    "Generate new image" : "Generer nyt billede",
     "Describe the image you want to generate" : "Beskriv det billede du vil generere",
     "No providers found" : "Ingen leverandører fundet",
     "Image generation is not available." : "Billedgenerering er ikke tilgængeligt",
@@ -294,13 +291,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Log venligst på for at se opgaveresultat",
     "This task does not exist or has been cleaned up" : "Denne opgave eksisterer ikke eller er blevet ryddet",
     "Assistant failed to schedule your task" : "Assistenten kunne ikke planlægge din opgave",
-    "Summarization task submitted successfully." : "Sammendragsopgave gennemført.",
     "You will be notified when it is ready." : "Du vil blive underrettet når den er klar.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med tekst -> Sammendrag\".",
     "Failed to launch the AI file action" : "Kunne ikke starte AI filhandlingen",
-    "Text-to-speech task submitted successfully." : "Tekst til tale opgave sendt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Generer tale\".",
-    "Transcription task submitted successfully." : "Transskribtionsopgave sendt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\"."
 },
 "nplurals=2; plural=(n != 1);");

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Rezumă",
     "Send an email" : "Trimite un email",
     "User not found" : "Utilizatorul nu a fost găsit",
     "Nextcloud Talk" : "Nextcloud Talk",

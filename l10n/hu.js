@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Összesítés",
     "Send an email" : "E-mail küldése",
     "User not found" : "A felhasználó nem található",
     "Nextcloud Assistant" : "Nextcloud Asszisztens",

@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "Підсумок",
-    "Transcribe audio" : "Транскрибувати аудіо",
-    "Text to speech" : "Текст на мову",
     "Failed to notify when ready; unknown user" : "Не вдалося повідомити про готовність; невідомий користувач",
     "Failed to cancel notification; unknown user" : "Не вдалося скасувати сповіщення; невідомий користувач",
     "Send a message to a Talk conversation" : "Надіслати повідомлення до розмови Talk",
@@ -199,8 +196,8 @@
     "Prompt cannot be empty." : "Команда не може бути порожньою.",
     "Image generation task has been scheduled." : "Завдання з генерації зображень було заплановано.",
     "Failed to schedule image generation task." : "Не вдалося запланувати завдання створення зображення.",
-    "Generate new image" : "Створити нове зображення",
     "The result image would be placed in the current folder." : "Результатне зображення буде розміщено в поточній папці.",
+    "Generate new image" : "Створити нове зображення",
     "Describe the image you want to generate" : "Опишіть зображення, яке ви хочете створити",
     "No providers found" : "Не знайдено постачальників",
     "Image generation is not available." : "Створення зображень недоступне.",
@@ -291,13 +288,10 @@
     "Please log in to view the task result" : "Будь ласка, увійдіть, щоб переглянути результат завдання",
     "This task does not exist or has been cleaned up" : "Це завдання не існує або було видалено",
     "Assistant failed to schedule your task" : "Асистент не зміг запланувати ваше завдання",
-    "Summarization task submitted successfully." : "Завдання з узагальнення успішно відправлено.",
     "You will be notified when it is ready." : "Ви отримаєте повідомлення, коли все буде готово.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з текстом -> Підсумувати».",
     "Failed to launch the AI file action" : "Не вдалося запустити дію файлу ШІ",
-    "Text-to-speech task submitted successfully." : "Завдання перетворення тексту в мову успішно відправлено.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
-    "Transcription task submitted successfully." : "Завдання з транскрипції успішно відправлено.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо»."
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

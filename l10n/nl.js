@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Transcribe audio" : "Zet audio om in tekst",
     "Failed to notify when ready; unknown user" : "Gereedmelding mislukt; onbekende gebruiker",
     "Failed to cancel notification; unknown user" : "Annuleringsmelding mislukt; onbekende gebruiker",
     "Send a message to a Talk conversation" : "Wen bericht naar een Talk-gesprek versturen",

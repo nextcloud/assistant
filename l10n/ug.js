@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "خۇلاسە",
-    "Transcribe audio" : "ئاۋازنى كۆچۈرۈڭ",
-    "Text to speech" : "تېكىستنى ئاۋازغا ئايلاندۇرۇش",
     "Failed to notify when ready; unknown user" : "تەييار بولغاندا ئۇقتۇرۇش قىلالمىدى نامەلۇم ئىشلەتكۈچى",
     "Failed to cancel notification; unknown user" : "ئۇقتۇرۇشنى بىكار قىلىش مەغلۇپ بولدى؛ نامەلۇم ئىشلەتكۈچى",
     "Assistant task submitted successfully" : "ياردەمچى ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
@@ -219,8 +216,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "سوئال بوش قالماسلىقى كېرەك.",
     "Image generation task has been scheduled." : "رەسىم ھاسىل قىلىش ۋەزىپىسى پىلانلاندى.",
     "Failed to schedule image generation task." : "رەسىم ھاسىل قىلىش ۋەزىپىسىنى پىلانلاش مەغلۇب بولدى.",
-    "Generate new image" : "يېڭى رەسىم ھاسىل قىلىڭ",
     "The result image would be placed in the current folder." : "نەتىجىدىكى رەسىم نۆۋەتتىكى قىسقۇچقا قويۇلىدۇ.",
+    "Generate new image" : "يېڭى رەسىم ھاسىل قىلىڭ",
     "Describe the image you want to generate" : "ھاسىل قىلماقچى بولغان رەسىمنى تەسۋىرلەڭ",
     "No providers found" : "تەمىنلىگۈچىلەر تېپىلمىدى",
     "Image generation is not available." : "رەسىم ھاسىل قىلىش مۇمكىن ئەمەس.",
@@ -315,13 +312,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "ۋەزىپە نەتىجىسىنى كۆرۈش ئۈچۈن كىرىڭ",
     "This task does not exist or has been cleaned up" : "بۇ ۋەزىپە مەۋجۇت ئەمەس ياكى تازىلاندى",
     "Assistant failed to schedule your task" : "ياردەمچى ۋەزىپىڭىزنى پىلانلىيالمىدى",
-    "Summarization task submitted successfully." : "خۇلاسە ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى.",
     "You will be notified when it is ready." : "تەييار بولغاندا سىزگە خەۋەر قىلىنىدۇ.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "بۇنى يەنە ياردەمچىنىڭ «تېكىست بىلەن ئىشلەش -> خۇلاسە قىلىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
     "Failed to launch the AI file action" : "سۈنئىي ئەقىل ھۆججىتى ھەرىكىتىنى قوزغىتىش مەغلۇب بولدى",
-    "Text-to-speech task submitted successfully." : "تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> نۇتۇق ھاسىل قىلىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
-    "Transcription task submitted successfully." : "كۆچۈرۈش ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> ئاۋازنى يېزىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ."
 },
 "nplurals=2; plural=(n != 1);");

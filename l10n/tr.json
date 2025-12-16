@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "Özetle",
-    "Transcribe audio" : "Sesten yazıya dönüştür",
-    "Text to speech" : "Yazıdan konuşmaya dönüştür",
     "Failed to notify when ready; unknown user" : "Hazır olduğunda bildirilemedi. Kullanıcı bilinmiyor",
     "Failed to cancel notification; unknown user" : "Bildirim iptal edilemedi. Kullanıcı bilinmiyor",
     "Assistant task submitted successfully" : "Yardımcı görevi gönderildi",
@@ -217,8 +214,8 @@
     "Prompt cannot be empty." : "İstem boş olamaz.",
     "Image generation task has been scheduled." : "Görsel oluşturma görevi zamanlandı.",
     "Failed to schedule image generation task." : "Görsel oluşturma görevi zamanlanamadı.",
-    "Generate new image" : "Yeni görsel oluştur",
     "The result image would be placed in the current folder." : "Sonuç görseli geçerli klasöre kaydedilir.",
+    "Generate new image" : "Yeni görsel oluştur",
     "Describe the image you want to generate" : "Oluşturmak istediğiniz görseli tanımlayın",
     "No providers found" : "Herhangi bir hizmet sağlayıcı bulunamadı",
     "Image generation is not available." : "Görsel oluşturma kullanılamıyor.",
@@ -315,13 +312,10 @@
     "Please log in to view the task result" : "Görev sonucunu görüntülemek için oturum açın",
     "This task does not exist or has been cleaned up" : "Bu görev bulunamadı ya da temizlenmiş",
     "Assistant failed to schedule your task" : "Yardımcı görevinizi zamanlayamadı",
-    "Summarization task submitted successfully." : "Özetleme görevi gönderildi.",
     "You will be notified when it is ready." : "Hazır olduğunda size bildirilecek.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Ayrıca Yardımcı içinde \"Yazı ile çalış -> Özetle\" menüsünde de bakabilirsiniz.",
     "Failed to launch the AI file action" : "Yapay zeka dosya işlemi başlatılamadı",
-    "Text-to-speech task submitted successfully." : "Yazıdan konuşmaya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Konuşma oluştur\" menüsünde de bakabilirsiniz.",
-    "Transcription task submitted successfully." : "Sesten yazıya dönüştürme görevi gönderildi. ",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

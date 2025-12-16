@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "要約する",
-    "Transcribe audio" : "音声の書き起こし",
-    "Text to speech" : "テキスト音声合成",
     "Failed to notify when ready; unknown user" : "準備完了時の通知に失敗しました;不明なユーザーです",
     "Failed to cancel notification; unknown user" : "通知をキャンセルできませんでした。不明なユーザーです。",
     "Assistant task submitted successfully" : "アシスタントタスクが正常に送信されました",
@@ -204,8 +201,8 @@
     "Prompt cannot be empty." : "プロンプトは空にできません。",
     "Image generation task has been scheduled." : "画像生成タスクがスケジュールされました。",
     "Failed to schedule image generation task." : "画像生成タスクのスケジュールに失敗しました。",
-    "Generate new image" : "画像生成",
     "The result image would be placed in the current folder." : "作成された画像は現在のフォルダーに保存されます。",
+    "Generate new image" : "画像生成",
     "Describe the image you want to generate" : "生成する画像を記述します",
     "No providers found" : "プロバイダが見つかりません",
     "Image generation is not available." : "画像生成が利用できません。",
@@ -296,13 +293,10 @@
     "Please log in to view the task result" : "タスクの結果を表示するにはログインしてください",
     "This task does not exist or has been cleaned up" : "このタスクは存在していません。または削除されています。",
     "Assistant failed to schedule your task" : "アシスタントがタスクをスケジューリングできませんでした",
-    "Summarization task submitted successfully." : "要約タスクが正常に送信されました。",
     "You will be notified when it is ready." : "準備ができたら通知します。",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "アシスタントの「テキストの操作 -> 要約」メニューでも確認できます。",
     "Failed to launch the AI file action" : "AIファイルアクションの起動に失敗しました",
-    "Text-to-speech task submitted successfully." : "テキスト読み上げタスクが正常に送信されました。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "アシスタントの「オーディオの操作 -> 音声の生成」メニューでも確認できます。",
-    "Transcription task submitted successfully." : "転写タスクが正常に送信されました。",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "アシスタントの「音声の操作 -> 音声の文字起こし」メニューでも確認できます。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

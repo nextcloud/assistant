@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Teksti kokkuvõte",
-    "Transcribe audio" : "Kirjuta heli üles",
-    "Text to speech" : "Kõnesüntees",
     "Failed to notify when ready; unknown user" : "Töö lõpetamisest polnud võimalik teada anda - kasutaja on tundmatu",
     "Failed to cancel notification; unknown user" : "Loomist polnud võimalik katkestada - kasutaja on tundmatu",
     "Assistant task submitted successfully" : "Ülesande jagamine Abilisele õnnestus",
@@ -217,8 +214,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "Käsuviip ei saa olla tühi.",
     "Image generation task has been scheduled." : "Pildiloome ülesande ajastamine õnnestus.",
     "Failed to schedule image generation task." : "Pildiloome ülesande ajastamine ei õnnestunud.",
-    "Generate new image" : "Loo uus pilt",
     "The result image would be placed in the current folder." : "Ülesande täitmisel loodud pilt pannakse hetkel kasutusl olevasse kausta.",
+    "Generate new image" : "Loo uus pilt",
     "Describe the image you want to generate" : "Kirjelda loodavat pilti",
     "No providers found" : "Teenusepakkujaid ei leidu",
     "Image generation is not available." : "Pildiloome pole saadaval.",
@@ -313,13 +310,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Ülesande tulemuse nägemiseks logi palun sisse",
     "This task does not exist or has been cleaned up" : "Ülesannet pole olemas või on kustutatud",
     "Assistant failed to schedule your task" : "Abiline ei suutnud sinu ülesannet ajastada",
-    "Summarization task submitted successfully." : "Kokkuvõtte tegemise ülesande jagamine õnnestus.",
     "You will be notified when it is ready." : "Töö valmimisel saad teavituse.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Seda saad ka kontrollida Abilise menüüst „Tööta heliga“ → „Teksti kokkuvõte“.",
     "Failed to launch the AI file action" : "Tehisaru poolt tehtava failitoimingu käivitamine ei õnnestunud",
-    "Text-to-speech task submitted successfully." : "Kõnesünteesi ülesande jagamine õnnestus.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Seda saad ka kontrollida Abilise menüüst „Tööta heliga“ → „Koosta kõne“.",
-    "Transcription task submitted successfully." : "Üleskirjutamise ülesande jagamine õnnestus.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Seda saad ka kontrollida Abilise menüüst „Tööta heliga“ → „Kirjuta heli üles“."
 },
 "nplurals=2; plural=(n != 1);");

@@ -1,8 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Gera samantekt",
-    "Transcribe audio" : "Umrita hljóð",
     "Send an email" : "Senda tölvupóst",
     "User not found" : "Notandi fannst ekki",
     "Nextcloud Assistant" : "Nextcloud Aðstoð",

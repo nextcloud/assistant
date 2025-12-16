@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "요약",
-    "Transcribe audio" : "받아쓰기",
-    "Text to speech" : "글 읽기",
     "Failed to notify when ready; unknown user" : "준비 완료 알림을 전달하지 못함; 알 수 없는 사용자",
     "Failed to cancel notification; unknown user" : "알림을 취소하지 못함; 알 수 없는 사용자",
     "Assistant task submitted successfully" : "어시스턴트 작업이 성공적으로 접수됨",

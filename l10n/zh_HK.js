@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "總結",
-    "Transcribe audio" : "抄錄音頻為文字",
-    "Text to speech" : "文字轉語音",
     "Failed to notify when ready; unknown user" : "就緒時通知失敗；用戶不詳",
     "Failed to cancel notification; unknown user" : "取消通知失敗：用戶不詳",
     "Assistant task submitted successfully" : "助手任務已成功遞交",
@@ -219,8 +216,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "提示詞不能為空。",
     "Image generation task has been scheduled." : "已排定影像產生任務。",
     "Failed to schedule image generation task." : "安排影像產生任務失敗。",
-    "Generate new image" : "產生新影像",
     "The result image would be placed in the current folder." : "結果影像會放在目前的資料夾中。",
+    "Generate new image" : "產生新影像",
     "Describe the image you want to generate" : "描述您想要產生的圖像",
     "No providers found" : "找不到提供者",
     "Image generation is not available." : "影像產生不可用。",
@@ -317,13 +314,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "請登入查看任務結果",
     "This task does not exist or has been cleaned up" : "任務不存在或已被刪除",
     "Assistant failed to schedule your task" : "小幫手無法安排您的任務。",
-    "Summarization task submitted successfully." : "總結任務已成功遞交。",
     "You will be notified when it is ready." : "就緒時將會通知您。",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "也可以在小幫手的「處理文字」→「總結」選單中確認。",
     "Failed to launch the AI file action" : "啟動人工智慧檔案動作失敗",
-    "Text-to-speech task submitted successfully." : "文字轉語音任務遞交成功。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
-    "Transcription task submitted successfully." : "轉錄任務已成功遞交。",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
 },
 "nplurals=1; plural=0;");

@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "总结归纳",
-    "Transcribe audio" : "转写音频",
-    "Text to speech" : "文字转语音",
     "Failed to notify when ready; unknown user" : "就绪时通知失败；未知用户",
     "Failed to cancel notification; unknown user" : "取消通知失败；不明的使用者",
     "Assistant task submitted successfully" : "助手任务已成功递交",
@@ -188,8 +185,8 @@
     "Prompt cannot be empty." : "提示词不能为空。",
     "Image generation task has been scheduled." : "已排定影像产生任务。",
     "Failed to schedule image generation task." : "安排影像产生任务失败。",
-    "Generate new image" : "产生新影像",
     "The result image would be placed in the current folder." : "结果影像会放在目前的资料夹中。",
+    "Generate new image" : "产生新影像",
     "Describe the image you want to generate" : "描述您要生成的图片",
     "No providers found" : "找不到提供者",
     "Image generation is not available." : "影像产生不可用。",
@@ -271,13 +268,10 @@
     "Please log in to view the task result" : "请登录以查看任务的结果",
     "This task does not exist or has been cleaned up" : "此任务不存在或已删除",
     "Assistant failed to schedule your task" : "手无法安排您的任务。",
-    "Summarization task submitted successfully." : "总结任务已成功递交。",
     "You will be notified when it is ready." : "就绪时将会通知您。",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "也可以在助手的「处理文字」→「总结」选单中确认。",
     "Failed to launch the AI file action" : "启动人工智慧档案动作失败",
-    "Text-to-speech task submitted successfully." : "文字转语音任务递交成功。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在助手的「处理音讯」→「产生语音」选单中确认。",
-    "Transcription task submitted successfully." : "转录任务已成功递交。",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在助手的「处理音讯」→「转录语音」选单中确认。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

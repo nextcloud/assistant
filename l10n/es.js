@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Resumir",
-    "Transcribe audio" : "Transcribir audio",
-    "Text to speech" : "Texto a voz",
     "Failed to notify when ready; unknown user" : "Fallo al notificar al estar listo; usuario desconocido",
     "Failed to cancel notification; unknown user" : "Fallo al cancelar la notificación; usuario desconocido",
     "Send a message to a Talk conversation" : "Enviar un mensaje a una conversación de Talk",
@@ -202,8 +199,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "El prompt no puede estar vacío.",
     "Image generation task has been scheduled." : "La tarea de generación de imágenes ha sido programada.",
     "Failed to schedule image generation task." : "Fallo al programar la tarea de generación de imágenes.",
-    "Generate new image" : "Generar imagen nueva",
     "The result image would be placed in the current folder." : "La imagen resultante se colocará en la carpeta actual.",
+    "Generate new image" : "Generar imagen nueva",
     "Describe the image you want to generate" : "Describa la imagen que quiere generar",
     "No providers found" : "No se encontraron proveedores",
     "Image generation is not available." : "La generación de imágenes no está disponible.",
@@ -294,13 +291,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Por favor, inicie sesión para ver el resultado de la tarea",
     "This task does not exist or has been cleaned up" : "Esta tarea no existe o no ha sido limpiada",
     "Assistant failed to schedule your task" : "El Asistente falló al agendar su tarea",
-    "Summarization task submitted successfully." : "La tarea de Resumir fue enviada exitosamente.",
     "You will be notified when it is ready." : "Será notificado cuando esta esté lista.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con texto -> Resumir\".",
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",
-    "Text-to-speech task submitted successfully." : "La tarea de texto a voz fue enviada exitosamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
-    "Transcription task submitted successfully." : "La tarea de Transcripción fue enviada exitosamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\"."
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

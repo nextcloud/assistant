@@ -1,8 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Podsumuj",
-    "Transcribe audio" : "Transkrypcja dźwięku",
     "Failed to notify when ready; unknown user" : "Nie udało się powiadomić po zakończeniu — nieznany użytkownik.",
     "Send a message to a Talk conversation" : "Wyślij wiadomość do rozmowy Talk",
     "Create a conversation" : "Utwórz rozmowę",

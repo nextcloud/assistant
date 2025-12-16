@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "Σύνοψη",
-    "Transcribe audio" : "Αποτύπωση ήχου",
-    "Text to speech" : "Κείμενο σε ομιλία",
     "Failed to notify when ready; unknown user" : "Αποτυχία ειδοποίησης όταν είναι έτοιμο· άγνωστος χρήστης",
     "Failed to cancel notification; unknown user" : "Αποτυχία ακύρωσης ειδοποίησης· άγνωστος χρήστης",
     "Send a message to a Talk conversation" : "Αποστολή μηνύματος σε συνομιλία Talk",
@@ -200,8 +197,8 @@
     "Prompt cannot be empty." : "Το prompt δεν μπορεί να είναι κενό.",
     "Image generation task has been scheduled." : "Η εργασία δημιουργίας εικόνας έχει προγραμματιστεί.",
     "Failed to schedule image generation task." : "Αποτυχία προγραμματισμού εργασίας δημιουργίας εικόνας.",
-    "Generate new image" : "Δημιουργία νέας εικόνας",
     "The result image would be placed in the current folder." : "Η εικόνα που θα προκύψει θα τοποθετηθεί στον τρέχοντα φάκελο.",
+    "Generate new image" : "Δημιουργία νέας εικόνας",
     "Describe the image you want to generate" : "Περιγράψτε την εικόνα που θέλετε να δημιουργήσετε",
     "No providers found" : "Δεν βρέθηκαν πάροχοι",
     "Image generation is not available." : "Η δημιουργία εικόνας δεν είναι διαθέσιμη.",
@@ -292,13 +289,10 @@
     "Please log in to view the task result" : "Παρακαλώ συνδεθείτε για να δείτε το αποτέλεσμα της εργασίας",
     "This task does not exist or has been cleaned up" : "Αυτή η εργασία δεν υπάρχει ή έχει καθαριστεί",
     "Assistant failed to schedule your task" : "Ο Βοηθός απέτυχε να προγραμματίσει την εργασία σας",
-    "Summarization task submitted successfully." : "Η εργασία σύνοψης υποβλήθηκε με επιτυχία.",
     "You will be notified when it is ready." : "Θα ειδοποιηθείτε όταν είναι έτοιμο.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με κείμενο -> Σύνοψη\".",
     "Failed to launch the AI file action" : "Αποτυχία εκκίνησης της ενέργειας AI αρχείου",
-    "Text-to-speech task submitted successfully." : "Η εργασία μετατροπής κειμένου σε ομιλία υποβλήθηκε με επιτυχία.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Δημιουργία ομιλίας\".",
-    "Transcription task submitted successfully." : "Η εργασία μεταγραφής υποβλήθηκε με επιτυχία.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Αποτύπωση ήχου\"."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

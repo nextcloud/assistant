@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Summarize",
     "Send an email" : "Send an email",
     "User not found" : "User not found",
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",

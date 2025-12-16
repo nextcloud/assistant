@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "Stručný souhrn",
-    "Transcribe audio" : "Vytvořit text ze zvukové nahrávky",
-    "Text to speech" : "Text na řeč",
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
     "Failed to cancel notification; unknown user" : "Nepodařilo se zrušit notifikaci – neznámý uživatel",
     "Assistant task submitted successfully" : "Úkol asistenta úspěšně odeslán",
@@ -216,8 +213,8 @@
     "Prompt cannot be empty." : "Prompt je třeba vyplnit.",
     "Image generation task has been scheduled." : "Úloha vytvoření obrázku byla naplánována.",
     "Failed to schedule image generation task." : "Nepodařil se naplánovat úlohu vytváření obrázku.",
-    "Generate new image" : "Vytvořit nový obrázek",
     "The result image would be placed in the current folder." : "Výsledný obrázek by byl umístěn ve složce, ve které se právě nacházíte.",
+    "Generate new image" : "Vytvořit nový obrázek",
     "Describe the image you want to generate" : "Popište obrázek, který chcete vytvořit",
     "No providers found" : "Nenalezeni žádní poskytovatelé",
     "Image generation is not available." : "Vytváření obrázků není k dispozici.",
@@ -313,13 +310,10 @@
     "Please log in to view the task result" : "Pro zobrazení výsledku úkolu se přihlaste",
     "This task does not exist or has been cleaned up" : "Tato úloha neexistuje nebo byla vyčištěna",
     "Assistant failed to schedule your task" : "Asistentovi se nepodařilo naplánovat váš úkol",
-    "Summarization task submitted successfully." : "Úkol shrnutí úspěšně zadán.",
     "You will be notified when it is ready." : "Až bude připraveno, budete upozorněni.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce s textem -> Shrnout“",
     "Failed to launch the AI file action" : "Nepodařilo se spustit AI akci ohledně souboru",
-    "Text-to-speech task submitted successfully." : "Úkol převodu řeči na text úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Vytvořit řeč“.",
-    "Transcription task submitted successfully." : "Úkol přepisu ze zvuku úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“."
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

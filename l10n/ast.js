@@ -1,7 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Resume",
     "User not found" : "Nun s'atopó l'usuariu",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "AI text generation" : "Xeneración de testos per IA",

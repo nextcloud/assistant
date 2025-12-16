@@ -1,7 +1,4 @@
 { "translations": {
-    "Summarize" : "ສະຫຼຸບຫຍໍ້",
-    "Transcribe audio" : "ຖອດຂໍ້ຄວາມຈາກສຽງ",
-    "Text to speech" : "ຂໍ້ຄວາມເປັນສຽງ",
     "Failed to notify when ready; unknown user" : "ບໍ່ສາມາດແຈ້ງເຕືອນເມື່ອພ້ອມ; ບໍ່ຮູ້ຈັກຜູ້ໃຊ້",
     "Failed to cancel notification; unknown user" : "ບໍ່ສາມາດຍົກເລີກການແຈ້ງເຕືອນ; ບໍ່ຮູ້ຈັກຜູ້ໃຊ້",
     "Assistant task submitted successfully" : "ສົ່ງໜ້າວຽກຜູ້ຊ່ວຍສຳເລັດແລ້ວ",
@@ -214,8 +211,8 @@
     "Prompt cannot be empty." : "ພຣອມຕ້ອງບໍ່ຫວ່າງເປົ່າ.",
     "Image generation task has been scheduled." : "ໜ້າວຽກການສ້າງຮູບພາບໄດ້ຖືກກຳນົດເວລາແລ້ວ.",
     "Failed to schedule image generation task." : "ບໍ່ສາມາດກຳນົດເວລາໜ້າວຽກການສ້າງຮູບພາບໄດ້.",
-    "Generate new image" : "ສ້າງຮູບພາບໃໝ່",
     "The result image would be placed in the current folder." : "ຮູບພາບຜົນລັບຈະຖືກວາງໄວ້ໃນໂຟເດີປັດຈຸບັນ.",
+    "Generate new image" : "ສ້າງຮູບພາບໃໝ່",
     "Describe the image you want to generate" : "ອະທິບາຍຮູບພາບທີ່ທ່ານຕ້ອງການສ້າງ",
     "No providers found" : "ບໍ່ພົບຜູ້ໃຫ້ບໍລິການ",
     "Image generation is not available." : "ການສ້າງຮູບພາບບໍ່ສາມາດໃຊ້ງານໄດ້.",
@@ -310,13 +307,10 @@
     "Please log in to view the task result" : "ກະລຸນາເຂົ້າສູ່ລະບົບເພື່ອເບິ່ງຜົນລັບຂອງໜ້າວຽກ",
     "This task does not exist or has been cleaned up" : "ໜ້າວຽກນີ້ບໍ່ມີຢູ່ ຫຼື ຖືກລຶບລ້າງແລ້ວ",
     "Assistant failed to schedule your task" : "ຜູ້ຊ່ວຍບໍ່ສາມາດກຳນົດເວລາໜ້າວຽກຂອງທ່ານໄດ້",
-    "Summarization task submitted successfully." : "ສົ່ງໜ້າວຽກການສະຫຼຸບຫຍໍ້ສຳເລັດແລ້ວ.",
     "You will be notified when it is ready." : "ທ່ານຈະໄດ້ຮັບການແຈ້ງເຕືອນເມື່ອມັນພ້ອມ.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບຂໍ້ຄວາມ -> ສະຫຼຸບຫຍໍ້\".",
     "Failed to launch the AI file action" : "ບໍ່ສາມາດເລີ່ມການກະທຳກັບຟາຍດ້ວຍ AI ໄດ້",
-    "Text-to-speech task submitted successfully." : "ສົ່ງໜ້າວຽກຂໍ້ຄວາມເປັນສຽງສຳເລັດແລ້ວ.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ສ້າງສຽງເວົ້າ\".",
-    "Transcription task submitted successfully." : "ສົ່ງໜ້າວຽກການຖອດຂໍ້ຄວາມຈາກສຽງສຳເລັດແລ້ວ.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ຖອດຂໍ້ຄວາມຈາກສຽງ\"."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

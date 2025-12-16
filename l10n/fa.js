@@ -1,8 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "خلاصه‌سازی",
-    "Transcribe audio" : "رونوشت صوتی",
     "Send an email" : "ارسال ایمیل",
     "User not found" : "کاربر یافت نشد",
     "Nextcloud Assistant" : "Nextcloud Assistant",

@@ -1,8 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Sammanfatta",
-    "Transcribe audio" : "Transkribera ljud",
     "Failed to notify when ready; unknown user" : "Det gick inte att meddela när det var klart; okänd användare",
     "Send an email" : "Skicka e-post",
     "User not logged in" : "Användaren är inte inloggad",

@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Achoimre",
-    "Transcribe audio" : "Trascríobh fuaime",
-    "Text to speech" : "Téacs go cainte",
     "Failed to notify when ready; unknown user" : "Theip ar an eolas nuair a bhí sé réidh; úsáideoir anaithnid",
     "Failed to cancel notification; unknown user" : "Theip ar an bhfógra a chealú; úsáideoir anaithnid",
     "Assistant task submitted successfully" : "Cuireadh tasc an chúntóra isteach go rathúil",
@@ -219,8 +216,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "Ní féidir an leid a bheith folamh.",
     "Image generation task has been scheduled." : "Tá tasc giniúna íomhá sceidealaithe.",
     "Failed to schedule image generation task." : "Theip ar sceidealú tasc giniúna íomhá.",
-    "Generate new image" : "Íomhá nua a ghiniúint",
     "The result image would be placed in the current folder." : "Chuirfí an íomhá toraidh san fhillteán reatha.",
+    "Generate new image" : "Íomhá nua a ghiniúint",
     "Describe the image you want to generate" : "Déan cur síos ar an íomhá is mian leat a ghiniúint",
     "No providers found" : "Níor aimsíodh aon soláthraithe",
     "Image generation is not available." : "Níl giniúint íomhánna ar fáil.",
@@ -317,13 +314,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Logáil isteach le do thoil chun toradh an taisc a fheiceáil",
     "This task does not exist or has been cleaned up" : "Níl an tasc seo ann nó tá sé glanta suas",
     "Assistant failed to schedule your task" : "Theip ar an gCúntóir do thasc a sceidealú",
-    "Summarization task submitted successfully." : "Cuireadh an tasc achoimre isteach go rathúil.",
     "You will be notified when it is ready." : "Cuirfear in iúl duit nuair a bheidh sé réidh.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le téacs -> Achoimrigh\" freisin.",
     "Failed to launch the AI file action" : "Theip ar an ngníomh comhaid AI a sheoladh",
-    "Text-to-speech task submitted successfully." : "Cuireadh an tasc téacs-go-hurlabhra isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
-    "Transcription task submitted successfully." : "Cuireadh an tasc trascríobh isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

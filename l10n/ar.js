@@ -1,8 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "تلخيص",
-    "Transcribe audio" : "تحويل الكلام لنص",
     "Failed to notify when ready; unknown user" : "فشل في تنبيه المستخدم عند اكتمال تجهيز نتيجة الطلب. مُستخدِم غير معروف",
     "Send a message to a Talk conversation" : "أرسِل رسالة إلى محادثة Talk",
     "Create a conversation" : "إنشاء مُحادَثة",

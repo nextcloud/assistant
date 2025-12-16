@@ -1,9 +1,6 @@
 OC.L10N.register(
     "assistant",
     {
-    "Summarize" : "Resumir",
-    "Transcribe audio" : "Transcrever áudio",
-    "Text to speech" : "Texto para fala",
     "Failed to notify when ready; unknown user" : "Falha ao notificar quando estiver pronto; usuário desconhecido",
     "Failed to cancel notification; unknown user" : "Falha ao cancelar a notificação; usuário desconhecido",
     "Assistant task submitted successfully" : "Tarefa de assistente enviada com sucesso",
@@ -219,8 +216,8 @@ OC.L10N.register(
     "Prompt cannot be empty." : "O prompt não pode estar vazio.",
     "Image generation task has been scheduled." : "A tarefa de geração de imagens foi agendada.",
     "Failed to schedule image generation task." : "Falha ao agendar a tarefa de geração de imagem.",
-    "Generate new image" : "Gerar nova imagem",
     "The result image would be placed in the current folder." : "A imagem resultante seria colocada na pasta atual.",
+    "Generate new image" : "Gerar nova imagem",
     "Describe the image you want to generate" : "Descreva a imagem que você deseja gerar",
     "No providers found" : "Nenhum provedor encontrado",
     "Image generation is not available." : "Geração de imagens não está disponível.",
@@ -316,13 +313,10 @@ OC.L10N.register(
     "Please log in to view the task result" : "Faça login para ver o resultado da tarefa",
     "This task does not exist or has been cleaned up" : "Esta tarefa não existe ou foi limpa",
     "Assistant failed to schedule your task" : "O assistente não conseguiu agendar sua tarefa",
-    "Summarization task submitted successfully." : "Tarefa de resumo enviado com sucesso",
     "You will be notified when it is ready." : "Você será notificado quando estiver pronto.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com texto -> Resumir\".",
     "Failed to launch the AI file action" : "Falha ao iniciar a ação de arquivo de IA",
-    "Text-to-speech task submitted successfully." : "Tarefa de conversão de texto em fala enviada com sucesso.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Gerar fala\".",
-    "Transcription task submitted successfully." : "Tarefa de transcrição enviada com sucesso.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\"."
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
