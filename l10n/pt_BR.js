@@ -1,6 +1,9 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize using AI" : "Resumir usando IA",
+    "Transcribe audio using AI" : "Transcrever áudio usando IA",
+    "Text-To-Speech using AI" : "Conversão de texto em fala usando IA",
     "Failed to notify when ready; unknown user" : "Falha ao notificar quando estiver pronto; usuário desconhecido",
     "Failed to cancel notification; unknown user" : "Falha ao cancelar a notificação; usuário desconhecido",
     "Assistant task submitted successfully" : "Tarefa de assistente enviada com sucesso",
@@ -216,6 +219,7 @@ OC.L10N.register(
     "Prompt cannot be empty." : "O prompt não pode estar vazio.",
     "Image generation task has been scheduled." : "A tarefa de geração de imagens foi agendada.",
     "Failed to schedule image generation task." : "Falha ao agendar a tarefa de geração de imagem.",
+    "Generate new image using AI" : "Gerar nova imagem usando IA",
     "The result image would be placed in the current folder." : "A imagem resultante seria colocada na pasta atual.",
     "Generate new image" : "Gerar nova imagem",
     "Describe the image you want to generate" : "Descreva a imagem que você deseja gerar",
@@ -313,6 +317,8 @@ OC.L10N.register(
     "Please log in to view the task result" : "Faça login para ver o resultado da tarefa",
     "This task does not exist or has been cleaned up" : "Esta tarefa não existe ou foi limpa",
     "Assistant failed to schedule your task" : "O assistente não conseguiu agendar sua tarefa",
+    "Generate image using AI" : "Gerar imagem usando IA",
+    "AI Assistant" : "Assistente IA",
     "You will be notified when it is ready." : "Você será notificado quando estiver pronto.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com texto -> Resumir\".",
     "Failed to launch the AI file action" : "Falha ao iniciar a ação de arquivo de IA",
