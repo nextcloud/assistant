@@ -84,7 +84,7 @@ import MicrophoneMessageIcon from 'vue-material-design-icons/MicrophoneMessage.v
 import NcListItem from '@nextcloud/vue/components/NcListItem'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 
-import moment from '@nextcloud/moment'
+import { useFormatRelativeTime } from '@nextcloud/vue'
 
 import { TASK_STATUS_STRING, SHAPE_TYPE_NAMES } from '../constants.js'
 import ImageDisplay from './fields/ImageDisplay.vue'
@@ -192,7 +192,9 @@ export default {
 			return statusTitles[this.task.status] ?? t('assistant', 'Unknown status')
 		},
 		details() {
-			return moment.unix(this.task.lastUpdated).fromNow()
+			return useFormatRelativeTime(this.task.lastUpdated * 1000, {
+				ignoreSeconds: true,
+			})
 		},
 		icon() {
 			return statusIcons[this.task.status] ?? ProgressQuestionIcon
