@@ -73,13 +73,13 @@ More details on how to set this up in the [admin docs](https://docs.nextcloud.co
 	<category>ai</category>
 	<website>https://github.com/nextcloud/assistant</website>
 	<bugs>https://github.com/nextcloud/assistant/issues</bugs>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot1.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot2.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot3.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot4.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot5.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot6.jpg</screenshot>
-	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot7.jpg</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot1.png</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot2.png</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot3.png</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot4.png</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot5.png</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot6.png</screenshot>
+	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot7.png</screenshot>
 	<dependencies>
 		<nextcloud min-version="30" max-version="33"/>
 	</dependencies>
