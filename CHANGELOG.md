@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.12.0 – 2025-12-17
+
+### Added
+- More AI warnings @marcelklehr [#425](https://github.com/nextcloud/assistant/pull/425)
+
+### Changed
+- Gracefully handle scheduling errors in the UI @julien-nc [#426](https://github.com/nextcloud/assistant/pull/426)
+
+### Fixed
+- use new composable for relative time @janepie [#429](https://github.com/nextcloud/assistant/pull/429)
+
 ## 2.11.0 – 2025-12-09
 
 ### Added
