@@ -128,7 +128,6 @@ OC.L10N.register(
     "Copy" : "Копировать",
     "Upload file" : "Загрузить файл",
     "The current Assistant task could not be found" : "Текущая задача Ассистента не найдена",
-    "Failed to schedule your task" : "Сбой планирования задачи",
     "This task does not exist or has been cleaned up" : "Эта задача не существует или удалена",
     "You will be notified when it is ready." : "Вы будете уведомлены по готовности.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Это также может быть в Ассистентах в меню \"Работа с текстом -> Обобщить\".",

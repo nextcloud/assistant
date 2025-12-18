@@ -180,7 +180,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "결과를 클립보드에 복사할 수 없음",
     "Copy output" : "출력을 복사",
     "Copy" : "복사",
-    "Failed to schedule your task" : "작업을 예약하지 못함",
     "Assistant error" : "어시스턴트 오류",
     "Please log in to view the task result" : "작업 결과를 보려면 로그인하세요.",
     "This task does not exist or has been cleaned up" : "이 작업은 존재하지 않거나 정리되었음"

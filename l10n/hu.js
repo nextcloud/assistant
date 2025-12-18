@@ -64,7 +64,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "Az eredményt nem lehet a vágólapra másolni",
     "Copy" : "Másolás",
     "Upload file" : "Fájl feltöltése",
-    "Failed to schedule your task" : "Nem sikerült a feladat ütemezése",
     "This task does not exist or has been cleaned up" : "Ez a feladat nem létezik vagy már törlésre került"
 },
 "nplurals=2; plural=(n != 1);");

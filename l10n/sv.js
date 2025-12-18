@@ -122,7 +122,6 @@ OC.L10N.register(
     "Advanced" : "Avancerad",
     "Result could not be copied to clipboard" : "Resultatet kunde inte kopieras till urklipp",
     "Copy" : "Kopiera",
-    "Failed to schedule your task" : "Det gick inte att schemalägga din uppgift",
     "This task does not exist or has been cleaned up" : "Den här uppgiften finns inte eller har rensats"
 },
 "nplurals=2; plural=(n != 1);");
