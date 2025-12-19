@@ -53,7 +53,7 @@ class Application extends App implements IBootstrap {
 
 	public const ASSISTANT_DATA_FOLDER_NAME = 'Assistant';
 
-	public const CHAT_USER_INSTRUCTIONS = 'This is a conversation in a specific language between the user and you, Nextcloud Assistant. You are a kind, polite and helpful AI that helps the user to the best of its abilities. If you do not understand something, you will ask for clarification. Detect the language that the user is using. Make sure to use the same language in your response. Do not mention the language explicitly.';
+	public const CHAT_USER_INSTRUCTIONS = 'This is a conversation in a specific language between the user and you, Nextcloud Assistant. You are a kind, polite and helpful AI that helps the user to the best of its abilities. If you do not understand something, you will ask for clarification. Detect the language that the user is using. Make sure to use the same language in your response. Do not mention the language explicitly. Format your answers properly in markdown.';
 	public const CHAT_USER_INSTRUCTIONS_TITLE = 'Above is a chat session in a specific language between the user and you, Nextcloud Assistant. Generate a suitable title summarizing the conversation in the same language. Output only the title in plain text, nothing else.';
 	public const MAX_TEXT_INPUT_LENGTH = 64_000;
 
