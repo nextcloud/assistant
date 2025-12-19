@@ -310,6 +310,7 @@ OC.L10N.register(
     "Your task with ID {id} has failed" : "Produciuse un fallo coa súa tarefa co ID {id}",
     "The current Assistant task could not be found" : "Non foi posíbel atopar a tarefa actual do Asistente",
     "Assistant error" : "Produciuse un erro do asistente",
+    "Something went wrong when scheduling the task" : "Algo foi mal ao programar a tarefa",
     "Submit the current task's result" : "Enviar o resultado da tarefa actual",
     "Output file for task {taskId} ({taskTypeName})" : "Ficheiro de saída para a tarefa {taskId} ({taskTypeName})",
     "The server failed to process your task with ID {id}" : "Produciuse un fallo no servidor ao procesar a tarefa co ID {id}",

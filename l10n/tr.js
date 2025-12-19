@@ -310,6 +310,7 @@ OC.L10N.register(
     "Your task with ID {id} has failed" : "{id} kimlikli göreviniz tamamlanamadı",
     "The current Assistant task could not be found" : "Geçerli Yardımcı görevi bulunamadı ",
     "Assistant error" : "Yardımcı sorunu",
+    "Something went wrong when scheduling the task" : "Görev zamanlanırken bir sorun çıktı",
     "Submit the current task's result" : "Geçerli görevin sonucunu gönder",
     "Output file for task {taskId} ({taskTypeName})" : "{taskId} ({taskTypeName}) görevinin çıktı dosyası",
     "The server failed to process your task with ID {id}" : "Sunucu {id} kimlikli görevinizi işleyemedi",

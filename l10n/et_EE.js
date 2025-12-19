@@ -310,6 +310,7 @@ OC.L10N.register(
     "Your task with ID {id} has failed" : "Sinu „{id}“ ülesande täitmine ei õnnestunud.",
     "The current Assistant task could not be found" : "Abilise praegust ülesannet ei õnnestu leida",
     "Assistant error" : "Viga Abilise töös",
+    "Something went wrong when scheduling the task" : "Midagi läks ülesande ajastamisel valesti",
     "Submit the current task's result" : "Saada praeguse ülesande tulemus",
     "Output file for task {taskId} ({taskTypeName})" : "{taskId} ülesande väljund ({taskTypeName})",
     "The server failed to process your task with ID {id}" : "Server ei suutnud töödelda sinu antud ülesannet tunnusega {id}",

@@ -308,6 +308,7 @@
     "Your task with ID {id} has failed" : "Ihre Aufgabe mit der ID {id} ist fehlgeschlagen",
     "The current Assistant task could not be found" : "Die aktuelle Assistentenaufgabe konnte nicht gefunden werden.",
     "Assistant error" : "Fehler des Assistenten",
+    "Something went wrong when scheduling the task" : "Beim Planen der Aufgabe ist etwas schief gelaufen",
     "Submit the current task's result" : "Das Ergebnis der aktuellen Aufgabe übermitteln",
     "Output file for task {taskId} ({taskTypeName})" : "Ausgabedatei für die Aufgabe {taskId} ({taskTypeName})",
     "The server failed to process your task with ID {id}" : "Der Server konnte Ihre Aufgabe mit der ID {id} nicht verarbeiten",
