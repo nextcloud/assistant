@@ -7,6 +7,9 @@
 		<template #icon>
 			<slot name="icon" />
 		</template>
+		<template #action>
+			<slot name="action" />
+		</template>
 	</NcEmptyContent>
 </template>
 
