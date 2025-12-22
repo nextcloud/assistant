@@ -315,6 +315,7 @@ OC.L10N.register(
     "Output file for task {taskId} ({taskTypeName})" : "Arquivo da saída para tarefa {taskId} ({taskTypeName})",
     "The server failed to process your task with ID {id}" : "O servidor falhou ao processar sua tarefa com ID {id}",
     "Please inform the server administrators of this issue." : "Informe os administradores do servidor sobre este problema.",
+    "No last task type available, falling back to default" : "Nenhum tipo de última tarefa disponível, voltando ao padrão",
     "Please log in to view the task result" : "Faça login para ver o resultado da tarefa",
     "This task does not exist or has been cleaned up" : "Esta tarefa não existe ou foi limpa",
     "Assistant failed to schedule your task" : "O assistente não conseguiu agendar sua tarefa",
