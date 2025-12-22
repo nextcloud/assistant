@@ -81,7 +81,7 @@ More details on how to set this up in the [admin docs](https://docs.nextcloud.co
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot6.png</screenshot>
 	<screenshot>https://github.com/nextcloud/assistant/raw/main/img/screenshots/screenshot7.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="30" max-version="33"/>
+		<nextcloud min-version="33" max-version="33"/>
 	</dependencies>
 	<settings>
 		<admin>OCA\Assistant\Settings\Admin</admin>
