@@ -31,6 +31,8 @@ use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\Reference\Text2StickerProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
+use OCA\Assistant\TaskProcessing\ImageToTextTranslateProvider;
+use OCA\Assistant\TaskProcessing\ImageToTextTranslateTaskType;
 use OCA\Assistant\TaskProcessing\TextToStickerProvider;
 use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
@@ -111,6 +113,9 @@ class Application extends App implements IBootstrap {
 		$context->registerTaskProcessingTaskType(TextToStickerTaskType::class);
 		$context->registerTaskProcessingProvider(TextToStickerProvider::class);
 		$context->registerReferenceProvider(Text2StickerProvider::class);
+
+		$context->registerTaskProcessingTaskType(ImageToTextTranslateTaskType::class);
+		$context->registerTaskProcessingProvider(ImageToTextTranslateProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {

@@ -19,6 +19,7 @@ use OCP\TaskProcessing\Exception\PreConditionNotMetException;
 use OCP\TaskProcessing\Exception\UnauthorizedException;
 use OCP\TaskProcessing\Exception\ValidationException;
 use OCP\TaskProcessing\IManager;
+use OCP\TaskProcessing\IProvider;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
@@ -33,6 +34,10 @@ class TaskProcessingService {
 		private LoggerInterface $logger,
 		private AssistantService $assistantService,
 	) {
+	}
+
+	public function getPreferredProvider(string $taskTypeId): IProvider {
+		return $this->taskProcessingManager->getPreferredProvider($taskTypeId);
 	}
 
 	/**
