@@ -58,10 +58,9 @@
 					<NcActions v-model:open="titleActionsOpen" :force-name="true" :inline="1">
 						<NcActionButton v-model="active.is_remembered" @update:modelValue="updateSession">
 							<template #icon>
-								<ContentSaveIcon v-if="active.is_remembered" :size="20" />
-								<ContentSaveOutlineIcon v-else :size="20" />
+								<MemoryIcon :size="20" />
 							</template>
-							{{ t('assistant', 'Remember this') }}
+							{{ active.is_remembered ? t('assistant', 'Remembered') : t('assistant', 'Remember this') }}
 						</NcActionButton>
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
 							<template #icon>
@@ -174,8 +173,7 @@ import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
-import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
+import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
@@ -220,8 +218,7 @@ export default {
 		TrashCanOutlineIcon,
 		PencilOutlineIcon,
 		PlusIcon,
-		ContentSaveOutlineIcon,
-		ContentSaveIcon,
+		MemoryIcon,
 
 		AssistantIcon,
 
