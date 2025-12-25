@@ -1,6 +1,8 @@
 OC.L10N.register(
     "assistant",
     {
+    "Summarize using AI" : "Shrnout pomocí AI",
+    "Text-To-Speech using AI" : "Převod textu na řeč pomocí AI",
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
     "Failed to cancel notification; unknown user" : "Nepodařilo se zrušit notifikaci – neznámý uživatel",
     "Assistant task submitted successfully" : "Úkol asistenta úspěšně odeslán",
