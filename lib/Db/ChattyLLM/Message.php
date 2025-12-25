@@ -66,11 +66,11 @@ class Message extends Entity implements \JsonSerializable {
 	];
 
 	public function __construct() {
-		$this->addType('session_id', Types::INTEGER);
+		$this->addType('sessionId', Types::INTEGER);
 		$this->addType('role', Types::STRING);
 		$this->addType('content', Types::STRING);
 		$this->addType('timestamp', Types::INTEGER);
-		$this->addType('ocp_task_id', Types::INTEGER);
+		$this->addType('ocpTaskId', Types::INTEGER);
 		$this->addType('sources', Types::STRING);
 		$this->addType('attachments', Types::STRING);
 	}

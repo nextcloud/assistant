@@ -55,6 +55,9 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     timestamp: ?int,
  *     agency_conversation_token: ?string,
  *     agency_pending_actions: ?string,
+ *     summary: ?string,
+ *     is_remembered: bool,
+ *     is_summary_up_to_date: bool,
  * }
  *
  * @psalm-type AssistantChatMessage = array{
@@ -77,6 +80,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     titleTaskId: ?int,
  *     sessionTitle: ?string,
  *     sessionAgencyPendingActions: ?array<string, mixed>,
+ *     is_remembered: ?bool,
  * }
  */
 class ResponseDefinitions {

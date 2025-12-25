@@ -55,7 +55,13 @@
 						@submit-text="onEditSessionTitle" />
 				</div>
 				<div v-if="active != null" class="session-area__top-bar__actions">
-					<NcActions v-model:open="titleActionsOpen">
+					<NcActions v-model:open="titleActionsOpen" :force-name="true" :inline="1">
+						<NcActionButton v-model="active.is_remembered" @update:modelValue="updateSession">
+							<template #icon>
+								<MemoryIcon :size="20" />
+							</template>
+							{{ active.is_remembered ? t('assistant', 'Remembered') : t('assistant', 'Remember this') }}
+						</NcActionButton>
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
 							<template #icon>
 								<PencilOutlineIcon :size="20" />
@@ -176,6 +182,7 @@ import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
@@ -220,6 +227,7 @@ export default {
 		TrashCanOutlineIcon,
 		PencilOutlineIcon,
 		PlusIcon,
+		MemoryIcon,
 
 		AssistantIcon,
 
@@ -329,6 +337,7 @@ export default {
 					console.debug('update session title with check result')
 				}
 				console.debug('check session response:', checkSessionResponseData)
+				this.active.is_remembered = checkSessionResponseData?.is_remembered
 				// update the pending actions when switching conversations
 				this.active.sessionAgencyPendingActions = checkSessionResponseData?.sessionAgencyPendingActions
 				this.active.agencyAnswered = false
@@ -801,6 +810,14 @@ export default {
 				return lastHumanMessage.attachments.find(a => a.type === SHAPE_TYPE_NAMES.Audio)
 			}
 			return false
+		},
+
+		async updateSession() {
+			await axios.put(getChatURL(`/sessions/${this.active.id}`), {
+				title: this.active.title,
+				is_remembered: this.active.is_remembered,
+			})
+
 		},
 
 		async updateLastHumanMessageContent() {
