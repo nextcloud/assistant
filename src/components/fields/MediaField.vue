@@ -121,6 +121,7 @@ import { SHAPE_TYPE_NAMES, VALID_AUDIO_MIME_TYPES, VALID_IMAGE_MIME_TYPES, VALID
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { uploadInputFile } from '../../utils.js'
 
 export default {
 	name: 'MediaField',
@@ -373,11 +374,7 @@ export default {
 		uploadDroppedFile(file) {
 			this.isUploading = true
 
-			const uploadEndpointUrl = generateOcsUrl('/apps/assistant/api/v1/input-file')
-			const formData = new FormData()
-			formData.append('data', file)
-			formData.append('filename', file.name)
-			return axios.post(uploadEndpointUrl, formData)
+			return uploadInputFile(file)
 				.then((response) => {
 					const data = response.data.ocs.data
 					this.onFileUploaded({ fileId: data.fileId, filePath: data.filePath })
