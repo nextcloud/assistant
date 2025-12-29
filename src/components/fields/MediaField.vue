@@ -3,12 +3,29 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="media-field">
+	<div class="media-field"
+		:class="{
+			draggedOver: isDraggedOver,
+		}"
+		@dragover="onDragOver"
+		@dragenter="onDragEnter"
+		@dragleave="onDragLeave"
+		@drop="onDrop">
 		<div class="label-row">
 			<label class="field-label"
 				:title="field.description">
 				{{ field.name }}
 			</label>
+			<NcButton v-if="value === null"
+				variant="tertiary"
+				:title="t('assistant', 'Drop a file here to upload it')">
+				<template #icon>
+					<InformationOutlineIcon />
+				</template>
+			</NcButton>
+			<strong v-show="value === null && isDraggedOver">
+				{{ t('assistant', 'Drop a file here to upload it') }}
+			</strong>
 		</div>
 		<div v-if="!isOutput"
 			class="select-media">
@@ -87,6 +104,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import TrayArrowDownIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 
@@ -115,6 +133,7 @@ export default {
 		ShareVariantIcon,
 		CloseIcon,
 		ContentSaveOutlineIcon,
+		InformationOutlineIcon,
 		NcButton,
 	},
 
@@ -150,6 +169,7 @@ export default {
 			filePath: null,
 			isUploading: false,
 			isRecording: false,
+			isDraggedOver: false,
 		}
 	},
 
@@ -296,6 +316,79 @@ export default {
 				console.error(error)
 			})
 		},
+		onDragOver(e) {
+			if (this.value !== null) {
+				return
+			}
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragEnter(e) {
+			if (this.value !== null) {
+				return
+			}
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragLeave(e) {
+			console.debug('leave', e.target)
+			if (this.value !== null) {
+				return
+			}
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = false
+			}
+		},
+		onDrop(e) {
+			if (this.value !== null) {
+				return
+			}
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.uploadDroppedFile(fileItems[0].getAsFile())
+				this.isDraggedOver = false
+			}
+		},
+		uploadDroppedFile(file) {
+			this.isUploading = true
+
+			const uploadEndpointUrl = generateOcsUrl('/apps/assistant/api/v1/input-file')
+			const formData = new FormData()
+			formData.append('data', file)
+			formData.append('filename', file.name)
+			return axios.post(uploadEndpointUrl, formData)
+				.then((response) => {
+					const data = response.data.ocs.data
+					this.onFileUploaded({ fileId: data.fileId, filePath: data.filePath })
+				})
+				.catch(error => {
+					console.error('error while uploading a file after drop', error)
+				})
+				.then(() => {
+					this.isUploading = false
+				})
+		},
 	},
 }
 </script>
@@ -307,11 +400,18 @@ export default {
 	align-items: start;
 	gap: 12px;
 
+	&.draggedOver {
+		border: solid 2px var(--color-border-success);
+		border-radius: var(--border-radius-large);
+	}
+
 	.label-row {
 		width: 100%;
+		height: var(--default-clickable-area);
 		display: flex;
 		align-items: center;
 		justify-content: start;
+		gap: 4px;
 
 		.field-label {
 			font-weight: bold;
