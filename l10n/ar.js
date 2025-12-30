@@ -203,9 +203,8 @@ OC.L10N.register(
     "Could not upload the file" : "يتعذّر رفع الملف",
     "Could not upload the files" : "يتعذّر رفع الملفات",
     "Your task with ID {id} has failed" : "مهمتك ذات الرقم {id} فشلت",
-    "Failed to schedule your task" : "تعذّرت جدولة مُهِمّتك",
-    "Submit the current task's result" : "أرسِل نتيجة المهمة الحالية",
     "Assistant error" : "حدث خطأ في عمل المُساعد",
+    "Submit the current task's result" : "أرسِل نتيجة المهمة الحالية",
     "Please log in to view the task result" : "أدُخل رجاءً لمشاهدة نتيجة المهمة",
     "This task does not exist or has been cleaned up" : "هذه المهمة غير موجودة أو تمّ محوُها"
 },

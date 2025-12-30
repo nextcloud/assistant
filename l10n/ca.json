@@ -199,9 +199,8 @@
     "Could not upload the file" : "No s'ha pogut pujar el fitxer",
     "Could not upload the files" : "No s'han pogut pujar els fitxers",
     "Your task with ID {id} has failed" : "La vostra tasca amb ID {id} ha fallat",
-    "Failed to schedule your task" : "No s'ha pogut planificar la vostra tasca",
-    "Submit the current task's result" : "Envieu el resultat de la tasca actual",
     "Assistant error" : "Error de l'assistent",
+    "Submit the current task's result" : "Envieu el resultat de la tasca actual",
     "Please log in to view the task result" : "Iniciar sessió per veure el resultat de la tasca",
     "This task does not exist or has been cleaned up" : "Aquesta tasca no existeix o s'ha netejat"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

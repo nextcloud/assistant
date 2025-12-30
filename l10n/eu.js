@@ -103,7 +103,6 @@ OC.L10N.register(
     "Copy output" : "Kopiatu irteera",
     "Copy" : "Kopiatu",
     "Upload file" : "Igo fitxategia",
-    "Failed to schedule your task" : "Ezin izan da zure zeregina programatu",
     "Assistant error" : "Laguntzailearen errorea",
     "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da"
 },

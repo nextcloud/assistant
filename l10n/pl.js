@@ -225,10 +225,9 @@ OC.L10N.register(
     "Could not upload the file" : "Nie można przesłać pliku",
     "Could not upload the files" : "Nie udało się przesłać plików",
     "Your task with ID {id} has failed" : "Twoje zadanie o identyfikatorze {id} nie powiodło się",
-    "Failed to schedule your task" : "Nie udało się zaplanować Twojego zadania",
+    "Assistant error" : "Błąd Asystenta",
     "Submit the current task's result" : "Prześlij wynik bieżącego zadania",
     "Output file for task {taskId} ({taskTypeName})" : "Plik wyjściowy dla zadania {taskId} ({taskTypeName})",
-    "Assistant error" : "Błąd Asystenta",
     "Please log in to view the task result" : "Zaloguj się, aby zobaczyć wynik zadania",
     "This task does not exist or has been cleaned up" : "To zadanie nie istnieje lub zostało usunięte"
 },

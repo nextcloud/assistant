@@ -180,9 +180,8 @@ OC.L10N.register(
     "Upload file" : "Last opp fil",
     "Could not upload the file" : "Kunne ikke laste opp filen",
     "Could not upload the files" : "Kunne ikke laste opp filene",
-    "Failed to schedule your task" : "Kunne ikke planlegge oppgaven din",
-    "Submit the current task's result" : "Send inn resultatet for gjeldende aktivitet",
     "Assistant error" : "Assistentfeil",
+    "Submit the current task's result" : "Send inn resultatet for gjeldende aktivitet",
     "Please log in to view the task result" : "Logg inn for å se oppgaveresultatet",
     "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp"
 },

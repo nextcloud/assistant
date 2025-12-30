@@ -66,7 +66,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "نتیجه را نمی توان در کلیپ بورد کپی کرد",
     "Copy" : "رونوشت",
     "Upload file" : "بارگذاری پرونده",
-    "Failed to schedule your task" : "برنامه ریزی کار شما انجام نشد",
     "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است"
 },
 "nplurals=2; plural=(n > 1);");
