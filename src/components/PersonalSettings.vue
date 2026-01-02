@@ -58,6 +58,20 @@
 					{{ taskNames.join(', ') }}
 				</div>
 			</div>
+			<div>
+				<h3>{{ t('assistant', 'Remembered conversations') }}</h3>
+				<p>{{ t('assistant', 'The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:') }}</p>
+				<NcFormBox>
+					<NcFormBoxButton v-for="conversation in rememberedConversations"
+						:key="conversation.id"
+						:label="conversation.title"
+						:description="conversation.summary">
+						<template #icon>
+							<MemoryIcon />
+						</template>
+					</NcFormBoxButton>
+				</NcFormBox>
+			</div>
 		</div>
 	</div>
 </template>
@@ -68,7 +82,10 @@ import AssistantIcon from './icons/AssistantIcon.vue'
 import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
 import NcFormBox from '@nextcloud/vue/components/NcFormBox'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
+import NcFormBoxButton from '@nextcloud/vue/components/NcFormBoxButton'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+
+import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
@@ -83,7 +100,9 @@ export default {
 		NcFormGroup,
 		NcFormBox,
 		NcFormBoxSwitch,
+		NcFormBoxButton,
 		NcNoteCard,
+		MemoryIcon,
 	},
 
 	props: [],
@@ -92,6 +111,7 @@ export default {
 		return {
 			state: loadState('assistant', 'config'),
 			providers: loadState('assistant', 'availableProviders'),
+			rememberedConversations: loadState('assistant', 'rememberedSessions'),
 		}
 	},
 

@@ -36,6 +36,10 @@ return [
 		['name' => 'assistantApi#getOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#runFileAction', 'url' => '/api/{apiVersion}/file-action/{fileId}/{taskTypeId}', 'verb' => 'POST', 'requirements' => $requirements],
 
+		['name' => 'chattyLLM#newSession', 'url' => '/chat/sessions', 'verb' => 'POST', 'postfix' => 'restful'],
+		['name' => 'chattyLLM#updateChatSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'PUT', 'postfix' => 'restful'],
+		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'DELETE', 'postfix' => 'restful'],
+
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/new_session', 'verb' => 'PUT'],
 		['name' => 'chattyLLM#updateSessionTitle', 'url' => '/chat/update_session', 'verb' => 'PATCH'],
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/delete_session', 'verb' => 'DELETE'],
