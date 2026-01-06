@@ -16,7 +16,7 @@
 				<OpenInNewIcon :size="16" />
 			</a>
 		</NcNoteCard>
-		<NcNoteCard v-if="state.text_to_sticker_available && !state.text_to_image_picker_available" type="warning">
+		<NcNoteCard v-if="state.text_to_sticker_available && !state.text_to_image_picker_available" type="info">
 			{{ t('assistant', 'The sticker generation feature won`t work without being able to generate images. Please install and enable a "Generate image" provider or disable the "Generate sticker" task type.') }}
 		</NcNoteCard>
 		<div id="assistant-content">
@@ -54,7 +54,7 @@
 				<NcNoteCard v-if="!state.task_processing_available" type="warning">
 					{{ t('assistant', 'To be able to use the Assistant, please install at least one AI task processing provider.') }}
 				</NcNoteCard>
-				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="warning">
+				<NcNoteCard v-if="!state.free_prompt_task_type_available" type="info">
 					<div class="checkbox-text">
 						<span>
 							{{ t('assistant', 'To enable text generation in the smart picker, please install an AI task processing provider for the "Free text to text prompt" task type:') }}
@@ -75,7 +75,7 @@
 						</ul>
 					</div>
 				</NcNoteCard>
-				<NcNoteCard v-if="!state.text_to_image_picker_available" type="warning">
+				<NcNoteCard v-if="!state.text_to_image_picker_available" type="info">
 					<div class="checkbox-text">
 						<span>
 							{{ t('assistant', 'To enable the sticker generation picker or the image generation picker, please install and enable a "Generate image" provider:') }}
@@ -96,7 +96,7 @@
 						</ul>
 					</div>
 				</NcNoteCard>
-				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="warning">
+				<NcNoteCard v-if="!state.speech_to_text_picker_available" type="info">
 					<div class="checkbox-text">
 						<span>
 							{{ t('assistant', 'To enable speech-to-text in the smart picker, please install and enable a "Transcribe audio" provider:') }}
