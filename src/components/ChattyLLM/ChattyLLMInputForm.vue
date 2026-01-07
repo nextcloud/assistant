@@ -54,14 +54,13 @@
 						:max-length="100"
 						@submit-text="onEditSessionTitle" />
 				</div>
+				<div v-if="active != null" class="session-area__top-bar__remember">
+					<NcCheckboxRadioSwitch v-model="active.is_remembered" type="switch" @update:modelValue="updateSession">
+						{{ t('assistant', 'Remember this') }}
+					</NcCheckboxRadioSwitch>
+				</div>
 				<div v-if="active != null" class="session-area__top-bar__actions">
-					<NcActions v-model:open="titleActionsOpen" :force-name="true" :inline="1">
-						<NcActionButton v-model="active.is_remembered" @update:modelValue="updateSession">
-							<template #icon>
-								<MemoryIcon :size="20" />
-							</template>
-							{{ active.is_remembered ? t('assistant', 'Remembered') : t('assistant', 'Remember this') }}
-						</NcActionButton>
+					<NcActions v-model:open="titleActionsOpen">
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
 							<template #icon>
 								<PencilOutlineIcon :size="20" />
@@ -173,11 +172,11 @@ import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
-import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
@@ -218,11 +217,11 @@ export default {
 		TrashCanOutlineIcon,
 		PencilOutlineIcon,
 		PlusIcon,
-		MemoryIcon,
 
 		AssistantIcon,
 
 		NcActionButton,
+		NcCheckboxRadioSwitch,
 		NcActions,
 		NcAppContent,
 		NcAppNavigation,
@@ -1005,6 +1004,10 @@ export default {
 
 			&__title {
 				width: 100%;
+			}
+
+			&__remember {
+				white-space: nowrap;
 			}
 		}
 
