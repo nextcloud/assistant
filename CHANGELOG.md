@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.0.0 – 2026-01-08
+
+### Added
+
+- Add buttons to suggest agency tools @marcelklehr [#424](https://github.com/nextcloud/assistant/pull/424)
+
+### Fixed
+
+- Adjust to the breaking changes in nc/files @julien-nc [#428](https://github.com/nextcloud/assistant/pull/428)
+
 ## 2.12.0 – 2025-12-17
 
 ### Added
