@@ -11,7 +11,7 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "Delete" : "Eliminar",
     "Submit" : "Submeter",
-    "You" : "Vovê",
+    "You" : "Você",
     "Choose" : "Escolher",
     "Clear Selection" : "Limpar seleção",
     "Cancelled" : "Cancelado",
