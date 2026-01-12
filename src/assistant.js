@@ -136,10 +136,17 @@ export async function openAssistantForm({
 								view.outputs = finishedTask?.output
 							}
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(
-								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
-								+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
-							)
+							if (finishedTask.userFacingErrorMessage) {
+								showError(
+									t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+									+ ': ' + finishedTask.userFacingErrorMessage,
+								)
+							} else {
+								showError(
+									t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+									+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
+								)
+							}
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
 						}
@@ -220,10 +227,17 @@ export async function openAssistantForm({
 							view.outputs = finishedTask?.output
 							view.selectedTaskId = finishedTask?.id
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-							showError(
-								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
-								+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
-							)
+							if (finishedTask.userFacingErrorMessage) {
+								showError(
+									t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+									+ ': ' + finishedTask.userFacingErrorMessage,
+								)
+							} else {
+								showError(
+									t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+									+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
+								)
+							}
 							console.error('[assistant] Task failed', finishedTask)
 							view.outputs = null
 						}
@@ -564,10 +578,17 @@ export async function openAssistantTask(
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-						showError(
-							t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+						if (finishedTask.userFacingErrorMessage) {
+							showError(
+								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+								+ ': ' + finishedTask.userFacingErrorMessage,
+							)
+						} else {
+							showError(
+								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
 								+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
-						)
+							)
+						}
 						console.error('[assistant] Task failed', finishedTask)
 						view.outputs = null
 					}
@@ -645,10 +666,17 @@ export async function openAssistantTask(
 						view.outputs = finishedTask?.output
 						view.selectedTaskId = finishedTask?.id
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
-						showError(
-							t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+						if (finishedTask.userFacingErrorMessage) {
+							showError(
+								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
+								+ ': ' + finishedTask.userFacingErrorMessage,
+							)
+						} else {
+							showError(
+								t('assistant', 'The server failed to process your task with ID {id}', { id: finishedTask.id })
 								+ '. ' + t('assistant', 'Please inform the server administrators of this issue.'),
-						)
+							)
+						}
 						console.error('[assistant] Task failed', finishedTask)
 						view.outputs = null
 					}
