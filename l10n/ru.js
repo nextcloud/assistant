@@ -76,6 +76,8 @@ OC.L10N.register(
     "Edit title" : "Редактировать заголовок",
     "Generate title" : "Генерация заголовка",
     "Creating a new conversation" : "Создание новой беседы",
+    "Hello there! What can I help you with today?" : "Здравствуйте! Чем я могу вам помочь сегодня?",
+    "Try sending a message to spark a conversation." : "Попробуйте отправить сообщение, чтобы начать беседу.",
     "Error loading messages" : "Ошибка загрузки сообщений",
     "Loading messages…" : "Загрузка сообщений…",
     "Cancel editing" : "Отменить редактирование",
