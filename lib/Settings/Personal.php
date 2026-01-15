@@ -97,7 +97,16 @@ class Personal implements ISettings {
 		$this->initialStateService->provideInitialState('availableProviders', $availableProviders);
 
 		$rememberedSessions = $this->sessionMapper->getRememberedUserSessions($this->userId);
-		$this->initialStateService->provideInitialState('rememberedSessions', $rememberedSessions);
+		$rememberedSessionsShort = [];
+		foreach($rememberedSessions as $session) {
+			$rememberedSessionsShort[] = [
+				'id' => $session->getId(),
+				'title' => $session->getTitle(),
+				'summary' => $session->getSummary(),
+			];
+		}
+
+		$this->initialStateService->provideInitialState('rememberedSessions', $rememberedSessionsShort);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 
