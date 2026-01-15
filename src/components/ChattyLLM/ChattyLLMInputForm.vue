@@ -61,6 +61,14 @@
 				</div>
 				<div v-if="active != null" class="session-area__top-bar__actions">
 					<NcActions v-model:open="titleActionsOpen">
+						<NcActionButton v-model="active.is_remembered"
+							type="checkbox"
+							@update:modelValue="updateSession">
+							<template #icon>
+								<MemoryIcon :size="20" />
+							</template>
+							{{ t('assistant', 'Remember this') }}
+						</NcActionButton>
 						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onEditSessionTitleClick">
 							<template #icon>
 								<PencilOutlineIcon :size="20" />
@@ -172,6 +180,7 @@ import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
@@ -217,6 +226,7 @@ export default {
 		TrashCanOutlineIcon,
 		PencilOutlineIcon,
 		PlusIcon,
+		MemoryIcon,
 
 		AssistantIcon,
 
@@ -1008,6 +1018,9 @@ export default {
 
 			&__remember {
 				white-space: nowrap;
+				@media (max-width: 600px) {
+					display: none;
+				}
 			}
 		}
 
