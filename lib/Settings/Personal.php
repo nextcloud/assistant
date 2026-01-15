@@ -98,7 +98,7 @@ class Personal implements ISettings {
 
 		$rememberedSessions = $this->sessionMapper->getRememberedUserSessions($this->userId);
 		$rememberedSessionsShort = [];
-		foreach($rememberedSessions as $session) {
+		foreach ($rememberedSessions as $session) {
 			$rememberedSessionsShort[] = [
 				'id' => $session->getId(),
 				'title' => $session->getTitle(),
