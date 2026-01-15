@@ -80,6 +80,75 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * @return array<Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getRememberedUserSessions(string $userId, int $limit = 0): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
+			->orderBy('timestamp', 'DESC');
+
+		if ($limit > 0) {
+			$qb->setMaxResults($limit);
+		}
+
+		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @return array<Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getRememberedUserSessionsWithOutdatedSummaries(string $userId, int $limit): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('is_summary_up_to_date', $qb->createPositionalParameter(0, IQueryBuilder::PARAM_INT)))
+			->setMaxResults($limit)
+			->orderBy('timestamp', 'DESC');
+
+		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @return array<Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getRememberedSessionsWithOutdatedSummaries(int $limit): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('is_summary_up_to_date', $qb->createPositionalParameter(0, IQueryBuilder::PARAM_INT)))
+			->setMaxResults($limit)
+			->orderBy('timestamp', 'DESC');
+
+		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @return array<Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getRememberedUserSessionsWithoutSummaries(string $userId, int $limit): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('is_remembered', $qb->createPositionalParameter(1, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->isNull('summary'))
+			->setMaxResults($limit)
+			->orderBy('timestamp', 'DESC');
+
+		return $this->findEntities($qb);
+	}
+
+	/**
 	 * @param string $userId
 	 * @param integer $sessionId
 	 * @param string $title
@@ -109,5 +178,11 @@ class SessionMapper extends QBMapper {
 			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
 
 		$qb->executeStatement();
+	}
+
+	public function updateSessionIsRemembered(?string $userId, int $sessionId, bool $is_remembered) {
+		$session = $this->getUserSession($userId, $sessionId);
+		$session->setIsRemembered($is_remembered);
+		$this->update($session);
 	}
 }

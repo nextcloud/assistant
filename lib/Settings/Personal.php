@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Settings;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IAppConfig;
@@ -27,6 +28,7 @@ class Personal implements ISettings {
 		private IInitialState $initialStateService,
 		private ?string $userId,
 		private ITaskProcessingManager $taskProcessingManager,
+		private SessionMapper $sessionMapper,
 	) {
 	}
 
@@ -61,6 +63,8 @@ class Personal implements ISettings {
 		$speechToTextPickerAvailable = $speechToTextAvailable && $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 		$speechToTextPickerEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'speech_to_text_picker_enabled', '1') === '1';
 
+
+
 		$userConfig = [
 			'task_processing_available' => $taskProcessingAvailable,
 			'assistant_available' => $assistantAvailable,
@@ -91,6 +95,18 @@ class Personal implements ISettings {
 			}
 		}
 		$this->initialStateService->provideInitialState('availableProviders', $availableProviders);
+
+		$rememberedSessions = $this->sessionMapper->getRememberedUserSessions($this->userId);
+		$rememberedSessionsShort = [];
+		foreach ($rememberedSessions as $session) {
+			$rememberedSessionsShort[] = [
+				'id' => $session->getId(),
+				'title' => $session->getTitle(),
+				'summary' => $session->getSummary(),
+			];
+		}
+
+		$this->initialStateService->provideInitialState('rememberedSessions', $rememberedSessionsShort);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 
