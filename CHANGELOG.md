@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.1.0 - 2026-01-15
+
+### Added 
+- Implement memories @marcelklehr [#422](https://github.com/nextcloud/assistant/pull/422)
+
+### Fixed
+- Use userFacingErrorMessage from TaskProcessing API if available @marcelklehr [#441](https://github.com/nextcloud/assistant/pull/441)
+
 ## 3.0.0 – 2026-01-08
 
 ### Added
