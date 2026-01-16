@@ -6,6 +6,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Електронска пошта",
     "Nextcloud Talk" : "Talk",
     "Assistant" : "Асистент",
+    "Memories" : "Memories",
     "Administration documentation" : "Документација за администратори",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",

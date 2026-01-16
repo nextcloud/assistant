@@ -85,6 +85,7 @@ OC.L10N.register(
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Pošlite žiadosť Asistentovi, napríklad: napíšte prvý koncept prezentácie, zadajte návrhy pre prezentáciu, napíšte koncept odpovede svojmu kolegovi.",
     "Assistant" : "Asistent",
     "Assistant fallback" : "Asistent v prípade zlyhania",
+    "Memories" : "Spomienky",
     "Voice chat" : "Hlasový chat",
     "Voice chat with the assistant" : "Hlasový chat s asistentom",
     "System prompt" : "Systémová výzva",

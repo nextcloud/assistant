@@ -51,6 +51,7 @@ OC.L10N.register(
     "Generate text" : "Generuj tekst",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Wyślij zapytanie do Asystenta, na przykład: napisz pierwszą wersję prezentacji, zaproponuj pomysły do prezentacji, napisz szkic odpowiedzi do mojego współpracownika.",
     "Assistant" : "Asystent",
+    "Memories" : "Wspomnienia",
     "Voice chat with the assistant" : "Rozmowa głosowa z asystentem",
     "System prompt" : "Polecenie systemowe",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Określ zasady i założenia, których asystent powinien przestrzegać podczas rozmowy",

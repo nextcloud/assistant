@@ -83,6 +83,8 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "ياردەمچىگە تەلەپ ئەۋەتىڭ ، مەسىلەن: تونۇشتۇرۇشنىڭ بىرىنچى لايىھىسىنى يېزىڭ ، ماڭا تونۇشتۇرۇش ئۈچۈن تەكلىپ بېرىڭ ، خىزمەتدىشىمغا جاۋاب لايىھىسىنى يېزىڭ.",
     "Assistant" : "ياردەمچى",
     "Assistant fallback" : "ياردەمچى زاپاس",
+    "Memories" : "ئەسلىمىلەر",
+    "The memories to be injected into the chat session." : "پاراڭلىشىشقا كىرگۈزۈلىدىغان خاتىرىلەر.",
     "Voice chat" : "ئاۋازلىق سۆھبەت",
     "Voice chat with the assistant" : "ياردەمچى بىلەن ئاۋازلىق پاراڭلىشىش",
     "System prompt" : "سىستېما ئەسكەرتمىسى",

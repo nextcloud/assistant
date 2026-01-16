@@ -77,6 +77,7 @@ OC.L10N.register(
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Στείλτε ένα αίτημα στον Βοηθό, για παράδειγμα: γράψτε ένα πρώτο προσχέδιο παρουσίασης, δώστε μου προτάσεις για μια παρουσίαση, γράψτε ένα προσχέδιο απάντησης στον συνάδελφό μου.",
     "Assistant" : "Βοηθός",
     "Assistant fallback" : "Εφεδρικός βοηθός",
+    "Memories" : "Αναμνήσεις",
     "Voice chat" : "Φωνητική συνομιλία",
     "Voice chat with the assistant" : "Φωνητική συνομιλία με τον βοηθό",
     "System prompt" : "Προτροπή συστήματος",

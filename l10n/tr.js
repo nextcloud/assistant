@@ -85,6 +85,8 @@ OC.L10N.register(
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Yardımcıya bir istek gönderin. Örneğin; bir sunumun ilk taslağını yaz, bir sunum için önerilerde bulun, meslektaşıma bir yanıt taslağı yaz.",
     "Assistant" : "Yardımcı",
     "Assistant fallback" : "Yardımcı varsayılanı",
+    "Memories" : "Anılar",
+    "The memories to be injected into the chat session." : "Anılar sohbet oturumuna eklenecek.",
     "Voice chat" : "Sesli sohbet",
     "Voice chat with the assistant" : "Yardımcı ile sesli görüşme",
     "System prompt" : "Sistem istemi",

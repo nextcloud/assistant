@@ -22,6 +22,7 @@ OC.L10N.register(
     "Nextcloud Talk" : "Nextcloud Talk",
     "Generate text" : "Sortu testua",
     "Assistant" : "Morroia",
+    "Memories" : "Memoriak",
     "Voice chat with the assistant" : "Ahots-txata laguntzailearekin",
     "System prompt" : "Sistemaren gonbita",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Definitu elkarrizketan zehar txat laguntzaileak jarraitu beharko lituzkeen arau eta suposizioak.",

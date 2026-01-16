@@ -64,6 +64,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "向助手发送一条请求，例如：写一份投影片的初稿，给我一些做演说的建议，写一个向我同事回复的草稿。",
     "Assistant" : "助手",
     "Assistant fallback" : "助手汰退",
+    "Memories" : "回忆",
     "Voice chat" : "语音聊天",
     "Voice chat with the assistant" : "与助手进行语音聊天",
     "System prompt" : "系统提示",

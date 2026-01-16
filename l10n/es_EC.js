@@ -7,6 +7,7 @@ OC.L10N.register(
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Correo Nextcloud",
     "OpenProject" : "OpenProject",
+    "Memories" : "Memorias",
     "Prompt" : "Promoción",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
     "Try again" : "Reintentar",
