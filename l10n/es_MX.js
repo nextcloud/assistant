@@ -7,6 +7,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Correo Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Asistente",
+    "Memories" : "Recuerdos",
     "System prompt" : "Prompt del sistema",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Define las reglas y suposiciones que el asistente debe seguir durante la conversación.",
     "Describe a task that you want the assistant to do or ask a question" : "Describa una tarea que quiere que haga el asistente o haga una pregunta",

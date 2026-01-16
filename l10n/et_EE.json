@@ -83,6 +83,8 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Saada abilisele mõni ülesanne, näiteks: koosta esitluse algne kavand, leia mulle häid ideid esitluse jaoks, koosta kirja vastuse kavand minu kolleegile.",
     "Assistant" : "Abiline",
     "Assistant fallback" : "Abilise varuvariant",
+    "Memories" : "Mälestused",
+    "The memories to be injected into the chat session." : "Vestluse sessiooni lisatavad mälestused.",
     "Voice chat" : "Häälvestlus",
     "Voice chat with the assistant" : "Häälvestlus Abilisega",
     "System prompt" : "Süsteemi viip",

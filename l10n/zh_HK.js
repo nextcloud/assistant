@@ -85,6 +85,8 @@ OC.L10N.register(
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "傳送一個要求給 Assistant，例如：書寫一份演示文稿的初稿，給我演示文稿的建議，書寫一份回覆給我的同事。",
     "Assistant" : "助手",
     "Assistant fallback" : "小幫手汰退",
+    "Memories" : "回憶",
+    "The memories to be injected into the chat session." : "要注入到聊天工作階段的記憶。",
     "Voice chat" : "語音聊天",
     "Voice chat with the assistant" : "與小幫手使用語音聊天",
     "System prompt" : "系統提示詞",

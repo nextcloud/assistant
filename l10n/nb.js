@@ -42,6 +42,7 @@ OC.L10N.register(
     "Generate text" : "Generer tekst",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Send en forespørsel til assistenten, for eksempel: skriv et første utkast til en presentasjon, gi meg forslag til en presentasjon, skriv et utkast til svar til kollegaen min.",
     "Assistant" : "Assistent",
+    "Memories" : "Minner",
     "System prompt" : "Systemledetekst",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Definer regler og antagelser som assistenten skal følge under samtalen.",
     "Describe a task that you want the assistant to do or ask a question" : "Beskriv en oppgave du vil at assistenten skal gjøre, eller still et spørsmål",

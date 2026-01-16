@@ -77,6 +77,7 @@ OC.L10N.register(
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Send en forespørgsel til assistenten, for eksempel: skriv en første kladde af en præsentation, giv mig forslag til en præsentation, skriv en svarkladde til min kollega.",
     "Assistant" : "Assistent",
     "Assistant fallback" : "Assistent tilbagefald",
+    "Memories" : "Minder",
     "Voice chat" : "Stemmechat",
     "Voice chat with the assistant" : "Stemmechat med assistenten",
     "System prompt" : "Systemprompt",

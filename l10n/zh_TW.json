@@ -83,6 +83,8 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "向 Assistant 傳送請求，例如：編寫一份簡報的初稿，給我簡報的建議，編寫一份給我同事回覆的草稿。",
     "Assistant" : "助理",
     "Assistant fallback" : "小幫手汰退",
+    "Memories" : "回憶",
+    "The memories to be injected into the chat session." : "要注入到聊天工作階段的記憶。",
     "Voice chat" : "語音聊天",
     "Voice chat with the assistant" : "與小幫手使用語音聊天",
     "System prompt" : "系統提示詞",

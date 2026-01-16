@@ -38,6 +38,7 @@
     "Generate text" : "Skapa text",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Skicka en förfrågan till assistenten, till exempel: skriv ett första utkast till en presentation, ge mig förslag på en presentation, skriv ett utkast till svar till min kollega.",
     "Assistant" : "Assistent",
+    "Memories" : "Memories",
     "Voice chat with the assistant" : "Röstchatt med assistenten",
     "System prompt" : "Systemuppmaning",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Definiera regler och antaganden som assistenten ska följa under samtalet.",

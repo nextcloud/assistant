@@ -75,6 +75,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Надішліть запит асистенту, наприклад: напишіть перший проект презентації, дайте мені пропозиції щодо презентації, напишіть проект відповіді моєму колезі.",
     "Assistant" : "Помічник",
     "Assistant fallback" : "Асистентський запасний варіант",
+    "Memories" : "Спогади",
     "Voice chat" : "Голосовий чат",
     "Voice chat with the assistant" : "Голосовий чат з асистентом",
     "System prompt" : "Системний запит",

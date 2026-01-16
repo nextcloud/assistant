@@ -83,6 +83,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Odeslat požadavek do Asistenta, například: napiš koncept prezentace, dej mi doporučení pro prezentaci, napiš koncept odpovědi kolegovi.",
     "Assistant" : "Asistent",
     "Assistant fallback" : "Náhradní asistenta",
+    "The memories to be injected into the chat session." : "Paměti, které vpravit do relace chatu.",
     "Voice chat" : "Hlasový chat",
     "Voice chat with the assistant" : "Hlasový chat s asistentem",
     "System prompt" : "Systémový prompt",

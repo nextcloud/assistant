@@ -79,6 +79,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "ສົ່ງຄຳຂໍໄປທີ່ຜູ້ຊ່ວຍ, ຕົວຢ່າງ: ຂຽນສະບັບຮ່າງທຳອິດຂອງບົດນຳສະເໜີ, ໃຫ້ຄຳແນະນຳສຳລັບບົດນຳສະເໜີ, ຂຽນສະບັບຮ່າງຄຳຕອບໃຫ້ເພື່ອນຮ່ວມງານຂອງຂ້ອຍ.",
     "Assistant" : "ຜູ້ຊ່ວຍ",
     "Assistant fallback" : "ຜູ້ຊ່ວຍສຳຮອງ",
+    "Memories" : "ຄວາມຊົງຈຳ",
     "Voice chat" : "ສົນທະນາດ້ວຍສຽງ",
     "Voice chat with the assistant" : "ສົນທະນາດ້ວຍສຽງກັບຜູ້ຊ່ວຍ",
     "System prompt" : "ພຣອມຂອງລະບົບ",

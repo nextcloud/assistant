@@ -60,6 +60,7 @@ OC.L10N.register(
     "Generate text" : "Tekst genereren",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Stuur een verzoek naar de Assistent, bijvoorbeeld: schrijf een eerste concept van een presentatie, geef mij suggesties voor een presentatie, schrijf een conceptantwoord naar mijn collega.",
     "Assistant" : "Assistent",
+    "Memories" : "Herinneringen",
     "Voice chat with the assistant" : "Spraakchat met de assistent",
     "System prompt" : "Systeemprompt",
     "Define rules and assumptions that the assistant should follow during the conversation." : "Definieer regels en aannames die de assistent moet volgen tijdens het gesprek",

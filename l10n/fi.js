@@ -9,6 +9,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud-sähköposti",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Avustaja",
+    "Memories" : "Muistot",
     "Chat history" : "Keskusteluhistoria",
     "Prompt" : "Kehote",
     "Administration documentation" : "Ylläpidon dokumentaatio",

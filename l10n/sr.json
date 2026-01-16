@@ -75,6 +75,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Пошаљите захтев Асистенту, на пример: напиши први нацрт презентације, дај ми сугестије за презентацију, напиши нацрт одговора мом колеги.",
     "Assistant" : "Асистент",
     "Assistant fallback" : "Ако Асистент не функционише",
+    "Memories" : "Успомене",
     "Voice chat" : "Гласовни чет",
     "Voice chat with the assistant" : "Гласовни чет са асистентом",
     "System prompt" : "Кориснички захтев",

@@ -85,6 +85,8 @@ OC.L10N.register(
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Eine Anfrage an den Assistenten stellen, z. B.: schreibe einen ersten Entwurf einer Präsentation, gib mir Vorschläge für eine Präsentation, schreibe einen Entwurf der Antwort an meinen Kollegen.",
     "Assistant" : "Assistent",
     "Assistant fallback" : "Assistant Fallback",
+    "Memories" : "Memories",
+    "The memories to be injected into the chat session." : "Die Erinnerungen, die in die Chat-Sitzung eingefügt werden sollen.",
     "Voice chat" : "Sprachchat",
     "Voice chat with the assistant" : "Sprachchat mit dem Assistenten",
     "System prompt" : "Systemaufforderung",

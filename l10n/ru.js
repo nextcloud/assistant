@@ -37,6 +37,7 @@ OC.L10N.register(
     "Chat with AI" : "Чат с ИИ",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Отправьте запрос Ассистенту, например: написать черновик презентации, дать мне предложения по презентации, написать черновик ответа моему коллеге.",
     "Assistant" : "Помощник",
+    "Memories" : "Воспоминания",
     "Voice chat" : "Голосовой чат",
     "Voice chat with the assistant" : "Голосовой чат с помощником",
     "System prompt" : "Системный промпт",

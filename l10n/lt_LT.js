@@ -10,6 +10,7 @@ OC.L10N.register(
     "View results" : "Rodyti rezultatus",
     "Nextcloud Mail" : "Nextcloud el. paštas",
     "Assistant" : "Asistentas.",
+    "Memories" : "Prisiminimai",
     "Hide advanced options" : "Slėpti išplėstines parinktis",
     "Show advanced options" : "Rodyti išplėstines parinktis",
     "Try again" : "Bandyti dar kartą",

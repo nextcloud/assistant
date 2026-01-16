@@ -83,6 +83,7 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Eine Anfrage an den Assistenten stellen, z. B.: schreiben Sie einen ersten Entwurf einer Präsentation, geben Sie mir Vorschläge für eine Präsentation, schreiben Sie einen Entwurf der Antwort an meinen Kollegen.",
     "Assistant" : "Assistent",
     "Assistant fallback" : "Assistant Fallback",
+    "The memories to be injected into the chat session." : "Die Erinnerungen, die in die Chat-Sitzung eingefügt werden sollen.",
     "Voice chat" : "Sprachchat",
     "Voice chat with the assistant" : "Sprachchat mit dem Assistenten",
     "System prompt" : "Systemaufforderung",

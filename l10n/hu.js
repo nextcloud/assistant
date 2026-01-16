@@ -19,6 +19,7 @@ OC.L10N.register(
     "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Beszélgetés",
     "Assistant" : "Asszisztens",
+    "Memories" : "Emlékek",
     "Prompt" : "Prompt",
     "Process and transform text" : "Szöveg feldolgozása és átalakítása",
     "Assistant admin options saved" : "Asszisztens rendszergazdai beállítások elmentve",

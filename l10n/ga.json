@@ -83,6 +83,8 @@
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "Cuir iarratas chuig an gCúntóir, mar shampla: scríobh an chéad dréacht de chur i láthair, tabhair moltaí dom le haghaidh cur i láthair, scríobh dréachtfhreagra chuig mo chomhghleacaí.",
     "Assistant" : "Cúntóir",
     "Assistant fallback" : "Cúntóir cúltaca",
+    "Memories" : "Cuimhní cinn",
+    "The memories to be injected into the chat session." : "Na cuimhní cinn atá le hinstealladh isteach sa seisiún comhrá.",
     "Voice chat" : "Comhrá gutha",
     "Voice chat with the assistant" : "Comhrá gutha leis an gcúntóir",
     "System prompt" : "Leid córais",

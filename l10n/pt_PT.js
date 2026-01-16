@@ -5,6 +5,7 @@ OC.L10N.register(
     "User not found" : "Utilizador não encontrado",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Assistant" : "Assistente",
+    "Memories" : "Memories",
     "Close" : "Fechar",
     "Less" : "Menos",
     "More" : "Mais",
