@@ -18,6 +18,7 @@
     "User not found" : "Benutzer nicht gefunden",
     "Failed to create a chat session" : "Chat-Sitzung konnte nicht erstellt werden",
     "Failed to update the chat session" : "Chat-Sitzung konnte nicht aktualisiert werden",
+    "Could not find session" : "Sitzung konnte nicht gefunden werden",
     "Failed to delete the chat session" : "Chat-Sitzung konnte nicht gelöscht werden",
     "Failed to get chat sessions" : "Chat-Sitzungen konnten nicht abgerufen werden",
     "The new message is too long" : "Die neue Nachricht ist zu lang",

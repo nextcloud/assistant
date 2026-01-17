@@ -10,6 +10,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Имейл",
     "OpenProject" : "OpenProject",
     "Assistant" : "Асистент",
+    "Memories" : "Спомени",
     "Prompt" : "Подкана",
     "Administration documentation" : "Административна документация",
     "Try again" : "Опитай отново",
