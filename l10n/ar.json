@@ -45,6 +45,7 @@
     "Generate text" : "توليد نص",
     "Send a request to the Assistant, for example: write a first draft of a presentation, give me suggestions for a presentation, write a draft reply to my colleague." : "أرسل طلباً للمُساعد. على سبيل المثال: أُكتُب مسودة أوّلية من العرض، أعطني مقترحات للعرض، أُكتُب ردّاً أوّليّاً على زميلي.",
     "Assistant" : "المُساعِد",
+    "Memories" : "تطبيق \"ذكريات\" Memories",
     "System prompt" : "مَحَثُّ النظام",
     "Define rules and assumptions that the assistant should follow during the conversation." : "تعريف القواعد و الافتراضات التي يجب على المساعد اتِّباعها خلال المحادثة.",
     "Describe a task that you want the assistant to do or ask a question" : "صِف المهمة التي تطلب العون لإنجازها أو اسأل سؤالاً",
