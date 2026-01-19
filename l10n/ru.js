@@ -73,6 +73,7 @@ OC.L10N.register(
     "Invalid response received for a new conversation request" : "Получен неверный ответ на новый запрос на беседу",
     "Error creating a new conversation" : "Ошибка при создании нового диалога",
     "New conversation" : "Новый разговор",
+    "No conversations yet" : "Еще ни одного обсуждения",
     "Delete" : "Удалить",
     "Edit title" : "Редактировать заголовок",
     "Generate title" : "Генерация заголовка",
