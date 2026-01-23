@@ -20,7 +20,7 @@ class RegenerateOutdatedChatSummariesJob extends TimedJob {
 		private SessionSummaryService $sessionSummaryService,
 	) {
 		parent::__construct($timeFactory);
-		$this->setInterval(60 * 60 * 24); // 24h
+		$this->setInterval(60 * 10); // 10min
 	}
 	public function run($argument) {
 		$userId = $argument['userId'];
