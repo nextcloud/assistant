@@ -9,11 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Service;
 
+use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\BackgroundJob\GenerateNewChatSummaries;
 use OCA\Assistant\BackgroundJob\RegenerateOutdatedChatSummariesJob;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCP\IAppConfig;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
 use OCP\TaskProcessing\Task;
@@ -34,6 +36,7 @@ class SessionSummaryService {
 		private MessageMapper $messageMapper,
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
+		private IAppConfig $appConfig,
 		private IJobList $jobList,
 	) {
 	}
@@ -104,5 +107,33 @@ class SessionSummaryService {
 			return [];
 		}
 	}
+
+	/**
+	 * returns all remembered chats as summaries where available and whole chats where not
+	 * @return array<string>
+	 */
+	public function getMemories(?string $userId): array {
+		$memories = [];
+		try {
+			$sessions = $this->sessionMapper->getRememberedUserSessions($userId, self::MAX_INJECTED_SUMMARIES);
+			foreach ($sessions as $session) {
+				if ($session->getSummary() !== null) {
+					$memories[] = $session->getSummary();
+
+				}
+				else {
+					$lastNMessages = intval($this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10'));
+					$chatHistory = $this->messageMapper->getMessages($session->getId(),0, $lastNMessages);
+					$memories[] = "This is the raw chat history of a chat between the user and Assistant: " . json_encode($chatHistory);
+				}
+			}
+			return $memories;
+		} catch (Exception $e) {
+			$this->logger->error('Failed to get remembered user sessions', ['exception' => $e]);
+			return [];
+		}
+	}
+
+
 
 }
