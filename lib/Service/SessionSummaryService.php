@@ -15,9 +15,9 @@ use OCA\Assistant\BackgroundJob\RegenerateOutdatedChatSummariesJob;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
-use OCP\IAppConfig;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
+use OCP\IAppConfig;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\TextToText;
 use Psr\Log\LoggerInterface;
@@ -121,15 +121,14 @@ class SessionSummaryService {
 					$memory = $session->getSummary();
 					if (!$session->getIsSummaryUpToDate()) {
 						$lastNMessages = intval($this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10'));
-						$chatHistory = $this->messageMapper->getMessages($session->getId(),0, $lastNMessages);
-						$memory .= "The summary is outdated. These are the last messages in the raw chat history: " . json_encode($chatHistory);
+						$chatHistory = $this->messageMapper->getMessages($session->getId(), 0, $lastNMessages);
+						$memory .= 'The summary is outdated. These are the last messages in the raw chat history: ' . json_encode($chatHistory);
 					}
 
-				}
-				else {
+				} else {
 					$lastNMessages = intval($this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10'));
-					$chatHistory = $this->messageMapper->getMessages($session->getId(),0, $lastNMessages);
-					$memory = "This is the raw chat history of a chat between the user and Assistant: " . json_encode($chatHistory);
+					$chatHistory = $this->messageMapper->getMessages($session->getId(), 0, $lastNMessages);
+					$memory = 'This is the raw chat history of a chat between the user and Assistant: ' . json_encode($chatHistory);
 				}
 				$memories[] = $memory;
 			}
