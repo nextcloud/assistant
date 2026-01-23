@@ -58,7 +58,7 @@
 					{{ taskNames.join(', ') }}
 				</div>
 			</div>
-			<div>
+			<div v-if="rememberedConversations.length > 0">
 				<h3>{{ t('assistant', 'Remembered conversations') }}</h3>
 				<p>{{ t('assistant', 'The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:') }}</p>
 				<NcFormBox>
