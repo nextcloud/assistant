@@ -1,8 +1,10 @@
 OC.L10N.register(
     "assistant",
     {
+    "Create a conversation" : "Crea una conversazione",
     "Send an email" : "Invia un'email",
     "User not found" : "Utente non trovato",
+    "Session not found" : "Sessione non trovata",
     "Nextcloud Assistant" : "Assistente di Nextcloud",
     "View results" : "Mostra risultati",
     "Nextcloud Deck" : "Nextcloud Deck",
@@ -31,6 +33,7 @@ OC.L10N.register(
     "Less" : "Meno",
     "More" : "Altro",
     "Cancel" : "Annulla",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Sei sicuro di voler eliminare \"{sessionTitle}\"?",
     "No conversations yet" : "Ancora nessuna conversazione",
     "Delete" : "Elimina",
     "Edit title" : "Modifica titolo",

@@ -263,7 +263,7 @@ OC.L10N.register(
     "Remove this media" : "Видаліть цей носій",
     "Download this media" : "Завантажте цей медіафайл",
     "Save this media" : "Збережіть цей носій",
-    "Share this media" : "Поділіться цим медіа",
+    "Share this media" : "Поділітися цим медіа",
     "Select from storage" : "Виберіть зі сховища",
     "Pick a file" : "Виберіть файл",
     "Clear value" : "Чисте значення",
