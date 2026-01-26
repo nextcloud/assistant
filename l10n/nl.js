@@ -92,6 +92,7 @@ OC.L10N.register(
     "Cancel" : "Annuleren",
     "What's the weather today?" : "Hoe is het weer vandaag?",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Weet je zeker dat je \"{sessionTitle}\" wilt verwijderen?",
+    "No conversations yet" : "Nog geen gesprekken",
     "Delete" : "Verwijder",
     "Edit title" : "Titel bewerken",
     "Cancel editing" : "Annuleer bewerken",
