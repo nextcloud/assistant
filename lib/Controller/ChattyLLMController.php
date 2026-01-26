@@ -1037,7 +1037,7 @@ class ChattyLLMController extends OCSController {
 			'history' => $history,
 		];
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
-			$input['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+			$input['memories'] = $this->sessionSummaryService->getMemories($this->userId);
 		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $this->userId, $customId);
 		$this->taskProcessingManager->scheduleTask($task);
@@ -1067,7 +1067,7 @@ class ChattyLLMController extends OCSController {
 		];
 		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
-			$taskInput['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+			$taskInput['memories'] = $this->sessionSummaryService->getMemories($this->userId);
 		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
@@ -1093,7 +1093,7 @@ class ChattyLLMController extends OCSController {
 		];
 		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]['optionalInputShape']['memories'])) {
-			$input['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+			$input['memories'] = $this->sessionSummaryService->getMemories($this->userId);
 		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
@@ -1119,7 +1119,7 @@ class ChattyLLMController extends OCSController {
 		];
 		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
-			$taskInput['memories'] = $this->sessionSummaryService->getUserSessionSummaries($this->userId);
+			$taskInput['memories'] = $this->sessionSummaryService->getMemories($this->userId);
 		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
