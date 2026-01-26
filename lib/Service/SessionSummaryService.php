@@ -110,7 +110,7 @@ class SessionSummaryService {
 
 	/**
 	 * returns all remembered chats as summaries where available and whole chats where not
-	 * @return array<string>
+	 * @return list<string>
 	 */
 	public function getMemories(?string $userId): array {
 		$memories = [];
@@ -118,7 +118,7 @@ class SessionSummaryService {
 			$sessions = $this->sessionMapper->getRememberedUserSessions($userId, self::MAX_INJECTED_SUMMARIES);
 			foreach ($sessions as $session) {
 				if ($session->getSummary() !== null) {
-					$memory = $session->getSummary();
+					$memory = $session->getSummary() ?? '';
 					if (!$session->getIsSummaryUpToDate()) {
 						$lastNMessages = intval($this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10'));
 						$chatHistory = $this->messageMapper->getMessages($session->getId(), 0, $lastNMessages);
