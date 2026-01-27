@@ -187,6 +187,7 @@ OC.L10N.register(
     "No conversations yet" : "Aucune conversation pour l'instant",
     "Delete" : "Supprimer",
     "Conversation title" : "Titre de la conversation",
+    "Remember this" : "Souvenez-vous de ça",
     "Edit title" : "Modifier le titre",
     "Generate title" : "Générer un titre",
     "Creating a new conversation" : "Création d'une nouvelle conversation",
