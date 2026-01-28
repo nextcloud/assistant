@@ -31,10 +31,7 @@ import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { showError } from '@nextcloud/dialogs'
-import { generateOcsUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
-
-const uploadEndpointUrl = generateOcsUrl('/apps/assistant/api/v1/input-file')
+import { uploadInputFile } from '../../utils.js'
 
 export default {
 	name: 'UploadInputFileButton',
@@ -104,7 +101,7 @@ export default {
 			if (!this.multiple) {
 				this.$emit('update:is-uploading', true)
 				const file = files[0]
-				this.uploadFile(file).then(response => {
+				uploadInputFile(file).then(response => {
 					this.$emit('files-uploaded', response.data.ocs.data)
 				}).catch(error => {
 					showError(t('assistant', 'Could not upload the file'))
@@ -114,7 +111,7 @@ export default {
 				})
 			} else {
 				this.$emit('update:is-uploading', true)
-				Promise.all(Array.from(files).map(f => this.uploadFile(f)))
+				Promise.all(Array.from(files).map(f => uploadInputFile(f)))
 					.then(responses => {
 						if (responses.some(response => response.code === 'ERR_CANCELED')) {
 							console.debug('At least one request has been canceled, do nothing')
@@ -129,12 +126,6 @@ export default {
 						this.$emit('update:is-uploading', false)
 					})
 			}
-		},
-		uploadFile(file) {
-			const formData = new FormData()
-			formData.append('data', file)
-			formData.append('filename', file.name)
-			return axios.post(uploadEndpointUrl, formData)
 		},
 	},
 }
