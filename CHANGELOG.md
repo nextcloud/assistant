@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.2.0 - 2026-01-28
+
+### Added 
+- Add support for Nextcloud 34 @marcelklehr [#448](https://github.com/nextcloud/assistant/pull/448)
+- add chat memories without delay by adding raw chats @janepie [#446](https://github.com/nextcloud/assistant/pull/446)
+
+### Changed
+- Format all Chat output in Markdown @ericfischereu [#431](https://github.com/nextcloud/assistant/pull/431)
+- Pin actions with full hash @julien-nc [#445](https://github.com/nextcloud/assistant/pull/445)
+
+
 ## 3.1.0 - 2026-01-15
 
 ### Added 
