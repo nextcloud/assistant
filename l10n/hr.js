@@ -12,6 +12,7 @@ OC.L10N.register(
     "Delete" : "Izbriši",
     "Edit title" : "Uredi naslov",
     "Submit" : "Šalji",
+    "You" : "Vi",
     "Delete message" : "Izbriši poruku",
     "Choose" : "Odaberite",
     "This may take a few seconds…" : "To može potrajati nekoliko sekundi...",
