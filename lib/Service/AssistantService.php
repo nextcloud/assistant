@@ -123,6 +123,7 @@ class AssistantService {
 			'send_message_to_conversation' => $this->l10n->t('Nextcloud Talk'),
 			'list_messages_in_conversation' => $this->l10n->t('Nextcloud Talk'),
 			'duckduckgo_results_json' => $this->l10n->t('DuckDuckGo web search'),
+			'youtube_search' => $this->l10n->t('YouTube video search'),
 		];
 	}
 
