@@ -140,7 +140,7 @@ export default {
 		buttonTypes() {
 			const taskTypes = {}
 			for (const task of this.options) {
-				const type = this.getTaskCategory(task.id)
+				const type = task.category.id
 				if (!taskTypes[type]) {
 					taskTypes[type] = []
 				}
@@ -153,7 +153,7 @@ export default {
 				}
 				result.push({
 					id: entry[0],
-					text: this.getTextForCategory(entry[0]),
+					text: entry[1][0].category.name,
 					icon: this.getCategoryIcon(entry[0]),
 					tasks: entry[1],
 				})
@@ -162,7 +162,7 @@ export default {
 			if (taskTypes.other) {
 				result.push({
 					id: 'other',
-					text: this.getTextForCategory('other'),
+					text: taskTypes.other[0].category.name,
 					icon: this.getCategoryIcon('other'),
 					tasks: taskTypes.other,
 				})
@@ -201,7 +201,11 @@ export default {
 			return taskType.id === this.modelValue
 		},
 		isCategorySelected(category) {
-			return category.id === this.getTaskCategory(this.modelValue || '')
+			if (!this.modelValue) {
+				return false
+			}
+			const selectedTask = this.options.find(task => task.id === this.modelValue)
+			return selectedTask && category.id === selectedTask.category.id
 		},
 		onTaskSelected(taskType) {
 			this.$emit('update:model-value', taskType.id)
@@ -215,44 +219,6 @@ export default {
 			} else {
 				this.onTaskSelected(taskType.tasks[0])
 				this.categorySubmenu = null
-			}
-		},
-		getTaskCategory(id) {
-			if (id.startsWith('chatty')) {
-				return 'chat'
-			} else if (id.startsWith('context_chat')) {
-				return 'context'
-			} else if (id.includes('translate')) {
-				return 'translate'
-			} else if (id.startsWith('richdocuments')) {
-				return 'generate'
-			} else if (id.includes('image') || id.includes('sticker')) {
-				return 'image'
-			} else if (id.includes('audio') || id.includes('speech')) {
-				return 'audio'
-			} else if (id.includes('text')) {
-				return 'text'
-			}
-			return 'other'
-		},
-		getTextForCategory(category) {
-			switch (category) {
-			case 'chat':
-				return t('assistant', 'Chat with AI')
-			case 'context':
-				return t('assistant', 'Context Chat')
-			case 'text':
-				return t('assistant', 'Work with text')
-			case 'image':
-				return t('assistant', 'Work with images')
-			case 'translate':
-				return t('assistant', 'Translate')
-			case 'audio':
-				return t('assistant', 'Work with audio')
-			case 'generate':
-				return t('assistant', 'Generate file')
-			default:
-				return t('assistant', 'Other')
 			}
 		},
 		getCategoryIcon(category) {

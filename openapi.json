@@ -432,7 +432,8 @@
                     "optionalInputShape",
                     "outputShape",
                     "optionalOutputShape",
-                    "priority"
+                    "priority",
+                    "category"
                 ],
                 "properties": {
                     "id": {
@@ -471,6 +472,21 @@
                     "priority": {
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "category": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "name"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
