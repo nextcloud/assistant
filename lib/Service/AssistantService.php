@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -234,6 +234,44 @@ class AssistantService {
 	}
 
 	/**
+	 * Get category information for a task type
+	 *
+	 * @param string $typeId The task type ID
+	 * @return array{id: string, name: string}
+	 */
+	private function getCategory(string $typeId): array {
+		$categoryId = 'other';
+		$categoryName = $this->l10n->t('Other');
+		if (str_starts_with($typeId, 'chatty')) {
+			$categoryId = 'chat';
+			$categoryName = $this->l10n->t('Chat with AI');
+		} elseif (str_starts_with($typeId, 'context_chat')) {
+			$categoryId = 'context';
+			$categoryName = $this->l10n->t('Context Chat');
+		} elseif (str_contains($typeId, 'translate')) {
+			$categoryId = 'translate';
+			$categoryName = $this->l10n->t('Translate');
+		} elseif (str_starts_with($typeId, 'richdocuments')) {
+			$categoryId = 'generate';
+			$categoryName = $this->l10n->t('Generate file');
+		} elseif (str_contains($typeId, 'image') || str_contains($typeId, 'sticker')) {
+			$categoryId = 'image';
+			$categoryName = $this->l10n->t('Work with images');
+		} elseif (str_contains($typeId, 'audio') || str_contains($typeId, 'speech')) {
+			$categoryId = 'audio';
+			$categoryName = $this->l10n->t('Work with audio');
+		} elseif (str_contains($typeId, 'text')) {
+			$categoryId = 'text';
+			$categoryName = $this->l10n->t('Work with text');
+		}
+
+		return [
+			'id' => $categoryId,
+			'name' => $categoryName,
+		];
+	}
+
+	/**
 	 * @return array<AssistantTaskProcessingTaskType>
 	 */
 	public function getAvailableTaskTypes(): array {
@@ -246,6 +284,7 @@ class AssistantService {
 				'description' => 'plop',
 				'id' => 'core:inputList',
 				'priority' => 0,
+				'category' => $this->getCategory('core:inputList'),
 				'inputShape' => [
 					'textList' => new ShapeDescriptor(
 						'Input text list',
@@ -334,6 +373,7 @@ class AssistantService {
 					'id' => 'chatty-llm',
 					'name' => $this->l10n->t('Chat with AI'),
 					'description' => $this->l10n->t('Chat with an AI model.'),
+					'category' => $this->getCategory('chatty-llm'),
 					'inputShape' => [],
 					'inputShapeEnumValues' => [],
 					'inputShapeDefaults' => [],
@@ -351,6 +391,7 @@ class AssistantService {
 			}
 			$taskTypeArray['id'] = $typeId;
 			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
+			$taskTypeArray['category'] = $this->getCategory($typeId);
 
 			if ($typeId === TextToText::ID) {
 				$taskTypeArray['name'] = $this->l10n->t('Generate text');
