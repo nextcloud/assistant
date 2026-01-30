@@ -4,6 +4,8 @@ OC.L10N.register(
     "Send an email" : "Azen imayl",
     "Nextcloud Assistant" : "Amallal n Nextcloud",
     "Nextcloud Mail" : "Imayl n Nextcloud",
+    "Other" : "Wayeḍ",
+    "Translate" : "Suqel",
     "Assistant" : "Amallal",
     "Close" : "Mdel",
     "More" : "Ugar",
@@ -16,8 +18,6 @@ OC.L10N.register(
     "Choose" : "Fren",
     "Cancelled" : "Ittwasefsex",
     "Audio output" : "Anekcum n umeslaw",
-    "Translate" : "Suqel",
-    "Other" : "Wayeḍ",
     "No file selected" : "Ulac afaylu yettwafernen",
     "Advanced" : "Talqayt",
     "Copy" : "Nɣel"
