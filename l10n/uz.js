@@ -5,6 +5,8 @@ OC.L10N.register(
     "User not found" : "Foydalanuvchi topilmadi",
     "Nextcloud Assistant" : "Next bulut yordamchisi",
     "Context Chat" : "Kontekst suhbati",
+    "Other" : "Boshqa",
+    "Translate" : "Tarjima",
     "Prompt" : "Tezkor",
     "Close" : "Yopish",
     "More" : "Ko'proq",
@@ -14,8 +16,6 @@ OC.L10N.register(
     "Edit title" : "Sarlavhani tahrirlash",
     "Submit" : "Submit",
     "Choose" : "Choose",
-    "Translate" : "Tarjima",
-    "Other" : "Boshqa",
     "Upload from device" : "Qurilmadan yuklash",
     "Copy" : "Nusxalash",
     "Upload file" : "Upload file"
