@@ -80,6 +80,7 @@ OC.L10N.register(
     "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Talk",
     "DuckDuckGo web search" : "Pesquisa web DuckDuckGo",
+    "YouTube video search" : "Pesquisa de vídeos no YouTube",
     "Other" : "Outro",
     "Chat with AI" : "Bate-papo com IA",
     "Translate" : "Traduzir",
