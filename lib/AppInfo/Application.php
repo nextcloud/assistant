@@ -7,7 +7,9 @@
 
 namespace OCA\Assistant\AppInfo;
 
+use OCA\Assistant\BackgroundJob\ProcessScheduledTasks;
 use OCA\Assistant\Capabilities;
+use OCA\Assistant\Dav\ScheduledTasksCalendarProvider;
 use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
 use OCA\Assistant\Listener\CSPListener;
@@ -33,6 +35,7 @@ use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
 use OCA\Assistant\TaskProcessing\TextToStickerProvider;
 use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
+use OCP\BackgroundJob\IJobList;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -111,8 +114,25 @@ class Application extends App implements IBootstrap {
 		$context->registerTaskProcessingTaskType(TextToStickerTaskType::class);
 		$context->registerTaskProcessingProvider(TextToStickerProvider::class);
 		$context->registerReferenceProvider(Text2StickerProvider::class);
+
+		// Register scheduled tasks calendar provider only if ContextAgentInteraction is available
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+			&& in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds(), true)
+		) {
+			$context->registerCalendarProvider(ScheduledTasksCalendarProvider::class);
+		}
 	}
 
 	public function boot(IBootContext $context): void {
+		// Register background job for processing scheduled tasks only if ContextAgentInteraction is available
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+			&& in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds(), true)
+		) {
+			$container = $context->getAppContainer();
+			$jobList = $container->get(IJobList::class);
+			if (!$jobList->has(ProcessScheduledTasks::class, null)) {
+				$jobList->add(ProcessScheduledTasks::class);
+			}
+		}
 	}
 }
