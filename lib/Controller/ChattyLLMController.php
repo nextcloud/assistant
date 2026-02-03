@@ -880,28 +880,25 @@ class ChattyLLMController extends OCSController {
 			) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
 			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 
-			$systemPrompt = '';
-			$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1);
-			if ($firstMessage->getRole() === 'system') {
-				$systemPrompt = $firstMessage->getContent();
-			}
-
 			$history = $this->getRawLastMessages($sessionId);
 			// history is a list of JSON strings
 			$history = array_map(static function (Message $message) {
 				return json_encode([
 					'role' => $message->getRole(),
 					'content' => $message->getContent(),
-				]);
+				], JSON_THROW_ON_ERROR);
 			}, $history);
 
 			try {
-				$taskId = $this->scheduleLLMChatTask($userInstructions, $systemPrompt, $history, $sessionId, false);
+				$taskId = $this->scheduleLLMChatTask($userInstructions, $userInstructions, $history, $sessionId, false);
 			} catch (\Exception $e) {
 				return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 			}
 			return new JSONResponse(['taskId' => $taskId]);
 		} catch (\OCP\DB\Exception $e) {
+			$this->logger->warning('Failed to generate a title for the chat session', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to generate a title for the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (\JsonException $e) {
 			$this->logger->warning('Failed to generate a title for the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to generate a title for the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
