@@ -115,24 +115,14 @@ class Application extends App implements IBootstrap {
 		$context->registerTaskProcessingProvider(TextToStickerProvider::class);
 		$context->registerReferenceProvider(Text2StickerProvider::class);
 
-		// Register scheduled tasks calendar provider only if ContextAgentInteraction is available
-		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
-			&& in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds(), true)
-		) {
-			$context->registerCalendarProvider(ScheduledTasksCalendarProvider::class);
-		}
+		$context->registerCalendarProvider(ScheduledTasksCalendarProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {
-		// Register background job for processing scheduled tasks only if ContextAgentInteraction is available
-		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
-			&& in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds(), true)
-		) {
-			$container = $context->getAppContainer();
-			$jobList = $container->get(IJobList::class);
-			if (!$jobList->has(ProcessScheduledTasks::class, null)) {
-				$jobList->add(ProcessScheduledTasks::class);
-			}
+		$container = $context->getAppContainer();
+		$jobList = $container->get(IJobList::class);
+		if (!$jobList->has(ProcessScheduledTasks::class, null)) {
+			$jobList->add(ProcessScheduledTasks::class);
 		}
 	}
 }
