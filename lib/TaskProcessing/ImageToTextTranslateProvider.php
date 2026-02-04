@@ -104,6 +104,8 @@ class ImageToTextTranslateProvider implements ISynchronousProvider {
 			throw new RuntimeException('Invalid target_language input');
 		}
 
+		$inputCount = count($input['input']);
+
 		// OCR
 		$ocrInputs = array_map(static function (File $file) {
 			return $file->getId();
@@ -122,6 +124,10 @@ class ImageToTextTranslateProvider implements ISynchronousProvider {
 			throw new RuntimeException('OCR sub task failed with: ' . $e->getMessage());
 		}
 
+		// we did half of the work: all the OCR stuff at once
+		$reportProgress(0.5);
+
+		$translationIndex = 0;
 		$translatedOutputs = [];
 		foreach ($ocrOutputs as $ocrOutput) {
 			try {
@@ -137,6 +143,10 @@ class ImageToTextTranslateProvider implements ISynchronousProvider {
 				);
 				$taskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 				$translatedOutputs[] = $taskOutput['output'];
+				// report progress
+				$translationIndex++;
+				$translationProgress = $translationIndex / $inputCount;
+				$reportProgress(0.5 + ($translationProgress / 2));
 			} catch (Exception $e) {
 				$this->logger->warning('Translation sub task failed with: ' . $e->getMessage(), ['exception' => $e]);
 				throw new RuntimeException('Translation sub task failed with: ' . $e->getMessage());
