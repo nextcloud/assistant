@@ -9,7 +9,6 @@ namespace OCA\Assistant\AppInfo;
 
 use OCA\Assistant\BackgroundJob\ProcessScheduledTasks;
 use OCA\Assistant\Capabilities;
-use OCA\Assistant\Dav\ScheduledTasksCalendarProvider;
 use OCA\Assistant\Listener\BeforeTemplateRenderedListener;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
 use OCA\Assistant\Listener\CSPListener;
@@ -114,8 +113,6 @@ class Application extends App implements IBootstrap {
 		$context->registerTaskProcessingTaskType(TextToStickerTaskType::class);
 		$context->registerTaskProcessingProvider(TextToStickerProvider::class);
 		$context->registerReferenceProvider(Text2StickerProvider::class);
-
-		$context->registerCalendarProvider(ScheduledTasksCalendarProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {

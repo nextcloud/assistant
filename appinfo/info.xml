@@ -88,4 +88,9 @@ More details on how to set this up in the [admin docs](https://docs.nextcloud.co
 		<personal>OCA\Assistant\Settings\Personal</personal>
 		<personal-section>OCA\Assistant\Settings\PersonalSection</personal-section>
 	</settings>
+	<sabre>
+		<calendar-plugins>
+			<plugin>OCA\Assistant\Dav\ScheduledTasksCalendarIntegration</plugin>
+		</calendar-plugins>
+	</sabre>
 </info>
