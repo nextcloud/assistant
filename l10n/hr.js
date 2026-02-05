@@ -32,6 +32,7 @@ OC.L10N.register(
     "You" : "Vi",
     "Delete message" : "Izbriši poruku",
     "Choose" : "Odaberite",
+    "Clear Selection" : "Clear Selection",
     "Describe the image you want to generate" : "Opišite sliku koju želite generirati",
     "Generate image" : "Generiraj sliku",
     "This may take a few seconds…" : "To može potrajati nekoliko sekundi...",
