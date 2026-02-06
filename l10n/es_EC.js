@@ -10,6 +10,7 @@ OC.L10N.register(
     "Other" : "Otro",
     "Translate" : "Traducir",
     "Memories" : "Memorias",
+    "Target language" : "Lenguaje de destino",
     "Prompt" : "Promoción",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
     "Try again" : "Reintentar",

@@ -22,6 +22,7 @@ OC.L10N.register(
     "Translate" : "Lefordítás",
     "Assistant" : "Asszisztens",
     "Memories" : "Emlékek",
+    "Target language" : "Célnyelv",
     "Prompt" : "Prompt",
     "Process and transform text" : "Szöveg feldolgozása és átalakítása",
     "Assistant admin options saved" : "Asszisztens rendszergazdai beállítások elmentve",
