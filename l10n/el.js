@@ -98,6 +98,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Η παραγόμενη φωνητική απάντηση ως μέρος της συνομιλίας",
     "Output transcript" : "Αποτύπωμα εξόδου",
     "Transcription of the audio output" : "Αποτύπωση της φωνητικής εξόδου",
+    "Target language" : "Γλώσσα στόχος",
     "cartoon, neutral background, sticker of %1$s" : "καρτούν, ουδέτερο φόντο, αυτοκόλλητο του %1$s",
     "Generate sticker" : "Δημιουργία αυτοκόλλητου",
     "Generate sticker from text" : "Δημιουργία αυτοκόλλητου από κείμενο",

@@ -13,6 +13,7 @@ OC.L10N.register(
     "Assistant" : "Avustaja",
     "Memories" : "Muistot",
     "Chat history" : "Keskusteluhistoria",
+    "Target language" : "Kohdekieli",
     "Prompt" : "Kehote",
     "Administration documentation" : "Ylläpidon dokumentaatio",
     "Try again" : "Yritä uudelleen",

@@ -98,6 +98,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Den genererede lydrespons som en del af samtalen",
     "Output transcript" : "Output transskription",
     "Transcription of the audio output" : "Transskriptionen af lydoutputtet ",
+    "Target language" : "Målsprog",
     "cartoon, neutral background, sticker of %1$s" : "tegneserie, neutral baggrund, mærkat af %1$s",
     "Generate sticker" : "Generer mærkat",
     "Generate sticker from text" : "Generer mærkat fra tekst",

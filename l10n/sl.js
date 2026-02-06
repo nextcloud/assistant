@@ -16,6 +16,7 @@ OC.L10N.register(
     "Translate" : "Prevedi",
     "Generate text" : "Ustvari besedilo",
     "Memories" : "Spomini",
+    "Target language" : "Ciljni jezik",
     "Administration documentation" : "Skrbniška dokumentacija",
     "Launch this task again" : "Znova zaženi nalogo",
     "Launch a task" : "Zaženi nalogo",
