@@ -109,6 +109,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "A resposta de voz gerada como parte da conversa",
     "Output transcript" : "Transcrição da saída",
     "Transcription of the audio output" : "Transcrição da saída de áudio",
+    "Translate image" : "Traduzir imagem",
+    "Translate the text content of an image" : "Traduzir o conteúdo textual de uma imagem",
     "Input files" : "Arquivos de entrada",
     "The files to extract text from" : "Os arquivos dos quais extrair texto",
     "Origin language" : "Idioma original",
