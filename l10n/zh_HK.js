@@ -109,6 +109,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "産生的語音回應作為對話的一部分",
     "Output transcript" : "輸出轉錄",
     "Transcription of the audio output" : "音訊輸出轉錄",
+    "Translate image" : "翻譯圖像",
+    "Translate the text content of an image" : "翻譯圖像文字內容",
     "Input files" : "輸入檔案",
     "The files to extract text from" : "用來提取文字的檔案",
     "Origin language" : "原始語言",
