@@ -38,6 +38,7 @@ OC.L10N.register(
     "Less" : "Manje",
     "More" : "Više",
     "Cancel" : "Odustani",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Jeste li sigurni da želite izbrisati \"{sessionTitle}\"?",
     "Delete" : "Izbriši",
     "Edit title" : "Uredi naslov",
     "Cancel editing" : "Odustani od uređivanja",
