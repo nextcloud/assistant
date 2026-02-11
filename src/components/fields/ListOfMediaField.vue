@@ -3,12 +3,29 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="media-list-field">
+	<div class="media-list-field"
+		:class="{
+			draggedOver: isDraggedOver,
+		}"
+		@dragover="onDragOver"
+		@dragenter="onDragEnter"
+		@dragleave="onDragLeave"
+		@drop="onDrop">
 		<div class="label-row">
 			<label class="field-label"
 				:title="field.description">
 				{{ field.name }}
 			</label>
+			<NcButton
+				variant="tertiary"
+				:title="t('assistant', 'Drop files here to upload them')">
+				<template #icon>
+					<InformationOutlineIcon />
+				</template>
+			</NcButton>
+			<strong v-show="isDraggedOver">
+				{{ t('assistant', 'Drop files here to upload them') }}
+			</strong>
 		</div>
 		<div v-if="!isOutput"
 			class="select-media">
@@ -91,6 +108,7 @@ import TrayArrowDownIcon from 'vue-material-design-icons/TrayArrowDown.vue'
 import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 import ContentSaveOutlineIcon from 'vue-material-design-icons/ContentSaveOutline.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 
@@ -104,6 +122,7 @@ import AudioRecorderWrapper from './AudioRecorderWrapper.vue'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { uploadInputFile } from '../../utils.js'
 
 import {
 	SHAPE_TYPE_NAMES,
@@ -123,6 +142,7 @@ export default {
 		TrayArrowDownIcon,
 		ShareVariantIcon,
 		ContentSaveOutlineIcon,
+		InformationOutlineIcon,
 		NcButton,
 	},
 
@@ -157,6 +177,7 @@ export default {
 		return {
 			isUploading: false,
 			isRecording: false,
+			isDraggedOver: false,
 		}
 	},
 
@@ -319,6 +340,66 @@ export default {
 				console.error(error)
 			})
 		},
+		onDragOver(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length > 0) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragEnter(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length > 0) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragLeave(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length > 0) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = false
+			}
+		},
+		onDrop(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length > 0) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.uploadDroppedFiles(fileItems.map(item => item.getAsFile()))
+				this.isDraggedOver = false
+			}
+		},
+		uploadDroppedFiles(files) {
+			this.isUploading = true
+
+			Promise.all(Array.from(files).map(f => uploadInputFile(f)))
+				.then(responses => {
+					if (responses.some(response => response.code === 'ERR_CANCELED')) {
+						console.debug('At least one request has been canceled, do nothing')
+						return
+					}
+					this.onFilesUploaded(responses.map(response => response.data.ocs.data))
+				})
+				.catch(error => {
+					showError(t('assistant', 'Could not upload the files'))
+					console.error(error)
+				})
+				.then(() => {
+					this.isUploading = false
+				})
+		},
 	},
 }
 </script>
@@ -330,12 +411,19 @@ export default {
 	align-items: center;
 	gap: 8px;
 
+	&.draggedOver {
+		border: solid 2px var(--color-border-success);
+		border-radius: var(--border-radius-large);
+	}
+
 	.label-row {
 		width: 100%;
+		height: var(--default-clickable-area);
 		display: flex;
 		flex-direction: row;
 		justify-content: start;
 		align-items: center;
+		gap: 4px;
 
 		.field-label {
 			font-weight: bold;
