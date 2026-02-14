@@ -59,6 +59,7 @@ OC.L10N.register(
     "Nextcloud Deck" : "Nextcloud看板",
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud 邮件",
+    "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud 通话",
     "Other" : "其他",
     "Chat with AI" : "与AI聊天",
