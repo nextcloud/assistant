@@ -96,6 +96,8 @@
     "The generated voice response as part of the conversation" : "La respuesta de voz generada como parte de la conversación",
     "Output transcript" : "Transcripción de salida",
     "Transcription of the audio output" : "Transcripción de la salida de audio",
+    "Origin language" : "Lenguaje origen",
+    "The language of the origin text" : "El lenguaje del texto de origen",
     "Target language" : "Lenguaje de destino",
     "The desired language to translate the origin text in" : "El lenguaje al que se desea traducir el texto de origen",
     "cartoon, neutral background, sticker of %1$s" : "caricatura, fondo neutro, sticker de %1$s",
