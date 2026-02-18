@@ -130,7 +130,7 @@ export default {
 		getOptionalInputFieldOptions(field, key) {
 			if (field.type === 'Enum'
 				&& this.optionalShapeOptions !== null
-				&& !Array.isArray(this.optionalShapeOptionsshapeOptions)
+				&& !Array.isArray(this.optionalShapeOptions)
 				&& this.optionalShapeOptions[key]
 			) {
 				return this.optionalShapeOptions[key]
