@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.13.0 – 2026-02-19
+
+### Changed
+
+- Only get the tasks of the current user when checking message/title generation tasks @julien-nc [#468](https://github.com/nextcloud/assistant/pull/468)
+
 ## 2.12.0 – 2025-12-17
 
 ### Added
