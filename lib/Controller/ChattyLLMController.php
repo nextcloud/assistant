@@ -691,7 +691,7 @@ class ChattyLLMController extends OCSController {
 		}
 
 		try {
-			$task = $this->taskProcessingManager->getTask($taskId);
+			$task = $this->taskProcessingManager->getUserTask($taskId, $this->userId);
 		} catch (NotFoundException $e) {
 			return new JSONResponse(['error' => 'task_not_found'], Http::STATUS_NOT_FOUND);
 		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
@@ -896,7 +896,7 @@ class ChattyLLMController extends OCSController {
 		}
 
 		try {
-			$task = $this->taskProcessingManager->getTask($taskId);
+			$task = $this->taskProcessingManager->getUserTask($taskId, $this->userId);
 		} catch (NotFoundException $e) {
 			return new JSONResponse(['error' => 'task_not_found'], Http::STATUS_NOT_FOUND);
 		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
