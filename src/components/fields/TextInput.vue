@@ -59,6 +59,7 @@ import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import { VALID_TEXT_MIME_TYPES, MAX_TEXT_INPUT_LENGTH } from '../../constants.js'
+import { parseSpecialSymbols } from '../../utils.js'
 
 const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose a text file'))
 	.setMimeTypeFilter(VALID_TEXT_MIME_TYPES)
@@ -184,7 +185,7 @@ export default {
 		},
 		async onCopy() {
 			try {
-				await navigator.clipboard.writeText(this.formattedValue)
+				await navigator.clipboard.writeText(parseSpecialSymbols(this.formattedValue))
 				this.copied = true
 				setTimeout(() => {
 					this.copied = false
