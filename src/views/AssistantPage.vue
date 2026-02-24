@@ -49,6 +49,7 @@ import {
 	setNotifyReady,
 } from '../assistant.js'
 import { TASK_STATUS_STRING } from '../constants.js'
+import { getErrorMessage } from '../utils.js'
 
 export default {
 	name: 'AssistantPage',
@@ -152,7 +153,10 @@ export default {
 					this.loading = false
 					this.showSyncTaskRunning = false
 					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
-					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
+					showError(
+						t('assistant', 'Assistant error') + ': '
+						+ (getErrorMessage(error?.response?.data?.ocs?.data?.message) ?? t('assistant', 'Something went wrong when scheduling the task')),
+					)
 				})
 				.then(() => {
 				})
