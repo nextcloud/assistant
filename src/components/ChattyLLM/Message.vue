@@ -56,7 +56,7 @@
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
 		<NcRichText class="message__content"
-			:text="message.content"
+			:text="displayedContent"
 			:use-markdown="true"
 			:reference-limit="1"
 			:references="references"
@@ -139,6 +139,14 @@ export default {
 			type: Object,
 			default: null,
 		},
+		searchQuery: {
+			type: String,
+			default: '',
+		},
+		isSearchMatch: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: ['delete', 'regenerate'],
@@ -157,6 +165,15 @@ export default {
 	},
 
 	computed: {
+		displayedContent() {
+			if (!this.searchQuery.trim() || !this.isSearchMatch || !this.message.content) {
+				return this.message.content
+			}
+			const q = this.searchQuery.trim()
+			const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+			const re = new RegExp(escaped, 'gi')
+			return this.message.content.replace(re, (match) => `*****${match}*****`)
+		},
 		parsedSources() {
 			if (!this.message.sources || ['', '[]'].includes(this.message.sources)) {
 				return []

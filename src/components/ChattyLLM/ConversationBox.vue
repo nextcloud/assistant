@@ -29,6 +29,8 @@
 				:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
 				:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"
 				:information-source-names="informationSourceNames"
+				:search-query="searchQuery"
+				:is-search-match="matchedMessageIds && matchedMessageIds.includes(message.id)"
 				@regenerate="regenerate(message.id)"
 				@delete="deleteMessage(message.id)" />
 			<LoadingPlaceholder v-if="loading.llmGeneration" :slow-pickup="slowPickup" />
@@ -82,6 +84,14 @@ export default {
 		slowPickup: {
 			type: Boolean,
 			default: false,
+		},
+		searchQuery: {
+			type: String,
+			default: '',
+		},
+		matchedMessageIds: {
+			type: Array,
+			default: () => [],
 		},
 	},
 

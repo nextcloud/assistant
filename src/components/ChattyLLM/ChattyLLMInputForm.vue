@@ -6,6 +6,17 @@
 	<div class="container">
 		<NcAppNavigation>
 			<NcAppNavigationList>
+				<div class="chat-search">
+					<NcTextField
+						:model-value="searchQuery"
+						:placeholder="t('assistant', 'Search in conversations')"
+						:show-trailing-button="searchQuery.length > 0"
+						trailing-button-icon="close"
+						:trailing-button-label="t('assistant', 'Clear search')"
+						@update:model-value="onSearchInput"
+						@trailing-button-click="clearSearch" />
+					<NcLoadingIcon v-if="searchLoading" class="chat-search__loading" :size="20" />
+				</div>
 				<NcAppNavigationNew :text="t('assistant', 'New conversation')"
 					variant="secondary"
 					@click="newSession">
@@ -17,11 +28,11 @@
 					<NcLoadingIcon :size="30" />
 					{{ t('assistant', 'Loading conversations…') }}
 				</div>
-				<div v-else-if="sessions != null && sessions.length === 0" class="unloaded-sessions">
-					{{ t('assistant', 'No conversations yet') }}
+				<div v-else-if="displayedSessions != null && displayedSessions.length === 0" class="unloaded-sessions">
+					{{ searchQuery ? t('assistant', 'No matching conversations') : t('assistant', 'No conversations yet') }}
 				</div>
 				<NcAppNavigationItem
-					v-for="session in sessions"
+					v-for="session in displayedSessions"
 					v-else
 					:key="'conversation' + session.id"
 					:active="session.id === active?.id"
@@ -120,6 +131,8 @@
 					<ConversationBox :messages="messages"
 						:loading="loading"
 						:slow-pickup="slowPickup"
+						:search-query="searchQuery"
+						:matched-message-ids="matchedMessageIds"
 						@regenerate="runRegenerationTask"
 						@delete="deleteMessage" />
 					<div v-if="messages != null && messages.length > 0 && !loading.llmGeneration && !loading.newHumanMessage && messages[messages.length - 1]?.role === 'human'" class="session-area__chat-area__active-session__utility-button">
@@ -203,6 +216,7 @@ import NcAppNavigationList from '@nextcloud/vue/components/NcAppNavigationList'
 import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 import ConversationBox from './ConversationBox.vue'
@@ -249,6 +263,7 @@ export default {
 		NcAppNavigationNew,
 		NcButton,
 		NcLoadingIcon,
+		NcTextField,
 		NcDialog,
 
 		ConversationBox,
@@ -302,10 +317,33 @@ export default {
 					message: t('assisant', 'Which actions can you do for me?'),
 				},
 			],
+			searchQuery: '',
+			searchResults: { sessions: [] },
+			searchLoading: false,
+			searchDebounceTimer: null,
 		}
 	},
 
 	computed: {
+		displayedSessions() {
+			if (this.sessions === null) {
+				return null
+			}
+			if (this.searchQuery.trim().length < 2) {
+				return this.sessions
+			}
+			return this.searchResults.sessions
+		},
+		matchedMessageIds() {
+			const q = this.searchQuery.trim()
+			if (q.length < 2 || !this.active || !this.messages?.length) {
+				return []
+			}
+			const lower = q.toLowerCase()
+			return this.messages
+				.filter((m) => m.content && m.content.toLowerCase().includes(lower))
+				.map((m) => m.id)
+		},
 		deletionConfirmationMessage() {
 			if (this.sessions === null || this.sessionIdToDelete === null) {
 				return ''
@@ -562,6 +600,48 @@ export default {
 			} finally {
 				this.loading.sessionDelete = false
 				this.sessionIdToDelete = null
+			}
+		},
+
+		onSearchInput(value) {
+			this.searchQuery = value
+			if (this.searchDebounceTimer) {
+				clearTimeout(this.searchDebounceTimer)
+			}
+			if (value.trim().length < 2) {
+				this.searchResults = { sessions: [] }
+				return
+			}
+			this.searchDebounceTimer = setTimeout(() => {
+				this.runSearch()
+			}, 300)
+		},
+
+		clearSearch() {
+			this.searchQuery = ''
+			this.searchResults = { sessions: [] }
+			if (this.searchDebounceTimer) {
+				clearTimeout(this.searchDebounceTimer)
+				this.searchDebounceTimer = null
+			}
+		},
+
+		async runSearch() {
+			const query = this.searchQuery.trim()
+			if (query.length < 2) {
+				this.searchResults = { sessions: [] }
+				return
+			}
+			try {
+				this.searchLoading = true
+				const response = await axios.get(getChatURL('/search'), { params: { query } })
+				this.searchResults = { sessions: response.data.sessions ?? [] }
+			} catch (error) {
+				console.error('searchChat error:', error)
+				this.searchResults = { sessions: [] }
+				showError(error?.response?.data?.error ?? t('assistant', 'Error searching conversations'))
+			} finally {
+				this.searchLoading = false
 			}
 		},
 
@@ -912,6 +992,22 @@ export default {
 	overflow: auto;
 	display: flex;
 	height: 100%;
+
+	.chat-search {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		margin-bottom: 0.5em;
+
+		:deep(.input-field) {
+			flex: 1;
+			min-width: 0;
+		}
+
+		&__loading {
+			flex-shrink: 0;
+		}
+	}
 
 	:deep(.app-navigation-new) {
 		padding: 0;

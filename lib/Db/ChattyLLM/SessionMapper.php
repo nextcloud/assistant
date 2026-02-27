@@ -185,4 +185,24 @@ class SessionMapper extends QBMapper {
 		$session->setIsRemembered($is_remembered);
 		$this->update($session);
 	}
+
+	/**
+	 * @return array<Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function searchSessionsByMessageContent(string $userId, string $query): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('s.id', 's.user_id', 's.title', 's.timestamp', 's.agency_conversation_token', 's.agency_pending_actions', 's.summary', 's.is_summary_up_to_date', 's.is_remembered')
+			->from($this->getTableName(), 's')
+			->innerJoin('s', 'assistant_chat_msgs', 'm', $qb->expr()->eq('s.id', 'm.session_id'))
+			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->in('m.role', $qb->createParameter('roles')))
+			->andWhere($qb->expr()->iLike('m.content', $qb->createPositionalParameter('%' . $query . '%', IQueryBuilder::PARAM_STR)))
+			->groupBy('s.id')
+			->orderBy('s.timestamp', 'DESC');
+
+		$qb->setParameter('roles', ['human', 'assistant'], IQueryBuilder::PARAM_STR_ARRAY);
+
+		return $this->findEntities($qb);
+	}
 }
