@@ -535,15 +535,19 @@ export default {
 
 		async onEditSessionTitle(newTitle) {
 			this.loading.updateTitle = true
-			const session = this.sessions.find((session) => session.id === this.active.id)
+			const sessionId = this.active.id
 
 			try {
 				await axios.patch(getChatURL('/update_session'), {
-					sessionId: this.active.id,
+					sessionId,
 					title: newTitle,
 				})
 				this.editingTitle = false
-				session.title = newTitle
+				this.active.title = newTitle
+				const inSessions = this.sessions?.find((s) => s.id === sessionId)
+				if (inSessions) inSessions.title = newTitle
+				const inSearchResults = this.searchResults.sessions?.find((s) => s.id === sessionId)
+				if (inSearchResults) inSearchResults.title = newTitle
 			} catch (error) {
 				console.error('updateTitle error:', error)
 				showError(error?.response?.data?.error ?? t('assistant', 'Error updating title of conversation'))
