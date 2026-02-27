@@ -5,8 +5,10 @@
 <template>
 	<div v-if="message.content || hasAttachments"
 		class="message"
+		:class="{ 'message--search-highlight': highlighted }"
 		@mouseover="showMessageActions = true"
-		@mouseleave="showMessageActions = false">
+		@mouseleave="showMessageActions = false"
+		@animationend="onAnimationEnd">
 		<MessageActions v-show="showMessageActions"
 			class="message__actions"
 			:show-regenerate="showRegenerate"
@@ -147,9 +149,13 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		highlighted: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
-	emits: ['delete', 'regenerate'],
+	emits: ['delete', 'regenerate', 'highlight-end'],
 
 	data: () => {
 		return {
@@ -195,6 +201,11 @@ export default {
 	},
 
 	methods: {
+		onAnimationEnd(e) {
+			if (e.animationName === 'searchHighlightFade') {
+				this.$emit('highlight-end')
+			}
+		},
 		copyMessage(message) {
 			navigator.clipboard.writeText(message)
 			showSuccess(t('assistant', 'Message copied to clipboard'))
@@ -232,6 +243,19 @@ export default {
 
 	&:hover {
 		background-color: var(--color-background-hover);
+	}
+
+	&--search-highlight {
+		animation: searchHighlightFade 1.2s ease-out;
+	}
+
+	@keyframes searchHighlightFade {
+		from {
+			background-color: var(--color-background-hover);
+		}
+		to {
+			background-color: transparent;
+		}
 	}
 
 	&__header {
