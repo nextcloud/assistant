@@ -770,6 +770,7 @@ export default {
 		},
 
 		async newSession(title = null) {
+			this.clearSearch()
 			try {
 				this.loading.newSession = true
 				const newSessionResponse = await axios.put(getChatURL('/new_session'), {
