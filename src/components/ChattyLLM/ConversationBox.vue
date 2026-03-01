@@ -29,8 +29,12 @@
 				:regenerate-loading="loading.llmGeneration && message.id === regenerateFromId"
 				:new-message-loading="loading.newHumanMessage && idx === (messages.length - 1)"
 				:information-source-names="informationSourceNames"
+				:search-query="searchQuery"
+				:is-search-match="matchedMessageIds && matchedMessageIds.includes(message.id)"
+				:highlighted="highlightedMessageIndex === idx"
 				@regenerate="regenerate(message.id)"
-				@delete="deleteMessage(message.id)" />
+				@delete="deleteMessage(message.id)"
+				@highlight-end="$emit('highlight-end')" />
 			<LoadingPlaceholder v-if="loading.llmGeneration" :slow-pickup="slowPickup" />
 		</div>
 	</div>
@@ -83,9 +87,21 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		searchQuery: {
+			type: String,
+			default: '',
+		},
+		matchedMessageIds: {
+			type: Array,
+			default: () => [],
+		},
+		highlightedMessageIndex: {
+			type: Number,
+			default: null,
+		},
 	},
 
-	emits: ['delete', 'regenerate'],
+	emits: ['delete', 'regenerate', 'highlight-end'],
 
 	data: () => {
 		return {

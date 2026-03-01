@@ -313,6 +313,39 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
+	 * Search chat messages by content
+	 *
+	 * Returns sessions that contain matching messages.
+	 *
+	 * @param string $query Search query (min 2 characters)
+	 * @return JSONResponse<Http::STATUS_OK, array{sessions: list<AssistantChatSession>}, array{}>|JSONResponse<Http::STATUS_UNAUTHORIZED|Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
+	 *
+	 * 200: Search results
+	 * 401: Not logged in
+	 * 500: Failed to search
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function searchChat(string $query = ''): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+
+		$query = trim($query);
+		if (empty($query) || strlen($query) < 2) {
+			return new JSONResponse(['sessions' => []]);
+		}
+
+		try {
+			$sessions = $this->sessionMapper->searchSessionsByMessageContent($this->userId, $query);
+			return new JSONResponse(['sessions' => $sessions]);
+		} catch (\OCP\DB\Exception $e) {
+			$this->logger->warning('Failed to search chat messages', ['exception' => $e]);
+            return new JSONResponse(['error' => $this->l10n->t('Failed to search chat sessions')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
 	 * Add a message
 	 *
 	 * Add a new chat message to the session

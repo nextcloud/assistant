@@ -5,8 +5,10 @@
 <template>
 	<div v-if="message.content || hasAttachments"
 		class="message"
+		:class="{ 'message--search-highlight': highlighted }"
 		@mouseover="showMessageActions = true"
-		@mouseleave="showMessageActions = false">
+		@mouseleave="showMessageActions = false"
+		@animationend="onAnimationEnd">
 		<MessageActions v-show="showMessageActions"
 			class="message__actions"
 			:show-regenerate="showRegenerate"
@@ -56,7 +58,7 @@
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
 		<NcRichText class="message__content"
-			:text="message.content"
+			:text="displayedContent"
 			:use-markdown="true"
 			:reference-limit="1"
 			:references="references"
@@ -139,9 +141,21 @@ export default {
 			type: Object,
 			default: null,
 		},
+		searchQuery: {
+			type: String,
+			default: '',
+		},
+		isSearchMatch: {
+			type: Boolean,
+			default: false,
+		},
+		highlighted: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
-	emits: ['delete', 'regenerate'],
+	emits: ['delete', 'regenerate', 'highlight-end'],
 
 	data: () => {
 		return {
@@ -157,6 +171,15 @@ export default {
 	},
 
 	computed: {
+		displayedContent() {
+			if (!this.searchQuery.trim() || !this.isSearchMatch || !this.message.content) {
+				return this.message.content
+			}
+			const q = this.searchQuery.trim()
+			const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+			const re = new RegExp(escaped, 'gi')
+			return this.message.content.replace(re, (match) => `*****${match}*****`)
+		},
 		parsedSources() {
 			if (!this.message.sources || ['', '[]'].includes(this.message.sources)) {
 				return []
@@ -178,6 +201,11 @@ export default {
 	},
 
 	methods: {
+		onAnimationEnd(e) {
+			if (e.animationName === 'searchHighlightFade') {
+				this.$emit('highlight-end')
+			}
+		},
 		copyMessage(message) {
 			navigator.clipboard.writeText(message)
 			showSuccess(t('assistant', 'Message copied to clipboard'))
@@ -215,6 +243,19 @@ export default {
 
 	&:hover {
 		background-color: var(--color-background-hover);
+	}
+
+	&--search-highlight {
+		animation: searchHighlightFade 1.2s ease-out;
+	}
+
+	@keyframes searchHighlightFade {
+		from {
+			background-color: var(--color-background-hover);
+		}
+		to {
+			background-color: transparent;
+		}
 	}
 
 	&__header {
