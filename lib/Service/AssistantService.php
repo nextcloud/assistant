@@ -336,6 +336,14 @@ class AssistantService {
 		}
 		/** @var string $typeId */
 		foreach ($availableTaskTypes as $typeId => $taskTypeArray) {
+			$preferredProviderName = null;
+			try {
+				$preferredProviderName = $this->taskProcessingManager->getPreferredProvider($typeId)->getName();
+			} catch (TaskProcessingException $e) {
+				$this->logger->debug('Could not get preferred provider for task type ' . $typeId . ': ' . $e->getMessage());
+			} catch (\Throwable $e) {
+				$this->logger->debug('Unexpected error while getting preferred provider for task type ' . $typeId . ': ' . $e->getMessage());
+			}
 			// skip chat, chat with tools and ContextAgent task types (not directly useful to the end user)
 			if (!self::DEBUG) {
 				// this appeared in 33, this is true if the task type class extends the IInternalTaskType
@@ -383,6 +391,7 @@ class AssistantService {
 					'optionalInputShapeDefaults' => [],
 					'optionalOutputShape' => [],
 					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
+					'preferredProviderName' => $preferredProviderName,
 				];
 				// do not add the raw TextToTextChat type
 				if (!self::DEBUG) {
@@ -392,6 +401,7 @@ class AssistantService {
 			$taskTypeArray['id'] = $typeId;
 			$taskTypeArray['priority'] = self::TASK_TYPE_PRIORITIES[$typeId] ?? 1000;
 			$taskTypeArray['category'] = $this->getCategory($typeId);
+			$taskTypeArray['preferredProviderName'] = $preferredProviderName;
 
 			if ($typeId === TextToText::ID) {
 				$taskTypeArray['name'] = $this->l10n->t('Generate text');
