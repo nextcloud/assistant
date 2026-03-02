@@ -4,7 +4,7 @@
 -->
 <template>
 	<div class="task-type-fields">
-		<TaskTypeField v-for="(field, key) in shape"
+		<TaskTypeField v-for="(field, key) in filteredShape"
 			:key="'shape' + key"
 			:field-key="key"
 			:field="field"
@@ -107,6 +107,17 @@ export default {
 				return {}
 			}
 			return this.optionalShape
+		},
+		filteredShape() {
+			// Hide numberOfImages field
+			if (!this.isOutput && this.shape) {
+				const filtered = { ...this.shape }
+				if ('numberOfImages' in filtered) {
+					delete filtered.numberOfImages
+				}
+				return filtered
+			}
+			return this.shape
 		},
 	},
 
