@@ -53,6 +53,10 @@
 					<div class="session-area__top-bar">
 						<div class="session-area__top-bar__title">
 							<EditableTextField :initial-text="selectedTaskType.name ?? ''" />
+							<span v-if="selectedTaskType.preferredProviderName"
+								class="session-area__top-bar__provider">
+								{{ t('assistant', 'Provider:') }} {{ selectedTaskType.preferredProviderName }}
+							</span>
 						</div>
 					</div>
 					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
@@ -601,6 +605,7 @@ export default {
 		}
 	}
 
+
 	.task-custom-select {
 		width: 100%;
 	}
@@ -790,7 +795,20 @@ export default {
 			background-color: var(--color-main-background);
 
 			&__title {
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
 				width: 100%;
+				min-width: 0;
+			}
+
+			&__provider {
+				font-weight: normal;
+				font-size: 0.9em;
+				color: var(--color-text-maxcontrast);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 
