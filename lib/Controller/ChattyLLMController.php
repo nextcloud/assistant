@@ -121,6 +121,9 @@ class ChattyLLMController extends OCSController {
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function newSession(int $timestamp, ?string $title = null): JSONResponse {
+		if ($timestamp > 10_000_000_000) {
+			$timestamp = intdiv($timestamp, 1000);
+		}
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
@@ -335,6 +338,9 @@ class ChattyLLMController extends OCSController {
 	public function newMessage(
 		int $sessionId, string $role, string $content, int $timestamp, ?array $attachments = null, bool $firstHumanMessage = false,
 	): JSONResponse {
+		if ($timestamp > 10_000_000_000) {
+			$timestamp = intdiv($timestamp, 1000);
+		}
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
