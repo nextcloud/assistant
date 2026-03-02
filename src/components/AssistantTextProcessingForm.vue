@@ -532,7 +532,10 @@ export default {
 			this.$emit('action-button-clicked', { button, output: this.myOutputs })
 		},
 		onHistoryTryAgain(e) {
-			this.$emit('try-again', e)
+			// Load the task into the form instead of auto-submitting.
+			// This lets the user review and fix stale enum values (e.g. removed models)
+			// before resubmitting.
+			this.$emit('load-task', e)
 		},
 		onHistoryLoadTask(e) {
 			this.$emit('load-task', e)
