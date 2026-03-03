@@ -6,11 +6,14 @@
 import { defineAsyncComponent } from 'vue'
 import { spawnDialog } from '@nextcloud/vue/functions/dialog'
 import { translate as t } from '@nextcloud/l10n'
+import { loadState } from '@nextcloud/initial-state'
 import Creation from '@mdi/svg/svg/creation.svg?raw'
 
 const GenerateImageDialog = defineAsyncComponent(() => import('./GenerateImageDialog.vue'))
 
 export const EntryId = 'assistant-generate-image'
+
+const state = loadState('assistant', 'new-file-generate-image', {})
 
 export const entry = {
 	id: EntryId,
@@ -18,7 +21,7 @@ export const entry = {
 	iconSvgInline: Creation,
 	order: 100,
 	enabled() {
-		return true
+		return state?.hasText2Image ?? false
 	},
 	async handler(context, content) {
 		await spawnDialog(GenerateImageDialog, {
