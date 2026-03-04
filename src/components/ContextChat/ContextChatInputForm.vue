@@ -236,7 +236,7 @@ export default {
 			defaultProviderKey: 'files__default',
 
 			sccEnabled: !!this.inputs.scopeType && this.inputs.scopeType !== _ScopeType.NONE && !!this.inputs.scopeList,
-			indexingComplete: loadState('assistant', 'contextChatIndexingComplete'),
+			indexingComplete: loadState('assistant', 'contextChatIndexingComplete', false),
 		}
 	},
 
