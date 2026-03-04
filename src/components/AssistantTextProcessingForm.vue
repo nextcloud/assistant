@@ -605,7 +605,6 @@ export default {
 		}
 	}
 
-
 	.task-custom-select {
 		width: 100%;
 	}
