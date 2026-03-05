@@ -433,7 +433,8 @@
                     "outputShape",
                     "optionalOutputShape",
                     "priority",
-                    "category"
+                    "category",
+                    "preferredProviderName"
                 ],
                 "properties": {
                     "id": {
@@ -490,8 +491,7 @@
                     },
                     "preferredProviderName": {
                         "type": "string",
-                        "nullable": true,
-                        "description": "Display name of the preferred provider for this task type"
+                        "nullable": true
                     }
                 }
             }
