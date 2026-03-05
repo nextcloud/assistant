@@ -198,17 +198,10 @@ export default {
 
 	methods: {
 		taskTypeLabel(taskType) {
-			if (taskType.preferredProviderName) {
-				return `${taskType.name} · ${taskType.preferredProviderName}`
-			}
 			return taskType.name
 		},
 		taskTypeTitle(taskType) {
-			const desc = taskType.description || ''
-			if (taskType.preferredProviderName) {
-				return `${desc} ${this.t('assistant', 'Provider:')} ${taskType.preferredProviderName}`.trim()
-			}
-			return desc
+			return taskType.description || ''
 		},
 		selectedTask(taskType) {
 			return taskType.id === this.modelValue
