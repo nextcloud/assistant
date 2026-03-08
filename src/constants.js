@@ -81,6 +81,14 @@ export const VALID_VIDEO_MIME_TYPES = [
 	'video/*',
 ]
 
+export const VALID_AUDIO_VIDEO_MIME_TYPES = [
+	...VALID_AUDIO_MIME_TYPES,
+	'video/webm',
+	'video/mp4',
+	'video/ogg',
+	'video/x-matroska',
+]
+
 export const VALID_TEXT_MIME_TYPES = [
 	'text/rtf',
 	'text/plain',
