@@ -136,6 +136,7 @@ OC.L10N.register(
     "No conversations yet" : "Nog geen gesprekken",
     "Delete" : "Verwijder",
     "Edit title" : "Titel bewerken",
+    "Try sending a message to spark a conversation." : "Probeer een bericht te versturen om het gesprek op te starten!",
     "Cancel editing" : "Annuleer bewerken",
     "Submit" : "Verwerken",
     "You" : "Je",
