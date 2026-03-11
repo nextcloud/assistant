@@ -30,6 +30,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     optionalOutputShape: array<string, AssistantShapeDescriptor>,
  *     priority: integer,
  *     category: array{id: string, name: string},
+ *     preferredProviderName: string|null,
  * }
  *
  * @psalm-type AssistantTaskProcessingTask = array{
