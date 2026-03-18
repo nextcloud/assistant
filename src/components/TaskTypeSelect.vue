@@ -17,13 +17,13 @@
 				<NcActionButton v-for="t in variants.tasks"
 					:key="t.id"
 					:disabled="selectedTask(t)"
-					:title="t.description"
+					:title="taskTypeTitle(t)"
 					:close-after-click="true"
 					@click="onTaskSelected(t)">
 					<template #icon>
 						<div style="width: 16px" />
 					</template>
-					{{ t.name }}
+					{{ taskTypeLabel(t) }}
 				</NcActionButton>
 				<template #icon>
 					<component :is="variants.icon" />
@@ -61,13 +61,13 @@
 				<NcActionButton v-for="t in categorySubMenuTaskType.tasks"
 					:key="t.id"
 					:disabled="selectedTask(t)"
-					:title="t.description"
+					:title="taskTypeTitle(t)"
 					:close-after-click="true"
 					@click="onTaskSelected(t)">
 					<template #icon>
 						<div style="width: 16px" />
 					</template>
-					{{ t.name }}
+					{{ taskTypeLabel(t) }}
 				</NcActionButton>
 			</template>
 		</NcActions>
@@ -197,6 +197,12 @@ export default {
 	},
 
 	methods: {
+		taskTypeLabel(taskType) {
+			return taskType.name
+		},
+		taskTypeTitle(taskType) {
+			return taskType.description || ''
+		},
 		selectedTask(taskType) {
 			return taskType.id === this.modelValue
 		},

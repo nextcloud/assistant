@@ -433,7 +433,8 @@
                     "outputShape",
                     "optionalOutputShape",
                     "priority",
-                    "category"
+                    "category",
+                    "preferredProviderName"
                 ],
                 "properties": {
                     "id": {
@@ -487,6 +488,10 @@
                                 "type": "string"
                             }
                         }
+                    },
+                    "preferredProviderName": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             }
