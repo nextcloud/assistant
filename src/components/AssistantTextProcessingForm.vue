@@ -55,7 +55,7 @@
 							<EditableTextField :initial-text="selectedTaskType.name ?? ''" />
 							<span v-if="selectedTaskType.preferredProviderName"
 								class="session-area__top-bar__provider">
-								{{ t('assistant', 'Provider:') }} {{ selectedTaskType.preferredProviderName }}
+								{{ t('assistant', 'Provider: {name}', { name: selectedTaskType.preferredProviderName }) }}
 							</span>
 						</div>
 					</div>
