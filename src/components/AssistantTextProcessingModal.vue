@@ -198,6 +198,7 @@ export default {
 // make large modal a bit larger
 .assistant-modal .modal-container {
 	width: 1220px !important;
+	max-width: 100% !important;
 }
 
 // the smart picker provider selector is not visible in 33
