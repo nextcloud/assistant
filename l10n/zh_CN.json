@@ -158,7 +158,7 @@
     "Invalid response received for a new conversation request" : "收到无效的响应，无法建立新对话请求",
     "Error creating a new conversation" : "创建新对话时发生错误",
     "Error regenerating a response" : "重新生成响应时发生错误",
-    "New conversation" : "新的对话",
+    "New conversation" : "新对话",
     "Loading conversations…" : "正在加载对话……",
     "No conversations yet" : "尚无对话",
     "Delete" : "删除",
