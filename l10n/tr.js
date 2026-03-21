@@ -172,6 +172,7 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare veya bir tarz örneği",
     "A description of what you need or some original content" : "Gerek duyduğunuz şeyin açıklaması veya özgün içerik",
     "New task" : "Yeni görev",
+    "Provider: {name}" : "Hizmet sağlayıcı: {name}",
     "Close" : "Kapat",
     "Close Nextcloud Assistant" : "Nextcloud yardımcısını kapat",
     "Less" : "Daha az",
