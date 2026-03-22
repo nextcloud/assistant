@@ -171,6 +171,7 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare nebo příklad stylu",
     "A description of what you need or some original content" : "Popis toho, co potřebujete nebo nějaký vzorový obsah",
     "New task" : "Nový úkol",
+    "Provider: {name}" : "Poskytovatel: {name}",
     "Close" : "Zavřít",
     "Close Nextcloud Assistant" : "Zavřít Nextcloud Asistenta",
     "Less" : "Méně",

@@ -172,6 +172,7 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare nó sampla den stíl",
     "A description of what you need or some original content" : "Cur síos ar a bhfuil uait nó ar bhunábhar éigin",
     "New task" : "Tasc nua",
+    "Provider: {name}" : "Soláthraí: {name}",
     "Close" : "Dún",
     "Close Nextcloud Assistant" : "Dún Nextcloud Assistant",
     "Less" : "Níos lú",
