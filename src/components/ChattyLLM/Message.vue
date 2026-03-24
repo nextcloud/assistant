@@ -22,7 +22,7 @@
 					:display-name="message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant')"
 					:is-no-user="message.role === 'assistant'"
 					:hide-status="true">
-					<template #icon>
+					<template v-if="(message.role === 'human' && newMessageLoading) || message.role === 'assistant'" #icon>
 						<NcLoadingIcon v-if="message.role === 'human' && newMessageLoading" :size="20" />
 						<AssistantIcon v-else-if="message.role === 'assistant'" :size="20" />
 					</template>
