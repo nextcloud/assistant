@@ -370,8 +370,8 @@ export async function setNotifyReady(taskId, enable) {
 export async function cancelTask(taskId) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
-	const url = generateOcsUrl('taskprocessing/task/{taskId}', { taskId })
-	return axios.delete(url, {})
+	const url = generateOcsUrl('taskprocessing/tasks/{taskId}/cancel', { taskId })
+	return axios.post(url, {})
 }
 
 /**
