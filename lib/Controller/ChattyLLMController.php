@@ -255,34 +255,13 @@ class ChattyLLMController extends OCSController {
 		}
 
 		try {
-			$this->deleteSessionTasks($this->userId, $sessionId);
+			// we don't delete the tasks
 			$this->sessionMapper->deleteSession($this->userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException  $e) {
 			$this->logger->warning('Failed to delete the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	private function deleteSessionTasks(string $userId, int $sessionId): void {
-		$sessionExists = $this->sessionMapper->exists($this->userId, $sessionId);
-		if (!$sessionExists) {
-			return;
-		}
-		$messages = $this->messageMapper->getMessages($sessionId, 0, 0);
-		foreach ($messages as $message) {
-			$ocpTaskId = $message->getOcpTaskId();
-			if ($ocpTaskId !== 0) {
-				try {
-					$task = $this->taskProcessingManager->getTask($ocpTaskId);
-					$this->taskProcessingManager->deleteTask($task);
-				} catch (\OCP\TaskProcessing\Exception\Exception) {
-					// silent failure here because:
-					// if the task is not found: all good nothing to delete
-					// if the task couldn't be deleted, it will be deleted by the task processing cleanup job later anyway
-				}
-			}
 		}
 	}
 
@@ -493,18 +472,10 @@ class ChattyLLMController extends OCSController {
 				return new JSONResponse(['error' => $this->l10n->t('Session not found')], Http::STATUS_NOT_FOUND);
 			}
 			$message = $this->messageMapper->getMessageById($sessionId, $messageId);
-			$ocpTaskId = $message->getOcpTaskId();
 
+			// do not delete the related task
 			$this->messageMapper->deleteMessageById($sessionId, $messageId);
 
-			// delete the related task
-			if ($ocpTaskId !== 0) {
-				try {
-					$task = $this->taskProcessingManager->getTask($ocpTaskId);
-					$this->taskProcessingManager->deleteTask($task);
-				} catch (\OCP\TaskProcessing\Exception\Exception) {
-				}
-			}
 			return new JSONResponse();
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete a chat message', ['exception' => $e]);
@@ -688,22 +659,13 @@ class ChattyLLMController extends OCSController {
 		}
 
 		$message = $this->messageMapper->getMessageById($sessionId, $messageId);
-		$ocpTaskId = $message->getOcpTaskId();
 
+		// we don't delete the related task
 		try {
 			$this->messageMapper->deleteMessageById($sessionId, $messageId);
 		} catch (\OCP\DB\Exception|\RuntimeException $e) {
 			$this->logger->warning('Failed to delete the last message', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
-		}
-
-		// delete the related task
-		if ($ocpTaskId !== 0) {
-			try {
-				$task = $this->taskProcessingManager->getTask($ocpTaskId);
-				$this->taskProcessingManager->deleteTask($task);
-			} catch (\OCP\TaskProcessing\Exception\Exception) {
-			}
 		}
 
 		return $this->generateForSession($sessionId);
