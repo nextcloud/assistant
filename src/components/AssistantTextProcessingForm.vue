@@ -53,10 +53,23 @@
 					<div class="session-area__top-bar">
 						<div class="session-area__top-bar__title">
 							<EditableTextField :initial-text="selectedTaskType.name ?? ''" />
-							<span v-if="selectedTaskType.preferredProviderName"
-								class="session-area__top-bar__provider">
-								{{ t('assistant', 'Provider: {name}', { name: selectedTaskType.preferredProviderName }) }}
-							</span>
+							<NcPopover v-if="selectedTaskType.preferredProviderName">
+								<template #trigger>
+									<NcButton
+										:aria-label="t('assistant', 'Provider name')">
+										<template #icon>
+											<InformationBoxIcon :size="20" />
+										</template>
+									</NcButton>
+								</template>
+								<template #default>
+									<div class="toolinfo_popover_inner">
+										<strong>
+											{{ t('assistant', 'Provider: {name}', { name: selectedTaskType.preferredProviderName }) }}
+										</strong>
+									</div>
+								</template>
+							</NcPopover>
 						</div>
 					</div>
 					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
@@ -134,6 +147,7 @@ import CreationIcon from 'vue-material-design-icons/Creation.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
+import InformationBoxIcon from 'vue-material-design-icons/InformationBox.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -145,6 +159,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import AssistantFormOutputs from './AssistantFormOutputs.vue'
@@ -186,10 +201,12 @@ export default {
 		NcAppNavigationList,
 		NcAppNavigationNew,
 		NcAssistantIcon,
+		NcPopover,
 		CreationIcon,
 		PlusIcon,
 		UnfoldLessHorizontalIcon,
 		UnfoldMoreHorizontalIcon,
+		InformationBoxIcon,
 		AssistantFormInputs,
 		AssistantFormOutputs,
 		ChattyLLMInputForm,
@@ -843,5 +860,11 @@ export default {
 		width: 100%;
 		padding: 16px;
 	}
+}
+</style>
+
+<style lang="scss">
+.toolinfo_popover_inner {
+	margin: 12px;
 }
 </style>
