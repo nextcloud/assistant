@@ -172,6 +172,7 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare oder ein Beispiel des Stils",
     "A description of what you need or some original content" : "Eine Beschreibung dessen, was Sie benötigen, oder einige Originalinhalte",
     "New task" : "Neue Aufgabe",
+    "Provider name" : "Anbietername",
     "Provider: {name}" : "Anbieter: {name}",
     "Close" : "Schließen",
     "Close Nextcloud Assistant" : "Nextcloud Assistant schließen",
