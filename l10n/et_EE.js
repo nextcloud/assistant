@@ -172,6 +172,8 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare või muu stiilinäide",
     "A description of what you need or some original content" : "Kirjelda mida vajad, või too mõni algupärase sisu näide",
     "New task" : "Uus ülesanne",
+    "Provider name" : "Teenusepakkuja nimi",
+    "Provider: {name}" : "Teenusepakkuja: {name}",
     "Close" : "Sulge",
     "Close Nextcloud Assistant" : "Sulge Nextcloudi Abiline",
     "Less" : "Vähem",
