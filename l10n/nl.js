@@ -124,6 +124,7 @@ OC.L10N.register(
     "Launch this task again" : "Start deze taak opnieuw",
     "Launch a task" : "Start een taak",
     "Failed to parse some files" : "Enkele bestanden kunnen niet worden gelezen",
+    "Provider name" : "Providernaam",
     "Close" : "Sluit",
     "Close Nextcloud Assistant" : "Sluit Nextcloud Assistent",
     "Less" : "Minder",
