@@ -36,6 +36,7 @@ OC.L10N.register(
     "Output texts" : "Išvesties tekstai",
     "The texts that were extracted from the files" : "Iš failų išgauti tekstai",
     "Prompt" : "Užduotis",
+    "Administration documentation" : "Administracinė dokumentacija",
     "Hide advanced options" : "Slėpti išplėstines parinktis",
     "Show advanced options" : "Rodyti išplėstines parinktis",
     "Try again" : "Bandyti dar kartą",
