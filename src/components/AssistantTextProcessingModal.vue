@@ -3,13 +3,16 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal v-if="show"
-		:size="modalSize"
-		:no-close="true"
-		dark
-		:container="null"
+	<PrimeDialog v-model:visible="show"
+		maximizable
+		:closable="false"
+		:dismissable-mask="false"
+		:close-on-escape="false"
+		:draggable="true"
+		append-to="self"
 		class="assistant-modal"
-		@close="onCancel">
+		:style="dialogStyle"
+		:breakpoints="dialogBreakpoints">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">
@@ -47,13 +50,13 @@
 					@cancel-task="onCancelTask" />
 			</div>
 		</div>
-	</NcModal>
+	</PrimeDialog>
 </template>
 
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import PrimeDialog from 'primevue/dialog'
 
-import NcModal from '@nextcloud/vue/components/NcModal'
 import NcButton from '@nextcloud/vue/components/NcButton'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
@@ -64,7 +67,7 @@ export default {
 	name: 'AssistantTextProcessingModal',
 	components: {
 		AssistantTextProcessingForm,
-		NcModal,
+		PrimeDialog,
 		NcButton,
 		CloseIcon,
 	},
@@ -116,7 +119,6 @@ export default {
 			show: true,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
-			modalSize: 'large',
 			progress: null,
 			taskStatus: null,
 			scheduledAt: null,
@@ -133,6 +135,18 @@ export default {
 		}
 	},
 	computed: {
+		dialogStyle() {
+			return {
+				width: '1220px',
+				maxWidth: '100%',
+			}
+		},
+		dialogBreakpoints() {
+			return {
+				'1280px': '95vw',
+				'960px': '100vw',
+			}
+		},
 		shortInput() {
 			const input = this.inputs.input ?? this.inputs.sourceMaterial ?? ''
 			if (typeof input === 'string') {
@@ -152,53 +166,61 @@ export default {
 		}
 	},
 	methods: {
+		dispatchModalEvent(name, detail) {
+			const target = this.$refs.modal_content
+			if (!target) {
+				return
+			}
+
+			target.dispatchEvent(new CustomEvent(name, {
+				detail,
+				bubbles: true,
+			}))
+		},
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')
-			this.$el.dispatchEvent(new CustomEvent('cancel', { bubbles: true }))
+			this.dispatchModalEvent('cancel')
 		},
 		onCancelTask() {
 			this.$emit('cancel-task')
-			this.$el.dispatchEvent(new CustomEvent('cancel-task', { bubbles: true }))
+			this.dispatchModalEvent('cancel-task')
 		},
 		onBackgroundNotify(enable) {
 			this.$emit('background-notify', enable)
-			this.$el.dispatchEvent(new CustomEvent('background-notify', { detail: enable, bubbles: true }))
+			this.dispatchModalEvent('background-notify', enable)
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
-			this.$el.dispatchEvent(new CustomEvent('sync-submit', { detail: params, bubbles: true }))
+			this.dispatchModalEvent('sync-submit', params)
 		},
 		onActionButtonClicked(data) {
 			this.$emit('action-button-clicked', data)
-			this.$el.dispatchEvent(new CustomEvent('action-button-clicked', { detail: data, bubbles: true }))
+			this.dispatchModalEvent('action-button-clicked', data)
 		},
 		onNewTask() {
 			this.$emit('new-task')
-			this.$el.dispatchEvent(new CustomEvent('new-task', { bubbles: true }))
+			this.dispatchModalEvent('new-task')
 		},
 		onTryAgain(data) {
 			this.$emit('try-again', data)
-			this.$el.dispatchEvent(new CustomEvent('try-again', { detail: data, bubbles: true }))
+			this.dispatchModalEvent('try-again', data)
 		},
 		onLoadTask(data) {
 			this.$emit('load-task', data)
-			this.$el.dispatchEvent(new CustomEvent('load-task', { detail: data, bubbles: true }))
+			this.dispatchModalEvent('load-task', data)
 		},
 	},
 }
 </script>
 
 <style lang="scss">
-// TODO fix this in nc/vue
-.modal-container__content .assistant-modal--wrapper {
-	height: 100%;
+.assistant-modal.p-dialog {
+	max-width: 100%;
 }
 
-// make large modal a bit larger
-.assistant-modal .modal-container {
-	width: 1220px !important;
-	max-width: 100% !important;
+.assistant-modal .p-dialog-content {
+	padding: 0;
 }
 
 // the smart picker provider selector is not visible in 33
