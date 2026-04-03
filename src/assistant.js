@@ -6,6 +6,8 @@
 import { TASK_STATUS_STRING } from './constants.js'
 import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
+import PrimeVue from 'primevue/config'
+import Aura from '@primeuix/themes/aura'
 
 window.assistantPollTimerId = null
 
@@ -103,6 +105,16 @@ export async function openAssistantForm({
 			},
 		)
 		app.mixin({ methods: { t, n } })
+		app.use(PrimeVue, {
+			theme: {
+				preset: Aura,
+				options: {
+					prefix: 'p',
+					darkModeSelector: 'system',
+					cssLayer: false,
+				},
+			},
+		})
 		const view = app.mount(modalMountPoint)
 		let lastTask = null
 
