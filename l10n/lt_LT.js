@@ -45,6 +45,7 @@ OC.L10N.register(
     "Less" : "Mažiau",
     "More" : "Daugiau",
     "Cancel" : "Atsisakyti",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Ar tikrai norite ištrinti „{sessionTitle}“?",
     "New conversation" : "Naujas pokalbis",
     "Loading conversations…" : "Įkeliami pokalbiai…",
     "No conversations yet" : "Pokalbių dar nėra",
