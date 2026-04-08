@@ -10,7 +10,7 @@
 		:close-on-escape="false"
 		:draggable="true"
 		append-to="body"
-		:base-z-index="100000"
+		:base-z-index="5000"
 		class="assistant-modal"
 		:style="dialogStyle"
 		:breakpoints="dialogBreakpoints">
@@ -223,7 +223,7 @@ export default {
 	height: calc(100vh - 32px);
 	max-height: calc(100vh - 32px);
 	overflow: hidden;
-	z-index: 100000 !important;
+	// z-index: 100000 !important;
 }
 
 .assistant-modal .p-dialog-content {
