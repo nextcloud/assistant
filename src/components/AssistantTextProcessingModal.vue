@@ -224,6 +224,10 @@ export default {
 	padding: 4px;
 	border: 0;
 	background: transparent;
+	cursor: grab;
+	&:active {
+		cursor: grabbing;
+	}
 }
 
 .assistant-modal .p-dialog-content {
