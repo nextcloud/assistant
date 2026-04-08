@@ -551,6 +551,16 @@ export async function openAssistantTask(
 		},
 	)
 	app.mixin({ methods: { t, n } })
+	app.use(PrimeVue, {
+		theme: {
+			preset: Aura,
+			options: {
+				prefix: 'p',
+				darkModeSelector: 'system',
+				cssLayer: false,
+			},
+		},
+	})
 	const view = app.mount(modalMountPoint)
 	let lastTask = task
 
