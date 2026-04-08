@@ -118,6 +118,7 @@ export default {
 	data() {
 		return {
 			show: true,
+			eventTarget: null,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
 			progress: null,
@@ -161,6 +162,7 @@ export default {
 	},
 	mounted() {
 		console.debug('[assistant] modal\'s outputs', this.outputs)
+		this.eventTarget = this.$el?.parentElement ?? null
 		if (this.isInsideViewer) {
 			const elem = this.$refs.modal_content
 			emit('viewer:trapElements:changed', elem)
@@ -168,7 +170,7 @@ export default {
 	},
 	methods: {
 		dispatchModalEvent(name, detail) {
-			const target = this.$refs.modal_content
+			const target = this.eventTarget ?? this.$refs.modal_content
 			if (!target) {
 				return
 			}
