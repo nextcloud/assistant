@@ -217,10 +217,18 @@ export default {
 <style lang="scss">
 .assistant-modal.p-dialog {
 	max-width: 100%;
+	height: calc(100vh - 32px);
+	max-height: calc(100vh - 32px);
+	overflow: hidden;
 }
 
 .assistant-modal .p-dialog-content {
 	padding: 0;
+	display: flex;
+	flex: 1 1 auto;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
 }
 
 // the smart picker provider selector is not visible in 33
@@ -241,19 +249,26 @@ div[role='listbox'] {
 .assistant-modal--wrapper {
 	width: 100%;
 	display: flex;
-	overflow-y: auto;
+	flex: 1 1 auto;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
 }
 
 .assistant-modal--content {
 	width: 100%;
 	margin: 0 auto;
 	padding: 8px 16px 16px 16px;
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	overflow-y: auto;
-	min-height: 500px;
+	justify-content: flex-start;
+	flex: 1 1 auto;
+	height: 100%;
+	max-height: 100%;
+	min-height: 0;
+	overflow: hidden;
 
 	> h2 {
 		display: flex;
@@ -265,7 +280,10 @@ div[role='listbox'] {
 
 	.form {
 		width: 100%;
+		flex: 1 1 auto;
 		height: 100%;
+		min-height: 0;
+		overflow: hidden;
 	}
 }
 </style>
