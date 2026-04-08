@@ -11,9 +11,7 @@
 		:draggable="true"
 		append-to="body"
 		:base-z-index="5000"
-		class="assistant-modal"
-		:style="dialogStyle"
-		:breakpoints="dialogBreakpoints">
+		class="assistant-modal">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">
@@ -137,18 +135,6 @@ export default {
 		}
 	},
 	computed: {
-		dialogStyle() {
-			return {
-				width: '1220px',
-				maxWidth: '100%',
-			}
-		},
-		dialogBreakpoints() {
-			return {
-				'1280px': '95vw',
-				'960px': '100vw',
-			}
-		},
 		shortInput() {
 			const input = this.inputs.input ?? this.inputs.sourceMaterial ?? ''
 			if (typeof input === 'string') {
@@ -222,6 +208,7 @@ export default {
 	max-width: 100%;
 	height: calc(100vh - 32px);
 	max-height: calc(100vh - 32px);
+	resize: both;
 	overflow: hidden;
 	// z-index: 100000 !important;
 }
