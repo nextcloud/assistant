@@ -205,12 +205,25 @@ export default {
 
 <style lang="scss">
 .assistant-modal.p-dialog {
+	position: relative;
 	max-width: 100%;
 	height: calc(100vh - 32px);
 	max-height: calc(100vh - 32px);
 	resize: both;
 	overflow: hidden;
 	// z-index: 100000 !important;
+}
+
+.assistant-modal .p-dialog-header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 2;
+	min-height: 0;
+	padding: 4px;
+	border: 0;
+	background: transparent;
 }
 
 .assistant-modal .p-dialog-content {
@@ -231,9 +244,9 @@ div[role='listbox'] {
 <style lang="scss" scoped>
 .close-button {
 	position: absolute;
-	top: 4px;
-	right: 4px;
-	z-index: 1;
+	top: 10px;
+	right: 10px;
+	z-index: 3;
 	background-color: var(--color-main-background);
 }
 
