@@ -228,6 +228,15 @@ export default {
 	&:active {
 		cursor: grabbing;
 	}
+	.p-dialog-maximize-button {
+		border-radius: var(--border-radius-element);
+		width: var(--default-clickable-area);
+		height: var(--default-clickable-area);
+		&:hover {
+			background-color: var(--color-background-hover);
+			border: none;
+		}
+	}
 }
 
 .assistant-modal .p-dialog-content {
