@@ -84,6 +84,7 @@ OC.L10N.register(
     "Assistant" : "Asistente",
     "Assistant fallback" : "Alternativa al Asistente",
     "Memories" : "Memorias",
+    "The memories to be injected into the chat session." : "Las memorias que se importarán en la sesión de chat.",
     "Voice chat" : "Chat de voz",
     "Voice chat with the assistant" : "Chat de voz con el asistente",
     "System prompt" : "Prompt del sistema",
