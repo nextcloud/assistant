@@ -10,6 +10,7 @@ OC.L10N.register(
     "Result: %1$s" : "Rezultatas: %1$s",
     "View results" : "Rodyti rezultatus",
     "Nextcloud Mail" : "Nextcloud el. paštas",
+    "Nextcloud Talk" : "„Nextcloud Talk“",
     "Other" : "Kita",
     "Translate" : "Verskite",
     "Assistant" : "Asistentas.",
