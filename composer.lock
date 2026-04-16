@@ -58,16 +58,16 @@
         },
         {
             "name": "henck/rtf-to-html",
-            "version": "1.2",
+            "version": "1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/henck/rtf-html-php.git",
-                "reference": "ff984a1d44fa359c85c0cffa0d66e991bf4dc967"
+                "reference": "36e4cdcc78d6b4f7075522c93fc41547a0faffe7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/henck/rtf-html-php/zipball/ff984a1d44fa359c85c0cffa0d66e991bf4dc967",
-                "reference": "ff984a1d44fa359c85c0cffa0d66e991bf4dc967",
+                "url": "https://api.github.com/repos/henck/rtf-html-php/zipball/36e4cdcc78d6b4f7075522c93fc41547a0faffe7",
+                "reference": "36e4cdcc78d6b4f7075522c93fc41547a0faffe7",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-2.0"
+                "MIT"
             ],
             "authors": [
                 {
@@ -99,9 +99,9 @@
             ],
             "support": {
                 "issues": "https://github.com/henck/rtf-html-php/issues",
-                "source": "https://github.com/henck/rtf-html-php/tree/v1.2"
+                "source": "https://github.com/henck/rtf-html-php/tree/v1.3"
             },
-            "time": "2021-09-10T15:19:14+00:00"
+            "time": "2026-03-10T18:58:29+00:00"
         },
         {
             "name": "html2text/html2text",
