@@ -73,6 +73,7 @@ OC.L10N.register(
     "Unknown status" : "Nežinoma būsena",
     "Audio input" : "Garso įvestis",
     "Audio output" : "Garso išvestis",
+    "Start recording" : "Pradėti įrašymą",
     "Choose a file" : "Pasirinkti failą",
     "No file selected" : "Neįkeltas joks failas",
     "Could not copy to clipboard" : "Nepavyko nukopijuoti į iškarpinę",
