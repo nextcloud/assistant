@@ -5,6 +5,7 @@ OC.L10N.register(
     "User not found" : "Foydalanuvchi topilmadi",
     "Nextcloud Assistant" : "Next bulut yordamchisi",
     "Context Chat" : "Kontekst suhbati",
+    "Nextcloud Talk" : "Keyingi bulut suhbati",
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Prompt" : "Tezkor",
