@@ -10,7 +10,7 @@
 		:close-on-escape="false"
 		:draggable="true"
 		append-to="body"
-		:base-z-index="5000"
+		:base-z-index="isInsideViewer ? 9998 : 5000"
 		class="assistant-modal">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
