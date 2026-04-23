@@ -88,6 +88,98 @@ class ChattyLLMController extends OCSController {
 				'title' => $this->l10n->t('Create a Deck card'),
 				'icon' => 'CardPlus',
 			],
+			'upload_file' => [
+				'title' => $this->l10n->t('Upload file'),
+				'icon' => 'Upload',
+			],
+			'create_folder' => [
+				'title' => $this->l10n->t('Create folder'),
+				'icon' => 'FolderPlus',
+			],
+			'move_file' => [
+				'title' => $this->l10n->t('Move file'),
+				'icon' => 'FileMove',
+			],
+			'copy_file' => [
+				'title' => $this->l10n->t('Copy file'),
+				'icon' => 'FileCopy',
+			],
+			'delete_file' => [
+				'title' => $this->l10n->t('Delete file'),
+				'icon' => 'Delete',
+			],
+			'create_bookmark' => [
+				'title' => $this->l10n->t('Create bookmark'),
+				'icon' => 'BookmarkPlus',
+			],
+			'update_bookmark' => [
+				'title' => $this->l10n->t('Update bookmark'),
+				'icon' => 'BookmarkEdit',
+			],
+			'delete_bookmark' => [
+				'title' => $this->l10n->t('Delete bookmark'),
+				'icon' => 'BookmarkRemove',
+			],
+			'create_bookmark_folder' => [
+				'title' => $this->l10n->t('Create bookmark folder'),
+				'icon' => 'FolderPlus',
+			],
+			'create_circle' => [
+				'title' => $this->l10n->t('Create circle'),
+				'icon' => 'AccountGroupPlus',
+			],
+			'add_member_to_circle' => [
+				'title' => $this->l10n->t('Add member to circle'),
+				'icon' => 'AccountPlus',
+			],
+			'remove_member_from_circle' => [
+				'title' => $this->l10n->t('Remove member from circle'),
+				'icon' => 'AccountRemove',
+			],
+			'update_circle' => [
+				'title' => $this->l10n->t('Update circle'),
+				'icon' => 'AccountGroupEdit',
+			],
+			'delete_circle' => [
+				'title' => $this->l10n->t('Delete circle'),
+				'icon' => 'AccountGroupRemove',
+			],
+			'share_with_circle' => [
+				'title' => $this->l10n->t('Share with circle'),
+				'icon' => 'ShareVariant',
+			],
+			'create_form' => [
+				'title' => $this->l10n->t('Create form'),
+				'icon' => 'FormTextbox',
+			],
+			'add_question_to_form' => [
+				'title' => $this->l10n->t('Add question to form'),
+				'icon' => 'CommentPlus',
+			],
+			'delete_form' => [
+				'title' => $this->l10n->t('Delete form'),
+				'icon' => 'Delete',
+			],
+			'update_form_settings' => [
+				'title' => $this->l10n->t('Update form settings'),
+				'icon' => 'Cog',
+			],
+			'share_with_user' => [
+				'title' => $this->l10n->t('Share with user'),
+				'icon' => 'AccountShare',
+			],
+			'share_with_group' => [
+				'title' => $this->l10n->t('Share with group'),
+				'icon' => 'AccountGroup',
+			],
+			'update_share_permissions' => [
+				'title' => $this->l10n->t('Update share permissions'),
+				'icon' => 'LockOpen',
+			],
+			'delete_share' => [
+				'title' => $this->l10n->t('Delete share'),
+				'icon' => 'Delete',
+			],
 		];
 	}
 
