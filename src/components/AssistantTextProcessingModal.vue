@@ -9,7 +9,7 @@
 		:dismissable-mask="false"
 		:close-on-escape="false"
 		:draggable="true"
-		append-to="body"
+		append-to="self"
 		:base-z-index="isInsideViewer ? 9998 : 5000"
 		class="assistant-modal">
 		<div ref="modal_content"
