@@ -583,8 +583,11 @@ export default {
 	align-items: center;
 	justify-content: start;
 	gap: 12px;
-	overflow-y: auto;
-	overflow-x: hidden;
+	overflow: hidden;
+	width: 100%;
+	flex: 1 1 auto;
+	height: 100%;
+	min-height: 0;
 
 	h2 {
 		margin-top: 0;
@@ -594,9 +597,10 @@ export default {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		// to make it max height, it will overflow anyway
-		height: 100000px;
-		overflow: auto;
+		flex: 1 1 auto;
+		height: 100%;
+		min-height: 0;
+		overflow: hidden;
 
 		> * {
 			margin-right: 6px;
@@ -604,7 +608,10 @@ export default {
 
 		.chatty-inputs {
 			margin-top: 8px;
-			height: 8000px;
+			flex: 1 1 auto;
+			height: 100%;
+			min-height: 0;
+			overflow: hidden;
 		}
 	}
 
@@ -653,12 +660,10 @@ export default {
 
 	.history {
 		width: 100%;
-		// to make it max height, it will overflow anyway
-		height: 100000px;
 		display: flex;
 		flex-direction: column;
 		align-items: end;
-		overflow: auto;
+		min-height: 0;
 
 		&--list {
 			width: 100%;
@@ -683,9 +688,13 @@ export default {
 }
 
 .container {
-	overflow: auto;
 	display: flex;
+	align-items: stretch;
+	flex: 1 1 auto;
+	width: 100%;
 	height: 100%;
+	min-height: 0;
+	overflow: hidden;
 
 	:deep(.app-navigation-new) {
 		padding: 0;
@@ -706,6 +715,10 @@ export default {
 		background-color: var(--color-primary-element-light);
 		color: var(--color-primary-element-light-text);
 		border-radius: var(--border-radius-large);
+		flex: 0 0 auto;
+		height: 100%;
+		min-height: 0;
+		overflow: visible;
 
 		@media only screen and (max-width: 1024px) {
 			position: relative !important;
@@ -736,6 +749,9 @@ export default {
 		padding: var(--default-grid-baseline) !important;
 		box-sizing: border-box;
 		height: 100%;
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
 
 		.app-navigation-input-confirm > form {
 			align-items: center;
@@ -790,10 +806,19 @@ export default {
 		}
 	}
 
+	:deep(.app-content-vue) {
+		flex: 1 1 auto;
+		height: 100%;
+		min-height: 0;
+		overflow-y: auto;
+	}
+
 	.session-area {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		min-width: 0;
+		min-height: 0;
 
 		&__top-bar {
 			display: flex;
@@ -832,6 +857,7 @@ export default {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
+			min-height: 0;
 			overflow-y: auto;
 			padding: 1em;
 
@@ -853,12 +879,14 @@ export default {
 		&__input-area {
 			position: sticky;
 			bottom: 0;
+			flex-shrink: 0;
 		}
 	}
 
 	.running-area {
 		width: 100%;
 		padding: 16px;
+		min-height: 0;
 	}
 }
 </style>

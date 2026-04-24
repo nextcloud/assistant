@@ -3,13 +3,15 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcModal v-if="show"
-		:size="modalSize"
-		:no-close="true"
-		dark
-		:container="null"
-		class="assistant-modal"
-		@close="onCancel">
+	<PrimeDialog v-model:visible="show"
+		maximizable
+		:closable="false"
+		:dismissable-mask="false"
+		:close-on-escape="false"
+		:draggable="true"
+		append-to="self"
+		:base-z-index="isInsideViewer ? 9998 : 5000"
+		class="assistant-modal">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">
@@ -47,13 +49,13 @@
 					@cancel-task="onCancelTask" />
 			</div>
 		</div>
-	</NcModal>
+	</PrimeDialog>
 </template>
 
 <script>
 import CloseIcon from 'vue-material-design-icons/Close.vue'
+import PrimeDialog from 'primevue/dialog'
 
-import NcModal from '@nextcloud/vue/components/NcModal'
 import NcButton from '@nextcloud/vue/components/NcButton'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
@@ -64,7 +66,7 @@ export default {
 	name: 'AssistantTextProcessingModal',
 	components: {
 		AssistantTextProcessingForm,
-		NcModal,
+		PrimeDialog,
 		NcButton,
 		CloseIcon,
 	},
@@ -114,9 +116,9 @@ export default {
 	data() {
 		return {
 			show: true,
+			eventTarget: null,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
-			modalSize: 'large',
 			progress: null,
 			taskStatus: null,
 			scheduledAt: null,
@@ -146,59 +148,106 @@ export default {
 	},
 	mounted() {
 		console.debug('[assistant] modal\'s outputs', this.outputs)
+		this.eventTarget = this.$el?.parentElement ?? null
 		if (this.isInsideViewer) {
 			const elem = this.$refs.modal_content
 			emit('viewer:trapElements:changed', elem)
 		}
 	},
 	methods: {
+		dispatchModalEvent(name, detail) {
+			const target = this.eventTarget ?? this.$refs.modal_content
+			if (!target) {
+				return
+			}
+
+			target.dispatchEvent(new CustomEvent(name, {
+				detail,
+				bubbles: true,
+			}))
+		},
 		onCancel() {
 			this.show = false
 			this.$emit('cancel')
-			this.$el.dispatchEvent(new CustomEvent('cancel', { bubbles: true }))
+			this.dispatchModalEvent('cancel')
 		},
 		onCancelTask() {
 			this.$emit('cancel-task')
-			this.$el.dispatchEvent(new CustomEvent('cancel-task', { bubbles: true }))
+			this.dispatchModalEvent('cancel-task')
 		},
 		onBackgroundNotify(enable) {
 			this.$emit('background-notify', enable)
-			this.$el.dispatchEvent(new CustomEvent('background-notify', { detail: enable, bubbles: true }))
+			this.dispatchModalEvent('background-notify', enable)
 		},
 		onSyncSubmit(params) {
 			this.$emit('sync-submit', params)
-			this.$el.dispatchEvent(new CustomEvent('sync-submit', { detail: params, bubbles: true }))
+			this.dispatchModalEvent('sync-submit', params)
 		},
 		onActionButtonClicked(data) {
 			this.$emit('action-button-clicked', data)
-			this.$el.dispatchEvent(new CustomEvent('action-button-clicked', { detail: data, bubbles: true }))
+			this.dispatchModalEvent('action-button-clicked', data)
 		},
 		onNewTask() {
 			this.$emit('new-task')
-			this.$el.dispatchEvent(new CustomEvent('new-task', { bubbles: true }))
+			this.dispatchModalEvent('new-task')
 		},
 		onTryAgain(data) {
 			this.$emit('try-again', data)
-			this.$el.dispatchEvent(new CustomEvent('try-again', { detail: data, bubbles: true }))
+			this.dispatchModalEvent('try-again', data)
 		},
 		onLoadTask(data) {
 			this.$emit('load-task', data)
-			this.$el.dispatchEvent(new CustomEvent('load-task', { detail: data, bubbles: true }))
+			this.dispatchModalEvent('load-task', data)
 		},
 	},
 }
 </script>
 
 <style lang="scss">
-// TODO fix this in nc/vue
-.modal-container__content .assistant-modal--wrapper {
-	height: 100%;
+.assistant-modal.p-dialog {
+	position: relative;
+	max-width: 100%;
+	height: calc(100vh - 32px);
+	max-height: calc(100vh - 32px);
+	height: 80%;
+	width: 50%;
+	resize: both;
+	overflow: hidden;
+	filter: drop-shadow(0 0 15px rgba(77, 77, 77, 0.5));
 }
 
-// make large modal a bit larger
-.assistant-modal .modal-container {
-	width: 1220px !important;
-	max-width: 100% !important;
+.assistant-modal .p-dialog-header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 2;
+	min-height: 0;
+	padding: 4px;
+	border: 0;
+	background: transparent;
+	cursor: grab;
+	&:active {
+		cursor: grabbing;
+	}
+	.p-dialog-maximize-button {
+		border-radius: var(--border-radius-element);
+		width: var(--default-clickable-area);
+		height: var(--default-clickable-area);
+		&:hover {
+			background-color: var(--color-background-hover);
+			border: none;
+		}
+	}
+}
+
+.assistant-modal .p-dialog-content {
+	padding: 0;
+	display: flex;
+	flex: 1 1 auto;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
 }
 
 // the smart picker provider selector is not visible in 33
@@ -210,28 +259,35 @@ div[role='listbox'] {
 <style lang="scss" scoped>
 .close-button {
 	position: absolute;
-	top: 4px;
-	right: 4px;
-	z-index: 1;
+	top: 10px;
+	right: 10px;
+	z-index: 3;
 	background-color: var(--color-main-background);
 }
 
 .assistant-modal--wrapper {
 	width: 100%;
 	display: flex;
-	overflow-y: auto;
+	flex: 1 1 auto;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
 }
 
 .assistant-modal--content {
 	width: 100%;
 	margin: 0 auto;
 	padding: 8px 16px 16px 16px;
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	overflow-y: auto;
-	min-height: 500px;
+	justify-content: flex-start;
+	flex: 1 1 auto;
+	height: 100%;
+	max-height: 100%;
+	min-height: 0;
+	overflow: hidden;
 
 	> h2 {
 		display: flex;
@@ -243,7 +299,10 @@ div[role='listbox'] {
 
 	.form {
 		width: 100%;
+		flex: 1 1 auto;
 		height: 100%;
+		min-height: 0;
+		overflow: hidden;
 	}
 }
 </style>
