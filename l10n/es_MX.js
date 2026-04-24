@@ -2,10 +2,12 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Enviar correo electrónico",
+    "Delete file" : "Eliminar archivo",
+    "Share with group" : "Compartir con el grupo",
     "User not found" : "No se encontró el usuario",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
-    "Nextcloud Mail" : "Correo Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "Nextcloud Mail" : "Correo Nextcloud",
     "Other" : "Otro",
     "Translate" : "Traducir",
     "Assistant" : "Asistente",

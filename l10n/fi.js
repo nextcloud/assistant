@@ -2,12 +2,17 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Lähetä sähköposti",
+    "Upload file" : "Lähetä tiedosto",
+    "Delete file" : "Poista tiedosto",
+    "Create form" : "Luo lomake",
+    "Delete form" : "Poista lomake",
+    "Share with group" : "Jaa ryhmän kanssa",
     "User not found" : "Käyttäjää ei löydy",
     "Nextcloud Assistant" : "Nextcloud-avustaja",
     "View results" : "Näytä tulokset",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud-sähköposti",
-    "Nextcloud Talk" : "Nextcloud Talk",
     "Other" : "Muu",
     "Translate" : "Käännä",
     "Assistant" : "Avustaja",
@@ -50,7 +55,6 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Ei voitu kopioida leikepöydälle",
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
-    "Copy" : "Kopioi",
-    "Upload file" : "Lähetä tiedosto"
+    "Copy" : "Kopioi"
 },
 "nplurals=2; plural=(n != 1);");

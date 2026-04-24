@@ -2,6 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "ارسال ایمیل",
+    "Upload file" : "بارگذاری پرونده",
+    "Delete file" : "حذف پرونده",
+    "Create form" : "ساخت فرم",
+    "Delete form" : "حذف فرم",
+    "Share with group" : "اشتراک‌گذاری با گروه",
     "User not found" : "کاربر یافت نشد",
     "Nextcloud Assistant" : "Nextcloud Assistant",
     "AI image generation" : "AI image generation",
@@ -12,10 +17,10 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "کار برای \"%1$s\" ناموفق بود",
     "\"%1$s\" task for \"%2$s\" has failed" : "%1$s\"وظیفه برای \"%2$s\" ناموفق بود",
     "View task" : "مشاهده کار",
+    "Nextcloud Talk" : "Nextcloud Talk",
+    "OpenProject" : "OpenProject",
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "ایمیل Nextclould",
-    "OpenProject" : "OpenProject",
-    "Nextcloud Talk" : "Nextcloud Talk",
     "Other" : "دیگر",
     "Translate" : "ترجمه",
     "Memories" : "Memories",
@@ -70,7 +75,6 @@ OC.L10N.register(
     "Advanced" : "پیشرفته",
     "Result could not be copied to clipboard" : "نتیجه را نمی توان در کلیپ بورد کپی کرد",
     "Copy" : "رونوشت",
-    "Upload file" : "بارگذاری پرونده",
     "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است"
 },
 "nplurals=2; plural=(n > 1);");

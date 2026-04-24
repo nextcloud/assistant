@@ -1,6 +1,10 @@
 OC.L10N.register(
     "assistant",
     {
+    "Upload file" : "Tải lên tập tin",
+    "Delete file" : "Xoá tập tin",
+    "Delete circle" : "Xóa vòng kết nối",
+    "Delete share" : "Xóa chia sẻ",
     "User not found" : "Không tìm thấy người dùng",
     "Nextcloud Assistant" : "Trợ lý Nextcloud",
     "Nextcloud Mail" : "Thư vWorkspace",
@@ -22,7 +26,6 @@ OC.L10N.register(
     "Scheduled" : "Lên kế hoạch",
     "Choose file" : "Choose file",
     "No file selected" : "Không có tập tin nào được chọn",
-    "Advanced" : "Nâng cao",
-    "Upload file" : "Tải lên tập tin"
+    "Advanced" : "Nâng cao"
 },
 "nplurals=1; plural=0;");

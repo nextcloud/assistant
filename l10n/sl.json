@@ -1,14 +1,22 @@
 { "translations": {
     "Send an email" : "Pošlji elektronsko sporočilo",
+    "Upload file" : "Pošlji datoteko",
+    "Move file" : "Premakni datoteko",
+    "Copy file" : "Kopiraj datoteko",
+    "Delete file" : "Izbriši datoteko",
+    "Create bookmark" : "Ustvari zaznamek",
+    "Create form" : "Ustvari obrazec",
+    "Delete form" : "Izbriši vprašalnik",
+    "Delete share" : "Izbriši mesto souporabe",
     "User not found" : "Uporabnika ni mogoče najti",
     "Session not found" : "Seje ni mogoče najti",
     "Input: %1$s" : "Vnos: %1$s",
     "Result: %1$s" : "Izpis: %1$s",
     "View results" : "Rezultati",
     "View task" : "Poglej nalogo",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Pošta Nextcloud Mail",
-    "Nextcloud Talk" : "Nextcloud Talk",
     "Other" : "Drugo",
     "Chat with AI" : "Klepet z UI",
     "Translate" : "Prevedi",
@@ -58,7 +66,6 @@
     "Clear value" : "Počisti vrednost",
     "Advanced" : "Napredno",
     "Copy" : "Kopiraj",
-    "Upload file" : "Pošlji datoteko",
     "Could not upload the file" : "Datoteke ni mogoče poslati"
 },"pluralForm" :"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
 }

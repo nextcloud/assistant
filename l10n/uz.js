@@ -2,6 +2,8 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Elektron pochta xabarini yuboring",
+    "Upload file" : "Upload file",
+    "Delete file" : "Faylni o'chirish",
     "User not found" : "Foydalanuvchi topilmadi",
     "Nextcloud Assistant" : "Next bulut yordamchisi",
     "Context Chat" : "Kontekst suhbati",
@@ -18,7 +20,6 @@ OC.L10N.register(
     "Submit" : "Submit",
     "Choose" : "Choose",
     "Upload from device" : "Qurilmadan yuklash",
-    "Copy" : "Nusxalash",
-    "Upload file" : "Upload file"
+    "Copy" : "Nusxalash"
 },
 "nplurals=1; plural=0;");

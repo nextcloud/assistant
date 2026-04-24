@@ -2,6 +2,12 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Enviar um e-mail",
+    "Upload file" : "Enviar ficheiro",
+    "Move file" : "Mover ficheiro",
+    "Copy file" : "Copiar ficheiro",
+    "Delete file" : "Apagar ficheiro",
+    "Delete circle" : "Eliminar círculo",
+    "Delete form" : "Apague formulário",
     "User not found" : "Utilizador não encontrado",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Other" : "Outro",
@@ -21,7 +27,6 @@ OC.L10N.register(
     "Running" : "Correr",
     "No file selected" : "Nenhum ficheiro selecionado",
     "Advanced" : "Avançado",
-    "Copy" : "copiar",
-    "Upload file" : "Enviar ficheiro"
+    "Copy" : "copiar"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

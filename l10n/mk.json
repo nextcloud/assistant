@@ -1,8 +1,13 @@
 { "translations": {
     "Send an email" : "Испрати е-пошта",
+    "Upload file" : "Прикачи датотека",
+    "Delete file" : "Избриши датотека",
+    "Delete circle" : "Избриши круг",
+    "Delete form" : "Избриши форма",
+    "Share with group" : "Сподели со група",
     "User not found" : "Корисникот не е пронајден",
-    "Nextcloud Mail" : "Електронска пошта",
     "Nextcloud Talk" : "Talk",
+    "Nextcloud Mail" : "Електронска пошта",
     "Other" : "Останато",
     "Translate" : "Преведи",
     "Assistant" : "Асистент",
@@ -30,7 +35,6 @@
     "No file selected" : "Нема избрано датотека",
     "Upload from device" : "Прикачи од уред",
     "Advanced" : "Напредно",
-    "Copy" : "Копирај",
-    "Upload file" : "Прикачи датотека"
+    "Copy" : "Копирај"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"
 }
