@@ -210,6 +210,7 @@ export default {
 	height: calc(100vh - 32px);
 	max-height: calc(100vh - 32px);
 	height: 80%;
+	width: 50%;
 	resize: both;
 	overflow: hidden;
 	// z-index: 100000 !important;
