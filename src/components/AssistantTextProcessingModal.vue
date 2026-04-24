@@ -213,7 +213,7 @@ export default {
 	width: 50%;
 	resize: both;
 	overflow: hidden;
-	// z-index: 100000 !important;
+	filter: drop-shadow(0 0 15px rgba(77, 77, 77, 0.5));
 }
 
 .assistant-modal .p-dialog-header {
