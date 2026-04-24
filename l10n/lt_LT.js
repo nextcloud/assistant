@@ -2,6 +2,15 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Siųsti el. laišką",
+    "Upload file" : "Įkelti failą",
+    "Create folder" : "Sukurti aplanką",
+    "Move file" : "Perkelti failą",
+    "Copy file" : "Kopijuoti failą",
+    "Delete file" : "Ištrinti failą",
+    "Create bookmark" : "Sukurti adresyną",
+    "Create form" : "Sukurti anketą",
+    "Delete form" : "Ištrinti anketą",
+    "Share with group" : "Bendrinti su grupe",
     "User not logged in" : "Naudotojas neprisijungęs",
     "User not found" : "Naudotojas nerastas",
     "Session not found" : "Seansas nerastas",
@@ -9,8 +18,8 @@ OC.L10N.register(
     "Input: %1$s" : "Įvestis: %1$s",
     "Result: %1$s" : "Rezultatas: %1$s",
     "View results" : "Rodyti rezultatus",
-    "Nextcloud Mail" : "Nextcloud el. paštas",
     "Nextcloud Talk" : "„Nextcloud Talk“",
+    "Nextcloud Mail" : "Nextcloud el. paštas",
     "Other" : "Kita",
     "Translate" : "Verskite",
     "Assistant" : "Asistentas.",
@@ -63,6 +72,7 @@ OC.L10N.register(
     "You" : "Jūs",
     "Delete message" : "Ištrinti laišką",
     "Choose" : "Pasirinkite",
+    "Clear Selection" : "Išvalyti pasirinkimą",
     "Describe the image you want to generate" : "Aprašykite paveikslėlį, kurį norite sukurti",
     "Generate image" : "Sugeneruoti paveikslėlį",
     "This may take a few seconds…" : "Tai gali šiek tiek užtrukti…",
@@ -81,7 +91,6 @@ OC.L10N.register(
     "Advanced" : "Išplėstiniai",
     "Could not parse file" : "Nepavyko išnagrinėti failo",
     "Copy output" : "Kopijuoti išvestį",
-    "Copy" : "Kopija",
-    "Upload file" : "Įkelti failą"
+    "Copy" : "Kopija"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

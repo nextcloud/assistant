@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Upload file" : "Xubir un ficheru",
     "User not found" : "Nun s'atopó l'usuariu",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "AI text generation" : "Xeneración de testos per IA",
@@ -10,9 +11,9 @@ OC.L10N.register(
     "Result: %1$s" : "Resultáu: %1$s",
     "View results" : "Ver los resultaos",
     "View task" : "Ver la xera",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud Mail",
-    "Nextcloud Talk" : "Nextcloud Talk",
     "Translate" : "Traducir",
     "Generate text" : "Xenerar el testu",
     "Assistant" : "Asistente",
@@ -52,7 +53,6 @@ OC.L10N.register(
     "Result could not be copied to clipboard" : "El resultáu nun pudo copiase nel cartafueyu",
     "Copy output" : "Copiar la salida",
     "Copy" : "Copiar",
-    "Upload file" : "Xubir un ficheru",
     "Assistant error" : "Error del asistente",
     "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse"
 },

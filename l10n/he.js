@@ -2,6 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "שליחת דוא״ל",
+    "Upload file" : "העלאת קובץ",
+    "Delete file" : "מחיקת קובץ",
+    "Create bookmark" : "יצירת סימנייה",
+    "Delete circle" : "מחיקת מעגל",
+    "Delete form" : "מחיקת טופס",
     "User not found" : "המשתמש לא נמצא",
     "Nextcloud Mail" : "דוא״ל Nextcloud",
     "Other" : "אחר",
@@ -22,7 +27,6 @@ OC.L10N.register(
     "No file selected" : "לא נבחר קובץ",
     "Could not copy to clipboard" : "לא ניתן להעתיק ללוח הגזירים",
     "Advanced" : "מתקדם",
-    "Copy" : "העתקה",
-    "Upload file" : "העלאת קובץ"
+    "Copy" : "העתקה"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

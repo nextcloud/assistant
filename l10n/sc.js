@@ -2,6 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Imbia unu messàgiu de posta eletrònica",
+    "Upload file" : "Càrriga archìviu",
+    "Delete file" : "Cantzella archìviu",
+    "Create bookmark" : "Crea unu signalibru",
+    "Delete form" : "Cantzella mòdulu",
+    "Delete share" : "Cantzella sa cumpartzidura",
     "User not found" : "Utèntzia no agatada",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Àteru",
@@ -29,7 +34,6 @@ OC.L10N.register(
     "Upload from device" : "Càrriga dae su dispositivu",
     "Advanced" : "Connoschèntzia avantzada",
     "Copy" : "Còpia",
-    "Upload file" : "Càrriga archìviu",
     "Could not upload the files" : "Impossìbile carrigare is archìvios"
 },
 "nplurals=2; plural=(n != 1);");

@@ -2,6 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "E-mail küldése",
+    "Upload file" : "Fájl feltöltése",
+    "Delete file" : "Fájl törlése",
+    "Create bookmark" : "Könyvjelző létrehozása",
+    "Create form" : "Űrlap létrehozása",
+    "Delete form" : "Űrlap törlése",
     "User not found" : "A felhasználó nem található",
     "Nextcloud Assistant" : "Nextcloud Asszisztens",
     "AI text generation" : "AI szöveggenerálás",
@@ -14,10 +19,10 @@ OC.L10N.register(
     "\"%1$s\" task for \"%2$s\" has failed" : "\"%1$s\" feladat a következőhoz: \"%2$s\" sikertelen",
     "View task" : "Feladat megtekintése",
     "Nextcloud Deck" : "Nextcloud Deck",
+    "Nextcloud Talk" : "Nextcloud Beszélgetés",
+    "OpenProject" : "OpenProject",
     "OpenStreetMap" : "OpenStreetMap",
     "Nextcloud Mail" : "Nextcloud Levelezés",
-    "OpenProject" : "OpenProject",
-    "Nextcloud Talk" : "Nextcloud Beszélgetés",
     "Other" : "Egyebek",
     "Translate" : "Lefordítás",
     "Assistant" : "Asszisztens",
@@ -93,7 +98,6 @@ OC.L10N.register(
     "Advanced" : "Speciális",
     "Result could not be copied to clipboard" : "Az eredményt nem lehet a vágólapra másolni",
     "Copy" : "Másolás",
-    "Upload file" : "Fájl feltöltése",
     "This task does not exist or has been cleaned up" : "Ez a feladat nem létezik vagy már törlésre került"
 },
 "nplurals=2; plural=(n != 1);");

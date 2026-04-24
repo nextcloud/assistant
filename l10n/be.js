@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Add a calendar task" : "Дадаць заданне календара",
+    "Upload file" : "Запампаваць файл",
     "User not found" : "Карыстальнік не знойдзены",
     "The new message is too long" : "Новае паведамленне занадта доўгае",
     "Session not found" : "Сеанс не знойдзены",
@@ -11,8 +12,8 @@ OC.L10N.register(
     "\"%1$s\" task for \"%2$s\" has finished" : "Заданне \"%1$s\" для \"%2$s\" выканана",
     "View task" : "Праглядзець заданне",
     "Nextcloud Tasks" : "Заданні Nextcloud",
-    "OpenProject" : "OpenProject",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "OpenProject" : "OpenProject",
     "Other" : "Іншае",
     "Translate" : "Перакласці",
     "Assistant" : "Памочнік",
@@ -64,7 +65,6 @@ OC.L10N.register(
     "Upload from device" : "Запампаваць з прылады",
     "Clear value" : "Ачысціць значэнне",
     "Advanced" : "Пашыраныя",
-    "Copy" : "Капіяваць",
-    "Upload file" : "Запампаваць файл"
+    "Copy" : "Капіяваць"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

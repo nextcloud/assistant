@@ -2,6 +2,12 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Trimite un email",
+    "Upload file" : "Încarcă fișier",
+    "Move file" : "Mută fișierul",
+    "Copy file" : "Copiază fișierul",
+    "Delete circle" : "Șterge cerc",
+    "Create form" : "Crează formular",
+    "Delete form" : "Șterge formularul",
     "User not found" : "Utilizatorul nu a fost găsit",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Other" : "Altele",
@@ -25,7 +31,6 @@ OC.L10N.register(
     "No file selected" : "Niciun fișier selectat",
     "Upload from device" : "Încarcă din dispozitiv",
     "Advanced" : "Avansat",
-    "Copy" : "Copiază",
-    "Upload file" : "Încarcă fișier"
+    "Copy" : "Copiază"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

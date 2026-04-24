@@ -2,10 +2,13 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Send an email",
+    "Upload file" : "Upload file",
+    "Delete file" : "Delete file",
+    "Share with group" : "Share with group",
     "User not found" : "User not found",
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
-    "Nextcloud Mail" : "Nextcloud Mail",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Other",
     "Translate" : "გადათარგმნე",
     "Administration documentation" : "Administration documentation",
@@ -31,7 +34,6 @@ OC.L10N.register(
     "No file selected" : "No file selected",
     "Upload from device" : "Upload from device",
     "Advanced" : "Advanced",
-    "Copy" : "Copy",
-    "Upload file" : "Upload file"
+    "Copy" : "Copy"
 },
 "nplurals=2; plural=(n!=1);");

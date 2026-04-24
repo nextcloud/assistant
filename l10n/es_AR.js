@@ -1,9 +1,10 @@
 OC.L10N.register(
     "assistant",
     {
+    "Upload file" : "Cargar archivo",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
-    "Nextcloud Mail" : "Correo de Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
+    "Nextcloud Mail" : "Correo de Nextcloud",
     "Translate" : "Traducir",
     "Assistant" : "Asistente",
     "Administration documentation" : "Documentación de administración",
@@ -21,7 +22,6 @@ OC.L10N.register(
     "Choose a file" : "Seleccione un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Advanced" : "Avanzado",
-    "Copy" : "Copiar",
-    "Upload file" : "Cargar archivo"
+    "Copy" : "Copiar"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

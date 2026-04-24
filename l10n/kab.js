@@ -2,6 +2,7 @@ OC.L10N.register(
     "assistant",
     {
     "Send an email" : "Azen imayl",
+    "Delete file" : "Kkes afaylu",
     "Nextcloud Assistant" : "Amallal n Nextcloud",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Other" : "Wayeḍ",
