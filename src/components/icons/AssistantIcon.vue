@@ -72,6 +72,18 @@ export default {
   animation: pulse 0.6s ease 0.2s forwards;
 }
 
+button:focus-visible .assistant-icon .star1 {
+  animation: pulse 0.6s ease forwards;
+}
+
+button:focus-visible .assistant-icon .star2 {
+  animation: pulse 0.6s ease 0.1s forwards;
+}
+
+button:focus-visible .assistant-icon .star3 {
+  animation: pulse 0.6s ease 0.2s forwards;
+}
+
 /* No animation to avoid vestibular motion triggers. */
 @media (prefers-reduced-motion: reduce) {
   .assistant-icon:hover .star1 {
@@ -85,34 +97,17 @@ export default {
   .assistant-icon:hover .star3 {
     animation: none;
   }
+
+  button:focus-visible .assistant-icon .star1,
+  button:focus-visible .assistant-icon .star2,
+  button:focus-visible .assistant-icon .star3 {
+    animation: none;
+  }
 }
 
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.4); }
   100% { transform: scale(1); }
-}
-</style>
-
-<!-- Unscoped: trigger animation when a parent button receives keyboard focus -->
-<style>
-button:focus-visible .assistant-icon .star1 {
-  animation: pulse 0.6s ease forwards;
-}
-
-button:focus-visible .assistant-icon .star2 {
-  animation: pulse 0.6s ease 0.1s forwards;
-}
-
-button:focus-visible .assistant-icon .star3 {
-  animation: pulse 0.6s ease 0.2s forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  button:focus-visible .assistant-icon .star1,
-  button:focus-visible .assistant-icon .star2,
-  button:focus-visible .assistant-icon .star3 {
-    animation: none;
-  }
 }
 </style>
