@@ -1,5 +1,10 @@
 { "translations": {
     "Send an email" : "Изпращане на имейл",
+    "Move file" : "Премести файла",
+    "Copy file" : "Копирай файла",
+    "Delete file" : "Изтриване на файлове",
+    "Create bookmark" : "Създаване на отметка",
+    "Delete form" : "Изтриване на формуляр ",
     "User not found" : "Потребителят не е намерен ",
     "Nextcloud Assistant" : "Асистент на \"Nextcloud\"",
     "AI image generation" : "Генериране на изображение с помощта на изкуствен интелект",

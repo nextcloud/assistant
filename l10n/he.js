@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Send an email" : "שליחת דוא״ל",
     "Upload file" : "העלאת קובץ",
+    "Move file" : "העברת קובץ",
+    "Copy file" : "העתקת קובץ",
     "Delete file" : "מחיקת קובץ",
     "Create bookmark" : "יצירת סימנייה",
     "Delete circle" : "מחיקת מעגל",

@@ -2,6 +2,9 @@ OC.L10N.register(
     "assistant",
     {
     "Upload file" : "Cargar archivo",
+    "Move file" : "Mover archivo",
+    "Copy file" : "Copiar archivo",
+    "Delete form" : "Borrar formulario",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Nextcloud Mail" : "Correo de Nextcloud",

@@ -2,6 +2,11 @@ OC.L10N.register(
     "assistant",
     {
     "Upload file" : "Xubir un ficheru",
+    "Move file" : "Mover ficheru",
+    "Copy file" : "Copiar ficheru",
+    "Delete file" : "Desaniciar el ficheru",
+    "Share with group" : "Compartir col grupu",
+    "Delete share" : "Desaniciar la compartición",
     "User not found" : "Nun s'atopó l'usuariu",
     "Nextcloud Assistant" : "Asistente de Nextcloud",
     "AI text generation" : "Xeneración de testos per IA",
