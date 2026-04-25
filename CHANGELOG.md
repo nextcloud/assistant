@@ -10,6 +10,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.4.0 - 2026-04-27
+
+### Added
+- Make the modal non modal @julien-nc [#507](https://github.com/nextcloud/assistant/pull/507)
+- Upload files on drop in MediaField and ListOfMediaField @julien-nc [#435](https://github.com/nextcloud/assistant/pull/435)
+- Show provider information in the UI @zainabnaseer1164 [#483](https://github.com/nextcloud/assistant/pull/483)
+
+### Changed
+- Extend the list of translated tool labels and associated icons @marcelklehr [#509](https://github.com/nextcloud/assistant/pull/509)
+- updated dependencies
+- Put provider names in a popover @julien-nc [#501](https://github.com/nextcloud/assistant/pull/501)
+- Less task deletion @julien-nc [#498](https://github.com/nextcloud/assistant/pull/498)
+- lazy loading appconfigs @janepie [#478](https://github.com/nextcloud/assistant/pull/478)
+
+### Fixed
+- trigger assistant icon animation on keyboard focus @bigcat88 @janepie [#462](https://github.com/nextcloud/assistant/pull/462)
+- hide "Generate image" file menu action when no provider available @bigcat88 [#460](https://github.com/nextcloud/assistant/pull/460)
+- normalize millisecond timestamps in chat API @bigcat88 [#463](https://github.com/nextcloud/assistant/pull/463)
+- Fix chat message avatar @julien-nc [#496](https://github.com/nextcloud/assistant/pull/496)
+- Fix modal being too large in narrow screens @julien-nc [#490](https://github.com/nextcloud/assistant/pull/490)
+
+
 ## 3.3.0 - 2026-02-19
 
 ### Added
@@ -22,7 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Restrict the task type list when invoking the assistant from the picker @julien-nc [#457](https://github.com/nextcloud/assistant/pull/457)
 - Only get the tasks of the current user when checking message/title generation tasks @julien-nc [#467](https://github.com/nextcloud/assistant/pull/467)
 
-### Fix
+### Fixed
 
 - Fix(ChattyLLM): Fix title generation to work with languages other than english @marcelklehr [#451](https://github.com/nextcloud/assistant/pull/451)
 - Make summary service appId for the task specific @janepie [#456](https://github.com/nextcloud/assistant/pull/456)
