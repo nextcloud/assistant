@@ -11,6 +11,7 @@ OC.L10N.register(
     "Create form" : "Sukurti anketą",
     "Delete form" : "Ištrinti anketą",
     "Share with group" : "Bendrinti su grupe",
+    "Delete share" : "Ištrinti bendrinimą",
     "User not logged in" : "Naudotojas neprisijungęs",
     "User not found" : "Naudotojas nerastas",
     "Session not found" : "Seansas nerastas",

@@ -3,6 +3,9 @@ OC.L10N.register(
     {
     "Send an email" : "Enviar correo electrónico",
     "Upload file" : "Cargar archivo",
+    "Move file" : "Mover archivo",
+    "Copy file" : "Copiar archivo",
+    "Delete circle" : "Borrar círculo",
     "User not found" : "No se encontró el usuario",
     "Nextcloud Mail" : "Correo Nextcloud",
     "Other" : "Otro",

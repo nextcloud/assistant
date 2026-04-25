@@ -3,10 +3,13 @@ OC.L10N.register(
     {
     "Send an email" : "E-mail küldése",
     "Upload file" : "Fájl feltöltése",
+    "Move file" : "Fájl áthelyezés",
+    "Copy file" : "Fájl másolás",
     "Delete file" : "Fájl törlése",
     "Create bookmark" : "Könyvjelző létrehozása",
     "Create form" : "Űrlap létrehozása",
     "Delete form" : "Űrlap törlése",
+    "Delete share" : "Megosztás törlése",
     "User not found" : "A felhasználó nem található",
     "Nextcloud Assistant" : "Nextcloud Asszisztens",
     "AI text generation" : "AI szöveggenerálás",

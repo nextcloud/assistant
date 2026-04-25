@@ -7,6 +7,7 @@ OC.L10N.register(
     "Delete circle" : "Избриши круг",
     "Delete form" : "Избриши форма",
     "Share with group" : "Сподели со група",
+    "Delete share" : "Избриши споделување",
     "User not found" : "Корисникот не е пронајден",
     "Nextcloud Talk" : "Talk",
     "Nextcloud Mail" : "Електронска пошта",

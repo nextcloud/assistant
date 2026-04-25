@@ -5,6 +5,7 @@ OC.L10N.register(
     "Upload file" : "Upload file",
     "Delete file" : "Delete file",
     "Share with group" : "Share with group",
+    "Delete share" : "Delete share",
     "User not found" : "User not found",
     "Nextcloud Assistant" : "Nextcloud-ის ასისტენტი",
     "Nextcloud Talk" : "Nextcloud Talk",

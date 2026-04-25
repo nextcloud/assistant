@@ -20,6 +20,7 @@ OC.L10N.register(
     "Create form" : "ສ້າງແບບຟອມ",
     "Delete form" : "ລຶບແບບຟອມ",
     "Share with group" : "ແບ່ງປັນກັບກຸ່ມ",
+    "Delete share" : "ລຶບການແບ່ງປັນ",
     "User not logged in" : "ຜູ້ໃຊ້ບໍ່ໄດ້ເຂົ້າສູ່ລະບົບ",
     "User not found" : "ບໍ່ພົບຜູ້ໃຊ້",
     "Failed to create a chat session" : "ບໍ່ສາມາດສ້າງຊ່ວງການສົນທະນາໄດ້",

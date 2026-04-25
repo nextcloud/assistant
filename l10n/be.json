@@ -1,6 +1,11 @@
 { "translations": {
     "Add a calendar task" : "Дадаць заданне календара",
     "Upload file" : "Запампаваць файл",
+    "Create folder" : "Стварыць папку",
+    "Move file" : "Перанесці файл",
+    "Copy file" : "Скапіяваць файл",
+    "Delete file" : "Выдаліць файл",
+    "Share with group" : "Абагуліць з групай",
     "User not found" : "Карыстальнік не знойдзены",
     "The new message is too long" : "Новае паведамленне занадта доўгае",
     "Session not found" : "Сеанс не знойдзены",
