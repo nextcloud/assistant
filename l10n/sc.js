@@ -31,9 +31,9 @@ OC.L10N.register(
     "Choose file" : "Sèbera un'archìviu",
     "Choose a file" : "Sèbera un'archìviu",
     "No file selected" : "Perunu documentu seletzionadu",
+    "Could not upload the files" : "Impossìbile carrigare is archìvios",
     "Upload from device" : "Càrriga dae su dispositivu",
     "Advanced" : "Connoschèntzia avantzada",
-    "Copy" : "Còpia",
-    "Could not upload the files" : "Impossìbile carrigare is archìvios"
+    "Copy" : "Còpia"
 },
 "nplurals=2; plural=(n != 1);");
