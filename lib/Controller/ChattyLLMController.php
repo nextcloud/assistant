@@ -125,27 +125,27 @@ class ChattyLLMController extends OCSController {
 				'icon' => 'FolderPlus',
 			],
 			'create_circle' => [
-				'title' => $this->l10n->t('Create circle'),
+				'title' => $this->l10n->t('Create team'),
 				'icon' => 'AccountGroupPlus',
 			],
 			'add_member_to_circle' => [
-				'title' => $this->l10n->t('Add member to circle'),
+				'title' => $this->l10n->t('Add member to team'),
 				'icon' => 'AccountPlus',
 			],
 			'remove_member_from_circle' => [
-				'title' => $this->l10n->t('Remove member from circle'),
+				'title' => $this->l10n->t('Remove member from team'),
 				'icon' => 'AccountRemove',
 			],
 			'update_circle' => [
-				'title' => $this->l10n->t('Update circle'),
+				'title' => $this->l10n->t('Update team'),
 				'icon' => 'AccountGroupEdit',
 			],
 			'delete_circle' => [
-				'title' => $this->l10n->t('Delete circle'),
+				'title' => $this->l10n->t('Delete team'),
 				'icon' => 'AccountGroupRemove',
 			],
 			'share_with_circle' => [
-				'title' => $this->l10n->t('Share with circle'),
+				'title' => $this->l10n->t('Share with team'),
 				'icon' => 'ShareVariant',
 			],
 			'create_form' => [
