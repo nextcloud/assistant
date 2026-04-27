@@ -141,7 +141,6 @@ class AssistantService {
 			'list_decks' => $this->l10n->t('Nextcloud Deck'),
 			'list_forms' => $this->l10n->t('List forms'),
 			'list_messages_in_conversation' => $this->l10n->t('Nextcloud Talk'),
-			'duckduckgo_results_json' => $this->l10n->t('DuckDuckGo web search'),
 		];
 	}
 
