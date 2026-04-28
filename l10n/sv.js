@@ -8,7 +8,6 @@ OC.L10N.register(
     "Copy file" : "Kopiera fil",
     "Delete file" : "Ta bort fil",
     "Create bookmark" : "Skapa bokmärke",
-    "Delete circle" : "Ta bort cirkel",
     "Create form" : "Skapa formulär",
     "Delete form" : "Ta bort formuläret",
     "Share with group" : "Dela med grupp",

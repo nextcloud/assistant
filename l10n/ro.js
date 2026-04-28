@@ -5,7 +5,6 @@ OC.L10N.register(
     "Upload file" : "Încarcă fișier",
     "Move file" : "Mută fișierul",
     "Copy file" : "Copiază fișierul",
-    "Delete circle" : "Șterge cerc",
     "Create form" : "Crează formular",
     "Delete form" : "Șterge formularul",
     "User not found" : "Utilizatorul nu a fost găsit",

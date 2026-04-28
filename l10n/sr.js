@@ -13,7 +13,6 @@ OC.L10N.register(
     "Create folder" : "Креирај фолдер",
     "Delete file" : "Обриши фајл",
     "Create bookmark" : "Креирај маркер",
-    "Delete circle" : "Обриши круг",
     "Create form" : "Креирај формулар",
     "Delete form" : "Обриши упитник",
     "Share with group" : "Подели са групом",

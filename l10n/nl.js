@@ -21,7 +21,6 @@ OC.L10N.register(
     "Copy file" : "Bestand kopiëren",
     "Delete file" : "Bestand verwijderen",
     "Create bookmark" : "Maak bookmark aan",
-    "Delete circle" : "Kring verwijderen",
     "Delete form" : "Verwijderen formulier",
     "Share with group" : "Deel met groep",
     "Delete share" : "Verwijder share",

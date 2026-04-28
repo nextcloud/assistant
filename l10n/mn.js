@@ -18,7 +18,6 @@ OC.L10N.register(
     "Create a Deck card" : "Deck карт үүсгэх",
     "Upload file" : "Файл байршуулах",
     "Delete file" : "–§–∞–π–ª —É—Å—Ç–≥–∞—Ö",
-    "Delete circle" : "бүлгийг устгах",
     "Create form" : "Маягт үүсгэх",
     "Delete form" : "Маягт устгах",
     "Share with group" : "Бүлэгтэй хуваалцах",

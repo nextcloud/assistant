@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Upload file" : "Tải lên tập tin",
     "Delete file" : "Xoá tập tin",
-    "Delete circle" : "Xóa vòng kết nối",
     "Delete share" : "Xóa chia sẻ",
     "User not found" : "Không tìm thấy người dùng",
     "Nextcloud Assistant" : "Trợ lý Nextcloud",

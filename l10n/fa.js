@@ -5,7 +5,6 @@ OC.L10N.register(
     "Upload file" : "بارگذاری پرونده",
     "Delete file" : "حذف پرونده",
     "Create bookmark" : "Create bookmark",
-    "Delete circle" : "حذف حلقه",
     "Create form" : "ساخت فرم",
     "Delete form" : "حذف فرم",
     "Share with group" : "اشتراک‌گذاری با گروه",

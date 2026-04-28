@@ -22,7 +22,6 @@ OC.L10N.register(
     "Copy file" : "Zkopírovat soubor",
     "Delete file" : "Smazat soubor",
     "Create bookmark" : "Vytvořit záložku",
-    "Delete circle" : "Smazat kruh",
     "Create form" : "Vytvořit formulář",
     "Delete form" : "Smazat formulář",
     "Share with group" : "Nasdílet skupině",
