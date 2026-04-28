@@ -6,7 +6,6 @@ OC.L10N.register(
     "Copy file" : "Copiar archivo",
     "Delete file" : "Eliminar archivo",
     "Create bookmark" : "Crear marcador",
-    "Delete circle" : "Borrar círculo",
     "Delete form" : "Eliminar formulario",
     "User not found" : "No se encontró el usuario",
     "AI image generation" : "Generación de imágenes de IA",

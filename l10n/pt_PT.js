@@ -6,7 +6,6 @@ OC.L10N.register(
     "Move file" : "Mover ficheiro",
     "Copy file" : "Copiar ficheiro",
     "Delete file" : "Apagar ficheiro",
-    "Delete circle" : "Eliminar círculo",
     "Delete form" : "Apague formulário",
     "User not found" : "Utilizador não encontrado",
     "Nextcloud Talk" : "Nextcloud Talk",

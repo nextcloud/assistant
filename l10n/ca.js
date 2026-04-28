@@ -13,7 +13,6 @@ OC.L10N.register(
     "Copy file" : "Copiar fitxer",
     "Delete file" : "Suprimeix el fitxer",
     "Create bookmark" : "Crea una adreça d'interès",
-    "Delete circle" : "Esborra el cercle",
     "Delete form" : "Suprimeix el formulari",
     "Share with group" : "Comparteix amb el grup",
     "Delete share" : "Suprimeix l'element compartit",

@@ -7,7 +7,6 @@ OC.L10N.register(
     "Copy file" : "העתקת קובץ",
     "Delete file" : "מחיקת קובץ",
     "Create bookmark" : "יצירת סימנייה",
-    "Delete circle" : "מחיקת מעגל",
     "Delete form" : "מחיקת טופס",
     "User not found" : "המשתמש לא נמצא",
     "Nextcloud Mail" : "דוא״ל Nextcloud",

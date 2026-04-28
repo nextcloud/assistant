@@ -5,7 +5,6 @@ OC.L10N.register(
     "Upload file" : "Alŝuti dosieron",
     "Move file" : "Movi dosieron",
     "Copy file" : "Kopii dosieron",
-    "Delete circle" : "Forigi rondon",
     "Delete share" : "Forigi kunhavigon",
     "User not found" : "Netrovita uzanto",
     "Nextcloud Mail" : "Nextcloud-retpoŝtilo",

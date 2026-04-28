@@ -4,7 +4,6 @@ OC.L10N.register(
     "Send an email" : "Испрати е-пошта",
     "Upload file" : "Прикачи датотека",
     "Delete file" : "Избриши датотека",
-    "Delete circle" : "Избриши круг",
     "Delete form" : "Избриши форма",
     "Share with group" : "Сподели со група",
     "Delete share" : "Избриши споделување",

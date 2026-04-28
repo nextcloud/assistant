@@ -6,7 +6,6 @@ OC.L10N.register(
     "Copy file" : "Copiar archivo",
     "Delete file" : "Eliminar archivo",
     "Create bookmark" : "Crear marcador",
-    "Delete circle" : "Borrar círculo",
     "Delete form" : "Eliminar formulario",
     "Share with group" : "Compartir con el grupo",
     "Delete share" : "Borrar recurso compartido",
