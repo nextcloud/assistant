@@ -182,8 +182,12 @@ export async function openAssistantForm({
 				.catch(error => {
 					view.loading = false
 					view.showSyncTaskRunning = false
-					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
-					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
+					const serverMessage = error?.response?.data?.ocs?.data?.message
+					console.error('Assistant scheduling error', serverMessage)
+					showError(
+						t('assistant', 'Assistant error') + ': '
+						+ (serverMessage || t('assistant', 'Something went wrong when scheduling the task')),
+					)
 				})
 		}
 		modalMountPoint.addEventListener('sync-submit', (data) => {
@@ -634,8 +638,12 @@ export async function openAssistantTask(
 			.catch(error => {
 				view.loading = false
 				view.showSyncTaskRunning = false
-				console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
-				showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
+				const serverMessage = error?.response?.data?.ocs?.data?.message
+				console.error('Assistant scheduling error', serverMessage)
+				showError(
+					t('assistant', 'Assistant error') + ': '
+					+ (serverMessage || t('assistant', 'Something went wrong when scheduling the task')),
+				)
 			})
 	}
 	modalMountPoint.addEventListener('sync-submit', (data) => {

@@ -151,8 +151,12 @@ export default {
 				.catch(error => {
 					this.loading = false
 					this.showSyncTaskRunning = false
-					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
-					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
+					const serverMessage = error?.response?.data?.ocs?.data?.message
+					console.error('Assistant scheduling error', serverMessage)
+					showError(
+						t('assistant', 'Assistant error') + ': '
+						+ (serverMessage || t('assistant', 'Something went wrong when scheduling the task')),
+					)
 				})
 				.then(() => {
 				})
