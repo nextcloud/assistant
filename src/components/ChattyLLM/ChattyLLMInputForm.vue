@@ -217,6 +217,7 @@ import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import moment from 'moment'
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
+import { getErrorMessage } from '../../utils.js'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -378,7 +379,7 @@ export default {
 						}
 					} catch (error) {
 						console.error('onCheckSessionTitle error:', error)
-						showError(error?.response?.data?.error ?? t('assistant', 'Error getting the generated title for the conversation'))
+						showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error getting the generated title for the conversation'))
 					}
 				}
 			} catch (error) {
@@ -443,7 +444,7 @@ export default {
 				session.title = newTitle
 			} catch (error) {
 				console.error('updateTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error updating title of conversation'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error updating title of conversation'))
 			} finally {
 				this.loading.updateTitle = false
 			}
@@ -540,7 +541,7 @@ export default {
 				}
 			} catch (error) {
 				console.error('onGenerateSessionTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title for the conversation'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error generating a title for the conversation'))
 			} finally {
 				this.loading.titleGeneration = false
 			}
@@ -558,7 +559,7 @@ export default {
 				}
 			} catch (error) {
 				console.error('deleteSession error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting conversation'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error deleting conversation'))
 			} finally {
 				this.loading.sessionDelete = false
 				this.sessionIdToDelete = null
@@ -573,7 +574,7 @@ export default {
 			} catch (error) {
 				this.sessions = []
 				console.error('fetchSessions error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error fetching conversations'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error fetching conversations'))
 			}
 		},
 
@@ -586,7 +587,7 @@ export default {
 				this.messages = this.messages.filter((message) => message.id !== messageId)
 			} catch (error) {
 				console.error('deleteMessage error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting message'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error deleting message'))
 			} finally {
 				this.loading.messageDelete = false
 			}
@@ -647,7 +648,7 @@ export default {
 				this.messages = null
 				this.messagesAxiosController = null
 				console.error('fetchMessages error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error fetching messages'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error fetching messages'))
 			}
 		},
 
@@ -685,7 +686,7 @@ export default {
 			} catch (error) {
 				this.loading.newHumanMessage = false
 				console.error('newMessage error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error creating a new message'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error creating a new message'))
 			}
 		},
 
@@ -710,7 +711,7 @@ export default {
 			} catch (error) {
 				this.loading.newSession = false
 				console.error('newSession error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error creating a new conversation'))
+				showError(getErrorMessage(error?.response?.data?.error) ?? t('assistant', 'Error creating a new conversation'))
 			}
 		},
 
