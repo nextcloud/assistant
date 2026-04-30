@@ -84,6 +84,16 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     sessionAgencyPendingActions: ?array<string, mixed>,
  *     is_remembered: ?bool,
  * }
+ *
+ * @psalm-type AssistantAssignment = array{
+ *      id: int,
+ *      user_id: string,
+ *      prompt: string,
+ *     	recurrence: string,
+ *      created_at: int,
+ *      updated_at: int,
+ *      starts_at: int
+ *  }
  */
 class ResponseDefinitions {
 }

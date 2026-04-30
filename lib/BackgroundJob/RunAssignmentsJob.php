@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+namespace OCA\Assistant\BackgroundJob;
+
+use OCA\Assistant\Service\SessionSummaryService;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\TimedJob;
+
+class GenerateNewChatSummaries extends TimedJob {
+	public function __construct(
+		ITimeFactory $timeFactory,
+		private AssignmentService $assignmentService,
+	) {
+		parent::__construct($timeFactory);
+		$this->setAllowParallelRuns(true);
+		$this->setTimeSensitivity(self::TIME_SENSITIVE);
+		$this->setInterval(60 * 10); // 10min
+	}
+	public function run($argument) {
+		$userId = $argument['userId'];
+		$this->assignmentService->generateSummariesForNewSessions($userId);
+	}
+}
