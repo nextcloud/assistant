@@ -275,7 +275,7 @@ OC.L10N.register(
     "Regenerate message" : "Atkurti pranešimą",
     "Delete message" : "Ištrinti pranešimą",
     "Select Files/Folders" : "Pasirinkite failus / aplankus",
-    "Select Providers" : "Pasirinkite teikėjus",
+    "Select Providers" : "Pasirinkti tiekėjus",
     "Choose Files/Folders" : "Pasirinkite failus / aplankus",
     "Choose" : "Pasirinkite",
     "Clear Selection" : "Išvalyti pasirinkimą",
