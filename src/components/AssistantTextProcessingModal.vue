@@ -214,6 +214,8 @@ export default {
 	resize: both;
 	overflow: hidden;
 	filter: drop-shadow(0 0 15px rgba(77, 77, 77, 0.5));
+	color: var(--color-main-text);
+	background-color: var(--color-main-background);
 }
 
 .assistant-modal .p-dialog-header {
