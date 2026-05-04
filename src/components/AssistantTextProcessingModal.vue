@@ -216,6 +216,7 @@ export default {
 	filter: drop-shadow(0 0 15px rgba(77, 77, 77, 0.5));
 	color: var(--color-main-text);
 	background-color: var(--color-main-background);
+	border: 0;
 }
 
 .assistant-modal .p-dialog-header {
@@ -237,8 +238,8 @@ export default {
 		width: var(--default-clickable-area);
 		height: var(--default-clickable-area);
 		&:hover {
-			background-color: var(--color-background-hover);
-			border: none;
+			background-color: var(--color-background-hover) !important;
+			border: none !important;
 		}
 	}
 }
