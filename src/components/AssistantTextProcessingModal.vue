@@ -238,8 +238,8 @@ export default {
 		width: var(--default-clickable-area);
 		height: var(--default-clickable-area);
 		&:hover {
-			background-color: var(--color-background-hover);
-			border: none;
+			background-color: var(--color-background-hover) !important;
+			border: none !important;
 		}
 	}
 }
