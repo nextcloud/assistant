@@ -9,39 +9,96 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Service;
 
+use OCA\Assistant\BackgroundJob\RunAssignmentsJob;
+use OCA\Assistant\Db\Assignment;
 use OCA\Assistant\Db\ChattyLLM\AssignmentMapper;
-use OCA\Assistant\Db\ChattyLLM\MessageMapper;
+use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
-use OCP\IAppConfig;
 use Psr\Log\LoggerInterface;
 
 class AssignmentsService {
 	public function __construct(
 		private AssignmentMapper $assignmentMapper,
 		private SessionMapper $sessionMapper,
-		private MessageMapper $messageMapper,
-		private TaskProcessingService $taskProcessingService,
+		private ChatService $chatService,
+		private ITimeFactory $timeFactory,
 		private LoggerInterface $logger,
-		private IAppConfig $appConfig,
 		private IJobList $jobList,
 	) {
 	}
 
-	public function runDueAssignmentsForUser(string $userId) {
+	/**
+	 * @throws InternalException
+	 * @throws UnauthorizedException
+	 */
+	public function createAssignment(?string $userId, string $prompt, int $startsAt, string $recurrence): Assignment {
+		if ($userId === null) {
+			throw new UnauthorizedException();
+		}
+		$assignment = new Assignment();
+		$assignment->setUserId($userId);
+		$assignment->setPrompt($prompt);
+		$assignment->setStartsAt($startsAt);
+		$assignment->setRecurrence($recurrence);
+		try {
+			$this->assignmentMapper->insert($assignment);
+		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		$session = $this->chatService->createChatSession($userId, $this->timeFactory->now()->getTimestamp(), 'Assignment ' . $assignment->getId()); // TODO: Add a proper title here
+		$session->setAssignmentId($assignment->getId());
+		try {
+			$this->sessionMapper->update($session);
+		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		if (!$this->jobList->has(RunAssignmentsJob::class, ['userId' => $userId])) {
+			$this->jobList->add(RunAssignmentsJob::class, ['userId' => $userId]);
+		}
+		return $assignment;
+	}
+
+	/**
+	 * @throws InternalException
+	 */
+	public function runDueAssignmentsForUser(?string $userId) {
 		try {
 			foreach ($this->assignmentMapper->findDueAssignmentsForUser($userId) as $assignment) {
-				try {
-					$session = $this->sessionMapper->getUserSessionForAssignment($userId, $assignment->getId());
-				} catch (DoesNotExistException $e) {
-				} catch (MultipleObjectsReturnedException $e) {
-				}
+				$this->scheduleAssignmentRun($userId, $assignment->getId());
 			}
 		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+	}
 
+	public function scheduleAssignmentRun(?string $userId, int $assignmentId): void {
+		try {
+			try {
+				$session = $this->sessionMapper->getUserSessionForAssignment($userId, $assignmentId);
+			} catch (DoesNotExistException $e) {
+				throw new NotFoundException(previous: $e);
+			} catch (MultipleObjectsReturnedException $e) {
+				throw new InternalException(previous: $e);
+			}
+			$assignment = $this->assignmentMapper->find($userId, $assignmentId);
+			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt(), $this->timeFactory->now()->getTimestamp());
+			$this->chatService->scheduleMessageGeneration($userId, $session->getId());
+		} catch (BadRequestException|InternalException|DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
+			$this->logger->error('Error while running assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+		} catch (NotFoundException $e) {
+			try {
+				$this->assignmentMapper->delete($assignment);
+			} catch (Exception $e) {
+				$this->logger->error('Error while deleting assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+			}
+		} catch (UnauthorizedException $e) {
+			// this should not happen
+			$this->logger->error('Unauthorized to run assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
 		}
 	}
 }

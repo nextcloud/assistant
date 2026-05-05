@@ -29,6 +29,8 @@ use OCP\DB\Types;
  * @method \void setAttachments(?string $attachments)
  */
 class Message extends Entity implements \JsonSerializable {
+	public const ROLE_HUMAN = 'human';
+
 	/** @var int */
 	protected $sessionId;
 	/** @var string */

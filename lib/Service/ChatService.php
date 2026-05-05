@@ -164,7 +164,7 @@ class ChatService {
 	 * @throws NotFoundException
 	 * @throws UnauthorizedException
 	 */
-	public function createMessage(?string $userId, int $sessionId, string $role, string $content, int $timestamp, ?array $attachments, bool $firstHumanMessage = false): Message {
+	public function createMessage(?string $userId, int $sessionId, string $role, string $content, int $timestamp, ?array $attachments = null, bool $firstHumanMessage = false): Message {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
@@ -393,7 +393,7 @@ class ChatService {
 			}
 			do {
 				$lastUserMessage = array_pop($history);
-			} while ($lastUserMessage->getRole() !== 'human');
+			} while ($lastUserMessage->getRole() !== Message::ROLE_HUMAN);
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;

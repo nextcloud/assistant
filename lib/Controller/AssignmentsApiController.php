@@ -10,6 +10,9 @@ namespace OCA\Assistant\Controller;
 use OCA\Assistant\Db\Assignment;
 use OCA\Assistant\Db\ChattyLLM\AssignmentMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\AssignmentsService;
+use OCA\Assistant\Service\InternalException;
+use OCA\Assistant\Service\UnauthorizedException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
@@ -34,8 +37,33 @@ class AssignmentsApiController extends OCSController {
 		private AssignmentMapper $assignmentMapper,
 		private LoggerInterface $logger,
 		private ITimeFactory $timeFactory,
+		private AssignmentsService $assignmentsService,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * Create a new assignment
+	 *
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, '', array{}>
+	 *
+	 * 200: User assignments returned
+	 * 403: User not logged in
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
+	#[Http\Attribute\ApiRoute(verb: 'POST', url: '/assignments')]
+	public function createUserAssignment(string $prompt, int $startsAt, string $recurrence): DataResponse {
+		try {
+			$assignment = $this->assignmentsService->createAssignment($this->userId, $prompt, $startsAt, $recurrence);
+			$serializedAssignment = $assignment->jsonSerialize();
+			return new DataResponse(['assignment' => $serializedAssignment]);
+		} catch (InternalException $e) {
+			$this->logger->error('Error while fetching assignments for user ' . $this->userId, ['exception' => $e]);
+			return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (UnauthorizedException $e) {
+			return new DataResponse('', Http::STATUS_FORBIDDEN);
+		}
 	}
 
 	/**

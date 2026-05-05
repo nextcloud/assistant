@@ -9,13 +9,17 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\BackgroundJob;
 
+use OCA\Assistant\Service\AssignmentsService;
+use OCA\Assistant\Service\InternalException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
+use Psr\Log\LoggerInterface;
 
-class GenerateNewChatSummaries extends TimedJob {
+class RunAssignmentsJob extends TimedJob {
 	public function __construct(
 		ITimeFactory $timeFactory,
-		private AssignmentService $assignmentService,
+		private AssignmentsService $assignmentService,
+		private LoggerInterface $logger,
 	) {
 		parent::__construct($timeFactory);
 		$this->setAllowParallelRuns(true);
@@ -24,6 +28,10 @@ class GenerateNewChatSummaries extends TimedJob {
 	}
 	public function run($argument) {
 		$userId = $argument['userId'];
-		$this->assignmentService->generateSummariesForNewSessions($userId);
+		try {
+			$this->assignmentService->runDueAssignmentsForUser($userId);
+		} catch (InternalException $e) {
+			$this->logger->error('Error running assignments for user ' . $userId, ['exception' => $e]);
+		}
 	}
 }
