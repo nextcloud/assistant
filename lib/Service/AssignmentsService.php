@@ -19,6 +19,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
+use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
 class AssignmentsService {
@@ -29,6 +30,7 @@ class AssignmentsService {
 		private ITimeFactory $timeFactory,
 		private LoggerInterface $logger,
 		private IJobList $jobList,
+		private IL10N $l10n,
 	) {
 	}
 
@@ -98,10 +100,25 @@ class AssignmentsService {
 				throw new InternalException(previous: $e);
 			}
 			$assignment = $this->assignmentMapper->find($userId, $assignmentId);
+			$assignment->setLastRunAt($this->timeFactory->now()->getTimestamp());
+			$this->assignmentMapper->update($assignment);
 			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt(), $this->timeFactory->now()->getTimestamp());
-			$this->chatService->scheduleMessageGeneration($userId, $session->getId());
+			$this->chatService->scheduleAssignmentMessageGeneration($userId, $session->getId());
 		} catch (BadRequestException|InternalException|DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
 			$this->logger->error('Error while running assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+			if (isset($session)) {
+				try {
+					$this->chatService->createMessage(
+						$userId,
+						$session->getId(),
+						message::ROLE_ASSISTANT,
+						$this->l10n->t('An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists.'),
+						$this->timeFactory->now()->getTimestamp()
+					);
+				} catch (BadRequestException|InternalException|NotFoundException|UnauthorizedException $e) {
+					$this->logger->error('Error while creating error message for assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+				}
+			}
 		} catch (NotFoundException $e) {
 			try {
 				$this->assignmentMapper->delete($assignment);

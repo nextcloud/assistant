@@ -113,19 +113,20 @@ class Assignment extends Entity implements \JsonSerializable {
 	public function isDueToRun(\DateTimeImmutable $now): bool {
 		try {
 			$startsAt = new \DateTime('@' . $this->getStartsAt());
+			$lastRunAt = new \DateTime('@' . $this->getLastRunAt());
 			// Find recurrences after the last run or after the current time if this assignment has never run
 			$rule = new Rule($this->getRecurrence(), $startsAt);
 			$transformer = new \Recurr\Transformer\ArrayTransformer();
-			$constraint = new AfterConstraint($this->getLastRunAt() !== 0 ? new \DateTime('@' . $this->getLastRunAt()) : $startsAt, true);
+			$constraint = new AfterConstraint($this->getLastRunAt() !== 0 ? $lastRunAt : $startsAt, false);
 			/** @var RecurrenceCollection $collection */
 			$collection = $transformer->transform($rule, $constraint);
 			if ($collection->isEmpty()) {
 				return false;
 			}
 			$nextRecurrence = $collection->first();
-			if ($nextRecurrence->getStart()->getTimestamp() <= $now->getTimestamp() && $nextRecurrence->getStart()->getTimestamp() > $this->getLastRunAt()) {
-				return true;
-			}
+			$isDue = $nextRecurrence->getStart()->getTimestamp() <= $now->getTimestamp() && $nextRecurrence->getStart()->getTimestamp() > $this->getLastRunAt();
+			\OCP\Log\logger('assistant')->debug('Next recurrence of assignment ' . $this->getId().' of user ' . $this->getUserId() . ': ' . $nextRecurrence->getStart()->format('Y-m-d H:i:s') . ' - isDue: ' . ($isDue ? 'true' : 'false'));
+			return $isDue;
 		} catch (InvalidRRule|\Exception|NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 			// this should not happen, as we validate the rule on setRecurrence, but just in case, we catch the exception and log it
 			logger('assistant')->error($e->getMessage(), ['exception' => $e]);

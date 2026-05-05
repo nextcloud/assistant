@@ -31,6 +31,8 @@ use OCP\DB\Types;
 class Message extends Entity implements \JsonSerializable {
 	public const ROLE_HUMAN = 'human';
 
+	public const ROLE_ASSISTANT = 'assistant';
+
 	/** @var int */
 	protected $sessionId;
 	/** @var string */

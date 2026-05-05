@@ -422,6 +422,54 @@ class ChatService {
 	}
 
 	/**
+	 * @throws InternalException
+	 * @throws BadRequestException
+	 * @throws NotFoundException
+	 * @throws UnauthorizedException
+	 */
+	public function scheduleAssignmentMessageGeneration(?string $userId, int $sessionId): int {
+		if ($userId === null) {
+			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
+		}
+		try {
+			$sessionExists = $this->sessionMapper->exists($userId, $sessionId);
+		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		if (!$sessionExists) {
+			throw new NotFoundException($this->l10n->t('Session not found'));
+		}
+
+		if (!$this->isContextAgentAvailable()) {
+			throw new BadRequestException('context_agent_not_available');
+		}
+		try {
+			$lastUserMessage = $this->messageMapper->getLastHumanMessage($sessionId);
+		} catch (DoesNotExistException $e) {
+			throw new NotFoundException($this->l10n->t('No user message found in this session'), previous: $e);
+		} catch (MultipleObjectsReturnedException|Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+
+
+		try {
+			$session = $this->sessionMapper->getUserSession($userId, $sessionId);
+		} catch (DoesNotExistException $e) {
+			throw new NotFoundException($this->l10n->t('Session not found'), previous: $e);
+		} catch (MultipleObjectsReturnedException|Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		// We reset the context for each interaction, because this is an assignment,
+		// the assistant does not remember things between assignment runs
+		$lastConversationToken = '{}';
+
+		// classic agency
+		$prompt = $lastUserMessage->getContent();
+		$taskId = $this->scheduleAgencyTask($userId, $prompt, 0, $lastConversationToken, $sessionId);
+		return $taskId;
+	}
+
+	/**
 	 * @throws BadRequestException
 	 * @throws InternalException
 	 * @throws NotFoundException
@@ -494,7 +542,7 @@ class ChatService {
 				'role' => $message->getRole(),
 			];
 			$attachments = $message->jsonSerialize()['attachments'];
-			if ($message->getRole() === 'assistant'
+			if ($message->getRole() === Message::ROLE_ASSISTANT
 				&& count($attachments) > 0
 				&& $attachments[0]['type'] === 'Audio'
 				&& isset($attachments[0]['remote_audio_id'])
