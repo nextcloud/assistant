@@ -36,7 +36,7 @@ class AssignmentMapper extends QBMapper {
 	 */
 	public function find(string $userId, int $assignmentId): Assignment {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select('id')
+		$qb->select(Assignment::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('id', $qb->createPositionalParameter($assignmentId, IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
@@ -69,7 +69,7 @@ class AssignmentMapper extends QBMapper {
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
 			->orderBy('created_at', 'DESC');
 
-		yield * $this->yieldEntities($qb);
+		yield from $this->yieldEntities($qb);
 	}
 
 	/**
@@ -78,6 +78,9 @@ class AssignmentMapper extends QBMapper {
 	 */
 	public function findDueAssignmentsForUser(string $userId): \Generator {
 		foreach ($this->findForUser($userId) as $assignment) {
+			if ($assignment === null) {
+				continue;
+			}
 			if (!$assignment->isDueToRun($this->timeFactory->now())) {
 				continue;
 			}
