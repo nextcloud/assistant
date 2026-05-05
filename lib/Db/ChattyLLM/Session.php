@@ -86,7 +86,7 @@ class Session extends Entity implements \JsonSerializable {
 		'summary',
 		'isSummaryUpToDate',
 		'isRemembered',
-		'assignment_id'
+		'assignmentId'
 	];
 
 	public function __construct() {

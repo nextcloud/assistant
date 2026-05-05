@@ -24,7 +24,7 @@ class RunAssignmentsJob extends TimedJob {
 		parent::__construct($timeFactory);
 		$this->setAllowParallelRuns(true);
 		$this->setTimeSensitivity(self::TIME_SENSITIVE);
-		$this->setInterval(60 * 10); // 10min
+		$this->setInterval(60); // 1min
 	}
 	public function run($argument) {
 		$userId = $argument['userId'];

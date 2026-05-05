@@ -11,7 +11,7 @@ namespace OCA\Assistant\Service;
 
 use OCA\Assistant\BackgroundJob\RunAssignmentsJob;
 use OCA\Assistant\Db\Assignment;
-use OCA\Assistant\Db\ChattyLLM\AssignmentMapper;
+use OCA\Assistant\Db\AssignmentMapper;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -41,10 +41,14 @@ class AssignmentsService {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
+		$now = $this->timeFactory->now()->getTimestamp();
 		$assignment = new Assignment();
 		$assignment->setUserId($userId);
 		$assignment->setPrompt($prompt);
 		$assignment->setStartsAt($startsAt);
+		$assignment->setLastRunAt(0);
+		$assignment->setCreatedAt($now);
+		$assignment->setUpdatedAt($now);
 		try {
 			$assignment->setRecurrence($recurrence);
 		} catch (\InvalidArgumentException $e) {

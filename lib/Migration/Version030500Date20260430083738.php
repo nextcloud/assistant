@@ -66,6 +66,7 @@ class Version030500Date20260430083738 extends SimpleMigrationStep {
 		}
 		if ($schema->hasTable('assistant_chat_sns')) {
 			$schemaChanged = true;
+			$table = $schema->getTable('assistant_chat_sns');
 			$table->addColumn('assignment_id', Types::BIGINT, [
 				'notnull' => false,
 			]);

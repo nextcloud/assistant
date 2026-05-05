@@ -7,7 +7,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\Assistant\Db\ChattyLLM;
+namespace OCA\Assistant\Db;
 
 use OCA\Assistant\Db\Assignment;
 use OCP\AppFramework\Db\DoesNotExistException;

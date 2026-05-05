@@ -8,7 +8,7 @@
 namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\Db\Assignment;
-use OCA\Assistant\Db\ChattyLLM\AssignmentMapper;
+use OCA\Assistant\Db\AssignmentMapper;
 use OCA\Assistant\ResponseDefinitions;
 use OCA\Assistant\Service\AssignmentsService;
 use OCA\Assistant\Service\InternalException;
