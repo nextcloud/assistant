@@ -34,7 +34,6 @@ class AssignmentsApiController extends OCSController {
 		private AssignmentMapper $assignmentMapper,
 		private LoggerInterface $logger,
 		private ITimeFactory $timeFactory,
-
 	) {
 		parent::__construct($appName, $request);
 	}

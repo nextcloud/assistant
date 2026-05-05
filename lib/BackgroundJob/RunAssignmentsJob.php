@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\BackgroundJob;
 
-use OCA\Assistant\Service\SessionSummaryService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
