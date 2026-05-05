@@ -78,6 +78,9 @@ class AssignmentsService {
 	public function runDueAssignmentsForUser(?string $userId) {
 		try {
 			foreach ($this->assignmentMapper->findDueAssignmentsForUser($userId) as $assignment) {
+				if ($assignment === null) {
+					continue;
+				}
 				$this->scheduleAssignmentRun($userId, $assignment->getId());
 			}
 		} catch (Exception $e) {
