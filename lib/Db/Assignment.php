@@ -11,6 +11,13 @@ namespace OCA\Assistant\Db;
 
 use OCP\AppFramework\Db\Entity;
 use OCP\DB\Types;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Recurr\Exception\InvalidRRule;
+use Recurr\RecurrenceCollection;
+use Recurr\Rule;
+use Recurr\Transformer\Constraint\AfterConstraint;
+use function OCP\Log\logger;
 
 /**
  * @method \string getUserId()
@@ -18,7 +25,6 @@ use OCP\DB\Types;
  * @method \string getPrompt()
  * @method \void setPrompt(string $prompt)
  * @method \string getRecurrence()
- * @method \void setRecurrence(string $recurrence)
  * @method \int getStartsAt()
  * @method \void setStartsAt(int $startsAt)
  * @method \int getCreatedAt()
@@ -90,10 +96,40 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
+	 * @throws \InvalidArgumentException
+	 */
+	public function setRecurrence(string $recurrence): void {
+		try {
+			new Rule($recurrence);
+		} catch (InvalidRRule $e) {
+			throw new \InvalidArgumentException('Invalid recurrence rule: ' . $recurrence, previous: $e);
+		}
+		$this->setter('recurrence', [$recurrence]);
+	}
+
+	/**
 	 * Evaluates the recurrence rule and checks if a run is due
 	 */
 	public function isDueToRun(\DateTimeImmutable $now): bool {
-		// TODO: Use an actual algorithm here
-		return true;
+		try {
+			$startsAt = new \DateTime('@' . $this->getStartsAt());
+			// Find recurrences after the last run or after the current time if this assignment has never run
+			$rule = new Rule($this->getRecurrence(), $startsAt);
+			$transformer = new \Recurr\Transformer\ArrayTransformer();
+			$constraint = new AfterConstraint($this->getLastRunAt() !== 0 ? new \DateTime('@' . $this->getLastRunAt()) : $startsAt, true);
+			/** @var RecurrenceCollection $collection */
+			$collection = $transformer->transform($rule, $constraint);
+			if ($collection->isEmpty()) {
+				return false;
+			}
+			$nextRecurrence = $collection->first();
+			if ($nextRecurrence->getStart()->getTimestamp() <= $now->getTimestamp() && $nextRecurrence->getStart()->getTimestamp() > $this->getLastRunAt()) {
+				return true;
+			}
+		} catch (InvalidRRule|\Exception|NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+			// this should not happen, as we validate the rule on setRecurrence, but just in case, we catch the exception and log it
+			logger('assistant')->error($e->getMessage(), ['exception' => $e]);
+		}
+		return false;
 	}
 }

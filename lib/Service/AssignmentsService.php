@@ -35,6 +35,7 @@ class AssignmentsService {
 	/**
 	 * @throws InternalException
 	 * @throws UnauthorizedException
+	 * @throws BadRequestException
 	 */
 	public function createAssignment(?string $userId, string $prompt, int $startsAt, string $recurrence): Assignment {
 		if ($userId === null) {
@@ -44,7 +45,11 @@ class AssignmentsService {
 		$assignment->setUserId($userId);
 		$assignment->setPrompt($prompt);
 		$assignment->setStartsAt($startsAt);
-		$assignment->setRecurrence($recurrence);
+		try {
+			$assignment->setRecurrence($recurrence);
+		} catch (\InvalidArgumentException $e) {
+			throw new BadRequestException('Invalid recurrence rule', previous: $e);
+		}
 		try {
 			$this->assignmentMapper->insert($assignment);
 		} catch (Exception $e) {

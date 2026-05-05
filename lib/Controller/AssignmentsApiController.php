@@ -132,6 +132,7 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
+	 * 400: Malformed recurrence rule
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
@@ -144,7 +145,11 @@ class AssignmentsApiController extends OCSController {
 					$assignment->setPrompt($prompt);
 				}
 				if ($recurrence !== null) {
-					$assignment->setRecurrence($recurrence);
+					try {
+						$assignment->setRecurrence($recurrence);
+					} catch (\InvalidArgumentException $e) {
+						return new DataResponse('', HTTP::STATUS_BAD_REQUEST);
+					}
 				}
 				if ($startsAt !== null) {
 					$assignment->setStartsAt($startsAt);
