@@ -11,8 +11,6 @@ import Aura from '@primeuix/themes/aura'
 
 window.assistantPollTimerId = null
 
-// TODO add param to lock on specific task type
-
 /**
  * Creates an assistant modal and return a promise which provides the result
  *
@@ -63,6 +61,12 @@ export async function openAssistantForm({
 	const selectedTaskTypeId = taskType ?? (await getLastSelectedTaskType())?.data
 
 	return new Promise((resolve, reject) => {
+		if (OCA.Assistant.isAssistantDialogOpen) {
+			reject(new Error('Assistant dialog is already open'))
+			return
+		}
+		OCA.Assistant.isAssistantDialogOpen = true
+
 		let modalMountPoint
 		const content = document.querySelector('#content') ?? document.querySelector('#content-vue')
 
@@ -121,6 +125,7 @@ export async function openAssistantForm({
 		modalMountPoint.addEventListener('cancel', () => {
 			cancelTaskPolling()
 			app.unmount()
+			OCA.Assistant.isAssistantDialogOpen = false
 			reject(new Error('User cancellation'))
 		})
 		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
@@ -144,6 +149,7 @@ export async function openAssistantForm({
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							if (closeOnResult) {
 								app.unmount()
+								OCA.Assistant.isAssistantDialogOpen = false
 							} else {
 								view.outputs = finishedTask?.output
 							}
@@ -305,6 +311,7 @@ export async function openAssistantForm({
 				data.detail.button.onClick(lastTask)
 			}
 			app.unmount()
+			OCA.Assistant.isAssistantDialogOpen = false
 		})
 	})
 }
@@ -487,7 +494,9 @@ export function handleNotification(event) {
 async function showAssistantTaskResult(taskId) {
 	getTask(taskId).then(response => {
 		console.debug('showing results for task', response.data?.ocs?.data?.task)
-		openAssistantTask(response.data?.ocs?.data?.task, {})
+		openAssistantTask(response.data?.ocs?.data?.task, {}).catch(error => {
+			console.error(error.message)
+		})
 	}).catch(error => {
 		if (error.response?.status === 401) {
 			showError(t('assistant', 'Please log in to view the task result'))
@@ -516,6 +525,11 @@ export async function openAssistantTask(
 		actionButtons = undefined,
 		mountPoint = null,
 	} = {}) {
+	if (OCA.Assistant.isAssistantDialogOpen) {
+		throw new Error('Assistant dialog is already open')
+	}
+	OCA.Assistant.isAssistantDialogOpen = true
+
 	const { createApp } = await import('vue')
 	const { default: AssistantTextProcessingModal } = await import('./components/AssistantTextProcessingModal.vue')
 
@@ -567,6 +581,7 @@ export async function openAssistantTask(
 	modalMountPoint.addEventListener('cancel', () => {
 		cancelTaskPolling()
 		app.unmount()
+		OCA.Assistant.isAssistantDialogOpen = false
 	})
 	modalMountPoint.addEventListener('submit', (data) => {
 		scheduleTask(task.appId, task.identifier ?? '', data.detail.selectedTaskTypeId, data.detail.inputs)
@@ -575,6 +590,7 @@ export async function openAssistantTask(
 			})
 			.catch(error => {
 				app.unmount()
+				OCA.Assistant.isAssistantDialogOpen = false
 				console.error('Assistant scheduling error', error)
 				showError(
 					t('assistant', 'Assistant failed to schedule your task')
@@ -754,6 +770,7 @@ export async function openAssistantTask(
 			data.detail.button.onClick(lastTask)
 		}
 		app.unmount()
+		OCA.Assistant.isAssistantDialogOpen = false
 	})
 }
 
