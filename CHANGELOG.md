@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.4.1 - 2026-05-04
+
+### Fixed
+- l10n: Use "teams" instead of the old "circles" @marcelklehr [#514](https://github.com/nextcloud/assistant/pull/514)
+- UI issues @julien-nc [#519](https://github.com/nextcloud/assistant/pull/519)
+- remove the dailog border @julien-nc [#520](https://github.com/nextcloud/assistant/pull/520)
+
 ## 3.4.0 - 2026-04-27
 
 ### Added
