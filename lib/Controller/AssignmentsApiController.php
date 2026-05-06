@@ -44,7 +44,9 @@ class AssignmentsApiController extends OCSController {
 
 	/**
 	 * Create a new assignment
-	 *
+	 * @param string $prompt The prompt to be sent to the assistant when the assignment is executed
+	 * @param int $startsAt The timestamp when the assignment should start being executed
+	 * @param string $recurrence The recurrence rule for the assignment, in RRULE format (e.g. "FREQ=DAILY;INTERVAL=1" for a daily assignment)
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *
 	 * 200: User assignments returned
@@ -97,14 +99,15 @@ class AssignmentsApiController extends OCSController {
 	}
 
 	/**
-	 * Get user's assignments
+	 * Get user's assignment
 	 *
-	 * Get a list of assignmetns for the current user.
+	 * @param int $id The id of the assignment to return
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
+	 * 404: Assignment not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
@@ -127,15 +130,19 @@ class AssignmentsApiController extends OCSController {
 	}
 
 	/**
-	 * Get user's assignments
+	 * Update a user's assignment
 	 *
-	 * Get a list of assignmetns for the current user.
+	 * @param int $id The id of the assignment
+	 * @param string|null $prompt The prompt to be sent to the assistant when the assignment is executed
+	 * @param int|null $startsAt The timestamp when the assignment should start being executed
+	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|HTTP::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
 	 * 400: Malformed recurrence rule
+	 * 404: Assignment not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
@@ -174,10 +181,11 @@ class AssignmentsApiController extends OCSController {
 
 	/**
 	 * Delete a user's assignment
-	 *	 *
+	 *
+	 * @param int $id The id of the assignment to delete
 	 * @return DataResponse<Http::STATUS_OK, '', array{}>|DataResponse<Http::STATUS_FORBIDDEN, '', array{}>
 	 *
-	 * 200: User assignment deleted
+	 * 200: User assignment deleted or not found
 	 * 403: User not logged in
 	 */
 	#[NoAdminRequired]
