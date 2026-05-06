@@ -1058,9 +1058,8 @@ export default {
 
 			&__title {
 				width: 100%;
-				height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
-				overflow: scroll;
-				align-content: center;
+				overflow-x: scroll;
+				white-space: nowrap;
 			}
 
 			&__remember {

@@ -162,7 +162,7 @@ export default {
 .editable-text-field {
 	display: flex;
 	//width: 100%;
-	overflow: hidden;
+	overflow: auto;
 	position: relative;
 	min-height: var(--default-clickable-area);
 	align-items: center;
