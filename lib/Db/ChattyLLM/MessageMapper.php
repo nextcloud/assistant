@@ -80,7 +80,7 @@ class MessageMapper extends QBMapper {
 	 * @param int $sessionId
 	 * @param int $cursor
 	 * @param int $limit
-	 * @return array<Message>
+	 * @return list<Message>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getMessages(int $sessionId, int $cursor, int $limit): array {

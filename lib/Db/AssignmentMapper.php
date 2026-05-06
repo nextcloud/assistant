@@ -49,7 +49,7 @@ class AssignmentMapper extends QBMapper {
 	 */
 	public function exists(string $userId, int $assignmentId): bool {
 		try {
-			return $this->find($userId, $assignmentId) !== null;
+			return (bool)$this->find($userId, $assignmentId);
 		} catch (\OCP\AppFramework\Db\DoesNotExistException $e) {
 			return false;
 		} catch (\OCP\AppFramework\Db\MultipleObjectsReturnedException $e) {
@@ -58,7 +58,7 @@ class AssignmentMapper extends QBMapper {
 	}
 
 	/**
-	 * @return \Generator<void, int, Assignment>
+	 * @return \Generator<array-key, Assignment>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function findForUser(string $userId): \Generator {
@@ -72,7 +72,7 @@ class AssignmentMapper extends QBMapper {
 	}
 
 	/**
-	 * @return \Generator<void, int, Assignment>
+	 * @return \Generator<array-key, Assignment>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function findDueAssignmentsForUser(string $userId): \Generator {

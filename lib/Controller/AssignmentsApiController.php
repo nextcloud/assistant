@@ -45,7 +45,7 @@ class AssignmentsApiController extends OCSController {
 	/**
 	 * Create a new assignment
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *
 	 * 200: User assignments returned
 	 * 403: User not logged in
@@ -83,6 +83,7 @@ class AssignmentsApiController extends OCSController {
 		if ($this->userId !== null) {
 			try {
 				$assignments = iterator_to_array($this->assignmentMapper->findForUser($this->userId));
+				/** @var list<AssistantAssignment> $serializedAssignments */
 				$serializedAssignments = array_map(static function (Assignment $assignments) {
 					return $assignments->jsonSerialize();
 				}, $assignments);
@@ -100,7 +101,7 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * Get a list of assignmetns for the current user.
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{assigntment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, '', array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
@@ -112,7 +113,9 @@ class AssignmentsApiController extends OCSController {
 		if ($this->userId !== null) {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
-				return new DataResponse(['assignment' => $assignment->jsonSerialize()]);
+				/** @var AssistantAssignment $serializedAssignment */
+				$serializedAssignment = $assignment->jsonSerialize();
+				return new DataResponse(['assignment' => $serializedAssignment]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', HTTP::STATUS_FORBIDDEN);
@@ -128,7 +131,7 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * Get a list of assignmetns for the current user.
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{assigntment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, '', array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|HTTP::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
@@ -156,7 +159,9 @@ class AssignmentsApiController extends OCSController {
 				}
 				$assignment->setUpdatedAt($this->timeFactory->now()->getTimestamp());
 				$this->assignmentMapper->update($assignment);
-				return new DataResponse(['assignment' => $assignment->jsonSerialize()]);
+				/** @var AssistantAssignment $serializedAssignment */
+				$serializedAssignment = $assignment->jsonSerialize();
+				return new DataResponse(['assignment' => $serializedAssignment]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', HTTP::STATUS_FORBIDDEN);

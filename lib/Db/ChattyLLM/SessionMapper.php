@@ -84,7 +84,7 @@ class SessionMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
-	 * @return array
+	 * @return list<Session>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getUserSessions(string $userId): array {

@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\Assignment;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
@@ -316,6 +317,7 @@ class ChattyLLMController extends OCSController {
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function getSessions(): JSONResponse {
 		try {
+			/** @var list<AssistantChatSession> $sessions */
 			$sessions = $this->chatService->getSessionsForUser($this->userId);
 			return new JSONResponse($sessions);
 		} catch (InternalException $e) {
