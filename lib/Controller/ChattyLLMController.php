@@ -8,7 +8,6 @@
 namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\Assignment;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
