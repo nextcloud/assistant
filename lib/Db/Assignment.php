@@ -125,7 +125,7 @@ class Assignment extends Entity implements \JsonSerializable {
 			}
 			$nextRecurrence = $collection->first();
 			$isDue = $nextRecurrence->getStart()->getTimestamp() <= $now->getTimestamp() && $nextRecurrence->getStart()->getTimestamp() > $this->getLastRunAt();
-			\OCP\Log\logger('assistant')->debug('Next recurrence of assignment ' . $this->getId().' of user ' . $this->getUserId() . ': ' . $nextRecurrence->getStart()->format('Y-m-d H:i:s') . ' - isDue: ' . ($isDue ? 'true' : 'false'));
+			\OCP\Log\logger('assistant')->debug('Next recurrence of assignment ' . $this->getId() . ' of user ' . $this->getUserId() . ': ' . $nextRecurrence->getStart()->format('Y-m-d H:i:s') . ' - isDue: ' . ($isDue ? 'true' : 'false'));
 			return $isDue;
 		} catch (InvalidRRule|\Exception|NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 			// this should not happen, as we validate the rule on setRecurrence, but just in case, we catch the exception and log it

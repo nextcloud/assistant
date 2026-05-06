@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Db;
 
-use OCA\Assistant\Db\Assignment;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
