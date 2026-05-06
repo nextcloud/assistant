@@ -1058,6 +1058,8 @@ export default {
 
 			&__title {
 				width: 100%;
+				height: var(--header-height);
+				overflow: scroll;
 			}
 
 			&__remember {
