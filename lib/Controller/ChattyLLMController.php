@@ -687,7 +687,7 @@ class ChattyLLMController extends OCSController {
 			return new JSONResponse(['taskId' => $taskId]);
 		} catch (InternalException|\JsonException $e) {
 			$this->logger->warning('Failed to generate a title for the chat session', ['exception' => $e]);
-			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the last message')], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to generate a title for the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		} catch (\OCA\Assistant\Service\NotFoundException $e) {
 			return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_NOT_FOUND);
 		} catch (\OCA\Assistant\Service\UnauthorizedException $e) {

@@ -92,7 +92,8 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     	recurrence: string,
  *      created_at: int,
  *      updated_at: int,
- *      starts_at: int
+ *      starts_at: int,
+ *      last_run_at: int
  *  }
  */
 class ResponseDefinitions {

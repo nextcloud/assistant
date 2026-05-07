@@ -75,10 +75,10 @@ class Assignment extends Entity implements \JsonSerializable {
 		$this->addType('userId', Types::STRING);
 		$this->addType('prompt', Types::STRING);
 		$this->addType('recurrence', Types::STRING);
-		$this->addType('startsAt', Types::INTEGER);
-		$this->addType('createdAt', Types::STRING);
-		$this->addType('updatedAt', Types::STRING);
-		$this->addType('lastRunAt', Types::INTEGER);
+		$this->addType('startsAt', Types::BIGINT);
+		$this->addType('createdAt', Types::BIGINT);
+		$this->addType('updatedAt', Types::BIGINT);
+		$this->addType('lastRunAt', Types::BIGINT);
 	}
 
 	#[\ReturnTypeWillChange]

@@ -95,7 +95,7 @@ class AssignmentsApiController extends OCSController {
 				return new DataResponse(['assignments' => []]);
 			}
 		}
-		return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+		return new DataResponse('', Http::STATUS_FORBIDDEN);
 	}
 
 	/**
