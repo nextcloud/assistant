@@ -121,12 +121,12 @@ class AssignmentsApiController extends OCSController {
 				return new DataResponse(['assignment' => $serializedAssignment]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
-				return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+				return new DataResponse('', Http::STATUS_FORBIDDEN);
 			} catch (DoesNotExistException|MultipleObjectsReturnedException) {
-				return new DataResponse('', HTTP::STATUS_NOT_FOUND);
+				return new DataResponse('', Http::STATUS_NOT_FOUND);
 			}
 		}
-		return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+		return new DataResponse('', Http::STATUS_FORBIDDEN);
 	}
 
 	/**
@@ -196,15 +196,15 @@ class AssignmentsApiController extends OCSController {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
 				$this->assignmentMapper->delete($assignment);
-				return new DataResponse('', HTTP::STATUS_OK);
+				return new DataResponse('', Http::STATUS_OK);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
-				return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+				return new DataResponse('', Http::STATUS_FORBIDDEN);
 			} catch (DoesNotExistException|MultipleObjectsReturnedException) {
 				// 200 OK because of idempotence, if we send DELETE twice, we return the same response twice
-				return new DataResponse('', HTTP::STATUS_OK);
+				return new DataResponse('', Http::STATUS_OK);
 			}
 		}
-		return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+		return new DataResponse('', Http::STATUS_FORBIDDEN);
 	}
 }
