@@ -1058,6 +1058,8 @@ export default {
 
 			&__title {
 				width: 100%;
+				overflow-x: auto;
+				white-space: nowrap;
 			}
 
 			&__remember {
