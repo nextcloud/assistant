@@ -29,7 +29,8 @@
                     "recurrence",
                     "created_at",
                     "updated_at",
-                    "starts_at"
+                    "starts_at",
+                    "last_run_at"
                 ],
                 "properties": {
                     "id": {
@@ -54,6 +55,10 @@
                         "format": "int64"
                     },
                     "starts_at": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "last_run_at": {
                         "type": "integer",
                         "format": "int64"
                     }
@@ -150,7 +155,8 @@
                     "agency_pending_actions",
                     "summary",
                     "is_remembered",
-                    "is_summary_up_to_date"
+                    "is_summary_up_to_date",
+                    "assignment_id"
                 ],
                 "properties": {
                     "id": {
@@ -186,6 +192,11 @@
                     },
                     "is_summary_up_to_date": {
                         "type": "boolean"
+                    },
+                    "assignment_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
                     }
                 }
             },
@@ -3083,29 +3094,44 @@
                         }
                     },
                     "401": {
-                        "description": "Current user is not logged in",
+                        "description": "User is not logged in",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "ocs"
-                                    ],
-                                    "properties": {
-                                        "ocs": {
+                                    "anyOf": [
+                                        {
                                             "type": "object",
                                             "required": [
-                                                "meta",
-                                                "data"
+                                                "error"
                                             ],
                                             "properties": {
-                                                "meta": {
-                                                    "$ref": "#/components/schemas/OCSMeta"
-                                                },
-                                                "data": {}
+                                                "error": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "ocs"
+                                            ],
+                                            "properties": {
+                                                "ocs": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "meta",
+                                                        "data"
+                                                    ],
+                                                    "properties": {
+                                                        "meta": {
+                                                            "$ref": "#/components/schemas/OCSMeta"
+                                                        },
+                                                        "data": {}
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
+                                    ]
                                 }
                             }
                         }
@@ -5475,7 +5501,7 @@
             "get": {
                 "operationId": "assignments_api-get-user-assignments",
                 "summary": "Get user's assignments",
-                "description": "Get a list of assignmetns for the current user.",
+                "description": "Get a list of assignments for the current user.",
                 "tags": [
                     "assignments"
                 ],
@@ -5543,6 +5569,36 @@
                     },
                     "403": {
                         "description": "User not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5933,6 +5989,36 @@
                     },
                     "404": {
                         "description": "Assignment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
