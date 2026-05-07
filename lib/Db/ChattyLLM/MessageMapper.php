@@ -56,7 +56,7 @@ class MessageMapper extends QBMapper {
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter('human', IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter(Message::ROLE_HUMAN, IQueryBuilder::PARAM_STR)))
 			->orderBy('timestamp', 'DESC')
 			->setMaxResults(1);
 
@@ -68,7 +68,7 @@ class MessageMapper extends QBMapper {
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter('human', IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter(Message::ROLE_HUMAN, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->nonEmptyString('content'))
 			->orderBy('timestamp', 'DESC')
 			->setMaxResults(1);
@@ -80,7 +80,7 @@ class MessageMapper extends QBMapper {
 	 * @param int $sessionId
 	 * @param int $cursor
 	 * @param int $limit
-	 * @return array<Message>
+	 * @return list<Message>
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getMessages(int $sessionId, int $cursor, int $limit): array {

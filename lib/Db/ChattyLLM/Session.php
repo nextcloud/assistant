@@ -25,6 +25,8 @@ use OCP\DB\Types;
  * @method \void setAgencyConversationToken(?string $agencyConversationToken)
  * @method \string|null getAgencyPendingActions()
  * @method \void setAgencyPendingActions(?string $agencyPendingActions)
+ * @method \void setAssignmentId(?int $id)
+ * @method \int|null getAssignmentId()
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */
@@ -55,6 +57,12 @@ class Session extends Entity implements \JsonSerializable {
 	 */
 	protected $isRemembered;
 
+	/**
+	 * Session can be linked to assignments that run in this session
+	 * @var ?int
+	 */
+	protected $assignmentId;
+
 
 	public static $columns = [
 		'id',
@@ -66,6 +74,7 @@ class Session extends Entity implements \JsonSerializable {
 		'summary',
 		'is_summary_up_to_date',
 		'is_remembered',
+		'assignment_id'
 	];
 	public static $fields = [
 		'id',
@@ -77,6 +86,7 @@ class Session extends Entity implements \JsonSerializable {
 		'summary',
 		'isSummaryUpToDate',
 		'isRemembered',
+		'assignmentId'
 	];
 
 	public function __construct() {
@@ -88,6 +98,7 @@ class Session extends Entity implements \JsonSerializable {
 		$this->addType('summary', Types::TEXT);
 		$this->addType('isSummaryUpToDate', Types::SMALLINT);
 		$this->addType('isRemembered', Types::SMALLINT);
+		$this->addType('assignmentId', Types::BIGINT);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -102,6 +113,7 @@ class Session extends Entity implements \JsonSerializable {
 			'summary' => $this->getSummary(),
 			'is_summary_up_to_date' => $this->getIsSummaryUpToDate(),
 			'is_remembered' => $this->getIsRemembered(),
+			'assignment_id' => $this->getAssignmentId(),
 		];
 	}
 

@@ -60,6 +60,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     summary: ?string,
  *     is_remembered: bool,
  *     is_summary_up_to_date: bool,
+ *     assignment_id: ?int
  * }
  *
  * @psalm-type AssistantChatMessage = array{
@@ -84,6 +85,17 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     sessionAgencyPendingActions: ?array<string, mixed>,
  *     is_remembered: ?bool,
  * }
+ *
+ * @psalm-type AssistantAssignment = array{
+ *      id: int,
+ *      user_id: string,
+ *      prompt: string,
+ *     	recurrence: string,
+ *      created_at: int,
+ *      updated_at: int,
+ *      starts_at: int,
+ *      last_run_at: int
+ *  }
  */
 class ResponseDefinitions {
 }

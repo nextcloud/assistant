@@ -20,6 +20,12 @@
       <code><![CDATA[DataResponse<Http::STATUS_OK, array{types: list<AssistantTaskProcessingTaskType>}, array{}>]]></code>
     </MoreSpecificReturnType>
   </file>
+  <file src="lib/Db/Assignment.php">
+    <UndefinedFunction>
+      <code><![CDATA[logger('assistant')]]></code>
+      <code><![CDATA[logger('assistant')]]></code>
+    </UndefinedFunction>
+  </file>
   <file src="lib/Service/AssistantService.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$types]]></code>
