@@ -578,7 +578,7 @@ class ChatService {
 		$lastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10', lazy: true);
 		$messages = $this->messageMapper->getMessages($sessionId, 0, $lastNMessages);
 
-		if ($messages[0]->getRole() === Message::ROLE_SYSTEM) {
+		if (!empty($messages) && $messages[0]->getRole() === Message::ROLE_SYSTEM) {
 			array_shift($messages);
 		}
 		return $messages;
