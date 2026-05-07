@@ -61,7 +61,7 @@ class AssignmentsApiController extends OCSController {
 			$serializedAssignment = $assignment->jsonSerialize();
 			return new DataResponse(['assignment' => $serializedAssignment]);
 		} catch (InternalException $e) {
-			$this->logger->error('Error while fetching assignments for user ' . $this->userId, ['exception' => $e]);
+			$this->logger->error('Error while creating assignment for user ' . $this->userId, ['exception' => $e]);
 			return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 		} catch (UnauthorizedException $e) {
 			return new DataResponse('', Http::STATUS_FORBIDDEN);

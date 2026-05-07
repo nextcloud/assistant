@@ -114,7 +114,7 @@ class AssignmentsService {
 					$this->chatService->createMessage(
 						$userId,
 						$session->getId(),
-						message::ROLE_ASSISTANT,
+						Message::ROLE_ASSISTANT,
 						$this->l10n->t('An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists.'),
 						$this->timeFactory->now()->getTimestamp()
 					);

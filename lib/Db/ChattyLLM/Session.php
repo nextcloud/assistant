@@ -25,8 +25,8 @@ use OCP\DB\Types;
  * @method \void setAgencyConversationToken(?string $agencyConversationToken)
  * @method \string|null getAgencyPendingActions()
  * @method \void setAgencyPendingActions(?string $agencyPendingActions)
- * @method \void setAssignmentId(int $id)
- * @method \int getAssignmentId()
+ * @method \void setAssignmentId(?int $id)
+ * @method \int|null getAssignmentId()
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */

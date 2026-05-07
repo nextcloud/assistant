@@ -266,7 +266,7 @@ class ChatService {
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		if ($messages[0]->getRole() === Message::ROLE_SYSTEM) {
+		if (!empty($messages) && $messages[0]->getRole() === Message::ROLE_SYSTEM) {
 			array_shift($messages);
 		}
 
@@ -397,9 +397,16 @@ class ChatService {
 			} catch (Exception|AppConfigTypeConflictException $e) {
 				throw new InternalException(previous: $e);
 			}
-			do {
+			$lastUserMessage = null;
+			while ($history !== []) {
 				$lastUserMessage = array_pop($history);
-			} while ($lastUserMessage->getRole() !== Message::ROLE_HUMAN);
+				if ($lastUserMessage !== null && $lastUserMessage->getRole() === Message::ROLE_HUMAN) {
+					break;
+				}
+			}
+			if (!$lastUserMessage instanceof Message || $lastUserMessage->getRole() !== Message::ROLE_HUMAN) {
+				throw new NotFoundException($this->l10n->t('No human message found in this session'));
+			}
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
