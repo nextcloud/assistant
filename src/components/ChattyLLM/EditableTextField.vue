@@ -9,7 +9,8 @@
 			dir="auto"
 			:text="text"
 			:autolink="false"
-			:use-extended-markdown="true" />
+			:use-extended-markdown="true"
+			:title="text" />
 		<NcTextField v-else
 			ref="ncTextField"
 			v-model="text"
@@ -183,6 +184,8 @@ export default {
 		line-height: var(--default-line-height) !important;
 		:deep(p) {
 			margin-block-end: unset !important;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 

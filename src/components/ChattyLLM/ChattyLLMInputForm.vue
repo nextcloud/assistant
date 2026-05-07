@@ -1058,7 +1058,7 @@ export default {
 
 			&__title {
 				width: 100%;
-				overflow-x: scroll;
+				overflow-x: auto;
 				white-space: nowrap;
 			}
 
