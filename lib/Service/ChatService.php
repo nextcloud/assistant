@@ -27,6 +27,7 @@ use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use Psr\Log\LoggerInterface;
 
 class ChatService {
+	public const EMPTY_CONVERSATION_TOKEN = '{}';
 
 	public function __construct(
 		private readonly IUserManager $userManager,
@@ -79,7 +80,7 @@ class ChatService {
 
 		$systemMsg = new Message();
 		$systemMsg->setSessionId($session->getId());
-		$systemMsg->setRole('system');
+		$systemMsg->setRole(Message::ROLE_SYSTEM);
 		$systemMsg->setAttachments('[]');
 		$systemMsg->setContent($userInstructions);
 		$systemMsg->setTimestamp($session->getTimestamp());
@@ -265,7 +266,7 @@ class ChatService {
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		if ($messages[0]->getRole() === 'system') {
+		if ($messages[0]->getRole() === Message::ROLE_SYSTEM) {
 			array_shift($messages);
 		}
 
@@ -360,7 +361,7 @@ class ChatService {
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				throw new InternalException(previous: $e);
 			}
-			$lastConversationToken = $session->getAgencyConversationToken() ?? '{}';
+			$lastConversationToken = $session->getAgencyConversationToken() ?? self::EMPTY_CONVERSATION_TOKEN;
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
 			$audioAttachment = $lastAttachments[0] ?? null;
@@ -388,7 +389,7 @@ class ChatService {
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				throw new InternalException(previous: $e);
 			}
-			if ($firstMessage->getRole() === 'system') {
+			if ($firstMessage->getRole() === Message::ROLE_SYSTEM) {
 				$systemPrompt = $firstMessage->getContent();
 			}
 			try {
@@ -466,7 +467,7 @@ class ChatService {
 		}
 		// We reset the context for each interaction, because this is an assignment,
 		// the assistant does not remember things between assignment runs
-		$lastConversationToken = '{}';
+		$lastConversationToken = self::EMPTY_CONVERSATION_TOKEN;
 
 		// classic agency
 		$prompt = $lastUserMessage->getContent();
@@ -577,7 +578,7 @@ class ChatService {
 		$lastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10', lazy: true);
 		$messages = $this->messageMapper->getMessages($sessionId, 0, $lastNMessages);
 
-		if ($messages[0]->getRole() === 'system') {
+		if ($messages[0]->getRole() === Message::ROLE_SYSTEM) {
 			array_shift($messages);
 		}
 		return $messages;

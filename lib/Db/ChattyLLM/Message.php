@@ -32,6 +32,7 @@ class Message extends Entity implements \JsonSerializable {
 	public const ROLE_HUMAN = 'human';
 
 	public const ROLE_ASSISTANT = 'assistant';
+	public const ROLE_SYSTEM = 'system';
 
 	/** @var int */
 	protected $sessionId;

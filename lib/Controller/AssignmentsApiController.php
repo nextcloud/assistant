@@ -73,7 +73,7 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * Get a list of assignmetns for the current user.
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{assignments: list<AssistantAssignment>}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignments: list<AssistantAssignment>}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *
 	 * 200: User assignments returned
 	 * 403: User not logged in
@@ -92,7 +92,7 @@ class AssignmentsApiController extends OCSController {
 				return new DataResponse(['assignments' => $serializedAssignments]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignments for user ' . $this->userId, ['exception' => $e]);
-				return new DataResponse(['assignments' => []]);
+				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new DataResponse('', Http::STATUS_FORBIDDEN);
@@ -137,7 +137,7 @@ class AssignmentsApiController extends OCSController {
 	 * @param int|null $startsAt The timestamp when the assignment should start being executed
 	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|HTTP::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|HTTP::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
@@ -158,7 +158,7 @@ class AssignmentsApiController extends OCSController {
 					try {
 						$assignment->setRecurrence($recurrence);
 					} catch (\InvalidArgumentException $e) {
-						return new DataResponse('', HTTP::STATUS_BAD_REQUEST);
+						return new DataResponse('', Http::STATUS_BAD_REQUEST);
 					}
 				}
 				if ($startsAt !== null) {
@@ -171,12 +171,12 @@ class AssignmentsApiController extends OCSController {
 				return new DataResponse(['assignment' => $serializedAssignment]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
-				return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 			} catch (DoesNotExistException|MultipleObjectsReturnedException) {
-				return new DataResponse('', HTTP::STATUS_NOT_FOUND);
+				return new DataResponse('', Http::STATUS_NOT_FOUND);
 			}
 		}
-		return new DataResponse('', HTTP::STATUS_FORBIDDEN);
+		return new DataResponse('', Http::STATUS_FORBIDDEN);
 	}
 
 	/**

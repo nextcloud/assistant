@@ -60,6 +60,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     summary: ?string,
  *     is_remembered: bool,
  *     is_summary_up_to_date: bool,
+ *     assignment_id: ?int
  * }
  *
  * @psalm-type AssistantChatMessage = array{

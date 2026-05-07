@@ -12,6 +12,7 @@ namespace OCA\Assistant\Service;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\BackgroundJob\GenerateNewChatSummaries;
 use OCA\Assistant\BackgroundJob\RegenerateOutdatedChatSummariesJob;
+use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
@@ -45,7 +46,7 @@ class SessionSummaryService {
 		foreach ($sessions as $session) {
 			try {
 				$messages = $this->messageMapper->getMessages($session->getId(), 0, self::SUMMARY_MESSAGE_LIMIT);
-				if ($messages[0]->getRole() === 'system') {
+				if ($messages[0]->getRole() === Message::ROLE_SYSTEM) {
 					array_shift($messages);
 				}
 

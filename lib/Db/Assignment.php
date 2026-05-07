@@ -62,7 +62,7 @@ class Assignment extends Entity implements \JsonSerializable {
 	];
 	public static $fields = [
 		'id',
-		'user_id',
+		'userId',
 		'prompt',
 		'recurrence',
 		'startsAt',

@@ -15,6 +15,7 @@ use OCA\Assistant\ResponseDefinitions;
 use OCA\Assistant\Service\BadRequestException;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\InternalException;
+use OCA\Assistant\Service\UnauthorizedException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http;
@@ -257,10 +258,11 @@ class ChattyLLMController extends OCSController {
 	 * @param integer $sessionId The chat session ID
 	 * @param string|null $title The new chat session title
 	 * @param bool|null $is_remembered The new is_remembered status: Whether to remember the insights from this chat session across all chat session
-	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_NOT_FOUND|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 *
 	 * 200: The title has been updated successfully
 	 * 404: The session was not found
+	 * 403: User is not logged in
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
@@ -271,8 +273,10 @@ class ChattyLLMController extends OCSController {
 		} catch (InternalException $e) {
 			$this->logger->warning('Failed to update the chat session', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to update the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
-		} catch (\OCA\Assistant\Service\NotFoundException|\OCA\Assistant\Service\UnauthorizedException $e) {
+		} catch (\OCA\Assistant\Service\NotFoundException) {
 			return new JSONResponse(['error' => $this->l10n->t('Could not find session')], Http::STATUS_NOT_FOUND);
+		} catch (UnauthorizedException $e) {
+			return new JSONResponse(['error' => $this->l10n->t('User is not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
 	}
 

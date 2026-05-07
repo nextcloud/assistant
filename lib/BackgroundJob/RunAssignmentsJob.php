@@ -11,6 +11,7 @@ namespace OCA\Assistant\BackgroundJob;
 
 use OCA\Assistant\Service\AssignmentsService;
 use OCA\Assistant\Service\InternalException;
+use OCA\Assistant\Service\UnauthorizedException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;
@@ -30,7 +31,7 @@ class RunAssignmentsJob extends TimedJob {
 		$userId = $argument['userId'];
 		try {
 			$this->assignmentService->runDueAssignmentsForUser($userId);
-		} catch (InternalException $e) {
+		} catch (InternalException|UnauthorizedException $e) {
 			$this->logger->error('Error running assignments for user ' . $userId, ['exception' => $e]);
 		}
 	}

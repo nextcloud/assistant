@@ -75,9 +75,12 @@ class AssignmentsService {
 	}
 
 	/**
-	 * @throws InternalException
+	 * @throws InternalException|UnauthorizedException
 	 */
-	public function runDueAssignmentsForUser(?string $userId) {
+	public function runDueAssignmentsForUser(?string $userId): void {
+		if ($userId === null) {
+			throw new UnauthorizedException();
+		}
 		try {
 			foreach ($this->assignmentMapper->findDueAssignmentsForUser($userId) as $assignment) {
 				if ($assignment === null) {
@@ -105,7 +108,7 @@ class AssignmentsService {
 			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt(), $this->timeFactory->now()->getTimestamp());
 			$this->chatService->scheduleAssignmentMessageGeneration($userId, $session->getId());
 		} catch (BadRequestException|InternalException|DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
-			$this->logger->error('Error while running assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+			$this->logger->error('Error while running assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
 			if (isset($session)) {
 				try {
 					$this->chatService->createMessage(
@@ -116,18 +119,21 @@ class AssignmentsService {
 						$this->timeFactory->now()->getTimestamp()
 					);
 				} catch (BadRequestException|InternalException|NotFoundException|UnauthorizedException $e) {
-					$this->logger->error('Error while creating error message for assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+					$this->logger->error('Error while creating error message for assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
 				}
 			}
 		} catch (NotFoundException $e) {
 			try {
+				$assignment = $this->assignmentMapper->find($userId, $assignmentId);
 				$this->assignmentMapper->delete($assignment);
-			} catch (Exception $e) {
-				$this->logger->error('Error while deleting assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+			} catch (Exception|MultipleObjectsReturnedException $e) {
+				$this->logger->error('Error while deleting assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
+			} catch (DoesNotExistException $e) {
+				// pass
 			}
 		} catch (UnauthorizedException $e) {
 			// this should not happen
-			$this->logger->error('Unauthorized to run assignment ' . $assignment->getId() . ' for user ' . $userId, ['exception' => $e]);
+			$this->logger->error('Unauthorized to run assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
 		}
 	}
 }

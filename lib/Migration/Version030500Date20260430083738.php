@@ -33,6 +33,7 @@ class Version030500Date20260430083738 extends SimpleMigrationStep {
 			$table = $schema->createTable('assistant_assignments');
 			$table->addColumn('id', Types::BIGINT, [
 				'autoincrement' => true,
+				'unsigned' => true,
 			]);
 			$table->addColumn('user_id', Types::STRING, [
 				'notnull' => true,
@@ -65,12 +66,18 @@ class Version030500Date20260430083738 extends SimpleMigrationStep {
 			$table->addIndex(['user_id'], 'assistant_assgnmts_user_id_idx');
 		}
 		if ($schema->hasTable('assistant_chat_sns')) {
-			$schemaChanged = true;
 			$table = $schema->getTable('assistant_chat_sns');
-			$table->addColumn('assignment_id', Types::BIGINT, [
-				'notnull' => false,
-			]);
-			$table->addIndex(['user_id', 'assignment_id'], 'assistant_chat_assgnmt_uid');
+			if (!$table->hasColumn('assignment_id')) {
+				$schemaChanged = true;
+				$table->addColumn('assignment_id', Types::BIGINT, [
+					'notnull' => false,
+					'unsigned' => true,
+				]);
+			}
+			if (!$table->hasIndex('assistant_chat_assgnmt_uid')) {
+				$schemaChanged = true;
+				$table->addIndex(['user_id', 'assignment_id'], 'assistant_chat_assgnmt_uid');
+			}
 		}
 
 		return $schemaChanged ? $schema : null;
