@@ -71,7 +71,7 @@ class AssignmentsApiController extends OCSController {
 	/**
 	 * Get user's assignments
 	 *
-	 * Get a list of assignmetns for the current user.
+	 * Get a list of assignments for the current user.
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{assignments: list<AssistantAssignment>}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *

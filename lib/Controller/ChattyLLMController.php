@@ -262,7 +262,7 @@ class ChattyLLMController extends OCSController {
 	 *
 	 * 200: The title has been updated successfully
 	 * 404: The session was not found
-	 * 403: User is not logged in
+	 * 401: User is not logged in
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
