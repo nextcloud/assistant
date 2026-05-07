@@ -93,7 +93,13 @@ class AssignmentsService {
 		}
 	}
 
+	/**
+	 * @throws UnauthorizedException
+	 */
 	public function scheduleAssignmentRun(?string $userId, int $assignmentId): void {
+		if ($userId === null) {
+			throw new UnauthorizedException();
+		}
 		try {
 			try {
 				$session = $this->sessionMapper->getUserSessionForAssignment($userId, $assignmentId);
@@ -131,9 +137,6 @@ class AssignmentsService {
 			} catch (DoesNotExistException $e) {
 				// pass
 			}
-		} catch (UnauthorizedException $e) {
-			// this should not happen
-			$this->logger->error('Unauthorized to run assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
 		}
 	}
 }
