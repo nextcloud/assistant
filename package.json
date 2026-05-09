@@ -42,7 +42,7 @@
     "@material-symbols/svg-700": "^0.40.0",
     "@mdi/js": "^7.4.47",
     "@mdi/svg": "^7.4.47",
-    "@nextcloud/auth": "^2.0.0",
+    "@nextcloud/auth": "^2.6.0",
     "@nextcloud/axios": "^2.0.0",
     "@nextcloud/dialogs": "^7.0.0-rc.1",
     "@nextcloud/event-bus": "^3.1.0",
