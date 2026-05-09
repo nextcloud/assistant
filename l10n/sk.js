@@ -75,7 +75,7 @@ OC.L10N.register(
     "AI sticker generation" : "Generovanie nálepiek AI",
     "Nextcloud Deck" : "Nextcloud Deck",
     "Nextcloud Tasks" : "Úlohy Nextcloud",
-    "Nextcloud Talk" : "Nextcloud Talk /Rozhovor/",
+    "Nextcloud Talk" : "Nextcloud Talk",
     "Nextcloud Files" : "Súbory Nextcloud",
     "OpenProject" : "OpenProject",
     "DuckDuckGo web search" : "Vyhľadávanie na webe DuckDuckGo",
