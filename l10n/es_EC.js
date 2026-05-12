@@ -7,6 +7,7 @@ OC.L10N.register(
     "Delete file" : "Eliminar archivo",
     "Create bookmark" : "Crear marcador",
     "Delete form" : "Eliminar formulario",
+    "Unauthorized" : "No autorizado",
     "User not found" : "No se encontró el usuario",
     "AI image generation" : "Generación de imágenes de IA",
     "OpenProject" : "OpenProject",

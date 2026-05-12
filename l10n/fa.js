@@ -9,6 +9,7 @@ OC.L10N.register(
     "Delete form" : "حذف فرم",
     "Share with group" : "اشتراک‌گذاری با گروه",
     "Delete share" : "حذف اشتراک‌گذاری",
+    "Unauthorized" : "غیرمجاز",
     "User not found" : "کاربر یافت نشد",
     "Nextcloud Assistant" : "Nextcloud Assistant",
     "AI image generation" : "AI image generation",

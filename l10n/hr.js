@@ -8,6 +8,7 @@ OC.L10N.register(
     "Delete form" : "Izbriši obrazac",
     "Share with group" : "Dijeli s grupom",
     "Delete share" : "Izbriši dijeljenje",
+    "Unauthorized" : "Neovlašteno",
     "User not found" : "Korisnik nije pronađen",
     "Nextcloud Assistant" : "Nextcloud Asistent",
     "Context Chat" : "Kontekstualni chat",

@@ -12,6 +12,7 @@ OC.L10N.register(
     "Delete form" : "Poista lomake",
     "Share with group" : "Jaa ryhmän kanssa",
     "Delete share" : "Poista jako",
+    "Unauthorized" : "Ei valtuuksia",
     "User not found" : "Käyttäjää ei löydy",
     "Nextcloud Assistant" : "Nextcloud-avustaja",
     "View results" : "Näytä tulokset",

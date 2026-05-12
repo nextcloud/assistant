@@ -7,6 +7,7 @@ OC.L10N.register(
     "Create bookmark" : "Crea unu signalibru",
     "Delete form" : "Cantzella mòdulu",
     "Delete share" : "Cantzella sa cumpartzidura",
+    "Unauthorized" : "Peruna autorizatzione",
     "User not found" : "Utèntzia no agatada",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Àteru",

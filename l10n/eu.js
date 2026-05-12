@@ -13,6 +13,7 @@ OC.L10N.register(
     "Delete form" : "Ezabatu galdetegia",
     "Share with group" : "Partekatu taldearekin",
     "Delete share" : "Ezabatu partekatzea",
+    "Unauthorized" : "Baimenik gabe",
     "User not found" : "Ez da erabiltzailea aurkitu",
     "Nextcloud Assistant" : "Nextcloud Assistant",
     "AI text generation" : "IA testu sorpena",

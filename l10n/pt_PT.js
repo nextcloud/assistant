@@ -7,6 +7,7 @@ OC.L10N.register(
     "Copy file" : "Copiar ficheiro",
     "Delete file" : "Apagar ficheiro",
     "Delete form" : "Apague formulário",
+    "Unauthorized" : "Não autorizado",
     "User not found" : "Utilizador não encontrado",
     "Nextcloud Talk" : "Nextcloud Talk",
     "Other" : "Outro",

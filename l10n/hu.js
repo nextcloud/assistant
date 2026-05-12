@@ -10,6 +10,7 @@ OC.L10N.register(
     "Create form" : "Űrlap létrehozása",
     "Delete form" : "Űrlap törlése",
     "Delete share" : "Megosztás törlése",
+    "Unauthorized" : "Jogosulatlan",
     "User not found" : "A felhasználó nem található",
     "Nextcloud Assistant" : "Nextcloud Asszisztens",
     "AI text generation" : "AI szöveggenerálás",

@@ -9,6 +9,7 @@ OC.L10N.register(
     "Delete form" : "Eyða eyðuformi",
     "Share with group" : "Deila með hópi",
     "Delete share" : "Eyða sameign",
+    "Unauthorized" : "Ekki heimilað",
     "User not found" : "Notandi fannst ekki",
     "Nextcloud Assistant" : "Nextcloud Aðstoð",
     "Nextcloud Deck" : "Nextcloud-dekk",
