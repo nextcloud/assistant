@@ -8,6 +8,7 @@ import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
+import { listen } from '@nextcloud/notify_push'
 
 window.assistantPollTimerId = null
 
@@ -146,7 +147,21 @@ export async function openAssistantForm({
 					view.selectedTaskId = lastTask?.id
 					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 
-					pollTask(task.id, view).then(finishedTask => {
+					// attempt to listen to push notifications to get the intermediate output
+					const pushTaskId = task.id
+					const pushChannel = 'task_' + pushTaskId
+					const hasPush = listen(pushChannel, (type, body) => {
+						console.debug('[assistant] received push notification', type, body)
+						if (pushTaskId === view.selectedTaskId) {
+							view.outputs = body
+						} else {
+							console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
+						}
+					})
+					console.debug('[assistant] HAS PUSH', hasPush)
+
+					// no need to update the task output with polling if we have push notifications
+					pollTask(task.id, view, !hasPush).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							if (closeOnResult) {
@@ -320,16 +335,28 @@ export async function openAssistantForm({
 	})
 }
 
-function updateTask(task, object) {
+function updateTask(task, object, updateOutput = true) {
 	if (task?.status === TASK_STATUS_STRING.running) {
 		object.progress = task?.progress * 100
 	}
 	object.taskStatus = task?.status
 	object.scheduledAt = task?.scheduledAt
-	object.outputs = task?.output
+	if (updateOutput) {
+		console.debug('[assistant] polling update output')
+		object.outputs = task?.output
+	}
 }
 
-export async function pollTask(taskId, obj, callback = updateTask) {
+/**
+ * Poll the task to update its status
+ *
+ * @param {number} taskId the task ID
+ * @param {object} obj the object to update
+ * @param {boolean} updateOutput whether to update the task output from the polling data or not
+ * @param {Function} callback the function to call to update the object
+ * @return {Promise<*>}
+ */
+export async function pollTask(taskId, obj, updateOutput = true, callback = updateTask) {
 	return new Promise((resolve, reject) => {
 		const pollOnce = () => {
 			getTask(taskId).then(response => {
@@ -339,7 +366,7 @@ export async function pollTask(taskId, obj, callback = updateTask) {
 					return
 				}
 				if (obj) {
-					callback(task, obj)
+					callback(task, obj, updateOutput)
 				}
 				if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
 					// stop polling
@@ -622,7 +649,21 @@ export async function openAssistantTask(
 				lastTask = task
 				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
-				pollTask(task.id, view).then(finishedTask => {
+
+				// attempt to listen to push notifications to get the intermediate output
+				const pushTaskId = task.id
+				const pushChannel = 'task_' + pushTaskId
+				const hasPush = listen(pushChannel, (type, body) => {
+					console.debug('[assistant] received push notification', type, body)
+					if (pushTaskId === view.selectedTaskId) {
+						view.outputs = body
+					} else {
+						console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
+					}
+				})
+				console.debug('[assistant] HAS PUSH', hasPush)
+
+				pollTask(task.id, view, !hasPush).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
 					} else if (finishedTask.status === TASK_STATUS_STRING.failed) {

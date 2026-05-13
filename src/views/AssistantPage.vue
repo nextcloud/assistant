@@ -40,6 +40,7 @@ import AssistantTextProcessingForm from '../components/AssistantTextProcessingFo
 import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
+import { listen } from '@nextcloud/notify_push'
 import {
 	cancelTask,
 	cancelTaskPolling,
@@ -128,7 +129,21 @@ export default {
 					this.task.id = task.id
 					this.task.completionExpectedAt = task.completionExpectedAt
 					this.task.scheduledAt = task.scheduledAt
-					pollTask(task.id, this, this.updateTask).then(finishedTask => {
+
+					// attempt to listen to push notifications to get the intermediate output
+					const pushTaskId = task.id
+					const pushChannel = 'task_' + pushTaskId
+					const hasPush = listen(pushChannel, (type, body) => {
+						console.debug('[assistant] received push notification', type, body)
+						if (pushTaskId === this.task.id) {
+							this.task.output = body
+						} else {
+							console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)
+						}
+					})
+					console.debug('[assistant] HAS PUSH', hasPush)
+
+					pollTask(task.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
@@ -202,7 +217,7 @@ export default {
 					this.task.completionExpectedAt = updatedTask.completionExpectedAt
 					this.task.scheduledAt = updatedTask.scheduledAt
 
-					pollTask(updatedTask.id, this, this.updateTask).then(finishedTask => {
+					pollTask(updatedTask.id, this, true, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
