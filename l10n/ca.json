@@ -15,6 +15,7 @@
     "Share with group" : "Comparteix amb el grup",
     "Delete share" : "Suprimeix l'element compartit",
     "Failed to create a chat session" : "No s'ha pogut crear una sessió de xat",
+    "Unauthorized" : "No autoritzat",
     "Failed to update the chat session" : "No s'ha pogut actualitzar la sessió de xat",
     "Session not found" : "No s'ha trobat la sessió",
     "Failed to delete the chat session" : "No s'ha pogut suprimir la sessió de xat",

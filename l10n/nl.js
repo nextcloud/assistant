@@ -150,6 +150,7 @@ OC.L10N.register(
     "Cancel editing" : "Annuleer bewerken",
     "Submit" : "Verwerken",
     "You" : "Je",
+    "Copy message" : "Bericht kopiëren",
     "Delete message" : "Bericht verwijderen",
     "Choose" : "Kies",
     "Describe the image you want to generate" : "Beschrijf de afbeelding die je wilt maken",
