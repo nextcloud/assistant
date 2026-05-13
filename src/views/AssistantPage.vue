@@ -107,6 +107,8 @@ export default {
 				this.loading = false
 				this.showSyncTaskRunning = false
 				this.task.id = null
+				this.task.output = null
+				this.task.status = null
 			})
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {

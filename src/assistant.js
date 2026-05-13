@@ -304,6 +304,8 @@ export async function openAssistantForm({
 				view.loading = false
 				view.showSyncTaskRunning = false
 				view.selectedTaskId = null
+				view.outputs = null
+				view.taskStatus = null
 				lastTask = null
 			})
 		})
@@ -769,6 +771,8 @@ export async function openAssistantTask(
 			view.loading = false
 			view.showSyncTaskRunning = false
 			view.selectedTaskId = null
+			view.outputs = null
+			view.taskStatus = null
 			lastTask = null
 		})
 	})

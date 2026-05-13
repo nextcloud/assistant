@@ -74,6 +74,25 @@
 								</template>
 							</NcPopover>
 						</div>
+						<div v-if="showSubtitle"
+							class="session-area__top-bar__subtitle">
+							{{ t('assistant', 'Getting results…') }}
+							<NcButton
+								@click="$emit('background-notify', !isNotifyEnabled)">
+								<template #icon>
+									<BellRingOutlineIcon v-if="isNotifyEnabled" />
+									<BellOutlineIcon v-else />
+								</template>
+								{{ t('assistant', 'Get notified when the task finishes') }}
+							</NcButton>
+							<NcButton
+								@click="$emit('cancel-task')">
+								<template #icon>
+									<CloseIcon />
+								</template>
+								{{ t('assistant', 'Cancel task') }}
+							</NcButton>
+						</div>
 					</div>
 					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
 						class="session-area__chat-area">
@@ -151,6 +170,9 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import InformationBoxIcon from 'vue-material-design-icons/InformationBox.vue'
+import BellOutlineIcon from 'vue-material-design-icons/BellOutline.vue'
+import BellRingOutlineIcon from 'vue-material-design-icons/BellRingOutline.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -210,6 +232,9 @@ export default {
 		UnfoldLessHorizontalIcon,
 		UnfoldMoreHorizontalIcon,
 		InformationBoxIcon,
+		BellOutlineIcon,
+		BellRingOutlineIcon,
+		CloseIcon,
 		AssistantFormInputs,
 		AssistantFormOutputs,
 		ChattyLLMInputForm,
@@ -414,6 +439,9 @@ export default {
 		},
 		showRunningEmptyContent() {
 			return this.showSyncTaskRunning && this.myOutputs === null
+		},
+		showSubtitle() {
+			return this.showSyncTaskRunning && this.myOutputs !== null
 		},
 	},
 	watch: {
@@ -835,12 +863,12 @@ export default {
 
 		&__top-bar {
 			display: flex;
+			flex-direction: column;
 			justify-content: space-between;
 			align-items: center;
-			gap: 4px;
 			position: sticky;
 			top: 0;
-			height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
+			// height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
 			box-sizing: border-box;
 			border-bottom: 1px solid var(--color-border);
 			padding-left: 52px;
@@ -856,6 +884,15 @@ export default {
 				min-width: 0;
 				overflow-x: auto;
 				white-space: nowrap;
+			}
+
+			&__subtitle {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				flex-wrap: wrap;
+				width: 100%;
+				padding: 4px 0 4px 10px;
 			}
 
 			&__provider {
