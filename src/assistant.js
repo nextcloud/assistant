@@ -136,6 +136,7 @@ export async function openAssistantForm({
 			view.progress = null
 			view.expectedRuntime = null
 			view.inputs = inputs
+			view.outputs = null
 			view.selectedTaskTypeId = taskTypeId
 
 			scheduleTask(appId, newTaskCustomId, taskTypeId, inputs)
@@ -323,11 +324,12 @@ function updateTask(task, object) {
 	}
 	object.taskStatus = task?.status
 	object.scheduledAt = task?.scheduledAt
+	object.outputs = task?.output
 }
 
 export async function pollTask(taskId, obj, callback = updateTask) {
 	return new Promise((resolve, reject) => {
-		window.assistantPollTimerId = setInterval(() => {
+		const pollOnce = () => {
 			getTask(taskId).then(response => {
 				const task = response.data?.ocs?.data?.task
 				if (window.assistantPollTimerId === null) {
@@ -353,7 +355,10 @@ export async function pollTask(taskId, obj, callback = updateTask) {
 				}
 				reject(new Error('pollTask request failed'))
 			})
-		}, 2000)
+		}
+		// start polling immediately
+		// pollOnce()
+		window.assistantPollTimerId = setInterval(pollOnce, 2000)
 	})
 }
 
@@ -606,6 +611,7 @@ export async function openAssistantTask(
 		view.isNotifyEnabled = false
 		view.expectedRuntime = null
 		view.inputs = inputs
+		view.outputs = null
 		view.selectedTaskTypeId = taskTypeId
 
 		scheduleTask('assistant', newTaskCustomId, taskTypeId, inputs)

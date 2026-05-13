@@ -42,7 +42,7 @@
 					</NcAppNavigationList>
 				</NcAppNavigation>
 				<RunningEmptyContent
-					v-if="showSyncTaskRunning"
+					v-if="showRunningEmptyContent"
 					class="running-area"
 					:description="shortInput"
 					:progress="progress"
@@ -174,7 +174,7 @@ import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import TranslateForm from './Translate/TranslateForm.vue'
 
-import { SHAPE_TYPE_NAMES, MAX_TEXT_INPUT_LENGTH } from '../constants.js'
+import { SHAPE_TYPE_NAMES, MAX_TEXT_INPUT_LENGTH, TASK_STATUS_STRING } from '../constants.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
@@ -344,6 +344,9 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
+			if (this.taskStatus === TASK_STATUS_STRING.running) {
+				return false
+			}
 			// otherwise, check that none of the properties of myInputs are empty
 			console.debug('[assistant] canSubmit', this.myInputs)
 			if (Object.keys(this.myInputs).length === 0) {
@@ -408,6 +411,9 @@ export default {
 		},
 		actionButtonsToShow() {
 			return this.hasOutput ? this.actionButtons : []
+		},
+		showRunningEmptyContent() {
+			return this.showSyncTaskRunning && this.myOutputs === null
 		},
 	},
 	watch: {

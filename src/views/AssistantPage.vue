@@ -110,12 +110,14 @@ export default {
 			})
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
+			this.loading = true
 			this.showSyncTaskRunning = true
 			this.isNotifyEnabled = false
 			this.progress = null
 			this.task.completionExpectedAt = null
 			this.task.scheduledAt = null
 			this.task.input = inputs
+			this.task.output = null
 			this.task.type = taskTypeId
 			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs)
 				.then((response) => {
