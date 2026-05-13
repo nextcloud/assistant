@@ -249,6 +249,7 @@ import axios, { isCancel } from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
+import { listen } from '@nextcloud/notify_push'
 import moment from 'moment'
 import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
 import ICAL from 'ical.js'
@@ -922,6 +923,27 @@ export default {
 		},
 
 		async pollGenerationTask(taskId, sessionId) {
+			// attempt to listen to push notifications to get the intermediate output
+			const pushTaskId = taskId
+			const pushChannel = 'task_' + pushTaskId
+			const pushSessionId = this.active.id
+			const hasPush = listen(pushChannel, (type, body) => {
+				console.debug('[assistant] received push notification', type, body)
+				if (pushSessionId === this.active.id) {
+					this.updateStreamingMessage(body.output, sessionId)
+				} else {
+					console.debug(
+						'[assistant] ignoring push notification for task',
+						pushTaskId,
+						'in session',
+						pushSessionId,
+						'the selected session is',
+						this.active.id,
+					)
+				}
+			})
+			console.debug('[assistant] HAS PUSH', hasPush)
+
 			return new Promise((resolve, reject) => {
 				this.pollMessageGenerationTimerId = setInterval(() => {
 					if (this.active === null || sessionId !== this.active.id) {
@@ -967,24 +989,28 @@ export default {
 								this.loading.llmRunning = true
 							}
 							if (error.response.data.task_output?.output) {
-								if (this.streamingMessage) {
-									this.streamingMessage.content = error.response.data.task_output.output
-								} else {
-									this.streamingMessage = {
-										role: Roles.ASSISTANT,
-										content: error.response.data.task_output.output,
-										attachments: [],
-										sources: '',
-										session_id: sessionId,
-										id: 0,
-										timestamp: moment().unix(),
-									}
-								}
+								this.updateStreamingMessage(error.response.data.task_output.output, sessionId)
 							}
 						}
 					})
 				}, 2000)
 			})
+		},
+
+		updateStreamingMessage(content, sessionId) {
+			if (this.streamingMessage) {
+				this.streamingMessage.content = content
+			} else {
+				this.streamingMessage = {
+					role: Roles.ASSISTANT,
+					content,
+					attachments: [],
+					sources: '',
+					session_id: sessionId,
+					id: 0,
+					timestamp: moment().unix(),
+				}
+			}
 		},
 
 		getLastHumanMessage() {
