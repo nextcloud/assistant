@@ -61,7 +61,8 @@
 									<NcButton
 										:aria-label="t('assistant', 'Provider name')">
 										<template #icon>
-											<InformationBoxIcon :size="20" />
+											<NcLoadingIcon v-if="streaming" :size="20" />
+											<InformationBoxIcon v-else :size="20" />
 										</template>
 									</NcButton>
 								</template>
@@ -74,7 +75,7 @@
 								</template>
 							</NcPopover>
 						</div>
-						<div v-if="showSubtitle"
+						<div v-if="streaming"
 							class="session-area__top-bar__subtitle">
 							{{ t('assistant', 'Getting results…') }}
 							<NcButton
@@ -440,7 +441,7 @@ export default {
 		showRunningEmptyContent() {
 			return this.showSyncTaskRunning && this.myOutputs === null
 		},
-		showSubtitle() {
+		streaming() {
 			return this.showSyncTaskRunning && this.myOutputs !== null
 		},
 	},
