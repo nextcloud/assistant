@@ -31,7 +31,13 @@
 				:information-source-names="informationSourceNames"
 				@regenerate="regenerate(message.id)"
 				@delete="deleteMessage(message.id)" />
-			<LoadingPlaceholder v-if="loading.llmGeneration" :slow-pickup="slowPickup" />
+			<Message v-if="streamingMessage"
+				:id="'message-streaming'"
+				:message="streamingMessage"
+				:streaming="true" />
+			<LoadingPlaceholder v-else-if="loading.llmGeneration"
+				:id="'message-placeholder'"
+				:slow-pickup="slowPickup" />
 		</div>
 	</div>
 </template>
@@ -82,6 +88,10 @@ export default {
 		slowPickup: {
 			type: Boolean,
 			default: false,
+		},
+		streamingMessage: {
+			type: Object,
+			default: null,
 		},
 	},
 

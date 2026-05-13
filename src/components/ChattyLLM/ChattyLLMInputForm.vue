@@ -149,6 +149,7 @@
 						</NcButton>
 					</div>
 					<ConversationBox :messages="messages"
+						:streaming-message="streamingMessage"
 						:loading="loading"
 						:slow-pickup="slowPickup"
 						@regenerate="runRegenerationTask"
@@ -316,6 +317,7 @@ export default {
 			pollCheckSessionTimeout: null,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
+			streamingMessage: null,
 			messagesAxiosController: null, // for request cancellation
 			allMessagesLoaded: false,
 			loading: {
@@ -426,6 +428,7 @@ export default {
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
 			this.loading.titleGeneration = false
+			this.streamingMessage = null
 			this.chatContent = ''
 			this.msgCursor = 0
 			this.messages = []
@@ -501,6 +504,7 @@ export default {
 						console.error('checkGenerationTask error:', error)
 						showError(t('assistant', 'Error generating a response'))
 					}
+					this.streamingMessage = null
 				}
 				if (checkSessionResponseData.titleTaskId !== null) {
 					try {
@@ -545,6 +549,9 @@ export default {
 			this.$nextTick(() => {
 				const lastIdx = this.messages.length - 1
 				document.querySelector('#message' + lastIdx)?.scrollIntoView()
+				document.querySelector('#message-streaming')?.scrollIntoView()
+				document.querySelector('#message-placeholder')?.scrollIntoView()
+				this.$refs.inputComponent.focus()
 				if (!this.isAssignment) {
 					this.$refs.inputComponent.focus()
 				}
@@ -864,6 +871,7 @@ export default {
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
 			try {
+				this.scrollToBottom()
 				this.slowPickup = false
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
@@ -887,6 +895,7 @@ export default {
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.streamingMessage = null
 			}
 		},
 
@@ -908,6 +917,7 @@ export default {
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.streamingMessage = null
 			}
 		},
 
@@ -955,6 +965,21 @@ export default {
 							this.slowPickup = error.response.data.slow_pickup
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
+							}
+							if (error.response.data.task_output?.output) {
+								if (this.streamingMessage) {
+									this.streamingMessage.content = error.response.data.task_output.output
+								} else {
+									this.streamingMessage = {
+										role: Roles.ASSISTANT,
+										content: error.response.data.task_output.output,
+										attachments: [],
+										sources: '',
+										session_id: sessionId,
+										id: 0,
+										timestamp: moment().unix(),
+									}
+								}
 							}
 						}
 					})

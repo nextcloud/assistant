@@ -17,13 +17,14 @@
 			@delete="$emit('delete')" />
 		<div class="message__header">
 			<div class="message__header__role">
+				<!-- we change the user prop when newMessageLoading changes to re-render the avatar without the icon template -->
 				<NcAvatar
-					:user="message.role === 'human' ? userId : 'Nextcloud Assistant'"
+					:user="message.role === 'human' ? (newMessageLoading ? '' : userId) : 'Nextcloud Assistant'"
 					:display-name="message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant')"
 					:is-no-user="message.role === 'assistant'"
 					:hide-status="true">
 					<template v-if="(message.role === 'human' && newMessageLoading) || message.role === 'assistant'" #icon>
-						<NcLoadingIcon v-if="message.role === 'human' && newMessageLoading" :size="20" />
+						<NcLoadingIcon v-if="(message.role === 'human' && newMessageLoading) || streaming" :size="32" />
 						<AssistantIcon v-else-if="message.role === 'assistant'" :size="20" />
 					</template>
 				</NcAvatar>
@@ -132,6 +133,10 @@ export default {
 			default: false,
 		},
 		newMessageLoading: {
+			type: Boolean,
+			default: false,
+		},
+		streaming: {
 			type: Boolean,
 			default: false,
 		},
