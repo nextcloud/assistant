@@ -27,6 +27,7 @@ OC.L10N.register(
     "Share with group" : "Nasdílet skupině",
     "Delete share" : "Smazat sdílení",
     "Failed to create a chat session" : "Nepodařilo se vytvořit relaci chatu",
+    "Unauthorized" : "Není pověření",
     "Failed to update the chat session" : "Nepodařilo se zaktualizovat relaci chatu",
     "Session not found" : "Relace nenalezena",
     "Could not find session" : "Nepodařilo se najít sezení",

@@ -16,6 +16,7 @@ OC.L10N.register(
     "Share with group" : "شارِك مع مجموعة",
     "Delete share" : "حذف المشاركة",
     "Failed to create a chat session" : "يتعذّر إنشاء جلسة دردشة",
+    "Unauthorized" : "غير مُصرَّح",
     "Failed to update the chat session" : "يتعذّر تحديث جلسة الدردشة",
     "Session not found" : "الجلسة غير موجودة",
     "Failed to delete the chat session" : "يتعذّر حذف جلسة الدردشة",
