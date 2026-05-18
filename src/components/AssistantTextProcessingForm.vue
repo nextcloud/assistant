@@ -244,6 +244,7 @@ export default {
 	provide() {
 		return {
 			providedCurrentTaskId: () => this.selectedTaskId,
+			streaming: () => this.streaming,
 		}
 	},
 	props: {
