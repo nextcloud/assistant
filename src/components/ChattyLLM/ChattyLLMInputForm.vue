@@ -319,6 +319,7 @@ export default {
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
+			isListeningTo: {},
 			messagesAxiosController: null, // for request cancellation
 			allMessagesLoaded: false,
 			loading: {
@@ -922,15 +923,16 @@ export default {
 			}
 		},
 
-		async pollGenerationTask(taskId, sessionId) {
+		listenToTaskNotifications(pushTaskId, pushSessionId) {
 			// attempt to listen to push notifications to get the intermediate output
-			const pushTaskId = taskId
+			if (this.isListeningTo[pushTaskId]) {
+				return true
+			}
 			const pushChannel = 'task_' + pushTaskId
-			const pushSessionId = this.active.id
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
 				if (pushSessionId === this.active.id) {
-					this.updateStreamingMessage(body.output, sessionId)
+					this.updateStreamingMessage(body.output, pushSessionId)
 				} else {
 					console.debug(
 						'[assistant] ignoring push notification for task',
@@ -942,6 +944,12 @@ export default {
 					)
 				}
 			})
+			this.isListeningTo[pushTaskId] = true
+			return hasPush
+		},
+
+		async pollGenerationTask(taskId, sessionId) {
+			const hasPush = this.listenToTaskNotifications(taskId, this.active.id)
 			console.debug('[assistant] HAS PUSH', hasPush)
 
 			return new Promise((resolve, reject) => {
