@@ -242,6 +242,11 @@ body[dir="rtl"] .choose-file-button {
 	.shadowed.streaming .rich-contenteditable__input {
 		animation: pulse 2s infinite;
 	}
+	@media (prefers-reduced-motion: reduce) {
+		.shadowed.streaming .rich-contenteditable__input {
+			animation: none;
+		}
+	}
 }
 
 @keyframes pulse {

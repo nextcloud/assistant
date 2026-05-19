@@ -899,6 +899,11 @@ export default {
 				> label {
 					animation: blink 2s infinite;
 				}
+				@media (prefers-reduced-motion: reduce) {
+					> label {
+						animation: none;
+					}
+				}
 			}
 
 			&__provider {
