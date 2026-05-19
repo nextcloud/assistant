@@ -632,6 +632,31 @@ export async function openAssistantTask(
 	const view = app.mount(modalMountPoint)
 	let lastTask = task
 
+	// notify push stuff
+	const isListeningTo = {}
+	// listen only if needed
+	// return true if notify_push is available
+	// we can't cleanup isListeningTo because there is no way to remove a handler with @nextcloud/notify_push
+	const listenToTaskNotifications = (pushTaskId) => {
+		if (isListeningTo[pushTaskId]) {
+			return true
+		}
+		// attempt to listen to push notifications to get the intermediate output
+		const pushChannel = 'task_' + pushTaskId
+		const hasPush = listen(pushChannel, (type, body) => {
+			console.debug('[assistant] received push notification', type, body)
+			if (pushTaskId === view.selectedTaskId) {
+				view.outputs = body
+			} else {
+				console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
+			}
+		})
+		if (hasPush) {
+			isListeningTo[pushTaskId] = true
+		}
+		return hasPush
+	}
+
 	modalMountPoint.addEventListener('cancel', () => {
 		cancelTaskPolling()
 		app.unmount()
@@ -668,17 +693,7 @@ export async function openAssistantTask(
 				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 
-				// attempt to listen to push notifications to get the intermediate output
-				const pushTaskId = task.id
-				const pushChannel = 'task_' + pushTaskId
-				const hasPush = listen(pushChannel, (type, body) => {
-					console.debug('[assistant] received push notification', type, body)
-					if (pushTaskId === view.selectedTaskId) {
-						view.outputs = body
-					} else {
-						console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
-					}
-				})
+				const hasPush = listenToTaskNotifications(task.id)
 				console.debug('[assistant] HAS PUSH', hasPush)
 
 				pollTask(task.id, view, !hasPush).then(finishedTask => {
@@ -767,7 +782,9 @@ export async function openAssistantTask(
 				view.progress = null
 				view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
 
-				pollTask(updatedTask.id, view).then(finishedTask => {
+				const hasPush = listenToTaskNotifications(task.id)
+
+				pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
 					console.debug('pollTask.then', finishedTask)
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output

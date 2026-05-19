@@ -70,6 +70,7 @@ export default {
 			progress: null,
 			loading: false,
 			isNotifyEnabled: false,
+			isListeningTo: {},
 		}
 	},
 
@@ -112,6 +113,25 @@ export default {
 				this.task.status = null
 			})
 		},
+		listenToTaskNotifications(pushTaskId) {
+			if (this.isListeningTo[pushTaskId]) {
+				return true
+			}
+			// attempt to listen to push notifications to get the intermediate output
+			const pushChannel = 'task_' + pushTaskId
+			const hasPush = listen(pushChannel, (type, body) => {
+				console.debug('[assistant] received push notification', type, body)
+				if (pushTaskId === this.task.id) {
+					this.task.output = body
+				} else {
+					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)
+				}
+			})
+			if (hasPush) {
+				this.isListeningTo[pushTaskId] = true
+			}
+			return hasPush
+		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.loading = true
 			this.showSyncTaskRunning = true
@@ -130,17 +150,7 @@ export default {
 					this.task.completionExpectedAt = task.completionExpectedAt
 					this.task.scheduledAt = task.scheduledAt
 
-					// attempt to listen to push notifications to get the intermediate output
-					const pushTaskId = task.id
-					const pushChannel = 'task_' + pushTaskId
-					const hasPush = listen(pushChannel, (type, body) => {
-						console.debug('[assistant] received push notification', type, body)
-						if (pushTaskId === this.task.id) {
-							this.task.output = body
-						} else {
-							console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)
-						}
-					})
+					const hasPush = this.listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
 
 					pollTask(task.id, this, !hasPush, this.updateTask).then(finishedTask => {
@@ -217,7 +227,9 @@ export default {
 					this.task.completionExpectedAt = updatedTask.completionExpectedAt
 					this.task.scheduledAt = updatedTask.scheduledAt
 
-					pollTask(updatedTask.id, this, true, this.updateTask).then(finishedTask => {
+					const hasPush = this.listenToTaskNotifications(task.id)
+
+					pollTask(updatedTask.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
