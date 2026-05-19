@@ -204,6 +204,13 @@ export default {
 </script>
 
 <style lang="scss">
+.p-dialog-mask {
+	z-index: 5000 !important;
+}
+#assistantTextProcessingModal.insideViewer .p-dialog-mask {
+	z-index: 9998 !important;
+}
+
 .assistant-modal.p-dialog {
 	position: relative;
 	max-width: 100%;
