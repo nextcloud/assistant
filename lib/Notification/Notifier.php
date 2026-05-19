@@ -7,8 +7,8 @@
 
 namespace OCA\Assistant\Notification;
 
-use InvalidArgumentException;
 use OCA\Assistant\AppInfo\Application;
+use OCP\Activity\Exceptions\UnknownActivityException;
 use OCP\App\IAppManager;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
@@ -57,13 +57,13 @@ class Notifier implements INotifier {
 	 * @param INotification $notification
 	 * @param string $languageCode The code of the language that should be used to prepare the notification
 	 * @return INotification
-	 * @throws InvalidArgumentException When the notification was not prepared by a notifier
+	 * @throws UnknownActivityException When the notification was not prepared by a notifier
 	 * @since 9.0.0
 	 */
 	public function prepare(INotification $notification, string $languageCode): INotification {
 		if ($notification->getApp() !== Application::APP_ID) {
 			// Not my app => throw
-			throw new InvalidArgumentException();
+			throw new UnknownActivityException();
 		}
 
 		$l = $this->factory->get(Application::APP_ID, $languageCode);
@@ -73,12 +73,12 @@ class Notifier implements INotifier {
 		if (in_array($notification->getSubject(), ['success', 'failure'], true)) {
 			// ignore old notifications (before meta tasks were introduced)
 			if (!isset($params['target'], $params['inputs'])) {
-				throw new InvalidArgumentException();
+				throw new UnknownActivityException();
 			}
 			$schedulingAppId = $params['appId'];
 			$schedulingAppInfo = $this->appManager->getAppInfo($schedulingAppId);
 			if ($schedulingAppInfo === null) {
-				throw new InvalidArgumentException();
+				throw new UnknownActivityException();
 			}
 			$schedulingAppName = $schedulingAppInfo['name'];
 
@@ -415,7 +415,7 @@ class Notifier implements INotifier {
 
 			default:
 				// Unknown subject => Unknown notification => throw
-				throw new InvalidArgumentException();
+				throw new UnknownActivityException();
 		}
 	}
 }
