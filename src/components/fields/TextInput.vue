@@ -28,10 +28,16 @@
 			:title="t('assistant', 'Copy output')"
 			@click="onCopy">
 			<template #icon>
-				<ClipboardCheckOutlineIcon v-if="copied" />
+				<NcLoadingIcon v-if="streaming()" />
+				<ClipboardCheckOutlineIcon v-else-if="copied" />
 				<ContentCopyIcon v-else />
 			</template>
-			{{ t('assistant', 'Copy') }}
+			<span v-if="streaming()">
+				{{ t('assistant', 'Getting results...') }}
+			</span>
+			<span v-else>
+				{{ t('assistant', 'Copy') }}
+			</span>
 		</NcButton>
 		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
@@ -52,6 +58,7 @@ import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
+import { NcLoadingIcon } from '@nextcloud/vue'
 
 import isMobile from '../../mixins/isMobile.js'
 
@@ -78,6 +85,7 @@ export default {
 	components: {
 		NcRichContenteditable,
 		NcButton,
+		NcLoadingIcon,
 		FileDocumentOutlineIcon,
 		ClipboardCheckOutlineIcon,
 		ContentCopyIcon,
