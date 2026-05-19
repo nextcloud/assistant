@@ -61,8 +61,7 @@
 									<NcButton
 										:aria-label="t('assistant', 'Provider name')">
 										<template #icon>
-											<NcLoadingIcon v-if="streaming" :size="20" />
-											<InformationBoxIcon v-else :size="20" />
+											<InformationBoxIcon :size="20" />
 										</template>
 									</NcButton>
 								</template>
@@ -77,7 +76,9 @@
 						</div>
 						<div v-if="streaming"
 							class="session-area__top-bar__subtitle">
-							{{ t('assistant', 'Getting results…') }}
+							<label>
+								{{ t('assistant', 'Getting results…') }}
+							</label>
 							<NcButton
 								@click="$emit('background-notify', !isNotifyEnabled)">
 								<template #icon>
@@ -895,6 +896,9 @@ export default {
 				flex-wrap: wrap;
 				width: 100%;
 				padding: 4px 0 4px 10px;
+				> label {
+					animation: blink 2s infinite;
+				}
 			}
 
 			&__provider {
@@ -941,6 +945,18 @@ export default {
 		width: 100%;
 		padding: 16px;
 		min-height: 0;
+	}
+}
+
+@keyframes blink {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
 	}
 }
 </style>
