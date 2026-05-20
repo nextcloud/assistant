@@ -138,7 +138,7 @@ export async function openAssistantForm({
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === view.selectedTaskId) {
-					view.outputs = body
+					view.outputs = body ?? null
 				} else {
 					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
 				}
@@ -646,7 +646,7 @@ export async function openAssistantTask(
 		const hasPush = listen(pushChannel, (type, body) => {
 			console.debug('[assistant] received push notification', type, body)
 			if (pushTaskId === view.selectedTaskId) {
-				view.outputs = body
+				view.outputs = body ?? null
 			} else {
 				console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
 			}

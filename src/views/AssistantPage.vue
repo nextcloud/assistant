@@ -122,7 +122,7 @@ export default {
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === this.task.id) {
-					this.task.output = body
+					this.task.output = body ?? null
 				} else {
 					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)
 				}
