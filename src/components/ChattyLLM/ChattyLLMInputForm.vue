@@ -931,8 +931,9 @@ export default {
 			const pushChannel = 'task_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
-				if (pushSessionId === this.active.id) {
-					this.updateStreamingMessage(body.output, pushSessionId)
+				const activeSessionId = this.active?.id
+				if (pushSessionId === activeSessionId) {
+					this.updateStreamingMessage(body?.output ?? '', pushSessionId)
 				} else {
 					console.debug(
 						'[assistant] ignoring push notification for task',
@@ -943,13 +944,16 @@ export default {
 						this.active.id,
 					)
 				}
+
 			})
-			this.isListeningTo[pushTaskId] = true
+			if (hasPush) {
+				this.isListeningTo[pushTaskId] = true
+			}
 			return hasPush
 		},
 
 		async pollGenerationTask(taskId, sessionId) {
-			const hasPush = this.listenToTaskNotifications(taskId, this.active.id)
+			const hasPush = this.listenToTaskNotifications(taskId, sessionId)
 			console.debug('[assistant] HAS PUSH', hasPush)
 
 			return new Promise((resolve, reject) => {
