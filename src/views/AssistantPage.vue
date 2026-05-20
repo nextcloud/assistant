@@ -186,11 +186,16 @@ export default {
 				.then(() => {
 				})
 		},
-		updateTask(task) {
+		updateTask(task, _obj, updateOutput = true) {
 			if (task.status === TASK_STATUS_STRING.running) {
 				this.progress = task.progress
 			}
-			this.task = task
+			this.task = updateOutput
+				? task
+				: {
+					...task,
+					output: this.task.output,
+				}
 		},
 		onSyncSubmit(data) {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
