@@ -945,7 +945,7 @@ export default {
 						'in session',
 						pushSessionId,
 						'the selected session is',
-						this.active.id,
+						this.active?.id,
 					)
 				}
 

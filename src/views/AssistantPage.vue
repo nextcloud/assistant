@@ -98,20 +98,31 @@ export default {
 
 	methods: {
 		onBackgroundNotify(enable) {
-			setNotifyReady(this.task.id, enable).then(res => {
-				this.isNotifyEnabled = enable
-			})
+			if (this.task?.id) {
+				setNotifyReady(this.task.id, enable).then(res => {
+					this.isNotifyEnabled = enable
+				})
+			}
 		},
 		onCancel() {
 			cancelTaskPolling()
-			setNotifyReady(this.task.id, false)
-			cancelTask(this.task.id).then(res => {
+			if (this.task?.id) {
+				setNotifyReady(this.task.id, false)
+				cancelTask(this.task.id).then(res => {
+					this.loading = false
+					this.showSyncTaskRunning = false
+					this.task.id = null
+					this.task.output = null
+					this.task.status = null
+				})
+			} else {
+				// if we ever end up in this state, this helps to recover
 				this.loading = false
 				this.showSyncTaskRunning = false
 				this.task.id = null
 				this.task.output = null
 				this.task.status = null
-			})
+			}
 		},
 		listenToTaskNotifications(pushTaskId) {
 			if (this.isListeningTo[pushTaskId]) {
