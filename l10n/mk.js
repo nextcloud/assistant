@@ -25,6 +25,7 @@ OC.L10N.register(
     "Cancel editing" : "Откажи уредување",
     "Submit" : "Испрати",
     "You" : "Вие",
+    "Copy message" : "Копирај порака",
     "Delete message" : "Избриши порака",
     "Choose" : "Избери",
     "Cancelled" : "Откажано",
