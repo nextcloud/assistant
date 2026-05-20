@@ -357,6 +357,10 @@ export default {
 					message: t('assistant', 'Create a scheduled task to send me the weather every morning '),
 				},
 				{
+					aria: t('assistant', 'Ask assistant, which actions it can do for you'),
+					message: t('assistant', 'Which actions can you do for me?'),
+				},
+				{
 					aria: t('assistant', 'Ask assistant for route from Munich to Berlin using public transport'),
 					message: t('assistant', 'Can you give me a route from Munich to Berlin using public transport?'),
 				},

@@ -219,7 +219,6 @@ export default {
 					const updatedTask = response.data?.ocs?.data?.task
 
 					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
-						this.selectedTaskTypeId = updatedTask.type
 						this.task.input = updatedTask.input
 						this.task.output = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
 						this.task.id = updatedTask.id
