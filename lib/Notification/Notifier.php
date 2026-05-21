@@ -14,7 +14,6 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\Notification\IAction;
 use OCP\Notification\INotification;
-
 use OCP\Notification\INotifier;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
@@ -117,7 +116,6 @@ class Notifier implements INotifier {
 			}
 		}
 
-
 		switch ($notification->getSubject()) {
 			case 'success':
 				$subject = $taskTypeName === null
@@ -154,7 +152,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'failure':
 				$subject = $taskTypeName === null
 					? $l->t('Task for "%1$s" has failed', [$schedulingAppName])
@@ -164,7 +161,6 @@ class Notifier implements INotifier {
 				if ($taskInput) {
 					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
-
 
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
@@ -185,7 +181,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'file_action_success':
 				$subject = $l->t('File action has finished');
 
@@ -239,7 +234,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'file_action_failure':
 				$subject = $l->t('File action has failed');
 
@@ -273,7 +267,6 @@ class Notifier implements INotifier {
 					->setIcon($iconUrl);
 
 				return $notification;
-
 			case 'new_image_file_success':
 				$subject = $l->t('New image file has been generated');
 
@@ -315,7 +308,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'new_image_file_failure':
 				$subject = $l->t('Image file generation has failed');
 
@@ -337,7 +329,6 @@ class Notifier implements INotifier {
 					->setIcon($iconUrl);
 
 				return $notification;
-
 			default:
 				// Unknown subject => Unknown notification => throw
 				throw new UnknownActivityException();

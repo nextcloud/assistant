@@ -54,7 +54,6 @@ class TextToStickerProvider implements ISynchronousProvider {
 		return [];
 	}
 
-
 	public function getOptionalInputShape(): array {
 		return [];
 	}
