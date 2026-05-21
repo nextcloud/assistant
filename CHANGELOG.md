@@ -10,6 +10,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.4.2 - 2026-05-21
+
+### Fixed
+- correctly set the z-index @julien-nc [#547](https://github.com/nextcloud/assistant/pull/547)
+- use UnknownActivityException instead of InvalidArgumentException in Notifier @janepie [#544](https://github.com/nextcloud/assistant/pull/544)
+- translate UI issues @janepie [#536](https://github.com/nextcloud/assistant/pull/536)
+- title UI issues @janepie [#524](https://github.com/nextcloud/assistant/pull/524)
+- Prevent opening the assistant dialog multiple times @julien-nc [#523](https://github.com/nextcloud/assistant/pull/523)
+
+
+### Changed
+- updated dependencies @janepie [#548](https://github.com/nextcloud/assistant/pull/548)
+- added strings for new mail tools @janepie [#525](https://github.com/nextcloud/assistant/pull/525)
+
+
 ## 3.4.1 - 2026-05-04
 
 ### Fixed
