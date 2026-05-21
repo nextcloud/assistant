@@ -70,7 +70,7 @@ class ChattyLLMTaskListener implements IEventListener {
 			$message = new Message();
 			$message->setSessionId($sessionId);
 			$message->setOcpTaskId($task->getId());
-			$message->setRole(Message::ROLE_ASSISTANT);
+			$message->setRole('assistant');
 			$message->setTimestamp(time());
 			$sources = json_encode($taskOutput['sources'] ?? []);
 			$message->setSources($sources ?: '[]');

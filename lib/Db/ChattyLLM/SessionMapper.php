@@ -66,25 +66,7 @@ class SessionMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
-	 * @param int $assignmentId
-	 * @return Session
-	 * @throws DoesNotExistException
-	 * @throws MultipleObjectsReturnedException
-	 * @throws Exception
-	 */
-	public function getUserSessionForAssignment(string $userId, int $assignmentId): Session {
-		$qb = $this->db->getQueryBuilder();
-		$qb->select(Session::$columns)
-			->from($this->getTableName())
-			->where($qb->expr()->eq('assignment_id', $qb->createPositionalParameter($assignmentId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
-
-		return $this->findEntity($qb);
-	}
-
-	/**
-	 * @param string $userId
-	 * @return list<Session>
+	 * @return array
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getUserSessions(string $userId): array {
