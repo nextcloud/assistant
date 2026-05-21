@@ -340,20 +340,20 @@ export default {
 			agencyAvailable: loadState('assistant', 'agency_available', false),
 			agencySuggestions: [
 				{
-					aria: t('assisant', 'Ask assistant, what\'s the weather today'),
-					message: t('assisant', 'What\'s the weather today?'),
+					aria: t('assistant', 'Ask assistant, what\'s the weather today'),
+					message: t('assistant', 'What\'s the weather today?'),
 				},
 				{
-					aria: t('assisant', 'Ask assistant, to create a share link for a file'),
-					message: t('assisant', 'Can you create a share link for me?'),
+					aria: t('assistant', 'Ask assistant, to create a share link for a file'),
+					message: t('assistant', 'Can you create a share link for me?'),
 				},
 				{
-					aria: t('assisant', 'Ask assistant, create a scheduled task to send me the weather every morning'),
-					message: t('assisant', 'Create a scheduled task to send me the weather every morning '),
+					aria: t('assistant', 'Ask assistant, create a scheduled task to send me the weather every morning'),
+					message: t('assistant', 'Create a scheduled task to send me the weather every morning '),
 				},
 				{
-					aria: t('assisant', 'Ask assistant, which actions it can do for you'),
-					message: t('assisant', 'Which actions can you do for me?'),
+					aria: t('assistant', 'Ask assistant, which actions it can do for you'),
+					message: t('assistant', 'Which actions can you do for me?'),
 				},
 			],
 		}
@@ -423,6 +423,7 @@ export default {
 		isAssignment() {
 			this.fetchSessions()
 			this.active = null
+			clearTimeout(this.pollCheckSessionTimeout)
 		},
 	},
 
@@ -690,7 +691,8 @@ export default {
 			} catch (error) {
 				this.sessions = []
 				console.error('fetchSessions error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error fetching conversations'))
+				const fallbackError = this.isAssignment ? t('assistant', 'Error fetching assignments') : t('assistant', 'Error fetching conversations')
+				showError(error?.response?.data?.error ?? fallbackError)
 			}
 		},
 

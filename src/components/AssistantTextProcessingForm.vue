@@ -521,6 +521,7 @@ export default {
 		},
 		onOpenChatFromAssignment() {
 			this.mySelectedTaskTypeId = CHAT_TASK_TYPE_ID
+			this.onTaskTypeUserChange()
 		},
 		onTaskTypeUserChange() {
 			this.$emit('new-task')
