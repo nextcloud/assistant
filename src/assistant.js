@@ -81,6 +81,7 @@ export async function openAssistantForm({
 			if (isInsideViewer) {
 				// so the assistant modal is opened on top of the current viewer
 				document.querySelector('body').append(modalMountPoint)
+				modalMountPoint.classList.add('insideViewer')
 			} else {
 				// so the viewer can be later opened on top of the assistant
 				document.querySelector('body').insertBefore(modalMountPoint, content.nextSibling)
@@ -547,6 +548,7 @@ export async function openAssistantTask(
 		if (isInsideViewer) {
 			// so the assistant modal is opened on top of the current viewer
 			document.querySelector('body').append(modalMountPoint)
+			modalMountPoint.classList.add('insideViewer')
 		} else {
 			// so the viewer can be later opened on top of the assistant
 			document.querySelector('body').insertBefore(modalMountPoint, content.nextSibling)
