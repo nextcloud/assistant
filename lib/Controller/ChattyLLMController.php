@@ -311,6 +311,7 @@ class ChattyLLMController extends OCSController {
 	 *
 	 * Get all chat sessions for the current user
 	 *
+	 * @param bool|null $isAssignment Whether to get only the sessions for assignments (true) or not (false) defaults to false
 	 * @return JSONResponse<Http::STATUS_OK, list<AssistantChatSession>, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 *
 	 * 200: The session list has been obtained successfully

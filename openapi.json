@@ -2897,6 +2897,16 @@
                 ],
                 "parameters": [
                     {
+                        "name": "isAssignment",
+                        "in": "query",
+                        "description": "Whether to get only the sessions for assignments (true) or not (false) defaults to false",
+                        "schema": {
+                            "type": "boolean",
+                            "nullable": true,
+                            "default": false
+                        }
+                    },
+                    {
                         "name": "OCS-APIRequest",
                         "in": "header",
                         "description": "Required to be true for the API request to pass",
@@ -4039,6 +4049,15 @@
                             "type": "integer",
                             "format": "int64",
                             "default": 0
+                        }
+                    },
+                    {
+                        "name": "hideUserMessages",
+                        "in": "query",
+                        "description": "Whether to hide user messages from the response",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
                         }
                     },
                     {
