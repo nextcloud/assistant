@@ -9,7 +9,6 @@ namespace OCA\Assistant\Service;
 
 use DateTime;
 use OCA\Assistant\AppInfo\Application;
-use OCA\Assistant\Db\ChattyLLM\Session;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as INotificationManager;
 use OCP\TaskProcessing\Task;
@@ -131,36 +130,6 @@ class NotificationService {
 			->setDateTime(new DateTime())
 			->setObject('task', (string)$taskId)
 			->setSubject($subject, $params);
-
-		$manager->notify($notification);
-	}
-
-	public function sendAssignmentNotification(?string $userId, Task $task, Session $session): void {
-		if ($userId === null) {
-			return;
-		}
-		$manager = $this->notificationManager;
-		$notification = $manager->createNotification();
-
-		$taskSuccessful = $task->getStatus() === Task::STATUS_SUCCESSFUL;
-		$pendingActions = $session->getAgencyPendingActions();
-
-		$params = [
-			'sessionId' => (string)$session->getId(),
-			'sessionTitle' => $session->getTitle(),
-		];
-
-		$subject = $taskSuccessful
-			? ($pendingActions === null
-			  ? 'assignment_successful'
-			  : 'assignment_approval_pending')
-			: 'assignment_failure';
-
-		$notification->setApp(Application::APP_ID)
-			->setUser($userId)
-			->setDateTime(new DateTime())
-			->setSubject($subject, $params)
-			->setObject('session', (string)$session->getId());
 
 		$manager->notify($notification);
 	}

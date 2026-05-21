@@ -92,7 +92,6 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, ChattyLLMTaskListener::class);
-		$context->registerEventListener(TaskFailedEvent::class, ChattyLLMTaskListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, FileActionTaskSuccessfulListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, NewFileMenuTaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, FileActionTaskFailedListener::class);
