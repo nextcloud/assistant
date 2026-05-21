@@ -64,6 +64,7 @@ class AssistantService {
 
 	private const TASK_TYPE_PRIORITIES = [
 		'chatty-llm' => 1,
+		'assignments' => 1,
 		TextToText::ID => 2,
 		'context_chat:context_chat' => 3,
 		'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType' => 3,
@@ -287,6 +288,9 @@ class AssistantService {
 		if (str_starts_with($typeId, 'chatty')) {
 			$categoryId = 'chat';
 			$categoryName = $this->l10n->t('Chat with AI');
+		} elseif (str_starts_with($typeId, 'assignments')) {
+			$categoryId = 'assignments';
+			$categoryName = $this->l10n->t('Scheduled tasks');
 		} elseif (str_starts_with($typeId, 'context_chat')) {
 			$categoryId = 'context';
 			$categoryName = $this->l10n->t('Context Chat');
@@ -433,6 +437,23 @@ class AssistantService {
 					'optionalInputShapeDefaults' => [],
 					'optionalOutputShape' => [],
 					'priority' => self::TASK_TYPE_PRIORITIES['chatty-llm'] ?? 1000,
+					'preferredProviderName' => $preferredProviderName,
+				];
+				// add the chattyUI assignments virtual task type
+				$types[] = [
+					'id' => 'assignments',
+					'name' => $this->l10n->t('Scheduled tasks'),
+					'description' => $this->l10n->t('Scheduled tasks'),
+					'category' => $this->getCategory('assignments'),
+					'inputShape' => [],
+					'inputShapeEnumValues' => [],
+					'inputShapeDefaults' => [],
+					'outputShape' => [],
+					'optionalInputShape' => [],
+					'optionalInputShapeEnumValues' => [],
+					'optionalInputShapeDefaults' => [],
+					'optionalOutputShape' => [],
+					'priority' => self::TASK_TYPE_PRIORITIES['assignments'] ?? 1000,
 					'preferredProviderName' => $preferredProviderName,
 				];
 				// do not add the raw TextToTextChat type

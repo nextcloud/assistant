@@ -157,12 +157,12 @@ class ChatService {
 	 * @throws InternalException
 	 * @throws UnauthorizedException
 	 */
-	public function getSessionsForUser(?string $userId): array {
+	public function getSessionsForUser(?string $userId, bool $isAssignment): array {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
 		try {
-			return $this->sessionMapper->getUserSessions($userId);
+			return $this->sessionMapper->getUserSessions($userId, $isAssignment);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
@@ -250,7 +250,7 @@ class ChatService {
 	 * @throws NotFoundException
 	 * @throws UnauthorizedException
 	 */
-	public function getSessionMessages(?string $userId, int $sessionId, int $limit = 20, int $cursor = 0): array {
+	public function getSessionMessages(?string $userId, int $sessionId, int $limit = 20, int $cursor = 0, bool $hideUserMessages = false): array {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
@@ -268,7 +268,7 @@ class ChatService {
 
 		/** @var list<Message> $messages */
 		try {
-			$messages = $this->messageMapper->getMessages($sessionId, $cursor, $limit);
+			$messages = $this->messageMapper->getMessages($sessionId, $cursor, $limit, $hideUserMessages);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}

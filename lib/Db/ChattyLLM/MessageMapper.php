@@ -80,16 +80,21 @@ class MessageMapper extends QBMapper {
 	 * @param int $sessionId
 	 * @param int $cursor
 	 * @param int $limit
+	 * @param bool $hideUserMessages
 	 * @return list<Message>
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getMessages(int $sessionId, int $cursor, int $limit): array {
+	public function getMessages(int $sessionId, int $cursor, int $limit, bool $hideUserMessages = false): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
 			->orderBy('id', 'DESC')
 			->setFirstResult($cursor);
+
+		if ($hideUserMessages) {
+			$qb->andWhere($qb->expr()->neq('role', $qb->createPositionalParameter(Message::ROLE_HUMAN, IQueryBuilder::PARAM_STR)));
+		}
 
 		if ($limit > 0) {
 			$qb->setMaxResults($limit);

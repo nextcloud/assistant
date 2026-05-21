@@ -81,6 +81,7 @@ import TextLongIcon from 'vue-material-design-icons/TextLong.vue'
 import ImageOutlineIcon from 'vue-material-design-icons/ImageOutline.vue'
 import WebIcon from 'vue-material-design-icons/Web.vue'
 import FileIcon from 'vue-material-design-icons/File.vue'
+import TimerOutlineIcon from 'vue-material-design-icons/TimerOutline.vue'
 
 import ContentPasteSearchIcon from './icons/ContentPasteSearch.vue'
 import WaveformIcon from './icons/Waveform.vue'
@@ -231,6 +232,8 @@ export default {
 			switch (category) {
 			case 'chat':
 				return MessageOutlineIcon
+			case 'assignments':
+				return TimerOutlineIcon
 			case 'context':
 				return ContentPasteSearchIcon
 			case 'text':

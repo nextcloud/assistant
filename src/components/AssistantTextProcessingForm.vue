@@ -17,7 +17,10 @@
 			:options="sortedTaskTypes"
 			@update:model-value="onTaskTypeUserChange" />
 		<div class="task-input-output-form">
-			<ChattyLLMInputForm v-if="mySelectedTaskTypeId === 'chatty-llm'" class="chatty-inputs" />
+			<ChattyLLMInputForm v-if="['chatty-llm', 'assignments'].includes(mySelectedTaskTypeId)"
+				:is-assignment="mySelectedTaskTypeId === 'assignments'"
+				class="chatty-inputs"
+				@open-chat="onOpenChatFromAssignment" />
 			<div v-else class="container chatty-inputs">
 				<NcAppNavigation>
 					<NcAppNavigationList>
@@ -515,6 +518,9 @@ export default {
 				.then(() => {
 					this.loadingTaskTypes = false
 				})
+		},
+		onOpenChatFromAssignment() {
+			this.mySelectedTaskTypeId = CHAT_TASK_TYPE_ID
 		},
 		onTaskTypeUserChange() {
 			this.$emit('new-task')

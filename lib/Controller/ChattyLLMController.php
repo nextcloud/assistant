@@ -318,9 +318,9 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function getSessions(): JSONResponse {
+	public function getSessions(?bool $isAssignment = false): JSONResponse {
 		try {
-			$sessions = $this->chatService->getSessionsForUser($this->userId);
+			$sessions = $this->chatService->getSessionsForUser($this->userId, $isAssignment);
 			/** @var list<AssistantChatSession> $serializedSessions */
 			$serializedSessions = array_map(static function ($session) {
 				return $session->jsonSerialize();
@@ -380,6 +380,7 @@ class ChattyLLMController extends OCSController {
 	 * @param int $sessionId The session ID
 	 * @param int $limit The max number of messages to return
 	 * @param int $cursor The index of the first result to return
+	 * @param bool $hideUserMessages Whether to hide user messages from the response
 	 * @return JSONResponse<Http::STATUS_OK, list<AssistantChatMessage>, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
 	 * 200: The message list has been successfully obtained
@@ -388,9 +389,9 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function getMessages(int $sessionId, int $limit = 20, int $cursor = 0): JSONResponse {
+	public function getMessages(int $sessionId, int $limit = 20, int $cursor = 0, bool $hideUserMessages = false): JSONResponse {
 		try {
-			$messages = $this->chatService->getSessionMessages($this->userId, $sessionId, $limit, $cursor);
+			$messages = $this->chatService->getSessionMessages($this->userId, $sessionId, $limit, $cursor, $hideUserMessages);
 			return new JSONResponse(array_map(static function (Message $message) {
 				return $message->jsonSerialize();
 			}, $messages));
