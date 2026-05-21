@@ -161,6 +161,15 @@ export default {
 	},
 
 	watch: {
+		value(newValue) {
+			if (!this.streaming()) {
+				return
+			}
+			const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
+			if (scrollableArea) {
+				scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
+			}
+		},
 	},
 
 	mounted() {
