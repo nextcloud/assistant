@@ -250,6 +250,9 @@ import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import moment from 'moment'
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
+import ICAL from 'ical.js'
+import formatRecurrenceRule from './recurrenceRule.js'
+import { getLanguage } from '@nextcloud/l10n'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -366,7 +369,28 @@ export default {
 			return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
 		},
 		rrule() {
-			return this.assignmentDetails?.recurrence ?? ''
+			const raw = this.assignmentDetails?.recurrence ?? ''
+			if (raw === '') {
+				return ''
+			}
+			try {
+				const iCalRecur = ICAL.Recur.fromString(raw)
+				const obj = {
+					frequency: iCalRecur.freq,
+					interval: iCalRecur.interval || 1,
+					count: iCalRecur.count ?? null,
+					until: iCalRecur.until ? new Date(iCalRecur.until) : null,
+					byDay: iCalRecur.parts.BYDAY ?? [],
+					byMonth: iCalRecur.parts.BYMONTH ?? [],
+					byMonthDay: iCalRecur.parts.BYMONTHDAY ?? [],
+					bySetPosition: iCalRecur.parts.BYSETPOS?.[0] ?? null,
+				}
+				console.debug('rrule:', obj)
+				const locale = getLanguage()
+				return formatRecurrenceRule(obj, locale)
+			} catch (error) {
+				return raw
+			}
 		},
 	},
 

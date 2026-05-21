@@ -55,6 +55,7 @@
     "@primeuix/themes": "^2.0.3",
     "extendable-media-recorder": "^9.2.11",
     "extendable-media-recorder-wav-encoder": "^7.0.129",
+    "ical.js": "^2.2.1",
     "moment": "^2.30.1",
     "primevue": "^4.5.4",
     "v-click-outside": "^3.2.0",
