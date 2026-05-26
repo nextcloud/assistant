@@ -8,13 +8,13 @@
 namespace OCA\Assistant\Notification;
 
 use OCA\Assistant\AppInfo\Application;
-use OCP\Activity\Exceptions\UnknownActivityException;
 use OCP\App\IAppManager;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\Notification\IAction;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
+use OCP\Notification\UnknownNotificationException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
@@ -56,13 +56,13 @@ class Notifier implements INotifier {
 	 * @param INotification $notification
 	 * @param string $languageCode The code of the language that should be used to prepare the notification
 	 * @return INotification
-	 * @throws UnknownActivityException When the notification was not prepared by a notifier
+	 * @throws UnknownNotificationException When the notification was not prepared by a notifier
 	 * @since 9.0.0
 	 */
 	public function prepare(INotification $notification, string $languageCode): INotification {
 		if ($notification->getApp() !== Application::APP_ID) {
 			// Not my app => throw
-			throw new UnknownActivityException();
+			throw new UnknownNotificationException();
 		}
 
 		$l = $this->factory->get(Application::APP_ID, $languageCode);
@@ -72,12 +72,12 @@ class Notifier implements INotifier {
 		if (in_array($notification->getSubject(), ['success', 'failure'], true)) {
 			// ignore old notifications (before meta tasks were introduced)
 			if (!isset($params['target'], $params['inputs'])) {
-				throw new UnknownActivityException();
+				throw new UnknownNotificationException();
 			}
 			$schedulingAppId = $params['appId'];
 			$schedulingAppInfo = $this->appManager->getAppInfo($schedulingAppId);
 			if ($schedulingAppInfo === null) {
-				throw new UnknownActivityException();
+				throw new UnknownNotificationException();
 			}
 			$schedulingAppName = $schedulingAppInfo['name'];
 
@@ -331,7 +331,7 @@ class Notifier implements INotifier {
 				return $notification;
 			default:
 				// Unknown subject => Unknown notification => throw
-				throw new UnknownActivityException();
+				throw new UnknownNotificationException();
 		}
 	}
 }
