@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.4.3 - 2026-05-26
+
+### Fixed
+- use UnknownNotificationException instead of Activity one @janepie [#552](https://github.com/nextcloud/assistant/pull/552)
+
 ## 3.4.2 - 2026-05-21
 
 ### Fixed
