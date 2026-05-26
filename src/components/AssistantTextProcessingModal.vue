@@ -258,7 +258,8 @@ export default {
 	left: 0;
 	right: 0;
 	z-index: 2;
-	min-height: 0;
+	// cover the absolutely-positioned maximize button so the drag strip stays grabbable
+	min-height: calc(var(--default-clickable-area) + 20px);
 	padding: 4px;
 	border: 0;
 	background: transparent;
@@ -267,10 +268,18 @@ export default {
 		cursor: grabbing;
 	}
 	.p-dialog-maximize-button {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		z-index: 3;
+		margin: 0 !important;
+		color: var(--color-main-text);
+		background-color: var(--color-main-background);
 		border-radius: var(--border-radius-element);
 		width: var(--default-clickable-area);
 		height: var(--default-clickable-area);
 		&:hover {
+			color: var(--color-main-text) !important;
 			background-color: var(--color-background-hover) !important;
 			border: none !important;
 		}
