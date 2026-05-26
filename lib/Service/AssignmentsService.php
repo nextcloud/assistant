@@ -39,7 +39,7 @@ class AssignmentsService {
 	 * @throws UnauthorizedException
 	 * @throws BadRequestException
 	 */
-	public function createAssignment(?string $userId, string $prompt, int $startsAt, string $recurrence): Assignment {
+	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence): Assignment {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
@@ -61,7 +61,7 @@ class AssignmentsService {
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		$session = $this->chatService->createChatSession($userId, $this->timeFactory->now()->getTimestamp(), 'Assignment ' . $assignment->getId()); // TODO: Add a proper title here
+		$session = $this->chatService->createChatSession($userId, $this->timeFactory->now()->getTimestamp(), $title);
 		$session->setAssignmentId($assignment->getId());
 		try {
 			$this->sessionMapper->update($session);

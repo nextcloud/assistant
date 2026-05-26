@@ -5334,11 +5334,16 @@
                             "schema": {
                                 "type": "object",
                                 "required": [
+                                    "title",
                                     "prompt",
                                     "startsAt",
                                     "recurrence"
                                 ],
                                 "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "The title of the new assignment"
+                                    },
                                     "prompt": {
                                         "type": "string",
                                         "description": "The prompt to be sent to the assistant when the assignment is executed"
