@@ -8,10 +8,10 @@
 		:closable="false"
 		:dismissable-mask="false"
 		:close-on-escape="false"
-		:draggable="true"
+		:draggable="!isSmallMobile"
 		append-to="self"
 		:base-z-index="isInsideViewer ? 9998 : 5000"
-		class="assistant-modal">
+		:class="['assistant-modal', { 'assistant-modal--fullscreen': isSmallMobile }]">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">
@@ -59,6 +59,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import PrimeDialog from 'primevue/dialog'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
+import { useIsSmallMobile } from '@nextcloud/vue/composables/useIsMobile'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
 
@@ -115,6 +116,9 @@ export default {
 		'load-task',
 		'new-task',
 	],
+	setup() {
+		return { isSmallMobile: useIsSmallMobile() }
+	},
 	data() {
 		return {
 			show: true,
@@ -228,6 +232,24 @@ export default {
 	color: var(--color-main-text);
 	background-color: var(--color-main-background);
 	border: 0;
+}
+
+.assistant-modal.p-dialog.assistant-modal--fullscreen,
+.assistant-modal.p-dialog.p-dialog-maximized {
+	inset: 0;
+	width: 100vw;
+	max-width: none;
+	height: 100vh;
+	max-height: none;
+	margin: 0;
+	border-radius: 0;
+	resize: none;
+	filter: none;
+	transform: none;
+}
+
+.assistant-modal.p-dialog.assistant-modal--fullscreen .p-dialog-header .p-dialog-maximize-button {
+	display: none;
 }
 
 .assistant-modal .p-dialog-header {
