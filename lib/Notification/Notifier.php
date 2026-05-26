@@ -8,7 +8,6 @@
 namespace OCA\Assistant\Notification;
 
 use OCA\Assistant\AppInfo\Application;
-
 use OCP\App\IAppManager;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
