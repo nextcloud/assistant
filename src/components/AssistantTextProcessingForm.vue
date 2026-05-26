@@ -21,8 +21,8 @@
 				:is-assignment="mySelectedTaskTypeId === 'assignments'"
 				class="chatty-inputs"
 				@open-chat="onOpenChatFromAssignment" />
-			<div v-else class="container chatty-inputs">
-				<NcAppNavigation>
+			<div v-else ref="container" class="container chatty-inputs">
+				<NcAppNavigation ref="appNav">
 					<NcAppNavigationList>
 						<NcAppNavigationNew :text="t('assistant', 'New task')"
 							variant="secondary"
@@ -204,6 +204,8 @@ import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import TranslateForm from './Translate/TranslateForm.vue'
 
+import navAutoCollapse from '../mixins/navAutoCollapse.js'
+
 import { SHAPE_TYPE_NAMES, MAX_TEXT_INPUT_LENGTH, TASK_STATUS_STRING } from '../constants.js'
 
 import axios from '@nextcloud/axios'
@@ -249,6 +251,7 @@ export default {
 		ChattyLLMInputForm,
 		EditableTextField,
 	},
+	mixins: [navAutoCollapse],
 	provide() {
 		return {
 			providedCurrentTaskId: () => this.selectedTaskId,
@@ -473,6 +476,9 @@ export default {
 		},
 		mySelectedTaskTypeId(newVal) {
 			this.myOutputs = {}
+			// the navigation lives in a conditionally-rendered branch, so
+			// re-attach the resize observer once that branch is in the DOM
+			this.$nextTick(() => this.setupNavObserver())
 		},
 	},
 	mounted() {
@@ -790,13 +796,13 @@ export default {
 		}
 	}
 
-	:deep(.app-navigation--close) {
+	:deep(.app-navigation--closed) {
 		.app-navigation-toggle-wrapper {
 			margin-right: -33px !important;
 		}
 	}
 
-	:deep(.app-navigation--close ~ .session-area) {
+	:deep(.app-navigation--closed ~ .session-area) {
 		.session-area__chat-area, .session-area__input-area {
 			padding-left: 0 !important;
 		}
