@@ -45,6 +45,7 @@ class AssignmentsApiController extends OCSController {
 
 	/**
 	 * Create a new assignment
+	 * @param string $title The title of the new assignment
 	 * @param string $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int $startsAt The timestamp when the assignment should start being executed
 	 * @param string $recurrence The recurrence rule for the assignment, in RRULE format (e.g. "FREQ=DAILY;INTERVAL=1" for a daily assignment)
@@ -57,9 +58,9 @@ class AssignmentsApiController extends OCSController {
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
 	#[Http\Attribute\ApiRoute(verb: 'POST', url: '/assignments')]
-	public function createUserAssignment(string $prompt, int $startsAt, string $recurrence): DataResponse {
+	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence): DataResponse {
 		try {
-			$assignment = $this->assignmentsService->createAssignment($this->userId, $prompt, $startsAt, $recurrence);
+			$assignment = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence);
 			$serializedAssignment = $assignment->jsonSerialize();
 			return new DataResponse(['assignment' => $serializedAssignment]);
 		} catch (InternalException $e) {
