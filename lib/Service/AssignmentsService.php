@@ -39,7 +39,7 @@ class AssignmentsService {
 	 * @throws UnauthorizedException
 	 * @throws BadRequestException
 	 */
-	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence): Assignment {
+	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, string $timezone): Assignment {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
@@ -53,6 +53,11 @@ class AssignmentsService {
 		$assignment->setUpdatedAt($now);
 		try {
 			$assignment->setRecurrence($recurrence);
+		} catch (\InvalidArgumentException $e) {
+			throw new BadRequestException('Invalid recurrence rule', previous: $e);
+		}
+		try {
+			$assignment->setTimezone($timezone);
 		} catch (\InvalidArgumentException $e) {
 			throw new BadRequestException('Invalid recurrence rule', previous: $e);
 		}

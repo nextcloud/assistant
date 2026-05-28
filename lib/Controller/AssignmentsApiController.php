@@ -58,9 +58,9 @@ class AssignmentsApiController extends OCSController {
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
 	#[Http\Attribute\ApiRoute(verb: 'POST', url: '/assignments')]
-	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence): DataResponse {
+	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence, string $timezone): DataResponse {
 		try {
-			$assignment = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence);
+			$assignment = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence, $timezone);
 			$serializedAssignment = $assignment->jsonSerialize();
 			return new DataResponse(['assignment' => $serializedAssignment]);
 		} catch (InternalException $e) {
@@ -141,18 +141,19 @@ class AssignmentsApiController extends OCSController {
 	 * @param string|null $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int|null $startsAt The timestamp when the assignment should start being executed
 	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
+	 * @param string|null $timezone The timezone for this assignment, omit to leave the current value in place
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
-	 * 400: Malformed recurrence rule
+	 * 400: Malformed input
 	 * 404: Assignment not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
 	#[Http\Attribute\ApiRoute(verb: 'PATCH', url: '/assignments/{id}')]
-	public function updateUserAssignment(int $id, ?string $prompt, ?string $recurrence, ?int $startsAt): DataResponse {
+	public function updateUserAssignment(int $id, ?string $prompt, ?string $recurrence, ?int $startsAt, ?string $timezone): DataResponse {
 		if ($this->userId !== null) {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
@@ -168,6 +169,13 @@ class AssignmentsApiController extends OCSController {
 				}
 				if ($startsAt !== null) {
 					$assignment->setStartsAt($startsAt);
+				}
+				if ($timezone !== null) {
+					try {
+						$assignment->setTimezone($timezone);
+					} catch (\InvalidArgumentException $e) {
+						return new DataResponse('', Http::STATUS_BAD_REQUEST);
+					}
 				}
 				$assignment->setUpdatedAt($this->timeFactory->now()->getTimestamp());
 				$this->assignmentMapper->update($assignment);

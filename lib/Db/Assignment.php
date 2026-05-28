@@ -33,6 +33,7 @@ use function OCP\Log\logger;
  * @method \void setUpdatedAt(int $updatedAt)
  * @method \void setLastRunAt(int $lastRunAt)
  * @method \int getLastRunAt()
+ * @method \string getTimezone()
  */
 class Assignment extends Entity implements \JsonSerializable {
 	/** @var string */
@@ -50,6 +51,9 @@ class Assignment extends Entity implements \JsonSerializable {
 	/** @var int */
 	protected $lastRunAt;
 
+	/** @var string */
+	protected $timezone;
+
 	public static $columns = [
 		'id',
 		'user_id',
@@ -59,6 +63,7 @@ class Assignment extends Entity implements \JsonSerializable {
 		'created_at',
 		'updated_at',
 		'last_run_at',
+		'timezone'
 	];
 	public static $fields = [
 		'id',
@@ -69,6 +74,7 @@ class Assignment extends Entity implements \JsonSerializable {
 		'createdAt',
 		'updatedAt',
 		'lastRunAt',
+		'timezone'
 	];
 
 	public function __construct() {
@@ -79,6 +85,7 @@ class Assignment extends Entity implements \JsonSerializable {
 		$this->addType('createdAt', Types::BIGINT);
 		$this->addType('updatedAt', Types::BIGINT);
 		$this->addType('lastRunAt', Types::BIGINT);
+		$this->addType('timezone', Types::STRING);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -92,6 +99,7 @@ class Assignment extends Entity implements \JsonSerializable {
 			'created_at' => $this->getCreatedAt(),
 			'updated_at' => $this->getUpdatedAt(),
 			'last_run_at' => $this->getLastRunAt(),
+			'timezone' => $this->getTimezone(),
 		];
 	}
 
@@ -108,6 +116,18 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
+	 * @throws \InvalidArgumentException
+	 */
+	public function setTimezone(string $timezone): void {
+		try {
+			$tz = new \DateTimeZone($timezone);
+		} catch (\Throwable $e) {
+			throw new \InvalidArgumentException('Invalid timezone: ' . $timezone, previous: $e);
+		}
+		$this->setter('timezone', [$tz->getName()]);
+	}
+
+	/**
 	 * Evaluates the recurrence rule and checks if a run is due
 	 */
 	public function isDueToRun(\DateTimeImmutable $now): bool {
@@ -115,7 +135,7 @@ class Assignment extends Entity implements \JsonSerializable {
 			$startsAt = new \DateTime('@' . $this->getStartsAt());
 			$lastRunAt = new \DateTime('@' . $this->getLastRunAt());
 			// Find recurrences after the last run or after the current time if this assignment has never run
-			$rule = new Rule($this->getRecurrence(), $startsAt);
+			$rule = new Rule($this->getRecurrence(), $startsAt, timezone: $this->getTimezone());
 			$transformer = new \Recurr\Transformer\ArrayTransformer();
 			$constraint = new AfterConstraint($this->getLastRunAt() !== 0 ? $lastRunAt : $startsAt, false);
 			/** @var RecurrenceCollection $collection */
