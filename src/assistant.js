@@ -129,6 +129,7 @@ export async function openAssistantForm({
 		// listen only if needed
 		// return true if notify_push is available
 		// we can't cleanup isListeningTo because there is no way to remove a handler with @nextcloud/notify_push
+		// TODO cleanup the handlers when we know we don't wanna listen anymore to a channel (task finished, failed...)
 		const listenToTaskNotifications = (pushTaskId) => {
 			if (isListeningTo[pushTaskId]) {
 				return true
