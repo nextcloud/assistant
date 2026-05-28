@@ -49,6 +49,7 @@ class AssignmentsApiController extends OCSController {
 	 * @param string $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int $startsAt The timestamp when the assignment should start being executed
 	 * @param string $recurrence The recurrence rule for the assignment, in RRULE format (e.g. "FREQ=DAILY;INTERVAL=1" for a daily assignment)
+	 * @param string $timezone The timezone for this assignment (either the timezone name or a timezone offset, e.g. "Europe/Berlin" or "+0100" for UTC+1)
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, '', array{}>
 	 *
 	 * 200: User assignments returned
@@ -141,7 +142,7 @@ class AssignmentsApiController extends OCSController {
 	 * @param string|null $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int|null $startsAt The timestamp when the assignment should start being executed
 	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
-	 * @param string|null $timezone The timezone for this assignment, omit to leave the current value in place
+	 * @param string|null $timezone The timezone for this assignment, omit to leave the current value in place. the value should be either the timezone name or a timezone offset, e.g. "Europe/Berlin" or "+0100" for UTC+1
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *

@@ -30,7 +30,8 @@
                     "created_at",
                     "updated_at",
                     "starts_at",
-                    "last_run_at"
+                    "last_run_at",
+                    "timezone"
                 ],
                 "properties": {
                     "id": {
@@ -61,6 +62,9 @@
                     "last_run_at": {
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "timezone": {
+                        "type": "string"
                     }
                 }
             },
@@ -5337,7 +5341,8 @@
                                     "title",
                                     "prompt",
                                     "startsAt",
-                                    "recurrence"
+                                    "recurrence",
+                                    "timezone"
                                 ],
                                 "properties": {
                                     "title": {
@@ -5356,6 +5361,10 @@
                                     "recurrence": {
                                         "type": "string",
                                         "description": "The recurrence rule for the assignment, in RRULE format (e.g. \"FREQ=DAILY;INTERVAL=1\" for a daily assignment)"
+                                    },
+                                    "timezone": {
+                                        "type": "string",
+                                        "description": "The timezone for this assignment (either the timezone name or a timezone offset, e.g. \"Europe/Berlin\" or \"+0100\" for UTC+1)"
                                     }
                                 }
                             }
@@ -5925,6 +5934,11 @@
                                         "format": "int64",
                                         "nullable": true,
                                         "description": "The timestamp when the assignment should start being executed"
+                                    },
+                                    "timezone": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "description": "The timezone for this assignment, omit to leave the current value in place. the value should be either the timezone name or a timezone offset, e.g. \"Europe/Berlin\" or \"+0100\" for UTC+1"
                                     }
                                 }
                             }
@@ -6023,7 +6037,7 @@
                         }
                     },
                     "400": {
-                        "description": "Malformed recurrence rule",
+                        "description": "Malformed input",
                         "content": {
                             "application/json": {
                                 "schema": {
