@@ -17,6 +17,11 @@
 				<div v-if="formattedRuntime">
 					{{ formattedRuntime }}
 				</div>
+				<div class="info-text-block">
+					{{ t('assistant', 'This task is running in the background.',) }}
+					<br>
+					{{ t('assistant', 'You can safely close the assistant or browse other tasks.',) }}
+				</div>
 				<NcButton
 					@click="$emit('background-notify', !isNotifyEnabled)">
 					<template #icon>
@@ -164,6 +169,10 @@ export default {
 		flex-direction: column;
 		align-items: center;
 		gap: 2px;
+	}
+
+	.info-text-block {
+		text-align: center;
 	}
 }
 </style>
