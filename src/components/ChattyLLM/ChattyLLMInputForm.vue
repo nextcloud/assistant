@@ -216,7 +216,7 @@ import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import moment from 'moment'
-import { SHAPE_TYPE_NAMES } from '../../constants.js'
+import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -272,6 +272,7 @@ export default {
 				initialMessages: false,
 				olderMessages: false,
 				llmGeneration: false,
+				llmRunning: false,
 				titleGeneration: false,
 				updateTitle: false,
 				newHumanMessage: false,
@@ -320,6 +321,7 @@ export default {
 		async active() {
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
+			this.loading.llmRunning = false
 			this.loading.titleGeneration = false
 			this.chatContent = ''
 			this.msgCursor = 0
@@ -386,6 +388,7 @@ export default {
 				showError(t('assistant', 'Error checking if the session is thinking'))
 			} finally {
 				this.loading.llmGeneration = false
+				this.loading.llmRunning = false
 				this.loading.titleGeneration = false
 			}
 		},
@@ -718,6 +721,7 @@ export default {
 			try {
 				this.slowPickup = false
 				this.loading.llmGeneration = true
+				this.loading.llmRunning = false
 				const params = {
 					sessionId,
 				}
@@ -737,6 +741,7 @@ export default {
 				showError(t('assistant', 'Error generating a response'))
 			} finally {
 				this.loading.llmGeneration = false
+				this.loading.llmRunning = false
 			}
 		},
 
@@ -744,6 +749,7 @@ export default {
 			try {
 				const sessionId = this.active.id
 				this.loading.llmGeneration = true
+				this.loading.llmRunning = false
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
@@ -756,6 +762,7 @@ export default {
 				showError(t('assistant', 'Error regenerating a response'))
 			} finally {
 				this.loading.llmGeneration = false
+				this.loading.llmRunning = false
 			}
 		},
 
@@ -801,6 +808,9 @@ export default {
 						} else {
 							console.debug('checkTaskPolling, task is still scheduled or running')
 							this.slowPickup = error.response.data.slow_pickup
+							if (error.response.data.task_status === TASK_STATUS_INT.running) {
+								this.loading.llmRunning = true
+							}
 						}
 					})
 				}, 2000)

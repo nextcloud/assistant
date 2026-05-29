@@ -10,8 +10,8 @@
 			:auto-complete="() => {}"
 			:link-auto-complete="false"
 			:disabled="disabled"
-			:placeholder="loading.llmGeneration ? thinkingText : placeholderText"
-			:aria-label="loading.llmGeneration ? thinkingText : placeholderText"
+			:placeholder="placeholder"
+			:aria-label="placeholder"
 			:maxlength="64_000"
 			:multiline="isMobile"
 			dir="auto"
@@ -103,6 +103,7 @@ export default {
 		return {
 			placeholderText: t('assistant', 'Type a message…'),
 			thinkingText: t('assistant', 'Processing…'),
+			scheduledText: t('assistant', 'Waiting…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
 			isRecording: false,
 			audioChatAvailable: loadState('assistant', 'audio_chat_available', false),
@@ -115,6 +116,13 @@ export default {
 		},
 		chatContentTooLong() {
 			return this.chatContent.length > MAX_TEXT_INPUT_LENGTH
+		},
+		placeholder() {
+			return this.loading.llmGeneration
+				? this.loading.llmRunning
+					? this.thinkingText
+					: this.scheduledText
+				: this.placeholderText
 		},
 	},
 
