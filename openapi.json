@@ -5341,8 +5341,7 @@
                                     "title",
                                     "prompt",
                                     "startsAt",
-                                    "recurrence",
-                                    "timezone"
+                                    "recurrence"
                                 ],
                                 "properties": {
                                     "title": {
@@ -5364,7 +5363,8 @@
                                     },
                                     "timezone": {
                                         "type": "string",
-                                        "description": "The timezone for this assignment (either the timezone name or a timezone offset, e.g. \"Europe/Berlin\" or \"+0100\" for UTC+1)"
+                                        "nullable": true,
+                                        "description": "The timezone for this assignment (either the timezone name or a timezone offset, e.g. \"Europe/Berlin\" or \"+0100\" for UTC+1). Defaults to the user's current timezone"
                                     }
                                 }
                             }
