@@ -49,7 +49,7 @@ class AssignmentsApiController extends OCSController {
 	 * @param string $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int $startsAt The timestamp when the assignment should start being executed
 	 * @param string $recurrence The recurrence rule for the assignment, in RRULE format (e.g. "FREQ=DAILY;INTERVAL=1" for a daily assignment)
-	 * @param string $timezone The timezone for this assignment (either the timezone name or a timezone offset, e.g. "Europe/Berlin" or "+0100" for UTC+1)
+	 * @param string|null $timezone The timezone for this assignment (either the timezone name or a timezone offset, e.g. "Europe/Berlin" or "+0100" for UTC+1). Defaults to the user's current timezone
 	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, '', array{}>
 	 *
 	 * 200: User assignments returned
@@ -59,7 +59,7 @@ class AssignmentsApiController extends OCSController {
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
 	#[Http\Attribute\ApiRoute(verb: 'POST', url: '/assignments')]
-	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence, string $timezone): DataResponse {
+	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): DataResponse {
 		try {
 			$assignment = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence, $timezone);
 			$serializedAssignment = $assignment->jsonSerialize();

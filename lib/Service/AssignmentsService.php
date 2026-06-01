@@ -19,6 +19,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
+use OCP\IDateTimeZone;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
@@ -31,6 +32,7 @@ class AssignmentsService {
 		private LoggerInterface $logger,
 		private IJobList $jobList,
 		private IL10N $l10n,
+		private IDateTimeZone $dateTimeZone,
 	) {
 	}
 
@@ -39,7 +41,7 @@ class AssignmentsService {
 	 * @throws UnauthorizedException
 	 * @throws BadRequestException
 	 */
-	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, string $timezone): Assignment {
+	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): Assignment {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
@@ -55,6 +57,9 @@ class AssignmentsService {
 			$assignment->setRecurrence($recurrence);
 		} catch (\InvalidArgumentException $e) {
 			throw new BadRequestException('Invalid recurrence rule', previous: $e);
+		}
+		if ($timezone === null) {
+			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId);
 		}
 		try {
 			$assignment->setTimezone($timezone);
