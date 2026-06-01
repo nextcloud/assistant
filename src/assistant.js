@@ -4,6 +4,7 @@
  */
 
 import { TASK_STATUS_STRING } from './constants.js'
+import { getErrorMessage } from './utils.js'
 import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
 import PrimeVue from 'primevue/config'
@@ -190,7 +191,10 @@ export async function openAssistantForm({
 					view.loading = false
 					view.showSyncTaskRunning = false
 					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
-					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
+					showError(
+						t('assistant', 'Assistant error') + ': '
+						+ (getErrorMessage(error?.response?.data?.ocs?.data?.message) ?? t('assistant', 'Something went wrong when scheduling the task')),
+					)
 				})
 		}
 		modalMountPoint.addEventListener('sync-submit', (data) => {
@@ -653,7 +657,10 @@ export async function openAssistantTask(
 				view.loading = false
 				view.showSyncTaskRunning = false
 				console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
-				showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
+				showError(
+					t('assistant', 'Assistant error') + ': '
+					+ (getErrorMessage(error?.response?.data?.ocs?.data?.message) ?? t('assistant', 'Something went wrong when scheduling the task')),
+				)
 			})
 	}
 	modalMountPoint.addEventListener('sync-submit', (data) => {

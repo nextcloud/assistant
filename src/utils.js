@@ -15,6 +15,24 @@ export function delay(callback, ms = 0) {
 }
 
 /**
+ * Safely extract a displayable error message string.
+ * Prevents [object Object] from being shown to the user when
+ * the API returns a non-string error value.
+ *
+ * @param {*} value The error value to extract a message from
+ * @return {string|undefined} The error message string or undefined
+ */
+export function getErrorMessage(value) {
+	if (typeof value === 'string') {
+		return value
+	}
+	if (value?.message && typeof value.message === 'string') {
+		return value.message
+	}
+	return undefined
+}
+
+/**
  * Parse special symbols in text like &amp; &lt; &gt; &sect;
  * FIXME upstream: https://github.com/nextcloud-libraries/nextcloud-vue/issues/4492
  *
