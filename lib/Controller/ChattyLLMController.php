@@ -381,7 +381,7 @@ class ChattyLLMController extends OCSController {
 	 * @param int $sessionId The session ID
 	 * @param int $limit The max number of messages to return
 	 * @param int $cursor The index of the first result to return
-	 * @param bool $hideUserMessages Whether to hide user messages from the response
+	 * @param string $filterByRole Only role to include in the response
 	 * @return JSONResponse<Http::STATUS_OK, list<AssistantChatMessage>, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
 	 * 200: The message list has been successfully obtained
@@ -390,9 +390,9 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function getMessages(int $sessionId, int $limit = 20, int $cursor = 0, bool $hideUserMessages = false): JSONResponse {
+	public function getMessages(int $sessionId, int $limit = 20, int $cursor = 0, string $filterByRole = ''): JSONResponse {
 		try {
-			$messages = $this->chatService->getSessionMessages($this->userId, $sessionId, $limit, $cursor, $hideUserMessages);
+			$messages = $this->chatService->getSessionMessages($this->userId, $sessionId, $limit, $cursor, $filterByRole);
 			return new JSONResponse(array_map(static function (Message $message) {
 				return $message->jsonSerialize();
 			}, $messages));

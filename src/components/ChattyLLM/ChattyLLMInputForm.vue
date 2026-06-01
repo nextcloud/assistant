@@ -348,7 +348,7 @@ export default {
 					message: t('assistant', 'Can you create a share link for me?'),
 				},
 				{
-					aria: t('assistant', 'Ask assistant, create a scheduled task to send me the weather every morning'),
+					aria: t('assistant', 'Ask assistant, to create a scheduled task to send me the weather every morning'),
 					message: t('assistant', 'Create a scheduled task to send me the weather every morning '),
 				},
 				{
@@ -735,7 +735,7 @@ export default {
 						sessionId: this.active.id,
 						cursor: this.msgCursor,
 						limit: this.msgLimit,
-						hideUserMessages: this.isAssignment,
+						filterByRole: this.isAssignment ? 'assistant' : undefined,
 					},
 					signal: this.messagesAxiosController.signal,
 				})
@@ -1183,6 +1183,7 @@ export default {
 			background-color: var(--color-main-background);
 
 			&__main {
+				margin-top: calc(var(--default-grid-baseline) * -1);
 				display: flex;
 				flex: 1;
 				flex-direction: column;

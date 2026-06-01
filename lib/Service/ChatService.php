@@ -245,12 +245,13 @@ class ChatService {
 	}
 
 	/**
+	 * @param string $filterByRole Only include messages with this role (empty to include all)
 	 * @return list<Message>
 	 * @throws InternalException
 	 * @throws NotFoundException
 	 * @throws UnauthorizedException
 	 */
-	public function getSessionMessages(?string $userId, int $sessionId, int $limit = 20, int $cursor = 0, bool $hideUserMessages = false): array {
+	public function getSessionMessages(?string $userId, int $sessionId, int $limit = 20, int $cursor = 0, string $filterByRole = ''): array {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
@@ -268,7 +269,7 @@ class ChatService {
 
 		/** @var list<Message> $messages */
 		try {
-			$messages = $this->messageMapper->getMessages($sessionId, $cursor, $limit, $hideUserMessages);
+			$messages = $this->messageMapper->getMessages($sessionId, $cursor, $limit, $filterByRole);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}

@@ -80,11 +80,11 @@ class MessageMapper extends QBMapper {
 	 * @param int $sessionId
 	 * @param int $cursor
 	 * @param int $limit
-	 * @param bool $hideUserMessages
+	 * @param string $filterByRole Only include messages with this role (empty to include all)
 	 * @return list<Message>
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getMessages(int $sessionId, int $cursor, int $limit, bool $hideUserMessages = false): array {
+	public function getMessages(int $sessionId, int $cursor, int $limit, string $filterByRole = ''): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
@@ -92,8 +92,8 @@ class MessageMapper extends QBMapper {
 			->orderBy('id', 'DESC')
 			->setFirstResult($cursor);
 
-		if ($hideUserMessages) {
-			$qb->andWhere($qb->expr()->neq('role', $qb->createPositionalParameter(Message::ROLE_HUMAN, IQueryBuilder::PARAM_STR)));
+		if ($filterByRole !== '') {
+			$qb->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter($filterByRole, IQueryBuilder::PARAM_STR)));
 		}
 
 		if ($limit > 0) {

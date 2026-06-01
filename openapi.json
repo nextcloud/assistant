@@ -4052,12 +4052,12 @@
                         }
                     },
                     {
-                        "name": "hideUserMessages",
+                        "name": "filterByRole",
                         "in": "query",
-                        "description": "Whether to hide user messages from the response",
+                        "description": "Only role to include in the response",
                         "schema": {
-                            "type": "boolean",
-                            "default": false
+                            "type": "string",
+                            "default": ""
                         }
                     },
                     {
