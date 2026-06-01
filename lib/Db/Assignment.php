@@ -137,7 +137,7 @@ class Assignment extends Entity implements \JsonSerializable {
 			// Find recurrences after the last run or after the current time if this assignment has never run
 			$rule = new Rule($this->getRecurrence(), $startsAt, timezone: $this->getTimezone());
 			$transformer = new \Recurr\Transformer\ArrayTransformer();
-			$constraint = new AfterConstraint($this->getLastRunAt() !== 0 ? $lastRunAt : $startsAt, false);
+			$constraint = $this->getLastRunAt() !== 0 ? new AfterConstraint($lastRunAt, false) : new AfterConstraint($startsAt, true);
 			/** @var RecurrenceCollection $collection */
 			$collection = $transformer->transform($rule, $constraint);
 			if ($collection->isEmpty()) {
