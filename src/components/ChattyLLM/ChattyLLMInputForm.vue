@@ -1004,7 +1004,7 @@ export default {
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
 							}
-							if (error.response.data.task_output?.output) {
+							if (!hasPush && error.response.data.task_output?.output) {
 								this.updateStreamingMessage(error.response.data.task_output.output, sessionId)
 							}
 						}
