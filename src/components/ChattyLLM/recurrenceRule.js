@@ -5,6 +5,11 @@
 import { getDayNames, getMonthNames, translatePlural as n, translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
 
+/*
+ * Copied and adapted from https://github.com/nextcloud/calendar/blob/main/src/models/recurrenceRule.js
+ * Modifications: support for hourly and minutely occurrences
+ */
+
 /**
  * Formats a recurrence-rule
  *
