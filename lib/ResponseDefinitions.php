@@ -94,7 +94,8 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *      created_at: int,
  *      updated_at: int,
  *      starts_at: int,
- *      last_run_at: int
+ *      last_run_at: int,
+ *      timezone: string,
  *  }
  */
 class ResponseDefinitions {
