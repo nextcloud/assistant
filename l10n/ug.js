@@ -222,6 +222,7 @@ OC.L10N.register(
     "Submit" : "يوللاڭ",
     "Type a message…" : "ئۇچۇر كىرگۈزۈڭ…",
     "Processing…" : "بىر تەرەپ قىلىش…",
+    "Waiting…" : "ساقلاش…",
     "Could not upload the recorded file" : "خاتىرىلەنگەن ھۆججەتنى يۈكلىيەلمىدى",
     "Please try again and inform the server administrators if this issue persists." : "بۇ مەسىلە داۋاملاشسا، قايتا سىناپ بېقىڭ ۋە مۇلازىمېتىر باشقۇرغۇچىلىرىغا خەۋەر قىلىڭ.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "بۇ چات جاۋابىنىڭ ھاسىل قىلىنىشى كۈتۈلگەندىن ئۇزۇنراق ۋاقىت ئالدى. ياردەمچىنىڭ توغرا تەڭشەلگەنلىكىنى جەزملەشتۈرۈش ئۈچۈن باشقۇرغۇچىڭىز بىلەن ئالاقىلىشىڭ.",

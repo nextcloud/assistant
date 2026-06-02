@@ -20,6 +20,7 @@ OC.L10N.register(
     "Delete" : "מחיקה",
     "Edit title" : "עריכת כותרת",
     "Submit" : "שליחה",
+    "Waiting…" : "בהמתנה…",
     "Choose" : "בחר",
     "This may take a few seconds…" : "פעולה זו עשויה לארוך מספר שניות…",
     "Cancelled" : "בוטל",

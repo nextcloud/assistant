@@ -257,6 +257,7 @@
     "Submit" : "Submit",
     "Type a message…" : "Type a message…",
     "Processing…" : "Processing …",
+    "Waiting…" : "Waiting…",
     "Could not upload the recorded file" : "Could not upload the recorded file",
     "Please try again and inform the server administrators if this issue persists." : "Please try again and inform the server administrators if this issue persists.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured.",

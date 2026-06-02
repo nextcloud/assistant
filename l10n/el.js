@@ -199,6 +199,7 @@ OC.L10N.register(
     "Submit" : "Υποβολή",
     "Type a message…" : "Πληκτρολογήστε ένα μήνυμα…",
     "Processing…" : "Επεξεργασία…",
+    "Waiting…" : "Αναμονή...",
     "Could not upload the recorded file" : "Δεν ήταν δυνατή η μεταφόρτωση του ηχογραφημένου αρχείου",
     "Please try again and inform the server administrators if this issue persists." : "Παρακαλώ δοκιμάστε ξανά και ενημερώστε τους διαχειριστές του διακομιστή εάν το πρόβλημα συνεχίζεται.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Αυτή η απάντηση συνομιλίας χρειάζεται περισσότερο χρόνο για να αρχίσει να δημιουργείται από το αναμενόμενο. Παρακαλώ επικοινωνήστε με τον διαχειριστή σας για να βεβαιωθείτε ότι ο Βοηθός είναι σωστά ρυθμισμένος.",

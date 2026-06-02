@@ -283,6 +283,7 @@ OC.L10N.register(
     "Submit" : "Cuir isteach",
     "Type a message…" : "Clóscríobh teachtaireacht…",
     "Processing…" : "Ag próiseáil…",
+    "Waiting…" : "Ag fanacht…",
     "Could not upload the recorded file" : "Níorbh fhéidir an comhad taifeadta a uaslódáil",
     "Please try again and inform the server administrators if this issue persists." : "Déan iarracht arís agus cuir riarthóirí an fhreastalaí ar an eolas má leanann an fhadhb seo ar aghaidh.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Tá an freagra comhrá seo ag glacadh níos faide ná mar a bhíothas ag súil leis le tosú ag giniúint. Téigh i dteagmháil le do riarthóir le cinntiú go bhfuil an Cúntóir cumraithe i gceart.",

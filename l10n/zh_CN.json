@@ -205,6 +205,7 @@
     "Submit" : "提交",
     "Type a message…" : "输入消息……",
     "Processing…" : "正在处理……",
+    "Waiting…" : "等待中...",
     "Could not upload the recorded file" : "无法上传录制的文件",
     "Please try again and inform the server administrators if this issue persists." : "请再试一次，如果问题仍然存在，请通知伺服器管理员。",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "此聊天回应开始产生的时间比预期长。请联络您的管理员，确保小帮手已正确设定。",

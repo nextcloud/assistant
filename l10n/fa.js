@@ -52,6 +52,7 @@ OC.L10N.register(
     "Edit title" : "ویرایش عنوان",
     "Cancel editing" : "Cancel editing",
     "Submit" : "ارسال",
+    "Waiting…" : "منتظر باشید ...",
     "You" : "You",
     "Delete message" : "Delete message",
     "Choose" : "انتخاب کنید",

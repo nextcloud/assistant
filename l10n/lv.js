@@ -23,6 +23,7 @@ OC.L10N.register(
     "Remember this" : "Atcerēties šo",
     "Hello there! What can I help you with today?" : "Sveiciens! Ar ko šodien varu palīdzēt?",
     "Submit" : "Iesniegt",
+    "Waiting…" : "Gaida...",
     "You" : "Tu",
     "Choose" : "Izvēlēties",
     "Clear Selection" : "Notīrīt atlasi",
