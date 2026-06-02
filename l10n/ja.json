@@ -203,6 +203,7 @@
     "Submit" : "提出する",
     "Type a message…" : "メッセージを入力してください...",
     "Processing…" : "処理中...",
+    "Waiting…" : "待機中…",
     "Could not upload the recorded file" : "録音されたファイルをアップロードできませんでした",
     "Please try again and inform the server administrators if this issue persists." : "再度試しても、問題が解決しない場合はサーバー管理者までご連絡ください。",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "このチャット応答の生成が開始されるまでに予想よりも時間がかかっています。管理者に問い合わせて、アシスタントが正しく構成されていることを確認してください。",

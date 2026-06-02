@@ -283,6 +283,7 @@ OC.L10N.register(
     "Submit" : "遞交",
     "Type a message…" : "請輸入一則訊息 ...",
     "Processing…" : "處理中 ...",
+    "Waiting…" : "正在等待……",
     "Could not upload the recorded file" : "無法上傳錄製檔案",
     "Please try again and inform the server administrators if this issue persists." : "請再試一次，如果問題仍然存在，請通知伺服器管理員。",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "此聊天回應開始產生的時間比預期長。請聯絡您的管理員，確保小幫手已正確設定。",

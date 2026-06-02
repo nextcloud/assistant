@@ -126,6 +126,7 @@
     "The text must be shorter than or equal to {maxLength} characters, currently {length}" : "Teksten må være kortere enn eller lik {maxLength}-tegn, for øyeblikket {length}",
     "Cancel editing" : "Avbryt redigering",
     "Submit" : "Send inn",
+    "Waiting…" : "Venter...",
     "Could not upload the recorded file" : "Kunne ikke laste opp den innspilte filen",
     "You" : "Du",
     "Message copied to clipboard" : "Melding kopiert til utklippstavlen",

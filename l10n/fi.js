@@ -39,6 +39,7 @@ OC.L10N.register(
     "Hello there! What can I help you with today?" : "Hei! Miten voin auttaa sinua tänään?",
     "Cancel editing" : "Peruuta muokkaus",
     "Submit" : "Lähetä",
+    "Waiting…" : "Odotetaan…",
     "You" : "Sinä",
     "Delete message" : "Poista viesti",
     "Choose" : "Valitse",

@@ -20,6 +20,7 @@ OC.L10N.register(
     "Delete" : "Cantzella",
     "Edit title" : "Modìfica tìtulu",
     "Submit" : "Imbia",
+    "Waiting…" : "Abeta…",
     "You" : "Tue",
     "Delete message" : "Cantzella messàgiu",
     "Choose" : "Sèbera",

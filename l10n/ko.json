@@ -139,6 +139,7 @@
     "The text must be shorter than or equal to {maxLength} characters, currently {length}" : "텍스트는 {maxLength}자 이하여야 합니다. 현재는 {length}자입니다.",
     "Cancel editing" : "수정 취소",
     "Submit" : "제출",
+    "Waiting…" : "대기중...",
     "You" : "당신",
     "Message copied to clipboard" : "메시지가 클립보드에 복사됨",
     "Copy message" : "메시지 복사",

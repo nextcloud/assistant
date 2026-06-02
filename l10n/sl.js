@@ -49,6 +49,7 @@ OC.L10N.register(
     "Generate title" : "Ustvari naslov",
     "Cancel editing" : "Prekliči urejanje",
     "Submit" : "Pošlji",
+    "Waiting…" : "Čakanje na povezavo ...",
     "You" : "Jaz",
     "Copy message" : "Kopiraj sporočilo",
     "Delete message" : "Izbriši sporočilo",

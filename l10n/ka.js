@@ -20,6 +20,7 @@ OC.L10N.register(
     "Edit title" : "Edit title",
     "Cancel editing" : "Cancel editing",
     "Submit" : "Submit",
+    "Waiting…" : "Waiting…",
     "You" : "You",
     "Delete message" : "Delete message",
     "Choose" : "Choose",

@@ -281,6 +281,7 @@
     "Submit" : "Gönder",
     "Type a message…" : "Bir ileti yazın…",
     "Processing…" : "İşleniyor…",
+    "Waiting…" : "Bekleniyor…",
     "Could not upload the recorded file" : "Kaydedilen dosya yüklenemedi",
     "Please try again and inform the server administrators if this issue persists." : "Lütfen yeniden deneyin ve bu sorun sürerse sunucu yöneticilerine bilgi verin.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Bu sohbet yanıtının oluşturulması beklenenden daha uzun sürüyor. Yardımcının doğru yapılandırıldığından emin olmak için lütfen yöneticinizle görüşün.",

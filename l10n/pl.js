@@ -265,6 +265,7 @@ OC.L10N.register(
     "Submit" : "Wyślij",
     "Type a message…" : "Wpisz wiadomość…",
     "Processing…" : "Przetwarzanie…",
+    "Waiting…" : "Oczekiwanie…",
     "Could not upload the recorded file" : "Nie można przesłać nagranego pliku",
     "You" : "Ty",
     "Message copied to clipboard" : "Wiadomość skopiowana do schowka",

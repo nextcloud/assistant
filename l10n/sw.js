@@ -233,6 +233,7 @@ OC.L10N.register(
     "Submit" : "Wasilisha",
     "Type a message…" : "Andika ujumbe…",
     "Processing…" : "Inachakata…",
+    "Waiting…" : "Inasubiri...",
     "Could not upload the recorded file" : "Haikuweza kupakia faili iliyorekodiwa",
     "Please try again and inform the server administrators if this issue persists." : "Tafadhali jaribu tena na uwajulishe wasimamizi wa seva ikiwa suala hili litaendelea.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Jibu hili la gumzo linachukua muda mrefu kuanza kuzalisha kuliko ilivyotarajiwa. Tafadhali wasiliana na msimamizi wako ili kuhakikisha kuwa programu ya Mratibu imesanidiwa ipasavyo.",

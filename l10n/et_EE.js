@@ -275,6 +275,7 @@ OC.L10N.register(
     "Submit" : "Saada",
     "Type a message…" : "Koosta sõnum…",
     "Processing…" : "Töötlen…",
+    "Waiting…" : "Ootan...",
     "Could not upload the recorded file" : "Salvestatud faili polnud võimalik üles laadida",
     "Please try again and inform the server administrators if this issue persists." : "Palun proovi uuesti ja kui viga kestab, siis palun teavita sellest serveri haldajat.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Vestluse vastuse koostamise käivitamiseks kulub eeldatavast rohkem aega. Vaatamaks, kas Abiline on korrektselt seadistatud, palun võta ühendust peakasutajaga.",

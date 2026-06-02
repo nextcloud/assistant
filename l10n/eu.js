@@ -78,6 +78,7 @@ OC.L10N.register(
     "Cancel editing" : "Utzi editatzeari",
     "Submit" : "Bidali",
     "Processing…" : "Prozesatzen",
+    "Waiting…" : "Itxaroten...",
     "You" : "Zu ",
     "Delete message" : "Mezua ezabatzen",
     "Select Files/Folders" : "Hautatu fitxategiak/karpetak",

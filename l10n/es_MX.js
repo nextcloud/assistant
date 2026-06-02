@@ -35,6 +35,7 @@ OC.L10N.register(
     "Cancel" : "Cancelar",
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
+    "Waiting…" : "Esperando...",
     "You" : "Usted",
     "Choose" : "Seleccionar",
     "Describe the image you want to generate" : "Describa la imagen que quiere generar",

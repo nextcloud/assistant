@@ -24,6 +24,7 @@ OC.L10N.register(
     "Edit title" : "Удери наслов",
     "Cancel editing" : "Откажи уредување",
     "Submit" : "Испрати",
+    "Waiting…" : "Почекајте...",
     "You" : "Вие",
     "Copy message" : "Копирај порака",
     "Delete message" : "Избриши порака",

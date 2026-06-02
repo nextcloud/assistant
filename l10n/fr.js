@@ -236,6 +236,7 @@ OC.L10N.register(
     "Submit" : "Soumettre",
     "Type a message…" : "Tapez un message…",
     "Processing…" : "Traitement…",
+    "Waiting…" : "En attente...",
     "Could not upload the recorded file" : "Impossible de téléverser le fichier enregistré",
     "Please try again and inform the server administrators if this issue persists." : "Veuillez réessayer et informer les administrateurs du serveur si le problème persiste.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "La génération de cette réponse au chat prend plus de temps que prévu. Veuillez contacter votre administrateur pour vous assurer que l'Assistant est correctement configuré.",

@@ -227,6 +227,7 @@
     "Submit" : "Kirim",
     "Type a message…" : "Ketik pesan…",
     "Processing…" : "Memproses…",
+    "Waiting…" : "Menunggu...",
     "Could not upload the recorded file" : "Tidak dapat mengunggah berkas rekaman",
     "Please try again and inform the server administrators if this issue persists." : "Silakan coba lagi dan beri tahu administrator server jika masalah ini berlanjut.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Respons chat ini membutuhkan waktu lebih lama dari perkiraan untuk mulai dibuat. Silakan hubungi administrator Anda untuk memastikan Asisten dikonfigurasi dengan benar.",
