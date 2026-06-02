@@ -74,27 +74,30 @@
 								</template>
 							</NcPopover>
 						</div>
-						<div v-if="streaming"
+						<NcNoteCard v-if="streaming"
+							type="info"
 							class="session-area__top-bar__subtitle">
-							<label>
-								{{ t('assistant', 'Getting results…') }}
-							</label>
-							<NcButton
-								@click="$emit('background-notify', !isNotifyEnabled)">
-								<template #icon>
-									<BellRingOutlineIcon v-if="isNotifyEnabled" />
-									<BellOutlineIcon v-else />
-								</template>
-								{{ t('assistant', 'Get notified when the task finishes') }}
-							</NcButton>
-							<NcButton
-								@click="$emit('cancel-task')">
-								<template #icon>
-									<CloseIcon />
-								</template>
-								{{ t('assistant', 'Cancel task') }}
-							</NcButton>
-						</div>
+							<div class="subtitle-content">
+								<label>
+									{{ t('assistant', 'Getting results…') }}
+								</label>
+								<NcButton
+									@click="$emit('background-notify', !isNotifyEnabled)">
+									<template #icon>
+										<BellRingOutlineIcon v-if="isNotifyEnabled" />
+										<BellOutlineIcon v-else />
+									</template>
+									{{ t('assistant', 'Get notified when the task finishes') }}
+								</NcButton>
+								<NcButton
+									@click="$emit('cancel-task')">
+									<template #icon>
+										<CloseIcon />
+									</template>
+									{{ t('assistant', 'Cancel task') }}
+								</NcButton>
+							</div>
+						</NcNoteCard>
 					</div>
 					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
 						class="session-area__chat-area">
@@ -187,6 +190,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import AssistantFormOutputs from './AssistantFormOutputs.vue'
@@ -229,6 +233,7 @@ export default {
 		NcAppNavigationNew,
 		NcAssistantIcon,
 		NcPopover,
+		NcNoteCard,
 		CreationIcon,
 		PlusIcon,
 		UnfoldLessHorizontalIcon,
@@ -874,12 +879,12 @@ export default {
 			// height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
 			box-sizing: border-box;
 			border-bottom: 1px solid var(--color-border);
-			padding-left: 52px;
 			padding-right: 0.5em;
 			font-weight: bold;
 			background-color: var(--color-main-background);
 
 			&__title {
+				padding-left: 52px;
 				display: flex;
 				align-items: center;
 				gap: 0.5em;
@@ -890,12 +895,16 @@ export default {
 			}
 
 			&__subtitle {
-				display: flex;
-				gap: 8px;
-				align-items: center;
-				flex-wrap: wrap;
-				width: 100%;
-				padding: 4px 0 4px 10px;
+				margin-left: 22px;
+				align-self: start;
+				.subtitle-content {
+					display: flex;
+					gap: 8px;
+					align-items: center;
+					flex-wrap: wrap;
+					width: 100%;
+					padding: 4px 0 4px 0px;
+				}
 			}
 
 			&__provider {
