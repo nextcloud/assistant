@@ -59,7 +59,7 @@ class AssignmentsService {
 			throw new BadRequestException('Invalid recurrence rule', previous: $e);
 		}
 		if ($timezone === null) {
-			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId);
+			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId)->getName();
 		}
 		try {
 			$assignment->setTimezone($timezone);
