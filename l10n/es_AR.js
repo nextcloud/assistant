@@ -18,6 +18,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
+    "Waiting…" : "Esperando...",
     "Choose" : "Elige",
     "Cancelled" : "Cancelado",
     "Failed" : "Error",

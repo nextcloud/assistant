@@ -200,6 +200,7 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "Type a message…" : "Escriba un mensaje…",
     "Processing…" : "Procesando…",
+    "Waiting…" : "Esperando…",
     "Could not upload the recorded file" : "No se pudo subir el archivo grabado",
     "Please try again and inform the server administrators if this issue persists." : "Por favor, intente de nuevo e informe al administrador del servidor si el problema persiste.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta respuesta al chat está tomando más tiempo del esperado para iniciar la generación. Por favor, contacte a su administrador para asegurarse de que el Asistente está configurado correctamente.",

@@ -112,6 +112,7 @@ OC.L10N.register(
     "Submit" : "Отправить ответ",
     "Type a message…" : "Набирает сообщение…",
     "Processing…" : "Обработка…",
+    "Waiting…" : "Ожидание…",
     "You" : "Вы",
     "Copy message" : "Копировать сообщение",
     "Delete message" : "Удалить сообщение",

@@ -283,6 +283,7 @@ OC.L10N.register(
     "Submit" : "Pateikti",
     "Type a message…" : "Įrašykite žinutę...",
     "Processing…" : "Apdorojama…",
+    "Waiting…" : "Laukiama…",
     "Could not upload the recorded file" : "Nepavyko įkelti įrašyto failo",
     "Please try again and inform the server administrators if this issue persists." : "Bandykite dar kartą ir, jei problema išlieka, informuokite serverio administratorius.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Šio pokalbio atsakymo generavimas užtrunka ilgiau nei tikėtasi. Prašome susisiekti su administratoriumi, kad įsitikintumėte, jog Asistentas yra tinkamai sukonfigūruotas.",

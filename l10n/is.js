@@ -33,6 +33,7 @@ OC.L10N.register(
     "Edit title" : "Breyta titli",
     "Cancel editing" : "Hætta við breytingar",
     "Submit" : "Senda inn",
+    "Waiting…" : "Bíð…",
     "You" : "Þú",
     "Delete message" : "Eyða skilaboðum",
     "Choose" : "Velja",

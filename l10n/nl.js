@@ -149,6 +149,7 @@ OC.L10N.register(
     "Try sending a message to spark a conversation." : "Probeer een bericht te versturen om het gesprek op te starten!",
     "Cancel editing" : "Annuleer bewerken",
     "Submit" : "Verwerken",
+    "Waiting…" : "Wachten ...",
     "You" : "Je",
     "Copy message" : "Bericht kopiëren",
     "Delete message" : "Bericht verwijderen",

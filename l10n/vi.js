@@ -18,6 +18,7 @@ OC.L10N.register(
     "Delete" : "Xóa",
     "Edit title" : "Chỉnh sửa tiêu đề",
     "Submit" : "Gửi đi",
+    "Waiting…" : "Vui lòng đợi...",
     "You" : "You",
     "Choose" : "Chọn",
     "Cancelled" : "Đã hủy",

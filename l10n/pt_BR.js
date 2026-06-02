@@ -283,6 +283,7 @@ OC.L10N.register(
     "Submit" : "Enviar",
     "Type a message…" : "Digite uma mensagem…",
     "Processing…" : "Processando…",
+    "Waiting…" : "Aguarde...",
     "Could not upload the recorded file" : "Não foi possível fazer o upload do arquivo gravado",
     "Please try again and inform the server administrators if this issue persists." : "Tente novamente e informe os administradores do servidor se o problema persistir.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta resposta do bate-papo está demorando mais do que o esperado para iniciar a geração. Entre em contato com a administração para verificar se o Assistente está configurado corretamente.",

@@ -197,6 +197,7 @@
     "Submit" : "Tilføj",
     "Type a message…" : "Indtast en besked...",
     "Processing…" : "Processerer ...",
+    "Waiting…" : "Venter …",
     "Could not upload the recorded file" : "Kunne ikke uploade den optagede fil",
     "Please try again and inform the server administrators if this issue persists." : "Prøv venligst igen og informer serveradministratorerne hvis dette fortsætter.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Denne chatrespons tager længere om at starte genereringen af, end forventet. Kontakt venligst din administrator for at sikre at assistenten er korrekt konfigureret.",

@@ -20,6 +20,7 @@ OC.L10N.register(
     "Edit title" : "Editează titlul",
     "Cancel editing" : "Anulează editarea",
     "Submit" : "Trimite",
+    "Waiting…" : "În așteptare...",
     "You" : "Tu",
     "Delete message" : "Șterge mesajul",
     "Choose" : "Alege",
