@@ -71,7 +71,7 @@ class AssignmentsService {
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		$session = $this->chatService->createChatSession($userId, $this->timeFactory->now()->getTimestamp(), $title);
+		$session = $this->chatService->createChatSession($userId, title: $title);
 		$session->setAssignmentId($assignment->getId());
 		try {
 			$this->sessionMapper->update($session);
@@ -121,7 +121,7 @@ class AssignmentsService {
 			$assignment = $this->assignmentMapper->find($userId, $assignmentId);
 			$assignment->setLastRunAt($this->timeFactory->now()->getTimestamp());
 			$this->assignmentMapper->update($assignment);
-			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt(), $this->timeFactory->now()->getTimestamp());
+			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt());
 			$this->chatService->scheduleAssignmentMessageGeneration($userId, $session->getId());
 		} catch (BadRequestException|InternalException|DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
 			$this->logger->error('Error while running assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
@@ -132,7 +132,6 @@ class AssignmentsService {
 						$session->getId(),
 						Message::ROLE_ASSISTANT,
 						$this->l10n->t('An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists.'),
-						$this->timeFactory->now()->getTimestamp()
 					);
 				} catch (BadRequestException|InternalException|NotFoundException|UnauthorizedException $e) {
 					$this->logger->error('Error while creating error message for assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);

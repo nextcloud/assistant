@@ -2760,18 +2760,17 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "required": [
-                                    "timestamp"
-                                ],
                                 "properties": {
                                     "timestamp": {
                                         "type": "integer",
                                         "format": "int64",
+                                        "nullable": true,
+                                        "default": null,
                                         "description": "The session creation date"
                                     },
                                     "title": {
@@ -3271,18 +3270,17 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "required": [
-                                    "timestamp"
-                                ],
                                 "properties": {
                                     "timestamp": {
                                         "type": "integer",
                                         "format": "int64",
+                                        "nullable": true,
+                                        "default": null,
                                         "description": "The session creation date"
                                     },
                                     "title": {
@@ -3680,8 +3678,7 @@
                                 "required": [
                                     "sessionId",
                                     "role",
-                                    "content",
-                                    "timestamp"
+                                    "content"
                                 ],
                                 "properties": {
                                     "sessionId": {
@@ -3700,6 +3697,8 @@
                                     "timestamp": {
                                         "type": "integer",
                                         "format": "int64",
+                                        "nullable": true,
+                                        "default": null,
                                         "description": "Date of the message"
                                     },
                                     "attachments": {
