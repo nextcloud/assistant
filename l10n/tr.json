@@ -334,6 +334,8 @@
     "This may take a few seconds…" : "Bu işlem bir kaç saniye sürebilir…",
     "This may take a few minutes…" : "Bu işlem bir kaç dakika sürebilir…",
     "Getting results…" : "Sonuçlar alınıyor…",
+    "This task is running in the background." : "Bu görev arka planda çalışıyor.",
+    "You can safely close the assistant or browse other tasks." : "Yardımcıyı kapatabilir ya da başka görevlere geçebilirsiniz.",
     "Get notified when the task finishes" : "Görev tamamlandığında bildirim gönderilsin",
     "Cancel task" : "Görevi iptal et",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Bu görevin çalışmaya başlaması beklenenden daha uzun sürüyor. Yardımcının doğru yapılandırıldığından emin olmak için lütfen yöneticinizle görüşün.",
