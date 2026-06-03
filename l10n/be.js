@@ -51,6 +51,7 @@ OC.L10N.register(
     "Cancel editing" : "Скасаваць рэдагаванне",
     "Submit" : "Адправіць",
     "Type a message…" : "Увядзіце паведамленне…",
+    "Waiting…" : "Чаканне…",
     "You" : "Вы",
     "Copy message" : "Скапіяваць паведамленне",
     "Delete message" : "Выдаліць паведамленне",

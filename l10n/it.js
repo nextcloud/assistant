@@ -16,7 +16,7 @@ OC.L10N.register(
     "Session not found" : "Sessione non trovata",
     "User not found" : "Utente non trovato",
     "Nextcloud Assistant" : "Assistente di Nextcloud",
-    "Context Chat" : "Chat contestual",
+    "Context Chat" : "Chat contestuale",
     "View results" : "Mostra risultati",
     "Nextcloud Deck" : "Nextcloud Deck",
     "Nextcloud Talk" : "Nextcloud Talk",
