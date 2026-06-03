@@ -39,6 +39,7 @@ OC.L10N.register(
     "Delete" : "Desaniciar",
     "Edit title" : "Editar el títulu",
     "Submit" : "Unviar",
+    "Waiting…" : "Esperando…",
     "You" : "Tu",
     "Delete message" : "Desaniciar el mensaxe",
     "Choose" : "Escoyer",

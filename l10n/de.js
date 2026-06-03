@@ -336,6 +336,8 @@ OC.L10N.register(
     "This may take a few seconds…" : "Das kann einige Sekunden dauern …",
     "This may take a few minutes…" : "Das kann einige Minuten dauern…",
     "Getting results…" : "Ergebnisse holen…",
+    "This task is running in the background." : "Diese Aufgabe läuft im Hintergrund.",
+    "You can safely close the assistant or browse other tasks." : "Du kannst den Assistenten schließen oder andere Aufgaben durchsuchen.",
     "Get notified when the task finishes" : "Benachrichtigung erhalten, wenn die Aufgabe abgeschlossen ist",
     "Cancel task" : "Aufgabe abbrechen",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Der Start dieser Aufgabe dauert länger als erwartet. Bitte wende dich an deine Administration, um sicherzustellen, dass der Assistent korrekt konfiguriert ist.",

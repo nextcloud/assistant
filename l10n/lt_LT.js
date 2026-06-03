@@ -336,6 +336,8 @@ OC.L10N.register(
     "This may take a few seconds…" : "Tai gali užtrukti keletą sekundžių…",
     "This may take a few minutes…" : "Tai gali užtrukti kelias minutes…",
     "Getting results…" : "Gaunami rezultatai…",
+    "This task is running in the background." : "Ši užduotis vykdoma fone.",
+    "You can safely close the assistant or browse other tasks." : "Galite saugiai uždaryti asistentą arba naršyti kitas užduotis.",
     "Get notified when the task finishes" : "Gaukite pranešimą, kai užduotis bus baigta",
     "Cancel task" : "Atšaukti užduotį",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Ši užduotis paleidžiama ilgiau, nei tikėtasi. Kreipkitės į savo administratorių, kad įsitikintumėte, jog „Asistentas“ yra tinkamai sukonfigūruotas.",
