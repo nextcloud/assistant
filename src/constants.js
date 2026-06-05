@@ -14,6 +14,15 @@ export const TASK_STATUS_INT = {
 	unknown: 0,
 }
 
+export const TASK_STATUS_INT_TO_STRING = {
+	5: 'STATUS_CANCELLED',
+	4: 'STATUS_FAILED',
+	3: 'STATUS_SUCCESSFUL',
+	2: 'STATUS_RUNNING',
+	1: 'STATUS_SCHEDULED',
+	0: 'STATUS_UNKNOWN',
+}
+
 export const TASK_STATUS_STRING = {
 	cancelled: 'STATUS_CANCELLED',
 	failed: 'STATUS_FAILED',

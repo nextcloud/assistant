@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { TASK_STATUS_STRING } from './constants.js'
+import { TASK_STATUS_STRING, TASK_STATUS_INT } from './constants.js'
 import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
 import PrimeVue from 'primevue/config'
@@ -11,6 +11,22 @@ import Aura from '@primeuix/themes/aura'
 import { listen } from '@nextcloud/notify_push'
 
 window.assistantPollTimerId = null
+
+listen('task_update', (type, body) => {
+	console.debug('[assistant] received task update push notification', type, body)
+	const newStatus = body.new_status
+	const taskId = body.task_id
+	if (newStatus === TASK_STATUS_INT.successful) {
+		// when a task successfully finished, we want to update its status AND output
+		// in case it is not the currently selected task
+		getTask(taskId).then(response => {
+			const task = response.data?.ocs?.data?.task
+			emit('assistant:task:updated', task)
+		})
+	} else {
+		emit('assistant:task:status:updated', { taskId, status: newStatus })
+	}
+})
 
 /**
  * Creates an assistant modal and return a promise which provides the result

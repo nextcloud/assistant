@@ -220,7 +220,11 @@ export default {
 			Object.keys(this.taskType.outputShape).forEach(key => {
 				const field = this.taskType.outputShape[key]
 				if (field.type === SHAPE_TYPE_NAMES.Text) {
-					textOutputs.push(this.task.output[key])
+					if (this.task.output && this.task.output[key]) {
+						textOutputs.push(this.task.output[key])
+					} else {
+						console.debug('[assistant] no output for key', key)
+					}
 				}
 			})
 			return textOutputs.join(' | ')
