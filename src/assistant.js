@@ -12,7 +12,7 @@ import { listen } from '@nextcloud/notify_push'
 
 window.assistantPollTimerId = null
 
-listen('task_update', (type, body) => {
+listen('taskprocessing:task_update', (type, body) => {
 	console.debug('[assistant] received task update push notification', type, body)
 	const newStatus = body.new_status
 	const taskId = body.task_id
@@ -151,7 +151,7 @@ export async function openAssistantForm({
 				return true
 			}
 			// attempt to listen to push notifications to get the intermediate output
-			const pushChannel = 'task_' + pushTaskId
+			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === view.selectedTaskId) {
@@ -659,7 +659,7 @@ export async function openAssistantTask(
 			return true
 		}
 		// attempt to listen to push notifications to get the intermediate output
-		const pushChannel = 'task_' + pushTaskId
+		const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 		const hasPush = listen(pushChannel, (type, body) => {
 			console.debug('[assistant] received push notification', type, body)
 			if (pushTaskId === view.selectedTaskId) {

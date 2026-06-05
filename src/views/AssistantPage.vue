@@ -129,7 +129,7 @@ export default {
 				return true
 			}
 			// attempt to listen to push notifications to get the intermediate output
-			const pushChannel = 'task_' + pushTaskId
+			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === this.task.id) {

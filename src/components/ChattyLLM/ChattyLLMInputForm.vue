@@ -932,7 +932,7 @@ export default {
 			if (this.isListeningTo[pushTaskId]) {
 				return true
 			}
-			const pushChannel = 'task_' + pushTaskId
+			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
 				console.debug('[assistant] received push notification', type, body)
 				const activeSessionId = this.active?.id
