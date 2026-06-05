@@ -257,6 +257,7 @@ export async function openAssistantForm({
 			view.showSyncTaskRunning = false
 			view.isNotifyEnabled = false
 			view.loading = false
+			view.taskStatus = task.status
 
 			view.selectedTaskTypeId = task.type
 			view.inputs = task.input
@@ -273,6 +274,7 @@ export async function openAssistantForm({
 						view.inputs = updatedTask.input
 						view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
 						view.selectedTaskId = updatedTask.id
+						view.taskStatus = updatedTask.status
 						lastTask = updatedTask
 						return
 					}
@@ -340,6 +342,7 @@ export async function openAssistantForm({
 			view.isNotifyEnabled = false
 			view.outputs = null
 			view.selectedTaskId = null
+			view.taskStatus = null
 			lastTask = null
 		})
 		modalMountPoint.addEventListener('background-notify', (data) => {
@@ -768,6 +771,7 @@ export async function openAssistantTask(
 		view.showSyncTaskRunning = false
 		view.isNotifyEnabled = false
 		view.loading = false
+		view.taskStatus = task.status
 
 		view.selectedTaskTypeId = task.type
 		view.inputs = task.input
@@ -784,6 +788,7 @@ export async function openAssistantTask(
 					view.inputs = updatedTask.input
 					view.outputs = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
 					view.selectedTaskId = updatedTask.id
+					view.taskStatus = updatedTask.status
 					lastTask = updatedTask
 					return
 				}
@@ -850,6 +855,7 @@ export async function openAssistantTask(
 		view.isNotifyEnabled = false
 		view.outputs = null
 		view.selectedTaskId = null
+		view.taskStatus = null
 		lastTask = null
 	})
 	modalMountPoint.addEventListener('background-notify', (data) => {

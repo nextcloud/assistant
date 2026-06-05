@@ -233,6 +233,7 @@ export default {
 						this.task.input = updatedTask.input
 						this.task.output = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
 						this.task.id = updatedTask.id
+						this.task.status = updatedTask.status
 						return
 					}
 

@@ -377,22 +377,23 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
+			const inputs = this.myInputs
 			if (this.taskStatus === TASK_STATUS_STRING.running) {
 				return false
 			}
 			// otherwise, check that none of the properties of myInputs are empty
-			console.debug('[assistant] canSubmit', this.myInputs)
-			if (Object.keys(this.myInputs).length === 0) {
+			console.debug('[assistant] canSubmit', inputs)
+			if (Object.keys(inputs).length === 0) {
 				return false
 			}
 			const taskType = this.selectedTaskType
 			// check that all fields required by the task type are defined
 			return Object.keys(taskType.inputShape).every(k => {
-				if (this.myInputs[k] === null || this.myInputs[k] === undefined) {
+				if (inputs[k] === null || inputs[k] === undefined) {
 					return false
 				}
 				const fieldType = taskType.inputShape[k].type
-				const value = this.myInputs[k]
+				const value = inputs[k]
 				return ([SHAPE_TYPE_NAMES.Text, SHAPE_TYPE_NAMES.Enum].includes(fieldType)
 						&& typeof value === 'string'
 						&& !!value?.trim()
