@@ -69,7 +69,7 @@ OC.L10N.register(
     "\"%1$s\" task for \"%2$s\" has finished" : "„%1$s“ užduotis „%2$s“ baigta",
     "Input: %1$s" : "Įvestis: %1$s",
     "Result: %1$s" : "Rezultatas: %1$s",
-    "View results" : "Rodyti rezultatus",
+    "View results" : "Žiūrėti rezultatus",
     "Task for \"%1$s\" has failed" : "Užduotis „%1$s“ nepavyko",
     "\"%1$s\" task for \"%2$s\" has failed" : "„%1$s“ užduotis „%2$s“ nepavyko",
     "View task" : "Peržiūrėti užduotį",
