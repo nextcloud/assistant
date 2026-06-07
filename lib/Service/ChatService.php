@@ -177,6 +177,7 @@ class ChatService {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
+		// For empty queries return two empty lists right away
 		if (trim($query) === '') {
 			return ['messages' => [], 'sessionIds' => []];
 		}
@@ -189,7 +190,7 @@ class ChatService {
 			array_map(fn(Message $m) => $m->getSessionId(), $messages)
 		));
 		return [
-			'messages' => array_map(fn(Message $m) => $m->jsonSerialize(), $messages),
+			'messages' => array_map(fn(Message $m) => $m->jsonSerialize(), $messages), // convert Message objects into plain arrays
 			'sessionIds' => $sessionIds,
 		];
 	}

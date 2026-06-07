@@ -480,13 +480,14 @@ class ChattyLLMController extends OCSController {
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function searchMessages(string $query): JSONResponse {
+
 		try {
 			$result = $this->chatService->searchMessages($this->userId, $query);
 			return new JSONResponse($result);
 		} catch (InternalException $e) {
 			$this->logger->warning('Failed to search chat messages', ['exception' => $e]);
 			return new JSONResponse(['error' => $this->l10n->t('Failed to search chat messages')], Http::STATUS_INTERNAL_SERVER_ERROR);
-		} catch (UnauthorizedException $e) {
+		} catch (\OCA\Assistant\Service\UnauthorizedException $e) {
 			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
 		}
 	}

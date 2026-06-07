@@ -193,18 +193,9 @@ class MessageMapper extends QBMapper {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Message::$columns)
 			->from($this->getTableName(), 'm')
-			->join('m', 'assistant_chat_sns', 's',
-				$qb->expr()->eq('m.session_id', 's.id')
-			)
-			->where($qb->expr()->eq('s.user_id',
-				$qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)
-			))
-			->andWhere($qb->expr()->iLike('m.content',
-				$qb->createPositionalParameter(
-					'%' . $this->db->escapeLikeParameter($query) . '%',
-					IQueryBuilder::PARAM_STR
-				)
-			))
+			->join('m', 'assistant_chat_sns', 's', $qb->expr()->eq('m.session_id', 's.id'))
+			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->iLike('m.content', $qb->createPositionalParameter('%' . $this->db->escapeLikeParameter($query) . '%', IQueryBuilder::PARAM_STR)))
 			->orderBy('m.timestamp', 'DESC')
 			->setMaxResults($limit);
 
