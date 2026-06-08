@@ -13,6 +13,9 @@
 						<PlusIcon :size="20" />
 					</template>
 				</NcAppNavigationNew>
+				<NcAppNavigationSearch
+					v-model="searchQuery"
+					:placeholder="t('assistant', 'Search messages…')" />
 				<div v-if="sessions == null" class="unloaded-sessions">
 					<NcLoadingIcon :size="30" />
 					{{ t('assistant', 'Loading conversations…') }}
@@ -20,8 +23,11 @@
 				<div v-else-if="sessions != null && sessions.length === 0" class="unloaded-sessions">
 					{{ t('assistant', 'No conversations yet') }}
 				</div>
+				<div v-else-if="searchResults !== null && filteredSessions.length === 0" class="unloaded-sessions">
+					{{ t('assistant', 'No conversations match your search') }}
+				</div>
 				<NcAppNavigationItem
-					v-for="session in sessions"
+					v-for="session in filteredSessions"
 					v-else
 					:key="'conversation' + session.id"
 					:active="session.id === active?.id"
@@ -204,6 +210,7 @@ import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
 
 import ConversationBox from './ConversationBox.vue'
 import EditableTextField from './EditableTextField.vue'
@@ -221,6 +228,7 @@ import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
 // future: type (text, image, file, etc), attachments, etc support
 
 const getChatURL = (endpoint) => generateOcsUrl('/apps/assistant/chat' + endpoint)
+
 const Roles = {
 	HUMAN: 'human',
 	ASSISTANT: 'assistant',
@@ -247,6 +255,7 @@ export default {
 		NcAppNavigationItem,
 		NcAppNavigationList,
 		NcAppNavigationNew,
+		NcAppNavigationSearch,
 		NcButton,
 		NcLoadingIcon,
 		NcDialog,
@@ -279,6 +288,7 @@ export default {
 				newSession: false,
 				messageDelete: false,
 				sessionDelete: false,
+				search: false,
 			},
 			msgCursor: 0,
 			msgLimit: 20,
@@ -303,6 +313,9 @@ export default {
 					message: t('assisant', 'Which actions can you do for me?'),
 				},
 			],
+			searchQuery: '',
+			searchResults: null,
+			searchDebounceTimer: null,
 		}
 	},
 
@@ -314,6 +327,13 @@ export default {
 			const session = this.sessions.find(s => s.id === this.sessionIdToDelete)
 			const sessionTitle = this.getSessionTitle(session)?.trim()
 			return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
+		},
+
+		filteredSessions() {
+			if (!this.sessions || this.searchResults === null) {
+				return this.sessions
+			}
+			return this.sessions.filter(s => this.searchResults.sessionIds.includes(s.id))
 		},
 	},
 
@@ -391,6 +411,17 @@ export default {
 				this.loading.llmRunning = false
 				this.loading.titleGeneration = false
 			}
+		},
+
+		searchQuery(newVal) {
+			clearTimeout(this.searchDebounceTimer)
+			if (!newVal.trim()) {
+				this.searchResults = null
+				return
+			}
+			this.searchDebounceTimer = setTimeout(() => {
+				this.performSearch(newVal.trim())
+			}, 350)
 		},
 	},
 
@@ -912,6 +943,20 @@ export default {
 			}
 			const url = generateUrl('/apps/assistant/config')
 			return axios.put(url, req)
+		},
+
+		async performSearch(query) {
+			this.loading.search = true
+			try {
+				const response = await axios.get(getChatURL('/search'), { params: { query } })
+				this.searchResults = response.data
+			} catch (error) {
+				console.error('Search error:', error)
+				showError(error?.response?.data?.error ?? t('assistant', 'Error searching messages'))
+				this.searchResults = null
+			} finally {
+				this.loading.search = false
+			}
 		},
 	},
 }

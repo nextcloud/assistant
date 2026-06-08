@@ -181,4 +181,24 @@ class MessageMapper extends QBMapper {
 
 		$qb->executeStatement();
 	}
+
+	/**
+	 * @param string $userId
+	 * @param string $query
+	 * @param int $limit
+	 * @return list<Message>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function searchMessages(string $userId, string $query, int $limit = 100): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(array_map(fn ($col) => 'm.' . $col, Message::$columns))
+			->from($this->getTableName(), 'm')
+			->join('m', 'assistant_chat_sns', 's', $qb->expr()->eq('m.session_id', 's.id'))
+			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->iLike('m.content', $qb->createPositionalParameter('%' . $this->db->escapeLikeParameter($query) . '%', IQueryBuilder::PARAM_STR)))
+			->orderBy('m.timestamp', 'DESC')
+			->setMaxResults($limit);
+
+		return $this->findEntities($qb);
+	}
 }

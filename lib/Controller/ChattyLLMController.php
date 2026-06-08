@@ -467,6 +467,33 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
+	 * Search chat messages
+	 *
+	 * Search through all chat messages for the current user
+	 *
+	 * @param string $query The search query
+	 * @return JSONResponse<Http::STATUS_OK, array{messages: list<AssistantChatMessage>, sessionIds: list<int>}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: Search results returned successfully
+	 * 401: Not logged in
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function searchMessages(string $query): JSONResponse {
+
+		try {
+			$result = $this->chatService->searchMessages($this->userId, $query);
+			return new JSONResponse($result);
+		} catch (InternalException $e) {
+			$this->logger->warning('Failed to search chat messages', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to search chat messages')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (\OCA\Assistant\Service\UnauthorizedException $e) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+	}
+
+
+	/**
 	 * Generate a new assistant message
 	 *
 	 * Schedule a task to generate a new message for a session

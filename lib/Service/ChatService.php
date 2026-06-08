@@ -169,6 +169,32 @@ class ChatService {
 	}
 
 	/**
+	 * @return array{messages: list<array<string,mixed>>, sessionIds: list<int>}
+	 * @throws UnauthorizedException
+	 * @throws InternalException
+	 */
+	public function searchMessages(?string $userId, string $query): array {
+		if ($userId === null) {
+			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
+		}
+		// For empty queries return two empty lists right away
+		if (trim($query) === '') {
+			return ['messages' => [], 'sessionIds' => []];
+		}
+		try {
+			$messages = $this->messageMapper->searchMessages($userId, $query);
+		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		$sessionIds = array_values(array_unique(
+			array_map(fn (Message $m) => $m->getSessionId(), $messages)
+		));
+		return [
+			'messages' => array_map(fn (Message $m) => $m->jsonSerialize(), $messages), // convert Message objects into plain arrays
+			'sessionIds' => $sessionIds,
+		];
+	}
+	/**
 	 * @throws BadRequestException
 	 * @throws InternalException
 	 * @throws NotFoundException
