@@ -187,10 +187,10 @@ class ChatService {
 			throw new InternalException(previous: $e);
 		}
 		$sessionIds = array_values(array_unique(
-			array_map(fn(Message $m) => $m->getSessionId(), $messages)
+			array_map(fn (Message $m) => $m->getSessionId(), $messages)
 		));
 		return [
-			'messages' => array_map(fn(Message $m) => $m->jsonSerialize(), $messages), // convert Message objects into plain arrays
+			'messages' => array_map(fn (Message $m) => $m->jsonSerialize(), $messages), // convert Message objects into plain arrays
 			'sessionIds' => $sessionIds,
 		];
 	}

@@ -191,7 +191,7 @@ class MessageMapper extends QBMapper {
 	 */
 	public function searchMessages(string $userId, string $query, int $limit = 100): array {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select(Message::$columns)
+		$qb->select(array_map(fn ($col) => 'm.' . $col, Message::$columns))
 			->from($this->getTableName(), 'm')
 			->join('m', 'assistant_chat_sns', 's', $qb->expr()->eq('m.session_id', 's.id'))
 			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
