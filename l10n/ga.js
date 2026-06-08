@@ -336,6 +336,8 @@ OC.L10N.register(
     "This may take a few seconds…" : "D’fhéadfadh sé seo cúpla soicind a thógáil…",
     "This may take a few minutes…" : "D’fhéadfadh sé seo cúpla nóiméad a thógáil…",
     "Getting results…" : "Torthaí á bhfáil…",
+    "This task is running in the background." : "Tá an tasc seo ag rith sa chúlra.",
+    "You can safely close the assistant or browse other tasks." : "Is féidir leat an cúntóir a dhúnadh go sábháilte nó brabhsáil trí thascanna eile.",
     "Get notified when the task finishes" : "Faigh fógra nuair a bheidh an tasc críochnaithe",
     "Cancel task" : "Cealaigh tasc",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Tá an tasc seo ag glacadh níos faide ná mar a bhíothas ag súil leis le tosú ag rith. Téigh i dteagmháil le do riarthóir le cinntiú go bhfuil Cúntóir cumraithe i gceart.",
