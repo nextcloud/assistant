@@ -415,6 +415,7 @@ export default {
 		},
 
 		searchQuery(newVal) {
+			console.debug('[search] searchQuery changed to:', JSON.stringify(newVal))
 			clearTimeout(this.searchDebounceTimer)
 			if (!newVal.trim()) {
 				this.searchResults = null
