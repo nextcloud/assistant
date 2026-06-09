@@ -886,6 +886,11 @@ class AssistantService {
 					$parser = new Parser();
 					$pdf = $parser->parseContent($fileContent);
 					$text = $pdf->getText();
+					// @author Marcel Klehr 2026-06-02
+					$text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+					if (!is_string($text)) {
+						throw new \Exception('PDF content cannot be extracted');
+					}
 					break;
 				}
 		}

@@ -174,13 +174,17 @@ class ChatService {
 	 * @throws NotFoundException
 	 * @throws UnauthorizedException
 	 */
-	public function createMessage(?string $userId, int $sessionId, string $role, string $content, int $timestamp, ?array $attachments = null, bool $firstHumanMessage = false): Message {
+	public function createMessage(?string $userId, int $sessionId, string $role, string $content, ?int $timestamp = null, ?array $attachments = null, bool $firstHumanMessage = false): Message {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
 
 		if (strlen($content) > Application::MAX_TEXT_INPUT_LENGTH) {
 			throw new BadRequestException($this->l10n->t('The new message is too long'));
+		}
+
+		if ($timestamp === null) {
+			$timestamp = $this->timeFactory->now()->getTimestamp();
 		}
 
 		if ($timestamp > 10_000_000_000) {

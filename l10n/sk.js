@@ -231,6 +231,7 @@ OC.L10N.register(
     "Submit" : "Odoslať",
     "Type a message…" : "Napíšte správu...",
     "Processing…" : "Spracovávam...",
+    "Waiting…" : "Čaká sa…",
     "Could not upload the recorded file" : "Nepodarilo sa nahrať zaznamenaný súbor",
     "Please try again and inform the server administrators if this issue persists." : "Skúste to prosím znova a informujte administrátorov servera, ak tento problém pretrvá.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Táto odpoveď v chate trvá dlhšie, než sa očakávalo. Kontaktujte svojho správcu, aby ste sa uistili, že Asistent je správne nakonfigurovaný.",

@@ -19,6 +19,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
+use OCP\IDateTimeZone;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
@@ -31,6 +32,7 @@ class AssignmentsService {
 		private LoggerInterface $logger,
 		private IJobList $jobList,
 		private IL10N $l10n,
+		private IDateTimeZone $dateTimeZone,
 	) {
 	}
 
@@ -39,7 +41,7 @@ class AssignmentsService {
 	 * @throws UnauthorizedException
 	 * @throws BadRequestException
 	 */
-	public function createAssignment(?string $userId, string $prompt, int $startsAt, string $recurrence): Assignment {
+	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): Assignment {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
@@ -56,12 +58,20 @@ class AssignmentsService {
 		} catch (\InvalidArgumentException $e) {
 			throw new BadRequestException('Invalid recurrence rule', previous: $e);
 		}
+		if ($timezone === null) {
+			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId)->getName();
+		}
+		try {
+			$assignment->setTimezone($timezone);
+		} catch (\InvalidArgumentException $e) {
+			throw new BadRequestException('Invalid recurrence rule', previous: $e);
+		}
 		try {
 			$this->assignmentMapper->insert($assignment);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		$session = $this->chatService->createChatSession($userId, $this->timeFactory->now()->getTimestamp(), 'Assignment ' . $assignment->getId()); // TODO: Add a proper title here
+		$session = $this->chatService->createChatSession($userId, title: $title);
 		$session->setAssignmentId($assignment->getId());
 		try {
 			$this->sessionMapper->update($session);
@@ -111,7 +121,7 @@ class AssignmentsService {
 			$assignment = $this->assignmentMapper->find($userId, $assignmentId);
 			$assignment->setLastRunAt($this->timeFactory->now()->getTimestamp());
 			$this->assignmentMapper->update($assignment);
-			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt(), $this->timeFactory->now()->getTimestamp());
+			$this->chatService->createMessage($userId, $session->getId(), Message::ROLE_HUMAN, $assignment->getPrompt());
 			$this->chatService->scheduleAssignmentMessageGeneration($userId, $session->getId());
 		} catch (BadRequestException|InternalException|DoesNotExistException|MultipleObjectsReturnedException|Exception $e) {
 			$this->logger->error('Error while running assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);
@@ -122,7 +132,6 @@ class AssignmentsService {
 						$session->getId(),
 						Message::ROLE_ASSISTANT,
 						$this->l10n->t('An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists.'),
-						$this->timeFactory->now()->getTimestamp()
 					);
 				} catch (BadRequestException|InternalException|NotFoundException|UnauthorizedException $e) {
 					$this->logger->error('Error while creating error message for assignment ' . $assignmentId . ' for user ' . $userId, ['exception' => $e]);

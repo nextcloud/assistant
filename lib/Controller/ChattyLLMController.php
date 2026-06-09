@@ -199,7 +199,7 @@ class ChattyLLMController extends OCSController {
 	 *
 	 * Create a new chat session, add a system message with user instructions
 	 *
-	 * @param int $timestamp The session creation date
+	 * @param ?int $timestamp The session creation date
 	 * @param ?string $title The session title
 	 * @return JSONResponse<Http::STATUS_OK, array{session: AssistantChatSession}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 * @throws AppConfigTypeConflictException
@@ -209,7 +209,7 @@ class ChattyLLMController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
-	public function newSession(int $timestamp, ?string $title = null): JSONResponse {
+	public function newSession(?int $timestamp = null, ?string $title = null): JSONResponse {
 		try {
 			$session = $this->chatService->createChatSession($this->userId, $timestamp, $title);
 			return new JSONResponse([
@@ -343,7 +343,7 @@ class ChattyLLMController extends OCSController {
 	 * @param int $sessionId The chat session ID
 	 * @param string $role Role of the message (human, assistant etc...)
 	 * @param string $content Content of the message
-	 * @param int $timestamp Date of the message
+	 * @param ?int $timestamp Date of the message
 	 * @param ?list<array{type: string, file_id: int}> $attachments List of attachment objects
 	 * @param bool $firstHumanMessage Is it the first human message of the session?
 	 * @return JSONResponse<Http::STATUS_OK, AssistantChatMessage, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
@@ -356,7 +356,7 @@ class ChattyLLMController extends OCSController {
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
 	public function newMessage(
-		int $sessionId, string $role, string $content, int $timestamp, ?array $attachments = null, bool $firstHumanMessage = false,
+		int $sessionId, string $role, string $content, ?int $timestamp = null, ?array $attachments = null, bool $firstHumanMessage = false,
 	): JSONResponse {
 		try {
 			$message = $this->chatService->createMessage($this->userId, $sessionId, $role, $content, $timestamp, $attachments, $firstHumanMessage);

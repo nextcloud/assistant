@@ -200,6 +200,7 @@
     "Submit" : "Відправити",
     "Type a message…" : "Введіть повідомлення...",
     "Processing…" : "Обробка...",
+    "Waiting…" : "Зачекайте...",
     "Could not upload the recorded file" : "Не вдалося завантажити записаний файл",
     "Please try again and inform the server administrators if this issue persists." : "Будь ласка, спробуйте ще раз і повідомте адміністраторам сервера, якщо проблема не зникне.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Генерація відповіді в чаті займає більше часу, ніж очікувалося. Зверніться до адміністратора, щоб переконатися, що Assistant налаштований правильно.",

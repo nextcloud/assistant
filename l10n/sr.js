@@ -197,6 +197,7 @@ OC.L10N.register(
     "Submit" : "Пошаљи",
     "Type a message…" : "Откуцајте поруку…",
     "Processing…" : "Обрађује се…",
+    "Waiting…" : "Чекам…",
     "Could not upload the recorded file" : "Није могао да се отпреми снимљени фајл",
     "Please try again and inform the server administrators if this issue persists." : "Молимо вас да покушате поново, па ако се проблем настави, обавестите администраторе сервера.",
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Започињање генерисања чет одговора траје дуже него што се очекује. Молимо вас да се обратите администратору који треба да провери да ли је Асистент исправно подешен.",

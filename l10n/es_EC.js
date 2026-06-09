@@ -28,6 +28,7 @@ OC.L10N.register(
     "Edit title" : "Editar título",
     "Cancel editing" : "Cancelar edición",
     "Submit" : "Enviar",
+    "Waiting…" : "Esperando...",
     "Delete message" : "Eliminar mensaje",
     "Choose" : "Seleccionar",
     "Cancelled" : "Cancelado",
