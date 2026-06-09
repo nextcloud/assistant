@@ -352,10 +352,35 @@ export default {
 					message: t('assistant', 'Create a scheduled task to send me the weather every morning '),
 				},
 				{
+					aria: t('assistant', 'Ask assistant for route from Munich to Berlin using public transport'),
+					message: t('assistant', 'Can you give me a route from Munich to Berlin using public transport?'),
+				},
+				{
+					aria: t('assistant', 'Ask assistant to transcribe a media file for you'),
+					message: t('assistant', 'Transcribe a media file for me'),
+				},
+				{
+					aria: t('assistant', 'Ask assistant to schedule an event for a Design meeting whenever you\'re free tomorrow'),
+					message: t('assistant', 'Schedule an event for a Design meeting whenever I\'m free tomorrow'),
+				},
+				{
+					aria: t('assistant', 'Ask assistant to create a deck card in my Project board in the todo stack for creating the presentation'),
+					message: t('assistant', 'Create a deck card in my Project board in the todo stack for creating the presentation'),
+				},
+				{
+					aria: t('assistant', 'Ask assistant to generate a slide deck about the features of Nextcloud'),
+					message: t('assistant', 'Generate a slide deck about the features of Nextcloud'),
+				},
+				{
+					aria: t('assistant', 'Ask assistant to generate an image of a puppy with a Nextcloud hat'),
+					message: t('assistant', 'Generate an image of a puppy with a Nextcloud hat'),
+				},
+			].sort(() => Math.round(Math.random() - 1)).slice(0, 2).concat(
+				{
 					aria: t('assistant', 'Ask assistant, which actions it can do for you'),
 					message: t('assistant', 'Which actions can you do for me?'),
 				},
-			],
+			),
 		}
 	},
 
