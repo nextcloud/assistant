@@ -84,15 +84,22 @@ class SessionMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
+	 * @param bool $isAssignment
 	 * @return list<Session>
 	 * @throws \OCP\DB\Exception
 	 */
-	public function getUserSessions(string $userId): array {
+	public function getUserSessions(string $userId, bool $isAssignment): array {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Session::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
 			->orderBy('timestamp', 'DESC');
+
+		if ($isAssignment) {
+			$qb->andWhere($qb->expr()->isNotNull('assignment_id'));
+		} else {
+			$qb->andWhere($qb->expr()->isNull('assignment_id'));
+		}
 
 		return $this->findEntities($qb);
 	}
