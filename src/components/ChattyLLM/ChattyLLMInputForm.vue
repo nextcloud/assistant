@@ -126,6 +126,7 @@
 					<ConversationBox :messages="messages"
 						:loading="loading"
 						:slow-pickup="slowPickup"
+						:search-query="searchQuery"
 						@regenerate="runRegenerationTask"
 						@delete="deleteMessage" />
 					<div v-if="messages != null && messages.length > 0 && !loading.llmGeneration && !loading.newHumanMessage && messages[messages.length - 1]?.role === 'human'" class="session-area__chat-area__active-session__utility-button">
