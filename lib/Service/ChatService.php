@@ -169,7 +169,7 @@ class ChatService {
 	}
 
 	/**
-	 * @return array{messages: list<array<string,mixed>>, sessionIds: list<int>}
+	 * @return array{messages: list<array{id: int, session_id: int, role: string, content: string, timestamp: int, ocp_task_id: int, sources: string, attachments: list<array{type: string, fileId: int}>}>, sessionIds: list<int>}
 	 * @throws UnauthorizedException
 	 * @throws InternalException
 	 */
@@ -187,10 +187,12 @@ class ChatService {
 			throw new InternalException(previous: $e);
 		}
 		$sessionIds = array_values(array_unique(
-			array_map(fn (Message $m) => $m->getSessionId(), $messages)
+			array_map(fn (Message $m) => $m->getSessionId(), $messages) // Extract the session id from each message, remove duplicates, re-index the array
 		));
+		/** @var list<array{id: int, session_id: int, role: string, content: string, timestamp: int, ocp_task_id: int, sources: string, attachments: list<array{type: string, fileId: int}>}> $serializedMessages */
+		$serializedMessages = array_map(fn (Message $m) => $m->jsonSerialize(), $messages);
 		return [
-			'messages' => array_map(fn (Message $m) => $m->jsonSerialize(), $messages), // convert Message objects into plain arrays
+			'messages' => $serializedMessages,
 			'sessionIds' => $sessionIds,
 		];
 	}
