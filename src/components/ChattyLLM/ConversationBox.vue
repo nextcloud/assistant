@@ -33,10 +33,12 @@
 				@delete="deleteMessage(message.id)" />
 			<Message v-if="streamingMessage"
 				:id="'message-streaming'"
+				:key="'message-streaming'"
 				:message="streamingMessage"
 				:streaming="true" />
 			<LoadingPlaceholder v-else-if="loading.llmGeneration"
 				:id="'message-placeholder'"
+				:key="'message-placeholder'"
 				:slow-pickup="slowPickup" />
 		</div>
 	</div>

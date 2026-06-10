@@ -57,7 +57,7 @@
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
 		<NcRichText class="message__content"
-			:text="message.content"
+			:text="streaming ? streamedMessageContent : message.content"
 			:use-markdown="true"
 			:reference-limit="1"
 			:references="references"
@@ -158,6 +158,7 @@ export default {
 			// with [] we inhibit the extract+resolve mechanism on NcRichText
 			// TODO This can be removed (and all the custom extract+resolve logic) when fixed in NcRichText
 			references: [],
+			streamedMessageContent: '',
 		}
 	},
 
@@ -175,6 +176,28 @@ export default {
 		},
 		audioAttachments() {
 			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.Audio) ?? []
+		},
+	},
+
+	watch: {
+		// Pseudo streaming
+		async 'message.content'(messageContent, oldMessageContent) {
+			if (!this.streaming) {
+				return
+			}
+			if (oldMessageContent) {
+				this.streamedMessageContent = oldMessageContent
+				messageContent = messageContent.replace(oldMessageContent, '')
+			}
+			let cachedStreamedMessageContent
+			for (const char of messageContent.split('')) {
+				this.streamedMessageContent += char
+				cachedStreamedMessageContent = this.streamedMessageContent
+				await new Promise(resolve => setTimeout(resolve, 5))
+				if (cachedStreamedMessageContent !== this.streamedMessageContent) {
+					break
+				}
+			}
 		},
 	},
 
