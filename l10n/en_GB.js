@@ -379,6 +379,8 @@ OC.L10N.register(
     "Please log in to view the task result" : "Please log in to view the task result",
     "This task does not exist or has been cleaned up" : "This task does not exist or has been cleaned up",
     "Assistant failed to schedule your task" : "Assistant failed to schedule your task",
+    "Does not repeat" : "Does not repeat",
+    "second to last" : "second to last",
     "Generate image using AI" : "Generate image using AI",
     "AI Assistant" : "AI Assistant",
     "Summarization AI task submitted successfully." : "Summarization AI task submitted successfully.",

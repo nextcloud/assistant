@@ -36,6 +36,16 @@ OC.L10N.register(
     "Could not upload the files" : "Impossìbile carrigare is archìvios",
     "Upload from device" : "Càrriga dae su dispositivu",
     "Advanced" : "Connoschèntzia avantzada",
-    "Copy" : "Còpia"
+    "Copy" : "Còpia",
+    "Does not repeat" : "No se repitit",
+    "Hourly" : "Ogni ora",
+    "Daily" : "Ogni die",
+    "Weekly" : "Ogni chida",
+    "_Every %n day_::_Every %n days_" : ["Cada %n die","Cada %n dies"],
+    "on the {ordinalNumber} {byDaySet}" : "su {ordinalNumber} {byDaySet}",
+    "second" : "segundu",
+    "fourth" : "de bator",
+    "fifth" : "de chimbe",
+    "second to last" : "penùltimu"
 },
 "nplurals=2; plural=(n != 1);");

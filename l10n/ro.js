@@ -31,6 +31,16 @@ OC.L10N.register(
     "No file selected" : "Niciun fișier selectat",
     "Upload from device" : "Încarcă din dispozitiv",
     "Advanced" : "Avansat",
-    "Copy" : "Copiază"
+    "Copy" : "Copiază",
+    "Does not repeat" : "Nu se repetă",
+    "Hourly" : "La oră",
+    "Daily" : "Zilnic",
+    "Weekly" : "Săptămânal",
+    "_Every %n day_::_Every %n days_" : ["La fiecare %n zi","La fiecare %n zile","La fiecare %n de zile"],
+    "on the {ordinalNumber} {byDaySet}" : "pe {ordinalNumber} {byDaySet}",
+    "second" : "secundă",
+    "fourth" : "al patrulea",
+    "fifth" : "al cincilea",
+    "second to last" : "penultimul"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

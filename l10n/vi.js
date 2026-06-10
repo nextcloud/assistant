@@ -26,6 +26,18 @@ OC.L10N.register(
     "Scheduled" : "Lên kế hoạch",
     "Choose file" : "Choose file",
     "No file selected" : "Không có tập tin nào được chọn",
-    "Advanced" : "Nâng cao"
+    "Advanced" : "Nâng cao",
+    "Does not repeat" : "Không lặp lại",
+    "Hourly" : "Hằng giờ",
+    "Daily" : "Hằng ngày",
+    "Weekly" : "Hằng tuần",
+    "_Every %n day_::_Every %n days_" : ["Mỗi %n ngày"],
+    "_Every %n year_::_Every %n years_" : ["Mỗi %n năm"],
+    "on the {ordinalNumber} {byDaySet}" : "vào {ordinalNumber} {byDaySet}",
+    "second" : "Thứ hai",
+    "third" : "vị trí thứ ba",
+    "fourth" : "vị trí thứ tư",
+    "fifth" : "vị trí thứ năm",
+    "second to last" : "kế cuối"
 },
 "nplurals=1; plural=0;");

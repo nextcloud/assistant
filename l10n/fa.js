@@ -79,6 +79,10 @@ OC.L10N.register(
     "Advanced" : "پیشرفته",
     "Result could not be copied to clipboard" : "نتیجه را نمی توان در کلیپ بورد کپی کرد",
     "Copy" : "رونوشت",
-    "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است"
+    "This task does not exist or has been cleaned up" : "این وظیفه وجود ندارد یا پاکسازی شده است",
+    "Does not repeat" : "تکرار نمی کند",
+    "Hourly" : "به طور ساعتی",
+    "Daily" : "روزانه",
+    "second to last" : "دوم تا آخرین"
 },
 "nplurals=2; plural=(n > 1);");

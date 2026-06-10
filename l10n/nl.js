@@ -175,6 +175,15 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Kon niet kopiëren naar het klembord",
     "Upload from device" : "Uploaden vanaf apparaat",
     "Advanced" : "Geavanceerd",
-    "Copy" : "Kopiëren"
+    "Copy" : "Kopiëren",
+    "Does not repeat" : "Niet herhalen",
+    "Hourly" : "Per uur",
+    "Daily" : "Dagelijks",
+    "Weekly" : "Wekelijks",
+    "_Every %n day_::_Every %n days_" : ["Elke dag","Elke%n dag"],
+    "second" : "tweede",
+    "fourth" : "vierde",
+    "fifth" : "vijfde",
+    "second to last" : "op twee na laatste"
 },
 "nplurals=2; plural=(n != 1);");

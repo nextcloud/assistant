@@ -29,6 +29,11 @@ OC.L10N.register(
     "No file selected" : "לא נבחר קובץ",
     "Could not copy to clipboard" : "לא ניתן להעתיק ללוח הגזירים",
     "Advanced" : "מתקדם",
-    "Copy" : "העתקה"
+    "Copy" : "העתקה",
+    "Does not repeat" : "אינו חוזר",
+    "Hourly" : "שעתי",
+    "Daily" : "יומי",
+    "Weekly" : "שבועי",
+    "second to last" : "אחד לפני האחרון"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

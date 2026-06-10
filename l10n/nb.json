@@ -196,6 +196,15 @@
     "Assistant error" : "Assistentfeil",
     "Submit the current task's result" : "Send inn resultatet for gjeldende aktivitet",
     "Please log in to view the task result" : "Logg inn for å se oppgaveresultatet",
-    "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp"
+    "This task does not exist or has been cleaned up" : "Denne oppgaven eksisterer ikke eller har blitt ryddet opp",
+    "Does not repeat" : "Gjentas ikke",
+    "Hourly" : "Hver time",
+    "Daily" : "Daglig",
+    "Weekly" : "Ukentlig",
+    "_Every %n day_::_Every %n days_" : ["Hver %n dag","Hver %n dager"],
+    "second" : "sekund",
+    "fourth" : "fjerde",
+    "fifth" : "femte",
+    "second to last" : "nest sist"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -75,6 +75,17 @@
     "Clear value" : "Počisti vrednost",
     "Advanced" : "Napredno",
     "Copy" : "Kopiraj",
-    "Could not upload the file" : "Datoteke ni mogoče poslati"
+    "Could not upload the file" : "Datoteke ni mogoče poslati",
+    "Does not repeat" : "Se ne ponavlja",
+    "Hourly" : "Urno",
+    "Daily" : "Dnevno",
+    "Weekly" : "Tedensko",
+    "_Every %n day_::_Every %n days_" : ["ponovi vsak %n. dan","ponovi vsak %n. dan","ponovi vsak %n. dan","ponovi vsak %n. dan"],
+    "on the {ordinalNumber} {byDaySet}" : ": {ordinalNumber} {byDaySet}",
+    "second" : "drugi",
+    "third" : "3.",
+    "fourth" : "4.",
+    "fifth" : "5.",
+    "second to last" : "predzadnji"
 },"pluralForm" :"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
 }

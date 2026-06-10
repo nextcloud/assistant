@@ -349,6 +349,17 @@ OC.L10N.register(
     "Submit the current task's result" : "Prześlij wynik bieżącego zadania",
     "Output file for task {taskId} ({taskTypeName})" : "Plik wyjściowy dla zadania {taskId} ({taskTypeName})",
     "Please log in to view the task result" : "Zaloguj się, aby zobaczyć wynik zadania",
-    "This task does not exist or has been cleaned up" : "To zadanie nie istnieje lub zostało usunięte"
+    "This task does not exist or has been cleaned up" : "To zadanie nie istnieje lub zostało usunięte",
+    "Does not repeat" : "Nie powtarza się",
+    "Hourly" : "Co godzinę",
+    "Daily" : "Codziennie",
+    "Weekly" : "Co tydzień",
+    "_Every %n day_::_Every %n days_" : ["Co %n dzień","Co %n dni","Co %n dni","Co %n dni"],
+    "on the {ordinalNumber} {byDaySet}" : "w dniu {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "{dayOfMonthList} w {monthNames}",
+    "second" : "drugi",
+    "fourth" : "czwarty",
+    "fifth" : "piąty",
+    "second to last" : "przedostatni"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

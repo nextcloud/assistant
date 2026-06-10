@@ -27,6 +27,13 @@ OC.L10N.register(
     "Running" : "Correr",
     "No file selected" : "Nenhum ficheiro selecionado",
     "Advanced" : "Avançado",
-    "Copy" : "copiar"
+    "Copy" : "copiar",
+    "Hourly" : "Hora a hora",
+    "Daily" : "Diariamente",
+    "Weekly" : "Semanalmente",
+    "second" : "segundo",
+    "fourth" : "quarto",
+    "fifth" : "quinto",
+    "second to last" : "do segundo ao último"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
