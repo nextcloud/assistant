@@ -405,6 +405,7 @@ OC.L10N.register(
     "Please log in to view the task result" : "Bitte anmelden um das Aufgabenergebnis anzusehen",
     "This task does not exist or has been cleaned up" : "Diese Aufgabe existiert nicht oder wurde bereinigt",
     "Assistant failed to schedule your task" : "Der Assistent konnte deine Aufgabe nicht planen",
+    "second to last" : "vorletzten",
     "Generate image using AI" : "Bild mittels KI erstellen",
     "AI Assistant" : "KI-Assistent",
     "Summarization AI task submitted successfully." : "Zusammenfassungs-KI-Aufgabe übermittelt.",

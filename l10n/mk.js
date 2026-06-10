@@ -39,6 +39,15 @@ OC.L10N.register(
     "No file selected" : "Нема избрано датотека",
     "Upload from device" : "Прикачи од уред",
     "Advanced" : "Напредно",
-    "Copy" : "Копирај"
+    "Copy" : "Копирај",
+    "Does not repeat" : "Не повторувај",
+    "Hourly" : "Часовно",
+    "Daily" : "Дневно",
+    "Weekly" : "Неделно",
+    "_Every %n day_::_Every %n days_" : ["Секој ден","Секој %n дена"],
+    "second" : "втор",
+    "fourth" : "четврти",
+    "fifth" : "петти",
+    "second to last" : "претпоследен"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

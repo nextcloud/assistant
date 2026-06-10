@@ -36,6 +36,14 @@ OC.L10N.register(
     "No file selected" : "No file selected",
     "Upload from device" : "Upload from device",
     "Advanced" : "Advanced",
-    "Copy" : "Copy"
+    "Copy" : "Copy",
+    "Does not repeat" : "Does not repeat",
+    "Hourly" : "საათობრივად",
+    "Daily" : "დღიურად",
+    "Weekly" : "კვირეულად",
+    "second" : "second",
+    "fourth" : "fourth",
+    "fifth" : "fifth",
+    "second to last" : "second to last"
 },
 "nplurals=2; plural=(n!=1);");

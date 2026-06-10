@@ -141,6 +141,18 @@
     "Advanced" : "Avancerad",
     "Result could not be copied to clipboard" : "Resultatet kunde inte kopieras till urklipp",
     "Copy" : "Kopiera",
-    "This task does not exist or has been cleaned up" : "Den här uppgiften finns inte eller har rensats"
+    "This task does not exist or has been cleaned up" : "Den här uppgiften finns inte eller har rensats",
+    "Does not repeat" : "Upprepar inte",
+    "Hourly" : "Varje timme",
+    "Daily" : "Varje dag",
+    "Weekly" : "Varje vecka",
+    "_Every %n day_::_Every %n days_" : ["Varje %n dag","Varje %n dagar"],
+    "on the {ordinalNumber} {byDaySet}" : "på den {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "i {monthNames} på den {dayOfMonthList}",
+    "second" : "sekund",
+    "third" : "tredje",
+    "fourth" : "fjärde",
+    "fifth" : "femte",
+    "second to last" : "näst sist"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

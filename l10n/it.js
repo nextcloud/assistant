@@ -90,6 +90,13 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Impossibile copiare negli appunti",
     "Upload from device" : "Carica dal dispositivo",
     "Advanced" : "Avanzate",
-    "Copy" : "Copia"
+    "Copy" : "Copia",
+    "Does not repeat" : "Non ripete",
+    "Hourly" : "Ogni ora",
+    "Daily" : "Giornalmente",
+    "Weekly" : "Settimanalmente",
+    "fourth" : "quarto",
+    "fifth" : "quinto",
+    "second to last" : "penultimo"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

@@ -62,6 +62,10 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Ei voitu kopioida leikepöydälle",
     "Upload from device" : "Lähetä laitteelta",
     "Advanced" : "Lisäasetukset",
-    "Copy" : "Kopioi"
+    "Copy" : "Kopioi",
+    "Does not repeat" : "Ei toistu",
+    "Hourly" : "Tunneittain",
+    "Daily" : "Päivittäin",
+    "second to last" : "toiseksi viimeinen"
 },
 "nplurals=2; plural=(n != 1);");

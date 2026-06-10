@@ -103,6 +103,12 @@ OC.L10N.register(
     "Advanced" : "Speciális",
     "Result could not be copied to clipboard" : "Az eredményt nem lehet a vágólapra másolni",
     "Copy" : "Másolás",
-    "This task does not exist or has been cleaned up" : "Ez a feladat nem létezik vagy már törlésre került"
+    "This task does not exist or has been cleaned up" : "Ez a feladat nem létezik vagy már törlésre került",
+    "Does not repeat" : "Nem ismétlődik",
+    "Hourly" : "Óránként",
+    "Daily" : "Naponta",
+    "Weekly" : "Hetente",
+    "fifth" : "ötödik",
+    "second to last" : "utolsó előtti"
 },
 "nplurals=2; plural=(n != 1);");

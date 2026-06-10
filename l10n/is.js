@@ -48,6 +48,13 @@ OC.L10N.register(
     "Could not copy to clipboard" : "Gat ekki afritað á klippispjald",
     "Upload from device" : "Senda inn frá tæki",
     "Advanced" : "Ítarlegt",
-    "Copy" : "Afrita"
+    "Copy" : "Afrita",
+    "Does not repeat" : "Endurtekst ekki",
+    "Hourly" : "Klukkutíma fresti",
+    "Daily" : "Daglega",
+    "Weekly" : "Vikulega",
+    "fourth" : "fjórða",
+    "fifth" : "fimmta",
+    "second to last" : "næstsíðasta"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

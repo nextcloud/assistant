@@ -22,6 +22,10 @@ OC.L10N.register(
     "Cancelled" : "ยกเลิกแล้ว",
     "No file selected" : "ไม่ได้เลือกไฟล์",
     "Advanced" : "ขั้นสูง",
-    "Copy" : "คัดลอก"
+    "Copy" : "คัดลอก",
+    "Hourly" : "รายชั่วโมง",
+    "Daily" : "รายวัน",
+    "Weekly" : "รายสัปดาห์",
+    "second" : "วินาที"
 },
 "nplurals=1; plural=0;");

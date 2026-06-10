@@ -123,6 +123,10 @@ OC.L10N.register(
     "Copy output" : "Kopiatu irteera",
     "Copy" : "Kopiatu",
     "Assistant error" : "Laguntzailearen errorea",
-    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da"
+    "This task does not exist or has been cleaned up" : "Zeregin hau ez dago edo garbitu da",
+    "Does not repeat" : "Ez errepikatu",
+    "Hourly" : "Orduro",
+    "Daily" : "Egunero",
+    "second to last" : "bigarren azkena"
 },
 "nplurals=2; plural=(n != 1);");
