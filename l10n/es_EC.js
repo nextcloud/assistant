@@ -44,6 +44,8 @@ OC.L10N.register(
     "No file selected" : "No se ha seleccionado algún archivo",
     "Upload from device" : "Subir desde el dispositivo",
     "Advanced" : "Avanzado",
-    "Copy" : "Copiar"
+    "Copy" : "Copiar",
+    "Does not repeat" : "No se repite",
+    "second to last" : "penúltimo"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

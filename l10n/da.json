@@ -304,6 +304,7 @@
     "Please log in to view the task result" : "Log venligst på for at se opgaveresultat",
     "This task does not exist or has been cleaned up" : "Denne opgave eksisterer ikke eller er blevet ryddet",
     "Assistant failed to schedule your task" : "Assistenten kunne ikke planlægge din opgave",
+    "second to last" : "næstsidste",
     "You will be notified when it is ready." : "Du vil blive underrettet når den er klar.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med tekst -> Sammendrag\".",
     "Failed to launch the AI file action" : "Kunne ikke starte AI filhandlingen",

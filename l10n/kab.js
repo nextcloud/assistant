@@ -23,6 +23,9 @@ OC.L10N.register(
     "Audio output" : "Anekcum n umeslaw",
     "No file selected" : "Ulac afaylu yettwafernen",
     "Advanced" : "Talqayt",
-    "Copy" : "Nɣel"
+    "Copy" : "Nɣel",
+    "Hourly" : "S usrag",
+    "Daily" : "S wass",
+    "Weekly" : "S umalas"
 },
 "nplurals=2; plural=(n != 1);");

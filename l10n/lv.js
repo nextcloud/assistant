@@ -42,6 +42,14 @@ OC.L10N.register(
     "Clear value" : "Notīrīt vērtību",
     "Advanced" : "Paplašināti",
     "Copy" : "Kopēt",
+    "Does not repeat" : "Neatkārtojas",
+    "Hourly" : "Ik stundu",
+    "Daily" : "Katru dienu",
+    "Weekly" : "Katru nedēļu",
+    "second" : "otrais",
+    "fourth" : "ceturtais",
+    "fifth" : "piektais",
+    "second to last" : "pirmspēdējais",
     "Failed to launch the AI file action" : "Neizdevās palaist AI datnes darbību"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

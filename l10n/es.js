@@ -307,6 +307,8 @@ OC.L10N.register(
     "Please log in to view the task result" : "Por favor, inicie sesión para ver el resultado de la tarea",
     "This task does not exist or has been cleaned up" : "Esta tarea no existe o no ha sido limpiada",
     "Assistant failed to schedule your task" : "El Asistente falló al agendar su tarea",
+    "Does not repeat" : "No repetir",
+    "second to last" : "penúltimo",
     "You will be notified when it is ready." : "Será notificado cuando esta esté lista.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con texto -> Resumir\".",
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",

@@ -195,6 +195,14 @@ OC.L10N.register(
     "Copy" : "복사",
     "Assistant error" : "어시스턴트 오류",
     "Please log in to view the task result" : "작업 결과를 보려면 로그인하세요.",
-    "This task does not exist or has been cleaned up" : "이 작업은 존재하지 않거나 정리되었음"
+    "This task does not exist or has been cleaned up" : "이 작업은 존재하지 않거나 정리되었음",
+    "Does not repeat" : "반복하지 않음",
+    "Hourly" : "1시간마다",
+    "Daily" : "매일",
+    "Weekly" : "매주",
+    "second" : "두 번째",
+    "fourth" : "네 번째",
+    "fifth" : "다섯 번째",
+    "second to last" : "끝에서 두 번째"
 },
 "nplurals=1; plural=0;");
