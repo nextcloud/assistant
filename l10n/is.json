@@ -51,8 +51,24 @@
     "Hourly" : "Klukkutíma fresti",
     "Daily" : "Daglega",
     "Weekly" : "Vikulega",
+    "Monthly" : "Mánaðarlega",
+    "Yearly" : "Árlega",
+    "_Every %n day_::_Every %n days_" : ["Á %n dags fresti","Á %n daga fresti"],
+    "_Every %n week_::_Every %n weeks_" : ["Á %n viku fresti","Á %n vikna fresti"],
+    "_Every %n month_::_Every %n months_" : ["Á %n mánaðar fresti","Á %n mánaða fresti"],
+    "_Every %n year_::_Every %n years_" : ["Á %n árs fresti","Á %n ára fresti"],
+    "_on {weekday}_::_on {weekdays}_" : ["á {weekday}","á {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["daginn {dayOfMonthList}","dagana {dayOfMonthList}"],
+    "on the {ordinalNumber} {byDaySet}" : "þann {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "í {monthNames} þann {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "þangað til {untilDate}",
+    "_%n time_::_%n times_" : ["%n sinni","%n sinnum"],
+    "first" : "fyrsta",
+    "second" : "sekúnda",
+    "third" : "þriðja",
     "fourth" : "fjórða",
     "fifth" : "fimmta",
-    "second to last" : "næstsíðasta"
+    "second to last" : "næstsíðasta",
+    "last" : "síðasta"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

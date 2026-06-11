@@ -29,9 +29,12 @@
     "Hourly" : "Hora a hora",
     "Daily" : "Diariamente",
     "Weekly" : "Semanalmente",
+    "first" : "primeiro",
     "second" : "segundo",
+    "third" : "terceiro",
     "fourth" : "quarto",
     "fifth" : "quinto",
-    "second to last" : "do segundo ao último"
+    "second to last" : "do segundo ao último",
+    "last" : "ultimo"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

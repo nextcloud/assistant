@@ -26,6 +26,8 @@ OC.L10N.register(
     "Hourly" : "รายชั่วโมง",
     "Daily" : "รายวัน",
     "Weekly" : "รายสัปดาห์",
+    "Monthly" : "ทุก ๆ เดือน",
+    "Yearly" : "ทุก ๆ ปี",
     "second" : "วินาที"
 },
 "nplurals=1; plural=0;");

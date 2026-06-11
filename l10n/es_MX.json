@@ -50,6 +50,27 @@
     "Advanced" : "Avanzado",
     "Copy" : "Copiar",
     "Does not repeat" : "No se repite",
-    "second to last" : "penúltimo"
+    "Hourly" : "Cada hora",
+    "Daily" : "Diario",
+    "Weekly" : "Semanalmente",
+    "Monthly" : "Mensualmente",
+    "Yearly" : "Anualmente",
+    "_Every %n day_::_Every %n days_" : ["Cada %n día","Cada %n días","Cada %n días"],
+    "_Every %n week_::_Every %n weeks_" : ["Cada %n semana","Cada %n semanas","Cada %n semanas"],
+    "_Every %n month_::_Every %n months_" : ["Cada %n mes","Cada %n meses","Cada %n meses"],
+    "_Every %n year_::_Every %n years_" : ["Cada %n año","Cada %n años","Cada %n años"],
+    "_on {weekday}_::_on {weekdays}_" : ["en {weekday}","en {weekdays}","en {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["el día {dayOfMonthList}","los días {dayOfMonthList}","los días {dayOfMonthList}"],
+    "on the {ordinalNumber} {byDaySet}" : "en el {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "en {monthNames} el {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "hasta {untilDate}",
+    "_%n time_::_%n times_" : ["%n vez","%n veces","%n veces"],
+    "first" : "primero",
+    "second" : "segundo",
+    "third" : "tercero",
+    "fourth" : "cuarto",
+    "fifth" : "quinto",
+    "second to last" : "penúltimo",
+    "last" : "último"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
