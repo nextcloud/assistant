@@ -488,6 +488,7 @@ export async function scheduleTask(appId, customId, taskType, inputs) {
 		type: taskType,
 		appId,
 		customId,
+		preferStreaming: true,
 	}
 	return axios.post(url, params, { signal: window.assistantAbortController.signal })
 }
