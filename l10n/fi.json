@@ -64,6 +64,26 @@
     "Does not repeat" : "Ei toistu",
     "Hourly" : "Tunneittain",
     "Daily" : "Päivittäin",
-    "second to last" : "toiseksi viimeinen"
+    "Weekly" : "Viikottain",
+    "Monthly" : "Kuukausittain",
+    "Yearly" : "Vuosittain",
+    "_Every %n hour_::_Every %n hours_" : ["%n tunnin välein"," %n tunnin välein"],
+    "_Every %n day_::_Every %n days_" : ["Päivittäin","Joka %n. päivä"],
+    "_Every %n week_::_Every %n weeks_" : ["Viikottain","Joka %n. viikko "],
+    "_Every %n month_::_Every %n months_" : ["Kuukausittain","Joka %n. kuukausi"],
+    "_Every %n year_::_Every %n years_" : ["Vuosittain","Joka %n. vuosi"],
+    "_on {weekday}_::_on {weekdays}_" : ["{weekday}na","viikonpäivinä {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["päivänä {dayOfMonthList}","päivinä {dayOfMonthList}"],
+    "on the {ordinalNumber} {byDaySet}" : "{ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "{monthNames}ssa {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "{untilDate} asti",
+    "_%n time_::_%n times_" : ["%n kerran","%n kertaa"],
+    "first" : "ensimmäinen",
+    "second" : "toinen",
+    "third" : "kolmas",
+    "fourth" : "neljäs",
+    "fifth" : "viides",
+    "second to last" : "toiseksi viimeinen",
+    "last" : "viimeinen"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

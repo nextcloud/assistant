@@ -39,11 +39,24 @@
     "Hourly" : "Ogni ora",
     "Daily" : "Ogni die",
     "Weekly" : "Ogni chida",
+    "Monthly" : "Ogni mese",
+    "Yearly" : "Ogni annu",
     "_Every %n day_::_Every %n days_" : ["Cada %n die","Cada %n dies"],
+    "_Every %n week_::_Every %n weeks_" : ["Cada %n chida","Cada %n chidas"],
+    "_Every %n month_::_Every %n months_" : ["Cada %n mese","Cada %n meses"],
+    "_Every %n year_::_Every %n years_" : ["Cada %n annu","Cada %n annos"],
+    "_on {weekday}_::_on {weekdays}_" : ["su {weekday}","su {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["sa die {dayOfMonthList}","is dies {dayOfMonthList}"],
     "on the {ordinalNumber} {byDaySet}" : "su {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "in {monthNames} su {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "finas a {untilDate}",
+    "_%n time_::_%n times_" : ["%n borta","%n bortas"],
+    "first" : "primu",
     "second" : "segundu",
+    "third" : "de tres",
     "fourth" : "de bator",
     "fifth" : "de chimbe",
-    "second to last" : "penùltimu"
+    "second to last" : "penùltimu",
+    "last" : "ùltimu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

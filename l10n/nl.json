@@ -178,10 +178,26 @@
     "Hourly" : "Per uur",
     "Daily" : "Dagelijks",
     "Weekly" : "Wekelijks",
+    "Monthly" : "Maandelijks",
+    "Yearly" : "Jaarlijks",
+    "_Every %n hour_::_Every %n hours_" : ["Elk %n uur","Elke %n uur"],
     "_Every %n day_::_Every %n days_" : ["Elke dag","Elke%n dag"],
+    "_Every %n week_::_Every %n weeks_" : ["Elke week","Elke %n weken"],
+    "_Every %n month_::_Every %n months_" : ["Elke maand","Elke %n maand"],
+    "_Every %n year_::_Every %n years_" : ["Elk jaar","Elk %n jaar"],
+    "_on {weekday}_::_on {weekdays}_" : ["op {weekday}","op {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["op dag {dayOfMonthList}","op de dagen {dayOfMonthList}"],
+    "on the {ordinalNumber} {byDaySet}" : "op de {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "op de {dayOfMonthList}van {monthNames}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "in {monthNames} op de {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "tot {untilDate}",
+    "_%n time_::_%n times_" : ["%n keer","%n keer"],
+    "first" : "eerste",
     "second" : "tweede",
+    "third" : "derde",
     "fourth" : "vierde",
     "fifth" : "vijfde",
-    "second to last" : "op twee na laatste"
+    "second to last" : "op twee na laatste",
+    "last" : "laatste"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

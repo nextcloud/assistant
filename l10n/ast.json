@@ -58,6 +58,19 @@
     "Copy output" : "Copiar la salida",
     "Copy" : "Copiar",
     "Assistant error" : "Error del asistente",
-    "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse"
+    "This task does not exist or has been cleaned up" : "Esta xera nun esiste o borróse",
+    "Hourly" : "Cada hora",
+    "Daily" : "Caldía",
+    "Weekly" : "Selmanalmente",
+    "_Every %n day_::_Every %n days_" : ["Cada %n día","Cada %n díes"],
+    "_Every %n week_::_Every %n weeks_" : ["Cada %n selmana","Cada %n selmanes"],
+    "_Every %n month_::_Every %n months_" : ["Cada %n mes","Cada %n meses"],
+    "_Every %n year_::_Every %n years_" : ["Cada %n añu","Cada %n años"],
+    "_%n time_::_%n times_" : ["%n vegada","%n vegaes"],
+    "first" : "primer",
+    "second" : "segundu",
+    "third" : "tercer",
+    "fourth" : "cuartu",
+    "fifth" : "quintu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
