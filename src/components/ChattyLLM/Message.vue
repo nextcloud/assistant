@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="message.content || hasAttachments"
+	<div v-if="message.content || streamedMessageContent || parsedSources.length || hasAttachments"
 		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
@@ -32,7 +32,7 @@
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
 				<div style="display: flex">
-					<NcPopover v-if="parsedSources.length">
+					<NcPopover v-if="parsedSources.length && !streaming">
 						<template #trigger>
 							<NcButton
 								:aria-label="t('assistant', 'Information sources')">
@@ -55,6 +55,14 @@
 				</div>
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
+		</div>
+		<div v-if="streaming" class="message__streamed-sources">
+			<NcChip v-for="(source, index) in parsedSources"
+				:key="source"
+				:text="source"
+				no-close
+				:variant="index === parsedSources.length-1 ? 'primary' : 'secondary'"
+				style="display: block; margin-bottom: 0.5em;" />
 		</div>
 		<NcRichText class="message__content"
 			:text="streaming ? streamedMessageContent : message.content"
@@ -80,6 +88,7 @@ import NcDateTime from '@nextcloud/vue/components/NcDateTime'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcChip from '@nextcloud/vue/components/NcChip'
 import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
 import InformationBox from 'vue-material-design-icons/InformationBox.vue'
@@ -112,6 +121,7 @@ export default {
 		InformationBox,
 
 		MessageActions,
+		NcChip,
 	},
 
 	props: {
@@ -211,6 +221,9 @@ export default {
 			showSuccess(t('assistant', 'Message copied to clipboard'))
 		},
 		fetch() {
+			if (!this.message.content) {
+				return
+			}
 			const urlMatch = (new RegExp(PLAIN_URL_PATTERN).exec(this.message.content.trim()))
 			const mdMatch = (new RegExp(MARKDOWN_LINK_PATTERN).exec(this.message.content.trim()))
 			const firstMatch = urlMatch
@@ -270,6 +283,10 @@ export default {
 		&__timestamp {
 			color: var(--color-text-maxcontrast);
 		}
+	}
+
+	&__streamed-sources {
+		margin-left: 2.6em;
 	}
 
 	&__content {

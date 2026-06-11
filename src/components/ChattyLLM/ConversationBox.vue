@@ -35,6 +35,7 @@
 				:id="'message-streaming'"
 				:key="'message-streaming'"
 				:message="streamingMessage"
+				:information-source-names="informationSourceNames"
 				:streaming="true" />
 			<LoadingPlaceholder v-else-if="loading.llmGeneration"
 				:id="'message-placeholder'"

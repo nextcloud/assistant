@@ -985,7 +985,7 @@ export default {
 				console.debug('[assistant] received push notification', type, body)
 				const activeSessionId = this.active?.id
 				if (pushSessionId === activeSessionId) {
-					this.updateStreamingMessage(body?.output ?? '', pushSessionId)
+					this.updateStreamingMessage(body ?? {}, pushSessionId)
 				} else {
 					console.debug(
 						'[assistant] ignoring push notification for task',
@@ -1052,8 +1052,8 @@ export default {
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
 							}
-							if (!hasPush && error.response.data.task_output?.output) {
-								this.updateStreamingMessage(error.response.data.task_output.output, sessionId)
+							if (!hasPush && typeof error.response.data.task_output !== 'undefined' && error.response.data.task_output !== null) {
+								this.updateStreamingMessage(error.response.data.task_output || {}, sessionId)
 							}
 						}
 					})
@@ -1061,15 +1061,16 @@ export default {
 			})
 		},
 
-		updateStreamingMessage(content, sessionId) {
+		updateStreamingMessage({ output, sources }, sessionId) {
 			if (this.streamingMessage) {
-				this.streamingMessage.content = content
+				this.streamingMessage.content = output
+				this.streamingMessage.sources = sources
 			} else {
 				this.streamingMessage = {
 					role: Roles.ASSISTANT,
-					content,
+					content: output,
 					attachments: [],
-					sources: '',
+					sources,
 					session_id: sessionId,
 					id: 0,
 					timestamp: moment().unix(),
