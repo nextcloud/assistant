@@ -98,7 +98,10 @@
 				</div>
 			</div>
 			<div ref="chatArea"
-				class="session-area__chat-area">
+				class="session-area__chat-area"
+				@wheel="onUserScroll"
+				@keydown="onUserScroll"
+				@touchstart="onUserScroll">
 				<NoSession v-if="loading.newSession"
 					:name="t('assistant', 'Creating a new conversation')"
 					description="">
@@ -320,6 +323,8 @@ export default {
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
+			// only used while streaming to prevent auto scrolling after some user scrolling happened
+			userScrolled: false,
 			isListeningTo: {},
 			messagesAxiosController: null, // for request cancellation
 			allMessagesLoaded: false,
@@ -481,6 +486,9 @@ export default {
 	},
 
 	methods: {
+		onUserScroll() {
+			this.userScrolled = true
+		},
 		async checkSession(sessionId, isAssignment) {
 			try {
 				if (this.active?.id == null || this.active?.id !== sessionId) {
@@ -503,6 +511,7 @@ export default {
 				if (checkSessionResponseData.messageTaskId !== null) {
 					try {
 						this.loading.llmGeneration = true
+						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
 						this.messages.push(message)
@@ -516,6 +525,7 @@ export default {
 						showError(t('assistant', 'Error generating a response'))
 					}
 					this.streamingMessage = null
+					this.userScrolled = false
 				}
 				if (checkSessionResponseData.titleTaskId !== null) {
 					try {
@@ -578,6 +588,9 @@ export default {
 				return
 			}
 			if (this.messages == null) {
+				return
+			}
+			if (this.userScrolled) {
 				return
 			}
 
@@ -904,6 +917,7 @@ export default {
 				this.slowPickup = false
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
+				this.userScrolled = false
 				const params = {
 					sessionId,
 				}
@@ -929,6 +943,7 @@ export default {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.streamingMessage = null
+				this.userScrolled = false
 			}
 		},
 
@@ -937,6 +952,7 @@ export default {
 				const sessionId = this.active.id
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
+				this.userScrolled = false
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
@@ -955,6 +971,7 @@ export default {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.streamingMessage = null
+				this.userScrolled = false
 			}
 		},
 
