@@ -178,6 +178,8 @@ export async function openAssistantForm({
 			view.isNotifyEnabled = false
 			view.progress = null
 			view.expectedRuntime = null
+			view.startedAt = null
+			view.completionExpectedAt = null
 			view.inputs = inputs
 			view.outputs = null
 			view.selectedTaskTypeId = taskTypeId
@@ -188,6 +190,8 @@ export async function openAssistantForm({
 					lastTask = task
 					view.selectedTaskId = lastTask?.id
 					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
+					view.startedAt = lastTask?.startedAt || null
+					view.completionExpectedAt = lastTask?.completionExpectedAt || null
 
 					const hasPush = listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
@@ -289,6 +293,8 @@ export async function openAssistantForm({
 					view.showSyncTaskRunning = true
 					view.progress = null
 					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+					view.startedAt = lastTask?.startedAt || null
+					view.completionExpectedAt = lastTask?.completionExpectedAt || null
 
 					const hasPush = listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
@@ -383,6 +389,8 @@ function updateTask(task, object, updateOutput = true) {
 		console.debug('[assistant] polling update output')
 		object.outputs = task?.output
 	}
+	object.startedAt = task?.startedAt
+	object.completionExpectedAt = task?.completionExpectedAt
 }
 
 /**
@@ -703,6 +711,8 @@ export async function openAssistantTask(
 		view.showSyncTaskRunning = true
 		view.isNotifyEnabled = false
 		view.expectedRuntime = null
+		view.startedAt = null
+		view.completionExpectedAt = null
 		view.inputs = inputs
 		view.outputs = null
 		view.selectedTaskTypeId = taskTypeId
@@ -713,7 +723,8 @@ export async function openAssistantTask(
 				lastTask = task
 				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
-
+				view.startedAt = lastTask?.startedAt || null
+				view.completionExpectedAt = lastTask?.completionExpectedAt || null
 				const hasPush = listenToTaskNotifications(task.id)
 				console.debug('[assistant] HAS PUSH', hasPush)
 
@@ -804,6 +815,8 @@ export async function openAssistantTask(
 				view.showSyncTaskRunning = true
 				view.progress = null
 				view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+				view.startedAt = lastTask?.startedAt || null
+				view.completionExpectedAt = lastTask?.completionExpectedAt || null
 
 				const hasPush = listenToTaskNotifications(task.id)
 
