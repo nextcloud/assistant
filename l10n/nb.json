@@ -201,10 +201,24 @@
     "Hourly" : "Hver time",
     "Daily" : "Daglig",
     "Weekly" : "Ukentlig",
+    "Monthly" : "Månedlig",
+    "Yearly" : "Årlig",
     "_Every %n day_::_Every %n days_" : ["Hver %n dag","Hver %n dager"],
+    "_Every %n week_::_Every %n weeks_" : ["Hver %n uke","Hver %n uker"],
+    "_Every %n month_::_Every %n months_" : ["Hver %n måned","Hver %n måned"],
+    "_Every %n year_::_Every %n years_" : ["Hvert %n år","Hvert %n år"],
+    "_on {weekday}_::_on {weekdays}_" : ["på {weekday}","på {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["på dag {dayOfMonthList}","på dager {dayOfMonthList}"],
+    "on the {ordinalNumber} {byDaySet}" : "den {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "i {monthNames} den {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "til {untilDate}",
+    "_%n time_::_%n times_" : ["%n gang","%n ganger"],
+    "first" : "første",
     "second" : "sekund",
+    "third" : "tredje",
     "fourth" : "fjerde",
     "fifth" : "femte",
-    "second to last" : "nest sist"
+    "second to last" : "nest sist",
+    "last" : "siste"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

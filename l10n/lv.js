@@ -46,10 +46,18 @@ OC.L10N.register(
     "Hourly" : "Ik stundu",
     "Daily" : "Katru dienu",
     "Weekly" : "Katru nedēļu",
+    "Monthly" : "Ikmēneša",
+    "Yearly" : "Ik gadu",
+    "_Every %n hour_::_Every %n hours_" : ["Ik pēc %n stundām","Ik pēc %n stundas","Ik pēc %n stundām"],
+    "_on {weekday}_::_on {weekdays}_" : ["{weekdays}","{weekdays}","{weekdays}"],
+    "until {untilDate}" : "līdz {untilDate}",
+    "first" : "pirmais",
     "second" : "otrais",
+    "third" : "trešais",
     "fourth" : "ceturtais",
     "fifth" : "piektais",
     "second to last" : "pirmspēdējais",
+    "last" : "pēdējais",
     "Failed to launch the AI file action" : "Neizdevās palaist AI datnes darbību"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

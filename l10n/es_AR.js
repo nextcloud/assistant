@@ -26,6 +26,12 @@ OC.L10N.register(
     "Choose a file" : "Seleccione un archivo",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Advanced" : "Avanzado",
-    "Copy" : "Copiar"
+    "Copy" : "Copiar",
+    "Hourly" : "Cada Hora",
+    "Daily" : "Diariamente",
+    "Weekly" : "Semanalmente",
+    "first" : "primero",
+    "second" : "segundo",
+    "last" : "último"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

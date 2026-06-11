@@ -42,10 +42,25 @@
     "Hourly" : "Часовно",
     "Daily" : "Дневно",
     "Weekly" : "Неделно",
+    "Monthly" : "Месечно",
+    "Yearly" : "Годишно",
     "_Every %n day_::_Every %n days_" : ["Секој ден","Секој %n дена"],
+    "_Every %n week_::_Every %n weeks_" : ["Секоја недела","Секој %n недели"],
+    "_Every %n month_::_Every %n months_" : ["Секој %n месец","Секој %n месеци"],
+    "_Every %n year_::_Every %n years_" : ["Секоја година","Секој %n години"],
+    "_on {weekday}_::_on {weekdays}_" : ["во {weekday}","во {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["на ден {dayOfMonthList}","на денови {dayOfMonthList}"],
+    "on the {ordinalNumber} {byDaySet}" : "на {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "во {monthNames} на {dayOfMonthList}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "во {monthNames} на {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "до {untilDate}",
+    "_%n time_::_%n times_" : ["%n пат","%n пати"],
+    "first" : "прв",
     "second" : "втор",
+    "third" : "трети",
     "fourth" : "четврти",
     "fifth" : "петти",
-    "second to last" : "претпоследен"
+    "second to last" : "претпоследен",
+    "last" : "последен"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"
 }

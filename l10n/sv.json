@@ -146,13 +146,25 @@
     "Hourly" : "Varje timme",
     "Daily" : "Varje dag",
     "Weekly" : "Varje vecka",
+    "Monthly" : "Varje månad",
+    "Yearly" : "Årligen",
     "_Every %n day_::_Every %n days_" : ["Varje %n dag","Varje %n dagar"],
+    "_Every %n week_::_Every %n weeks_" : ["Varje %n vecka","Varje %n veckor"],
+    "_Every %n month_::_Every %n months_" : ["Varje %n månad","Varje %n månader"],
+    "_Every %n year_::_Every %n years_" : ["Varje %n år","Varje %n år"],
+    "_on {weekday}_::_on {weekdays}_" : ["på {weekday}","på {weekdays}"],
+    "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["på dag {dayOfMonthList}","på dagar {dayOfMonthList}"],
     "on the {ordinalNumber} {byDaySet}" : "på den {ordinalNumber} {byDaySet}",
     "in {monthNames} on the {dayOfMonthList}" : "i {monthNames} på den {dayOfMonthList}",
+    "in {monthNames} on the {ordinalNumber} {byDaySet}" : "i {monthNames} på den {ordinalNumber} {byDaySet}",
+    "until {untilDate}" : "till {untilDate}",
+    "_%n time_::_%n times_" : ["%n gång","%n gånger"],
+    "first" : "första",
     "second" : "sekund",
     "third" : "tredje",
     "fourth" : "fjärde",
     "fifth" : "femte",
-    "second to last" : "näst sist"
+    "second to last" : "näst sist",
+    "last" : "sista"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
