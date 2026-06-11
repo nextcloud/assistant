@@ -8,11 +8,11 @@
 		:description="description">
 		<template #action>
 			<div class="running-actions">
-				<div v-if="progress !== null"
+				<div v-if="speculativeProgress !== null"
 					class="progress">
 					<span>{{ formattedProgress }} %</span>
 					<NcProgressBar
-						:value="progress" />
+						:value="speculativeProgress" />
 				</div>
 				<div v-if="formattedRuntime">
 					{{ formattedRuntime }}
@@ -99,6 +99,14 @@ export default {
 			type: [Number, null],
 			default: null,
 		},
+		startedAt: {
+			type: [Number, null],
+			default: null,
+		},
+		completionExpectedAt: {
+			type: [Number, null],
+			default: null,
+		},
 	},
 
 	emits: [
@@ -110,6 +118,7 @@ export default {
 		return {
 			now: Date.now() / 1000,
 			timer: null,
+			speculativeProgress: this.progress,
 		}
 	},
 
@@ -121,8 +130,8 @@ export default {
 			return TASK_STATUS_STRING
 		},
 		formattedProgress() {
-			if (this.progress !== null) {
-				return this.progress.toFixed(2)
+			if (this.speculativeProgress !== null) {
+				return this.speculativeProgress.toFixed(2)
 			}
 			return null
 		},
@@ -136,10 +145,18 @@ export default {
 			return t('assistant', 'This may take a few minutes…')
 		},
 		progressMessage() {
-			if (this.taskStatus === TASK_STATUS_STRING.scheduled) {
+			if (this.taskStatus === TASK_STATUS_STRING.scheduled || this.taskStatus === null) {
 				return t('assistant', 'Waiting…')
 			}
 			return t('assistant', 'Processing…')
+		},
+	},
+
+	watch: {
+		progress() {
+			if (this.progress) {
+				this.speculativeProgress = this.progress
+			}
 		},
 	},
 
@@ -149,6 +166,7 @@ export default {
 			console.debug('scheduledAt', this.scheduledAt)
 			console.debug('status', this.taskStatus)
 			this.now = Date.now() / 1000
+			this.updateProgressSpeculatively()
 		}, 2000)
 	},
 
@@ -159,6 +177,16 @@ export default {
 	},
 
 	methods: {
+		updateProgressSpeculatively() {
+			if (this.progress !== null && this.startedAt !== null && this.completionExpectedAt !== null) {
+				const total = (this.completionExpectedAt - this.startedAt)
+				const elapsed = (this.now - this.startedAt)
+				const newProgress = elapsed / total
+				if (newProgress > this.speculativeProgress) {
+					this.speculativeProgress = newProgress
+				}
+			}
+		},
 	},
 }
 </script>

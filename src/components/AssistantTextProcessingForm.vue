@@ -47,6 +47,8 @@
 					:description="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
+					:started-at="startedAt"
+					:completion-expected-at="completionExpectedAt"
 					:is-notify-enabled="isNotifyEnabled"
 					:task-status="taskStatus"
 					:scheduled-at="scheduledAt"
@@ -274,6 +276,14 @@ export default {
 			default: null,
 		},
 		scheduledAt: {
+			type: [Number, null],
+			default: null,
+		},
+		startedAt: {
+			type: [Number, null],
+			default: null,
+		},
+		completionExpectedAt: {
 			type: [Number, null],
 			default: null,
 		},
