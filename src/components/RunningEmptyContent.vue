@@ -4,7 +4,7 @@
 -->
 <template>
 	<NcEmptyContent
-		:name="t('assistant', 'Getting results…')"
+		:name="progressMessage"
 		:description="description">
 		<template #action>
 			<div class="running-actions">
@@ -134,6 +134,12 @@ export default {
 				return t('assistant', 'This may take a few seconds…')
 			}
 			return t('assistant', 'This may take a few minutes…')
+		},
+		progressMessage() {
+			if (this.taskStatus === TASK_STATUS_STRING.scheduled) {
+				return t('assistant', 'Waiting…')
+			}
+			return t('assistant', 'Processing…')
 		},
 	},
 
