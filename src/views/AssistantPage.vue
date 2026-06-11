@@ -19,6 +19,8 @@
 					:scheduled-at="task.scheduledAt"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
+					:started-at="startedAt"
+					:completion-expected-at="completionExpectedAt"
 					:is-notify-enabled="isNotifyEnabled"
 					@sync-submit="onSyncSubmit"
 					@try-again="onTryAgain"
@@ -88,6 +90,12 @@ export default {
 			const scheduled = this.task.scheduledAt
 			return (expected && scheduled) ? (expected - scheduled) : null
 		},
+		startedAt() {
+			return this?.task?.startedAt
+		},
+		completionExpectedAt() {
+			return this?.task?.completionExpectedAt
+		},
 	},
 
 	mounted() {
@@ -114,6 +122,7 @@ export default {
 			this.isNotifyEnabled = false
 			this.progress = null
 			this.task.completionExpectedAt = null
+			this.task.startedAt = null
 			this.task.scheduledAt = null
 			this.task.input = inputs
 			this.task.type = taskTypeId
@@ -123,6 +132,7 @@ export default {
 					const task = response.data?.ocs?.data?.task
 					this.task.id = task.id
 					this.task.completionExpectedAt = task.completionExpectedAt
+					this.task.startedAt = task.startedAt
 					this.task.scheduledAt = task.scheduledAt
 					pollTask(task.id, this, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
@@ -196,6 +206,7 @@ export default {
 					this.showSyncTaskRunning = true
 					this.progress = null
 					this.task.completionExpectedAt = updatedTask.completionExpectedAt
+					this.task.startedAt = updatedTask.startedAt
 					this.task.scheduledAt = updatedTask.scheduledAt
 
 					pollTask(updatedTask.id, this, this.updateTask).then(finishedTask => {

@@ -135,6 +135,8 @@ export async function openAssistantForm({
 			view.isNotifyEnabled = false
 			view.progress = null
 			view.expectedRuntime = null
+			view.startedAt = null
+			view.completionExpectedAt = null
 			view.inputs = inputs
 			view.selectedTaskTypeId = taskTypeId
 
@@ -144,6 +146,8 @@ export async function openAssistantForm({
 					lastTask = task
 					view.selectedTaskId = lastTask?.id
 					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
+					view.startedAt = lastTask?.startedAt || null
+					view.completionExpectedAt = lastTask?.completionExpectedAt || null
 
 					pollTask(task.id, view).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
@@ -239,6 +243,8 @@ export async function openAssistantForm({
 					view.showSyncTaskRunning = true
 					view.progress = null
 					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+					view.startedAt = lastTask?.startedAt || null
+					view.completionExpectedAt = lastTask?.completionExpectedAt || null
 
 					pollTask(updatedTask.id, view).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
@@ -323,6 +329,8 @@ function updateTask(task, object) {
 	}
 	object.taskStatus = task?.status
 	object.scheduledAt = task?.scheduledAt
+	object.startedAt = task?.startedAt
+	object.completionExpectedAt = task?.completionExpectedAt
 }
 
 export async function pollTask(taskId, obj, callback = updateTask) {
@@ -605,6 +613,8 @@ export async function openAssistantTask(
 		view.showSyncTaskRunning = true
 		view.isNotifyEnabled = false
 		view.expectedRuntime = null
+		view.startedAt = null
+		view.completionExpectedAt = null
 		view.inputs = inputs
 		view.selectedTaskTypeId = taskTypeId
 
@@ -614,6 +624,8 @@ export async function openAssistantTask(
 				lastTask = task
 				view.selectedTaskId = lastTask?.id
 				view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
+				view.startedAt = lastTask?.startedAt || null
+				view.completionExpectedAt = lastTask?.completionExpectedAt || null
 				pollTask(task.id, view).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
@@ -699,6 +711,8 @@ export async function openAssistantTask(
 				view.showSyncTaskRunning = true
 				view.progress = null
 				view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
+				view.startedAt = lastTask?.startedAt || null
+				view.completionExpectedAt = lastTask?.completionExpectedAt || null
 
 				pollTask(updatedTask.id, view).then(finishedTask => {
 					console.debug('pollTask.then', finishedTask)

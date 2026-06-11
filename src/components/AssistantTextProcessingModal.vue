@@ -36,6 +36,8 @@
 					:short-input="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
+					:started-at="startedAt"
+					:completion-expected-at="completionExpectedAt"
 					:is-notify-enabled="isNotifyEnabled"
 					:task-type-id-list="taskTypeIdList"
 					:task-status="taskStatus"
@@ -124,6 +126,8 @@ export default {
 			scheduledAt: null,
 			loading: false,
 			expectedRuntime: null,
+			startedAt: null,
+			completionExpectedAt: null,
 			isNotifyEnabled: false,
 			showSyncTaskRunning: false,
 			showScheduleConfirmation: false,
