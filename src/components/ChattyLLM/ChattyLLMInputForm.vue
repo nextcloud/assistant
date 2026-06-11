@@ -97,7 +97,8 @@
 					</NcActions>
 				</div>
 			</div>
-			<div class="session-area__chat-area">
+			<div ref="chatArea"
+				class="session-area__chat-area">
 				<NoSession v-if="loading.newSession"
 					:name="t('assistant', 'Creating a new conversation')"
 					description="">
@@ -451,7 +452,7 @@ export default {
 			}
 
 			await this.fetchMessages()
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 
 			// start polling in case a message is currently being generated
 			this.checkSession(this.active.id, this.isAssignment)
@@ -505,7 +506,11 @@ export default {
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
 						this.messages.push(message)
-						this.scrollToBottom()
+						if (this.streamingMessage === null) {
+							this.scrollToLastMessage()
+						} else {
+							this.focusOnInputField()
+						}
 					} catch (error) {
 						console.error('checkGenerationTask error:', error)
 						showError(t('assistant', 'Error generating a response'))
@@ -543,7 +548,15 @@ export default {
 				}
 			}
 		},
-		scrollToBottom() {
+		focusOnInputField() {
+			this.$nextTick(() => {
+				this.$refs.inputComponent.focus()
+				if (!this.isAssignment) {
+					this.$refs.inputComponent.focus()
+				}
+			})
+		},
+		scrollToLastMessage() {
 			console.debug('scrollToBottom: active:', this.active)
 			if (this.active == null) {
 				return
@@ -557,10 +570,20 @@ export default {
 				document.querySelector('#message' + lastIdx)?.scrollIntoView()
 				document.querySelector('#message-streaming')?.scrollIntoView()
 				document.querySelector('#message-placeholder')?.scrollIntoView()
-				this.$refs.inputComponent.focus()
-				if (!this.isAssignment) {
-					this.$refs.inputComponent.focus()
-				}
+			})
+			this.focusOnInputField()
+		},
+		scrollToBottomWhileStreaming() {
+			if (this.active == null) {
+				return
+			}
+			if (this.messages == null) {
+				return
+			}
+
+			this.$nextTick(() => {
+				const chatAreaElem = this.$refs.chatArea
+				chatAreaElem.scrollTop = chatAreaElem.scrollHeight
 			})
 		},
 
@@ -645,7 +668,7 @@ export default {
 
 			this.messages.push({ role, content, timestamp, session_id: this.active.id })
 			this.chatContent = ''
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 			await this.newMessage(role, content, timestamp, this.active.id)
 		},
 
@@ -668,7 +691,7 @@ export default {
 
 			this.messages.push({ role, content, timestamp, session_id: this.active.id, attachments })
 			this.chatContent = ''
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 			await this.newMessage(role, content, timestamp, this.active.id, attachments)
 		},
 
@@ -877,7 +900,7 @@ export default {
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
 			try {
-				this.scrollToBottom()
+				this.scrollToLastMessage()
 				this.slowPickup = false
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
@@ -894,7 +917,11 @@ export default {
 				const message = await this.pollGenerationTask(generationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages.push(message)
-				this.scrollToBottom()
+				if (this.streamingMessage === null) {
+					this.scrollToLastMessage()
+				} else {
+					this.focusOnInputField()
+				}
 			} catch (error) {
 				console.error('scheduleGenerationTask error:', error)
 				showError(t('assistant', 'Error generating a response'))
@@ -916,7 +943,11 @@ export default {
 				const message = await this.pollGenerationTask(regenerationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages[this.messages.length - 1] = message
-				this.scrollToBottom()
+				if (this.streamingMessage === null) {
+					this.scrollToLastMessage()
+				} else {
+					this.focusOnInputField()
+				}
 			} catch (error) {
 				console.error('scheduleRegenerationTask error:', error)
 				showError(t('assistant', 'Error regenerating a response'))
@@ -1027,6 +1058,7 @@ export default {
 					timestamp: moment().unix(),
 				}
 			}
+			this.scrollToBottomWhileStreaming()
 		},
 
 		getLastHumanMessage() {
@@ -1112,7 +1144,7 @@ export default {
 
 			// this.messages.push({ role, content, timestamp })
 			this.chatContent = ''
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 			await this.newMessage(role, content, timestamp, this.active.id, null, false, confirm)
 		},
 
