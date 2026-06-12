@@ -357,7 +357,6 @@
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Cuimhníonn Comhrá an Chúnta na comhráite seo a leanas agus cuirfear san áireamh iad i ngach comhrá nua:",
     "This may take a few seconds…" : "D’fhéadfadh sé seo cúpla soicind a thógáil…",
     "This may take a few minutes…" : "D’fhéadfadh sé seo cúpla nóiméad a thógáil…",
-    "Getting results…" : "Torthaí á bhfáil…",
     "This task is running in the background." : "Tá an tasc seo ag rith sa chúlra.",
     "You can safely close the assistant or browse other tasks." : "Is féidir leat an cúntóir a dhúnadh go sábháilte nó brabhsáil trí thascanna eile.",
     "Get notified when the task finishes" : "Faigh fógra nuair a bheidh an tasc críochnaithe",
@@ -463,6 +462,7 @@
     "Text-to-Speech AI task submitted successfully." : "Cuireadh tasc AI Téacs-go-Caint isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
     "Transcription AI task submitted successfully." : "Cuireadh tasc trascríobh AI isteach go rathúil.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin.",
+    "Getting results…" : "Torthaí á bhfáil…"
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

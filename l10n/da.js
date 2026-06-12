@@ -243,7 +243,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "De følgende services anvendes som backends til Nextcloud assistent:",
     "This may take a few seconds…" : "Dette kan tage et par sekunder ...",
     "This may take a few minutes…" : "Dette kan tage et par minutter ...",
-    "Getting results…" : "Henter resultater ...",
     "Get notified when the task finishes" : "Bliv underrettet når opgaven er færdig",
     "Cancel task" : "Annuller opgave",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Denne opgave tager længere tid at starte end forventet. Kontakt venligst din administrator for at sikre at assistenten er korrekt konfigureret.",
@@ -335,6 +334,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med tekst -> Sammendrag\".",
     "Failed to launch the AI file action" : "Kunne ikke starte AI filhandlingen",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Generer tale\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\".",
+    "Getting results…" : "Henter resultater ..."
 },
 "nplurals=2; plural=(n != 1);");

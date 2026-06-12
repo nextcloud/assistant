@@ -250,7 +250,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "以下服务被用于云助手的后端：",
     "This may take a few seconds…" : "此操作可能需要花费几秒钟 ...",
     "This may take a few minutes…" : "这可能需要几分钟……",
-    "Getting results…" : "正在获取结果……",
     "Cancel task" : "取消任务",
     "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未提交任何“{taskTypename}”任务",
     "Nothing yet" : "暂无",
@@ -333,6 +332,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "也可以在助手的「处理文字」→「总结」选单中确认。",
     "Failed to launch the AI file action" : "启动人工智慧档案动作失败",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在助手的「处理音讯」→「产生语音」选单中确认。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在助手的「处理音讯」→「转录语音」选单中确认。"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在助手的「处理音讯」→「转录语音」选单中确认。",
+    "Getting results…" : "正在获取结果……"
 },
 "nplurals=1; plural=0;");

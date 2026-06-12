@@ -357,7 +357,6 @@
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "مکالمه‌های زیر توسط چت دستیار به خاطر سپرده می‌شوند و در هر مکالمه جدید در نظر گرفته خواهند شد:",
     "This may take a few seconds…" : "این ممکن است چند ثانیه طول بکشد…",
     "This may take a few minutes…" : "این ممکن است چند دقیقه طول بکشد…",
-    "Getting results…" : "در حال دریافت نتایج…",
     "This task is running in the background." : "این کار در پس‌زمینه در حال اجراست.",
     "You can safely close the assistant or browse other tasks." : "می‌توانید با خیال راحت دستیار را ببندید یا کارهای دیگر را مرور کنید.",
     "Get notified when the task finishes" : "هنگام پایان کار به من اطلاع داده شود",
@@ -463,6 +462,7 @@
     "Text-to-Speech AI task submitted successfully." : "کار تبدیل متن به گفتار هوش مصنوعی با موفقیت ثبت شد.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "این مورد را می‌توان در دستیار، از منوی «کار با صدا -> تولید گفتار» نیز بررسی کرد.",
     "Transcription AI task submitted successfully." : "وظیفهٔ رونویسی با هوش مصنوعی با موفقیت ارسال شد.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "این مورد را می‌توان در دستیار، از منوی «کار با صدا -> رونویسی صدا» نیز بررسی کرد."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "این مورد را می‌توان در دستیار، از منوی «کار با صدا -> رونویسی صدا» نیز بررسی کرد.",
+    "Getting results…" : "در حال دریافت نتایج…"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

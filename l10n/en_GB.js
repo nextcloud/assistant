@@ -311,7 +311,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:",
     "This may take a few seconds…" : "This may take a few seconds…",
     "This may take a few minutes…" : "This may take a few minutes…",
-    "Getting results…" : "Getting results…",
     "Get notified when the task finishes" : "Get notified when the task finishes",
     "Cancel task" : "Cancel task",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured.",
@@ -413,6 +412,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Text-to-Speech AI task submitted successfully.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu.",
     "Transcription AI task submitted successfully." : "Transcription AI task submitted successfully.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu.",
+    "Getting results…" : "Getting results…"
 },
 "nplurals=2; plural=(n != 1);");

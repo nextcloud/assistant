@@ -246,7 +246,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "Наступні сервіси використовуються як бекенд для Nextcloud Assistant:",
     "This may take a few seconds…" : "Це може зайняти кілька секунд...",
     "This may take a few minutes…" : "Це може зайняти кілька хвилин...",
-    "Getting results…" : "Отримання результатів...",
     "Get notified when the task finishes" : "Отримайте сповіщення, коли завдання буде виконано",
     "Cancel task" : "Скасувати завдання",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Запуск цього завдання займає більше часу, ніж очікувалося. Зверніться до адміністратора, щоб переконатися, що Assistant налаштований правильно.",
@@ -338,6 +337,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з текстом -> Підсумувати».",
     "Failed to launch the AI file action" : "Не вдалося запустити дію файлу ШІ",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо»."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо».",
+    "Getting results…" : "Отримання результатів..."
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

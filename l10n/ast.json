@@ -43,7 +43,6 @@
     "Choose" : "Escoyer",
     "Generate image" : "Xenerar una imaxe",
     "Assistant options saved" : "Guardáronse les opciones del asistente",
-    "Getting results…" : "Consiguiendo los resultaos…",
     "Cancelled" : "Encaboxáu",
     "Failed" : "Falló",
     "Scheduled" : "Planificóse",
@@ -71,6 +70,7 @@
     "second" : "segundu",
     "third" : "tercer",
     "fourth" : "cuartu",
-    "fifth" : "quintu"
+    "fifth" : "quintu",
+    "Getting results…" : "Consiguiendo los resultaos…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

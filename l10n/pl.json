@@ -295,7 +295,6 @@
     "The following services are used as backends for Nextcloud Assistant:" : "Następujące usługi są używane jako backendy dla Nextcloud Assistant:",
     "This may take a few seconds…" : "Może to potrwać kilka sekund…",
     "This may take a few minutes…" : "To może zająć kilka minut...",
-    "Getting results…" : "Odbieranie wyników...",
     "Cancel task" : "Anuluj zadanie",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Nie przesłałeś jeszcze żadnego zadania typu \"{taskTypeName}\"",
     "Nothing yet" : "Jeszcze nic",
@@ -372,6 +371,7 @@
     "fourth" : "czwarty",
     "fifth" : "piąty",
     "second to last" : "przedostatni",
-    "last" : "ostatni"
+    "last" : "ostatni",
+    "Getting results…" : "Odbieranie wyników..."
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

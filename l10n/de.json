@@ -357,7 +357,6 @@
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Folgende Konversationen werden vom Assistant-Chat gespeichert und bei jeder neuen Konversation berücksichtigt:",
     "This may take a few seconds…" : "Das kann einige Sekunden dauern …",
     "This may take a few minutes…" : "Das kann einige Minuten dauern…",
-    "Getting results…" : "Ergebnisse holen…",
     "This task is running in the background." : "Diese Aufgabe läuft im Hintergrund.",
     "You can safely close the assistant or browse other tasks." : "Du kannst den Assistenten schließen oder andere Aufgaben durchsuchen.",
     "Get notified when the task finishes" : "Benachrichtigung erhalten, wenn die Aufgabe abgeschlossen ist",
@@ -463,6 +462,7 @@
     "Text-to-Speech AI task submitted successfully." : "Text-zu-Sprache-KI-Aufgabe übermittelt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Sprachausgabe erstellen\" überprüft werden.",
     "Transcription AI task submitted successfully." : "Transkriptions-KI-Aufgabe übermittelt.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden.",
+    "Getting results…" : "Ergebnisse holen…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

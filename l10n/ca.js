@@ -172,7 +172,6 @@ OC.L10N.register(
     "No suitable providers are available. They must first be enabled by your administrator." : "No hi ha proveïdors adequats disponibles. Primer els ha d'habilitar el vostre administrador.",
     "The following services are used as backends for Nextcloud Assistant:" : "Els serveis següents s'utilitzen com a backend per a Nextcloud Assistant:",
     "This may take a few seconds…" : "Això podria trigar uns quants segons...",
-    "Getting results…" : "S'estan obtenint resultats…",
     "Cancel task" : "Cancel·la la tasca",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Encara no heu enviat cap tasca \"{taskTypeName}\"",
     "Nothing yet" : "Encara res",
@@ -241,6 +240,7 @@ OC.L10N.register(
     "fourth" : "quart",
     "fifth" : "cinquè",
     "second to last" : "penúltim",
-    "last" : "últim"
+    "last" : "últim",
+    "Getting results…" : "S'estan obtenint resultats…"
 },
 "nplurals=2; plural=(n != 1);");

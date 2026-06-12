@@ -280,7 +280,6 @@
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Дараах яриануудыг Assistant Chat санаж байгаа бөгөөд шинэ яриа бүрт харгалзах болно:",
     "This may take a few seconds…" : "Энэ хэдэн секунд шаардаж магадгүй…",
     "This may take a few minutes…" : "Энэ хэдэн минут шаардаж магадгүй…",
-    "Getting results…" : "Үр дүнг авч байна…",
     "Get notified when the task finishes" : "Даалгавар дуусахад мэдэгдэл авах",
     "Cancel task" : "Даалгаврыг цуцлах",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Энэ даалгавар хүлээгдсэнээс удаан эхлэж байна. Assistant зөв тохируулагдсан эсэхийг баталгаажуулахын тулд администратортой холбогдоно уу.",
@@ -379,6 +378,7 @@
     "Text-to-Speech AI task submitted successfully." : "Текстээс яриа AI даалгавар амжилттай илгээгдлээ.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Generate speech\" цэсээр мөн шалгаж болно.",
     "Transcription AI task submitted successfully." : "AI хөрвүүлэлтийн даалгавар амжилттай илгээгдлээ.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Transcribe audio\" цэсээр мөн шалгаж болно."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Transcribe audio\" цэсээр мөн шалгаж болно.",
+    "Getting results…" : "Үр дүнг авч байна…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
