@@ -335,7 +335,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Aşağıdaki konuşmalar Yardımcı Sohbeti tarafından hatırlanır ve her yeni konuşma için dikkate alınır:",
     "This may take a few seconds…" : "Bu işlem bir kaç saniye sürebilir…",
     "This may take a few minutes…" : "Bu işlem bir kaç dakika sürebilir…",
-    "Getting results…" : "Sonuçlar alınıyor…",
     "This task is running in the background." : "Bu görev arka planda çalışıyor.",
     "You can safely close the assistant or browse other tasks." : "Yardımcıyı kapatabilir ya da başka görevlere geçebilirsiniz.",
     "Get notified when the task finishes" : "Görev tamamlandığında bildirim gönderilsin",
@@ -439,6 +438,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "YZ ile yazıdan konuşmaya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Konuşma oluştur\" menüsünde de bakabilirsiniz.",
     "Transcription AI task submitted successfully." : "YZ ile sesten yazıya dönüştürme görevi gönderildi.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz.",
+    "Getting results…" : "Sonuçlar alınıyor…"
 },
 "nplurals=2; plural=(n > 1);");

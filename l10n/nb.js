@@ -155,7 +155,6 @@ OC.L10N.register(
     "Assistant options saved" : "Assistentalternativer lagret",
     "Failed to save assistant options" : "Kunne ikke lagre assistentalternativer",
     "No suitable providers are available. They must first be enabled by your administrator." : "Ingen egnede leverandører er tilgjengelige. De må først aktiveres av administratoren.",
-    "Getting results…" : "Får resultater...",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Du har ikke sendt inn noen {taskTypeName}-oppgave enda",
     "Nothing yet" : "Ingenting enda",
     "Succeeded" : "Vellykket",
@@ -221,6 +220,7 @@ OC.L10N.register(
     "fourth" : "fjerde",
     "fifth" : "femte",
     "second to last" : "nest sist",
-    "last" : "siste"
+    "last" : "siste",
+    "Getting results…" : "Får resultater..."
 },
 "nplurals=2; plural=(n != 1);");

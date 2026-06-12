@@ -272,7 +272,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "Nextcloud ياردەمچىسى ئۈچۈن تۆۋەندىكى مۇلازىمەتلەر ئىشلىتىلىدۇ:",
     "This may take a few seconds…" : "بۇ بىر نەچچە سېكۇنت ۋاقىت ئېلىشى مۇمكىن…",
     "This may take a few minutes…" : "بۇ بىر نەچچە مىنۇت ۋاقىت ئېلىشى مۇمكىن…",
-    "Getting results…" : "نەتىجىگە ئېرىشىش…",
     "Get notified when the task finishes" : "ۋەزىپە تاماملانغاندا ئۇقتۇرۇش ئېلىڭ",
     "Cancel task" : "ۋەزىپىنى بىكار قىلىش",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "بۇ ۋەزىپە كۈتۈلگەندىن ئۇزۇنراق ئىجرا بولۇۋاتىدۇ. ياردەمچىنىڭ توغرا تەڭشەلگەنلىكىنى جەزملەشتۈرۈش ئۈچۈن باشقۇرغۇچىڭىز بىلەن ئالاقىلىشىڭ.",
@@ -372,6 +371,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "AI تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> نۇتۇق ھاسىل قىلىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
     "Transcription AI task submitted successfully." : "AI ئاۋازنى تېكىستكە ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> ئاۋازنى يېزىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> ئاۋازنى يېزىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
+    "Getting results…" : "نەتىجىگە ئېرىشىش…"
 },
 "nplurals=2; plural=(n != 1);");

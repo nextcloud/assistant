@@ -96,7 +96,6 @@ OC.L10N.register(
     "Assistant options saved" : "Laguntzailearen aukerak gorde dira",
     "Failed to save assistant options" : "Ezin izan dira gorde laguntzailearen aukerak",
     "This may take a few seconds…" : "Segundo batzuk beharko dira...",
-    "Getting results…" : "Emaitzak lortzen...",
     "Nothing yet" : "Ezer ez oraindik",
     "Succeeded" : "Arrakastatsua",
     "Cancelled" : "Ezeztatua",
@@ -146,6 +145,7 @@ OC.L10N.register(
     "fourth" : "laugarrena",
     "fifth" : "bosgarrena",
     "second to last" : "bigarren azkena",
-    "last" : "azkena"
+    "last" : "azkena",
+    "Getting results…" : "Emaitzak lortzen..."
 },
 "nplurals=2; plural=(n != 1);");

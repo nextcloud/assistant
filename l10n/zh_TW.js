@@ -359,7 +359,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "以下對話將由小幫手聊天記憶，並在每次新對話中予以考量：",
     "This may take a few seconds…" : "這可能需要幾秒鐘……",
     "This may take a few minutes…" : "這可能需要幾分鐘……",
-    "Getting results…" : "正在取得結果……",
     "This task is running in the background." : "此任務在背景執行。",
     "You can safely close the assistant or browse other tasks." : "您可以安全地關閉小幫手或瀏覽其他任務。",
     "Get notified when the task finishes" : "任務完成時通知",
@@ -465,6 +464,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "人工智慧文字轉語音任務遞交成功。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
     "Transcription AI task submitted successfully." : "人工智慧轉錄任務已成功遞交。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。",
+    "Getting results…" : "正在取得結果……"
 },
 "nplurals=1; plural=0;");

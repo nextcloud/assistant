@@ -45,7 +45,6 @@ OC.L10N.register(
     "Choose" : "Escoyer",
     "Generate image" : "Xenerar una imaxe",
     "Assistant options saved" : "Guardáronse les opciones del asistente",
-    "Getting results…" : "Consiguiendo los resultaos…",
     "Cancelled" : "Encaboxáu",
     "Failed" : "Falló",
     "Scheduled" : "Planificóse",
@@ -73,6 +72,7 @@ OC.L10N.register(
     "second" : "segundu",
     "third" : "tercer",
     "fourth" : "cuartu",
-    "fifth" : "quintu"
+    "fifth" : "quintu",
+    "Getting results…" : "Consiguiendo los resultaos…"
 },
 "nplurals=2; plural=(n != 1);");

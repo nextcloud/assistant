@@ -122,7 +122,6 @@
     "Assistant options saved" : "Опции ассистента сохранены",
     "Failed to save assistant options" : "Сбой сохранения опций ассистента",
     "This may take a few seconds…" : "Подождите немного…",
-    "Getting results…" : "Получение результатов…",
     "Cancel task" : "Отменить задачу",
     "Succeeded" : "Успешно",
     "Cancelled" : "Отменено",
@@ -179,6 +178,7 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Это также может быть в Ассистентах в меню \"Работа с текстом -> Обобщить\".",
     "Failed to launch the AI file action" : "Не удалось запустить AI действие с файлом",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Это также может быть в Ассистентах в меню \"Работа с аудио -> Сгенерировать речь\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Это также может быть в Ассистентах в меню \"Работа с аудио -> Транскрибировать аудио\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Это также может быть в Ассистентах в меню \"Работа с аудио -> Транскрибировать аудио\".",
+    "Getting results…" : "Получение результатов…"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }
