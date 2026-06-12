@@ -44,7 +44,7 @@
     "@mdi/svg": "^7.4.47",
     "@nextcloud/auth": "^2.0.0",
     "@nextcloud/axios": "^2.0.0",
-    "@nextcloud/dialogs": "^7.0.0-rc.1",
+    "@nextcloud/dialogs": "^7.4.0",
     "@nextcloud/event-bus": "^3.1.0",
     "@nextcloud/files": "^4.0.0",
     "@nextcloud/initial-state": "^3.0.0",
