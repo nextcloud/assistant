@@ -97,7 +97,11 @@
 					</NcActions>
 				</div>
 			</div>
-			<div class="session-area__chat-area">
+			<div ref="chatArea"
+				class="session-area__chat-area"
+				@wheel="onUserScroll"
+				@keydown="onUserScroll"
+				@touchstart="onUserScroll">
 				<NoSession v-if="loading.newSession"
 					:name="t('assistant', 'Creating a new conversation')"
 					description="">
@@ -149,6 +153,7 @@
 						</NcButton>
 					</div>
 					<ConversationBox :messages="messages"
+						:streaming-message="streamingMessage"
 						:loading="loading"
 						:slow-pickup="slowPickup"
 						@regenerate="runRegenerationTask"
@@ -248,6 +253,7 @@ import axios, { isCancel } from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
+import { listen } from '@nextcloud/notify_push'
 import moment from 'moment'
 import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
 import ICAL from 'ical.js'
@@ -316,6 +322,10 @@ export default {
 			pollCheckSessionTimeout: null,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
+			streamingMessage: null,
+			// only used while streaming to prevent auto scrolling after some user scrolling happened
+			userScrolled: false,
+			isListeningTo: {},
 			messagesAxiosController: null, // for request cancellation
 			allMessagesLoaded: false,
 			loading: {
@@ -351,6 +361,10 @@ export default {
 				{
 					aria: t('assistant', 'Ask assistant, to create a scheduled task to send me the weather every morning'),
 					message: t('assistant', 'Create a scheduled task to send me the weather every morning '),
+				},
+				{
+					aria: t('assistant', 'Ask assistant, which actions it can do for you'),
+					message: t('assistant', 'Which actions can you do for me?'),
 				},
 				{
 					aria: t('assistant', 'Ask assistant for route from Munich to Berlin using public transport'),
@@ -426,6 +440,7 @@ export default {
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
 			this.loading.titleGeneration = false
+			this.streamingMessage = null
 			this.chatContent = ''
 			this.msgCursor = 0
 			this.messages = []
@@ -442,7 +457,7 @@ export default {
 			}
 
 			await this.fetchMessages()
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 
 			// start polling in case a message is currently being generated
 			this.checkSession(this.active.id, this.isAssignment)
@@ -471,6 +486,9 @@ export default {
 	},
 
 	methods: {
+		onUserScroll() {
+			this.userScrolled = true
+		},
 		async checkSession(sessionId, isAssignment) {
 			try {
 				if (this.active?.id == null || this.active?.id !== sessionId) {
@@ -493,14 +511,21 @@ export default {
 				if (checkSessionResponseData.messageTaskId !== null) {
 					try {
 						this.loading.llmGeneration = true
+						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
 						this.messages.push(message)
-						this.scrollToBottom()
+						if (this.streamingMessage === null) {
+							this.scrollToLastMessage()
+						} else {
+							this.focusOnInputField()
+						}
 					} catch (error) {
 						console.error('checkGenerationTask error:', error)
 						showError(t('assistant', 'Error generating a response'))
 					}
+					this.streamingMessage = null
+					this.userScrolled = false
 				}
 				if (checkSessionResponseData.titleTaskId !== null) {
 					try {
@@ -533,7 +558,15 @@ export default {
 				}
 			}
 		},
-		scrollToBottom() {
+		focusOnInputField() {
+			this.$nextTick(() => {
+				this.$refs.inputComponent.focus()
+				if (!this.isAssignment) {
+					this.$refs.inputComponent.focus()
+				}
+			})
+		},
+		scrollToLastMessage() {
 			console.debug('scrollToBottom: active:', this.active)
 			if (this.active == null) {
 				return
@@ -545,9 +578,25 @@ export default {
 			this.$nextTick(() => {
 				const lastIdx = this.messages.length - 1
 				document.querySelector('#message' + lastIdx)?.scrollIntoView()
-				if (!this.isAssignment) {
-					this.$refs.inputComponent.focus()
-				}
+				document.querySelector('#message-streaming')?.scrollIntoView()
+				document.querySelector('#message-placeholder')?.scrollIntoView()
+			})
+			this.focusOnInputField()
+		},
+		scrollToBottomWhileStreaming() {
+			if (this.active == null) {
+				return
+			}
+			if (this.messages == null) {
+				return
+			}
+			if (this.userScrolled) {
+				return
+			}
+
+			this.$nextTick(() => {
+				const chatAreaElem = this.$refs.chatArea
+				chatAreaElem.scrollTop = chatAreaElem.scrollHeight
 			})
 		},
 
@@ -632,7 +681,7 @@ export default {
 
 			this.messages.push({ role, content, timestamp, session_id: this.active.id })
 			this.chatContent = ''
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 			await this.newMessage(role, content, timestamp, this.active.id)
 		},
 
@@ -655,7 +704,7 @@ export default {
 
 			this.messages.push({ role, content, timestamp, session_id: this.active.id, attachments })
 			this.chatContent = ''
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 			await this.newMessage(role, content, timestamp, this.active.id, attachments)
 		},
 
@@ -864,9 +913,11 @@ export default {
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
 			try {
+				this.scrollToLastMessage()
 				this.slowPickup = false
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
+				this.userScrolled = false
 				const params = {
 					sessionId,
 				}
@@ -880,13 +931,19 @@ export default {
 				const message = await this.pollGenerationTask(generationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages.push(message)
-				this.scrollToBottom()
+				if (this.streamingMessage === null) {
+					this.scrollToLastMessage()
+				} else {
+					this.focusOnInputField()
+				}
 			} catch (error) {
 				console.error('scheduleGenerationTask error:', error)
 				showError(t('assistant', 'Error generating a response'))
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.streamingMessage = null
+				this.userScrolled = false
 			}
 		},
 
@@ -895,23 +952,62 @@ export default {
 				const sessionId = this.active.id
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
+				this.userScrolled = false
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
 				const message = await this.pollGenerationTask(regenerationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages[this.messages.length - 1] = message
-				this.scrollToBottom()
+				if (this.streamingMessage === null) {
+					this.scrollToLastMessage()
+				} else {
+					this.focusOnInputField()
+				}
 			} catch (error) {
 				console.error('scheduleRegenerationTask error:', error)
 				showError(t('assistant', 'Error regenerating a response'))
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.streamingMessage = null
+				this.userScrolled = false
 			}
 		},
 
+		listenToTaskNotifications(pushTaskId, pushSessionId) {
+			// attempt to listen to push notifications to get the intermediate output
+			if (this.isListeningTo[pushTaskId]) {
+				return true
+			}
+			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
+			const hasPush = listen(pushChannel, (type, body) => {
+				console.debug('[assistant] received push notification', type, body)
+				const activeSessionId = this.active?.id
+				if (pushSessionId === activeSessionId) {
+					this.updateStreamingMessage(body ?? {}, pushSessionId)
+				} else {
+					console.debug(
+						'[assistant] ignoring push notification for task',
+						pushTaskId,
+						'in session',
+						pushSessionId,
+						'the selected session is',
+						this.active?.id,
+					)
+				}
+
+			})
+			if (hasPush) {
+				this.isListeningTo[pushTaskId] = true
+			}
+			return hasPush
+		},
+
 		async pollGenerationTask(taskId, sessionId) {
+			const hasPush = this.listenToTaskNotifications(taskId, sessionId)
+			console.debug('[assistant] HAS PUSH', hasPush)
+
 			return new Promise((resolve, reject) => {
 				this.pollMessageGenerationTimerId = setInterval(() => {
 					if (this.active === null || sessionId !== this.active.id) {
@@ -956,10 +1052,31 @@ export default {
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
 							}
+							if (!hasPush && typeof error.response.data.task_output !== 'undefined' && error.response.data.task_output !== null) {
+								this.updateStreamingMessage(error.response.data.task_output || {}, sessionId)
+							}
 						}
 					})
 				}, 2000)
 			})
+		},
+
+		updateStreamingMessage({ output, sources }, sessionId) {
+			if (this.streamingMessage) {
+				this.streamingMessage.content = output
+				this.streamingMessage.sources = sources
+			} else {
+				this.streamingMessage = {
+					role: Roles.ASSISTANT,
+					content: output,
+					attachments: [],
+					sources,
+					session_id: sessionId,
+					id: 0,
+					timestamp: moment().unix(),
+				}
+			}
+			this.scrollToBottomWhileStreaming()
 		},
 
 		getLastHumanMessage() {
@@ -1045,7 +1162,7 @@ export default {
 
 			// this.messages.push({ role, content, timestamp })
 			this.chatContent = ''
-			this.scrollToBottom()
+			this.scrollToLastMessage()
 			await this.newMessage(role, content, timestamp, this.active.id, null, false, confirm)
 		},
 

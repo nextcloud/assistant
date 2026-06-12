@@ -263,7 +263,7 @@ export default {
 			height: 16px;
 			flex: 0 0 16px;
 			border-radius: 8px;
-			background-color: var(--color-error);
+			background-color: var(--color-element-error);
 		}
 
 		@keyframes fadeOutIn {
@@ -271,7 +271,7 @@ export default {
 				opacity: 1;
 			}
 			50% {
-				opacity: .3;
+				opacity: 0.1;
 			}
 			100% {
 				opacity: 1;
@@ -280,6 +280,11 @@ export default {
 
 		.fadeOutIn {
 			animation: fadeOutIn 3s infinite;
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.fadeOutIn {
+				animation: none;
+			}
 		}
 	}
 }

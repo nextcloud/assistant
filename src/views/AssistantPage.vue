@@ -42,6 +42,7 @@ import AssistantTextProcessingForm from '../components/AssistantTextProcessingFo
 import { showError } from '@nextcloud/dialogs'
 import { emit } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
+import { listen } from '@nextcloud/notify_push'
 import {
 	cancelTask,
 	cancelTaskPolling,
@@ -71,6 +72,7 @@ export default {
 			progress: null,
 			loading: false,
 			isNotifyEnabled: false,
+			isListeningTo: {},
 		}
 	},
 
@@ -104,20 +106,53 @@ export default {
 
 	methods: {
 		onBackgroundNotify(enable) {
-			setNotifyReady(this.task.id, enable).then(res => {
-				this.isNotifyEnabled = enable
-			})
+			if (this.task?.id) {
+				setNotifyReady(this.task.id, enable).then(res => {
+					this.isNotifyEnabled = enable
+				})
+			}
 		},
 		onCancel() {
 			cancelTaskPolling()
-			setNotifyReady(this.task.id, false)
-			cancelTask(this.task.id).then(res => {
+			if (this.task?.id) {
+				setNotifyReady(this.task.id, false)
+				cancelTask(this.task.id).then(res => {
+					this.loading = false
+					this.showSyncTaskRunning = false
+					this.task.id = null
+					this.task.output = null
+					this.task.status = null
+				})
+			} else {
+				// if we ever end up in this state, this helps to recover
 				this.loading = false
 				this.showSyncTaskRunning = false
 				this.task.id = null
+				this.task.output = null
+				this.task.status = null
+			}
+		},
+		listenToTaskNotifications(pushTaskId) {
+			if (this.isListeningTo[pushTaskId]) {
+				return true
+			}
+			// attempt to listen to push notifications to get the intermediate output
+			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
+			const hasPush = listen(pushChannel, (type, body) => {
+				console.debug('[assistant] received push notification', type, body)
+				if (pushTaskId === this.task.id) {
+					this.task.output = body ?? null
+				} else {
+					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)
+				}
 			})
+			if (hasPush) {
+				this.isListeningTo[pushTaskId] = true
+			}
+			return hasPush
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
+			this.loading = true
 			this.showSyncTaskRunning = true
 			this.isNotifyEnabled = false
 			this.progress = null
@@ -125,6 +160,7 @@ export default {
 			this.task.startedAt = null
 			this.task.scheduledAt = null
 			this.task.input = inputs
+			this.task.output = null
 			this.task.type = taskTypeId
 			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs)
 				.then((response) => {
@@ -134,7 +170,11 @@ export default {
 					this.task.completionExpectedAt = task.completionExpectedAt
 					this.task.startedAt = task.startedAt
 					this.task.scheduledAt = task.scheduledAt
-					pollTask(task.id, this, this.updateTask).then(finishedTask => {
+
+					const hasPush = this.listenToTaskNotifications(task.id)
+					console.debug('[assistant] HAS PUSH', hasPush)
+
+					pollTask(task.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
 						} else if (finishedTask.status === TASK_STATUS_STRING.failed) {
@@ -167,11 +207,16 @@ export default {
 				.then(() => {
 				})
 		},
-		updateTask(task) {
+		updateTask(task, _obj, updateOutput = true) {
 			if (task.status === TASK_STATUS_STRING.running) {
 				this.progress = task.progress
 			}
-			this.task = task
+			this.task = updateOutput
+				? task
+				: {
+					...task,
+					output: this.task.output,
+				}
 		},
 		onSyncSubmit(data) {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
@@ -195,10 +240,10 @@ export default {
 					const updatedTask = response.data?.ocs?.data?.task
 
 					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
-						this.selectedTaskTypeId = updatedTask.type
 						this.task.input = updatedTask.input
 						this.task.output = updatedTask.status === TASK_STATUS_STRING.successful ? updatedTask.output : null
 						this.task.id = updatedTask.id
+						this.task.status = updatedTask.status
 						return
 					}
 
@@ -209,7 +254,9 @@ export default {
 					this.task.startedAt = updatedTask.startedAt
 					this.task.scheduledAt = updatedTask.scheduledAt
 
-					pollTask(updatedTask.id, this, this.updateTask).then(finishedTask => {
+					const hasPush = this.listenToTaskNotifications(task.id)
+
+					pollTask(updatedTask.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output

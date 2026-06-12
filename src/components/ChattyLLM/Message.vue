@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="message.content || hasAttachments"
+	<div v-if="message.content || streamedMessageContent || parsedSources.length || hasAttachments"
 		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
@@ -17,13 +17,14 @@
 			@delete="$emit('delete')" />
 		<div class="message__header">
 			<div class="message__header__role">
+				<!-- we change the user prop when newMessageLoading changes to re-render the avatar without the icon template -->
 				<NcAvatar
-					:user="message.role === 'human' ? userId : 'Nextcloud Assistant'"
+					:user="message.role === 'human' ? (newMessageLoading ? '' : userId) : 'Nextcloud Assistant'"
 					:display-name="message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant')"
 					:is-no-user="message.role === 'assistant'"
 					:hide-status="true">
 					<template v-if="(message.role === 'human' && newMessageLoading) || message.role === 'assistant'" #icon>
-						<NcLoadingIcon v-if="message.role === 'human' && newMessageLoading" :size="20" />
+						<NcLoadingIcon v-if="(message.role === 'human' && newMessageLoading) || streaming" :size="32" />
 						<AssistantIcon v-else-if="message.role === 'assistant'" :size="20" />
 					</template>
 				</NcAvatar>
@@ -31,7 +32,7 @@
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
 				<div style="display: flex">
-					<NcPopover v-if="parsedSources.length">
+					<NcPopover v-if="parsedSources.length && !streaming">
 						<template #trigger>
 							<NcButton
 								:aria-label="t('assistant', 'Information sources')">
@@ -55,8 +56,16 @@
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
+		<div v-if="streaming" class="message__streamed-sources">
+			<NcChip v-for="(source, index) in parsedSources"
+				:key="source"
+				:text="source"
+				no-close
+				:variant="index === parsedSources.length-1 ? 'primary' : 'secondary'"
+				style="display: block; margin-bottom: 0.5em;" />
+		</div>
 		<NcRichText class="message__content"
-			:text="message.content"
+			:text="streaming ? streamedMessageContent : message.content"
 			:use-markdown="true"
 			:reference-limit="1"
 			:references="references"
@@ -79,6 +88,7 @@ import NcDateTime from '@nextcloud/vue/components/NcDateTime'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcChip from '@nextcloud/vue/components/NcChip'
 import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
 import InformationBox from 'vue-material-design-icons/InformationBox.vue'
@@ -111,6 +121,7 @@ export default {
 		InformationBox,
 
 		MessageActions,
+		NcChip,
 	},
 
 	props: {
@@ -135,6 +146,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		streaming: {
+			type: Boolean,
+			default: false,
+		},
 		informationSourceNames: {
 			type: Object,
 			default: null,
@@ -153,6 +168,7 @@ export default {
 			// with [] we inhibit the extract+resolve mechanism on NcRichText
 			// TODO This can be removed (and all the custom extract+resolve logic) when fixed in NcRichText
 			references: [],
+			streamedMessageContent: '',
 		}
 	},
 
@@ -173,6 +189,28 @@ export default {
 		},
 	},
 
+	watch: {
+		// Pseudo streaming
+		async 'message.content'(messageContent, oldMessageContent) {
+			if (!this.streaming) {
+				return
+			}
+			if (oldMessageContent) {
+				this.streamedMessageContent = oldMessageContent
+				messageContent = messageContent.replace(oldMessageContent, '')
+			}
+			let cachedStreamedMessageContent
+			for (const char of messageContent.split('')) {
+				this.streamedMessageContent += char
+				cachedStreamedMessageContent = this.streamedMessageContent
+				await new Promise(resolve => setTimeout(resolve, 5))
+				if (cachedStreamedMessageContent !== this.streamedMessageContent) {
+					break
+				}
+			}
+		},
+	},
+
 	mounted() {
 		this.fetch()
 	},
@@ -183,6 +221,9 @@ export default {
 			showSuccess(t('assistant', 'Message copied to clipboard'))
 		},
 		fetch() {
+			if (!this.message.content) {
+				return
+			}
 			const urlMatch = (new RegExp(PLAIN_URL_PATTERN).exec(this.message.content.trim()))
 			const mdMatch = (new RegExp(MARKDOWN_LINK_PATTERN).exec(this.message.content.trim()))
 			const firstMatch = urlMatch
@@ -242,6 +283,10 @@ export default {
 		&__timestamp {
 			color: var(--color-text-maxcontrast);
 		}
+	}
+
+	&__streamed-sources {
+		margin-left: 2.6em;
 	}
 
 	&__content {

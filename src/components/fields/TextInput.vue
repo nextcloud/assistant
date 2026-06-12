@@ -17,7 +17,7 @@
 			:multiline="isMobile"
 			:maxlength="maxLength"
 			class="editable-input"
-			:class="{ shadowed: isOutput }"
+			:class="{ shadowed: isOutput, streaming: isOutput && streaming() }"
 			:placeholder="placeholder"
 			:title="title"
 			@submit="hasValue && $emit('submit', $event)"
@@ -28,10 +28,16 @@
 			:title="t('assistant', 'Copy output')"
 			@click="onCopy">
 			<template #icon>
-				<ClipboardCheckOutlineIcon v-if="copied" />
+				<NcLoadingIcon v-if="streaming()" />
+				<ClipboardCheckOutlineIcon v-else-if="copied" />
 				<ContentCopyIcon v-else />
 			</template>
-			{{ t('assistant', 'Copy') }}
+			<span v-if="streaming()">
+				{{ t('assistant', 'Getting results...') }}
+			</span>
+			<span v-else>
+				{{ t('assistant', 'Copy') }}
+			</span>
 		</NcButton>
 		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
@@ -52,6 +58,7 @@ import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
+import { NcLoadingIcon } from '@nextcloud/vue'
 
 import isMobile from '../../mixins/isMobile.js'
 
@@ -78,6 +85,7 @@ export default {
 	components: {
 		NcRichContenteditable,
 		NcButton,
+		NcLoadingIcon,
 		FileDocumentOutlineIcon,
 		ClipboardCheckOutlineIcon,
 		ContentCopyIcon,
@@ -85,6 +93,10 @@ export default {
 
 	mixins: [
 		isMobile,
+	],
+
+	inject: [
+		'streaming',
 	],
 
 	props: {
@@ -149,6 +161,15 @@ export default {
 	},
 
 	watch: {
+		value(newValue) {
+			if (!this.streaming()) {
+				return
+			}
+			const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
+			if (scrollableArea) {
+				scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
+			}
+		},
 	},
 
 	mounted() {
@@ -232,8 +253,28 @@ body[dir="rtl"] .choose-file-button {
 		padding-bottom: 4px !important;
 	}
 	.shadowed .rich-contenteditable__input {
-		border: 2px solid var(--color-primary-element) !important;
+		border: 2px solid var(--color-primary-element);
 		padding-bottom: 38px !important;
+	}
+	.shadowed.streaming .rich-contenteditable__input {
+		animation: pulse 2s infinite;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.shadowed.streaming .rich-contenteditable__input {
+			animation: none;
+		}
+	}
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 0 0px rgba(128, 128, 128, 0.7);
+	}
+	70% {
+		box-shadow: 0 0 0 14px rgba(128, 128, 128, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0px rgba(128, 128, 128, 0);
 	}
 }
 </style>

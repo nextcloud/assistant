@@ -4874,6 +4874,33 @@
                                         },
                                         "slow_pickup": {
                                             "type": "boolean"
+                                        },
+                                        "task_output": {
+                                            "type": "object",
+                                            "nullable": true,
+                                            "additionalProperties": {
+                                                "oneOf": [
+                                                    {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "oneOf": [
+                                                                {
+                                                                    "type": "number"
+                                                                },
+                                                                {
+                                                                    "type": "string"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "number"
+                                                    },
+                                                    {
+                                                        "type": "string"
+                                                    }
+                                                ]
+                                            }
                                         }
                                     }
                                 }

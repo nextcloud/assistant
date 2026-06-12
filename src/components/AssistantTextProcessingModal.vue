@@ -221,7 +221,7 @@ export default {
 	height: calc(100vh - 32px);
 	max-height: calc(100vh - 32px);
 	height: 80%;
-	width: 50%;
+	width: 70%;
 	resize: both;
 	overflow: hidden;
 	filter: drop-shadow(0 0 15px rgba(77, 77, 77, 0.5));

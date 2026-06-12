@@ -39,7 +39,7 @@ import axios from '@nextcloud/axios'
 import { subscribe, unsubscribe } from '@nextcloud/event-bus'
 import { generateOcsUrl } from '@nextcloud/router'
 
-import { TASK_STATUS_STRING } from '../constants.js'
+import { TASK_STATUS_STRING, TASK_STATUS_INT_TO_STRING } from '../constants.js'
 
 export default {
 	name: 'TaskList',
@@ -109,10 +109,12 @@ export default {
 	mounted() {
 		this.getTasks()
 		subscribe('assistant:task:updated', this.updateTask)
+		subscribe('assistant:task:status:updated', this.updateTaskStatus)
 	},
 
 	beforeUnmount() {
 		unsubscribe('assistant:task:updated', this.updateTask)
+		unsubscribe('assistant:task:status:updated', this.updateTaskStatus)
 	},
 
 	methods: {
@@ -136,6 +138,12 @@ export default {
 			const taskToUpdate = this.tasks.find(t => t.id === task.id)
 			if (taskToUpdate) {
 				Object.assign(taskToUpdate, task)
+			}
+		},
+		updateTaskStatus({ taskId, status }) {
+			const taskToUpdate = this.tasks.find(t => t.id === taskId)
+			if (taskToUpdate) {
+				taskToUpdate.status = TASK_STATUS_INT_TO_STRING[status] ?? TASK_STATUS_STRING.unknown
 			}
 		},
 		onTaskDelete(task) {

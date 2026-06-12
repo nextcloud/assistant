@@ -196,6 +196,11 @@ export default {
 		font-style: italic;
 		animation: breathing 2s linear infinite normal;
 	}
+	@media (prefers-reduced-motion: reduce) {
+		:deep(&__thinking > div) {
+			animation: none;
+		}
+	}
 
 	&__button-box {
 		display: flex;

@@ -42,7 +42,7 @@
 					</NcAppNavigationList>
 				</NcAppNavigation>
 				<RunningEmptyContent
-					v-if="showSyncTaskRunning"
+					v-if="showRunningEmptyContent"
 					class="running-area"
 					:description="shortInput"
 					:progress="progress"
@@ -76,6 +76,30 @@
 								</template>
 							</NcPopover>
 						</div>
+						<NcNoteCard v-if="streaming"
+							type="info"
+							class="session-area__top-bar__subtitle">
+							<div class="subtitle-content">
+								<label>
+									{{ t('assistant', 'Getting results…') }}
+								</label>
+								<NcButton
+									@click="$emit('background-notify', !isNotifyEnabled)">
+									<template #icon>
+										<BellRingOutlineIcon v-if="isNotifyEnabled" />
+										<BellOutlineIcon v-else />
+									</template>
+									{{ t('assistant', 'Get notified when the task finishes') }}
+								</NcButton>
+								<NcButton
+									@click="$emit('cancel-task')">
+									<template #icon>
+										<CloseIcon />
+									</template>
+									{{ t('assistant', 'Cancel task') }}
+								</NcButton>
+							</div>
+						</NcNoteCard>
 					</div>
 					<div v-if="mySelectedTaskTypeId === 'core:text2text:translate'"
 						class="session-area__chat-area">
@@ -153,6 +177,9 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import UnfoldLessHorizontalIcon from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
 import UnfoldMoreHorizontalIcon from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import InformationBoxIcon from 'vue-material-design-icons/InformationBox.vue'
+import BellOutlineIcon from 'vue-material-design-icons/BellOutline.vue'
+import BellRingOutlineIcon from 'vue-material-design-icons/BellRingOutline.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -165,6 +192,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcAssistantIcon from '@nextcloud/vue/components/NcAssistantIcon'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 
 import AssistantFormInputs from './AssistantFormInputs.vue'
 import AssistantFormOutputs from './AssistantFormOutputs.vue'
@@ -176,7 +204,7 @@ import TaskList from './TaskList.vue'
 import TaskTypeSelect from './TaskTypeSelect.vue'
 import TranslateForm from './Translate/TranslateForm.vue'
 
-import { SHAPE_TYPE_NAMES, MAX_TEXT_INPUT_LENGTH } from '../constants.js'
+import { SHAPE_TYPE_NAMES, MAX_TEXT_INPUT_LENGTH, TASK_STATUS_STRING } from '../constants.js'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
@@ -207,11 +235,15 @@ export default {
 		NcAppNavigationNew,
 		NcAssistantIcon,
 		NcPopover,
+		NcNoteCard,
 		CreationIcon,
 		PlusIcon,
 		UnfoldLessHorizontalIcon,
 		UnfoldMoreHorizontalIcon,
 		InformationBoxIcon,
+		BellOutlineIcon,
+		BellRingOutlineIcon,
+		CloseIcon,
 		AssistantFormInputs,
 		AssistantFormOutputs,
 		ChattyLLMInputForm,
@@ -220,6 +252,7 @@ export default {
 	provide() {
 		return {
 			providedCurrentTaskId: () => this.selectedTaskId,
+			streaming: () => this.streaming,
 		}
 	},
 	props: {
@@ -354,19 +387,23 @@ export default {
 			return this.selectedTaskType
 		},
 		canSubmit() {
+			const inputs = this.myInputs
+			if (this.taskStatus === TASK_STATUS_STRING.running) {
+				return false
+			}
 			// otherwise, check that none of the properties of myInputs are empty
-			console.debug('[assistant] canSubmit', this.myInputs)
-			if (Object.keys(this.myInputs).length === 0) {
+			console.debug('[assistant] canSubmit', inputs)
+			if (Object.keys(inputs).length === 0) {
 				return false
 			}
 			const taskType = this.selectedTaskType
 			// check that all fields required by the task type are defined
 			return Object.keys(taskType.inputShape).every(k => {
-				if (this.myInputs[k] === null || this.myInputs[k] === undefined) {
+				if (inputs[k] === null || inputs[k] === undefined) {
 					return false
 				}
 				const fieldType = taskType.inputShape[k].type
-				const value = this.myInputs[k]
+				const value = inputs[k]
 				return ([SHAPE_TYPE_NAMES.Text, SHAPE_TYPE_NAMES.Enum].includes(fieldType)
 						&& typeof value === 'string'
 						&& !!value?.trim()
@@ -418,6 +455,12 @@ export default {
 		},
 		actionButtonsToShow() {
 			return this.hasOutput ? this.actionButtons : []
+		},
+		showRunningEmptyContent() {
+			return this.showSyncTaskRunning && this.myOutputs === null
+		},
+		streaming() {
+			return this.showSyncTaskRunning && this.myOutputs !== null
 		},
 	},
 	watch: {
@@ -839,20 +882,20 @@ export default {
 
 		&__top-bar {
 			display: flex;
+			flex-direction: column;
 			justify-content: space-between;
 			align-items: center;
-			gap: 4px;
 			position: sticky;
 			top: 0;
-			height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
+			// height: calc(var(--default-clickable-area) + var(--default-grid-baseline) * 2);
 			box-sizing: border-box;
 			border-bottom: 1px solid var(--color-border);
-			padding-left: 52px;
 			padding-right: 0.5em;
 			font-weight: bold;
 			background-color: var(--color-main-background);
 
 			&__title {
+				padding-left: 52px;
 				display: flex;
 				align-items: center;
 				gap: 0.5em;
@@ -860,6 +903,19 @@ export default {
 				min-width: 0;
 				overflow-x: auto;
 				white-space: nowrap;
+			}
+
+			&__subtitle {
+				margin-left: 22px;
+				align-self: start;
+				.subtitle-content {
+					display: flex;
+					gap: 8px;
+					align-items: center;
+					flex-wrap: wrap;
+					width: 100%;
+					padding: 4px 0 4px 0px;
+				}
 			}
 
 			&__provider {
