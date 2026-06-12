@@ -95,6 +95,9 @@ class Notifier implements INotifier {
 					$taskTypeName = $l->t('AI image generation');
 				} elseif ($params['taskTypeId'] === AudioToText::ID) {
 					$taskTypeName = $l->t('AI audio transcription');
+				} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')
+					&& $params['taskTypeId'] === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID) {
+					$taskTypeName = $l->t('AI subtitles generation');
 				} elseif ($params['taskTypeId'] === 'copywriter') {
 					// TODO adjust that when we have copywriter back on its feet
 					// Catch the custom copywriter task type built on top of the FreePrompt task type.
@@ -202,6 +205,9 @@ class Notifier implements INotifier {
 					case AudioToText::ID:
 						$message = $l->t('{sourceFile} has been transcribed in {targetFile}');
 						break;
+					case class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles') ? \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID : 'nope':
+						$message = $l->t('{sourceFile} has been subtitled in {targetFile}');
+						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
 						$message = $l->t('{sourceFile} has been converted to audio in {targetFile}');
 						break;
@@ -252,6 +258,9 @@ class Notifier implements INotifier {
 						break;
 					case AudioToText::ID:
 						$message = $l->t('Transcription of {sourceFile} has failed');
+						break;
+					case class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles') ? \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID : 'nope':
+						$message = $l->t('Subtitling of {sourceFile} has failed');
 						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
 						$message = $l->t('The text-to-speech process for {sourceFile} has failed');
