@@ -653,6 +653,7 @@ class ChatService {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
+		/** @psalm-suppress UndefinedMethod */
 		$task->setPreferStreaming(true);
 		try {
 			$this->taskProcessingManager->scheduleTask($task);
@@ -701,6 +702,7 @@ class ChatService {
 			$userId,
 			$customId
 		);
+		/** @psalm-suppress UndefinedMethod */
 		$task->setPreferStreaming(true);
 		try {
 			$this->taskProcessingManager->scheduleTask($task);
