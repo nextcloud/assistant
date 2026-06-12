@@ -166,7 +166,6 @@ OC.L10N.register(
     "Assistant options saved" : "어시스턴트 옵션이 저장되었습니다",
     "Failed to save assistant options" : "어시스턴트 옵션을 저장하지 못했습니다.",
     "No suitable providers are available. They must first be enabled by your administrator." : "적합한 제공업체가 없습니다. 먼저 관리자가 활성화해야 합니다.",
-    "Getting results…" : "결과를 가져오는 중...",
     "You have not submitted any \"{taskTypeName}\" task yet" : "아직 \"{taskTypeName}\" 작업을 제출하지 않았습니다.",
     "Nothing yet" : "아직 아무것도 없음",
     "Succeeded" : "성공",
@@ -220,6 +219,7 @@ OC.L10N.register(
     "fourth" : "네 번째",
     "fifth" : "다섯 번째",
     "second to last" : "끝에서 두 번째",
-    "last" : "마지막"
+    "last" : "마지막",
+    "Getting results…" : "결과를 가져오는 중..."
 },
 "nplurals=1; plural=0;");

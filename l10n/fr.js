@@ -288,7 +288,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Les conversations suivantes sont mémorisées par le chat de l'Assistant et seront prises en compte pour chaque nouvelle conversation :",
     "This may take a few seconds…" : "Cela ne devrait durer que quelques secondes…",
     "This may take a few minutes…" : "Cela peut prendre quelques minutes...",
-    "Getting results…" : "Récupération des résultats…",
     "Get notified when the task finishes" : "Être notifié quand la tâche est terminée",
     "Cancel task" : "Annuler la tâche",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Cette tâche prend plus de temps que prévu. Veuillez contacter votre administrateur pour vous assurer que l'Assistant est correctement configuré.",
@@ -388,6 +387,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Tâche de synthèse vocale soumise avec succès.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Vous pouvez également vérifier cela dans l'Assistant, dans le menu \"Travailler avec l'audio > Synthèse vocale\".",
     "Transcription AI task submitted successfully." : "Tâche de transcription par IA soumise avec succès.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Vous pouvez également vérifier cela dans l'Assistant, dans le menu \"Travailler avec l'audio > Transcrire l'audio\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Vous pouvez également vérifier cela dans l'Assistant, dans le menu \"Travailler avec l'audio > Transcrire l'audio\".",
+    "Getting results…" : "Récupération des résultats…"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

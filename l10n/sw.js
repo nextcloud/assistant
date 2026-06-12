@@ -285,7 +285,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Mazungumzo yafuatayo yanakumbukwa na Msaidizi wa Gumzo na yatatiliwa maanani kwa kila mazungumzo mapya.",
     "This may take a few seconds…" : "Hii inaweza kuchukua sekunde chache...",
     "This may take a few minutes…" : "Hii inaweza kuchukua dakika chache...",
-    "Getting results…" : "Inapata matokeo...",
     "Get notified when the task finishes" : "Pata arifa kazi itakapokamilika",
     "Cancel task" : "Ghairi jukumu",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Jukumu hili linachukua muda mrefu kuanza kufanya kazi kuliko ilivyotarajiwa. Tafadhali wasiliana na msimamizi wako ili kuhakikisha kuwa programu ya Mratibu imesanidiwa ipasavyo.",
@@ -385,6 +384,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Kazi ya AI ya maandishi hadi sauti imewasilishwa kwa mafanikio.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Inaweza pia kuangaliwa katika Mratibu katika menyu ya \"Fanya kazi na sauti -> Tengeneza hotuba\"",
     "Transcription AI task submitted successfully." : "Kazi ya unukuzi ya AI imewasilishwa kwa mafanikio.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Inaweza pia kuangaliwa kwenye Mratibu katika menyu ya \"Fanya kazi na sauti -> Nukuu sauti\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Inaweza pia kuangaliwa kwenye Mratibu katika menyu ya \"Fanya kazi na sauti -> Nukuu sauti\".",
+    "Getting results…" : "Inapata matokeo..."
 },
 "nplurals=2; plural=(n != 1);");

@@ -133,6 +133,7 @@ OC.L10N.register(
     "YouTube video search" : "Pesquisa de vídeos no YouTube",
     "Other" : "Outro",
     "Chat with AI" : "Bate-papo com IA",
+    "Scheduled tasks" : "Tarefas agendadas",
     "Translate" : "Traduzir",
     "Generate file" : "Gerar arquivo",
     "Work with images" : "Trabalhar com imagens",
@@ -261,7 +262,9 @@ OC.L10N.register(
     "Error creating a new conversation" : "Erro ao criar uma nova conversa",
     "Error regenerating a response" : "Erro ao regenerar uma resposta",
     "New conversation" : "Nova conversa",
+    "Loading scheduled tasks…" : "Carregando as tarefas agendadas…",
     "Loading conversations…" : "Carregando conversas…",
+    "No scheduled tasks yet" : "Ainda nenhuma tarefa agendada",
     "No conversations yet" : "Sem conversas ainda",
     "Delete" : "Excluir",
     "Conversation title" : "Título da conversa",
@@ -335,7 +338,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "As seguintes conversas são lembradas pelo bate-papo com o assistente e serão levadas em consideração em todas as novas conversas:",
     "This may take a few seconds…" : "Isso pode demorar alguns segundos…",
     "This may take a few minutes…" : "Isso pode demorar alguns minutinhos…",
-    "Getting results…" : "Obtendo resultados…",
     "This task is running in the background." : "Esta tarefa está sendo executada em segundo plano.",
     "You can safely close the assistant or browse other tasks." : "Você pode fechar o assistente sem problemas ou navegar por outras tarefas.",
     "Get notified when the task finishes" : "Ser notificado quando a tarefa for concluída",
@@ -439,6 +441,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Tarefa de IA de conversão de texto em fala enviada com sucesso.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Gerar fala\".",
     "Transcription AI task submitted successfully." : "Tarefa de transcrição por IA enviada com sucesso.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\".",
+    "Getting results…" : "Obtendo resultados…"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

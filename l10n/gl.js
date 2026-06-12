@@ -287,7 +287,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "As seguintes conversas son lembradas polo asistente de parola e teranse en conta en cada nova conversa:",
     "This may take a few seconds…" : "Isto pode levar uns segundos…",
     "This may take a few minutes…" : "Isto pode levar uns minutos…",
-    "Getting results…" : "Obtendo resultados…",
     "Get notified when the task finishes" : "Recibir unha notificación no remate da tarefa",
     "Cancel task" : "Cancelar a tarefa",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta tarefa leva máis tempo do agardado para iniciar. Póñase en contacto coa administración para asegurarse de que o Asistente está configurado correctamente.",
@@ -387,6 +386,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "A tarefa de «texto a voz» pola IA foi enviada satisfactoriamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Xerar parrafeo».",
     "Transcription AI task submitted successfully." : "A tarefa de transcrición pola IA foi enviada satisfactoriamente.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son»."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son».",
+    "Getting results…" : "Obtendo resultados…"
 },
 "nplurals=2; plural=(n != 1);");

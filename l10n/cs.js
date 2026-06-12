@@ -288,7 +288,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Následující konverzace jsou zapamatovány rozšířením Assistant Chat a budou brány v potaz ve všech dalších konverzacích:",
     "This may take a few seconds…" : "Může to pár sekund trvat …",
     "This may take a few minutes…" : "Může to pár minut trvat …",
-    "Getting results…" : "Získávání výsledků",
     "Get notified when the task finishes" : "Dostat upozornění až bude úloha dokončena",
     "Cancel task" : "Zrušit úkol",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Spouštění tohoto úkolu trvá déle, než očekáváno. Obraťte se na správce ohledně ujištění se, že je Asistent správně nastavený.",
@@ -388,6 +387,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Úkol převodu řeči na text pomocí AI úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Vytvořit řeč“.",
     "Transcription AI task submitted successfully." : "Úkol přepisu ze zvuku na text pomocí AI úspěšně zadán.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“.",
+    "Getting results…" : "Získávání výsledků"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");
