@@ -432,6 +432,10 @@ class AssistantApiController extends OCSController {
 			$message = $this->l10n->t('Assistant task submitted successfully');
 			if ($taskTypeId === AudioToText::ID) {
 				$message = $this->l10n->t('Transcription task submitted successfully');
+			} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')) {
+				if ($taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID) {
+					$message = $this->l10n->t('Subtitles task submitted successfully');
+				}
 			} elseif ($taskTypeId === TextToTextSummary::ID) {
 				$message = $this->l10n->t('Summarization task submitted successfully');
 			} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {

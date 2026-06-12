@@ -75,6 +75,18 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 					}
 					$targetFileName = $sourceFile->getName() . ' - text to speech.' . $extension;
 					$targetFile = $sourceFileParent->newFile($targetFileName, $speechFile->fopen('rb'));
+				} elseif (
+					class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')
+					&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID
+				) {
+					$subtitlesFileId = (int)$task->getOutput()['output'];
+					$subtitlesFile = $this->taskProcessingService->getOutputFile($subtitlesFileId);
+					$mimeType = mime_content_type($subtitlesFile->fopen('rb'));
+					$mimeType = $mimeType ?: 'text/plain';
+					$mimes = new \Mimey\MimeTypes;
+					$extension = $mimes->getExtension($mimeType);
+					$targetFileName = $sourceFile->getName() . ' - subtitles.' . $extension;
+					$targetFile = $sourceFileParent->newFile($targetFileName, $subtitlesFile->fopen('rb'));
 				} else {
 					$textResult = $task->getOutput()['output'];
 					$suffix = $taskTypeId === TextToTextSummary::ID ? 'summarized' : 'transcribed';
