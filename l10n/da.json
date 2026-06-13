@@ -153,6 +153,9 @@
     "Shakespeare or an example of the style" : "Shakespeare eller et eksempel på en stil",
     "A description of what you need or some original content" : "En beskrivelse af hvad du har behov for eller noget originalt indhold",
     "New task" : "Ny opgave",
+    "Getting results…" : "Henter resultater ...",
+    "Get notified when the task finishes" : "Bliv underrettet når opgaven er færdig",
+    "Cancel task" : "Annuller opgave",
     "Close" : "Luk",
     "Close Nextcloud Assistant" : "Luk Nextcloud assistent",
     "Less" : "Mindre",
@@ -241,8 +244,6 @@
     "The following services are used as backends for Nextcloud Assistant:" : "De følgende services anvendes som backends til Nextcloud assistent:",
     "This may take a few seconds…" : "Dette kan tage et par sekunder ...",
     "This may take a few minutes…" : "Dette kan tage et par minutter ...",
-    "Get notified when the task finishes" : "Bliv underrettet når opgaven er færdig",
-    "Cancel task" : "Annuller opgave",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Denne opgave tager længere tid at starte end forventet. Kontakt venligst din administrator for at sikre at assistenten er korrekt konfigureret.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Du har endnu ikke angivet nogen \"{taskTypeName}\" opgave",
     "Nothing yet" : "Endnu intet",
@@ -332,7 +333,6 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med tekst -> Sammendrag\".",
     "Failed to launch the AI file action" : "Kunne ikke starte AI filhandlingen",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Generer tale\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\".",
-    "Getting results…" : "Henter resultater ..."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\"."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

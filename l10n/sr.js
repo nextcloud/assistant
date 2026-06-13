@@ -153,6 +153,9 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Шекспир или пример стила",
     "A description of what you need or some original content" : "Опис онога што желите или неки оригинални садржај",
     "New task" : "Нови задатак",
+    "Getting results…" : "Преузимање резултата",
+    "Get notified when the task finishes" : "Прими обавештење када се задатак заврши",
+    "Cancel task" : "Откажи задатак",
     "Close" : "Затвори",
     "Close Nextcloud Assistant" : "Затвори Nextcloud Асистент",
     "Less" : "Мање",
@@ -241,8 +244,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "Следећи сервиси се користе као позадински механизми за Nextcloud Асистент:",
     "This may take a few seconds…" : "Ово може потрајати пар секунди…",
     "This may take a few minutes…" : "Ово може потрајати неколико минута…",
-    "Get notified when the task finishes" : "Прими обавештење када се задатак заврши",
-    "Cancel task" : "Откажи задатак",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Започињање извршавања овог задатка траје дуже него што се очекује. Молимо вас да се обратите администратору који треба да провери да ли је Асистент исправно подешен.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Још увек нисте предали ниједан \"{taskTypeName}\" задатак",
     "Nothing yet" : "Још увек ништа",
@@ -332,7 +333,6 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Такође може да се провери у Асистенту у менију „Рад са текстом -> Резимирај”.",
     "Failed to launch the AI file action" : "Није успело покретање AI фајл акције",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Генериши говор”.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”.",
-    "Getting results…" : "Преузимање резултата"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”."
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

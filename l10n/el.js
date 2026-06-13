@@ -155,6 +155,9 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Σαίξπηρ ή ένα παράδειγμα του στυλ",
     "A description of what you need or some original content" : "Μια περιγραφή του τι χρειάζεστε ή κάποιο πρωτότυπο περιεχόμενο",
     "New task" : "Νέα εργασία",
+    "Getting results…" : "Λήψη αποτελεσμάτων…",
+    "Get notified when the task finishes" : "Λήψη ειδοποίησης όταν η εργασία ολοκληρωθεί",
+    "Cancel task" : "Ακύρωση εργασίας",
     "Close" : "Κλείσιμο",
     "Close Nextcloud Assistant" : "Κλείσιμο του βοηθού του Nextcloud",
     "Less" : "Λιγότερα",
@@ -243,8 +246,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "Οι ακόλουθες υπηρεσίες χρησιμοποιούνται ως backends για τον Βοηθό Nextcloud:",
     "This may take a few seconds…" : "Αυτό μπορεί να διαρκέσει λίγα δευτερόλεπτα…",
     "This may take a few minutes…" : "Αυτό μπορεί να διαρκέσει λίγα λεπτά…",
-    "Get notified when the task finishes" : "Λήψη ειδοποίησης όταν η εργασία ολοκληρωθεί",
-    "Cancel task" : "Ακύρωση εργασίας",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Αυτή η εργασία χρειάζεται περισσότερο χρόνο για να ξεκινήσει από το αναμενόμενο. Παρακαλώ επικοινωνήστε με τον διαχειριστή σας για να βεβαιωθείτε ότι ο Βοηθός είναι σωστά ρυθμισμένος.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Δεν έχετε υποβάλει ακόμα καμία εργασία \"{taskTypeName}\"",
     "Nothing yet" : "Τίποτα ακόμη",
@@ -334,7 +335,6 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με κείμενο -> Σύνοψη\".",
     "Failed to launch the AI file action" : "Αποτυχία εκκίνησης της ενέργειας AI αρχείου",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Δημιουργία ομιλίας\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Αποτύπωση ήχου\".",
-    "Getting results…" : "Λήψη αποτελεσμάτων…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Αποτύπωση ήχου\"."
 },
 "nplurals=2; plural=(n != 1);");

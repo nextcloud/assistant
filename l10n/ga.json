@@ -230,6 +230,9 @@
     "New task" : "Tasc nua",
     "Provider name" : "Ainm an tsoláthraí",
     "Provider: {name}" : "Soláthraí: {name}",
+    "Getting results…" : "Torthaí á bhfáil…",
+    "Get notified when the task finishes" : "Faigh fógra nuair a bheidh an tasc críochnaithe",
+    "Cancel task" : "Cealaigh tasc",
     "Close" : "Dún",
     "Close Nextcloud Assistant" : "Dún Nextcloud Assistant",
     "Less" : "Níos lú",
@@ -244,6 +247,8 @@
     "Can you create a share link for me?" : "An féidir leat nasc comhroinnte a chruthú domsa?",
     "Ask assistant, to create a scheduled task to send me the weather every morning" : "Iarr ar chúntóir tasc sceidealaithe a chruthú chun an aimsir a sheoladh chugam gach maidin",
     "Create a scheduled task to send me the weather every morning " : "Cruthaigh tasc sceidealaithe chun an aimsir a sheoladh chugam gach maidin",
+    "Ask assistant, which actions it can do for you" : "Fiafraigh de chúntóir, cé na gníomhartha is féidir leis a dhéanamh duit",
+    "Which actions can you do for me?" : "Cé na gníomhartha is féidir leat a dhéanamh domsa?",
     "Ask assistant for route from Munich to Berlin using public transport" : "Iarr ar chúntóir an bealach ó München go Beirlín ag baint úsáide as iompar poiblí",
     "Can you give me a route from Munich to Berlin using public transport?" : "An féidir leat bealach a thabhairt dom ó München go Beirlín ag baint úsáide as iompar poiblí?",
     "Ask assistant to transcribe a media file for you" : "Iarr ar chúntóir comhad meán a thras-scríobh duit",
@@ -256,8 +261,6 @@
     "Generate a slide deck about the features of Nextcloud" : "Ginigh sraith sleamhnán faoi ghnéithe Nextcloud",
     "Ask assistant to generate an image of a puppy with a Nextcloud hat" : "Iarr ar chúntóir íomhá de choileán le hata Nextcloud a ghiniúint",
     "Generate an image of a puppy with a Nextcloud hat" : "Gin íomhá de choileán le hata NextcloudGin íomhá de choileán le hata Nextcloud",
-    "Ask assistant, which actions it can do for you" : "Fiafraigh de chúntóir, cé na gníomhartha is féidir leis a dhéanamh duit",
-    "Which actions can you do for me?" : "Cé na gníomhartha is féidir leat a dhéanamh domsa?",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "An bhfuil tú cinnte gur mhaith leat \"{sessionTitle}\" a scriosadh?",
     "Error generating a response" : "Earráid agus freagra á ghiniúint",
     "Error getting the generated title for the conversation" : "Earráid agus an teideal ginte á fháil don chomhrá",
@@ -359,8 +362,6 @@
     "This may take a few minutes…" : "D’fhéadfadh sé seo cúpla nóiméad a thógáil…",
     "This task is running in the background." : "Tá an tasc seo ag rith sa chúlra.",
     "You can safely close the assistant or browse other tasks." : "Is féidir leat an cúntóir a dhúnadh go sábháilte nó brabhsáil trí thascanna eile.",
-    "Get notified when the task finishes" : "Faigh fógra nuair a bheidh an tasc críochnaithe",
-    "Cancel task" : "Cealaigh tasc",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Tá an tasc seo ag glacadh níos faide ná mar a bhíothas ag súil leis le tosú ag rith. Téigh i dteagmháil le do riarthóir le cinntiú go bhfuil Cúntóir cumraithe i gceart.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Níl aon tasc \"{taskTypeName}\" curtha isteach agat fós",
     "Nothing yet" : "Ní dhéanfaidh aon ní go fóill",
@@ -462,7 +463,6 @@
     "Text-to-Speech AI task submitted successfully." : "Cuireadh tasc AI Téacs-go-Caint isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
     "Transcription AI task submitted successfully." : "Cuireadh tasc trascríobh AI isteach go rathúil.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin.",
-    "Getting results…" : "Torthaí á bhfáil…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
 },"pluralForm" :"nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);"
 }

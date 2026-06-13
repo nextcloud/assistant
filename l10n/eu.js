@@ -66,6 +66,7 @@ OC.L10N.register(
     "Show advanced options" : "Erakutsi aukera aurreratuak",
     "Try again" : "Saiatu berriz",
     "Send request" : "Bidali eskaera",
+    "Getting results…" : "Emaitzak lortzen...",
     "Close" : "Itxi",
     "Close Nextcloud Assistant" : "Itxi Nextcloud Assistant",
     "Less" : "Gutxiago",
@@ -145,7 +146,6 @@ OC.L10N.register(
     "fourth" : "laugarrena",
     "fifth" : "bosgarrena",
     "second to last" : "bigarren azkena",
-    "last" : "azkena",
-    "Getting results…" : "Emaitzak lortzen..."
+    "last" : "azkena"
 },
 "nplurals=2; plural=(n != 1);");

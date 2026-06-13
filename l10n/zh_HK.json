@@ -229,6 +229,9 @@
     "New task" : "新任務",
     "Provider name" : "提供者名字",
     "Provider: {name}" : "提供者：{name}",
+    "Getting results…" : "正在取得結果…",
+    "Get notified when the task finishes" : "任務完成通知",
+    "Cancel task" : "取消任務",
     "Close" : "關閉",
     "Close Nextcloud Assistant" : "關閉 Nextcloud 小幫手",
     "Less" : "更少",
@@ -333,8 +336,6 @@
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "以下對話已被 Assistant Chat 記住，並會在每次新的對話中一併考慮：",
     "This may take a few seconds…" : "此操作可能需要花幾秒鐘 ...",
     "This may take a few minutes…" : "這可能需要幾分鐘…",
-    "Get notified when the task finishes" : "任務完成通知",
-    "Cancel task" : "取消任務",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "此任務開始執行的時間比預期長。請聯絡您的管理員，確保小幫手已正確設定。",
     "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未提交任何 \"{taskTypeName}\" 任務",
     "Nothing yet" : "暫無資料",
@@ -434,7 +435,6 @@
     "Text-to-Speech AI task submitted successfully." : "AI 文字轉語音任務已成功提交。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
     "Transcription AI task submitted successfully." : "AI 轉錄任務已成功提交。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。",
-    "Getting results…" : "正在取得結果…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

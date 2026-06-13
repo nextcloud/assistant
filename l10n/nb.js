@@ -96,6 +96,7 @@ OC.L10N.register(
     "a number" : "et tall",
     "Shakespeare or an example of the style" : "Shakespeare eller et eksempel på stilen",
     "A description of what you need or some original content" : "En beskrivelse av hva du trenger eller noe originalt innhold",
+    "Getting results…" : "Får resultater...",
     "Close" : "Lukk",
     "Close Nextcloud Assistant" : "Lukk Nextcloud Assistant",
     "Less" : "Mindre",
@@ -220,7 +221,6 @@ OC.L10N.register(
     "fourth" : "fjerde",
     "fifth" : "femte",
     "second to last" : "nest sist",
-    "last" : "siste",
-    "Getting results…" : "Får resultater..."
+    "last" : "siste"
 },
 "nplurals=2; plural=(n != 1);");
