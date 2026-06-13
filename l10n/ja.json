@@ -159,6 +159,9 @@
     "Shakespeare or an example of the style" : "シェイクスピア、またはそのスタイルの例",
     "A description of what you need or some original content" : "必要なものの説明、またはオリジナルコンテンツ",
     "New task" : "新規タスク",
+    "Getting results…" : "結果を取得",
+    "Get notified when the task finishes" : "タスクが完了したら通知を受け取る",
+    "Cancel task" : "タスクをキャンセル",
     "Close" : "閉じる",
     "Close Nextcloud Assistant" : "Nextcloudアシスタントを閉じる",
     "Less" : "以下",
@@ -247,8 +250,6 @@
     "The following services are used as backends for Nextcloud Assistant:" : "Nextcloud Assistantには以下のサービスがバックエンドとして使用されます：",
     "This may take a few seconds…" : "これには数秒かかることがあります…",
     "This may take a few minutes…" : "完了まで数分かかる可能性があります…",
-    "Get notified when the task finishes" : "タスクが完了したら通知を受け取る",
-    "Cancel task" : "タスクをキャンセル",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "このタスクの実行が開始されるまでに予想よりも時間がかかっています。管理者に問い合わせて、アシスタントが正しく構成されていることを確認してください。",
     "You have not submitted any \"{taskTypeName}\" task yet" : "あなたの{taskTypeName}タスクはまだ提出されていません",
     "Nothing yet" : "まだなにもありません",
@@ -336,7 +337,6 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "アシスタントの「テキストの操作 -> 要約」メニューでも確認できます。",
     "Failed to launch the AI file action" : "AIファイルアクションの起動に失敗しました",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "アシスタントの「オーディオの操作 -> 音声の生成」メニューでも確認できます。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "アシスタントの「音声の操作 -> 音声の文字起こし」メニューでも確認できます。",
-    "Getting results…" : "結果を取得"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "アシスタントの「音声の操作 -> 音声の文字起こし」メニューでも確認できます。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

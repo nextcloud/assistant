@@ -219,6 +219,8 @@
     "Shakespeare or an example of the style" : "Shakespeare lub przykład tego stylu",
     "A description of what you need or some original content" : "Opis tego, czego potrzebujesz, lub oryginalna treść",
     "New task" : "Nowe zadanie",
+    "Getting results…" : "Odbieranie wyników...",
+    "Cancel task" : "Anuluj zadanie",
     "Close" : "Zamknij",
     "Close Nextcloud Assistant" : "Zamknij Asystenta Nextcloud",
     "Less" : "Mniej",
@@ -295,7 +297,6 @@
     "The following services are used as backends for Nextcloud Assistant:" : "Następujące usługi są używane jako backendy dla Nextcloud Assistant:",
     "This may take a few seconds…" : "Może to potrwać kilka sekund…",
     "This may take a few minutes…" : "To może zająć kilka minut...",
-    "Cancel task" : "Anuluj zadanie",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Nie przesłałeś jeszcze żadnego zadania typu \"{taskTypeName}\"",
     "Nothing yet" : "Jeszcze nic",
     "Succeeded" : "Zakończono pomyślnie",
@@ -371,7 +372,6 @@
     "fourth" : "czwarty",
     "fifth" : "piąty",
     "second to last" : "przedostatni",
-    "last" : "ostatni",
-    "Getting results…" : "Odbieranie wyników..."
+    "last" : "ostatni"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

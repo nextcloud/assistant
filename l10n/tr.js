@@ -231,6 +231,9 @@ OC.L10N.register(
     "New task" : "Yeni görev",
     "Provider name" : "Hizmet sağlayıcı adı",
     "Provider: {name}" : "Hizmet sağlayıcı: {name}",
+    "Getting results…" : "Sonuçlar alınıyor…",
+    "Get notified when the task finishes" : "Görev tamamlandığında bildirim gönderilsin",
+    "Cancel task" : "Görevi iptal et",
     "Close" : "Kapat",
     "Close Nextcloud Assistant" : "Nextcloud yardımcısını kapat",
     "Less" : "Daha az",
@@ -337,8 +340,6 @@ OC.L10N.register(
     "This may take a few minutes…" : "Bu işlem bir kaç dakika sürebilir…",
     "This task is running in the background." : "Bu görev arka planda çalışıyor.",
     "You can safely close the assistant or browse other tasks." : "Yardımcıyı kapatabilir ya da başka görevlere geçebilirsiniz.",
-    "Get notified when the task finishes" : "Görev tamamlandığında bildirim gönderilsin",
-    "Cancel task" : "Görevi iptal et",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Bu görevin çalışmaya başlaması beklenenden daha uzun sürüyor. Yardımcının doğru yapılandırıldığından emin olmak için lütfen yöneticinizle görüşün.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Henüz bir \"{taskTypeName}\" görevi göndermemişsiniz",
     "Nothing yet" : "Henüz bir şey yok",
@@ -438,7 +439,6 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "YZ ile yazıdan konuşmaya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Konuşma oluştur\" menüsünde de bakabilirsiniz.",
     "Transcription AI task submitted successfully." : "YZ ile sesten yazıya dönüştürme görevi gönderildi.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz.",
-    "Getting results…" : "Sonuçlar alınıyor…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz."
 },
 "nplurals=2; plural=(n > 1);");

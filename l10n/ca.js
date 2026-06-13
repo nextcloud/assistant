@@ -100,6 +100,8 @@ OC.L10N.register(
     "a number" : "un nombre",
     "Shakespeare or an example of the style" : "Shakespeare o un exemple d'estil",
     "A description of what you need or some original content" : "Una descripció del que necessites o algun contingut original",
+    "Getting results…" : "S'estan obtenint resultats…",
+    "Cancel task" : "Cancel·la la tasca",
     "Close" : "Tanca",
     "Close Nextcloud Assistant" : "Tanca l'assistent de Nextcloud",
     "Less" : "Menys",
@@ -172,7 +174,6 @@ OC.L10N.register(
     "No suitable providers are available. They must first be enabled by your administrator." : "No hi ha proveïdors adequats disponibles. Primer els ha d'habilitar el vostre administrador.",
     "The following services are used as backends for Nextcloud Assistant:" : "Els serveis següents s'utilitzen com a backend per a Nextcloud Assistant:",
     "This may take a few seconds…" : "Això podria trigar uns quants segons...",
-    "Cancel task" : "Cancel·la la tasca",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Encara no heu enviat cap tasca \"{taskTypeName}\"",
     "Nothing yet" : "Encara res",
     "Succeeded" : "Amb èxit",
@@ -240,7 +241,6 @@ OC.L10N.register(
     "fourth" : "quart",
     "fifth" : "cinquè",
     "second to last" : "penúltim",
-    "last" : "últim",
-    "Getting results…" : "S'estan obtenint resultats…"
+    "last" : "últim"
 },
 "nplurals=2; plural=(n != 1);");

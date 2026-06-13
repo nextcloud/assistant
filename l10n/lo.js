@@ -166,6 +166,9 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare ຫຼື ຕົວຢ່າງຂອງຮູບແບບ",
     "A description of what you need or some original content" : "ຄຳອະທິບາຍສິ່ງທີ່ທ່ານຕ້ອງການ ຫຼື ເນື້ອໃນຕົ້ນສະບັບບາງສ່ວນ",
     "New task" : "ໜ້າວຽກໃໝ່",
+    "Getting results…" : "ກຳລັງຮັບຜົນລັບ...",
+    "Get notified when the task finishes" : "ຮັບການແຈ້ງເຕືອນເມື່ອໜ້າວຽກສຳເລັດ",
+    "Cancel task" : "ຍົກເລີກໜ້າວຽກ",
     "Close" : "ປິດ",
     "Close Nextcloud Assistant" : "ປິດຜູ້ຊ່ວຍ Nextcloud",
     "Less" : "ໜ້ອຍລົງ",
@@ -257,8 +260,6 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "ບໍລິການຕໍ່ໄປນີ້ຖືກໃຊ້ເປັນແບັກເອັນສຳລັບຜູ້ຊ່ວຍ Nextcloud:",
     "This may take a few seconds…" : "ອັນນີ້ອາດໃຊ້ເວລາສອງສາມວິນາທີ...",
     "This may take a few minutes…" : "ອັນນີ້ອາດໃຊ້ເວລາສອງສາມນາທີ...",
-    "Get notified when the task finishes" : "ຮັບການແຈ້ງເຕືອນເມື່ອໜ້າວຽກສຳເລັດ",
-    "Cancel task" : "ຍົກເລີກໜ້າວຽກ",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "ໜ້າວຽກນີ້ໃຊ້ເວລາເລີ່ມເຮັດວຽກດົນກວ່າທີ່ຄາດໄວ້. ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານເພື່ອໃຫ້ແນ່ໃຈວ່າຜູ້ຊ່ວຍໄດ້ຮັບການຕັ້ງຄ່າຢ່າງຖືກຕ້ອງ.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "ທ່ານຍັງບໍ່ໄດ້ສົ່ງໜ້າວຽກ \"{taskTypeName}\" ເທື່ອ",
     "Nothing yet" : "ຍັງບໍ່ມີຫຍັງ",
@@ -348,7 +349,6 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບຂໍ້ຄວາມ -> ສະຫຼຸບຫຍໍ້\".",
     "Failed to launch the AI file action" : "ບໍ່ສາມາດເລີ່ມການກະທຳກັບຟາຍດ້ວຍ AI ໄດ້",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ສ້າງສຽງເວົ້າ\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ຖອດຂໍ້ຄວາມຈາກສຽງ\".",
-    "Getting results…" : "ກຳລັງຮັບຜົນລັບ..."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ຖອດຂໍ້ຄວາມຈາກສຽງ\"."
 },
 "nplurals=1; plural=0;");

@@ -105,6 +105,7 @@
     "Show advanced options" : "고급 옵션 표시",
     "Try again" : "다시 시도",
     "Send request" : "요청 전송",
+    "Getting results…" : "결과를 가져오는 중...",
     "Close" : "닫기",
     "Close Nextcloud Assistant" : "Nextcloud 어시스턴트 닫기",
     "Less" : "덜 중요함",
@@ -217,7 +218,6 @@
     "fourth" : "네 번째",
     "fifth" : "다섯 번째",
     "second to last" : "끝에서 두 번째",
-    "last" : "마지막",
-    "Getting results…" : "결과를 가져오는 중..."
+    "last" : "마지막"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

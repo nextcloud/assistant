@@ -177,6 +177,9 @@ OC.L10N.register(
     "Shakespeare or an example of the style" : "Shakespeare atau contoh gayanya",
     "A description of what you need or some original content" : "Deskripsi tentang apa yang Anda butuhkan atau sebagian konten asli",
     "New task" : "Tugas baru",
+    "Getting results…" : "Mengambil hasil…",
+    "Get notified when the task finishes" : "Dapatkan notifikasi saat tugas selesai",
+    "Cancel task" : "Batalkan tugas",
     "Close" : "Tutup",
     "Close Nextcloud Assistant" : "Tutup Asisten Nextcloud",
     "Less" : "Lebih sedikit",
@@ -281,8 +284,6 @@ OC.L10N.register(
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Percakapan berikut diingat oleh Chat Asisten dan akan diperhitungkan untuk setiap percakapan baru:",
     "This may take a few seconds…" : "Ini mungkin memerlukan beberapa detik…",
     "This may take a few minutes…" : "Ini mungkin memerlukan beberapa menit…",
-    "Get notified when the task finishes" : "Dapatkan notifikasi saat tugas selesai",
-    "Cancel task" : "Batalkan tugas",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Tugas ini membutuhkan waktu lebih lama dari perkiraan untuk mulai berjalan. Silakan hubungi administrator Anda untuk memastikan Asisten dikonfigurasi dengan benar.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Anda belum mengirim tugas \"{taskTypeName}\" apa pun",
     "Nothing yet" : "Belum ada",
@@ -380,7 +381,6 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Tugas AI teks-ke-ucapan berhasil dikirim.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ini juga dapat diperiksa di Asisten pada menu \"Bekerja dengan audio -> Hasilkan ucapan\".",
     "Transcription AI task submitted successfully." : "Tugas AI transkripsi berhasil dikirim.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ini juga dapat diperiksa di Asisten pada menu \"Bekerja dengan audio -> Transkripsikan audio\".",
-    "Getting results…" : "Mengambil hasil…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ini juga dapat diperiksa di Asisten pada menu \"Bekerja dengan audio -> Transkripsikan audio\"."
 },
 "nplurals=1; plural=0;");
