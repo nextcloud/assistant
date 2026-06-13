@@ -232,6 +232,9 @@ OC.L10N.register(
     "New task" : "Nova tarefa",
     "Provider name" : "Nome do provedor",
     "Provider: {name}" : "Provedor: {name}",
+    "Getting results…" : "Obtendo resultados…",
+    "Get notified when the task finishes" : "Ser notificado quando a tarefa for concluída",
+    "Cancel task" : "Cancelar tarefa",
     "Close" : "Fechar",
     "Close Nextcloud Assistant" : "Fechar Nextcloud Assistente",
     "Less" : "Menos",
@@ -340,8 +343,6 @@ OC.L10N.register(
     "This may take a few minutes…" : "Isso pode demorar alguns minutinhos…",
     "This task is running in the background." : "Esta tarefa está sendo executada em segundo plano.",
     "You can safely close the assistant or browse other tasks." : "Você pode fechar o assistente sem problemas ou navegar por outras tarefas.",
-    "Get notified when the task finishes" : "Ser notificado quando a tarefa for concluída",
-    "Cancel task" : "Cancelar tarefa",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta tarefa está demorando mais do que o esperado para começar a ser executada. Entre em contato com sua administração para verificar se o Assistente está configurado corretamente.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Você ainda não enviou nenhuma tarefa \"{taskTypeName}\"",
     "Nothing yet" : "Nada ainda",
@@ -441,7 +442,6 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Tarefa de IA de conversão de texto em fala enviada com sucesso.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Gerar fala\".",
     "Transcription AI task submitted successfully." : "Tarefa de transcrição por IA enviada com sucesso.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\".",
-    "Getting results…" : "Obtendo resultados…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\"."
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

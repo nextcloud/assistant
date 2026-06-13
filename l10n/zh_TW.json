@@ -230,6 +230,9 @@
     "New task" : "新任務",
     "Provider name" : "提供者名稱",
     "Provider: {name}" : "提供者：{name}",
+    "Getting results…" : "正在取得結果……",
+    "Get notified when the task finishes" : "任務完成時通知",
+    "Cancel task" : "取消任務",
     "Close" : "關閉",
     "Close Nextcloud Assistant" : "關閉 Nextcloud 小幫手",
     "Less" : "更少",
@@ -244,6 +247,8 @@
     "Can you create a share link for me?" : "你可以為我建立分享連結嗎？",
     "Ask assistant, to create a scheduled task to send me the weather every morning" : "請小幫手設定排程任務，每天早上傳送天氣資訊給我 ",
     "Create a scheduled task to send me the weather every morning " : "建立排程任務，每天早上傳送天氣資訊給我",
+    "Ask assistant, which actions it can do for you" : "詢問小幫手：它能為您執行哪些動作",
+    "Which actions can you do for me?" : "你可以幫我執行哪些動作？",
     "Ask assistant for route from Munich to Berlin using public transport" : "請小幫手查詢從慕尼黑到柏林的大眾運輸路線",
     "Can you give me a route from Munich to Berlin using public transport?" : "你可以給我從慕尼黑到柏林的大眾運輸路線嗎？",
     "Ask assistant to transcribe a media file for you" : "請小幫手為您轉錄媒體檔案",
@@ -256,8 +261,6 @@
     "Generate a slide deck about the features of Nextcloud" : "產生關於 Nextcloud 功能的簡報",
     "Ask assistant to generate an image of a puppy with a Nextcloud hat" : "請小幫手產生一張戴著 Nextcloud 帽子的小狗圖片",
     "Generate an image of a puppy with a Nextcloud hat" : "產生一張戴著 Nextcloud 帽子的小狗圖片",
-    "Ask assistant, which actions it can do for you" : "詢問小幫手：它能為您執行哪些動作",
-    "Which actions can you do for me?" : "你可以幫我執行哪些動作？",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "您確定您想要刪除「{sessionTitle}」嗎？",
     "Error generating a response" : "產生回應時發生錯誤",
     "Error getting the generated title for the conversation" : "取得對話產生的標題時發生錯誤",
@@ -359,8 +362,6 @@
     "This may take a few minutes…" : "這可能需要幾分鐘……",
     "This task is running in the background." : "此任務在背景執行。",
     "You can safely close the assistant or browse other tasks." : "您可以安全地關閉小幫手或瀏覽其他任務。",
-    "Get notified when the task finishes" : "任務完成時通知",
-    "Cancel task" : "取消任務",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "此任務開始執行的時間比預期長。請聯絡您的管理員，確保小幫手已正確設定。",
     "You have not submitted any \"{taskTypeName}\" task yet" : "您尚未遞交任何「{taskTypeName}」任務",
     "Nothing yet" : "還沒有",
@@ -462,7 +463,6 @@
     "Text-to-Speech AI task submitted successfully." : "人工智慧文字轉語音任務遞交成功。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
     "Transcription AI task submitted successfully." : "人工智慧轉錄任務已成功遞交。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。",
-    "Getting results…" : "正在取得結果……"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

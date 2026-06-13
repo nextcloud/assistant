@@ -30,6 +30,7 @@ OC.L10N.register(
     "The task ran successfully but the result is identical to the input." : "La xera executóse correutamente mas el resultáu ye idénticu al de la entrada.",
     "Try again" : "Retentar",
     "Send request" : "Unviar la solicitú",
+    "Getting results…" : "Consiguiendo los resultaos…",
     "Close" : "Zarrar",
     "Close Nextcloud Assistant" : "Zarrar l'asistente de Nextcloud",
     "Less" : "Menos",
@@ -72,7 +73,6 @@ OC.L10N.register(
     "second" : "segundu",
     "third" : "tercer",
     "fourth" : "cuartu",
-    "fifth" : "quintu",
-    "Getting results…" : "Consiguiendo los resultaos…"
+    "fifth" : "quintu"
 },
 "nplurals=2; plural=(n != 1);");

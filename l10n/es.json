@@ -154,6 +154,9 @@
     "Shakespeare or an example of the style" : "Shakespeare o un ejemplo del estilo",
     "A description of what you need or some original content" : "Una descripción de lo que necesita, o, un algún contenido original",
     "New task" : "Nueva tarea",
+    "Getting results…" : "Obteniendo resultados…",
+    "Get notified when the task finishes" : "Notificarme cuando la tarea finalice",
+    "Cancel task" : "Cancelar tarea",
     "Close" : "Cerrar",
     "Close Nextcloud Assistant" : "Cerrar el Asistente Nextcloud",
     "Less" : "Menos",
@@ -242,8 +245,6 @@
     "The following services are used as backends for Nextcloud Assistant:" : "Los siguientes servicios se utilizan como backends para el Asistente de Nextcloud:",
     "This may take a few seconds…" : "Esto puede tardar unos segundos…",
     "This may take a few minutes…" : "Esto podría tomar unos pocos minutos…",
-    "Get notified when the task finishes" : "Notificarme cuando la tarea finalice",
-    "Cancel task" : "Cancelar tarea",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta tarea está tomando más tiempo del esperado en iniciar. Por favor, contacte a su administrador para asegurarse de que el Asistente está configurado correctamente.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "No ha enviado ninguna tarea del tipo \"{taskTypeName}\"",
     "Nothing yet" : "No hay nada todavía",
@@ -333,7 +334,6 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con texto -> Resumir\".",
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\".",
-    "Getting results…" : "Obteniendo resultados…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\"."
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

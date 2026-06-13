@@ -101,6 +101,8 @@ OC.L10N.register(
     "a number" : "رقم",
     "Shakespeare or an example of the style" : "شكسبير أو مثال على الأسلوب",
     "A description of what you need or some original content" : "وصف لما تريده أو بعض من المحتوى الأصلي",
+    "Getting results…" : "البدء ...",
+    "Cancel task" : "إلغاء المهمة",
     "Close" : "إغلاق",
     "Close Nextcloud Assistant" : "أغلِق مُساعِد نكست كلاود Nextcloud Assistant",
     "Less" : "أقل",
@@ -175,7 +177,6 @@ OC.L10N.register(
     "Failed to save assistant options" : "تعذّر حفظ خيارات المُساعِد",
     "No suitable providers are available. They must first be enabled by your administrator." : "لا يوجد أيّ مُزوِّد مستقر متاح. يجب أوّلاً تمكينه من قِبل مسؤول النظام.",
     "The following services are used as backends for Nextcloud Assistant:" : "الخدمات التالية تُستعمل كواجهات خلفية لتطبيق \"المساعد Assistant\" في نكست كلاود",
-    "Cancel task" : "إلغاء المهمة",
     "You have not submitted any \"{taskTypeName}\" task yet" : "أنت لم تُرسل أي مهمة \"{taskTypeName}\" حتى الآن",
     "Nothing yet" : "لا شيء حتى الآن",
     "Succeeded" : "تمّت بنجاح",
@@ -243,7 +244,6 @@ OC.L10N.register(
     "fourth" : "رابع",
     "fifth" : "خامس",
     "second to last" : "الثاني إلى الاخير",
-    "last" : "الأخير",
-    "Getting results…" : "البدء ..."
+    "last" : "الأخير"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

@@ -181,6 +181,9 @@
     "Shakespeare or an example of the style" : "Shakespeare ou un exemplo do estilo",
     "A description of what you need or some original content" : "Unha descrición do que necesita ou algún contido orixinal",
     "New task" : "Nova tarefa",
+    "Getting results…" : "Obtendo resultados…",
+    "Get notified when the task finishes" : "Recibir unha notificación no remate da tarefa",
+    "Cancel task" : "Cancelar a tarefa",
     "Close" : "Pechar",
     "Close Nextcloud Assistant" : "Pechar o Asistente de Nextcloud",
     "Less" : "Menos",
@@ -285,8 +288,6 @@
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "As seguintes conversas son lembradas polo asistente de parola e teranse en conta en cada nova conversa:",
     "This may take a few seconds…" : "Isto pode levar uns segundos…",
     "This may take a few minutes…" : "Isto pode levar uns minutos…",
-    "Get notified when the task finishes" : "Recibir unha notificación no remate da tarefa",
-    "Cancel task" : "Cancelar a tarefa",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta tarefa leva máis tempo do agardado para iniciar. Póñase en contacto coa administración para asegurarse de que o Asistente está configurado correctamente.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Aínda non enviou ningunha tarefa «{taskTypeName}»",
     "Nothing yet" : "Aínda non hai ren",
@@ -384,7 +385,6 @@
     "Text-to-Speech AI task submitted successfully." : "A tarefa de «texto a voz» pola IA foi enviada satisfactoriamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Xerar parrafeo».",
     "Transcription AI task submitted successfully." : "A tarefa de transcrición pola IA foi enviada satisfactoriamente.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son».",
-    "Getting results…" : "Obtendo resultados…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son»."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

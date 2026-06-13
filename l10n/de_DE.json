@@ -230,6 +230,9 @@
     "New task" : "Neue Aufgabe",
     "Provider name" : "Anbietername",
     "Provider: {name}" : "Anbieter: {name}",
+    "Getting results…" : "Ergebnisse holen…",
+    "Get notified when the task finishes" : "Benachrichtigt werden, wenn die Aufgabe abgeschlossen ist",
+    "Cancel task" : "Aufgabe abbrechen",
     "Close" : "Schließen",
     "Close Nextcloud Assistant" : "Nextcloud Assistant schließen",
     "Less" : "Weniger",
@@ -244,6 +247,8 @@
     "Can you create a share link for me?" : "Kannst du einen Freigabelink für mich erstellen?",
     "Ask assistant, to create a scheduled task to send me the weather every morning" : "Fragen Sie den Assistenten, eine geplante Aufgabe zu erstellen, damit ich jeden Morgen die Wettervorhersage erhalte",
     "Create a scheduled task to send me the weather every morning " : "Erstellen Sie eine geplante Aufgabe, die mir jeden Morgen die Wettervorhersage schickt ",
+    "Ask assistant, which actions it can do for you" : "Den Assistenten fragen, welche Aktionen er für mich ausführen kann",
+    "Which actions can you do for me?" : "Welche Aktionen kannst du für mich ausführen?",
     "Ask assistant for route from Munich to Berlin using public transport" : "Fragen Sie den Assistenten nach der Route von München nach Berlin mit öffentlichen Verkehrsmitteln",
     "Can you give me a route from Munich to Berlin using public transport?" : "Kannst Du mir eine Route von München nach Berlin mit öffentlichen Verkehrsmitteln nennen?",
     "Ask assistant to transcribe a media file for you" : "Frage den Assistenten, eine Mediendatei für Sie zu transkribieren",
@@ -256,8 +261,6 @@
     "Generate a slide deck about the features of Nextcloud" : "Erstelle eine Präsentation über die Funktionen von Nextcloud",
     "Ask assistant to generate an image of a puppy with a Nextcloud hat" : "Fragen Sie den Assistenten, ein Bild von einem Welpen mit einer Nextcloud-Mütze zu erstellen",
     "Generate an image of a puppy with a Nextcloud hat" : "Erstelle ein Bild von einem Welpen mit einer Nextcloud-Mütze",
-    "Ask assistant, which actions it can do for you" : "Den Assistenten fragen, welche Aktionen er für mich ausführen kann",
-    "Which actions can you do for me?" : "Welche Aktionen kannst du für mich ausführen?",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Möchten Sie wirklich \"{sessionTitle}\" löschen?",
     "Error generating a response" : "Fehler beim Erstellen einer Antwort",
     "Error getting the generated title for the conversation" : "Fehler beim Abrufen des generierten Titels für die Unterhaltung",
@@ -359,8 +362,6 @@
     "This may take a few minutes…" : "Das kann einige Minuten dauern…",
     "This task is running in the background." : "Diese Aufgabe läuft im Hintergrund.",
     "You can safely close the assistant or browse other tasks." : "Sie können den Assistenten schließen oder andere Aufgaben durchsuchen.",
-    "Get notified when the task finishes" : "Benachrichtigt werden, wenn die Aufgabe abgeschlossen ist",
-    "Cancel task" : "Aufgabe abbrechen",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Der Start dieser Aufgabe dauert länger als erwartet. Bitte wenden Sie sich an Ihre Administration, um sicherzustellen, dass der Assistent korrekt konfiguriert ist.",
     "You have not submitted any \"{taskTypeName}\" task yet" : "Sie haben noch keine \"{taskTypeName}\"-Aufgabe übermittelt",
     "Nothing yet" : "Noch nichts vorhanden",
@@ -462,7 +463,6 @@
     "Text-to-Speech AI task submitted successfully." : "Text-zu-Sprache-KI-Aufgabe übermittelt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Sprachausgabe erstellen\" überprüft werden.",
     "Transcription AI task submitted successfully." : "Transkriptions-KI-Aufgabe übermittelt.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden.",
-    "Getting results…" : "Ergebnisse holen…"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
