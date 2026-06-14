@@ -415,6 +415,7 @@ OC.L10N.register(
     "Could not parse file" : "Níorbh fhéidir an comhad a pharsáil",
     "Result could not be copied to clipboard" : "Níorbh fhéidir an toradh a chóipeáil chuig an ngearrthaisce",
     "Copy output" : "Cóipeáil an t-aschur",
+    "Getting results..." : "Ag fáil torthaí...",
     "Copy" : "Cóipeáil",
     "Could not upload the file" : "Níorbh fhéidir an comhad a uaslódáil",
     "Your task with ID {id} has failed" : "Theip ar do thasc le haitheantas {id}",
