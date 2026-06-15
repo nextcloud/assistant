@@ -413,6 +413,7 @@
     "Could not parse file" : "تجزیهٔ پرونده ممکن نشد",
     "Result could not be copied to clipboard" : "نتیجه را نمی توان در کلیپ بورد کپی کرد",
     "Copy output" : "کپی خروجی",
+    "Getting results..." : "در حال دریافت نتایج...",
     "Copy" : "رونوشت",
     "Could not upload the file" : "بارگذاری پرونده ممکن نشد",
     "Your task with ID {id} has failed" : "کار شما با شناسه {id} ناموفق بود",
