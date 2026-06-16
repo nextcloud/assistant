@@ -413,6 +413,7 @@
     "Could not parse file" : "無法解析檔案",
     "Result could not be copied to clipboard" : "結果無法複製到剪貼簿",
     "Copy output" : "複製輸出",
+    "Getting results..." : "正在取得結果……",
     "Copy" : "複製",
     "Could not upload the file" : "無法上傳檔案",
     "Your task with ID {id} has failed" : "您的任務（ID 為 {id}）失敗",
