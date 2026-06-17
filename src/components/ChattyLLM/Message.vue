@@ -242,6 +242,9 @@ export default {
 			}
 		},
 		getSourceString(source) {
+			if (source.startsWith('mcp_')) {
+				return t('assistant', 'MCP server: {tool_id}', { tool_id: source.substring('mcp_'.length) })
+			}
 			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
 		},
 	},
