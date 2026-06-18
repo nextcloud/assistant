@@ -11,6 +11,7 @@ OC.L10N.register(
     "Translate" : "Traducir",
     "Assistant" : "Asistente",
     "Try again" : "Reintentar",
+    "Close" : "Close",
     "Cancel" : "Cancel",
     "Delete" : "Borrar",
     "Submit" : "Enviar",
