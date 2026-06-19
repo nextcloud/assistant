@@ -314,6 +314,7 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Die Erstellung dieser Chat-Antwort dauert länger als erwartet. Bitte wende dich an deine Administration, um sicherzustellen, dass der Assistent korrekt konfiguriert ist.",
     "You" : "Du",
     "Message copied to clipboard" : "Nachricht in die Zwischenablage kopiert",
+    "MCP server: {tool_id}" : "MCP-Server: {tool_id}",
     "Information sources" : "Informationsquellen",
     "Copy message" : "Nachricht kopieren",
     "Regenerate message" : "Nachricht erneut erstellen",
