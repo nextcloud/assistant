@@ -316,6 +316,7 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Bu sohbet yanıtının oluşturulması beklenenden daha uzun sürüyor. Yardımcının doğru yapılandırıldığından emin olmak için lütfen yöneticinizle görüşün.",
     "You" : "Siz",
     "Message copied to clipboard" : "İleti panoya kopyalandı",
+    "MCP server: {tool_id}" : "MCP sunucusu: {tool_id}",
     "Information sources" : "Bilgi kaynakları",
     "Copy message" : "İletiyi kopyala",
     "Regenerate message" : "İletiyi yeniden oluştur",
