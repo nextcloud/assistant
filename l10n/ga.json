@@ -314,6 +314,7 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Tá an freagra comhrá seo ag glacadh níos faide ná mar a bhíothas ag súil leis le tosú ag giniúint. Téigh i dteagmháil le do riarthóir le cinntiú go bhfuil an Cúntóir cumraithe i gceart.",
     "You" : "tú",
     "Message copied to clipboard" : "Cóipeáladh an teachtaireacht chuig an ngearrthaisce",
+    "MCP server: {tool_id}" : "Freastalaí MCP: {tool_id}",
     "Information sources" : "Foinsí eolais",
     "Copy message" : "Cóipeáil teachtaireacht",
     "Regenerate message" : "Athghin teachtaireacht",
