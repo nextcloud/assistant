@@ -481,8 +481,15 @@ export default {
 		}
 	},
 
-	mounted() {
-		this.fetchSessions()
+	async mounted() {
+		await this.fetchSessions()
+		const urlSessionId = parseInt(new URLSearchParams(window.location.search).get('sessionId'), 10)
+		if (Number.isFinite(urlSessionId)) {
+			const session = this.sessions?.find(s => s.id === urlSessionId)
+			if (session) {
+				this.onSessionSelect(session)
+			}
+		}
 	},
 
 	methods: {

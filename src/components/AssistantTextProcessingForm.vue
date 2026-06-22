@@ -331,11 +331,15 @@ export default {
 		'background-notify',
 	],
 	data() {
+		const urlIsAssignment = new URLSearchParams(window.location.search).get('isAssignment')
+		const urlSelectedTaskTypeId = urlIsAssignment != null && urlIsAssignment !== '0' && urlIsAssignment !== 'false'
+			? 'assignments'
+			: null
 		return {
 			myInputs: this.inputs,
 			myOutputs: this.outputs,
 			taskTypes: [],
-			mySelectedTaskTypeId: this.selectedTaskTypeId || CHAT_TASK_TYPE_ID,
+			mySelectedTaskTypeId: urlSelectedTaskTypeId || this.selectedTaskTypeId || CHAT_TASK_TYPE_ID,
 			loadingTaskTypes: false,
 			historyLoading: false,
 			showAdvanced: false,
