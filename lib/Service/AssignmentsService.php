@@ -118,6 +118,10 @@ class AssignmentsService {
 			} catch (MultipleObjectsReturnedException $e) {
 				throw new InternalException(previous: $e);
 			}
+			if ($session->getAgencyPendingActions() !== null) {
+				$this->logger->debug('Skipping assignment run as the last run still has pending actions');
+				return;
+			}
 			$assignment = $this->assignmentMapper->find($userId, $assignmentId);
 			$assignment->setLastRunAt($this->timeFactory->now()->getTimestamp());
 			$this->assignmentMapper->update($assignment);
