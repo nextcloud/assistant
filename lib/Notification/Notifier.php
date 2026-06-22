@@ -340,7 +340,7 @@ class Notifier implements INotifier {
 				return $notification;
 
 			case 'assignment_approval_pending':
-				$subject = $l->t('Assignment run pending review');
+				$subject = $l->t('Scheduled task is pending review');
 
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
@@ -353,7 +353,7 @@ class Notifier implements INotifier {
 					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]))
 					->setIcon($iconUrl);
 
-				$actionLabel = $l->t('View assignment');
+				$actionLabel = $l->t('View scheduled task');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)
@@ -365,7 +365,7 @@ class Notifier implements INotifier {
 				return $notification;
 
 			case 'assignment_successful':
-				$subject = $l->t('Assignment succeeded');
+				$subject = $l->t('Scheduled task succeeded');
 
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
@@ -378,7 +378,7 @@ class Notifier implements INotifier {
 					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]))
 					->setIcon($iconUrl);
 
-				$actionLabel = $l->t('View assignment result');
+				$actionLabel = $l->t('View result');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)
@@ -390,7 +390,7 @@ class Notifier implements INotifier {
 				return $notification;
 
 			case 'assignment_failure':
-				$subject = $l->t('Assignment failed');
+				$subject = $l->t('Scheduled task failed');
 
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
@@ -403,7 +403,7 @@ class Notifier implements INotifier {
 					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]))
 					->setIcon($iconUrl);
 
-				$actionLabel = $l->t('View assignment result');
+				$actionLabel = $l->t('View result');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)
