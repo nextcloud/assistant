@@ -350,7 +350,7 @@ class Notifier implements INotifier {
 					->setParsedSubject($subject)
 					->setParsedMessage($message)
 					// TODO: link directly to assignment
-					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId'], 'isAssignmnet' => 'true']))
+					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId'], 'isAssignment' => 'true']))
 					->setIcon($iconUrl);
 
 				$actionLabel = $l->t('View assignment');
@@ -375,7 +375,7 @@ class Notifier implements INotifier {
 					->setParsedSubject($subject)
 					->setParsedMessage($message)
 					// TODO: link directly to assignment
-					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId'], 'isAssignmnet' => 'true']))
+					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId'], 'isAssignment' => 'true']))
 					->setIcon($iconUrl);
 
 				$actionLabel = $l->t('View assignment result');
@@ -400,7 +400,7 @@ class Notifier implements INotifier {
 					->setParsedSubject($subject)
 					->setParsedMessage($message)
 					// TODO: link directly to assignment
-					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId'], 'isAssignmnet' => 'true']))
+					->setLink($this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId'], 'isAssignment' => 'true']))
 					->setIcon($iconUrl);
 
 				$actionLabel = $l->t('View assignment result');
