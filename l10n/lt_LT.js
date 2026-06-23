@@ -151,7 +151,7 @@ OC.L10N.register(
     "No human message found in this session" : "Šioje sesijoje nerasta jokių žmonių žinučių",
     "Assistant" : "Asistentas",
     "Assistant fallback" : "Atsarginis asistentas",
-    "Memories" : "Prisiminimai",
+    "Memories" : "„Prisiminimai“",
     "The memories to be injected into the chat session." : "Į pokalbio sesiją įterptini prisiminimai.",
     "Voice chat" : "Balso pokalbis",
     "Voice chat with the assistant" : "Garso pokalbis su asistentu",
