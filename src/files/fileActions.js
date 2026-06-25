@@ -10,7 +10,7 @@ import CreationSvgIcon from '@mdi/svg/svg/creation.svg?raw'
 import SummarizeSymbol from '@material-symbols/svg-700/outlined/summarize.svg?raw'
 import TTSSymbol from '@material-symbols/svg-700/outlined/text_to_speech.svg?raw'
 import STTSymbol from '@material-symbols/svg-700/outlined/speech_to_text.svg?raw'
-import { VALID_AUDIO_MIME_TYPES, VALID_TEXT_MIME_TYPES } from '../constants.js'
+import { VALID_AUDIO_VIDEO_MIME_TYPES, VALID_TEXT_MIME_TYPES } from '../constants.js'
 
 const actionIgnoreLists = [
 	'trashbin',
@@ -122,14 +122,14 @@ function registerSttAction() {
 		id: 'assistant-stt',
 		parent: 'assistant-group',
 		displayName: ({ nodes }) => {
-			return t('assistant', 'Transcribe audio using AI')
+			return t('assistant', 'Transcribe media using AI')
 		},
 		enabled({ nodes, view }) {
 			return !actionIgnoreLists.includes(view.id)
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => VALID_AUDIO_MIME_TYPES.includes(mime))
+				&& nodes.every(({ mime }) => VALID_AUDIO_VIDEO_MIME_TYPES.includes(mime))
 		},
 		iconSvgInline: () => STTSymbol,
 		order: 0,
@@ -168,7 +168,7 @@ if (assistantEnabled) {
 			groupMimeTypes.push(...VALID_TEXT_MIME_TYPES)
 		}
 		if (sttAvailable) {
-			groupMimeTypes.push(...VALID_AUDIO_MIME_TYPES)
+			groupMimeTypes.push(...VALID_AUDIO_VIDEO_MIME_TYPES)
 		}
 		registerGroupAction(groupMimeTypes)
 	}
