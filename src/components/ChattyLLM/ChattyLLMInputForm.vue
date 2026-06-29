@@ -3,8 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
   -->
 <template>
-	<div class="container">
-		<NcAppNavigation>
+	<div ref="container" class="container">
+		<NcAppNavigation ref="appNav">
 			<NcAppNavigationList>
 				<NcAppNavigationNew v-if="!isAssignment"
 					:text="t('assistant', 'New conversation')"
@@ -260,6 +260,8 @@ import ICAL from 'ical.js'
 import formatRecurrenceRule from './recurrenceRule.js'
 import { getLanguage } from '@nextcloud/l10n'
 
+import navAutoCollapse from '../../mixins/navAutoCollapse.js'
+
 // future: type (text, image, file, etc), attachments, etc support
 
 const getChatURL = (endpoint) => generateOcsUrl('/apps/assistant/chat' + endpoint)
@@ -299,6 +301,8 @@ export default {
 		InputArea,
 		NoSession,
 	},
+
+	mixins: [navAutoCollapse],
 
 	props: {
 		isAssignment: {
@@ -1234,13 +1238,13 @@ export default {
 		}
 	}
 
-	:deep(.app-navigation--close) {
+	:deep(.app-navigation--closed) {
 		.app-navigation-toggle-wrapper {
 			margin-right: -33px !important;
 		}
 	}
 
-	:deep(.app-navigation--close ~ .session-area) {
+	:deep(.app-navigation--closed ~ .session-area) {
 		.session-area__chat-area, .session-area__input-area {
 			padding-left: 0 !important;
 		}
