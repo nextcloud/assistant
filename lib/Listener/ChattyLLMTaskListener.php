@@ -123,6 +123,8 @@ class ChattyLLMTaskListener implements IEventListener {
 			} else {
 				$content = trim($taskOutput['output'] ?? '');
 				$message->setContent($content);
+				$reasoning = trim($taskOutput['reasoning'] ?? '');
+				$message->setReasoning($reasoning);
 				// the task is not an audio one, but we might still need to Tts the answer
 				// if it is a response to a ContextAgentInteraction confirmation that was asked about an audio message
 				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());

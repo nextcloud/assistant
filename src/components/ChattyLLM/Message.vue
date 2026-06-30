@@ -31,19 +31,37 @@
 				<div class="message__header__role__name">
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
-				<div style="display: flex">
+				<div style="display: flex; gap: 5px">
+					<NcPopover v-if="message.reasoning && !streaming">
+						<template #trigger>
+							<NcButton
+								:aria-label="t('assistant', 'Reasoning content')">
+								<template #icon>
+									<ReasoningContentIcon :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<template #default>
+							<div class="reasoningcontent_popover_inner">
+								<h6>{{ t('assistant', 'Reasoning content') }}</h6>
+								<NcRichText :text="message.reasoning"
+									:use-markdown="true"
+									:autolink="true" />
+							</div>
+						</template>
+					</NcPopover>
 					<NcPopover v-if="parsedSources.length && !streaming">
 						<template #trigger>
 							<NcButton
-								:aria-label="t('assistant', 'Information sources')">
+								:aria-label="t('assistant', 'Information sources & actions')">
 								<template #icon>
-									<InformationBox :size="20" />
+									<ToolInformationIcon :size="20" />
 								</template>
 							</NcButton>
 						</template>
 						<template #default>
 							<div class="toolinfo_popover_inner">
-								<h6> Information sources </h6>
+								<h6>{{ t('assistant', 'Information sources & actions') }}</h6>
 								<ul>
 									<li v-for="source in parsedSources" :key="source">
 										{{ source }}
@@ -62,7 +80,11 @@
 				:text="source"
 				no-close
 				:variant="index === parsedSources.length-1 ? 'primary' : 'secondary'"
-				style="display: block; margin-bottom: 0.5em;" />
+				style="display: block; margin-bottom: 0.5em;">
+				<template #icon>
+					<ToolInformationIcon :size="20" />
+				</template>
+			</NcChip>
 		</div>
 		<NcRichText class="message__content"
 			:text="streaming ? streamedMessageContent : message.content"
@@ -91,10 +113,9 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcChip from '@nextcloud/vue/components/NcChip'
 import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
-import InformationBox from 'vue-material-design-icons/InformationBox.vue'
-
 import MessageActions from './MessageActions.vue'
 import AudioDisplay from '../fields/AudioDisplay.vue'
+import { ReasoningContentIcon, ToolInformationIcon } from '../icons/aliases.js'
 
 import { getCurrentUser } from '@nextcloud/auth'
 import { showSuccess } from '@nextcloud/dialogs'
@@ -118,14 +139,15 @@ export default {
 		NcRichText,
 		NcPopover,
 		NcButton,
-		InformationBox,
+		ReasoningContentIcon,
+		ToolInformationIcon,
 
 		MessageActions,
 		NcChip,
 	},
 
 	props: {
-		// { id: number, session_id: number, role: string, content: string, timestamp: number, sources: string }
+		// { id: number, session_id: number, role: string, content: string, timestamp: number, sources: string, reasoning: string }
 		message: {
 			type: Object,
 			required: true,
@@ -247,6 +269,9 @@ export default {
 			}
 			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
 		},
+		toggleReasoning() {
+			this.showReasoning = !this.showReasoning
+		},
 	},
 }
 </script>
@@ -288,7 +313,8 @@ export default {
 		}
 	}
 
-	&__streamed-sources {
+	&__streamed-sources,
+	&__streamed-reasoning {
 		margin-left: 2.6em;
 	}
 
@@ -308,7 +334,8 @@ export default {
 </style>
 
 <style lang="scss">
-.toolinfo_popover_inner {
+.toolinfo_popover_inner,
+.reasoningcontent_popover_inner{
 	margin: 12px;
 	h6 {
 		margin: 2px;
