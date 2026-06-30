@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Settings;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\AgentSkillsService;
 use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -24,6 +25,7 @@ class Admin implements ISettings {
 		private IAppConfig $appConfig,
 		private IInitialState $initialStateService,
 		private ITaskProcessingManager $taskProcessingManager,
+		private AgentSkillsService $agentSkillsService,
 	) {
 	}
 
@@ -39,6 +41,8 @@ class Admin implements ISettings {
 		$speechToTextAvailable = array_key_exists(AudioToText::ID, $availableTaskTypes);
 		$textToImageAvailable = array_key_exists(TextToImage::ID, $availableTaskTypes);
 		$textToStickerAvailable = array_key_exists(TextToStickerTaskType::ID, $availableTaskTypes);
+		$contextAgentAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
+			&& array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $availableTaskTypes);
 
 		$assistantEnabled = $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1', lazy: true) === '1';
 
@@ -52,6 +56,8 @@ class Admin implements ISettings {
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$chattyLLMUserInstructionsTitle = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
 		$chattyLLMLastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10', lazy: true);
+
+		$globalSkillsConfig = $this->agentSkillsService->getGlobalSkillsConfig();
 
 		$adminConfig = [
 			'task_processing_available' => $taskProcessingAvailable,
@@ -67,6 +73,9 @@ class Admin implements ISettings {
 			'chat_user_instructions' => $chattyLLMUserInstructions,
 			'chat_user_instructions_title' => $chattyLLMUserInstructionsTitle,
 			'chat_last_n_messages' => $chattyLLMLastNMessages,
+			'context_agent_available' => $contextAgentAvailable,
+			'global_skills_admin_uid' => $globalSkillsConfig['admin_uid'],
+			'global_skills_path' => $globalSkillsConfig['path'],
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

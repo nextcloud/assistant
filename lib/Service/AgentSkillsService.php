@@ -9,10 +9,13 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Service;
 
+use OCA\Assistant\AppInfo\Application;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\IAppConfig;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use Psr\Log\LoggerInterface;
@@ -22,17 +25,24 @@ use Symfony\Component\Yaml\Yaml;
 
 class AgentSkillsService {
 
+	public const GLOBAL_SKILLS_ADMIN_UID_KEY = 'global_skills_admin_uid';
+	public const GLOBAL_SKILLS_PATH_KEY = 'global_skills_path';
+
 	private const SKILLS_FOLDER_PATH = 'Context Agent/Skills';
 	private const SKILL_FILE_NAME = 'SKILL.md';
 	private const FRONTMATTER_DELIMITER = '---';
 	private const CACHE_PREFIX = 'assistant_skills';
 	private const CACHE_TTL = 24 * 60 * 60;
 	private const FRONTMATTER_METADATA_FIELDS = ['name', 'description'];
+	private const GLOBAL_CACHE_KEY = 'global_folder';
+	private const GLOBAL_SKILL_CACHE_PREFIX = 'global_skill:';
 
 	private ICache $cache;
 
 	public function __construct(
 		private AssistantService $assistantService,
+		private IRootFolder $rootFolder,
+		private IAppConfig $appConfig,
 		private LoggerInterface $logger,
 		ICacheFactory $cacheFactory,
 	) {
@@ -51,16 +61,44 @@ class AgentSkillsService {
 	 */
 	public function listSkills(string $userId): array {
 		$skillsFolder = $this->getSkillsFolder($userId);
-		$folderEtag = $skillsFolder->getEtag();
-		$folderCacheKey = "folder:$userId";
+		$userSkills = $this->listSkillsFromFolder(
+			$skillsFolder,
+			"folder:$userId",
+			"skill:$userId:",
+		);
 
+		$globalFolder = $this->getGlobalSkillsFolder();
+		if ($globalFolder === null) {
+			return array_values($userSkills);
+		}
+		$globalSkills = $this->listSkillsFromFolder(
+			$globalFolder,
+			self::GLOBAL_CACHE_KEY,
+			self::GLOBAL_SKILL_CACHE_PREFIX,
+		);
+
+		// user skills take precedence on name collision
+		$merged = $globalSkills;
+		foreach ($userSkills as $name => $metadata) {
+			$merged[$name] = $metadata;
+		}
+		return array_values($merged);
+	}
+
+	/**
+	 * List metadata for all skills directly under the given folder.
+	 *
+	 * @return array<string, array{name: string, description: string}> indexed by folder/skill name
+	 */
+	private function listSkillsFromFolder(Folder $folder, string $folderCacheKey, string $skillCacheKeyPrefix): array {
+		$folderEtag = $folder->getEtag();
 		$cached = $this->cache->get($folderCacheKey);
 		if (is_array($cached) && ($cached['etag'] ?? null) === $folderEtag && is_array($cached['skills'] ?? null)) {
-			return array_values($cached['skills']);
+			return $cached['skills'];
 		}
 
 		$skills = [];
-		foreach ($skillsFolder->getDirectoryListing() as $node) {
+		foreach ($folder->getDirectoryListing() as $node) {
 			if (!$node instanceof Folder) {
 				continue;
 			}
@@ -74,7 +112,10 @@ class AgentSkillsService {
 				continue;
 			}
 			try {
-				$skills[] = $this->getSkillMetadata($userId, $node->getName(), $skillFile);
+				$skills[$node->getName()] = $this->getSkillMetadata(
+					$skillCacheKeyPrefix . md5($node->getName()),
+					$skillFile,
+				);
 			} catch (RuntimeException $e) {
 				$this->logger->warning('Failed to read skill metadata for ' . $node->getName() . ': ' . $e->getMessage());
 			}
@@ -90,9 +131,8 @@ class AgentSkillsService {
 	 * @return array{name: string, description: string}
 	 * @throws RuntimeException if the file has no valid frontmatter or is missing required fields
 	 */
-	private function getSkillMetadata(string $userId, string $skillName, File $skillFile): array {
+	private function getSkillMetadata(string $cacheKey, File $skillFile): array {
 		$etag = $skillFile->getEtag();
-		$cacheKey = 'skill:' . $userId . ':' . md5($skillName);
 		$cached = $this->cache->get($cacheKey);
 		if (is_array($cached) && ($cached['etag'] ?? null) === $etag && is_array($cached['metadata'] ?? null)) {
 			return $cached['metadata'];
@@ -197,7 +237,7 @@ class AgentSkillsService {
 	}
 
 	/**
-	 * Load the full content of a skill by its folder name.
+	 * Load the full content of a skill by its folder/skill name.
 	 *
 	 * @throws NotFoundException if the skill folder or its SKILL.md file does not exist
 	 * @throws NotPermittedException if the skills folder cannot be created or read
@@ -206,8 +246,34 @@ class AgentSkillsService {
 	 * @throws \OCP\Lock\LockedException if the SKILL.md file is locked
 	 */
 	public function loadSkill(string $userId, string $skillName): string {
-		$skillsFolder = $this->getSkillsFolder($userId);
-		$skillFolder = $skillsFolder->get($skillName);
+		$userFolder = $this->getSkillsFolder($userId);
+		$globalFolder = $this->getGlobalSkillsFolder();
+
+		// user skills take precedence
+		$folders = [$userFolder];
+		if ($globalFolder !== null) {
+			$folders[] = $globalFolder;
+		}
+
+		foreach ($folders as $folder) {
+			try {
+				return $this->loadSkillFromFolder($folder, $skillName);
+			} catch (NotFoundException $e) {
+				continue;
+			}
+		}
+
+		throw new NotFoundException('Skill "' . $skillName . '" not found');
+	}
+
+	/**
+	 * @throws NotFoundException if the skill or its SKILL.md is missing
+	 */
+	private function loadSkillFromFolder(Folder $folder, string $skillName): string {
+		if (!$folder->nodeExists($skillName)) {
+			throw new NotFoundException('Skill "' . $skillName . '" not found');
+		}
+		$skillFolder = $folder->get($skillName);
 		if (!$skillFolder instanceof Folder) {
 			throw new NotFoundException('Skill "' . $skillName . '" not found');
 		}
@@ -242,6 +308,61 @@ class AgentSkillsService {
 		}
 
 		return substr($content, $offset, $closingPos - $offset);
+	}
+
+	/**
+	 * Resolve the admin-configured global skills folder, if any.
+	 *
+	 * Returns null if no folder is configured, the admin user no longer exists, or the
+	 * configured path no longer points to a folder.
+	 */
+	public function getGlobalSkillsFolder(): ?Folder {
+		$adminUid = $this->appConfig->getValueString(Application::APP_ID, self::GLOBAL_SKILLS_ADMIN_UID_KEY, '', lazy: true);
+		$path = $this->appConfig->getValueString(Application::APP_ID, self::GLOBAL_SKILLS_PATH_KEY, '', lazy: true);
+		if ($adminUid === '' || $path === '') {
+			return null;
+		}
+		try {
+			$userFolder = $this->rootFolder->getUserFolder($adminUid);
+			if (!$userFolder->nodeExists($path)) {
+				$this->logger->warning('Global skills folder does not exist: ' . $path . ' (admin: ' . $adminUid . ')');
+				return null;
+			}
+			$node = $userFolder->get($path);
+			// todo
+			$folder = $node;
+			$this->logger->warning('global folder etag', ['etag' => $folder->getEtag(), 'fileId' => $folder->getId(), 'path' => $folder->getPath()]);
+			// todo
+
+			if (!$node instanceof Folder) {
+				$this->logger->warning('Global skills path is not a folder: ' . $path . ' (admin: ' . $adminUid . ')');
+				return null;
+			}
+			return $node;
+		} catch (\Throwable $e) {
+			$this->logger->warning('Failed to resolve global skills folder', ['exception' => $e]);
+			return null;
+		}
+	}
+
+	/**
+	 * Set or clear the admin-configured global skills folder. Pass empty strings to clear.
+	 */
+	public function setGlobalSkillsFolder(string $adminUid, string $path): void {
+		$this->appConfig->setValueString(Application::APP_ID, self::GLOBAL_SKILLS_ADMIN_UID_KEY, $adminUid, lazy: true);
+		$this->appConfig->setValueString(Application::APP_ID, self::GLOBAL_SKILLS_PATH_KEY, $path, lazy: true);
+		// invalidate the global folder cache so the next listSkills re-reads
+		$this->cache->remove(self::GLOBAL_CACHE_KEY);
+	}
+
+	/**
+	 * @return array{admin_uid: string, path: string}
+	 */
+	public function getGlobalSkillsConfig(): array {
+		return [
+			'admin_uid' => $this->appConfig->getValueString(Application::APP_ID, self::GLOBAL_SKILLS_ADMIN_UID_KEY, '', lazy: true),
+			'path' => $this->appConfig->getValueString(Application::APP_ID, self::GLOBAL_SKILLS_PATH_KEY, '', lazy: true),
+		];
 	}
 
 	/**

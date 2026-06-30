@@ -178,24 +178,64 @@
 					:title="t('assistant', 'Number of messages to consider for chat completions (excluding the user instructions, which is always considered)')"
 					@update:model-value="delayedValueUpdate(state.chat_last_n_messages, 'chat_last_n_messages')" />
 			</div>
+			<div v-if="state.context_agent_available" class="global-skills">
+				<h4>
+					{{ t('assistant', 'Global Agent Skills') }}
+				</h4>
+				<NcNoteCard type="info">
+					{{ t('assistant', 'Select a folder containing skills (sub-folders, each holding a SKILL.md file). These will be available to all users in addition to their personal skills in "Chat with AI". The folder is resolved from the filesystem of the admin who set it.') }}
+				</NcNoteCard>
+				<div class="global-skills__row">
+					<NcButton variant="secondary" @click="onPickGlobalSkillsFolder">
+						<template #icon>
+							<FolderPlusOutlineIcon />
+						</template>
+						{{ t('assistant', 'Select global skills folder') }}
+					</NcButton>
+					<NcButton v-if="state.global_skills_path"
+						variant="tertiary"
+						@click="onClearGlobalSkillsFolder">
+						{{ t('assistant', 'Clear') }}
+					</NcButton>
+				</div>
+				<div v-if="state.global_skills_path" class="global-skills__current">
+					<NcTextField :model-value="state.global_skills_path"
+						class="text-field"
+						:label="t('assistant', 'Selected folder')"
+						:readonly="true" />
+					<span class="global-skills__set-by">
+						{{ t('assistant', 'Set by') }}
+					</span>
+					<NcAvatar :user="state.global_skills_admin_uid"
+						:hide-status="true" />
+					<span>{{ state.global_skills_admin_uid }}</span>
+				</div>
+				<div v-else class="global-skills__current">
+					<span>{{ t('assistant', 'No global skills folder configured') }}</span>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import FolderPlusOutlineIcon from 'vue-material-design-icons/FolderPlusOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 
 import AssistantIcon from './icons/AssistantIcon.vue'
 
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcFormBox from '@nextcloud/vue/components/NcFormBox'
+import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
+import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
-import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
-import NcFormBox from '@nextcloud/vue/components/NcFormBox'
-import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 
+import { getCurrentUser } from '@nextcloud/auth'
 import axios from '@nextcloud/axios'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { getFilePickerBuilder, showError, showSuccess } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 
@@ -206,6 +246,9 @@ export default {
 
 	components: {
 		AssistantIcon,
+		FolderPlusOutlineIcon,
+		NcAvatar,
+		NcButton,
 		NcNoteCard,
 		NcRichContenteditable,
 		NcTextField,
@@ -240,6 +283,48 @@ export default {
 				this.optionsToSave[key] = newValue
 				this.saveOptions(this.optionsToSave)
 			}, 2000)
+		},
+		async onPickGlobalSkillsFolder() {
+			const picker = getFilePickerBuilder(t('assistant', 'Select global skills folder'))
+				.setMultiSelect(false)
+				.allowDirectories(true)
+				.setMimeTypeFilter(['httpd/unix-directory'])
+				.addButton({
+					id: 'choose-global-skills-folder',
+					label: t('assistant', 'Select'),
+					variant: 'primary',
+					callback: (nodes) => {
+						if (!nodes || nodes.length === 0 || !nodes[0].path) {
+							showError(t('assistant', 'No folder selected'))
+							return
+						}
+						this.saveGlobalSkillsFolder(nodes[0].path)
+					},
+				})
+				.build()
+			await picker.pick()
+		},
+		onClearGlobalSkillsFolder() {
+			this.saveGlobalSkillsFolder('')
+		},
+		saveGlobalSkillsFolder(path) {
+			const url = generateUrl('/apps/assistant/admin-config/global-skills')
+			return axios.put(url, { path })
+				.then(() => {
+					this.state.global_skills_path = path
+					this.state.global_skills_admin_uid = path === '' ? '' : (getCurrentUser()?.uid ?? '')
+					showSuccess(t('assistant', 'Global skills folder updated'))
+				})
+				.catch((error) => {
+					console.error('Failed to set global skills folder', error)
+					showError(
+						t('assistant', 'Failed to set global skills folder')
+						+ ': ' + (
+							error.response?.data?.message
+							?? error.response?.request?.responseText
+						),
+					)
+				})
 		},
 		saveOptions(values) {
 			const req = {
@@ -324,6 +409,32 @@ export default {
 		> .line > label {
 			width: 900px !important;
 			font-weight: bold;
+		}
+	}
+
+	.global-skills {
+		display: flex;
+		flex-direction: column;
+		margin-top: 16px;
+
+		&__row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-top: 8px;
+		}
+
+		&__current {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-top: 8px;
+		}
+
+		&__set-by {
+			color: var(--color-text-maxcontrast);
 		}
 	}
 }
