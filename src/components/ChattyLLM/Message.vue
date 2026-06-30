@@ -35,7 +35,8 @@
 					<NcPopover v-if="message.reasoning">
 						<template #trigger>
 							<NcButton
-								:aria-label="t('assistant', 'Reasoning content')">
+								:aria-label="t('assistant', 'Reasoning content')"
+								:title="t('assistant', 'Reasoning content')">
 								<template #icon>
 									<ReasoningContentIcon :size="20" />
 								</template>
@@ -53,7 +54,8 @@
 					<NcPopover v-if="parsedSources.length && !streaming">
 						<template #trigger>
 							<NcButton
-								:aria-label="t('assistant', 'Information sources & actions')">
+								:aria-label="t('assistant', 'Information sources & actions')"
+								:title="t('assistant', 'Information sources & actions')">
 								<template #icon>
 									<ToolInformationIcon :size="20" />
 								</template>
