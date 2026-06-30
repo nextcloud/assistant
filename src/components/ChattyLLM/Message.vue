@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="message.content || streamedMessageContent || parsedSources.length || hasAttachments"
+	<div v-if="message.content || message.reasoning || streamedMessageContent || parsedSources.length || hasAttachments"
 		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
@@ -32,7 +32,7 @@
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
 				<div style="display: flex; gap: 5px">
-					<NcPopover v-if="message.reasoning && !streaming">
+					<NcPopover v-if="message.reasoning">
 						<template #trigger>
 							<NcButton
 								:aria-label="t('assistant', 'Reasoning content')">
@@ -74,17 +74,19 @@
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
+		<div v-if="streaming && !streamedMessageContent" class="message__streamed-reasoning">
+			<NcChip :text="t('assistant', 'Reasoning…')"
+				no-close
+				:variant="!parsedSources.length ? 'primary' : 'secondary'"
+				style="display: block; margin-bottom: 0.5em;" />
+		</div>
 		<div v-if="streaming" class="message__streamed-sources">
 			<NcChip v-for="(source, index) in parsedSources"
 				:key="source"
 				:text="source"
 				no-close
 				:variant="index === parsedSources.length-1 ? 'primary' : 'secondary'"
-				style="display: block; margin-bottom: 0.5em;">
-				<template #icon>
-					<ToolInformationIcon :size="20" />
-				</template>
-			</NcChip>
+				style="display: block; margin-bottom: 0.5em;" />
 		</div>
 		<NcRichText class="message__content"
 			:text="streaming ? streamedMessageContent : message.content"
@@ -269,9 +271,6 @@ export default {
 			}
 			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
 		},
-		toggleReasoning() {
-			this.showReasoning = !this.showReasoning
-		},
 	},
 }
 </script>
@@ -335,7 +334,7 @@ export default {
 
 <style lang="scss">
 .toolinfo_popover_inner,
-.reasoningcontent_popover_inner{
+.reasoningcontent_popover_inner {
 	margin: 12px;
 	h6 {
 		margin: 2px;
@@ -344,5 +343,11 @@ export default {
 		list-style-type: disc;
 		padding-left: 18px;
 	}
+}
+
+.reasoningcontent_popover_inner {
+	max-width: 500px;
+	max-height: 400px;
+	overflow-y: auto;
 }
 </style>
