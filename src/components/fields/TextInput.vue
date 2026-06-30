@@ -22,23 +22,33 @@
 			:title="title"
 			@submit="hasValue && $emit('submit', $event)"
 			@update:model-value="$emit('update:value', $event)" />
-		<NcButton v-if="isOutput && hasValue"
-			class="copy-button"
-			variant="secondary"
-			:title="t('assistant', 'Copy output')"
-			@click="onCopy">
-			<template #icon>
-				<NcLoadingIcon v-if="streaming()" />
-				<ClipboardCheckOutlineIcon v-else-if="copied" />
-				<ContentCopyIcon v-else />
-			</template>
-			<span v-if="streaming()">
-				{{ t('assistant', 'Getting results...') }}
-			</span>
-			<span v-else>
-				{{ t('assistant', 'Copy') }}
-			</span>
-		</NcButton>
+		<div v-if="isOutput && hasValue"
+			class="output-buttons">
+			<NcButton v-if="!streaming() && canImproveOutput()"
+				class="improve-button"
+				variant="secondary"
+				:title="t('assistant', 'Improve with new instructions')"
+				@click="improveOutput(formattedValue)">
+				{{ t('assistant', 'Improve') }}
+			</NcButton>
+			<NcButton
+				class="copy-button"
+				variant="secondary"
+				:title="t('assistant', 'Copy output')"
+				@click="onCopy">
+				<template #icon>
+					<NcLoadingIcon v-if="streaming()" />
+					<ClipboardCheckOutlineIcon v-else-if="copied" />
+					<ContentCopyIcon v-else />
+				</template>
+				<span v-if="streaming()">
+					{{ t('assistant', 'Getting results...') }}
+				</span>
+				<span v-else>
+					{{ t('assistant', 'Copy') }}
+				</span>
+			</NcButton>
+		</div>
 		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
 			variant="secondary"
@@ -95,9 +105,7 @@ export default {
 		isMobile,
 	],
 
-	inject: [
-		'streaming',
-	],
+	inject: ['streaming', 'improveOutput', 'canImproveOutput'],
 
 	props: {
 		id: {
@@ -230,21 +238,28 @@ body[dir="rtl"] .choose-file-button {
 	right: unset;
 }
 
+body[dir="rtl"] .output-buttons {
+	left: 4px;
+	right: unset;
+}
+
 .text-input {
 	position: relative;
 
-	.copy-button,
+	.output-buttons,
 	.choose-file-button {
 		position: absolute !important;
 	}
 
-	.choose-file-button {
-		bottom: 2px;
-	}
-
-	.copy-button {
+	.output-buttons {
 		bottom: 4px;
 		right: 4px;
+		display: flex;
+		gap: 4px;
+	}
+
+	.choose-file-button {
+		bottom: 2px;
 	}
 
 	.rich-contenteditable__input {

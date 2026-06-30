@@ -215,6 +215,7 @@ import { saveLastSelectedTaskType } from '../assistant.js'
 
 const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
 const CHAT_TASK_TYPE_ID = 'chatty-llm'
+const TEXT2TEXT_IMPROVE_TASK_TYPE_ID = 'core:text2text:improve'
 
 export default {
 	name: 'AssistantTextProcessingForm',
@@ -253,6 +254,24 @@ export default {
 		return {
 			providedCurrentTaskId: () => this.selectedTaskId,
 			streaming: () => this.streaming,
+			improveOutput: (content) => {
+				if (!this.showImproveWithNewInstructionsButton) {
+					return
+				}
+				this.$emit('new-task')
+				this.mySelectedTaskTypeId = TEXT2TEXT_IMPROVE_TASK_TYPE_ID
+				this.$nextTick(() => {
+					this.$refs?.assistantFormInputs?.setDefaultValues(true)
+					this.$nextTick(() => {
+						this.myInputs = {
+							...this.myInputs,
+							input: content,
+						}
+						saveLastSelectedTaskType(this.mySelectedTaskTypeId)
+					})
+				})
+			},
+			canImproveOutput: () => this.showImproveWithNewInstructionsButton,
 		}
 	},
 	props: {
@@ -459,6 +478,20 @@ export default {
 		},
 		actionButtonsToShow() {
 			return this.hasOutput ? this.actionButtons : []
+		},
+		contextWriteTaskType() {
+			const taskType = this.taskTypes.find(tt => tt.id === TEXT2TEXT_IMPROVE_TASK_TYPE_ID)
+			if (taskType === undefined) {
+				return null
+			}
+			if (this.taskTypeIdList !== null && !this.taskTypeIdList.includes(TEXT2TEXT_IMPROVE_TASK_TYPE_ID)) {
+				return null
+			}
+			return taskType
+		},
+		showImproveWithNewInstructionsButton() {
+			return this.hasOutput
+				&& this.contextWriteTaskType !== null
 		},
 		showRunningEmptyContent() {
 			return this.showSyncTaskRunning && this.myOutputs === null
