@@ -248,7 +248,7 @@ body[dir="rtl"] .choose-file-button {
 	}
 
 	.rich-contenteditable__input {
-		min-height: calc(var(--default-clickable-area) + 4px);
+		min-height: calc(var(--default-clickable-area) * 3 + 4px);
 		padding-top: 5px !important;
 		padding-bottom: 4px !important;
 	}
