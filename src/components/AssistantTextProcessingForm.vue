@@ -514,7 +514,6 @@ export default {
 						...this.myInputs,
 						input: content,
 					}
-					saveLastSelectedTaskType(this.mySelectedTaskTypeId)
 				})
 			})
 		},

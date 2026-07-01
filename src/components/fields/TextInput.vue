@@ -29,6 +29,9 @@
 				variant="secondary"
 				:title="t('assistant', 'Improve with new instructions')"
 				@click="$emit('improve', formattedValue)">
+				<template #icon>
+					<WrenchOutlineIcon />
+				</template>
 				{{ t('assistant', 'Improve this text') }}
 			</NcButton>
 			<NcButton
@@ -64,6 +67,7 @@
 <script>
 import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+import WrenchOutlineIcon from 'vue-material-design-icons/WrenchOutline.vue'
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -99,6 +103,7 @@ export default {
 		FileDocumentOutlineIcon,
 		ClipboardCheckOutlineIcon,
 		ContentCopyIcon,
+		WrenchOutlineIcon,
 	},
 
 	mixins: [
