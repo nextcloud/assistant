@@ -447,4 +447,24 @@ class AssistantApiController extends OCSController {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
 	}
+
+	/**
+	 * Get the assistant folder's path
+	 *
+	 * Returns the assistant folder's path inside the user's home mount
+	 *
+	 * @return DataResponse<Http::STATUS_OK, array{path: string}, array{}>|DataResponse<Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: The path is returned in the form: /<userId>/files/Assistant
+	 */
+	#[NoAdminRequired]
+	#[NoCsrfRequired]
+	public function getAssistantFolderPath(): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse(['error' => 'User should be logged in', Http::STATUS_UNAUTHORIZED]);
+		}
+
+		$folder = $this->assistantService->getAssistantDataFolder($this->userId);
+		return new DataResponse(['path' => $folder->getPath()]);
+	}
 }
