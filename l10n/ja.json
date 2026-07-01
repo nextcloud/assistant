@@ -323,6 +323,7 @@
     "_on {weekday}_::_on {weekdays}_" : ["on {weekdays}"],
     "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["on days {dayOfMonthList}"],
     "on the {ordinalNumber} {byDaySet}" : "on the {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "{monthNames}の{dayOfMonthList}日に",
     "in {monthNames} on the {ordinalNumber} {byDaySet}" : "in {monthNames} on the {ordinalNumber} {byDaySet}",
     "until {untilDate}" : "{untilDate} まで",
     "_%n time_::_%n times_" : ["%n回"],
