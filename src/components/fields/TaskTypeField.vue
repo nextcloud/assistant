@@ -10,8 +10,10 @@
 		:field="field"
 		:options="options ?? undefined"
 		:is-output="isOutput"
+		:can-improve-output="isTextField ? canImproveOutput : false"
 		@submit="$emit('submit', $event)"
-		@update:value="$emit('update:value', $event)" />
+		@update:value="$emit('update:value', $event)"
+		@improve="$emit('improve', $event)" />
 </template>
 
 <script>
@@ -56,11 +58,16 @@ export default {
 			type: [Object, Array, null],
 			default: null,
 		},
+		canImproveOutput: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'submit',
 		'update:value',
+		'improve',
 	],
 
 	data() {
@@ -90,6 +97,9 @@ export default {
 				return false
 			}
 			return (this.defaults && this.defaults[this.fieldKey] && parseInt(this.defaults[this.fieldKey]) < 10)
+		},
+		isTextField() {
+			return this.field.type === SHAPE_TYPE_NAMES.Text
 		},
 		component() {
 			if (this.field.type === SHAPE_TYPE_NAMES.Text) {

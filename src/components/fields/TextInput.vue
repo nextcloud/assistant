@@ -24,12 +24,12 @@
 			@update:model-value="$emit('update:value', $event)" />
 		<div v-if="isOutput && hasValue"
 			class="output-buttons">
-			<NcButton v-if="!streaming() && canImproveOutput()"
+			<NcButton v-if="!streaming() && canImproveOutput"
 				class="improve-button"
 				variant="secondary"
 				:title="t('assistant', 'Improve with new instructions')"
-				@click="improveOutput(formattedValue)">
-				{{ t('assistant', 'Improve') }}
+				@click="$emit('improve', formattedValue)">
+				{{ t('assistant', 'Improve this text') }}
 			</NcButton>
 			<NcButton
 				class="copy-button"
@@ -105,7 +105,7 @@ export default {
 		isMobile,
 	],
 
-	inject: ['streaming', 'improveOutput', 'canImproveOutput'],
+	inject: ['streaming'],
 
 	props: {
 		id: {
@@ -136,11 +136,16 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		canImproveOutput: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'submit',
 		'update:value',
+		'improve',
 	],
 
 	data() {
