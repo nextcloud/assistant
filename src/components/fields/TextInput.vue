@@ -30,7 +30,7 @@
 				:title="t('assistant', 'Improve with new instructions')"
 				@click="$emit('improve', formattedValue)">
 				<template #icon>
-					<WrenchOutlineIcon />
+					<WrenchOutlineIcon size="20" />
 				</template>
 				{{ t('assistant', 'Improve this text') }}
 			</NcButton>
@@ -40,9 +40,9 @@
 				:title="t('assistant', 'Copy output')"
 				@click="onCopy">
 				<template #icon>
-					<NcLoadingIcon v-if="streaming()" />
-					<ClipboardCheckOutlineIcon v-else-if="copied" />
-					<ContentCopyIcon v-else />
+					<NcLoadingIcon v-if="streaming()" size="20" />
+					<ClipboardCheckOutlineIcon v-else-if="copied" size="20" />
+					<ContentCopyIcon v-else size="20" />
 				</template>
 				<span v-if="streaming()">
 					{{ t('assistant', 'Getting results...') }}
