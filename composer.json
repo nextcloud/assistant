@@ -18,7 +18,8 @@
 		"phpoffice/phpword": "^1.2",
 		"ralouphie/mimey": "^1.0",
 		"simshaun/recurr": "^5.0",
-		"smalot/pdfparser": "^2.11"
+		"smalot/pdfparser": "^2.11",
+		"symfony/yaml": "^7.4"
 	},
 	"scripts": {
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
