@@ -123,7 +123,9 @@
 							v-model:show-advanced="showAdvanced"
 							v-model:outputs="myOutputs"
 							:inputs="myInputs"
-							:selected-task-type="selectedTaskType" />
+							:selected-task-type="selectedTaskType"
+							:can-improve-output="canImproveOutput"
+							@improve="onImprove" />
 					</div>
 					<div class="footer">
 						<div class="footer--action-buttons">
@@ -215,6 +217,7 @@ import { saveLastSelectedTaskType } from '../assistant.js'
 
 const TEXT2TEXT_TASK_TYPE_ID = 'core:text2text'
 const CHAT_TASK_TYPE_ID = 'chatty-llm'
+const TEXT2TEXT_IMPROVE_TASK_TYPE_ID = 'core:text2text:improve'
 
 export default {
 	name: 'AssistantTextProcessingForm',
@@ -460,6 +463,20 @@ export default {
 		actionButtonsToShow() {
 			return this.hasOutput ? this.actionButtons : []
 		},
+		improveTaskType() {
+			const taskType = this.taskTypes.find(tt => tt.id === TEXT2TEXT_IMPROVE_TASK_TYPE_ID)
+			if (taskType === undefined) {
+				return null
+			}
+			if (this.taskTypeIdList !== null && !this.taskTypeIdList.includes(TEXT2TEXT_IMPROVE_TASK_TYPE_ID)) {
+				return null
+			}
+			return taskType
+		},
+		canImproveOutput() {
+			return this.hasOutput
+				&& this.improveTaskType !== null
+		},
 		showRunningEmptyContent() {
 			return this.showSyncTaskRunning && this.myOutputs === null
 		},
@@ -484,6 +501,22 @@ export default {
 		console.debug('[assistant] form\'s myoutputs', this.myOutputs)
 	},
 	methods: {
+		onImprove(content) {
+			if (!this.canImproveOutput) {
+				return
+			}
+			this.$emit('new-task')
+			this.mySelectedTaskTypeId = TEXT2TEXT_IMPROVE_TASK_TYPE_ID
+			this.$nextTick(() => {
+				this.$refs?.assistantFormInputs?.setDefaultValues(true)
+				this.$nextTick(() => {
+					this.myInputs = {
+						...this.myInputs,
+						input: content,
+					}
+				})
+			})
+		},
 		// Parse the file if a fileId is passed as initial value to a text field
 		parseTextFileInputs(taskType) {
 			if (taskType === undefined || taskType === null) {
