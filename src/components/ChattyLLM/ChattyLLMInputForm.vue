@@ -1068,16 +1068,18 @@ export default {
 			})
 		},
 
-		updateStreamingMessage({ output, sources }, sessionId) {
+		updateStreamingMessage({ output, sources, reasoning }, sessionId) {
 			if (this.streamingMessage) {
 				this.streamingMessage.content = output
 				this.streamingMessage.sources = sources
+				this.streamingMessage.reasoning = reasoning
 			} else {
 				this.streamingMessage = {
 					role: Roles.ASSISTANT,
 					content: output,
 					attachments: [],
 					sources,
+					reasoning,
 					session_id: sessionId,
 					id: 0,
 					timestamp: moment().unix(),

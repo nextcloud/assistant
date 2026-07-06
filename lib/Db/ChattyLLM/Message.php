@@ -26,7 +26,9 @@ use OCP\DB\Types;
  * @method \string|null getSources()
  * @method \void setSources(?string $sources)
  * @method \string|null getAttachments()
- * @method \void setAttachments(?string $attachments)
+ * @method \void setAttachments(?string $reasoning)
+ * @method \string|null getReasoning()
+ * @method \void setReasoning(?string $reasoning)
  */
 class Message extends Entity implements \JsonSerializable {
 	public const ROLE_HUMAN = 'human';
@@ -48,6 +50,8 @@ class Message extends Entity implements \JsonSerializable {
 	protected $sources;
 	/** @var ?string */
 	protected $attachments;
+	/** @var string */
+	protected $reasoning;
 
 	public static $columns = [
 		'id',
@@ -58,6 +62,7 @@ class Message extends Entity implements \JsonSerializable {
 		'ocp_task_id',
 		'sources',
 		'attachments',
+		'reasoning',
 	];
 	public static $fields = [
 		'id',
@@ -68,6 +73,7 @@ class Message extends Entity implements \JsonSerializable {
 		'ocpTaskId',
 		'sources',
 		'attachments',
+		'reasoning',
 	];
 
 	public function __construct() {
@@ -78,6 +84,7 @@ class Message extends Entity implements \JsonSerializable {
 		$this->addType('ocpTaskId', Types::INTEGER);
 		$this->addType('sources', Types::STRING);
 		$this->addType('attachments', Types::STRING);
+		$this->addType('reasoning', Types::STRING);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -90,6 +97,7 @@ class Message extends Entity implements \JsonSerializable {
 			'timestamp' => $this->timestamp,
 			'ocp_task_id' => $this->ocpTaskId,
 			'sources' => $this->sources,
+			'reasoning' => $this->reasoning,
 			'attachments' => $this->attachments === null
 				? []
 				: (json_decode($this->attachments, true) ?: []),
