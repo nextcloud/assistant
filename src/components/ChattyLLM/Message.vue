@@ -55,16 +55,13 @@
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
 		</div>
-		<NcRichText v-if="!searchQuery"
+		<NcRichText
 			class="message__content"
 			:text="message.content"
 			:use-markdown="true"
 			:reference-limit="1"
 			:references="references"
 			:autolink="true" />
-		<div v-else
-			class="message__content message__content--highlighted"
-			v-html="highlightedContent" />
 		<AudioDisplay v-for="a in audioAttachments"
 			:key="a.type + '-' + a.file_id"
 			class="message__content"
@@ -179,16 +176,15 @@ export default {
 		audioAttachments() {
 			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.Audio) ?? []
 		},
-		highlightedContent() {
+		displayContent() {
 			if (!this.searchQuery || !this.message.content) {
 				return this.message.content
 			}
-			const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 			const regexEscaped = this.searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-			const parts = this.message.content.split(new RegExp(`(${regexEscaped})`, 'gi'))
-			return parts.map((part, i) =>
-				i % 2 === 1 ? `<mark>${escapeHtml(part)}</mark>` : escapeHtml(part),
-			).join('')
+			return this.message.content.replace(
+				new RegExp(`(${regexEscaped})`, 'gi'),
+				'**$1**',
+			)
 		},
 	},
 
@@ -273,18 +269,6 @@ export default {
 
 		:deep(.widget-default), :deep(.widget-custom) {
 			width: auto !important;
-		}
-
-		&--highlighted {
-			white-space: pre-wrap;
-			word-wrap: break-word;
-
-			:deep(mark) {
-				background-color: var(--color-warning);
-				color: var(--color-main-text);
-				border-radius: 2px;
-				padding: 0 2px;
-			}
 		}
 	}
 }

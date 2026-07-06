@@ -127,6 +127,7 @@
 						:loading="loading"
 						:slow-pickup="slowPickup"
 						:search-query="searchQuery"
+						:matching-message-ids="matchingMessageIds"
 						@regenerate="runRegenerationTask"
 						@delete="deleteMessage" />
 					<div v-if="messages != null && messages.length > 0 && !loading.llmGeneration && !loading.newHumanMessage && messages[messages.length - 1]?.role === 'human'" class="session-area__chat-area__active-session__utility-button">
@@ -335,6 +336,10 @@ export default {
 				return this.sessions
 			}
 			return this.sessions.filter(s => this.searchResults.sessionIds.includes(s.id))
+		},
+
+		matchingMessageIds() {
+			return new Set(this.searchResults?.messages?.map(m => m.id) ?? [])
 		},
 	},
 

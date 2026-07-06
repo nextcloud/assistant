@@ -190,14 +190,29 @@ class MessageMapper extends QBMapper {
 	 * @throws \OCP\DB\Exception
 	 */
 	public function searchMessages(string $userId, string $query, int $limit = 100): array {
+		// Split the query into individual words on whitespace
+		$words = array_filter(preg_split('/\s+/', trim($query)));
+
+		if (empty($words)) { // A guard for the edge case where the query is empty or consists of all whitespaces
+			return [];
+		}
+
 		$qb = $this->db->getQueryBuilder();
-		$qb->select(array_map(fn ($col) => 'm.' . $col, Message::$columns))
+		$qb->select(array_map(fn ($col) => 'm.' . $col . ' AS ' . $col, Message::$columns))
 			->from($this->getTableName(), 'm')
-			->join('m', 'assistant_chat_sns', 's', $qb->expr()->eq('m.session_id', 's.id'))
-			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->iLike('m.content', $qb->createPositionalParameter('%' . $this->db->escapeLikeParameter($query) . '%', IQueryBuilder::PARAM_STR)))
-			->orderBy('m.timestamp', 'DESC')
-			->setMaxResults($limit);
+			->join('m', 'assistant_chat_sns', 's', $qb->expr()->eq('m.session_id', 's.id')) 
+			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
+
+		// Add a andWhere for each word and then AND them all together on to the query builder
+		foreach ($words as $word) {
+				$qb->andWhere($qb->expr()->iLike(
+					'm.content',
+					$qb->createPositionalParameter('%' . $this->db->escapeLikeParameter($word) . '%', IQueryBuilder::PARAM_STR),
+				));
+			}
+
+			$qb->orderBy('m.timestamp', 'DESC')
+				->setMaxResults($limit);
 
 		return $this->findEntities($qb);
 	}
