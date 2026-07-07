@@ -317,7 +317,7 @@ OC.L10N.register(
     "You" : "Du",
     "Message copied to clipboard" : "Nachricht in die Zwischenablage kopiert",
     "MCP server: {tool_id}" : "MCP-Server: {tool_id}",
-    "Information sources" : "Informationsquellen",
+    "Reasoning content" : "Inhalt der logischen Begründung",
     "Copy message" : "Nachricht kopieren",
     "Regenerate message" : "Nachricht erneut erstellen",
     "Delete message" : "Nachricht löschen",
@@ -467,6 +467,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Text-zu-Sprache-KI-Aufgabe übermittelt.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Sprachausgabe erstellen\" überprüft werden.",
     "Transcription AI task submitted successfully." : "Transkriptions-KI-Aufgabe übermittelt.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Es kann auch im Assistenten im Menü \"Mit Audio arbeiten -> Audio transkribieren\" überprüft werden.",
+    "Information sources" : "Informationsquellen"
 },
 "nplurals=2; plural=(n != 1);");

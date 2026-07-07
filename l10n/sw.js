@@ -242,7 +242,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Jibu hili la gumzo linachukua muda mrefu kuanza kuzalisha kuliko ilivyotarajiwa. Tafadhali wasiliana na msimamizi wako ili kuhakikisha kuwa programu ya Mratibu imesanidiwa ipasavyo.",
     "You" : "Wewe",
     "Message copied to clipboard" : "Ujumbe umenakiliwa kwenye ubao wa kunakili",
-    "Information sources" : "Vyanzo vya habari",
     "Copy message" : "Nakili ujumbe",
     "Regenerate message" : "Tengeneza ujumbe upya",
     "Delete message" : "Futa ujumbe",
@@ -385,6 +384,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Kazi ya AI ya maandishi hadi sauti imewasilishwa kwa mafanikio.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Inaweza pia kuangaliwa katika Mratibu katika menyu ya \"Fanya kazi na sauti -> Tengeneza hotuba\"",
     "Transcription AI task submitted successfully." : "Kazi ya unukuzi ya AI imewasilishwa kwa mafanikio.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Inaweza pia kuangaliwa kwenye Mratibu katika menyu ya \"Fanya kazi na sauti -> Nukuu sauti\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Inaweza pia kuangaliwa kwenye Mratibu katika menyu ya \"Fanya kazi na sauti -> Nukuu sauti\".",
+    "Information sources" : "Vyanzo vya habari"
 },
 "nplurals=2; plural=(n != 1);");

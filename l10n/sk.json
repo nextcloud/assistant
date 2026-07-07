@@ -238,7 +238,6 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Táto odpoveď v chate trvá dlhšie, než sa očakávalo. Kontaktujte svojho správcu, aby ste sa uistili, že Asistent je správne nakonfigurovaný.",
     "You" : "Vy",
     "Message copied to clipboard" : "Správa bola skopírovaná do schránky",
-    "Information sources" : "Zdroje informácií",
     "Copy message" : "Kopírovať správu",
     "Regenerate message" : "Znova vygenerovať správu",
     "Delete message" : "Zmazať správu",
@@ -380,6 +379,7 @@
     "Text-to-Speech AI task submitted successfully." : "Úloha prevodu textu na reč AI bola úspešne odoslaná.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Môže sa to tiež skontrolovať v Asistentovi v ponuke \"Práca s audio -> Generovať reč\".",
     "Transcription AI task submitted successfully." : "Úloha prepisu AI bola úspešne odoslaná.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Môže sa to tiež skontrolovať v Asistentovi v ponuke \"Práca s audiom -> Prepis zvuku\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Môže sa to tiež skontrolovať v Asistentovi v ponuke \"Práca s audiom -> Prepis zvuku\".",
+    "Information sources" : "Zdroje informácií"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }
