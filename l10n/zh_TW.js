@@ -317,7 +317,7 @@ OC.L10N.register(
     "You" : "您",
     "Message copied to clipboard" : "訊息已複製到剪貼簿",
     "MCP server: {tool_id}" : "MCP 伺服器：{tool_id}",
-    "Information sources" : "資訊來源",
+    "Reasoning content" : "推理內容",
     "Copy message" : "複製訊息",
     "Regenerate message" : "重新產生訊息",
     "Delete message" : "刪除訊息",
@@ -467,6 +467,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "人工智慧文字轉語音任務遞交成功。",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在小幫手的「處理音訊」→「產生語音」選單中確認。",
     "Transcription AI task submitted successfully." : "人工智慧轉錄任務已成功遞交。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在小幫手的「處理音訊」→「轉錄語音」選單中確認。",
+    "Information sources" : "資訊來源"
 },
 "nplurals=1; plural=0;");

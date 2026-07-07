@@ -310,7 +310,6 @@
     "You" : "شما",
     "Message copied to clipboard" : "پیام در کلیپ‌بورد کپی شد",
     "MCP server: {tool_id}" : "سرور MCP: {tool_id}",
-    "Information sources" : "منابع اطلاعاتی",
     "Copy message" : "کپی پیام",
     "Regenerate message" : "بازتولید پیام",
     "Delete message" : "حذف پیام",
@@ -460,6 +459,7 @@
     "Text-to-Speech AI task submitted successfully." : "وظیفه تبدیل متن به گفتار هوش مصنوعی با موفقیت ارسال شد.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "همچنین می‌توانید آن را در دستیار در منوی «کار با صدا → تولید گفتار» بررسی کنید.",
     "Transcription AI task submitted successfully." : "وظیفه رونویسی هوش مصنوعی با موفقیت ارسال شد.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "همچنین می‌توانید آن را در دستیار در منوی «کار با صدا → رونویسی صدا» بررسی کنید."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "همچنین می‌توانید آن را در دستیار در منوی «کار با صدا → رونویسی صدا» بررسی کنید.",
+    "Information sources" : "منابع اطلاعاتی"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

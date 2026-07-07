@@ -206,7 +206,6 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Αυτή η απάντηση συνομιλίας χρειάζεται περισσότερο χρόνο για να αρχίσει να δημιουργείται από το αναμενόμενο. Παρακαλώ επικοινωνήστε με τον διαχειριστή σας για να βεβαιωθείτε ότι ο Βοηθός είναι σωστά ρυθμισμένος.",
     "You" : "Εσύ",
     "Message copied to clipboard" : "Το μήνυμα αντιγράφηκε στο πρόχειρο",
-    "Information sources" : "Πηγές πληροφοριών",
     "Copy message" : "Αντιγραφή μηνύματος",
     "Regenerate message" : "Επαναδημιουργία μηνύματος",
     "Delete message" : "Διαγραφή μηνύματος",
@@ -333,6 +332,7 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με κείμενο -> Σύνοψη\".",
     "Failed to launch the AI file action" : "Αποτυχία εκκίνησης της ενέργειας AI αρχείου",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Δημιουργία ομιλίας\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Αποτύπωση ήχου\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Μπορεί επίσης να ελεγχθεί στον Βοηθό στο μενού \"Εργασία με ήχο -> Αποτύπωση ήχου\".",
+    "Information sources" : "Πηγές πληροφοριών"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

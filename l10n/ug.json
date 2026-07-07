@@ -229,7 +229,6 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "بۇ چات جاۋابىنىڭ ھاسىل قىلىنىشى كۈتۈلگەندىن ئۇزۇنراق ۋاقىت ئالدى. ياردەمچىنىڭ توغرا تەڭشەلگەنلىكىنى جەزملەشتۈرۈش ئۈچۈن باشقۇرغۇچىڭىز بىلەن ئالاقىلىشىڭ.",
     "You" : "سەن",
     "Message copied to clipboard" : "چاپلاش تاختىسىغا كۆچۈرۈلگەن ئۇچۇر",
-    "Information sources" : "ئۇچۇر مەنبەلىرى",
     "Copy message" : "ئۇچۇرنى كۆچۈرۈڭ",
     "Regenerate message" : "ئۇچۇرنى قايتا ھاسىل قىلىش",
     "Delete message" : "ئۇچۇرنى ئۆچۈرۈڭ",
@@ -370,6 +369,7 @@
     "Text-to-Speech AI task submitted successfully." : "AI تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> نۇتۇق ھاسىل قىلىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
     "Transcription AI task submitted successfully." : "AI ئاۋازنى تېكىستكە ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> ئاۋازنى يېزىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> ئاۋازنى يېزىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
+    "Information sources" : "ئۇچۇر مەنبەلىرى"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

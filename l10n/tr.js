@@ -312,7 +312,6 @@ OC.L10N.register(
     "You" : "Siz",
     "Message copied to clipboard" : "İleti panoya kopyalandı",
     "MCP server: {tool_id}" : "MCP sunucusu: {tool_id}",
-    "Information sources" : "Bilgi kaynakları",
     "Copy message" : "İletiyi kopyala",
     "Regenerate message" : "İletiyi yeniden oluştur",
     "Delete message" : "İletiyi sil",
@@ -462,6 +461,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "YZ ile yazıdan konuşmaya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Konuşma oluştur\" menüsünde de bakabilirsiniz.",
     "Transcription AI task submitted successfully." : "YZ ile sesten yazıya dönüştürme görevi gönderildi.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz.",
+    "Information sources" : "Bilgi kaynakları"
 },
 "nplurals=2; plural=(n > 1);");

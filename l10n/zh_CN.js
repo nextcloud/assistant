@@ -215,7 +215,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "此聊天回应开始产生的时间比预期长。请联络您的管理员，确保小帮手已正确设定。",
     "You" : "您",
     "Message copied to clipboard" : "消息已复制到剪贴板",
-    "Information sources" : "资讯来源",
     "Copy message" : "复制消息",
     "Regenerate message" : "重新生成消息",
     "Delete message" : "删除消息",
@@ -333,6 +332,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "也可以在助手的「处理文字」→「总结」选单中确认。",
     "Failed to launch the AI file action" : "启动人工智慧档案动作失败",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在助手的「处理音讯」→「产生语音」选单中确认。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在助手的「处理音讯」→「转录语音」选单中确认。"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在助手的「处理音讯」→「转录语音」选单中确认。",
+    "Information sources" : "资讯来源"
 },
 "nplurals=1; plural=0;");

@@ -315,7 +315,7 @@
     "You" : "Você",
     "Message copied to clipboard" : "Mensagem copiada para a área de transferência",
     "MCP server: {tool_id}" : "Servidor MCP: {tool_id}",
-    "Information sources" : "Fontes de informações",
+    "Reasoning content" : "Conteúdo de raciocínio",
     "Copy message" : "Copiar mensagem",
     "Regenerate message" : "Regenerar mensagem",
     "Delete message" : "Excluir mensagem",
@@ -465,6 +465,7 @@
     "Text-to-Speech AI task submitted successfully." : "Tarefa de IA de conversão de texto em fala enviada com sucesso.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Gerar fala\".",
     "Transcription AI task submitted successfully." : "Tarefa de transcrição por IA enviada com sucesso.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\".",
+    "Information sources" : "Fontes de informações"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
