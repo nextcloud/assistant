@@ -309,7 +309,7 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Šio pokalbio atsakymo generavimas užtrunka ilgiau nei tikėtasi. Prašome susisiekti su administratoriumi, kad įsitikintumėte, jog Asistentas yra tinkamai sukonfigūruotas.",
     "You" : "Jūs",
     "Message copied to clipboard" : "Pranešimas nukopijuotas į iškarpinę",
-    "Information sources" : "Informacijos šaltiniai",
+    "Reasoning content" : "Argumentacijos turinys",
     "Copy message" : "Kopijuoti pranešimą",
     "Regenerate message" : "Atkurti pranešimą",
     "Delete message" : "Ištrinti pranešimą",
@@ -458,6 +458,7 @@
     "Text-to-Speech AI task submitted successfully." : "Teksto įgarsinimo DI užduotis sėkmingai pateikta.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Tai taip pat galima patikrinti „Asistento“ programėlėje, meniu „Darbas su garso įrašais -> Sukurti kalbą“.",
     "Transcription AI task submitted successfully." : "Transkripcijos DI užduotis sėkmingai pateikta.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tai taip pat galima patikrinti „Asistento“ programėlėje, meniu „Darbas su garso įrašais -> Garso įrašo transkribavimas“."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tai taip pat galima patikrinti „Asistento“ programėlėje, meniu „Darbas su garso įrašais -> Garso įrašo transkribavimas“.",
+    "Information sources" : "Informacijos šaltiniai"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

@@ -317,7 +317,7 @@ OC.L10N.register(
     "You" : "tú",
     "Message copied to clipboard" : "Cóipeáladh an teachtaireacht chuig an ngearrthaisce",
     "MCP server: {tool_id}" : "Freastalaí MCP: {tool_id}",
-    "Information sources" : "Foinsí eolais",
+    "Reasoning content" : "Ábhar réasúnaíochta",
     "Copy message" : "Cóipeáil teachtaireacht",
     "Regenerate message" : "Athghin teachtaireacht",
     "Delete message" : "Scrios teachtaireacht",
@@ -467,6 +467,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Cuireadh tasc AI Téacs-go-Caint isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
     "Transcription AI task submitted successfully." : "Cuireadh tasc trascríobh AI isteach go rathúil.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin.",
+    "Information sources" : "Foinsí eolais"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

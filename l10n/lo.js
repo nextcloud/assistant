@@ -218,7 +218,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "ການຕອບກັບໃນການສົນທະນານີ້ໃຊ້ເວລາເລີ່ມສ້າງດົນກວ່າທີ່ຄາດໄວ້. ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານເພື່ອໃຫ້ແນ່ໃຈວ່າຜູ້ຊ່ວຍໄດ້ຮັບການຕັ້ງຄ່າຢ່າງຖືກຕ້ອງ.",
     "You" : "ເຈົ້າ",
     "Message copied to clipboard" : "ສຳເນົາຂໍ້ຄວາມໃສ່ຄລິບບອດແລ້ວ",
-    "Information sources" : "ແຫຼ່ງຂໍ້ມູນ",
     "Copy message" : "ສຳເນົາຂໍ້ຄວາມ",
     "Regenerate message" : "ສ້າງຂໍ້ຄວາມໃໝ່",
     "Delete message" : "ລຶບຂໍ້ຄວາມ",
@@ -349,6 +348,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບຂໍ້ຄວາມ -> ສະຫຼຸບຫຍໍ້\".",
     "Failed to launch the AI file action" : "ບໍ່ສາມາດເລີ່ມການກະທຳກັບຟາຍດ້ວຍ AI ໄດ້",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ສ້າງສຽງເວົ້າ\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ຖອດຂໍ້ຄວາມຈາກສຽງ\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ຖອດຂໍ້ຄວາມຈາກສຽງ\".",
+    "Information sources" : "ແຫຼ່ງຂໍ້ມູນ"
 },
 "nplurals=1; plural=0;");

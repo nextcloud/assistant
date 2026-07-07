@@ -255,7 +255,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Spuštění vytváření této odpovědi do chatu trvá déle, než očekáváno. Obraťte se na správce ohledně ujištění se, že je Asistent správně nastavený.",
     "You" : "Vy",
     "Message copied to clipboard" : "Zpráva zkopírována do schránky",
-    "Information sources" : "Zdroje informací",
     "Copy message" : "Zkopírovat zprávu",
     "Regenerate message" : "Znovu vytvořit zprávu",
     "Delete message" : "Smazat zprávu",
@@ -399,6 +398,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Úkol převodu řeči na text pomocí AI úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Vytvořit řeč“.",
     "Transcription AI task submitted successfully." : "Úkol přepisu ze zvuku na text pomocí AI úspěšně zadán.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“.",
+    "Information sources" : "Zdroje informací"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

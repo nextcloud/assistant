@@ -206,7 +206,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Започињање генерисања чет одговора траје дуже него што се очекује. Молимо вас да се обратите администратору који треба да провери да ли је Асистент исправно подешен.",
     "You" : "Ви",
     "Message copied to clipboard" : "Порука је копирана у клипборд",
-    "Information sources" : "Извори информација",
     "Copy message" : "Копирај поруку",
     "Regenerate message" : "Поново генериши поруку",
     "Delete message" : "Обриши поруку",
@@ -333,6 +332,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Такође може да се провери у Асистенту у менију „Рад са текстом -> Резимирај”.",
     "Failed to launch the AI file action" : "Није успело покретање AI фајл акције",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Генериши говор”.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”.",
+    "Information sources" : "Извори информација"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

@@ -268,7 +268,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured.",
     "You" : "You",
     "Message copied to clipboard" : "Message copied to clipboard",
-    "Information sources" : "Information sources",
     "Copy message" : "Copy message",
     "Regenerate message" : "Regenerate message",
     "Delete message" : "Delete message",
@@ -413,6 +412,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Text-to-Speech AI task submitted successfully.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu.",
     "Transcription AI task submitted successfully." : "Transcription AI task submitted successfully.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu.",
+    "Information sources" : "Information sources"
 },
 "nplurals=2; plural=(n != 1);");

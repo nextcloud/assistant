@@ -266,7 +266,6 @@ OC.L10N.register(
     "Could not upload the recorded file" : "Nie można przesłać nagranego pliku",
     "You" : "Ty",
     "Message copied to clipboard" : "Wiadomość skopiowana do schowka",
-    "Information sources" : "Źródła informacji",
     "Copy message" : "Skopiuj wiadomość",
     "Regenerate message" : "Wygeneruj wiadomość ponownie",
     "Delete message" : "Usuń wiadomość",
@@ -369,6 +368,7 @@ OC.L10N.register(
     "fourth" : "czwarty",
     "fifth" : "piąty",
     "second to last" : "przedostatni",
-    "last" : "ostatni"
+    "last" : "ostatni",
+    "Information sources" : "Źródła informacji"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

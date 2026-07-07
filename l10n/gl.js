@@ -244,7 +244,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta resposta de parola leva máis tempo do agardado para comezar a xerarse. Póñase en contacto coa administración para asegurarse de que o Asistente está configurado correctamente.",
     "You" : "Vde.",
     "Message copied to clipboard" : "Copiouse a mensaxe no portapapeis",
-    "Information sources" : "Fontes de información",
     "Copy message" : "Copiar a mensaxe",
     "Regenerate message" : "Volver xerar a mensaxe",
     "Delete message" : "Eliminar a mensaxe",
@@ -387,6 +386,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "A tarefa de «texto a voz» pola IA foi enviada satisfactoriamente.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Xerar parrafeo».",
     "Transcription AI task submitted successfully." : "A tarefa de transcrición pola IA foi enviada satisfactoriamente.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son»."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Tamén se pode comprobar no Asistente no menú «Traballar con son -> Transcribir son».",
+    "Information sources" : "Fontes de información"
 },
 "nplurals=2; plural=(n != 1);");
