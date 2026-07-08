@@ -30,6 +30,7 @@ use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\Reference\Text2StickerProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
+use OCA\Assistant\TaskProcessing\AudioToAudioTranslateProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
 use OCA\Assistant\TaskProcessing\ImageToTextTranslateProvider;
 use OCA\Assistant\TaskProcessing\ImageToTextTranslateTaskType;
@@ -118,6 +119,11 @@ class Application extends App implements IBootstrap {
 		// not ready yet
 		// $context->registerTaskProcessingTaskType(ImageToTextTranslateTaskType::class);
 		// $context->registerTaskProcessingProvider(ImageToTextTranslateProvider::class);
+
+		// AudioToAudioTranslate appeared in 35
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioTranslate')) {
+			$context->registerTaskProcessingProvider(AudioToAudioTranslateProvider::class);
+		}
 	}
 
 	public function boot(IBootContext $context): void {
