@@ -318,6 +318,8 @@ OC.L10N.register(
     "Message copied to clipboard" : "Sõnum on kopeeritud lõikelauale",
     "MCP server: {tool_id}" : "MCP-server: {tool_id}",
     "Reasoning content" : "Sisu põhjendus/selgitus",
+    "Information sources & actions" : "Teabeallikad ja tegevused",
+    "Reasoning…" : "Otsin selgitust…",
     "Copy message" : "Kopeeri sõnum",
     "Regenerate message" : "Koosta sõnum uuesti",
     "Delete message" : "Kustuta sõnum",

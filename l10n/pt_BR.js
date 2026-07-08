@@ -318,6 +318,8 @@ OC.L10N.register(
     "Message copied to clipboard" : "Mensagem copiada para a área de transferência",
     "MCP server: {tool_id}" : "Servidor MCP: {tool_id}",
     "Reasoning content" : "Conteúdo de raciocínio",
+    "Information sources & actions" : "Fontes de informações e ações",
+    "Reasoning…" : "Raciocínio…",
     "Copy message" : "Copiar mensagem",
     "Regenerate message" : "Regenerar mensagem",
     "Delete message" : "Excluir mensagem",
