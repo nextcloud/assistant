@@ -182,11 +182,11 @@ class AgentSkillsService {
 	 * @param string $description short, agent-facing description of when to use this skill
 	 * @param string $content the body of SKILL.md (markdown after the frontmatter)
 	 * @return 'created'|'overwritten' 'created' if a new SKILL.md was written, 'overwritten' if an
-	 *         existing one was replaced
+	 *                                 existing one was replaced
 	 * @throws \InvalidArgumentException if the skill name is empty or contains a slash
 	 * @throws NotFoundException if the skills folder cannot be resolved
 	 * @throws NotPermittedException if the skill folder or SKILL.md file cannot be written, or if a
-	 *         non-folder node already exists at the target skill path
+	 *                               non-folder node already exists at the target skill path
 	 * @throws \OC\User\NoUserException if the user does not exist
 	 * @throws \OCP\Files\GenericFileException if writing the SKILL.md file fails
 	 * @throws \OCP\Lock\LockedException if the SKILL.md file is locked
