@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div v-if="message.content || streamedMessageContent || parsedSources.length || hasAttachments"
+	<div v-if="message.content || message.reasoning || streamedMessageContent || parsedSources.length || hasAttachments"
 		class="message"
 		@mouseover="showMessageActions = true"
 		@mouseleave="showMessageActions = false">
@@ -31,19 +31,39 @@
 				<div class="message__header__role__name">
 					{{ message.role === 'human' ? displayName : t('assistant', 'Nextcloud Assistant') }}
 				</div>
-				<div style="display: flex">
+				<div style="display: flex; gap: 5px">
+					<NcPopover v-if="message.reasoning">
+						<template #trigger>
+							<NcButton
+								:aria-label="t('assistant', 'Reasoning content')"
+								:title="t('assistant', 'Reasoning content')">
+								<template #icon>
+									<ReasoningContentIcon :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<template #default>
+							<div class="reasoningcontent_popover_inner">
+								<h6>{{ t('assistant', 'Reasoning content') }}</h6>
+								<NcRichText :text="message.reasoning"
+									:use-markdown="true"
+									:autolink="true" />
+							</div>
+						</template>
+					</NcPopover>
 					<NcPopover v-if="parsedSources.length && !streaming">
 						<template #trigger>
 							<NcButton
-								:aria-label="t('assistant', 'Information sources')">
+								:aria-label="t('assistant', 'Information sources & actions')"
+								:title="t('assistant', 'Information sources & actions')">
 								<template #icon>
-									<InformationBox :size="20" />
+									<ToolInformationIcon :size="20" />
 								</template>
 							</NcButton>
 						</template>
 						<template #default>
 							<div class="toolinfo_popover_inner">
-								<h6> Information sources </h6>
+								<h6>{{ t('assistant', 'Information sources & actions') }}</h6>
 								<ul>
 									<li v-for="source in parsedSources" :key="source">
 										{{ source }}
@@ -55,6 +75,12 @@
 				</div>
 			</div>
 			<NcDateTime class="message__header__timestamp" :timestamp="new Date((message?.timestamp ?? 0) * 1000)" :ignore-seconds="true" />
+		</div>
+		<div v-if="streaming && !streamedMessageContent" class="message__streamed-reasoning">
+			<NcChip :text="t('assistant', 'Reasoning…')"
+				no-close
+				:variant="!parsedSources.length ? 'primary' : 'secondary'"
+				style="display: block; margin-bottom: 0.5em;" />
 		</div>
 		<div v-if="streaming" class="message__streamed-sources">
 			<NcChip v-for="(source, index) in parsedSources"
@@ -91,10 +117,9 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcChip from '@nextcloud/vue/components/NcChip'
 import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
-import InformationBox from 'vue-material-design-icons/InformationBox.vue'
-
 import MessageActions from './MessageActions.vue'
 import AudioDisplay from '../fields/AudioDisplay.vue'
+import { ReasoningContentIcon, ToolInformationIcon } from '../icons/aliases.js'
 
 import { getCurrentUser } from '@nextcloud/auth'
 import { showSuccess } from '@nextcloud/dialogs'
@@ -118,14 +143,15 @@ export default {
 		NcRichText,
 		NcPopover,
 		NcButton,
-		InformationBox,
+		ReasoningContentIcon,
+		ToolInformationIcon,
 
 		MessageActions,
 		NcChip,
 	},
 
 	props: {
-		// { id: number, session_id: number, role: string, content: string, timestamp: number, sources: string }
+		// { id: number, session_id: number, role: string, content: string, timestamp: number, sources: string, reasoning: string }
 		message: {
 			type: Object,
 			required: true,
@@ -288,7 +314,8 @@ export default {
 		}
 	}
 
-	&__streamed-sources {
+	&__streamed-sources,
+	&__streamed-reasoning {
 		margin-left: 2.6em;
 	}
 
@@ -308,7 +335,8 @@ export default {
 </style>
 
 <style lang="scss">
-.toolinfo_popover_inner {
+.toolinfo_popover_inner,
+.reasoningcontent_popover_inner {
 	margin: 12px;
 	h6 {
 		margin: 2px;
@@ -317,5 +345,11 @@ export default {
 		list-style-type: disc;
 		padding-left: 18px;
 	}
+}
+
+.reasoningcontent_popover_inner {
+	max-width: 500px;
+	max-height: 400px;
+	overflow-y: auto;
 }
 </style>

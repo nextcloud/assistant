@@ -208,7 +208,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Denne chatrespons tager længere om at starte genereringen af, end forventet. Kontakt venligst din administrator for at sikre at assistenten er korrekt konfigureret.",
     "You" : "Dig",
     "Message copied to clipboard" : "Besked kopieret til udklipsholder",
-    "Information sources" : "Informationskilder",
     "Copy message" : "Kopiér besked",
     "Regenerate message" : "Regenerer besked",
     "Delete message" : "Slet besked",
@@ -335,6 +334,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med tekst -> Sammendrag\".",
     "Failed to launch the AI file action" : "Kunne ikke starte AI filhandlingen",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Generer tale\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Det kan også kontrolleres i assistenten i menuen \"Arbejd med lyd -> Transskriber lyd\".",
+    "Information sources" : "Informationskilder"
 },
 "nplurals=2; plural=(n != 1);");

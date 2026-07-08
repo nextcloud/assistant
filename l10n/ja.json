@@ -212,7 +212,6 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "このチャット応答の生成が開始されるまでに予想よりも時間がかかっています。管理者に問い合わせて、アシスタントが正しく構成されていることを確認してください。",
     "You" : "自分",
     "Message copied to clipboard" : "メッセージがクリップボードにコピーされました",
-    "Information sources" : "情報源",
     "Copy message" : "メッセージをコピー",
     "Regenerate message" : "メッセージを再生成",
     "Delete message" : "メッセージを削除",
@@ -323,6 +322,7 @@
     "_on {weekday}_::_on {weekdays}_" : ["on {weekdays}"],
     "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["on days {dayOfMonthList}"],
     "on the {ordinalNumber} {byDaySet}" : "on the {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "{monthNames}の{dayOfMonthList}日に",
     "in {monthNames} on the {ordinalNumber} {byDaySet}" : "in {monthNames} on the {ordinalNumber} {byDaySet}",
     "until {untilDate}" : "{untilDate} まで",
     "_%n time_::_%n times_" : ["%n回"],
@@ -337,6 +337,7 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "アシスタントの「テキストの操作 -> 要約」メニューでも確認できます。",
     "Failed to launch the AI file action" : "AIファイルアクションの起動に失敗しました",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "アシスタントの「オーディオの操作 -> 音声の生成」メニューでも確認できます。",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "アシスタントの「音声の操作 -> 音声の文字起こし」メニューでも確認できます。"
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "アシスタントの「音声の操作 -> 音声の文字起こし」メニューでも確認できます。",
+    "Information sources" : "情報源"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

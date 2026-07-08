@@ -36,6 +36,7 @@ return [
 		['name' => 'assistantApi#getOutputFilePreview', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#getOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#runFileAction', 'url' => '/api/{apiVersion}/file-action/{fileId}/{taskTypeId}', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'assistantApi#getAssistantFolderPath', 'url' => '/api/{apiVersion}/assistant-folder-path', 'verb' => 'GET', 'requirements' => $requirements],
 
 		['name' => 'agentSkillsApi#listSkills', 'url' => '/api/{apiVersion}/skills', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'agentSkillsApi#storeSkill', 'url' => '/api/{apiVersion}/skills', 'verb' => 'POST', 'requirements' => $requirements],

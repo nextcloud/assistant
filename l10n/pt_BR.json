@@ -85,8 +85,13 @@
     "{targetFile} has been generated in {targetDirectory}" : "{targetFile} foi gerado em {targetDirectory}",
     "Image file generation has failed" : "Geração do arquivo de imagem falhou",
     "Generation of a new image file in {targetDirectory} has failed" : "A geração de um novo arquivo de imagem em {targetDirectory} falhou",
+    "Scheduled task is pending review" : "A tarefa agendada está aguardando revisão",
     "\"%s\" awaits your review before continuing." : "\"%s\" aguarda sua aprovação antes de continuar.",
+    "View scheduled task" : "Ver tarefa agendada",
+    "Scheduled task succeeded" : "A tarefa agendada foi executada com sucesso",
     "\"%s\" was run successfully." : "\"%s\" foi executada com êxito.",
+    "View result" : "Ver resultado",
+    "Scheduled task failed" : "A tarefa agendada falhou",
     "\"%s\" failed to run." : "Falha na execução de \"%s\".",
     "AI sticker generation" : "Geração de stickers por IA",
     "An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists." : "Ocorreu um erro ao agendar a execução desta tarefa. Entre em contato com a administração do sistema caso o problema persista.",
@@ -310,7 +315,9 @@
     "You" : "Você",
     "Message copied to clipboard" : "Mensagem copiada para a área de transferência",
     "MCP server: {tool_id}" : "Servidor MCP: {tool_id}",
-    "Information sources" : "Fontes de informações",
+    "Reasoning content" : "Conteúdo de raciocínio",
+    "Information sources & actions" : "Fontes de informações e ações",
+    "Reasoning…" : "Raciocínio…",
     "Copy message" : "Copiar mensagem",
     "Regenerate message" : "Regenerar mensagem",
     "Delete message" : "Excluir mensagem",
@@ -460,6 +467,7 @@
     "Text-to-Speech AI task submitted successfully." : "Tarefa de IA de conversão de texto em fala enviada com sucesso.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Gerar fala\".",
     "Transcription AI task submitted successfully." : "Tarefa de transcrição por IA enviada com sucesso.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Também pode ser verificado no Assistente, no menu \"Trabalhar com áudio -> Transcrever áudio\".",
+    "Information sources" : "Fontes de informações"
 },"pluralForm" :"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

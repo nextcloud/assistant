@@ -317,7 +317,9 @@ OC.L10N.register(
     "You" : "Sina",
     "Message copied to clipboard" : "Sõnum on kopeeritud lõikelauale",
     "MCP server: {tool_id}" : "MCP-server: {tool_id}",
-    "Information sources" : "Infoallikad",
+    "Reasoning content" : "Sisu põhjendus/selgitus",
+    "Information sources & actions" : "Teabeallikad ja tegevused",
+    "Reasoning…" : "Otsin selgitust…",
     "Copy message" : "Kopeeri sõnum",
     "Regenerate message" : "Koosta sõnum uuesti",
     "Delete message" : "Kustuta sõnum",
@@ -467,6 +469,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Tehisaru abil kõnesünteesi ülesande jagamine õnnestus.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Seda saad ka kontrollida Abilise menüüst „Tööta heliga“ → „Koosta kõne“.",
     "Transcription AI task submitted successfully." : "Tehisaru abil üleskirjutamise ülesande jagamine õnnestus.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Seda saad ka kontrollida Abilise menüüst „Tööta heliga“ → „Kirjuta heli üles“."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Seda saad ka kontrollida Abilise menüüst „Tööta heliga“ → „Kirjuta heli üles“.",
+    "Information sources" : "Infoallikad"
 },
 "nplurals=2; plural=(n != 1);");

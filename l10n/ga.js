@@ -87,8 +87,13 @@ OC.L10N.register(
     "{targetFile} has been generated in {targetDirectory}" : "Tá {targetFile} ginte i {targetDirectory}",
     "Image file generation has failed" : "Theip ar ghiniúint comhaid íomhá",
     "Generation of a new image file in {targetDirectory} has failed" : "Theip ar chomhad íomhá nua a ghiniúint i {targetDirectory}",
+    "Scheduled task is pending review" : "Tá an tasc sceidealaithe ag feitheamh ar athbhreithniú",
     "\"%s\" awaits your review before continuing." : "Tá \"%s\" ag fanacht le d'athbhreithniú sula leanann sé ar aghaidh.",
+    "View scheduled task" : "Féach ar an tasc sceidealaithe",
+    "Scheduled task succeeded" : "D’éirigh leis an tasc sceidealaithe",
     "\"%s\" was run successfully." : "Rith \"%s\" go rathúil.",
+    "View result" : "Féach ar an toradh",
+    "Scheduled task failed" : "Theip ar an tasc sceidealaithe",
     "\"%s\" failed to run." : "Theip ar \"%s\" a rith.",
     "AI sticker generation" : "Giniúint greamán AI",
     "An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists." : "Tharla earráid agus an tasc seo á sceidealú. Téigh i dteagmháil le riarthóir do chórais má leanann an fhadhb seo ar aghaidh.",
@@ -312,7 +317,7 @@ OC.L10N.register(
     "You" : "tú",
     "Message copied to clipboard" : "Cóipeáladh an teachtaireacht chuig an ngearrthaisce",
     "MCP server: {tool_id}" : "Freastalaí MCP: {tool_id}",
-    "Information sources" : "Foinsí eolais",
+    "Reasoning content" : "Ábhar réasúnaíochta",
     "Copy message" : "Cóipeáil teachtaireacht",
     "Regenerate message" : "Athghin teachtaireacht",
     "Delete message" : "Scrios teachtaireacht",
@@ -462,6 +467,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Cuireadh tasc AI Téacs-go-Caint isteach go rathúil.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Gin urlabhra\" freisin.",
     "Transcription AI task submitted successfully." : "Cuireadh tasc trascríobh AI isteach go rathúil.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Is féidir é a sheiceáil sa Chúntóir sa roghchlár \"Oibrigh le fuaim -> Tras-scríobh fuaim\" freisin.",
+    "Information sources" : "Foinsí eolais"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");

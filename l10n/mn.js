@@ -239,7 +239,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Энэ чат хариулт хүлээгдсэнээс удаан үүсч эхлэж байна. Assistant зөв тохируулагдсан эсэхийг баталгаажуулахын тулд администратортой холбогдоно уу.",
     "You" : "Та",
     "Message copied to clipboard" : "Мессеж санах ойд хуулагдлаа",
-    "Information sources" : "Мэдээллийн эх сурвалж",
     "Copy message" : "Мессеж хуулах",
     "Regenerate message" : "Мессежийг дахин үүсгэх",
     "Delete message" : "Зурвас устгах",
@@ -381,6 +380,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Текстээс яриа AI даалгавар амжилттай илгээгдлээ.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Generate speech\" цэсээр мөн шалгаж болно.",
     "Transcription AI task submitted successfully." : "AI хөрвүүлэлтийн даалгавар амжилттай илгээгдлээ.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Transcribe audio\" цэсээр мөн шалгаж болно."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Transcribe audio\" цэсээр мөн шалгаж болно.",
+    "Information sources" : "Мэдээллийн эх сурвалж"
 },
 "nplurals=2; plural=(n != 1);");

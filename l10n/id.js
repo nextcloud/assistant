@@ -238,7 +238,6 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Respons chat ini membutuhkan waktu lebih lama dari perkiraan untuk mulai dibuat. Silakan hubungi administrator Anda untuk memastikan Asisten dikonfigurasi dengan benar.",
     "You" : "Anda",
     "Message copied to clipboard" : "Pesan disalin ke papan klip",
-    "Information sources" : "Sumber informasi",
     "Copy message" : "Salin pesan",
     "Regenerate message" : "Buat ulang pesan",
     "Delete message" : "Hapus pesan",
@@ -381,6 +380,7 @@ OC.L10N.register(
     "Text-to-Speech AI task submitted successfully." : "Tugas AI teks-ke-ucapan berhasil dikirim.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ini juga dapat diperiksa di Asisten pada menu \"Bekerja dengan audio -> Hasilkan ucapan\".",
     "Transcription AI task submitted successfully." : "Tugas AI transkripsi berhasil dikirim.",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ini juga dapat diperiksa di Asisten pada menu \"Bekerja dengan audio -> Transkripsikan audio\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ini juga dapat diperiksa di Asisten pada menu \"Bekerja dengan audio -> Transkripsikan audio\".",
+    "Information sources" : "Sumber informasi"
 },
 "nplurals=1; plural=0;");

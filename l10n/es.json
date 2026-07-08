@@ -207,7 +207,6 @@
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta respuesta al chat está tomando más tiempo del esperado para iniciar la generación. Por favor, contacte a su administrador para asegurarse de que el Asistente está configurado correctamente.",
     "You" : "Usted",
     "Message copied to clipboard" : "Mensaje copiado al portapapeles",
-    "Information sources" : "Fuentes de información",
     "Copy message" : "Copiar mensaje",
     "Regenerate message" : "Regenerar mensaje",
     "Delete message" : "Borrar mensaje",
@@ -334,6 +333,7 @@
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con texto -> Resumir\".",
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
-    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\"."
+    "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\".",
+    "Information sources" : "Fuentes de información"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }
