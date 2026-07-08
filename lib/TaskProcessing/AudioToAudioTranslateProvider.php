@@ -28,7 +28,6 @@ use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToSpeech;
 use OCP\TaskProcessing\TaskTypes\TextToTextTranslate;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwareProvider {
 
@@ -75,15 +74,96 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 
 
 	public function getOptionalInputShape(): array {
-		return [];
+		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
+		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
+
+		$optionalInputShape = [];
+
+		if (isset($translateOptionalInputShape['model'])) {
+			$optionalInputShape['translation_model'] = new ShapeDescriptor(
+				$this->l->t('Translation model'),
+				$this->l->t('The model used to translate'),
+				EShapeType::Enum,
+			);
+		}
+
+		if (isset($ttsOptionalInputShape['model'])) {
+			$optionalInputShape['speech_model'] = new ShapeDescriptor(
+				$ttsOptionalInputShape['model']->getName(),
+				$ttsOptionalInputShape['model']->getDescription(),
+				EShapeType::Enum,
+			);
+		}
+
+		if (isset($ttsOptionalInputShape['voice'])) {
+			$optionalInputShape['speech_voice'] = new ShapeDescriptor(
+				$ttsOptionalInputShape['voice']->getName(),
+				$ttsOptionalInputShape['voice']->getDescription(),
+				EShapeType::Enum,
+			);
+		}
+
+		if (isset($ttsOptionalInputShape['speed'])) {
+			$optionalInputShape['speech_speed'] = new ShapeDescriptor(
+				$ttsOptionalInputShape['speed']->getName(),
+				$ttsOptionalInputShape['speed']->getDescription(),
+				EShapeType::Number,
+			);
+		}
+
+		return $optionalInputShape;
 	}
 
 	public function getOptionalInputShapeEnumValues(): array {
-		return [];
+		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
+		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
+
+		$optionalInputShapeEnumValues = [];
+
+		if (isset($translateOptionalInputShape['model'])) {
+			$optionalInputShapeEnumValues['translation_model'] = $translateProvider->getOptionalInputShapeEnumValues()['model'];
+		}
+
+		if (isset($ttsOptionalInputShape['model'])) {
+			$optionalInputShapeEnumValues['speech_model'] = $ttsProvider->getOptionalInputShapeEnumValues()['model'];
+		}
+
+		if (isset($ttsOptionalInputShape['voice'])) {
+			$optionalInputShapeEnumValues['speech_voice'] = $ttsProvider->getOptionalInputShapeEnumValues()['voice'];
+		}
+
+		return $optionalInputShapeEnumValues;
 	}
 
 	public function getOptionalInputShapeDefaults(): array {
-		return [];
+		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
+		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
+
+		$optionalInputShapeDefaults = [];
+
+		if (isset($translateOptionalInputShape['model'])) {
+			$optionalInputShapeDefaults['translation_model'] = $translateProvider->getOptionalInputShapeDefaults()['model'];
+		}
+
+		if (isset($ttsOptionalInputShape['model'])) {
+			$optionalInputShapeDefaults['speech_model'] = $ttsProvider->getOptionalInputShapeDefaults()['model'];
+		}
+
+		if (isset($ttsOptionalInputShape['voice'])) {
+			$optionalInputShapeDefaults['speech_voice'] = $ttsProvider->getOptionalInputShapeDefaults()['voice'];
+		}
+
+		if (isset($ttsOptionalInputShape['speed'])) {
+			$optionalInputShapeDefaults['speech_speed'] = $ttsProvider->getOptionalInputShapeDefaults()['speed'];
+		}
+
+		return $optionalInputShapeDefaults;
 	}
 
 	public function getOutputShapeEnumValues(): array {
@@ -115,16 +195,36 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 		$includeWatermark = $options->getIncludeWatermarks();
 		$reportOutput = $options->getReportIntermediateOutput();
 		$preferStreaming = $options->getPreferStreaming();
-	
+
 		if (!isset($input['input']) || !$input['input'] instanceof File || !$input['input']->isReadable()) {
 			throw new ProcessingException('Invalid input file');
 		}
 
 		if (!isset($input['origin_language']) || !is_string($input['origin_language'])) {
-			throw new RuntimeException('Invalid origin_language input');
+			throw new ProcessingException('Invalid origin_language input');
 		}
 		if (!isset($input['target_language']) || !is_string($input['target_language'])) {
-			throw new RuntimeException('Invalid target_language input');
+			throw new ProcessingException('Invalid target_language input');
+		}
+
+		$translationModel = null;
+		if (isset($input['translation_model']) && is_string($input['translation_model'])) {
+			$translationModel = $input['translation_model'];
+		}
+
+		$ttsModel = null;
+		if (isset($input['speech_model']) && is_string($input['speech_model'])) {
+			$ttsModel = $input['speech_model'];
+		}
+
+		$ttsVoice = null;
+		if (isset($input['speech_voice']) && is_string($input['speech_voice'])) {
+			$ttsVoice = $input['speech_voice'];
+		}
+
+		$ttsSpeed = null;
+		if (isset($input['speech_speed']) && is_numeric($input['speech_speed'])) {
+			$ttsSpeed = $input['speech_speed'];
 		}
 
 		// STT
@@ -139,7 +239,7 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 			$transcription = $taskOutput['output'];
 		} catch (Exception $e) {
 			$this->logger->warning('STT sub task failed with: ' . $e->getMessage(), ['exception' => $e]);
-			throw new RuntimeException('STT sub task failed with: ' . $e->getMessage());
+			throw new ProcessingException('STT sub task failed with: ' . $e->getMessage());
 		}
 
 		if (empty(trim($transcription))) {
@@ -170,13 +270,17 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 
 		// translation
 		try {
+			$translationInput = [
+				'input' => $transcription,
+				'origin_language' => $input['origin_language'],
+				'target_language' => $input['target_language'],
+			];
+			if ($translationModel !== null) {
+				$translationInput['translation_model'] = $translationModel;
+			}
 			$task = new Task(
 				TextToTextTranslate::ID,
-				[
-					'input' => $transcription,
-					'origin_language' => $input['origin_language'],
-					'target_language' => $input['target_language'],
-				],
+				$translationInput,
 				Application::APP_ID . ':internal',
 				$userId,
 			);
@@ -186,7 +290,7 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 			$reportProgress(0.6);
 		} catch (Exception $e) {
 			$this->logger->warning('Translation sub task failed with: ' . $e->getMessage(), ['exception' => $e]);
-			throw new RuntimeException('Translation sub task failed with: ' . $e->getMessage());
+			throw new ProcessingException('Translation sub task failed with: ' . $e->getMessage());
 		}
 
 		if ($preferStreaming) {
@@ -201,11 +305,21 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 
 		// TTS
 		try {
+			$ttsInput = ['input' => $translatedText];
+			if ($ttsModel !== null) {
+				$ttsInput['model'] = $ttsModel;
+			}
+			if ($ttsVoice !== null) {
+				$ttsInput['voice'] = $ttsVoice;
+			}
+			if ($ttsSpeed !== null) {
+				$ttsInput['speed'] = $ttsSpeed;
+			}
 			// this provider is not declared if TextToSpeech does not exist so we know it's fine
 			/** @psalm-suppress UndefinedClass */
 			$task = new Task(
 				TextToSpeech::ID,
-				['input' => $translatedText],
+				$ttsInput,
 				Application::APP_ID . ':internal',
 				$userId,
 			);
