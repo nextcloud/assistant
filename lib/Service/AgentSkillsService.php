@@ -27,8 +27,8 @@ class AgentSkillsService {
 
 	public const GLOBAL_SKILLS_ADMIN_UID_KEY = 'global_skills_admin_uid';
 	public const GLOBAL_SKILLS_PATH_KEY = 'global_skills_path';
+	public const SKILLS_FOLDER_PATH = 'Context Agent/Skills';
 
-	private const SKILLS_FOLDER_PATH = 'Context Agent/Skills';
 	private const SKILL_FILE_NAME = 'SKILL.md';
 	private const FRONTMATTER_DELIMITER = '---';
 	private const CACHE_PREFIX = 'assistant_skills';
@@ -150,7 +150,7 @@ class AgentSkillsService {
 	 * @return array{name: string, description: string}
 	 * @throws RuntimeException if the YAML is invalid or any required field is missing
 	 */
-	private function parseMetadataFields(string $frontmatter, string $filePath): array {
+	public function parseMetadataFields(string $frontmatter, string $filePath): array {
 		try {
 			$parsed = Yaml::parse($frontmatter);
 		} catch (ParseException $e) {
@@ -193,7 +193,10 @@ class AgentSkillsService {
 	 */
 	public function storeSkill(string $userId, string $skillName, string $description, string $content): string {
 		if ($skillName === '' || str_contains($skillName, '/')) {
-			throw new \InvalidArgumentException('Invalid skill name: ' . $skillName);
+			throw new \InvalidArgumentException('Invalid skill name: ' . ($skillName ?: '(empty string)'));
+		}
+		if ($description === '') {
+			throw new \InvalidArgumentException('Skill description must not be empty');
 		}
 
 		$skillsFolder = $this->getSkillsFolder($userId);
@@ -292,7 +295,7 @@ class AgentSkillsService {
 	 * @throws \OCP\Files\GenericFileException if reading the file fails
 	 * @throws \OCP\Lock\LockedException if the file is locked
 	 */
-	private function extractFrontmatter(File $file): string {
+	public function extractFrontmatter(File $file): string {
 		$content = $file->getContent();
 		$delimiter = self::FRONTMATTER_DELIMITER;
 
