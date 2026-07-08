@@ -329,11 +329,6 @@ class AgentSkillsService {
 				return null;
 			}
 			$node = $userFolder->get($path);
-			// todo
-			$folder = $node;
-			$this->logger->warning('global folder etag', ['etag' => $folder->getEtag(), 'fileId' => $folder->getId(), 'path' => $folder->getPath()]);
-			// todo
-
 			if (!$node instanceof Folder) {
 				$this->logger->warning('Global skills path is not a folder: ' . $path . ' (admin: ' . $adminUid . ')');
 				return null;

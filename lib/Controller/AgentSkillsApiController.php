@@ -62,10 +62,10 @@ class AgentSkillsApiController extends OCSController {
 			return new DataResponse(['error' => $this->l10n->t('Unknown user')], Http::STATUS_UNAUTHORIZED);
 		} catch (NotFoundException|NotPermittedException $e) {
 			$this->logger->debug('Skills folder not found', ['exception' => $e]);
-			return new DataResponse(['error' => 'Skills folder not found'], Http::STATUS_NOT_FOUND);
+			return new DataResponse(['error' => $this->l10n->t('Skills folder not found')], Http::STATUS_NOT_FOUND);
 		} catch (\Exception|Throwable $e) {
 			$this->logger->error('Failed to list skills', ['exception' => $e]);
-			return new DataResponse(['error' => 'Failed to list skills'], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new DataResponse(['error' => $this->l10n->t('Failed to list skills')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -95,10 +95,10 @@ class AgentSkillsApiController extends OCSController {
 			return new DataResponse(['error' => $this->l10n->t('Unknown user')], Http::STATUS_UNAUTHORIZED);
 		} catch (NotFoundException|NotPermittedException $e) {
 			$this->logger->debug('Skill not found', ['exception' => $e]);
-			return new DataResponse(['error' => 'Skill not found'], Http::STATUS_NOT_FOUND);
+			return new DataResponse(['error' => $this->l10n->t('Skill not found')], Http::STATUS_NOT_FOUND);
 		} catch (\Exception|Throwable $e) {
 			$this->logger->error('Failed to load the skill', ['exception' => $e]);
-			return new DataResponse(['error' => 'Failed to load the skill'], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new DataResponse(['error' => $this->l10n->t('Failed to load the skill')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -133,7 +133,7 @@ class AgentSkillsApiController extends OCSController {
 			return new DataResponse(['error' => $this->l10n->t('Unknown user')], Http::STATUS_UNAUTHORIZED);
 		} catch (\Exception|Throwable $e) {
 			$this->logger->error('Failed to store the skill', ['exception' => $e]);
-			return new DataResponse(['error' => 'Failed to store the skill'], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new DataResponse(['error' => $this->l10n->t('Failed to store the skill')], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 		$status = $action === 'created' ? Http::STATUS_CREATED : Http::STATUS_OK;
 		return new DataResponse(['action' => $action], $status);
