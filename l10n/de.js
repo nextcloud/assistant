@@ -318,6 +318,8 @@ OC.L10N.register(
     "Message copied to clipboard" : "Nachricht in die Zwischenablage kopiert",
     "MCP server: {tool_id}" : "MCP-Server: {tool_id}",
     "Reasoning content" : "Inhalt der logischen Begründung",
+    "Information sources & actions" : "Informationsquellen & Aktionen",
+    "Reasoning…" : "Begründe …",
     "Copy message" : "Nachricht kopieren",
     "Regenerate message" : "Nachricht erneut erstellen",
     "Delete message" : "Nachricht löschen",
