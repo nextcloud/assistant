@@ -461,7 +461,7 @@ class AssistantApiController extends OCSController {
 	#[NoCsrfRequired]
 	public function getAssistantFolderPath(): DataResponse {
 		if ($this->userId === null) {
-			return new DataResponse(['error' => 'User should be logged in', Http::STATUS_UNAUTHORIZED]);
+			return new DataResponse(['error' => 'User should be logged in'], Http::STATUS_UNAUTHORIZED);
 		}
 
 		$folder = $this->assistantService->getAssistantDataFolder($this->userId);
