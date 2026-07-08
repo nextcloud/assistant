@@ -90,5 +90,4 @@ class FreePromptReferenceProvider extends ADiscoverableReferenceProvider {
 		$this->referenceManager->invalidateCache($userId);
 	}
 
-
 }

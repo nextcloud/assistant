@@ -63,7 +63,6 @@ class Session extends Entity implements \JsonSerializable {
 	 */
 	protected $assignmentId;
 
-
 	public static $columns = [
 		'id',
 		'user_id',

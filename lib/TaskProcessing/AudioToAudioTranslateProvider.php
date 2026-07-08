@@ -72,7 +72,6 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 		];
 	}
 
-
 	public function getOptionalInputShape(): array {
 		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
 		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();

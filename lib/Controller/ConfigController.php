@@ -14,7 +14,6 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IAppConfig;
 use OCP\IConfig;
-
 use OCP\IRequest;
 use OCP\PreConditionNotMetException;
 

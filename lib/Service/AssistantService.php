@@ -935,7 +935,6 @@ class AssistantService {
 				}
 		}
 
-
 		$phpWord = IOFactory::createReader($readerType);
 		$phpWord = $phpWord->load($filePath);
 		$sections = $phpWord->getSections();

@@ -23,7 +23,6 @@ class TaskNotification extends Entity implements \JsonSerializable {
 	/** @var int */
 	protected $timestamp;
 
-
 	public function __construct() {
 		$this->addType('ocp_task_id', Types::INTEGER);
 		$this->addType('timestamp', Types::INTEGER);

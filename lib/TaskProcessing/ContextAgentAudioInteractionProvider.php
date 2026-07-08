@@ -61,7 +61,6 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 		return [];
 	}
 
-
 	public function getOptionalInputShape(): array {
 		return [
 			'memories' => new ShapeDescriptor(
