@@ -2891,8 +2891,8 @@
         "/ocs/v2.php/apps/assistant/api/{apiVersion}/skills": {
             "get": {
                 "operationId": "agent_skills_api-list-skills",
-                "summary": "List the current user's skills",
-                "description": "Returns each skill's name and description, as parsed from the YAML frontmatter of its SKILL.md file.",
+                "summary": "List available skills for the current user",
+                "description": "Returns each skill's name and description, as parsed from the YAML frontmatter of its SKILL.md file. Includes admin-configured global skills when configured.",
                 "tags": [
                     "agent_skills"
                 ],
@@ -3414,7 +3414,7 @@
             "get": {
                 "operationId": "agent_skills_api-load-skill",
                 "summary": "Load a skill's full content",
-                "description": "Returns the full content of the SKILL.md file (frontmatter + body) for the given skill.",
+                "description": "Returns the full content of the SKILL.md file (frontmatter + body) for the given skill. If the skill is not present in the user's skills, the admin-configured global skills folder is used as a fallback when configured.",
                 "tags": [
                     "agent_skills"
                 ],
@@ -3487,6 +3487,44 @@
                                                     ],
                                                     "properties": {
                                                         "content": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Skill name is too long",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "error"
+                                                    ],
+                                                    "properties": {
+                                                        "error": {
                                                             "type": "string"
                                                         }
                                                     }
