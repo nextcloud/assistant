@@ -118,21 +118,24 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 	public function getOptionalInputShapeEnumValues(): array {
 		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
 		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
+		$translateEnumValues = $translateProvider->getOptionalInputShapeEnumValues();
+
 		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
 		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
+		$ttsEnumValues = $ttsProvider->getOptionalInputShapeEnumValues();
 
 		$optionalInputShapeEnumValues = [];
 
-		if (isset($translateOptionalInputShape['model'])) {
-			$optionalInputShapeEnumValues['translation_model'] = $translateProvider->getOptionalInputShapeEnumValues()['model'];
+		if (isset($translateOptionalInputShape['model']) && isset($translateEnumValues['model'])) {
+			$optionalInputShapeEnumValues['translation_model'] = $translateEnumValues['model'];
 		}
 
-		if (isset($ttsOptionalInputShape['model'])) {
-			$optionalInputShapeEnumValues['speech_model'] = $ttsProvider->getOptionalInputShapeEnumValues()['model'];
+		if (isset($ttsOptionalInputShape['model']) && isset($ttsEnumValues['model'])) {
+			$optionalInputShapeEnumValues['speech_model'] = $ttsEnumValues['model'];
 		}
 
-		if (isset($ttsOptionalInputShape['voice'])) {
-			$optionalInputShapeEnumValues['speech_voice'] = $ttsProvider->getOptionalInputShapeEnumValues()['voice'];
+		if (isset($ttsOptionalInputShape['voice']) && isset($ttsEnumValues['voice'])) {
+			$optionalInputShapeEnumValues['speech_voice'] = $ttsEnumValues['voice'];
 		}
 
 		return $optionalInputShapeEnumValues;
@@ -141,25 +144,28 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 	public function getOptionalInputShapeDefaults(): array {
 		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
 		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
+		$translateOptionalInputShapeDefaults = $translateProvider->getOptionalInputShapeDefaults();
+
 		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
 		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
+		$ttsOptionalInputShapeDefaults = $ttsProvider->getOptionalInputShapeDefaults();
 
 		$optionalInputShapeDefaults = [];
 
-		if (isset($translateOptionalInputShape['model'])) {
-			$optionalInputShapeDefaults['translation_model'] = $translateProvider->getOptionalInputShapeDefaults()['model'];
+		if (isset($translateOptionalInputShape['model']) && isset($translateOptionalInputShapeDefaults['model'])) {
+			$optionalInputShapeDefaults['translation_model'] = $translateOptionalInputShapeDefaults['model'];
 		}
 
-		if (isset($ttsOptionalInputShape['model'])) {
-			$optionalInputShapeDefaults['speech_model'] = $ttsProvider->getOptionalInputShapeDefaults()['model'];
+		if (isset($ttsOptionalInputShape['model']) && isset($ttsOptionalInputShapeDefaults['model'])) {
+			$optionalInputShapeDefaults['speech_model'] = $ttsOptionalInputShapeDefaults['model'];
 		}
 
-		if (isset($ttsOptionalInputShape['voice'])) {
-			$optionalInputShapeDefaults['speech_voice'] = $ttsProvider->getOptionalInputShapeDefaults()['voice'];
+		if (isset($ttsOptionalInputShape['voice']) && isset($ttsOptionalInputShapeDefaults['voice'])) {
+			$optionalInputShapeDefaults['speech_voice'] = $ttsOptionalInputShapeDefaults['voice'];
 		}
 
-		if (isset($ttsOptionalInputShape['speed'])) {
-			$optionalInputShapeDefaults['speech_speed'] = $ttsProvider->getOptionalInputShapeDefaults()['speed'];
+		if (isset($ttsOptionalInputShape['speed']) && isset($ttsOptionalInputShapeDefaults['speed'])) {
+			$optionalInputShapeDefaults['speech_speed'] = $ttsOptionalInputShapeDefaults['speed'];
 		}
 
 		return $optionalInputShapeDefaults;
@@ -322,7 +328,7 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 				Application::APP_ID . ':internal',
 				$userId,
 			);
-			$task->setIncludeWatermark(true);
+			$task->setIncludeWatermark($includeWatermark);
 			$taskOutput = $this->taskProcessingService->runTaskProcessingTask($task);
 			$outputAudioFileId = $taskOutput['speech'];
 
