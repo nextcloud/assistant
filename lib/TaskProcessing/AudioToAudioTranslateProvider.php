@@ -320,8 +320,6 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 			if ($ttsSpeed !== null) {
 				$ttsInput['speed'] = $ttsSpeed;
 			}
-			// this provider is not declared if TextToSpeech does not exist so we know it's fine
-			/** @psalm-suppress UndefinedClass */
 			$task = new Task(
 				TextToSpeech::ID,
 				$ttsInput,
