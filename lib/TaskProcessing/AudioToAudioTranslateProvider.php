@@ -73,9 +73,17 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 	}
 
 	public function getOptionalInputShape(): array {
-		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		try {
+			$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \OCP\TaskProcessing\Exception\Exception('Failed to get a provider for the translate task type', 0, $e);
+		}
 		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
-		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		try {
+			$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \OCP\TaskProcessing\Exception\Exception('Failed to get a provider for the speech-to-text task type', 0, $e);
+		}
 		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
 
 		$optionalInputShape = [];
@@ -116,11 +124,19 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 	}
 
 	public function getOptionalInputShapeEnumValues(): array {
-		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		try {
+			$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \OCP\TaskProcessing\Exception\Exception('Failed to get a provider for the translate task type', 0, $e);
+		}
 		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
 		$translateEnumValues = $translateProvider->getOptionalInputShapeEnumValues();
 
-		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		try {
+			$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \OCP\TaskProcessing\Exception\Exception('Failed to get a provider for the speech-to-text task type', 0, $e);
+		}
 		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
 		$ttsEnumValues = $ttsProvider->getOptionalInputShapeEnumValues();
 
@@ -142,11 +158,19 @@ class AudioToAudioTranslateProvider implements IProvider, ISynchronousOptionsAwa
 	}
 
 	public function getOptionalInputShapeDefaults(): array {
-		$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		try {
+			$translateProvider = $this->taskProcessingService->getPreferredProvider(TextToTextTranslate::ID);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \OCP\TaskProcessing\Exception\Exception('Failed to get a provider for the translate task type', 0, $e);
+		}
 		$translateOptionalInputShape = $translateProvider->getOptionalInputShape();
 		$translateOptionalInputShapeDefaults = $translateProvider->getOptionalInputShapeDefaults();
 
-		$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		try {
+			$ttsProvider = $this->taskProcessingService->getPreferredProvider(TextToSpeech::ID);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			throw new \OCP\TaskProcessing\Exception\Exception('Failed to get a provider for the speech-to-text task type', 0, $e);
+		}
 		$ttsOptionalInputShape = $ttsProvider->getOptionalInputShape();
 		$ttsOptionalInputShapeDefaults = $ttsProvider->getOptionalInputShapeDefaults();
 
