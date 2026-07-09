@@ -665,16 +665,20 @@ export default {
 			return session.timestamp ? (' ' + moment(session.timestamp * 1000).format('LLL')) : t('assistant', 'Untitled conversation')
 		},
 
-		async handleSubmit(event) {
+		async handleSubmit(attachedFileIds) {
 			if (this.chatContent.trim() === '') {
 				console.debug('empty message')
 				return
 			}
+			const attachments = attachedFileIds.map(fileId => ({ type: SHAPE_TYPE_NAMES.File, file_id: fileId }))
 
 			const role = Roles.HUMAN
 			const content = this.chatContent.trim()
 			const timestamp = +new Date() / 1000 | 0
 			console.debug('[Assistant] submit text', content)
+			if (attachedFileIds.length > 0) {
+				console.debug('[Assistant] submit attachments', attachments)
+			}
 
 			if (this.active === null) {
 				await this.newSession()
@@ -686,10 +690,10 @@ export default {
 				this.active.agencyAnswered = true
 			}
 
-			this.messages.push({ role, content, timestamp, session_id: this.active.id })
+			this.messages.push({ role, content, timestamp, session_id: this.active.id, attachments })
 			this.chatContent = ''
 			this.scrollToLastMessage()
-			await this.newMessage(role, content, timestamp, this.active.id)
+			await this.newMessage(role, content, timestamp, this.active.id, attachments)
 		},
 
 		async handleSubmitAudio(fileId) {

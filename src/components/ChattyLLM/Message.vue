@@ -103,6 +103,12 @@
 			:file-id="a.file_id"
 			:task-id="message.role === 'human' ? undefined : (a.ocp_task_id ?? message.ocp_task_id)"
 			:is-output="message.role === 'assistant'" />
+		<FileDisplay v-for="f in fileAttachments"
+			:key="f.type + '-' + f.file_id"
+			class="message__content"
+			:file-id="f.file_id"
+			:task-id="message.role === 'human' ? undefined : (f.ocp_task_id ?? message.ocp_task_id)"
+			:is-output="message.role === 'assistant'" />
 	</div>
 </template>
 
@@ -126,6 +132,7 @@ import { showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
+import FileDisplay from '../fields/FileDisplay.vue'
 
 const PLAIN_URL_PATTERN = /(?:\s|^|\()((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;()]*)*))(?:\s|$|\))/ig
 const MARKDOWN_LINK_PATTERN = /\[[-A-Z0-9+&@#%?=~_|!:,.;()]+\]\(((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;]*)*))\)/ig
@@ -135,6 +142,7 @@ export default {
 
 	components: {
 		AudioDisplay,
+		FileDisplay,
 		AssistantIcon,
 
 		NcAvatar,
@@ -212,6 +220,9 @@ export default {
 		},
 		audioAttachments() {
 			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.Audio) ?? []
+		},
+		fileAttachments() {
+			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.File) ?? []
 		},
 	},
 

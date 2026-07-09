@@ -447,13 +447,27 @@ class ChatService {
 				$taskId = $this->scheduleAudioChatTask($userId, $fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
 			} else {
 				// for a text chat task, let's only use text in the history
-				$history = array_map(static function (Message $message) {
+				$historyMessages = array_map(static function (Message $message) {
 					return json_encode([
 						'role' => $message->getRole(),
 						'content' => $message->getContent(),
 					]);
 				}, $history);
-				$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $history, $sessionId);
+				if (count($lastAttachments) > 0 && $this->isMultimodalChatAvailable()) {
+					// for a multimodal chat task, let's use the attachments in the history as we don't know the structure in history
+					$attachmentsHistory = array_map(static function (Message $message) {
+						return $message->jsonSerialize()['attachments'];
+					}, $history);
+					// Just add all the attachments in the history as attachments for the latest message as we can't know the structure in history
+					$attachmentsHistory = array_merge($lastAttachments, ...$attachmentsHistory);
+					$attachmentsHistory = array_map(static function (array $attachment) {
+						return $attachment['file_id'];
+					}, $attachmentsHistory);
+
+					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $attachmentsHistory);
+				} else {
+					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId);
+				}
 			}
 		}
 		return $taskId;
@@ -567,6 +581,14 @@ class ChatService {
 		return in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
 	}
 
+	public function isMultimodalChatAvailable(): bool {
+		if (!class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalChatWithTools')) {
+			return false;
+		}
+		return in_array(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
+	}
+
+
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings
 		// The content is the remote audio ID (or the transcription as fallback)
@@ -665,6 +687,49 @@ class ChatService {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
+		/** @psalm-suppress UndefinedMethod */
+		$task->setPreferStreaming(true);
+		try {
+			$this->taskProcessingManager->scheduleTask($task);
+		} catch (PreConditionNotMetException $e) {
+			throw new BadRequestException('pre_condition_not_met', previous: $e);
+		} catch (\OCP\TaskProcessing\Exception\UnauthorizedException $e) {
+			throw new BadRequestException('unauthorized', previous: $e);
+		} catch (ValidationException $e) {
+			throw new BadRequestException('validation_failed', previous: $e);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			throw new InternalException(previous: $e);
+		}
+		return $task->getId() ?? 0;
+	}
+
+	/**
+	 * Schedule a Multimodal Chat task
+	 *
+	 * @throws BadRequestException
+	 * @throws InternalException
+	 */
+	private function scheduleMultimodalChatTask(
+		?string $userId,
+		string $content,
+		string $systemPrompt,
+		array $history,
+		int $sessionId,
+		array $attachmentsHistory,
+	): int {
+		$customId = 'chatty-llm:' . $sessionId;
+		$this->checkIfSessionIsThinking($userId, $customId);
+		$input = [
+			'input' => $content,
+			'system_prompt' => $systemPrompt,
+			'history' => $history,
+			'input_attachments' => $attachmentsHistory,
+			'tools' => '[]', // Empty tools as there is not a non tools version
+			'tool_message' => '',
+		];
+		/** @psalm-suppress UndefinedClass */
+		$task = new Task(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
 		$task->setPreferStreaming(true);
 		try {

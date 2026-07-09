@@ -72,6 +72,8 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			$this->initialStateService->provideInitialState('contextChatIndexingComplete', $indexingComplete);
 			$this->initialStateService->provideInitialState('contextAgentToolSources', $this->assistantService->informationSources);
 			$this->initialStateService->provideInitialState('audio_chat_available', $this->assistantService->isAudioChatAvailable());
+			$multimodalChatAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalChatWithTools') && array_key_exists(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $this->taskProcessingManager->getAvailableTaskTypes());
+			$this->initialStateService->provideInitialState('multimodal_chat_available', $multimodalChatAvailable);
 			$autoplayAudioChat = $this->config->getUserValue($this->userId, Application::APP_ID, 'autoplay_audio_chat', '1') === '1';
 			$this->initialStateService->provideInitialState('autoplay_audio_chat', $autoplayAudioChat);
 			$agencyAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypes());
