@@ -174,7 +174,7 @@ class AgentSkillsService {
 	/**
 	 * Store (create or overwrite) a skill for a user.
 	 *
-	 * Creates the folder "Skills/$skillName/" and writes a SKILL.md file with a YAML frontmatter
+	 * Creates the folder "{Assistant}/Context Agent/Skills/$skillName/" and writes a SKILL.md file with a YAML frontmatter
 	 * header containing the name and description, followed by the provided body content.
 	 *
 	 * @param string $userId

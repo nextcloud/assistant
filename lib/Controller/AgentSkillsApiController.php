@@ -25,6 +25,10 @@ use Throwable;
 
 class AgentSkillsApiController extends OCSController {
 
+	private const MAX_SKILL_NAME_LENGTH = 64;
+	private const MAX_DESCRIPTION_LENGTH = 1024;
+	private const MAX_CONTENT_LENGTH = 50_000;
+
 	public function __construct(
 		string $appName,
 		IRequest $request,
@@ -37,10 +41,11 @@ class AgentSkillsApiController extends OCSController {
 	}
 
 	/**
-	 * List the current user's skills
+	 * List available skills for the current user
 	 *
 	 * Returns each skill's name and description, as parsed from the YAML frontmatter
 	 * of its SKILL.md file.
+	 * Includes admin-configured global skills when configured.
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{skills: list<array{name: string, description: string}>}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>|DataResponse<Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 *
@@ -73,11 +78,14 @@ class AgentSkillsApiController extends OCSController {
 	 * Load a skill's full content
 	 *
 	 * Returns the full content of the SKILL.md file (frontmatter + body) for the given skill.
+	 * If the skill is not present in the user's skills, the admin-configured global skills folder
+	 * is used as a fallback when configured.
 	 *
 	 * @param string $skillName The skill's folder name
-	 * @return DataResponse<Http::STATUS_OK, array{content: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>|DataResponse<Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{content: string}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>|DataResponse<Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 *
 	 * 200: Skill content returned
+	 * 400: Skill name is too long
 	 * 401: User is not authenticated
 	 * 404: Skill not found
 	 * 500: Skill could not be loaded
@@ -87,6 +95,9 @@ class AgentSkillsApiController extends OCSController {
 	public function loadSkill(string $skillName): DataResponse {
 		if ($this->userId === null) {
 			return new DataResponse(['error' => $this->l10n->t('Unknown user')], Http::STATUS_UNAUTHORIZED);
+		}
+		if (mb_strlen($skillName) > self::MAX_SKILL_NAME_LENGTH) {
+			return new DataResponse(['error' => $this->l10n->t('Skill name is too long (max %d characters)', [self::MAX_SKILL_NAME_LENGTH])], Http::STATUS_BAD_REQUEST);
 		}
 		try {
 			$content = $this->agentSkillsService->loadSkill($this->userId, $skillName);
@@ -124,6 +135,15 @@ class AgentSkillsApiController extends OCSController {
 	public function storeSkill(string $skillName, string $description, string $content): DataResponse {
 		if ($this->userId === null) {
 			return new DataResponse(['error' => $this->l10n->t('Unknown user')], Http::STATUS_UNAUTHORIZED);
+		}
+		if (mb_strlen($skillName) > self::MAX_SKILL_NAME_LENGTH) {
+			return new DataResponse(['error' => $this->l10n->t('Skill name is too long (max %d characters)', [self::MAX_SKILL_NAME_LENGTH])], Http::STATUS_BAD_REQUEST);
+		}
+		if (mb_strlen($description) > self::MAX_DESCRIPTION_LENGTH) {
+			return new DataResponse(['error' => $this->l10n->t('Description is too long (max %d characters)', [self::MAX_DESCRIPTION_LENGTH])], Http::STATUS_BAD_REQUEST);
+		}
+		if (mb_strlen($content) > self::MAX_CONTENT_LENGTH) {
+			return new DataResponse(['error' => $this->l10n->t('Content is too long (max %d characters)', [self::MAX_CONTENT_LENGTH])], Http::STATUS_BAD_REQUEST);
 		}
 		try {
 			$action = $this->agentSkillsService->storeSkill($this->userId, $skillName, $description, $content);
