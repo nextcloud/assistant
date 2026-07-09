@@ -211,7 +211,7 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Генерація відповіді в чаті займає більше часу, ніж очікувалося. Зверніться до адміністратора, щоб переконатися, що Assistant налаштований правильно.",
     "You" : "Ви",
     "Message copied to clipboard" : "Повідомлення скопійовано до буфера обміну",
-    "Copy message" : "Скопіювати повідомлення",
+    "Copy message" : "Копіювати повідомлення",
     "Regenerate message" : "Регенерувати повідомлення",
     "Delete message" : "Вилучити повідомлення",
     "Select Files/Folders" : "Виберіть файли/каталоги",

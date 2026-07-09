@@ -318,6 +318,8 @@ OC.L10N.register(
     "Message copied to clipboard" : "訊息已複製到剪貼簿",
     "MCP server: {tool_id}" : "MCP 伺服器：{tool_id}",
     "Reasoning content" : "推理內容",
+    "Information sources & actions" : "資訊來源與動作",
+    "Reasoning…" : "推理……",
     "Copy message" : "複製訊息",
     "Regenerate message" : "重新產生訊息",
     "Delete message" : "刪除訊息",

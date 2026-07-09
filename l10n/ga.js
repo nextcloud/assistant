@@ -318,6 +318,8 @@ OC.L10N.register(
     "Message copied to clipboard" : "Cóipeáladh an teachtaireacht chuig an ngearrthaisce",
     "MCP server: {tool_id}" : "Freastalaí MCP: {tool_id}",
     "Reasoning content" : "Ábhar réasúnaíochta",
+    "Information sources & actions" : "Foinsí faisnéise agus gníomhartha",
+    "Reasoning…" : "Réasúnaíocht…",
     "Copy message" : "Cóipeáil teachtaireacht",
     "Regenerate message" : "Athghin teachtaireacht",
     "Delete message" : "Scrios teachtaireacht",
