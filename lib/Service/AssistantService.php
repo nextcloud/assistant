@@ -785,7 +785,7 @@ class AssistantService {
 					/** @var int|list<int> $outputSlot */
 					$outputSlot = $task->getOutput()[$key];
 					if (is_array($outputSlot)) {
-						$ids += $outputSlot;
+						$ids = array_merge($ids, $outputSlot);
 					} else {
 						$ids[] = $outputSlot;
 					}

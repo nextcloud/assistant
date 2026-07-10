@@ -102,13 +102,15 @@
 			:autoplay="message.autoPlay"
 			:file-id="a.file_id"
 			:task-id="message.role === 'human' ? undefined : (a.ocp_task_id ?? message.ocp_task_id)"
-			:is-output="message.role === 'assistant'" />
+			:is-output="isOutput" />
 		<FileDisplay v-for="f in fileAttachments"
 			:key="f.type + '-' + f.file_id"
 			class="message__content"
 			:file-id="f.file_id"
 			:task-id="message.role === 'human' ? undefined : (f.ocp_task_id ?? message.ocp_task_id)"
-			:is-output="message.role === 'assistant'" />
+			:is-output="isOutput"
+			:clickable="isOutput"
+			@click.native="onPreviewClick(f)" />
 	</div>
 </template>
 
@@ -224,6 +226,9 @@ export default {
 		fileAttachments() {
 			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.File) ?? []
 		},
+		isOutput() {
+			return this.message.role === 'assistant'
+		},
 	},
 
 	watch: {
@@ -283,6 +288,24 @@ export default {
 				return t('assistant', 'MCP server: {tool_id}', { tool_id: source.substring('mcp_'.length) })
 			}
 			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
+		},
+		onPreviewClick(file) {
+			// do not open input media files in the viewer
+			if (file.file_id === null || !this.isOutput) {
+				return
+			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/save', {
+				taskId: file.ocp_task_id ?? this.message.ocp_task_id,
+				fileId: file.file_id,
+			})
+			return axios.post(url).then(response => {
+				const savedPath = response.data.ocs.data.path
+				console.debug('[assistant] view output file', savedPath)
+				OCA.Viewer.open({ path: savedPath })
+			}).catch(error => {
+				console.error(error)
+			})
 		},
 	},
 }

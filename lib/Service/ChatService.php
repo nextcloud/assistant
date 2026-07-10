@@ -40,6 +40,7 @@ class ChatService {
 		private readonly IManager $taskProcessingManager,
 		private readonly LoggerInterface $logger,
 		private readonly ITimeFactory $timeFactory,
+		private readonly AssistantService $assistantService,
 	) {
 	}
 
@@ -453,9 +454,23 @@ class ChatService {
 						'content' => $message->getContent(),
 					]);
 				}, $history);
-				if (count($lastAttachments) > 0 && $this->isMultimodalChatAvailable()) {
+				if ($this->isMultimodalChatAvailable()) {
 					// for a multimodal chat task, let's use the attachments in the history as we don't know the structure in history
-					$attachmentsHistory = array_map(static function (Message $message) {
+					$assistantService = $this->assistantService;
+					$attachmentsHistory = array_map(static function (Message $message) use ($userId, $assistantService) {
+						// Make sure that the user has access to the output files
+						if ($message->getRole() === Message::ROLE_ASSISTANT) {
+							$attachments = $message->jsonSerialize()['attachments'];
+							$result = [];
+							foreach ($attachments as $attachment) {
+								$info = $assistantService->saveOutputFile($userId, $message->getOcpTaskId(), $attachment['file_id']);
+								$result[] = [
+									'type' => 'File',
+									'file_id' => $info['fileId'],
+								];
+							}
+							return $result;
+						}
 						return $message->jsonSerialize()['attachments'];
 					}, $history);
 					// Just add all the attachments in the history as attachments for the latest message as we can't know the structure in history
@@ -463,7 +478,6 @@ class ChatService {
 					$attachmentsHistory = array_map(static function (array $attachment) {
 						return $attachment['file_id'];
 					}, $attachmentsHistory);
-
 					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $attachmentsHistory);
 				} else {
 					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId);
