@@ -11,6 +11,7 @@
 		</label>
 		<NcRichText
 			v-if="isOutput && hasValue && !isEditing"
+			ref="richText"
 			class="rendered-output output-wrapper"
 			:title="t('assistant', 'Double-click to edit')"
 			:text="value ?? ''"
@@ -196,10 +197,16 @@ export default {
 			if (!this.streaming()) {
 				return
 			}
-			const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
-			if (scrollableArea) {
-				scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
-			}
+			this.$nextTick(() => {
+				const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
+				if (scrollableArea) {
+					scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
+				}
+				const richText = this.$refs.richText?.$el
+				if (richText) {
+					richText.scrollTo(0, richText.scrollHeight)
+				}
+			})
 		},
 	},
 
