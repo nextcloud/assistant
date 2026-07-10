@@ -325,6 +325,7 @@ body[dir="rtl"] .output-buttons {
 		border-radius: var(--border-radius-large) !important;
 		padding: 8px !important;
 		padding-bottom: 42px !important;
+		min-height: calc(var(--default-clickable-area) * 3 + 4px);
 		max-height: 35vh !important;
 		overflow-y: auto !important;
 		.rendered-output, .rendered-output * {
