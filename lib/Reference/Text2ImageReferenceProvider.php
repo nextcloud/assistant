@@ -90,5 +90,4 @@ class Text2ImageReferenceProvider extends ADiscoverableReferenceProvider {
 		$this->referenceManager->invalidateCache($userId);
 	}
 
-
 }

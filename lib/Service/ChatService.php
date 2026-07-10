@@ -364,7 +364,6 @@ class ChatService {
 				throw new InternalException(previous: $e);
 			}
 
-
 			try {
 				$session = $this->sessionMapper->getUserSession($userId, $sessionId);
 			} catch (DoesNotExistException $e) {
@@ -475,7 +474,6 @@ class ChatService {
 			throw new InternalException(previous: $e);
 		}
 
-
 		try {
 			$session = $this->sessionMapper->getUserSession($userId, $sessionId);
 		} catch (DoesNotExistException $e) {
@@ -553,7 +551,6 @@ class ChatService {
 		}
 		return in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
 	}
-
 
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings

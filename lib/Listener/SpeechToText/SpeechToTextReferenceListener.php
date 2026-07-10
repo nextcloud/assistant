@@ -8,7 +8,6 @@
 namespace OCA\Assistant\Listener\SpeechToText;
 
 use OCA\Assistant\AppInfo\Application;
-
 use OCP\Collaboration\Reference\RenderReferenceEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;

@@ -62,7 +62,6 @@ class ImageToTextTranslateProvider implements ISynchronousProvider {
 		];
 	}
 
-
 	public function getOptionalInputShape(): array {
 		return [];
 	}
