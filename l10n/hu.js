@@ -44,6 +44,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Az előállított hangválasz a beszélgetés részeként",
     "Output transcript" : "Kimenet leirata",
     "Transcription of the audio output" : "A hangkimenet leirata",
+    "Audio transcription" : "Hang átírása",
     "Input files" : "Bemeneti fájlok",
     "The files to extract text from" : "Fájlok, melyekből szöveget kell kinyerni",
     "Origin language" : "Eredeti nyelv",

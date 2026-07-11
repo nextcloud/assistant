@@ -107,6 +107,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Генерисани гласовни одговор као део разговора",
     "Output transcript" : "Транскрипт излаза",
     "Transcription of the audio output" : "Транскрипција аудио излаза",
+    "Audio transcription" : "Звучни транскрипт",
     "Origin language" : "Изворни језик",
     "The language of the origin text" : "Језик изворног текста",
     "Target language" : "Циљни језик",
