@@ -32,6 +32,7 @@ OC.L10N.register(
     "Generate text" : "Ustvari besedilo",
     "Assistant" : "Pomočnik",
     "Memories" : "Spomini",
+    "Audio transcription" : "Zvočni prepis",
     "Target language" : "Ciljni jezik",
     "Administration documentation" : "Skrbniška dokumentacija",
     "Launch this task again" : "Znova zaženi nalogo",

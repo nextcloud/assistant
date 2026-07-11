@@ -118,6 +118,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Vygenerovaná hlasová odpoveď ako súčasť konverzácie",
     "Output transcript" : "Výstupný prepis",
     "Transcription of the audio output" : "Prepis audio výstupu",
+    "Audio transcription" : "Prepis zvuku",
+    "This was generated using Artificial Intelligence." : "Toto bolo generované pomocou umelej inteligencie.",
     "Input files" : "Vstupné súbory",
     "The files to extract text from" : "Súbory na extrahovanie textu z",
     "Origin language" : "Pôvodný jazyk",

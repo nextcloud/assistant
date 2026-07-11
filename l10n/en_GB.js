@@ -142,6 +142,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "The generated voice response as part of the conversation",
     "Output transcript" : "Output transcript",
     "Transcription of the audio output" : "Transcription of the audio output",
+    "Audio transcription" : "Audio transcription",
+    "This was generated using Artificial Intelligence." : "This was generated using Artificial Intelligence.",
     "Translate image" : "Translate image",
     "Translate the text content of an image" : "Translate the text content of an image",
     "Input files" : "Input files",

@@ -114,6 +114,8 @@
     "The generated voice response as part of the conversation" : "سۆھبەتنىڭ بىر قىسمى سۈپىتىدە ھاسىل قىلىنغان ئاۋازلىق جاۋاب",
     "Output transcript" : "چىقىرىش تېكىستى",
     "Transcription of the audio output" : "ئاۋاز چىقىرىشنىڭ كۆچۈرۈلۈشى",
+    "Audio transcription" : "Audio transcription",
+    "This was generated using Artificial Intelligence." : "بۇ سۈنئىي ئەقىل ئارقىلىق بارلىققا كەلتۈرۈلدى.",
     "Input files" : "كىرگۈزگۈچى ھۆججەتلەر",
     "The files to extract text from" : "تېكىست چىقىرۋالدىغان ھۆججەتلەر",
     "Origin language" : "ئەسلى تىل",

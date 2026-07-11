@@ -109,6 +109,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Згенерована голосова відповідь як частина розмови",
     "Output transcript" : "Вихідна розшифровка",
     "Transcription of the audio output" : "Транскрипція аудіовиходу",
+    "Audio transcription" : "Аудіо транскрипція",
     "Input files" : "Вхідні файли",
     "The files to extract text from" : "Файли, з яких потрібно видобути текст",
     "Origin language" : "Мова походження",

@@ -120,6 +120,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "La réponse vocale générée dans le cadre de la conversation",
     "Output transcript" : "Transcription de la sortie",
     "Transcription of the audio output" : "Transcription de la sortie audio",
+    "Audio transcription" : "Transcription audio",
     "Translate image" : "Traduire l'image",
     "Translate the text content of an image" : "Traduire le contenu textuel d'une image",
     "Input files" : "Fichiers d'entrée",
