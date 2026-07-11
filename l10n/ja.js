@@ -111,6 +111,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "会話の一部として生成された音声応答",
     "Output transcript" : "文字起こしを出力",
     "Transcription of the audio output" : "音声出力の文字起こし",
+    "Audio transcription" : "音声の文字起こし",
     "Input files" : "入力ファイル",
     "The files to extract text from" : "テキストを抽出するファイル",
     "Origin language" : "元の言語",

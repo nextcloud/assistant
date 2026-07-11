@@ -120,6 +120,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "A resposta de voz xerada como parte da conversa",
     "Output transcript" : "Transcrición de saída",
     "Transcription of the audio output" : "Transcrición da saída de son",
+    "Audio transcription" : "Transcrición de son",
+    "This was generated using Artificial Intelligence." : "Isto foi xerado empregando intelixencia artificial.",
     "Translate image" : "Traducir a imaxe",
     "Translate the text content of an image" : "Traducir o contido de texto dunha imaxe",
     "Input files" : "Ficheiros de entrada",

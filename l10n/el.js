@@ -109,6 +109,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Η παραγόμενη φωνητική απάντηση ως μέρος της συνομιλίας",
     "Output transcript" : "Αποτύπωμα εξόδου",
     "Transcription of the audio output" : "Αποτύπωση της φωνητικής εξόδου",
+    "Audio transcription" : "Μεταγραφή ήχου",
     "Origin language" : "Γλώσσα προέλευσης",
     "The language of the origin text" : "Η γλώσσα του αρχικού κειμένου",
     "Target language" : "Γλώσσα στόχος",
