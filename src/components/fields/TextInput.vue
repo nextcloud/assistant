@@ -12,7 +12,7 @@
 		<NcRichContenteditable
 			:id="id"
 			ref="input"
-			:model-value="value ?? ''"
+			:model-value="isOutput ? formattedValue : (value ?? '')"
 			:link-autocomplete="false"
 			:multiline="isMobile"
 			:maxlength="maxLength"
