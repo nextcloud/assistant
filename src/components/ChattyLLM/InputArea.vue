@@ -3,9 +3,17 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="input-area">
+	<div class="input-area"
+		:class="{
+			draggedOver: isDraggedOver,
+		}"
+		@dragover="onDragOver"
+		@dragenter="onDragEnter"
+		@dragleave="onDragLeave"
+		@drop="onDrop">
 		<NcRichContenteditable ref="richContenteditable"
 			:class="{ 'input-area__thinking': loading.llmGeneration }"
+			class="input"
 			:model-value="chatContent"
 			:auto-complete="() => {}"
 			:link-auto-complete="false"
@@ -50,7 +58,9 @@ import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
-import { MAX_TEXT_INPUT_LENGTH } from '../../constants.js'
+import { getCurrentUser } from '@nextcloud/auth'
+import { uploadInputFile } from '../../utils.js'
+import { VALID_TEXT_MIME_TYPES, MAX_TEXT_INPUT_LENGTH } from '../../constants.js'
 
 /*
 maxlength calculation (just a rough estimate):
@@ -106,6 +116,7 @@ export default {
 			scheduledText: t('assistant', 'Waiting…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
 			isRecording: false,
+			isDraggedOver: false,
 			audioChatAvailable: loadState('assistant', 'audio_chat_available', false),
 		}
 	},
@@ -156,6 +167,88 @@ export default {
 				this.$emit('submit', e)
 			}
 		},
+		onDragOver(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragEnter(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragLeave(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = false
+			}
+		},
+		onDrop(e) {
+			e.preventDefault()
+			e.stopPropagation()
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				this.uploadDroppedFile(fileItems[0].getAsFile())
+				this.isDraggedOver = false
+			}
+		},
+		uploadDroppedFile(file) {
+			if (!VALID_TEXT_MIME_TYPES.includes(file.type)) {
+				showError(t('assistant', 'Invalid file type. Only text files are supported.'))
+				return
+			}
+			this.isUploading = true
+
+			return uploadInputFile(file)
+				.then((response) => {
+					const data = response.data.ocs.data
+					this.onFileUploaded({ fileId: data.fileId, filePath: data.filePath })
+				})
+				.catch(error => {
+					console.error('error while uploading a file after drop', error)
+				})
+				.then(() => {
+					this.isUploading = false
+				})
+		},
+		onFileUploaded({ fileId, filePath }) {
+			const userId = getCurrentUser()?.uid
+			if (!userId) {
+				return
+			}
+			const userFilePath = filePath.replace('/' + userId + '/files/', '/')
+			const url = generateOcsUrl('/apps/assistant/api/v1/parse-file')
+			axios.post(url, {
+				filePath: userFilePath,
+			}).then((response) => {
+				const data = response.data?.ocs?.data
+				if (data?.parsedText === undefined) {
+					showError(t('assistant', 'Unexpected response from text parser'))
+					return
+				}
+
+				this.$emit('update:chatContent', data?.parsedText)
+			}).catch((error) => {
+				console.error(error)
+				showError(t('assistant', 'Could not parse file'))
+			})
+		},
 	},
 }
 </script>
@@ -191,6 +284,11 @@ export default {
 	justify-content: space-between;
 	align-items: end;
 	gap: 4px;
+
+	&.draggedOver .input {
+		border: solid 2px var(--color-border-success);
+		border-radius: var(--border-radius-large);
+	}
 
 	:deep(&__thinking > div) {
 		font-style: italic;

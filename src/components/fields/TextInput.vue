@@ -3,7 +3,14 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="text-input">
+	<div class="text-input"
+		:class="{
+			draggedOver: isDraggedOver,
+		}"
+		@dragover="onDragOver"
+		@dragenter="onDragEnter"
+		@dragleave="onDragLeave"
+		@drop="onDrop">
 		<label :for="id">
 			{{ label }}
 			<br v-if="limitLabel">
@@ -65,6 +72,8 @@ import isMobile from '../../mixins/isMobile.js'
 import axios from '@nextcloud/axios'
 import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
+import { uploadInputFile } from '../../utils.js'
 import { VALID_TEXT_MIME_TYPES, MAX_TEXT_INPUT_LENGTH } from '../../constants.js'
 
 const picker = (callback, target) => getFilePickerBuilder(t('assistant', 'Choose a text file'))
@@ -139,6 +148,7 @@ export default {
 		return {
 			copied: false,
 			maxLength: MAX_TEXT_INPUT_LENGTH,
+			isDraggedOver: false,
 		}
 	},
 
@@ -215,6 +225,88 @@ export default {
 				showError(t('assistant', 'Result could not be copied to clipboard'))
 			}
 		},
+		onDragOver(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragEnter(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = true
+			}
+		},
+		onDragLeave(e) {
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				e.preventDefault()
+				e.stopPropagation()
+				this.isDraggedOver = false
+			}
+		},
+		onDrop(e) {
+			e.preventDefault()
+			e.stopPropagation()
+			const fileItems = [...e.dataTransfer.items].filter(
+				(item) => item.kind === 'file',
+			)
+			if (fileItems.length === 1) {
+				this.uploadDroppedFile(fileItems[0].getAsFile())
+				this.isDraggedOver = false
+			}
+		},
+		uploadDroppedFile(file) {
+			if (!VALID_TEXT_MIME_TYPES.includes(file.type)) {
+				showError(t('assistant', 'Invalid file type. Only text files are supported.'))
+				return
+			}
+			this.isUploading = true
+
+			return uploadInputFile(file)
+				.then((response) => {
+					const data = response.data.ocs.data
+					this.onFileUploaded({ fileId: data.fileId, filePath: data.filePath })
+				})
+				.catch(error => {
+					console.error('error while uploading a file after drop', error)
+				})
+				.then(() => {
+					this.isUploading = false
+				})
+		},
+		onFileUploaded({ fileId, filePath }) {
+			const userId = getCurrentUser()?.uid
+			if (!userId) {
+				return
+			}
+			const userFilePath = filePath.replace('/' + userId + '/files/', '/')
+			const url = generateOcsUrl('/apps/assistant/api/v1/parse-file')
+			axios.post(url, {
+				filePath: userFilePath,
+			}).then((response) => {
+				const data = response.data?.ocs?.data
+				if (data?.parsedText === undefined) {
+					showError(t('assistant', 'Unexpected response from text parser'))
+					return
+				}
+
+				this.$emit('update:value', data?.parsedText)
+			}).catch((error) => {
+				console.error(error)
+				showError(t('assistant', 'Could not parse file'))
+			})
+		},
 	},
 }
 </script>
@@ -232,6 +324,11 @@ body[dir="rtl"] .choose-file-button {
 
 .text-input {
 	position: relative;
+
+	&.draggedOver {
+		border: solid 2px var(--color-border-success);
+		border-radius: var(--border-radius-large);
+	}
 
 	.copy-button,
 	.choose-file-button {
