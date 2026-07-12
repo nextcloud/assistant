@@ -70,6 +70,17 @@ export default {
 	},
 
 	watch: {
+		selectValue: {
+			handler(newVal) {
+				// If the current value doesn't match any available option, clear it.
+				// This handles stale enum values (e.g. a removed model) when loading
+				// a task from history.
+				if (this.value !== null && this.value !== undefined && this.value !== '' && newVal === undefined) {
+					this.$emit('update:value', undefined)
+				}
+			},
+			immediate: true,
+		},
 	},
 
 	mounted() {
