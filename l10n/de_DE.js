@@ -167,6 +167,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Die erstellte Sprachantwort als Teil des Gesprächs",
     "Output transcript" : "Ausgabetranskript",
     "Transcription of the audio output" : "Transkription der Audio-Ausgabe",
+    "Translation model" : "Übersetzungsmodell",
+    "The model used to translate" : "Das zum Übersetzen verwendete Modell",
     "Audio transcription" : "Audio-Transskription",
     "The transcribed audio input" : "Die transkribierte Audioaufnahme",
     "Text output" : "Textausgabe",
