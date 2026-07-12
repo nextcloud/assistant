@@ -167,6 +167,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "An freagra gutha a ghintear mar chuid den chomhrá",
     "Output transcript" : "Tras-scríbhinn aschuir",
     "Transcription of the audio output" : "Tras-scríobh an aschuir fuaime",
+    "Translation model" : "Múnla aistriúcháin",
+    "The model used to translate" : "An tsamhail a úsáideadh chun aistriúchán a dhéanamh",
     "Audio transcription" : "Trascríobh fuaime",
     "The transcribed audio input" : "An t-ionchur fuaime trascríofa",
     "Text output" : "Aschur téacs",
