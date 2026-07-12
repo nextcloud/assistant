@@ -167,6 +167,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Loodud häälvastus vestluse osana",
     "Output transcript" : "Väljundi üleskirjutus",
     "Transcription of the audio output" : "Heliväljundi üleskirjutus",
+    "Translation model" : "Tõlkemudel",
+    "The model used to translate" : "Tõlkimisel kasutatv keelemudel",
     "Audio transcription" : "Heliriba üleskirjutus",
     "The transcribed audio input" : "Üleskirjutatud häälsisend",
     "Text output" : "Tekstiväljund",
