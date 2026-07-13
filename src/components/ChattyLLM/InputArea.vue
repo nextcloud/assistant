@@ -50,6 +50,7 @@
 				:maxlength="64_000"
 				:multiline="isMobile"
 				dir="auto"
+				@paste="onPaste"
 				@update:model-value="$emit('update:chatContent', $event)"
 				@submit="onSubmitText" />
 			<div class="input-area__button-box">
@@ -198,6 +199,13 @@ export default {
 	},
 
 	methods: {
+		onPaste(e) {
+			if (!this.multimodalChatAvailable || e.clipboardData.files.length === 0) {
+				return
+			}
+			e.preventDefault()
+			this.uploadFiles(e.clipboardData.files)
+		},
 		focus() {
 			this.$nextTick(() => {
 				this.$refs.richContenteditable.focus()
@@ -228,12 +236,17 @@ export default {
 			this.$refs.fileInput.click()
 		},
 		onUploadFileSelected() {
-			const files = this.$refs.fileInput.files
+			this.uploadFiles(this.$refs.fileInput.files)
+				.finally(() => {
+					this.$refs.fileInput.value = ''
+				})
+		},
+		uploadFiles(files) {
 			if (!files || files.length === 0) {
-				return
+				return Promise.resolve()
 			}
 			this.isUploading = true
-			Promise.all(Array.from(files).map(f => uploadInputFile(f)))
+			return Promise.all(Array.from(files).map(f => uploadInputFile(f)))
 				.then((responses) => {
 					const fileIds = responses.map(response => response.data.ocs.data.fileId)
 					this.attachedFileIds = [...this.attachedFileIds, ...fileIds]
@@ -244,7 +257,6 @@ export default {
 				})
 				.finally(() => {
 					this.isUploading = false
-					this.$refs.fileInput.value = ''
 				})
 		},
 		async onChooseFromNextcloud() {
