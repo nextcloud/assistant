@@ -447,39 +447,43 @@ class ChatService {
 				$fileId = $audioAttachment['file_id'];
 				$taskId = $this->scheduleAudioChatTask($userId, $fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
 			} else {
-				// for a text chat task, let's only use text in the history
-				$historyMessages = array_map(static function (Message $message) {
-					return json_encode([
-						'role' => $message->getRole(),
-						'content' => $message->getContent(),
-					]);
-				}, $history);
 				if ($this->isMultimodalChatAvailable()) {
-					// for a multimodal chat task, let's use the attachments in the history as we don't know the structure in history
+					// for a multimodal chat also attachments need to be added to the history
 					$assistantService = $this->assistantService;
-					$attachmentsHistory = array_map(static function (Message $message) use ($userId, $assistantService) {
-						// Make sure that the user has access to the output files
-						if ($message->getRole() === Message::ROLE_ASSISTANT) {
-							$attachments = $message->jsonSerialize()['attachments'];
-							$result = [];
-							foreach ($attachments as $attachment) {
+					$historyMessages = array_map(static function (Message $message) use ($userId, $assistantService) {
+						$attachments = $message->jsonSerialize()['attachments'];
+						// Attachments that were generated need to be saved in the user's files so they are ac
+						$content = array_map(static function (array $attachment) use ($userId, $assistantService, $message) {
+							if ($message->getRole() === Message::ROLE_ASSISTANT) {
 								$info = $assistantService->saveOutputFile($userId, $message->getOcpTaskId(), $attachment['file_id']);
-								$result[] = [
-									'type' => 'File',
+								return [
+									'type' => 'file',
 									'file_id' => $info['fileId'],
 								];
 							}
-							return $result;
-						}
-						return $message->jsonSerialize()['attachments'];
+							return ['type' => 'file', 'file_id' => $attachment['file_id']];
+						}, $attachments);
+						$content[] = [
+							'type' => 'text',
+							'text' => $message->getContent(),
+						];
+						return json_encode([
+							'role' => $message->getRole(),
+							'content' => $content,
+						]);
 					}, $history);
-					// Just add all the attachments in the history as attachments for the latest message as we can't know the structure in history
-					$attachmentsHistory = array_merge($lastAttachments, ...$attachmentsHistory);
-					$attachmentsHistory = array_map(static function (array $attachment) {
+					$lastAttachments = array_map(static function (array $attachment) {
 						return $attachment['file_id'];
-					}, $attachmentsHistory);
-					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $attachmentsHistory);
+					}, $lastAttachments);
+					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $lastAttachments);
 				} else {
+					// for a text chat task, let's only use text in the history
+					$historyMessages = array_map(static function (Message $message) {
+						return json_encode([
+							'role' => $message->getRole(),
+							'content' => $message->getContent(),
+						]);
+					}, $history);
 					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId);
 				}
 			}

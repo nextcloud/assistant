@@ -84,6 +84,8 @@ class ChattyLLMTaskListener implements IEventListener {
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID;
 			$isMultimodalChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalChatWithTools')
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID;
+			$isMultimodalAgencyChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalContextAgentInteraction')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID;
 
 			$taskOutput = $task->getOutput();
 
@@ -150,7 +152,7 @@ class ChattyLLMTaskListener implements IEventListener {
 			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 
 			// store the conversation token and the actions if we are using the agency feature
-			if ($isAgency || $isAgencyAudioChat) {
+			if ($isAgency || $isAgencyAudioChat || $isMultimodalAgencyChat) {
 				$conversationToken = ($taskOutput['conversation_token'] ?? null) ?: null;
 				$pendingActions = ($taskOutput['actions'] ?? null) ?: null;
 				$session->setAgencyConversationToken($conversationToken);
