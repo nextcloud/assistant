@@ -11,8 +11,10 @@
 		:label="field.description"
 		:placeholder="field.placeholder ?? field.description"
 		:title="field.name"
+		:can-improve-output="canImproveOutput"
 		@submit="onSubmit"
-		@update:value="onUpdateValue" />
+		@update:value="onUpdateValue"
+		@improve="$emit('improve', $event)" />
 </template>
 
 <script>
@@ -42,11 +44,16 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		canImproveOutput: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'submit',
 		'update:value',
+		'improve',
 	],
 
 	data() {

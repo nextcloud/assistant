@@ -22,23 +22,36 @@
 			:title="title"
 			@submit="hasValue && $emit('submit', $event)"
 			@update:model-value="$emit('update:value', $event)" />
-		<NcButton v-if="isOutput && hasValue"
-			class="copy-button"
-			variant="secondary"
-			:title="t('assistant', 'Copy output')"
-			@click="onCopy">
-			<template #icon>
-				<NcLoadingIcon v-if="streaming()" />
-				<ClipboardCheckOutlineIcon v-else-if="copied" />
-				<ContentCopyIcon v-else />
-			</template>
-			<span v-if="streaming()">
-				{{ t('assistant', 'Getting results...') }}
-			</span>
-			<span v-else>
-				{{ t('assistant', 'Copy') }}
-			</span>
-		</NcButton>
+		<div v-if="isOutput && hasValue"
+			class="output-buttons">
+			<NcButton v-if="!streaming() && canImproveOutput"
+				class="improve-button"
+				variant="secondary"
+				:title="t('assistant', 'Improve with new instructions')"
+				@click="$emit('improve', formattedValue)">
+				<template #icon>
+					<WrenchOutlineIcon size="20" />
+				</template>
+				{{ t('assistant', 'Improve this text') }}
+			</NcButton>
+			<NcButton
+				class="copy-button"
+				variant="secondary"
+				:title="t('assistant', 'Copy output')"
+				@click="onCopy">
+				<template #icon>
+					<NcLoadingIcon v-if="streaming()" size="20" />
+					<ClipboardCheckOutlineIcon v-else-if="copied" size="20" />
+					<ContentCopyIcon v-else size="20" />
+				</template>
+				<span v-if="streaming()">
+					{{ t('assistant', 'Getting results...') }}
+				</span>
+				<span v-else>
+					{{ t('assistant', 'Copy') }}
+				</span>
+			</NcButton>
+		</div>
 		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
 			variant="secondary"
@@ -54,6 +67,7 @@
 <script>
 import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+import WrenchOutlineIcon from 'vue-material-design-icons/WrenchOutline.vue'
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -89,15 +103,14 @@ export default {
 		FileDocumentOutlineIcon,
 		ClipboardCheckOutlineIcon,
 		ContentCopyIcon,
+		WrenchOutlineIcon,
 	},
 
 	mixins: [
 		isMobile,
 	],
 
-	inject: [
-		'streaming',
-	],
+	inject: ['streaming'],
 
 	props: {
 		id: {
@@ -128,11 +141,16 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		canImproveOutput: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'submit',
 		'update:value',
+		'improve',
 	],
 
 	data() {
@@ -230,21 +248,28 @@ body[dir="rtl"] .choose-file-button {
 	right: unset;
 }
 
+body[dir="rtl"] .output-buttons {
+	left: 4px;
+	right: unset;
+}
+
 .text-input {
 	position: relative;
 
-	.copy-button,
+	.output-buttons,
 	.choose-file-button {
 		position: absolute !important;
 	}
 
-	.choose-file-button {
-		bottom: 2px;
-	}
-
-	.copy-button {
+	.output-buttons {
 		bottom: 4px;
 		right: 4px;
+		display: flex;
+		gap: 4px;
+	}
+
+	.choose-file-button {
+		bottom: 2px;
 	}
 
 	.rich-contenteditable__input {
