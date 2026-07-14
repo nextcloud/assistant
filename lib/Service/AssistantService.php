@@ -743,7 +743,8 @@ class AssistantService {
 	 * @throws NotPermittedException
 	 */
 	private function getTargetFileName(File $file): string {
-		$mimeType = $this->detectMimeType($file->fopen('rb'));
+		$head = fread($file->fopen('rb'), 4096);
+		$mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
 		$fileName = $file->getName();
 
 		$mimes = new \Mimey\MimeTypes;
@@ -753,29 +754,6 @@ class AssistantService {
 			return $fileName . '.' . $extension;
 		}
 		return $fileName;
-	}
-
-	/**
-	 * Wraps mime_content_type() to avoid a PHP warning when given a stream
-	 * that does not implement stream_cast() (e.g. Icewind\Streams\CallbackWrapper,
-	 * returned by File::fopen() for some storage backends). The stream is
-	 * drained into a temp file first so mime_content_type() can operate on a
-	 * real path instead of the unsupported stream resource.
-	 *
-	 * @param resource $stream
-	 * @return string|false
-	 */
-	private function detectMimeType($stream) {
-		$tmpFile = tempnam(sys_get_temp_dir(), 'nc_assistant_mime_');
-		$tmpHandle = fopen($tmpFile, 'wb');
-		stream_copy_to_stream($stream, $tmpHandle);
-		fclose($tmpHandle);
-		if (is_resource($stream)) {
-			fclose($stream);
-		}
-		$mimeType = mime_content_type($tmpFile);
-		unlink($tmpFile);
-		return $mimeType;
 	}
 
 	/**
@@ -830,7 +808,8 @@ class AssistantService {
 	 */
 	public function getOutputFilePreviewFile(string $userId, int $taskId, int $fileId, ?int $x = 100, ?int $y = 100): ?array {
 		$taskOutputFile = $this->getTaskOutputFile($userId, $taskId, $fileId);
-		$realMime = $this->detectMimeType($taskOutputFile->fopen('rb'));
+		$head = fread($taskOutputFile->fopen('rb'), 4096);
+		$realMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
 		return $this->previewService->getFilePreviewFile($taskOutputFile, $x, $y, $realMime ?: null);
 	}
 
