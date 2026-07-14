@@ -134,7 +134,7 @@ class ChattyLLMTaskListener implements IEventListener {
 				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());
 				if ($isMultimodalChat) {
 					$attachments = $taskOutput['output_attachments'] ?? [];
-					$attachments = array_map(function($attachment) {
+					$attachments = array_map(function ($attachment) {
 						return [
 							'type' => 'File',
 							'file_id' => $attachment,

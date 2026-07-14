@@ -452,7 +452,7 @@ class ChatService {
 					$assistantService = $this->assistantService;
 					$historyMessages = array_map(static function (Message $message) use ($userId, $assistantService) {
 						$attachments = $message->jsonSerialize()['attachments'];
-						// Attachments that were generated need to be saved in the user's files so they are ac
+						// Attachments that were generated need to be saved in the user's files so they are accessible to provider
 						$content = array_map(static function (array $attachment) use ($userId, $assistantService, $message) {
 							if ($message->getRole() === Message::ROLE_ASSISTANT) {
 								$info = $assistantService->saveOutputFile($userId, $message->getOcpTaskId(), $attachment['file_id']);

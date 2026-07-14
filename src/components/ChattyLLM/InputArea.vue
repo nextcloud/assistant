@@ -57,7 +57,7 @@
 				<NcButton v-if="!audioChatAvailable || chatContent"
 					class="input-area__button-box__button"
 					:aria-label="submitBtnAriaText"
-					:disabled="disabled || !chatContent.trim() || chatContentTooLong"
+					:disabled="disabled || isUploading || !chatContent.trim() || chatContentTooLong"
 					variant="primary"
 					@click="onSubmitText">
 					<template #icon>
@@ -183,7 +183,7 @@ export default {
 			return this.loading.llmGeneration || this.loading.olderMessages || this.loading.initialMessages || this.loading.titleGeneration || this.loading.newHumanMessage || this.loading.newSession
 		},
 		chatContentTooLong() {
-			return this.chatContent.length > MAX_TEXT_INPUT_LENGTH && this.attachedFileIds.length > MAX_ATTACHED_FILES
+			return this.chatContent.length > MAX_TEXT_INPUT_LENGTH || this.attachedFileIds.length > MAX_ATTACHED_FILES
 		},
 		placeholder() {
 			return this.loading.llmGeneration
@@ -227,7 +227,7 @@ export default {
 			})
 		},
 		onSubmitText(e) {
-			if (!this.chatContentTooLong) {
+			if (!this.chatContentTooLong && !this.isUploading) {
 				this.$emit('submit', this.attachedFileIds)
 				this.attachedFileIds = []
 			}
