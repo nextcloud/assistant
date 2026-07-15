@@ -101,7 +101,7 @@ class Application extends App implements IBootstrap {
 		$context->registerNotifierService(Notifier::class);
 
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
-		
+
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {

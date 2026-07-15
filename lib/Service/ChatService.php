@@ -20,7 +20,7 @@ class ChatService {
 	) {
 	}
 
-    /**
+	/**
 	 * @throws InternalException
 	 */
 	public function deleteAllUserChatData(string $userId): void {
