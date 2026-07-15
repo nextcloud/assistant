@@ -23,6 +23,7 @@ use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
 use OCA\Assistant\Listener\TaskSuccessfulListener;
 use OCA\Assistant\Listener\Text2Image\Text2ImageReferenceListener;
 use OCA\Assistant\Listener\Text2Image\Text2StickerListener;
+use OCA\Assistant\Listener\UserDeletedListener;
 use OCA\Assistant\Notification\Notifier;
 use OCA\Assistant\Reference\FreePromptReferenceProvider;
 use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
@@ -48,6 +49,7 @@ use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\IManager;
+use OCP\User\Events\UserDeletedEvent;
 
 class Application extends App implements IBootstrap {
 
@@ -101,6 +103,8 @@ class Application extends App implements IBootstrap {
 		$context->registerNotifierService(Notifier::class);
 
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
+
+		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
 			$context->registerTaskProcessingProvider(AudioToAudioChatProvider::class);

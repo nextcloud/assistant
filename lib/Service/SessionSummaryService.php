@@ -42,6 +42,15 @@ class SessionSummaryService {
 	) {
 	}
 
+	public function deleteSummaryJobsForUser(string $userId): void {
+		if ($this->jobList->has(GenerateNewChatSummaries::class, ['userId' => $userId])) {
+			$this->jobList->remove(GenerateNewChatSummaries::class, ['userId' => $userId]);
+		}
+		if ($this->jobList->has(RegenerateOutdatedChatSummariesJob::class, ['userId' => $userId])) {
+			$this->jobList->remove(RegenerateOutdatedChatSummariesJob::class, ['userId' => $userId]);
+		}
+	}
+
 	private function generateSummaries(array $sessions): void {
 		foreach ($sessions as $session) {
 			try {
