@@ -21,6 +21,7 @@ use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
 use OCP\IDateTimeZone;
 use OCP\IL10N;
+use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class AssignmentsService {
@@ -33,6 +34,7 @@ class AssignmentsService {
 		private IJobList $jobList,
 		private IL10N $l10n,
 		private IDateTimeZone $dateTimeZone,
+		private IUserManager $userManager,
 	) {
 	}
 
@@ -85,11 +87,29 @@ class AssignmentsService {
 	}
 
 	/**
+	 * @throws InternalException
+	 */
+	public function deleteAllForUser(string $userId): void {
+		try {
+			$this->assignmentMapper->deleteAllForUser($userId);
+		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		if ($this->jobList->has(RunAssignmentsJob::class, ['userId' => $userId])) {
+			$this->jobList->remove(RunAssignmentsJob::class, ['userId' => $userId]);
+		}
+	}
+
+	/**
 	 * @throws InternalException|UnauthorizedException
 	 */
 	public function runDueAssignmentsForUser(?string $userId): void {
 		if ($userId === null) {
 			throw new UnauthorizedException();
+		}
+		if ($this->userManager->get($userId) === null) {
+			$this->deleteAllForUser($userId);
+			return;
 		}
 		try {
 			foreach ($this->assignmentMapper->findDueAssignmentsForUser($userId) as $assignment) {

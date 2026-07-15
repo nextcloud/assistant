@@ -86,4 +86,15 @@ class AssignmentMapper extends QBMapper {
 			yield $assignment;
 		}
 	}
+
+	/**
+	 * @throws \OCP\DB\Exception
+	 */
+	public function deleteAllForUser(string $userId): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
+
+		$qb->executeStatement();
+	}
 }

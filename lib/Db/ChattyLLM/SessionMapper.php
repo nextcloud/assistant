@@ -83,6 +83,19 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * @return \Generator<array-key, Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getAllUserSessions(string $userId): \Generator {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
+
+		yield from $this->yieldEntities($qb);
+	}
+
+	/**
 	 * @param string $userId
 	 * @param bool $isAssignment
 	 * @return list<Session>
@@ -201,6 +214,17 @@ class SessionMapper extends QBMapper {
 		$qb->delete($this->getTableName())
 			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
+
+		$qb->executeStatement();
+	}
+
+	/**
+	 * @throws \OCP\DB\Exception
+	 */
+	public function deleteAllSessionsForUser(string $userId): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
 
 		$qb->executeStatement();
 	}

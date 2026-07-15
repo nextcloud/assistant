@@ -153,6 +153,21 @@ class ChatService {
 	}
 
 	/**
+	 * @throws InternalException
+	 */
+	public function deleteAllUserChatData(string $userId): void {
+		try {
+			$sessions = $this->sessionMapper->getAllUserSessions($userId);
+			foreach ($sessions as $session) {
+				$this->messageMapper->deleteMessagesBySession($session->getId());
+			}
+			$this->sessionMapper->deleteAllSessionsForUser($userId);
+		} catch (Exception|\RuntimeException $e) {
+			throw new InternalException(previous: $e);
+		}
+	}
+
+	/**
 	 * @return list<Session>
 	 * @throws InternalException
 	 * @throws UnauthorizedException
