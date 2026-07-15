@@ -132,12 +132,13 @@ class ChattyLLMTaskListener implements IEventListener {
 				// the task is not an audio one, but we might still need to Tts the answer
 				// if it is a response to a ContextAgentInteraction confirmation that was asked about an audio message
 				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());
-				if ($isMultimodalChat) {
+				if ($isMultimodalChat || $isMultimodalAgencyChat) {
 					$attachments = $taskOutput['output_attachments'] ?? [];
-					$attachments = array_map(function ($attachment) {
+					$attachments = array_map(function ($attachment) use ($task) {
 						return [
 							'type' => 'File',
 							'file_id' => $attachment,
+							'ocp_task_id' => $task->getId(),
 						];
 					}, $attachments);
 					$message->setAttachments(json_encode($attachments));

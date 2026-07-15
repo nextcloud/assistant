@@ -773,7 +773,7 @@ class AssistantService {
 				/** @var int|list<int> $inputSlot */
 				$inputSlot = $task->getInput()[$key];
 				if (is_array($inputSlot)) {
-					$ids += $inputSlot;
+					$ids = array_merge($ids, $inputSlot);
 				} else {
 					$ids[] = $inputSlot;
 				}
@@ -792,7 +792,7 @@ class AssistantService {
 				}
 			}
 		}
-		return array_values($ids);
+		return $ids;
 	}
 
 	/**

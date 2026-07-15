@@ -400,6 +400,13 @@ class ChatService {
 				// audio agency
 				$fileId = $audioAttachment['file_id'];
 				$taskId = $this->scheduleAgencyAudioTask($userId, $fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId());
+			} elseif ($this->isMultimodalContextAgentAvailable()) {
+				// multimodal agency
+				$prompt = $lastUserMessage->getContent();
+				$inputAttachments = array_map(static function (array $attachment) {
+					return $attachment['file_id'];
+				}, $lastAttachments);
+				$taskId = $this->scheduleAgencyMultimodalTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, $inputAttachments);
 			} else {
 				// classic agency
 				$prompt = $lastUserMessage->getContent();
@@ -449,19 +456,14 @@ class ChatService {
 			} else {
 				if ($this->isMultimodalChatAvailable()) {
 					// for a multimodal chat also attachments need to be added to the history
-					$assistantService = $this->assistantService;
-					$historyMessages = array_map(static function (Message $message) use ($userId, $assistantService) {
+					$historyMessages = array_map(static function (Message $message) {
 						$attachments = $message->jsonSerialize()['attachments'];
-						// Attachments that were generated need to be saved in the user's files so they are accessible to provider
-						$content = array_map(static function (array $attachment) use ($userId, $assistantService, $message) {
-							if ($message->getRole() === Message::ROLE_ASSISTANT) {
-								$info = $assistantService->saveOutputFile($userId, $message->getOcpTaskId(), $attachment['file_id']);
-								return [
-									'type' => 'file',
-									'file_id' => $info['fileId'],
-								];
+						$content = array_map(static function (array $attachment) {
+							$newAttachment = ['type' => 'file', 'file_id' => $attachment['file_id']];
+							if (isset($attachment['ocp_task_id'])) {
+								$newAttachment['ocp_task_id'] = $attachment['ocp_task_id'];
 							}
-							return ['type' => 'file', 'file_id' => $attachment['file_id']];
+							return $newAttachment;
 						}, $attachments);
 						$content[] = [
 							'type' => 'text',
@@ -477,7 +479,7 @@ class ChatService {
 					}, $lastAttachments);
 					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $lastAttachments);
 				} else {
-					// for a text chat task, let's only use text in the history
+					// for a text chat task only use text in the history
 					$historyMessages = array_map(static function (Message $message) {
 						return json_encode([
 							'role' => $message->getRole(),
@@ -606,6 +608,12 @@ class ChatService {
 		return in_array(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
 	}
 
+	public function isMultimodalContextAgentAvailable(): bool {
+		if (!class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalContextAgentInteraction')) {
+			return false;
+		}
+		return in_array(\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
+	}
 
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings
@@ -792,6 +800,58 @@ class ChatService {
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
+			$taskInput,
+			Application::APP_ID . ':chatty-llm',
+			$userId,
+			$customId
+		);
+		/** @psalm-suppress UndefinedMethod */
+		$task->setPreferStreaming(true);
+		try {
+			$this->taskProcessingManager->scheduleTask($task);
+		} catch (PreConditionNotMetException $e) {
+			throw new BadRequestException('pre_condition_not_met', previous: $e);
+		} catch (\OCP\TaskProcessing\Exception\UnauthorizedException $e) {
+			throw new BadRequestException('unauthorized', previous: $e);
+		} catch (ValidationException $e) {
+			throw new BadRequestException('validation_failed', previous: $e);
+		} catch (\OCP\TaskProcessing\Exception\Exception $e) {
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			throw new InternalException(previous: $e);
+		}
+		return $task->getId() ?? 0;
+	}
+
+	/**
+	 * Schedule a multimodal agency chat task
+	 *
+	 * @param list<int> $inputAttachments
+	 * @throws BadRequestException
+	 * @throws InternalException
+	 */
+	private function scheduleAgencyMultimodalTask(
+		?string $userId,
+		string $content,
+		int $confirmation,
+		string $conversationToken,
+		int $sessionId,
+		array $inputAttachments,
+	): int {
+		$customId = 'chatty-llm:' . $sessionId;
+		$this->checkIfSessionIsThinking($userId, $customId);
+		$taskInput = [
+			'input' => $content,
+			'input_attachments' => $inputAttachments,
+			'confirmation' => $confirmation,
+			'conversation_token' => $conversationToken,
+		];
+		/** @psalm-suppress UndefinedClass */
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
+			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
+		}
+		/** @psalm-suppress UndefinedClass */
+		$task = new Task(
+			\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID,
 			$taskInput,
 			Application::APP_ID . ':chatty-llm',
 			$userId,
