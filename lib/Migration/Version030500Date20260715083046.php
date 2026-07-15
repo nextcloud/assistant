@@ -70,7 +70,7 @@ class Version030500Date20260715083046 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * @return list<string>
+	 * @return array<int, mixed>
 	 */
 	private function getDistinctUserIds(): array {
 		$userIds = [];
