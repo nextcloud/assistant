@@ -182,7 +182,7 @@ OC.L10N.register(
     "Error deleting message" : "Помилка видалення повідомлення",
     "Error fetching messages" : "Повідомлення про помилки при отриманні даних",
     "Error creating a new message" : "Помилка створення нового повідомлення",
-    "Invalid response received for a new conversation request" : "Отримано невірну відповідь на новий запит на розмову",
+    "Invalid response received for a new conversation request" : "Отримано недійсну відповідь на новий запит щодо початку нової розмови",
     "Error creating a new conversation" : "Помилка створення нової розмови",
     "Error regenerating a response" : "Помилка регенерації відповіді",
     "New conversation" : "Нова розмова",
