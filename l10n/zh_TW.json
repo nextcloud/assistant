@@ -165,6 +165,8 @@
     "The generated voice response as part of the conversation" : "產生的語音回應是對話的一部分",
     "Output transcript" : "輸出轉錄",
     "Transcription of the audio output" : "音訊輸出轉錄",
+    "Translation model" : "翻譯模型",
+    "The model used to translate" : "用來翻譯的模型",
     "Audio transcription" : "音訊轉錄",
     "The transcribed audio input" : "音訊輸入的轉錄內容",
     "Text output" : "文字輸出",
