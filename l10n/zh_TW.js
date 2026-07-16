@@ -424,6 +424,8 @@ OC.L10N.register(
     "Unexpected response from text parser" : "來自文字解析程式的意外回應",
     "Could not parse file" : "無法解析檔案",
     "Result could not be copied to clipboard" : "結果無法複製到剪貼簿",
+    "Improve with new instructions" : "透過新指示來改進",
+    "Improve this text" : "改進此文字",
     "Copy output" : "複製輸出",
     "Getting results..." : "正在取得結果……",
     "Copy" : "複製",
