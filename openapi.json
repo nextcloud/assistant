@@ -5052,6 +5052,32 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "Task processing failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "task_status": {
+                                            "type": "integer",
+                                            "format": "int64"
+                                        },
+                                        "userFacingErrorMessage": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "",
                         "content": {
@@ -5114,24 +5140,6 @@
                                             }
                                         }
                                     ]
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Task processing failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    }
                                 }
                             }
                         }
