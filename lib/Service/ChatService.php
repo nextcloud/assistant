@@ -845,10 +845,7 @@ class ChatService {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
-		/** @psalm-suppress UndefinedClass */
-		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
-			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
-		}
+		$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID,
