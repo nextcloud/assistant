@@ -424,6 +424,8 @@ OC.L10N.register(
     "Unexpected response from text parser" : "Unerwartete Antwort vom Textparser",
     "Could not parse file" : "Datei konnte nicht geparst werden",
     "Result could not be copied to clipboard" : "Ergebnis konnte nicht in die Zwischenablage kopiert werden",
+    "Improve with new instructions" : "Verbessern mit neuen Anweisungen",
+    "Improve this text" : "Diesen Text verbessern",
     "Copy output" : "Ausgabe kopieren",
     "Getting results..." : "Ergebnisse holen …",
     "Copy" : "Kopieren",
