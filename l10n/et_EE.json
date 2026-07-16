@@ -422,6 +422,8 @@
     "Unexpected response from text parser" : "Ootamatu vastus tekstitöötlemise moodulilt",
     "Could not parse file" : "Teksti polnud võimalik töödelda",
     "Result could not be copied to clipboard" : "Tulemust ei õnnestunud lõikelauale kopeerida.",
+    "Improve with new instructions" : "Paranda uue juhendi alusel",
+    "Improve this text" : "Paranda seda teksti",
     "Copy output" : "Kopeeri väljund",
     "Getting results..." : "Laadin tulemusi…",
     "Copy" : "Kopeeri",
