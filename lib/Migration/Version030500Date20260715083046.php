@@ -105,6 +105,6 @@ class Version030500Date20260715083046 extends SimpleMigrationStep {
 		}
 
 		$userIds = array_unique(array_merge($userIdsChat, $userIdsAssignments));
-		return $userIds;
+		return array_values($userIds);
 	}
 }
