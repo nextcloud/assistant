@@ -180,6 +180,17 @@ class SessionMapper extends QBMapper {
 		$qb->executeStatement();
 	}
 
+	/**
+	 * @throws \OCP\DB\Exception
+	 */
+	public function deleteAllSessionsForUser(string $userId): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
+
+		$qb->executeStatement();
+	}
+
 	public function updateSessionIsRemembered(?string $userId, int $sessionId, bool $is_remembered) {
 		$session = $this->getUserSession($userId, $sessionId);
 		$session->setIsRemembered($is_remembered);
