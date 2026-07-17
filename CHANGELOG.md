@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.5.0 2026-07-17
+
+### Added
+- Delete chat messages and assignments when user is deleted @janepie @lukasdotcom [#606](https://github.com/nextcloud/assistant/pull/606)
+
 ## 3.4.3 - 2026-05-26
 
 ### Fixed
