@@ -93,6 +93,9 @@ class TaskProcessingService {
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
 			$authorizedTaskTypes[] = \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID;
 		}
+		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')) {
+			$authorizedTaskTypes[] = \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID;
+		}
 		return in_array($taskTypeId, $authorizedTaskTypes, true);
 	}
 
@@ -111,7 +114,7 @@ class TaskProcessingService {
 			throw new Exception('Invalid task type for file action');
 		}
 		try {
-			$input = $taskTypeId === AudioToText::ID
+			$input = ($taskTypeId === AudioToText::ID) || (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles') && $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID)
 				? ['input' => $fileId]
 				: ['input' => $this->assistantService->parseTextFromFile($userId, fileId: $fileId)];
 		} catch (NotPermittedException|GenericFileException|LockedException|\OCP\Files\NotFoundException|Exception $e) {

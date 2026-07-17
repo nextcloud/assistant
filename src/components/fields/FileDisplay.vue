@@ -79,7 +79,9 @@ export default {
 
 	mounted() {
 		console.debug('CURRENT TASK', this.myCurrentTaskId)
-		this.getFileInfo()
+		if (!this.isOutput) {
+			this.getFileInfo()
+		}
 	},
 
 	methods: {

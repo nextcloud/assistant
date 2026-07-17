@@ -10,7 +10,7 @@ import CreationSvgIcon from '@mdi/svg/svg/creation.svg?raw'
 import SummarizeSymbol from '@material-symbols/svg-700/outlined/summarize.svg?raw'
 import TTSSymbol from '@material-symbols/svg-700/outlined/text_to_speech.svg?raw'
 import STTSymbol from '@material-symbols/svg-700/outlined/speech_to_text.svg?raw'
-import { VALID_AUDIO_MIME_TYPES, VALID_TEXT_MIME_TYPES } from '../constants.js'
+import { VALID_AUDIO_MIME_TYPES, VALID_TEXT_MIME_TYPES, VALID_VIDEO_MIME_TYPES } from '../constants.js'
 
 const actionIgnoreLists = [
 	'trashbin',
@@ -156,6 +156,45 @@ function registerSttAction() {
 	registerFileAction(sttAction)
 }
 
+function registerSttSubtitlesAction() {
+	const sttSubtitlesAction = {
+		id: 'assistant-stt-subtitles',
+		parent: 'assistant-group',
+		displayName: ({ nodes }) => {
+			return t('assistant', 'Generate subtitles using AI')
+		},
+		enabled({ nodes, view }) {
+			return !actionIgnoreLists.includes(view.id)
+				&& nodes.length === 1
+				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
+				&& nodes.every(({ type }) => type === FileType.File)
+				&& nodes.every(({ mime }) => VALID_AUDIO_MIME_TYPES.includes(mime) || VALID_VIDEO_MIME_TYPES.includes(mime))
+		},
+		iconSvgInline: () => STTSymbol,
+		order: 0,
+		async exec({ nodes }) {
+			const node = nodes[0]
+			const { default: axios } = await import('@nextcloud/axios')
+			const { generateOcsUrl } = await import('@nextcloud/router')
+			const { showError, showSuccess } = await import('@nextcloud/dialogs')
+			const url = generateOcsUrl('/apps/assistant/api/v1/file-action/{fileId}/core:audio2text:subtitles', { fileId: node.fileid })
+			try {
+				await axios.post(url)
+				showSuccess(
+					t('assistant', 'AI subtitles task submitted successfully.') + '\n'
+						+ t('assistant', 'You will be notified when it is ready.') + '\n'
+						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate subtitles" menu.'),
+				)
+			} catch (error) {
+				console.error(error)
+				showError(t('assistant', 'Failed to launch the AI file action'))
+			}
+			return null
+		},
+	}
+	registerFileAction(sttSubtitlesAction)
+}
+
 const assistantEnabled = loadState('assistant', 'assistant-enabled', false)
 const summarizeAvailable = loadState('assistant', 'summarize-available', false)
 const sttAvailable = loadState('assistant', 'stt-available', false)
@@ -174,6 +213,7 @@ if (assistantEnabled) {
 	}
 	if (sttAvailable) {
 		registerSttAction()
+		registerSttSubtitlesAction()
 	}
 	if (summarizeAvailable) {
 		registerSummarizeAction()
