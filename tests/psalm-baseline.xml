@@ -42,12 +42,4 @@
       <code><![CDATA[self::DEBUG]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="lib/Migration/Version030500Date20260715083046.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$userIds]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<string>]]></code>
-    </MoreSpecificReturnType>
-  </file>
 </files>

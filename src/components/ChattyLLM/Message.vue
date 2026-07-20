@@ -308,7 +308,7 @@ export default {
 				return axios.post(url).then(response => {
 					const savedPath = response.data.ocs.data.path
 					console.debug('[assistant] view output file', savedPath)
-					OCA.Viewer.open({ path: savedPath })
+					OCA?.Viewer?.open({ path: savedPath })
 				}).catch(error => {
 					console.error(error)
 				})
@@ -318,7 +318,7 @@ export default {
 			return axios.get(url).then(response => {
 				const path = this.toViewerPath(response.data.ocs.data.path)
 				console.debug('[assistant] view input file', path)
-				OCA.Viewer.open({ path })
+				OCA?.Viewer?.open({ path })
 			}).catch(error => {
 				console.error(error)
 			})

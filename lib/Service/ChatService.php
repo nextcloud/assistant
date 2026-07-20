@@ -40,7 +40,6 @@ class ChatService {
 		private readonly IManager $taskProcessingManager,
 		private readonly LoggerInterface $logger,
 		private readonly ITimeFactory $timeFactory,
-		private readonly AssistantService $assistantService,
 	) {
 	}
 
