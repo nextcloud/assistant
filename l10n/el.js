@@ -15,6 +15,8 @@ OC.L10N.register(
     "Copy file" : "Αντιγραφή αρχείου",
     "Delete file" : "Διαγραφή αρχείου",
     "Create bookmark" : "Δημιουργία σελιδοδείκτη",
+    "Create team" : "Δημιουργία ομάδας",
+    "Delete team" : "Διαγραφή ομάδας",
     "Create form" : "Δημιουργία φόρμας",
     "Delete form" : "Διαγραφή φόρμας",
     "Share with group" : "Κοινή χρήση με ομάδα",
