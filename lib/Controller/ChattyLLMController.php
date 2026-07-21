@@ -550,7 +550,7 @@ class ChattyLLMController extends OCSController {
 	 *
 	 * @param int $taskId The message generation task ID
 	 * @param int $sessionId The chat session ID
-	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int, slow_pickup: bool, task_output?: array<string, list<numeric|string>|numeric|string>|null}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 * @return JSONResponse<Http::STATUS_OK, AssistantChatAgencyMessage, array{}>|JSONResponse<Http::STATUS_EXPECTATION_FAILED, array{task_status: int, slow_pickup: bool, task_output?: array<string, list<numeric|string>|numeric|string>|null}, array{}>|JSONResponse<Http::STATUS_BAD_REQUEST, array{error: string, task_status?: int, userFacingErrorMessage?: ?string}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
 	 *
@@ -610,7 +610,11 @@ class ChattyLLMController extends OCSController {
 			}
 			return new JSONResponse($responsePayload, Http::STATUS_EXPECTATION_FAILED);
 		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {
-			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
+			return new JSONResponse([
+				'error' => 'task_failed_or_canceled',
+				'task_status' => $task->getstatus(),
+				'userFacingErrorMessage' => $task->getUserFacingErrorMessage(),
+			], Http::STATUS_BAD_REQUEST);
 		}
 		return new JSONResponse(['error' => 'unknown_error', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
 	}

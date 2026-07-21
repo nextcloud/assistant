@@ -529,7 +529,7 @@ export default {
 						}
 					} catch (error) {
 						console.error('checkGenerationTask error:', error)
-						showError(t('assistant', 'Error generating a response'))
+						showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error generating a response'))
 					}
 					this.streamingMessage = null
 					this.userScrolled = false
@@ -945,7 +945,7 @@ export default {
 				}
 			} catch (error) {
 				console.error('scheduleGenerationTask error:', error)
-				showError(t('assistant', 'Error generating a response'))
+				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error generating a response'))
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
@@ -973,7 +973,7 @@ export default {
 				}
 			} catch (error) {
 				console.error('scheduleRegenerationTask error:', error)
-				showError(t('assistant', 'Error regenerating a response'))
+				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error regenerating a response'))
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
@@ -1052,7 +1052,7 @@ export default {
 						if (error.response?.status !== 417) {
 							console.error('checkTaskPolling error', error)
 							clearInterval(this.pollMessageGenerationTimerId)
-							reject(new Error('Message generation task check failed'))
+							reject(error)
 						} else {
 							console.debug('checkTaskPolling, task is still scheduled or running')
 							this.slowPickup = error.response.data.slow_pickup
