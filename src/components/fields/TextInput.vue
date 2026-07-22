@@ -13,6 +13,7 @@
 			v-if="isOutput && hasValue && !isEditing"
 			ref="richText"
 			class="rendered-output output-wrapper"
+			:class="{ streaming: isOutput && streaming() }"
 			:title="t('assistant', 'Double-click to edit')"
 			:text="value ?? ''"
 			:use-markdown="true"
@@ -353,8 +354,14 @@ body[dir="rtl"] .output-buttons {
 	.shadowed.streaming .rich-contenteditable__input {
 		animation: pulse 2s infinite;
 	}
+	.output-wrapper.streaming {
+		animation: pulse 2s infinite;
+	}
 	@media (prefers-reduced-motion: reduce) {
 		.shadowed.streaming .rich-contenteditable__input {
+			animation: none;
+		}
+		.output-wrapper.streaming {
 			animation: none;
 		}
 	}
