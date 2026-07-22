@@ -9,7 +9,18 @@
 			<br v-if="limitLabel">
 			{{ limitLabel ?? '' }}
 		</label>
+		<NcRichText
+			v-if="isOutput && hasValue && !isEditing"
+			ref="richText"
+			class="rendered-output output-wrapper"
+			:class="{ streaming: isOutput && streaming() }"
+			:title="t('assistant', 'Double-click to edit')"
+			:text="value ?? ''"
+			:use-markdown="true"
+			:autolink="true"
+			@dblclick="enterEditMode" />
 		<NcRichContenteditable
+			v-else
 			:id="id"
 			ref="input"
 			:model-value="value ?? ''"
@@ -21,7 +32,8 @@
 			:placeholder="placeholder"
 			:title="title"
 			@submit="hasValue && $emit('submit', $event)"
-			@update:model-value="$emit('update:value', $event)" />
+			@update:model-value="$emit('update:value', $event)"
+			@blur="onEditableBlur" />
 		<div v-if="isOutput && hasValue"
 			class="output-buttons">
 			<NcButton v-if="!streaming() && canImproveOutput"
@@ -73,6 +85,7 @@ import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 import { NcLoadingIcon } from '@nextcloud/vue'
+import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
 import isMobile from '../../mixins/isMobile.js'
 
@@ -98,6 +111,7 @@ export default {
 
 	components: {
 		NcRichContenteditable,
+		NcRichText,
 		NcButton,
 		NcLoadingIcon,
 		FileDocumentOutlineIcon,
@@ -156,6 +170,7 @@ export default {
 	data() {
 		return {
 			copied: false,
+			isEditing: false,
 			maxLength: MAX_TEXT_INPUT_LENGTH,
 		}
 	},
@@ -183,10 +198,16 @@ export default {
 			if (!this.streaming()) {
 				return
 			}
-			const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
-			if (scrollableArea) {
-				scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
-			}
+			this.$nextTick(() => {
+				const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
+				if (scrollableArea) {
+					scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
+				}
+				const richText = this.$refs.richText?.$el
+				if (richText) {
+					richText.scrollTo(0, richText.scrollHeight)
+				}
+			})
 		},
 	},
 
@@ -233,6 +254,39 @@ export default {
 				showError(t('assistant', 'Result could not be copied to clipboard'))
 			}
 		},
+		enterEditMode() {
+			if (!this.isOutput) {
+				return
+			}
+			this.isEditing = true
+			this.$nextTick(() => {
+				const ref = this.$refs.input
+				if (!ref) {
+					return
+				}
+				if (typeof ref.focus === 'function') {
+					ref.focus()
+					return
+				}
+				const el = ref.$el
+				if (!el) {
+					return
+				}
+				if (typeof el.focus === 'function') {
+					el.focus()
+					return
+				}
+				const editable = el.querySelector?.('[contenteditable]')
+				if (editable && typeof editable.focus === 'function') {
+					editable.focus()
+				}
+			})
+		},
+		onEditableBlur() {
+			if (this.isOutput && this.isEditing) {
+				this.isEditing = false
+			}
+		},
 	},
 }
 </script>
@@ -272,6 +326,21 @@ body[dir="rtl"] .output-buttons {
 		bottom: 2px;
 	}
 
+	.output-wrapper {
+		display: block !important;
+		box-sizing: border-box !important;
+		border: 2px solid var(--color-primary-element) !important;
+		border-radius: var(--border-radius-large) !important;
+		padding: 8px !important;
+		padding-bottom: 42px !important;
+		min-height: calc(var(--default-clickable-area) * 3 + 4px);
+		max-height: 35vh !important;
+		overflow-y: auto !important;
+		.rendered-output, .rendered-output * {
+			cursor: text;
+		}
+	}
+
 	.rich-contenteditable__input {
 		min-height: calc(var(--default-clickable-area) * 3 + 4px);
 		padding-top: 5px !important;
@@ -280,12 +349,19 @@ body[dir="rtl"] .output-buttons {
 	.shadowed .rich-contenteditable__input {
 		border: 2px solid var(--color-primary-element);
 		padding-bottom: 38px !important;
+		max-height: 35vh !important;
 	}
 	.shadowed.streaming .rich-contenteditable__input {
 		animation: pulse 2s infinite;
 	}
+	.output-wrapper.streaming {
+		animation: pulse 2s infinite;
+	}
 	@media (prefers-reduced-motion: reduce) {
 		.shadowed.streaming .rich-contenteditable__input {
+			animation: none;
+		}
+		.output-wrapper.streaming {
 			animation: none;
 		}
 	}
