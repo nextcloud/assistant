@@ -46,7 +46,7 @@
 							<div class="reasoningcontent_popover_inner">
 								<h6>{{ t('assistant', 'Reasoning content') }}</h6>
 								<NcRichText :text="message.reasoning"
-									:use-markdown="true"
+									:use-extended-markdown="true"
 									:autolink="true" />
 							</div>
 						</template>
@@ -92,7 +92,6 @@
 		</div>
 		<NcRichText class="message__content"
 			:text="streaming ? streamedMessageContent : message.content"
-			:use-markdown="true"
 			:use-extended-markdown="true"
 			:reference-limit="1"
 			:references="references"
