@@ -93,6 +93,7 @@
 		<NcRichText class="message__content"
 			:text="streaming ? streamedMessageContent : message.content"
 			:use-markdown="true"
+			:use-extended-markdown="true"
 			:reference-limit="1"
 			:references="references"
 			:autolink="true" />
