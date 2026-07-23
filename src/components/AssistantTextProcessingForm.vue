@@ -46,6 +46,7 @@
 					class="running-area"
 					:description="shortInput"
 					:progress="progress"
+					:task-position="taskPosition"
 					:expected-runtime="expectedRuntime"
 					:started-at="startedAt"
 					:completion-expected-at="completionExpectedAt"
@@ -282,6 +283,10 @@ export default {
 		showSyncTaskRunning: {
 			type: Boolean,
 			default: false,
+		},
+		taskPosition: {
+			type: [Number, null],
+			default: null,
 		},
 		shortInput: {
 			type: String,
