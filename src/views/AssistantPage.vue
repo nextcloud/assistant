@@ -14,6 +14,7 @@
 					:selected-task-type-id="task.type"
 					:loading="loading"
 					:show-sync-task-running="showSyncTaskRunning"
+					:task-position="taskPosition"
 					:short-input="shortInput"
 					:task-status="task.status"
 					:scheduled-at="task.scheduledAt"
@@ -46,8 +47,10 @@ import { listen } from '@nextcloud/notify_push'
 import {
 	cancelTask,
 	cancelTaskPolling,
+	cancelTaskPositionPolling,
 	getTask,
 	pollTask,
+	pollTaskPosition,
 	scheduleTask,
 	setNotifyReady,
 } from '../assistant.js'
@@ -69,6 +72,7 @@ export default {
 		return {
 			task: loadState('assistant', 'task'),
 			showSyncTaskRunning: false,
+			taskPosition: null,
 			progress: null,
 			loading: false,
 			isNotifyEnabled: false,
@@ -114,11 +118,13 @@ export default {
 		},
 		onCancel() {
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			if (this.task?.id) {
 				setNotifyReady(this.task.id, false)
 				cancelTask(this.task.id).then(res => {
 					this.loading = false
 					this.showSyncTaskRunning = false
+					this.taskPosition = null
 					this.task.id = null
 					this.task.output = null
 					this.task.status = null
@@ -127,6 +133,7 @@ export default {
 				// if we ever end up in this state, this helps to recover
 				this.loading = false
 				this.showSyncTaskRunning = false
+				this.taskPosition = null
 				this.task.id = null
 				this.task.output = null
 				this.task.status = null
@@ -154,6 +161,7 @@ export default {
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
 			this.loading = true
 			this.showSyncTaskRunning = true
+			this.taskPosition = null
 			this.isNotifyEnabled = false
 			this.progress = null
 			this.task.completionExpectedAt = null
@@ -174,6 +182,11 @@ export default {
 					const hasPush = this.listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
 
+					pollTaskPosition(task.id, this).then(() => {
+						console.debug('[assistant] pollTaskPosition finished')
+					}).catch(error => {
+						console.debug('[assistant] pollPosition error', error.message)
+					})
 					pollTask(task.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
 							this.task.output = finishedTask?.output
@@ -184,12 +197,14 @@ export default {
 						}
 						this.loading = false
 						this.showSyncTaskRunning = false
+						this.taskPosition = null
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 						if (error.message === 'task-not-found') {
 							this.loading = false
 							this.showSyncTaskRunning = false
+							this.taskPosition = null
 							this.isNotifyEnabled = false
 							this.task.status = TASK_STATUS_STRING.unknown
 							this.task.output = null
@@ -201,6 +216,7 @@ export default {
 				.catch(error => {
 					this.loading = false
 					this.showSyncTaskRunning = false
+					this.taskPosition = null
 					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
 					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
 				})
@@ -226,7 +242,9 @@ export default {
 		},
 		onLoadTask(task) {
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			this.showSyncTaskRunning = false
+			this.taskPosition = null
 			this.loading = false
 
 			this.task.type = task.type
@@ -249,6 +267,7 @@ export default {
 
 					this.loading = true
 					this.showSyncTaskRunning = true
+					this.taskPosition = null
 					this.progress = null
 					this.task.completionExpectedAt = updatedTask.completionExpectedAt
 					this.task.startedAt = updatedTask.startedAt
@@ -256,6 +275,11 @@ export default {
 
 					const hasPush = this.listenToTaskNotifications(task.id)
 
+					pollTaskPosition(updatedTask.id, this).then(() => {
+						console.debug('[assistant] pollTaskPosition finished')
+					}).catch(error => {
+						console.debug('[assistant] pollPosition error', error.message)
+					})
 					pollTask(updatedTask.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
@@ -269,12 +293,14 @@ export default {
 						// resolve(finishedTask)
 						this.loading = false
 						this.showSyncTaskRunning = false
+						this.taskPosition = null
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('Assistant poll error', error)
 						if (error.message === 'task-not-found') {
 							this.loading = false
 							this.showSyncTaskRunning = false
+							this.taskPosition = null
 							this.isNotifyEnabled = false
 							this.task.status = TASK_STATUS_STRING.unknown
 							this.task.output = null
@@ -289,8 +315,10 @@ export default {
 		},
 		onNewTask() {
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			this.loading = false
 			this.showSyncTaskRunning = false
+			this.taskPosition = null
 			this.isNotifyEnabled = false
 			this.task.status = TASK_STATUS_STRING.unknown
 			this.task.output = null
