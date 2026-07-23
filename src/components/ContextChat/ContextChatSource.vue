@@ -5,7 +5,7 @@
 <template>
 	<NcRichText
 		:text="text"
-		:use-markdown="true"
+		:use-extended-markdown="true"
 		:reference-limit="1"
 		:references="references"
 		:autolink="true" />

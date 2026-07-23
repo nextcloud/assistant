@@ -16,7 +16,7 @@
 			:class="{ streaming: isOutput && streaming() }"
 			:title="t('assistant', 'Double-click to edit')"
 			:text="value ?? ''"
-			:use-markdown="true"
+			:use-extended-markdown="true"
 			:autolink="true"
 			@dblclick="enterEditMode" />
 		<NcRichContenteditable
