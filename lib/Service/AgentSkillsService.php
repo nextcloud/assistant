@@ -12,6 +12,7 @@ namespace OCA\Assistant\Service;
 use OCA\Assistant\AppInfo\Application;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IFilenameValidator;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -43,6 +44,7 @@ class AgentSkillsService {
 		private AssistantService $assistantService,
 		private IRootFolder $rootFolder,
 		private IAppConfig $appConfig,
+		private IFilenameValidator $filenameValidator,
 		private LoggerInterface $logger,
 		ICacheFactory $cacheFactory,
 	) {
@@ -192,8 +194,11 @@ class AgentSkillsService {
 	 * @throws \OCP\Lock\LockedException if the SKILL.md file is locked
 	 */
 	public function storeSkill(string $userId, string $skillName, string $description, string $content): string {
-		if ($skillName === '' || str_contains($skillName, '/')) {
-			throw new \InvalidArgumentException('Invalid skill name: ' . ($skillName ?: '(empty string)'));
+		try {
+			$this->filenameValidator->validateFilename($skillName);
+		} catch (\Exception $e) {
+			$reason = $e->getMessage() !== '' ? $e->getMessage() : get_class($e);
+			throw new \InvalidArgumentException('Invalid skill name: ' . ($skillName ?: '(empty string)') . ': ' . $reason, 0, $e);
 		}
 		if ($description === '') {
 			throw new \InvalidArgumentException('Skill description must not be empty');

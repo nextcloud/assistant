@@ -67,6 +67,7 @@ class AgentSkillsServiceTest extends TestCase {
 			$this->assistantService,
 			$this->rootFolder,
 			$this->appConfig,
+			Server::get(\OCP\Files\IFilenameValidator::class),
 			$this->logger,
 			Server::get(ICacheFactory::class),
 		);
