@@ -102,7 +102,16 @@
 			:autoplay="message.autoPlay"
 			:file-id="a.file_id"
 			:task-id="message.role === 'human' ? undefined : (a.ocp_task_id ?? message.ocp_task_id)"
-			:is-output="message.role === 'assistant'" />
+			:is-output="isOutput" />
+		<div v-if="fileAttachments.length" class="message__content message__files">
+			<FileDisplay v-for="f in fileAttachments"
+				:key="f.type + '-' + f.file_id"
+				:file-id="f.file_id"
+				:task-id="message.role === 'human' ? undefined : (f.ocp_task_id ?? message.ocp_task_id)"
+				:is-output="isOutput"
+				:clickable="true"
+				@click.native="onPreviewClick(f)" />
+		</div>
 	</div>
 </template>
 
@@ -126,6 +135,7 @@ import { showSuccess } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
+import FileDisplay from '../fields/FileDisplay.vue'
 
 const PLAIN_URL_PATTERN = /(?:\s|^|\()((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;()]*)*))(?:\s|$|\))/ig
 const MARKDOWN_LINK_PATTERN = /\[[-A-Z0-9+&@#%?=~_|!:,.;()]+\]\(((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;]*)*))\)/ig
@@ -135,6 +145,7 @@ export default {
 
 	components: {
 		AudioDisplay,
+		FileDisplay,
 		AssistantIcon,
 
 		NcAvatar,
@@ -213,6 +224,12 @@ export default {
 		audioAttachments() {
 			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.Audio) ?? []
 		},
+		fileAttachments() {
+			return this.message.attachments?.filter(a => a.type === SHAPE_TYPE_NAMES.File) ?? []
+		},
+		isOutput() {
+			return this.message.role === 'assistant'
+		},
 	},
 
 	watch: {
@@ -273,6 +290,39 @@ export default {
 			}
 			return this.informationSourceNames[source] ? this.informationSourceNames[source] : source
 		},
+		toViewerPath(path) {
+			// `/userId/files/foo` -> `/foo` (Viewer expects a user-files-relative path)
+			const match = /^\/[^/]+\/files(\/.*)$/.exec(path)
+			return match ? match[1] : path
+		},
+		onPreviewClick(file) {
+			if (file.file_id === null) {
+				return
+			}
+
+			if (this.isOutput) {
+				const url = generateOcsUrl('/apps/assistant/api/v1/task/{taskId}/file/{fileId}/save', {
+					taskId: file.ocp_task_id ?? this.message.ocp_task_id,
+					fileId: file.file_id,
+				})
+				return axios.post(url).then(response => {
+					const savedPath = response.data.ocs.data.path
+					console.debug('[assistant] view output file', savedPath)
+					OCA?.Viewer?.open({ path: savedPath })
+				}).catch(error => {
+					console.error(error)
+				})
+			}
+
+			const url = generateOcsUrl('/apps/assistant/api/v1/file/{fileId}/info', { fileId: file.file_id })
+			return axios.get(url).then(response => {
+				const path = this.toViewerPath(response.data.ocs.data.path)
+				console.debug('[assistant] view input file', path)
+				OCA?.Viewer?.open({ path })
+			}).catch(error => {
+				console.error(error)
+			})
+		},
 	},
 }
 </script>
@@ -330,6 +380,13 @@ export default {
 		:deep(.widget-default), :deep(.widget-custom) {
 			width: auto !important;
 		}
+	}
+
+	&__files {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 0.5em;
 	}
 }
 </style>

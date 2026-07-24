@@ -76,6 +76,11 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			$this->initialStateService->provideInitialState('autoplay_audio_chat', $autoplayAudioChat);
 			$agencyAvailable = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypes());
 			$this->initialStateService->provideInitialState('agency_available', $agencyAvailable);
+
+			$multimodalChatAvailable = $agencyAvailable
+				? (class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalContextAgentInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypes()))
+				: (class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalChatWithTools') && array_key_exists(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $this->taskProcessingManager->getAvailableTaskTypes()));
+			$this->initialStateService->provideInitialState('multimodal_chat_available', $multimodalChatAvailable);
 		}
 		if (class_exists(\OCA\Viewer\Event\LoadViewer::class)) {
 			$this->eventDispatcher->dispatchTyped(new \OCA\Viewer\Event\LoadViewer());
