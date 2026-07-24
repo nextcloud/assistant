@@ -57,6 +57,7 @@ class AgentSkillsService {
 	 * @return list<array{name: string, description: string}>
 	 * @throws NotFoundException if the skills folder cannot be resolved
 	 * @throws NotPermittedException if the skills folder cannot be created or read
+	 * @throws RuntimeException if the skills path or its parent exists but is not a folder
 	 * @throws \OC\User\NoUserException if the user does not exist
 	 * @throws \OCP\Files\GenericFileException if reading a SKILL.md file fails
 	 * @throws \OCP\Lock\LockedException if a SKILL.md file is locked
@@ -185,10 +186,11 @@ class AgentSkillsService {
 	 * @param string $content the body of SKILL.md (markdown after the frontmatter)
 	 * @return 'created'|'overwritten' 'created' if a new SKILL.md was written, 'overwritten' if an
 	 *                                 existing one was replaced
-	 * @throws \InvalidArgumentException if the skill name is empty or contains a slash
+	 * @throws \InvalidArgumentException if the skill name is empty or contains forbidden characters
 	 * @throws NotFoundException if the skills folder cannot be resolved
 	 * @throws NotPermittedException if the skill folder or SKILL.md file cannot be written, or if a
 	 *                               non-folder node already exists at the target skill path
+	 * @throws RuntimeException if the skills path or its parent exists but is not a folder
 	 * @throws \OC\User\NoUserException if the user does not exist
 	 * @throws \OCP\Files\GenericFileException if writing the SKILL.md file fails
 	 * @throws \OCP\Lock\LockedException if the SKILL.md file is locked
@@ -249,6 +251,7 @@ class AgentSkillsService {
 	 *
 	 * @throws NotFoundException if the skill folder or its SKILL.md file does not exist
 	 * @throws NotPermittedException if the skills folder cannot be created or read
+	 * @throws RuntimeException if the skills path or its parent exists but is not a folder
 	 * @throws \OC\User\NoUserException if the user does not exist
 	 * @throws \OCP\Files\GenericFileException if reading the SKILL.md file fails
 	 * @throws \OCP\Lock\LockedException if the SKILL.md file is locked
@@ -375,6 +378,7 @@ class AgentSkillsService {
 	 * @return Folder
 	 * @throws NotFoundException if the user folder or the assistant data folder cannot be resolved
 	 * @throws NotPermittedException if the skills folder cannot be created
+	 * @throws RuntimeException if the skills path or its parent exists but is not a folder
 	 * @throws \OC\User\NoUserException if the user does not exist
 	 */
 	private function getSkillsFolder(string $userId): Folder {
@@ -386,16 +390,18 @@ class AgentSkillsService {
 			if ($node instanceof Folder) {
 				return $node;
 			}
+			throw new RuntimeException('Skills path exists but is not a folder: ' . $node->getPath());
 		}
 
 		// recursively create the skills folder
 		$parentPath = dirname($skillsFolderPath);
-		try {
-			$assistantFolder->newFolder($parentPath);
-		} catch (NotPermittedException $e) {
-			if (!$assistantFolder->nodeExists($parentPath)) {
-				throw $e;
+		if ($assistantFolder->nodeExists($parentPath)) {
+			$parent = $assistantFolder->get($parentPath);
+			if (!$parent instanceof Folder) {
+				throw new RuntimeException('Skills parent path exists but is not a folder: ' . $parent->getPath());
 			}
+		} else {
+			$assistantFolder->newFolder($parentPath);
 		}
 		return $assistantFolder->newFolder($skillsFolderPath);
 	}
