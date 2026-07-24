@@ -313,7 +313,7 @@ class AgentSkillsService {
 		}
 
 		$offset = strpos($content, "\n") + 1;
-		// match "---" on its own line (followed by a newline or end-of-file)
+		// match "---" on its own line (followed by a newline or end-of-line)
 		if (!preg_match('#\n' . $delimiter . '(?:\r?\n|$)#', $content, $matches, PREG_OFFSET_CAPTURE, $offset)) {
 			throw new RuntimeException('Skill file missing frontmatter closing delimiter: ' . $file->getPath());
 		}
