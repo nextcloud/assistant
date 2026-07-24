@@ -115,7 +115,7 @@ class AgentSkillsService {
 			}
 			try {
 				$skills[$node->getName()] = $this->getSkillMetadata(
-					$skillCacheKeyPrefix . md5($node->getName()),
+					$skillCacheKeyPrefix . hash('sha256', $node->getName()),
 					$skillFile,
 				);
 			} catch (RuntimeException $e) {
@@ -239,7 +239,7 @@ class AgentSkillsService {
 
 		// invalidate caches so the next listSkills/getSkillMetadata call re-reads
 		$this->cache->remove("folder:$userId");
-		$this->cache->remove('skill:' . $userId . ':' . md5($skillName));
+		$this->cache->remove('skill:' . $userId . ':' . hash('sha256', $skillName));
 
 		return $isOverwrite ? 'overwritten' : 'created';
 	}
