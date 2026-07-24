@@ -427,6 +427,7 @@
     "Unexpected response from text parser" : "文字解析程式回應異常。",
     "Could not parse file" : "無法分析檔案",
     "Result could not be copied to clipboard" : "結果無法複製到剪貼板。",
+    "Double-click to edit" : "雙擊以編輯",
     "Improve with new instructions" : "使用新指示改善",
     "Improve this text" : "改善此文字",
     "Copy output" : "複製輸出",
