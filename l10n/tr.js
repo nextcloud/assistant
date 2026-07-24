@@ -162,6 +162,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Sesli görüşmenin parçası olarak oluşturulan yanıt",
     "Output transcript" : "Çıkışın yazıya dönüştürülmesi",
     "Transcription of the audio output" : "Ses çıkışının yazıya dönüştürülmesi",
+    "Audio transcription" : "Sesi yazıya dönüştürme",
+    "This was generated using Artificial Intelligence." : "Bu içerik yapay zeka tarafından oluşturulmuştur.",
     "Translate image" : "Görseli yazıya çevir",
     "Translate the text content of an image" : "Bir görseldeki içeriği yazıya çevir ",
     "Input files" : "Giriş dosyaları",

@@ -153,6 +153,21 @@ class ChatService {
 	}
 
 	/**
+	 * @throws InternalException
+	 */
+	public function deleteAllUserChatData(string $userId): void {
+		try {
+			$sessions = $this->sessionMapper->getAllUserSessions($userId);
+			foreach ($sessions as $session) {
+				$this->messageMapper->deleteMessagesBySession($session->getId());
+			}
+			$this->sessionMapper->deleteAllSessionsForUser($userId);
+		} catch (Exception|\RuntimeException $e) {
+			throw new InternalException(previous: $e);
+		}
+	}
+
+	/**
 	 * @return list<Session>
 	 * @throws InternalException
 	 * @throws UnauthorizedException
@@ -364,7 +379,6 @@ class ChatService {
 				throw new InternalException(previous: $e);
 			}
 
-
 			try {
 				$session = $this->sessionMapper->getUserSession($userId, $sessionId);
 			} catch (DoesNotExistException $e) {
@@ -475,7 +489,6 @@ class ChatService {
 			throw new InternalException(previous: $e);
 		}
 
-
 		try {
 			$session = $this->sessionMapper->getUserSession($userId, $sessionId);
 		} catch (DoesNotExistException $e) {
@@ -553,7 +566,6 @@ class ChatService {
 		}
 		return in_array(\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
 	}
-
 
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings

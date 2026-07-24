@@ -48,6 +48,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Sortutako ahots-erantzuna elkarrizketaren parte da",
     "Output transcript" : "Irteerako transkripzioa",
     "Transcription of the audio output" : "Audio-irteeraren transkripzioa",
+    "Audio transcription" : "Audioen transkripzioa",
     "Input files" : "Sarrerako fitxategiak",
     "The files to extract text from" : "Zein fitxategietatik erauzi behar da testua",
     "Origin language" : "Jatorrizko hizkuntza",

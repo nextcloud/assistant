@@ -110,6 +110,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "ການຕອບກັບດ້ວຍສຽງທີ່ຖືກສ້າງຂຶ້ນເປັນສ່ວນໜຶ່ງຂອງການສົນທະນາ",
     "Output transcript" : "ຂໍ້ຄວາມທີ່ຖອດຈາກສຽງຕອບກັບ",
     "Transcription of the audio output" : "ການຖອດຂໍ້ຄວາມຈາກສຽງທີ່ຕອບກັບ",
+    "Audio transcription" : "ການຖອດສຽງ",
     "Origin language" : "Origin language",
     "The language of the origin text" : "The language of the origin text",
     "Target language" : "Target language",

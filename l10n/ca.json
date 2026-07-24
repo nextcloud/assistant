@@ -60,6 +60,7 @@
     "Describe a task that you want the assistant to do or ask a question" : "Descriu una tasca que vols que faci l'assistent o fes una pregunta",
     "Chat history" : "Historial de xat",
     "The history of chat messages before the current message, starting with a message by the user" : "L'historial dels missatges de xat abans del missatge actual, començant amb un missatge de l'usuari",
+    "Audio transcription" : "Transcripció d'àudio",
     "Origin language" : "Llengua d'origen",
     "The language of the origin text" : "La llengua del text d'origen",
     "Target language" : "Llengua de destinació",

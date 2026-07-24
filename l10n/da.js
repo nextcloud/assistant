@@ -109,6 +109,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Den genererede lydrespons som en del af samtalen",
     "Output transcript" : "Output transskription",
     "Transcription of the audio output" : "Transskriptionen af lydoutputtet ",
+    "Audio transcription" : "Lydtransskription",
     "Origin language" : "Oprindelsessprog",
     "The language of the origin text" : "Det sprog, der anvendes i oprindelsesteksten",
     "Target language" : "Målsprog",

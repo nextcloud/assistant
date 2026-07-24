@@ -12,8 +12,10 @@
 			:options="getInputFieldOptions(field, key)"
 			:is-output="isOutput"
 			:defaults="defaults"
+			:can-improve-output="canImproveOutput"
 			@submit="onSubmit"
-			@update:value="onValueChange(key, $event)" />
+			@update:value="onValueChange(key, $event)"
+			@improve="$emit('improve', $event)" />
 		<!--NcButton v-if="hasOptionalShape"
 			@click="$emit('update:show-advanced', !showAdvanced)">
 			<template #icon>
@@ -32,7 +34,9 @@
 				:options="getOptionalInputFieldOptions(field, key)"
 				:is-output="isOutput"
 				:defaults="optionalDefaults"
-				@update:value="onValueChange(key, $event)" />
+				:can-improve-output="canImproveOutput"
+				@update:value="onValueChange(key, $event)"
+				@improve="$emit('improve', $event)" />
 		</div>
 	</div>
 </template>
@@ -84,11 +88,16 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		canImproveOutput: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'submit',
 		'update:values',
+		'improve',
 	],
 
 	data() {

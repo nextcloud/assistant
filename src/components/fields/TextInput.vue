@@ -9,7 +9,18 @@
 			<br v-if="limitLabel">
 			{{ limitLabel ?? '' }}
 		</label>
+		<NcRichText
+			v-if="isOutput && hasValue && !isEditing"
+			ref="richText"
+			class="rendered-output output-wrapper"
+			:class="{ streaming: isOutput && streaming() }"
+			:title="t('assistant', 'Double-click to edit')"
+			:text="value ?? ''"
+			:use-extended-markdown="true"
+			:autolink="true"
+			@dblclick="enterEditMode" />
 		<NcRichContenteditable
+			v-else
 			:id="id"
 			ref="input"
 			:model-value="value ?? ''"
@@ -21,24 +32,38 @@
 			:placeholder="placeholder"
 			:title="title"
 			@submit="hasValue && $emit('submit', $event)"
-			@update:model-value="$emit('update:value', $event)" />
-		<NcButton v-if="isOutput && hasValue"
-			class="copy-button"
-			variant="secondary"
-			:title="t('assistant', 'Copy output')"
-			@click="onCopy">
-			<template #icon>
-				<NcLoadingIcon v-if="streaming()" />
-				<ClipboardCheckOutlineIcon v-else-if="copied" />
-				<ContentCopyIcon v-else />
-			</template>
-			<span v-if="streaming()">
-				{{ t('assistant', 'Getting results...') }}
-			</span>
-			<span v-else>
-				{{ t('assistant', 'Copy') }}
-			</span>
-		</NcButton>
+			@update:model-value="$emit('update:value', $event)"
+			@blur="onEditableBlur" />
+		<div v-if="isOutput && hasValue"
+			class="output-buttons">
+			<NcButton v-if="!streaming() && canImproveOutput"
+				class="improve-button"
+				variant="secondary"
+				:title="t('assistant', 'Improve with new instructions')"
+				@click="$emit('improve', formattedValue)">
+				<template #icon>
+					<WrenchOutlineIcon size="20" />
+				</template>
+				{{ t('assistant', 'Improve this text') }}
+			</NcButton>
+			<NcButton
+				class="copy-button"
+				variant="secondary"
+				:title="t('assistant', 'Copy output')"
+				@click="onCopy">
+				<template #icon>
+					<NcLoadingIcon v-if="streaming()" size="20" />
+					<ClipboardCheckOutlineIcon v-else-if="copied" size="20" />
+					<ContentCopyIcon v-else size="20" />
+				</template>
+				<span v-if="streaming()">
+					{{ t('assistant', 'Getting results...') }}
+				</span>
+				<span v-else>
+					{{ t('assistant', 'Copy') }}
+				</span>
+			</NcButton>
+		</div>
 		<NcButton v-if="!isOutput && !hasValue && showChooseButton"
 			class="choose-file-button"
 			variant="secondary"
@@ -54,11 +79,13 @@
 <script>
 import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
 import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline.vue'
+import WrenchOutlineIcon from 'vue-material-design-icons/WrenchOutline.vue'
 import ContentCopyIcon from 'vue-material-design-icons/ContentCopy.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcRichContenteditable from '@nextcloud/vue/components/NcRichContenteditable'
 import { NcLoadingIcon } from '@nextcloud/vue'
+import { NcRichText } from '@nextcloud/vue/components/NcRichText'
 
 import isMobile from '../../mixins/isMobile.js'
 
@@ -84,20 +111,20 @@ export default {
 
 	components: {
 		NcRichContenteditable,
+		NcRichText,
 		NcButton,
 		NcLoadingIcon,
 		FileDocumentOutlineIcon,
 		ClipboardCheckOutlineIcon,
 		ContentCopyIcon,
+		WrenchOutlineIcon,
 	},
 
 	mixins: [
 		isMobile,
 	],
 
-	inject: [
-		'streaming',
-	],
+	inject: ['streaming'],
 
 	props: {
 		id: {
@@ -128,16 +155,22 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		canImproveOutput: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'submit',
 		'update:value',
+		'improve',
 	],
 
 	data() {
 		return {
 			copied: false,
+			isEditing: false,
 			maxLength: MAX_TEXT_INPUT_LENGTH,
 		}
 	},
@@ -165,10 +198,16 @@ export default {
 			if (!this.streaming()) {
 				return
 			}
-			const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
-			if (scrollableArea) {
-				scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
-			}
+			this.$nextTick(() => {
+				const scrollableArea = this.$refs.input?.$el?.querySelector('#' + this.id)
+				if (scrollableArea) {
+					scrollableArea.scrollTo(0, scrollableArea.scrollHeight)
+				}
+				const richText = this.$refs.richText?.$el
+				if (richText) {
+					richText.scrollTo(0, richText.scrollHeight)
+				}
+			})
 		},
 	},
 
@@ -215,6 +254,39 @@ export default {
 				showError(t('assistant', 'Result could not be copied to clipboard'))
 			}
 		},
+		enterEditMode() {
+			if (!this.isOutput) {
+				return
+			}
+			this.isEditing = true
+			this.$nextTick(() => {
+				const ref = this.$refs.input
+				if (!ref) {
+					return
+				}
+				if (typeof ref.focus === 'function') {
+					ref.focus()
+					return
+				}
+				const el = ref.$el
+				if (!el) {
+					return
+				}
+				if (typeof el.focus === 'function') {
+					el.focus()
+					return
+				}
+				const editable = el.querySelector?.('[contenteditable]')
+				if (editable && typeof editable.focus === 'function') {
+					editable.focus()
+				}
+			})
+		},
+		onEditableBlur() {
+			if (this.isOutput && this.isEditing) {
+				this.isEditing = false
+			}
+		},
 	},
 }
 </script>
@@ -230,21 +302,43 @@ body[dir="rtl"] .choose-file-button {
 	right: unset;
 }
 
+body[dir="rtl"] .output-buttons {
+	left: 4px;
+	right: unset;
+}
+
 .text-input {
 	position: relative;
 
-	.copy-button,
+	.output-buttons,
 	.choose-file-button {
 		position: absolute !important;
+	}
+
+	.output-buttons {
+		bottom: 4px;
+		right: 4px;
+		display: flex;
+		gap: 4px;
 	}
 
 	.choose-file-button {
 		bottom: 2px;
 	}
 
-	.copy-button {
-		bottom: 4px;
-		right: 4px;
+	.output-wrapper {
+		display: block !important;
+		box-sizing: border-box !important;
+		border: 2px solid var(--color-primary-element) !important;
+		border-radius: var(--border-radius-large) !important;
+		padding: 8px !important;
+		padding-bottom: 42px !important;
+		min-height: calc(var(--default-clickable-area) * 3 + 4px);
+		max-height: 35vh !important;
+		overflow-y: auto !important;
+		.rendered-output, .rendered-output * {
+			cursor: text;
+		}
 	}
 
 	.rich-contenteditable__input {
@@ -255,12 +349,19 @@ body[dir="rtl"] .choose-file-button {
 	.shadowed .rich-contenteditable__input {
 		border: 2px solid var(--color-primary-element);
 		padding-bottom: 38px !important;
+		max-height: 35vh !important;
 	}
 	.shadowed.streaming .rich-contenteditable__input {
 		animation: pulse 2s infinite;
 	}
+	.output-wrapper.streaming {
+		animation: pulse 2s infinite;
+	}
 	@media (prefers-reduced-motion: reduce) {
 		.shadowed.streaming .rich-contenteditable__input {
+			animation: none;
+		}
+		.output-wrapper.streaming {
 			animation: none;
 		}
 	}

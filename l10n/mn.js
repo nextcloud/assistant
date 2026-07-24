@@ -116,6 +116,8 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Харилцааны хэсэг болох үүсгэсэн дуут хариу",
     "Output transcript" : "Гаралтын хуулбар",
     "Transcription of the audio output" : "Аудио гаралтын хуулбар",
+    "Audio transcription" : "Аудио хөрвүүлэлт",
+    "This was generated using Artificial Intelligence." : "Энэ нь хиймэл оюунаар үүсгэгдсэн.",
     "Translate image" : "Зургийг орчуулах",
     "Translate the text content of an image" : "Зургийн текстийн агуулгыг орчуулах",
     "Input files" : "Оруулах файлууд",

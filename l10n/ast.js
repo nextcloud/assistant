@@ -23,6 +23,7 @@ OC.L10N.register(
     "Generate text" : "Xenerar el testu",
     "Assistant" : "Asistente",
     "Memories" : "Recuerdos",
+    "Audio transcription" : "Trescripción del audiu",
     "Target language" : "Llingua de destín",
     "Process and transform text" : "Procesa y tresforma testu",
     "Failed to save assistant admin options" : "Nun se puen guardar les opciones d'alministración del asistente",

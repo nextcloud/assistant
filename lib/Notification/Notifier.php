@@ -8,13 +8,11 @@
 namespace OCA\Assistant\Notification;
 
 use OCA\Assistant\AppInfo\Application;
-
 use OCP\App\IAppManager;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\Notification\IAction;
 use OCP\Notification\INotification;
-
 use OCP\Notification\INotifier;
 use OCP\Notification\UnknownNotificationException;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
@@ -95,6 +93,9 @@ class Notifier implements INotifier {
 					$taskTypeName = $l->t('AI image generation');
 				} elseif ($params['taskTypeId'] === AudioToText::ID) {
 					$taskTypeName = $l->t('AI audio transcription');
+				} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')
+					&& $params['taskTypeId'] === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID) {
+					$taskTypeName = $l->t('AI subtitles generation');
 				} elseif ($params['taskTypeId'] === 'copywriter') {
 					// TODO adjust that when we have copywriter back on its feet
 					// Catch the custom copywriter task type built on top of the FreePrompt task type.
@@ -117,7 +118,6 @@ class Notifier implements INotifier {
 				$this->logger->debug('Impossible to get task type ' . $params['taskTypeId'], ['exception' => $e]);
 			}
 		}
-
 
 		switch ($notification->getSubject()) {
 			case 'success':
@@ -155,7 +155,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'failure':
 				$subject = $taskTypeName === null
 					? $l->t('Task for "%1$s" has failed', [$schedulingAppName])
@@ -165,7 +164,6 @@ class Notifier implements INotifier {
 				if ($taskInput) {
 					$content .= $l->t('Input: %1$s', [$taskInput]);
 				}
-
 
 				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
@@ -186,7 +184,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'file_action_success':
 				$subject = $l->t('File action has finished');
 
@@ -201,6 +198,9 @@ class Notifier implements INotifier {
 						break;
 					case AudioToText::ID:
 						$message = $l->t('{sourceFile} has been transcribed in {targetFile}');
+						break;
+					case class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles') ? \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID : 'nope':
+						$message = $l->t('{sourceFile} has been subtitled in {targetFile}');
 						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
 						$message = $l->t('{sourceFile} has been converted to audio in {targetFile}');
@@ -240,7 +240,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'file_action_failure':
 				$subject = $l->t('File action has failed');
 
@@ -252,6 +251,9 @@ class Notifier implements INotifier {
 						break;
 					case AudioToText::ID:
 						$message = $l->t('Transcription of {sourceFile} has failed');
+						break;
+					case class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles') ? \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID : 'nope':
+						$message = $l->t('Subtitling of {sourceFile} has failed');
 						break;
 					case class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech') ? \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID : 'nope':
 						$message = $l->t('The text-to-speech process for {sourceFile} has failed');
@@ -274,7 +276,6 @@ class Notifier implements INotifier {
 					->setIcon($iconUrl);
 
 				return $notification;
-
 			case 'new_image_file_success':
 				$subject = $l->t('New image file has been generated');
 
@@ -316,7 +317,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'new_image_file_failure':
 				$subject = $l->t('Image file generation has failed');
 
@@ -338,7 +338,6 @@ class Notifier implements INotifier {
 					->setIcon($iconUrl);
 
 				return $notification;
-
 			case 'assignment_approval_pending':
 				$subject = $l->t('Scheduled task is pending review');
 
@@ -363,7 +362,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'assignment_successful':
 				$subject = $l->t('Scheduled task succeeded');
 
@@ -388,7 +386,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			case 'assignment_failure':
 				$subject = $l->t('Scheduled task failed');
 
@@ -413,7 +410,6 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
-
 			default:
 				// Unknown subject => Unknown notification => throw
 				throw new UnknownNotificationException();

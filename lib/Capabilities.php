@@ -128,6 +128,24 @@ class Capabilities implements IPublicCapability {
 					'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'client_integration/speech_to_text.svg'),
 				];
 				$capabilities['client_integration'][Application::APP_ID]['context-menu'][] = $endpoint;
+
+				if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')) {
+					$url = $this->urlGenerator->linkToOCSRouteAbsolute(Application::APP_ID . '.assistantApi.runFileAction', [
+						'apiVersion' => 'v1',
+						'fileId' => '123456789',
+						'taskTypeId' => \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID,
+					]);
+					$url = str_replace($this->urlGenerator->getBaseUrl(), '', $url);
+					$url = str_replace('123456789', '{fileId}', $url);
+					$endpoint = [
+						'name' => $this->l->t('Generate subtitles using AI'),
+						'url' => $url,
+						'method' => 'POST',
+						'mimetype_filters' => 'audio/, video/',
+						'icon' => $this->urlGenerator->imagePath(Application::APP_ID, 'client_integration/speech_to_text.svg'),
+					];
+					$capabilities['client_integration'][Application::APP_ID]['context-menu'][] = $endpoint;
+				}
 			}
 
 			if ($ttsAvailable) {

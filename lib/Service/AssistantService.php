@@ -69,13 +69,14 @@ class AssistantService {
 		'context_chat:context_chat' => 3,
 		'legacy:TextProcessing:OCA\ContextChat\TextProcessing\ContextChatTaskType' => 3,
 		'context_chat:context_chat_search' => 4,
-		AudioToText::ID => 5,
-		TextToTextTranslate::ID => 6,
-		ContextWrite::ID => 7,
-		TextToImage::ID => 8,
-		TextToTextSummary::ID => 9,
-		TextToTextHeadline::ID => 10,
-		TextToTextTopics::ID => 11,
+		AudioToText::ID => 10,
+		'core:audio2text:subtitles' => 11,
+		TextToTextTranslate::ID => 20,
+		ContextWrite::ID => 21,
+		TextToImage::ID => 22,
+		TextToTextSummary::ID => 23,
+		TextToTextHeadline::ID => 24,
+		TextToTextTopics::ID => 25,
 	];
 
 	public array $informationSources;
@@ -934,7 +935,6 @@ class AssistantService {
 					throw new \Exception('Unsupported file mimetype');
 				}
 		}
-
 
 		$phpWord = IOFactory::createReader($readerType);
 		$phpWord = $phpWord->load($filePath);

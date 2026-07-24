@@ -23,6 +23,7 @@ use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
 use OCA\Assistant\Listener\TaskSuccessfulListener;
 use OCA\Assistant\Listener\Text2Image\Text2ImageReferenceListener;
 use OCA\Assistant\Listener\Text2Image\Text2StickerListener;
+use OCA\Assistant\Listener\UserDeletedListener;
 use OCA\Assistant\Notification\Notifier;
 use OCA\Assistant\Reference\FreePromptReferenceProvider;
 use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
@@ -30,6 +31,7 @@ use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\Reference\Text2StickerProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
+use OCA\Assistant\TaskProcessing\AudioToAudioTranslateProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
 use OCA\Assistant\TaskProcessing\ImageToTextTranslateProvider;
 use OCA\Assistant\TaskProcessing\ImageToTextTranslateTaskType;
@@ -38,7 +40,6 @@ use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
-
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
@@ -48,6 +49,7 @@ use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\IManager;
+use OCP\User\Events\UserDeletedEvent;
 
 class Application extends App implements IBootstrap {
 
@@ -102,6 +104,8 @@ class Application extends App implements IBootstrap {
 
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
 
+		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
 			$context->registerTaskProcessingProvider(AudioToAudioChatProvider::class);
 		}
@@ -118,6 +122,8 @@ class Application extends App implements IBootstrap {
 		// not ready yet
 		// $context->registerTaskProcessingTaskType(ImageToTextTranslateTaskType::class);
 		// $context->registerTaskProcessingProvider(ImageToTextTranslateProvider::class);
+
+		$context->registerTaskProcessingProvider(AudioToAudioTranslateProvider::class);
 	}
 
 	public function boot(IBootContext $context): void {
