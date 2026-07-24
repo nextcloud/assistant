@@ -14,6 +14,7 @@ return [
 		['name' => 'config#getConfigValue', 'url' => '/config', 'verb' => 'GET'],
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
+		['name' => 'config#setGlobalSkillsFolder', 'url' => '/admin-config/global-skills', 'verb' => 'PUT'],
 
 		['name' => 'assistant#getAssistantTaskResultPage', 'url' => '/task/view/{taskId}', 'verb' => 'GET'],
 		['name' => 'assistant#getAssistantStandalonePage', 'url' => '/', 'verb' => 'GET'],
@@ -36,6 +37,10 @@ return [
 		['name' => 'assistantApi#getOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#runFileAction', 'url' => '/api/{apiVersion}/file-action/{fileId}/{taskTypeId}', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#getAssistantFolderPath', 'url' => '/api/{apiVersion}/assistant-folder-path', 'verb' => 'GET', 'requirements' => $requirements],
+
+		['name' => 'agentSkillsApi#listSkills', 'url' => '/api/{apiVersion}/skills', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'agentSkillsApi#storeSkill', 'url' => '/api/{apiVersion}/skills', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'agentSkillsApi#loadSkill', 'url' => '/api/{apiVersion}/skills/{skillName}', 'verb' => 'GET', 'requirements' => $requirements],
 
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/sessions', 'verb' => 'POST', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#updateChatSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'PUT', 'postfix' => 'restful'],

@@ -8,7 +8,9 @@
 namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\AgentSkillsService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\DataResponse;
@@ -25,6 +27,7 @@ class ConfigController extends Controller {
 		IRequest $request,
 		private IConfig $config,
 		private IAppConfig $appConfig,
+		private AgentSkillsService $agentSkillsService,
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
@@ -70,6 +73,28 @@ class ConfigController extends Controller {
 				$this->appConfig->setValueString(Application::APP_ID, $key, $value, lazy: true);
 			}
 		}
+		return new DataResponse(1);
+	}
+
+	/**
+	 * Set (or clear) the admin-configured global skills folder.
+	 *
+	 * The folder is resolved against the current admin user's filesystem. Pass an empty
+	 * `path` to clear the configuration.
+	 *
+	 * @param string $path Folder path inside the current admin user's home, as returned by the file picker
+	 * @return DataResponse
+	 */
+	public function setGlobalSkillsFolder(string $path): DataResponse {
+		if ($this->userId === null) {
+			return new DataResponse(['error' => 'Unauthorized'], Http::STATUS_UNAUTHORIZED);
+		}
+		$path = trim($path);
+		if ($path === '') {
+			$this->agentSkillsService->setGlobalSkillsFolder('', '');
+			return new DataResponse(1);
+		}
+		$this->agentSkillsService->setGlobalSkillsFolder($this->userId, $path);
 		return new DataResponse(1);
 	}
 }
