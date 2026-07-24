@@ -194,6 +194,35 @@ class AgentSkillsServiceTest extends TestCase {
 		$this->service->extractFrontmatter($file);
 	}
 
+	public function testExtractFrontmatterIgnoresDelimiterNotOnOwnLine(): void {
+		// "---plop" should NOT be treated as a closing delimiter
+		$raw = "---\nname: My Skill\ndescription: Does something\n---plop\nmore content\n---\n\n# Body";
+		$file = $this->writeRawSkillFile(self::TEST_USER, 'tricky-skill', $raw);
+
+		$result = $this->service->extractFrontmatter($file);
+
+		$this->assertSame("name: My Skill\ndescription: Does something\n---plop\nmore content", $result);
+	}
+
+	public function testExtractFrontmatterOnlyFrontmatterNoBody(): void {
+		// file ends right after the closing delimiter with no trailing content
+		$raw = "---\nname: abc\ndescription: def\n---";
+		$file = $this->writeRawSkillFile(self::TEST_USER, 'no-body-skill', $raw);
+
+		$result = $this->service->extractFrontmatter($file);
+
+		$this->assertSame("name: abc\ndescription: def", $result);
+	}
+
+	public function testExtractFrontmatterOnlyFrontmatterTrailingNewline(): void {
+		$raw = "---\nname: abc\ndescription: def\n---\n";
+		$file = $this->writeRawSkillFile(self::TEST_USER, 'no-body-skill-2', $raw);
+
+		$result = $this->service->extractFrontmatter($file);
+
+		$this->assertSame("name: abc\ndescription: def", $result);
+	}
+
 	// -------------------------------------------------------------------------
 	// parseMetadataFields – pure logic, no filesystem needed
 	// -------------------------------------------------------------------------

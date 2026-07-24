@@ -310,10 +310,11 @@ class AgentSkillsService {
 		}
 
 		$offset = strpos($content, "\n") + 1;
-		$closingPos = strpos($content, "\n" . $delimiter, $offset);
-		if ($closingPos === false) {
+		// match "---" on its own line (followed by a newline or end-of-file)
+		if (!preg_match('#\n' . $delimiter . '(?:\r?\n|$)#', $content, $matches, PREG_OFFSET_CAPTURE, $offset)) {
 			throw new RuntimeException('Skill file missing frontmatter closing delimiter: ' . $file->getPath());
 		}
+		$closingPos = $matches[0][1];
 
 		return substr($content, $offset, $closingPos - $offset);
 	}
