@@ -33,6 +33,7 @@
 					:loading="loading"
 					:action-buttons="actionButtons"
 					:show-sync-task-running="showSyncTaskRunning"
+					:task-position="taskPosition"
 					:short-input="shortInput"
 					:progress="progress"
 					:expected-runtime="expectedRuntime"
@@ -130,6 +131,7 @@ export default {
 			completionExpectedAt: null,
 			isNotifyEnabled: false,
 			showSyncTaskRunning: false,
+			taskPosition: null,
 			showScheduleConfirmation: false,
 			// from props
 			selectedTaskId: this.initSelectedTaskId,

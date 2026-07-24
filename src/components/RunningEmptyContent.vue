@@ -14,8 +14,13 @@
 					<NcProgressBar
 						:value="speculativeProgress" />
 				</div>
-				<div v-if="formattedRuntime">
-					{{ formattedRuntime }}
+				<div class="inline">
+					<span v-if="formattedRuntime">
+						{{ formattedRuntime }}
+					</span>
+					<span v-if="formattedPosition">
+						{{ formattedPosition }}
+					</span>
 				</div>
 				<div class="info-text-block">
 					{{ t('assistant', 'This task is running in the background.',) }}
@@ -83,6 +88,10 @@ export default {
 			type: [Number, null],
 			default: null,
 		},
+		taskPosition: {
+			type: [Number, null],
+			default: null,
+		},
 		expectedRuntime: {
 			type: [Number, null],
 			default: null,
@@ -143,6 +152,12 @@ export default {
 				return t('assistant', 'This may take a few seconds…')
 			}
 			return t('assistant', 'This may take a few minutes…')
+		},
+		formattedPosition() {
+			if (this.taskPosition === null || this.taskStatus !== TASK_STATUS_STRING.scheduled) {
+				return ''
+			}
+			return t('assistant', 'Task position: {position}', { position: this.taskPosition })
 		},
 		progressMessage() {
 			if (this.taskStatus === TASK_STATUS_STRING.scheduled || this.taskStatus === null) {
@@ -207,6 +222,11 @@ export default {
 
 	.info-text-block {
 		text-align: center;
+	}
+
+	.inline {
+		display: flex;
+		gap: 4px;
 	}
 }
 </style>
