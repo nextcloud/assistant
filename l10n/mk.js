@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Непознат корисник",
     "Send an email" : "Испрати е-пошта",
     "Upload file" : "Прикачи датотека",
     "Delete file" : "Избриши датотека",
@@ -14,7 +15,9 @@ OC.L10N.register(
     "Translate" : "Преведи",
     "Assistant" : "Асистент",
     "Memories" : "Memories",
+    "Select" : "Избери",
     "Administration documentation" : "Документација за администратори",
+    "Clear" : "Исчисти",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",
     "Less" : "Помалку",

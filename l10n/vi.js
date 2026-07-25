@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Người dùng không tồn tại",
     "Upload file" : "Tải lên tập tin",
     "Delete file" : "Xoá tập tin",
     "Delete share" : "Xóa chia sẻ",
@@ -9,7 +10,9 @@ OC.L10N.register(
     "Nextcloud Mail" : "Thư vWorkspace",
     "Other" : "Khác",
     "Translate" : "Dịch thuật",
+    "Select" : "Chọn",
     "Administration documentation" : "Tài liệu hành chính",
+    "Clear" : "Xóa",
     "Try again" : "Thử lại",
     "Close" : "Đóng",
     "Less" : "ít",

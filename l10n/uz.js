@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Unknown user",
     "Send an email" : "Elektron pochta xabarini yuboring",
     "Upload file" : "Upload file",
     "Delete file" : "Faylni o'chirish",
@@ -11,6 +12,8 @@ OC.L10N.register(
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Prompt" : "Tezkor",
+    "Select" : "Tanlash",
+    "Clear" : "Toza",
     "Close" : "Yopish",
     "More" : "Ko'proq",
     "Cancel" : "Bekor qilish",

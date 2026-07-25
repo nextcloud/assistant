@@ -1,4 +1,5 @@
 { "translations": {
+    "Unknown user" : "Unknown user",
     "Send an email" : "Send an email",
     "Upload file" : "Upload file",
     "Delete file" : "Delete file",
@@ -10,7 +11,9 @@
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Other",
     "Translate" : "გადათარგმნე",
+    "Select" : "მონიშვნა",
     "Administration documentation" : "Administration documentation",
+    "Clear" : "Clear",
     "Close" : "Close",
     "More" : "More",
     "Cancel" : "Cancel",

@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Unknown user",
     "Send an email" : "Send an email",
     "Upload file" : "Upload file",
     "Delete file" : "Delete file",
@@ -12,7 +13,9 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Other",
     "Translate" : "გადათარგმნე",
+    "Select" : "მონიშვნა",
     "Administration documentation" : "Administration documentation",
+    "Clear" : "Clear",
     "Close" : "Close",
     "More" : "More",
     "Cancel" : "Cancel",

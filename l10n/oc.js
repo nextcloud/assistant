@@ -5,6 +5,7 @@ OC.L10N.register(
     "Create bookmark" : "Crear marcapagina",
     "User not found" : "Utilizaire pas trobat",
     "Translate" : "Tradurre",
+    "Clear" : "Escafar",
     "Close" : "Tampar",
     "Cancel" : "Anullar",
     "Delete" : "Suprimir",
