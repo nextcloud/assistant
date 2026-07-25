@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Ismeretlen felhasználó",
     "Send an email" : "E-mail küldése",
     "Upload file" : "Fájl feltöltése",
     "Move file" : "Fájl áthelyezés",
@@ -55,10 +56,12 @@ OC.L10N.register(
     "The texts that were extracted from the files" : "A fájlokból kinyert szövegek",
     "Prompt" : "Prompt",
     "Process and transform text" : "Szöveg feldolgozása és átalakítása",
+    "Select" : "Kiválasztás",
     "Assistant admin options saved" : "Asszisztens rendszergazdai beállítások elmentve",
     "Failed to save assistant admin options" : "Nem sikerült az asszisztens rendszergazdai beállításainak mentése",
     "Administration documentation" : "Rengszergazdai dokumentáció",
     "Select which features you want to enable" : "Válassza ki milyen funkciókat kíván engedélyezni",
+    "Clear" : "Törlés",
     "Try again" : "Próbálja újra",
     "Close" : "Bezárás",
     "Close Nextcloud Assistant" : "Nextcloud Asszisztens bezárása",

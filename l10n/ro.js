@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Utilizator necunoscut",
     "Send an email" : "Trimite un email",
     "Upload file" : "Încarcă fișier",
     "Move file" : "Mută fișierul",
@@ -12,6 +13,8 @@ OC.L10N.register(
     "Other" : "Altele",
     "Translate" : "Tradu",
     "Assistant" : "Asistent",
+    "Select" : "Selectează",
+    "Clear" : "Șterge ",
     "Close" : "Închide",
     "Less" : "Mai puțin",
     "More" : "Mai mult",

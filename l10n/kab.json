@@ -1,4 +1,5 @@
 { "translations": {
+    "Unknown user" : "Aseqdac arussin",
     "Send an email" : "Azen imayl",
     "Upload file" : "Ssali-d afaylu",
     "Delete file" : "Kkes afaylu",
@@ -8,6 +9,8 @@
     "Other" : "Wayeḍ",
     "Translate" : "Suqel",
     "Assistant" : "Amallal",
+    "Select" : "Fren",
+    "Clear" : "Ṣfeḍ",
     "Try again" : "Ɛreḍ tikkelt nniḍen.",
     "Close" : "Mdel",
     "More" : "Ugar",

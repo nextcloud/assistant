@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Utente sconosciuto",
     "Create a conversation" : "Crea una conversazione",
     "Send an email" : "Invia un'email",
     "Create folder" : "Crea cartella",
@@ -50,7 +51,9 @@ OC.L10N.register(
     "Output texts" : "Testo in uscita",
     "The texts that were extracted from the files" : "Il testo che è stato estratto dai file",
     "Prompt" : "Prompt",
+    "Select" : "Seleziona",
     "Administration documentation" : "Documentazione di amministrazione",
+    "Clear" : "Pulisci",
     "Try again" : "Riprova",
     "Close" : "Chiudi",
     "Less" : "Meno",

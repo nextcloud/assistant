@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Nepoznat korisnik",
     "Send an email" : "Pošalji poruku e-pošte",
     "Delete file" : "Izbriši datoteku",
     "Create bookmark" : "Stvori knjižnu oznaku",
@@ -40,7 +41,9 @@ OC.L10N.register(
     "Output texts" : "Izlazni tekstovi",
     "The texts that were extracted from the files" : "Tekstovi izdvojeni iz datoteka",
     "Prompt" : "Upit",
+    "Select" : "Odaberi",
     "Administration documentation" : "Administratorska dokumentacija",
+    "Clear" : "Izbriši",
     "Try again" : "Pokušajte ponovno",
     "Close" : "Zatvori",
     "Less" : "Manje",

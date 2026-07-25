@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "משתמש לא ידוע",
     "Send an email" : "שליחת דוא״ל",
     "Upload file" : "העלאת קובץ",
     "Move file" : "העברת קובץ",
@@ -12,6 +13,8 @@ OC.L10N.register(
     "Nextcloud Mail" : "דוא״ל Nextcloud",
     "Other" : "אחר",
     "Translate" : "תרגום",
+    "Select" : "בחר",
+    "Clear" : "פינוי",
     "Try again" : "ניסיון חוזר",
     "Close" : "סגירה",
     "Less" : "פחות:",

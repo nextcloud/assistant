@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Nezināms lietotājs",
     "Failed to notify when ready; unknown user" : "Neizdevās paziņot, kad gatavs; nezināms lietotāj",
     "Send an email" : "Sūtīt e-pasta ziņojumu",
     "Add a calendar task" : "Pievienot kalendāra uzdevumu",
@@ -14,6 +15,8 @@ OC.L10N.register(
     "Nextcloud Tasks" : "Nextcloud uzdevumi",
     "Other" : "Cits",
     "Translate" : "Tulkot",
+    "Select" : "Atzīmēt",
+    "Clear" : "Notīrīt",
     "Close" : "Aizvērt",
     "Less" : "Mazāk",
     "More" : "Vairāk",

@@ -10,6 +10,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud-retpoŝtilo",
     "Other" : "Alia",
     "Translate" : "Traduku",
+    "Clear" : "Viŝi",
     "Close" : "Malfermi",
     "Less" : "Malpli",
     "Cancel" : "Cancel",

@@ -1,4 +1,5 @@
 { "translations": {
+    "Unknown user" : "Erabiltzaile ezezaguna",
     "Failed to notify when ready; unknown user" : "Ezin izan da jakinarazi prest dagoenean; erabiltzaile ezezaguna",
     "Send a message to a Talk conversation" : "Bidali mezu bat Talk elkarrizketa batera",
     "Send an email" : "Bidali posta-mezu bat",
@@ -57,10 +58,12 @@
     "The texts that were extracted from the files" : "Fitxategietatik erauzitako testuak",
     "Prompt" : "Galdera",
     "Process and transform text" : "Testua prozesatu eta eraldatu",
+    "Select" : "Hautatu",
     "Assistant admin options saved" : "Laguntzailearen administratzailearen aukerak gorde dira",
     "Failed to save assistant admin options" : "Ezin izan dira gorde laguntzailearen administratzaile aukerak",
     "Administration documentation" : "Administrazioaren dokumentazioa",
     "Select which features you want to enable" : "Hautatu zeintzuk ezaugarri gaitu nahi dituzun",
+    "Clear" : "Garbitu",
     "Hide advanced options" : "Ezkutatu aukera aurreratuak",
     "Show advanced options" : "Erakutsi aukera aurreratuak",
     "Try again" : "Saiatu berriz",

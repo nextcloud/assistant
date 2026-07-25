@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "ผู้ใช้ที่ไม่รู้จัก",
     "Upload file" : "อัปโหลดไฟล์",
     "Move file" : "ย้ายไฟล์",
     "Copy file" : "คัดลอกไฟล์",
@@ -8,6 +9,8 @@ OC.L10N.register(
     "Delete form" : "ลบฟอร์ม",
     "Other" : "อื่น ๆ",
     "Translate" : "แปลภาษา",
+    "Select" : "เลือก",
+    "Clear" : "ล้าง",
     "Close" : "ปิด",
     "Less" : "ย่อ",
     "More" : "เพิ่มเติม",

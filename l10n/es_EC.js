@@ -19,6 +19,7 @@ OC.L10N.register(
     "Target language" : "Lenguaje de destino",
     "Prompt" : "Promoción",
     "Select which features you want to enable" : "Selecciona las características que deseas habilitar",
+    "Clear" : "Limpiar",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
     "Less" : "Menos",
