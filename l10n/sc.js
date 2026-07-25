@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Utèntzia disconnota",
     "Send an email" : "Imbia unu messàgiu de posta eletrònica",
     "Upload file" : "Càrriga archìviu",
     "Delete file" : "Cantzella archìviu",
@@ -12,6 +13,8 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Àteru",
     "Translate" : "Borta",
+    "Select" : "Seletziona",
+    "Clear" : "Lìmpia",
     "Close" : "Serra",
     "Less" : "De mancu",
     "More" : "Prus",

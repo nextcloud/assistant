@@ -10,6 +10,7 @@ OC.L10N.register(
     "Other" : "Otro",
     "Translate" : "Traducir",
     "Assistant" : "Asistente",
+    "Clear" : "Limpiar",
     "Try again" : "Reintentar",
     "Close" : "Close",
     "Cancel" : "Cancel",

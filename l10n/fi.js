@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Tuntematon käyttäjä",
     "Send an email" : "Lähetä sähköposti",
     "Upload file" : "Lähetä tiedosto",
     "Create folder" : "Luo kansio",
@@ -26,7 +27,9 @@ OC.L10N.register(
     "Chat history" : "Keskusteluhistoria",
     "Target language" : "Kohdekieli",
     "Prompt" : "Kehote",
+    "Select" : "Valitse",
     "Administration documentation" : "Ylläpidon dokumentaatio",
+    "Clear" : "Tyhjennä",
     "Try again" : "Yritä uudelleen",
     "Close" : "Sulje",
     "Less" : "Vähemmän",

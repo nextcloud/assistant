@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Óþekktur notandi",
     "Send an email" : "Senda tölvupóst",
     "Move file" : "Færa skrá",
     "Copy file" : "Afrita skrá",
@@ -23,7 +24,9 @@ OC.L10N.register(
     "Target language" : "Marktungumál:",
     "The desired language to translate the origin text in" : "Tungumálið sem þýða skal upprunalega textann yfir á",
     "Prompt" : "Kvaðning",
+    "Select" : "Velja",
     "Administration documentation" : "Hjálparskjöl fyrir stjórnendur",
+    "Clear" : "Hreinsa",
     "Try again" : "Reyndu aftur",
     "Close" : "Loka",
     "Less" : "Minna",

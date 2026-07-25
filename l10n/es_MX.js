@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Ususario desconocido",
     "Send an email" : "Enviar correo electrónico",
     "Move file" : "Mover archivo",
     "Copy file" : "Copiar archivo",
@@ -27,7 +28,9 @@ OC.L10N.register(
     "Target language" : "Idioma destino",
     "The desired language to translate the origin text in" : "El idioma deseado a traducir el texto de origen",
     "Prompt" : "Prompt",
+    "Select" : "Seleccionar",
     "Administration documentation" : "Documentación de administración",
+    "Clear" : "Limpiar",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
     "Less" : "Menos",

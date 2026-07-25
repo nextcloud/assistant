@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Aseqdac arussin",
     "Send an email" : "Azen imayl",
     "Upload file" : "Ssali-d afaylu",
     "Delete file" : "Kkes afaylu",
@@ -10,6 +11,8 @@ OC.L10N.register(
     "Other" : "Wayeḍ",
     "Translate" : "Suqel",
     "Assistant" : "Amallal",
+    "Select" : "Fren",
+    "Clear" : "Ṣfeḍ",
     "Try again" : "Ɛreḍ tikkelt nniḍen.",
     "Close" : "Mdel",
     "More" : "Ugar",
