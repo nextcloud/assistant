@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Непознат потребител",
     "Send an email" : "Изпращане на имейл",
     "Move file" : "Премести файла",
     "Copy file" : "Копирай файла",
@@ -20,7 +21,9 @@ OC.L10N.register(
     "Memories" : "Спомени",
     "Target language" : "Целеви език",
     "Prompt" : "Подкана",
+    "Select" : "Избери",
     "Administration documentation" : "Административна документация",
+    "Clear" : "Изчистване",
     "Try again" : "Опитай отново",
     "Close" : "Затваряне",
     "Less" : "По-малко",
