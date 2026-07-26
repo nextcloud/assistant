@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Nekonata uzanto",
     "Send an email" : "Sendi retmesaĝon",
     "Upload file" : "Alŝuti dosieron",
     "Move file" : "Movi dosieron",
@@ -10,6 +11,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud-retpoŝtilo",
     "Other" : "Alia",
     "Translate" : "Traduku",
+    "Select" : "Elekti",
     "Clear" : "Viŝi",
     "Close" : "Malfermi",
     "Less" : "Malpli",

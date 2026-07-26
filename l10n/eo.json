@@ -1,4 +1,5 @@
 { "translations": {
+    "Unknown user" : "Nekonata uzanto",
     "Send an email" : "Sendi retmesaĝon",
     "Upload file" : "Alŝuti dosieron",
     "Move file" : "Movi dosieron",
@@ -8,6 +9,7 @@
     "Nextcloud Mail" : "Nextcloud-retpoŝtilo",
     "Other" : "Alia",
     "Translate" : "Traduku",
+    "Select" : "Elekti",
     "Clear" : "Viŝi",
     "Close" : "Malfermi",
     "Less" : "Malpli",
