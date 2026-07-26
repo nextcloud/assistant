@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Usuariu desconocíu",
     "Upload file" : "Xubir un ficheru",
     "Move file" : "Mover ficheru",
     "Copy file" : "Copiar ficheru",
@@ -26,8 +27,10 @@ OC.L10N.register(
     "Audio transcription" : "Trescripción del audiu",
     "Target language" : "Llingua de destín",
     "Process and transform text" : "Procesa y tresforma testu",
+    "Select" : "Seleicionar",
     "Failed to save assistant admin options" : "Nun se puen guardar les opciones d'alministración del asistente",
     "Administration documentation" : "Documentación de l'alministración",
+    "Clear" : "Borrar",
     "The task ran successfully but the result is identical to the input." : "La xera executóse correutamente mas el resultáu ye idénticu al de la entrada.",
     "Try again" : "Retentar",
     "Send request" : "Unviar la solicitú",

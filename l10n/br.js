@@ -1,12 +1,15 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Implijer dianv",
     "Upload file" : "Pellgas ur restr",
     "Delete file" : "Dilemel ar restr",
     "Unauthorized" : "Disaotreet",
     "Nextcloud Talk" : "Flap Nextcloud",
     "Translate" : "Treiñ",
     "Assistant" : "Skoazeller",
+    "Select" : "Diuzañ",
+    "Clear" : "Netaat",
     "Close" : "Serriñ",
     "More" : "Muioc'h",
     "Cancel" : "Nullañ",
