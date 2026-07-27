@@ -259,6 +259,7 @@ import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
 import ICAL from 'ical.js'
 import formatRecurrenceRule from './recurrenceRule.js'
 import { getLanguage } from '@nextcloud/l10n'
+import { getTaskPosition } from '../../assistant.js'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -339,6 +340,7 @@ export default {
 				newSession: false,
 				messageDelete: false,
 				sessionDelete: false,
+				taskPosition: null,
 			},
 			msgCursor: 0,
 			msgLimit: 20,
@@ -439,6 +441,7 @@ export default {
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
+			this.loading.taskPosition = null
 			this.loading.titleGeneration = false
 			this.streamingMessage = null
 			this.chatContent = ''
@@ -559,6 +562,7 @@ export default {
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.loading.taskPosition = null
 				this.loading.titleGeneration = false
 				if (isAssignment) {
 					this.pollCheckSessionTimeout = setTimeout(() => { this.checkSession(sessionId, isAssignment) }, 5000)
@@ -924,6 +928,7 @@ export default {
 				this.slowPickup = false
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
+				this.loading.taskPosition = null
 				this.userScrolled = false
 				const params = {
 					sessionId,
@@ -949,6 +954,7 @@ export default {
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.loading.taskPosition = null
 				this.streamingMessage = null
 				this.userScrolled = false
 			}
@@ -959,6 +965,7 @@ export default {
 				const sessionId = this.active.id
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
+				this.loading.taskPosition = null
 				this.userScrolled = false
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
@@ -977,6 +984,7 @@ export default {
 			} finally {
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
+				this.loading.taskPosition = null
 				this.streamingMessage = null
 				this.userScrolled = false
 			}
@@ -1058,6 +1066,12 @@ export default {
 							this.slowPickup = error.response.data.slow_pickup
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
+							} else if (error.response.data.task_status === TASK_STATUS_INT.scheduled) {
+								getTaskPosition(taskId).then(response => {
+									const taskPosition = response.data?.ocs?.data
+									this.loading.taskPosition = taskPosition
+									console.debug('Task position:', taskPosition)
+								})
 							}
 							if (!hasPush && typeof error.response.data.task_output !== 'undefined' && error.response.data.task_output !== null) {
 								this.updateStreamingMessage(error.response.data.task_output || {}, sessionId)
