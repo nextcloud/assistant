@@ -260,6 +260,7 @@ OC.L10N.register(
     "This chat response is taking longer to start generating than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Spuštění vytváření této odpovědi do chatu trvá déle, než očekáváno. Obraťte se na správce ohledně ujištění se, že je Asistent správně nastavený.",
     "You" : "Vy",
     "Message copied to clipboard" : "Zpráva zkopírována do schránky",
+    "Reasoning…" : "Zdůvodňování…",
     "Copy message" : "Zkopírovat zprávu",
     "Regenerate message" : "Znovu vytvořit zprávu",
     "Delete message" : "Smazat zprávu",
