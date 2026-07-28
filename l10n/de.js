@@ -8,7 +8,7 @@ OC.L10N.register(
     "Unknown user" : "Unbekannter Benutzer",
     "Skills folder not found" : "Fähigkeiten-Ordner nicht gefunden",
     "Failed to list skills" : "Fähigkeiten nicht aufgelistet",
-    "Skill name is too long (max %d characters)" : "Der Fertigkeitsname ist zu lang (maximal %d Zeichen).",
+    "Skill name is too long (max %d characters)" : "Der Fähigkeitsname ist zu lang (maximal %d Zeichen).",
     "Skill not found" : "Fähigkeit nicht gefunden",
     "Failed to load the skill" : "Die Fertigkeit konnte nicht geladen werden",
     "Description is too long (max %d characters)" : "Die Beschreibung ist zu lang (maximal %d Zeichen)",
