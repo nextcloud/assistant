@@ -82,6 +82,10 @@ class ChattyLLMTaskListener implements IEventListener {
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID;
 			$isAgencyAudioChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction')
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID;
+			$isMultimodalChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalChatWithTools')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID;
+			$isMultimodalAgencyChat = class_exists('OCP\\TaskProcessing\\TaskTypes\\MultimodalContextAgentInteraction')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID;
 
 			$taskOutput = $task->getOutput();
 
@@ -128,6 +132,17 @@ class ChattyLLMTaskListener implements IEventListener {
 				// the task is not an audio one, but we might still need to Tts the answer
 				// if it is a response to a ContextAgentInteraction confirmation that was asked about an audio message
 				$this->runTtsIfNeeded($sessionId, $message, $taskTypeId, $task->getUserId());
+				if ($isMultimodalChat || $isMultimodalAgencyChat) {
+					$attachments = $taskOutput['output_attachments'] ?? [];
+					$attachments = array_map(function ($attachment) use ($task) {
+						return [
+							'type' => 'File',
+							'file_id' => $attachment,
+							'ocp_task_id' => $task->getId(),
+						];
+					}, $attachments);
+					$message->setAttachments(json_encode($attachments));
+				}
 			}
 			try {
 				$this->messageMapper->insert($message);
@@ -138,7 +153,7 @@ class ChattyLLMTaskListener implements IEventListener {
 			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 
 			// store the conversation token and the actions if we are using the agency feature
-			if ($isAgency || $isAgencyAudioChat) {
+			if ($isAgency || $isAgencyAudioChat || $isMultimodalAgencyChat) {
 				$conversationToken = ($taskOutput['conversation_token'] ?? null) ?: null;
 				$pendingActions = ($taskOutput['actions'] ?? null) ?: null;
 				$session->setAgencyConversationToken($conversationToken);

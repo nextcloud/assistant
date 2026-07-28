@@ -4,6 +4,7 @@
  */
 
 export const MAX_TEXT_INPUT_LENGTH = 64_000
+export const MAX_ATTACHED_FILES = 10
 
 export const TASK_STATUS_INT = {
 	cancelled: 5,
