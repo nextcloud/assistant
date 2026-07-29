@@ -1,6 +1,7 @@
 OC.L10N.register(
     "assistant",
     {
+    "Unknown user" : "Ususario desconocido",
     "Upload file" : "Cargar archivo",
     "Move file" : "Mover archivo",
     "Copy file" : "Copiar archivo",
@@ -21,12 +22,12 @@ OC.L10N.register(
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
     "Waiting…" : "Esperando...",
+    "Choose a file" : "Seleccione un archivo",
     "Choose" : "Elige",
+    "No file selected" : "No se ha seleccionado algún archivo",
     "Cancelled" : "Cancelado",
     "Failed" : "Error",
     "Scheduled" : "Programado",
-    "Choose a file" : "Seleccione un archivo",
-    "No file selected" : "No se ha seleccionado algún archivo",
     "Advanced" : "Avanzado",
     "Copy" : "Copiar",
     "Hourly" : "Cada Hora",
