@@ -64,7 +64,7 @@ function registerSummarizeAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'Summarization AI task submitted successfully.') + '\n'
+					t('assistant', 'Summarization AI task submitted.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
 				)
@@ -103,7 +103,7 @@ function registerTtsAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'Text-to-Speech AI task submitted successfully.') + '\n'
+					t('assistant', 'Text-to-Speech AI task submitted.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
 				)
@@ -142,7 +142,7 @@ function registerSttAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'Transcription AI task submitted successfully.') + '\n'
+					t('assistant', 'Transcription AI task submitted.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
 				)
@@ -181,7 +181,7 @@ function registerSttSubtitlesAction() {
 			try {
 				await axios.post(url)
 				showSuccess(
-					t('assistant', 'AI subtitles task submitted successfully.') + '\n'
+					t('assistant', 'AI subtitles task submitted.') + '\n'
 						+ t('assistant', 'You will be notified when it is ready.') + '\n'
 						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate subtitles" menu.'),
 				)

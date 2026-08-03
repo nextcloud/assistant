@@ -429,18 +429,18 @@ class AssistantApiController extends OCSController {
 	public function runFileAction(int $fileId, string $taskTypeId): DataResponse {
 		try {
 			$this->taskProcessingService->runFileAction($this->userId, $fileId, $taskTypeId);
-			$message = $this->l10n->t('Assistant task submitted successfully');
+			$message = $this->l10n->t('Assistant task submitted');
 			if ($taskTypeId === AudioToText::ID) {
-				$message = $this->l10n->t('Transcription task submitted successfully');
+				$message = $this->l10n->t('Transcription task submitted');
 			} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')) {
 				if ($taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID) {
-					$message = $this->l10n->t('Subtitles task submitted successfully');
+					$message = $this->l10n->t('Subtitles task submitted');
 				}
 			} elseif ($taskTypeId === TextToTextSummary::ID) {
-				$message = $this->l10n->t('Summarization task submitted successfully');
+				$message = $this->l10n->t('Summarization task submitted');
 			} elseif (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
 				if ($taskTypeId === \OCP\TaskProcessing\TaskTypes\TextToSpeech::ID) {
-					$message = $this->l10n->t('Text-to-speech task submitted successfully');
+					$message = $this->l10n->t('Text-to-speech task submitted');
 				}
 			}
 			return new DataResponse([
