@@ -5,10 +5,6 @@
     "Unknown user" : "نامەلۇم ئىشلەتكۈچى",
     "Failed to notify when ready; unknown user" : "تەييار بولغاندا ئۇقتۇرۇش قىلالمىدى نامەلۇم ئىشلەتكۈچى",
     "Failed to cancel notification; unknown user" : "ئۇقتۇرۇشنى بىكار قىلىش مەغلۇپ بولدى؛ نامەلۇم ئىشلەتكۈچى",
-    "Assistant task submitted successfully" : "ياردەمچى ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
-    "Transcription task submitted successfully" : "كۆچۈرۈش ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
-    "Summarization task submitted successfully" : "خۇلاسە ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
-    "Text-to-speech task submitted successfully" : "تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
     "Send a message to a Talk conversation" : "Talk سۆھبىتىگە ئۇچۇر ئەۋەتىڭ",
     "Create a conversation" : "سۆھبەت قۇرۇڭ",
     "Send an email" : "ئېلېكترونلۇق خەت ئەۋەتىڭ",
@@ -367,14 +363,18 @@
     "last" : "ئاخىرقى",
     "Generate image using AI" : "AI نى ئىشلىتىپ سۈرەت ھاسىل قىل",
     "AI Assistant" : "AI ياردەمچى",
-    "Summarization AI task submitted successfully." : "AI خۇلاسىلەش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
     "You will be notified when it is ready." : "تەييار بولغاندا سىزگە خەۋەر قىلىنىدۇ.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "بۇنى يەنە ياردەمچىنىڭ «تېكىست بىلەن ئىشلەش -> خۇلاسە قىلىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
     "Failed to launch the AI file action" : "سۈنئىي ئەقىل ھۆججىتى ھەرىكىتىنى قوزغىتىش مەغلۇب بولدى",
-    "Text-to-Speech AI task submitted successfully." : "AI تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> نۇتۇق ھاسىل قىلىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
-    "Transcription AI task submitted successfully." : "AI ئاۋازنى تېكىستكە ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "بۇنى يەنە ياردەمچىنىڭ «ئاۋاز بىلەن ئىشلەش -> ئاۋازنى يېزىش» تىزىملىكىدىن تەكشۈرگىلى بولىدۇ.",
-    "Information sources" : "ئۇچۇر مەنبەلىرى"
+    "Assistant task submitted successfully" : "ياردەمچى ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
+    "Transcription task submitted successfully" : "كۆچۈرۈش ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
+    "Summarization task submitted successfully" : "خۇلاسە ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
+    "Text-to-speech task submitted successfully" : "تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋەپپەقىيەتلىك تاپشۇرۇلدى",
+    "Information sources" : "ئۇچۇر مەنبەلىرى",
+    "Summarization AI task submitted successfully." : "AI خۇلاسىلەش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
+    "Text-to-Speech AI task submitted successfully." : "AI تېكىستنى ئاۋازغا ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى.",
+    "Transcription AI task submitted successfully." : "AI ئاۋازنى تېكىستكە ئايلاندۇرۇش ۋەزىپىسى مۇۋاپىقىيەتلىك ھالدا يوللاندى."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

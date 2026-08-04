@@ -2,10 +2,6 @@
     "Unknown user" : "ບໍ່ຮູ້ຈັກຜູ້ໃຊ້",
     "Failed to notify when ready; unknown user" : "ບໍ່ສາມາດແຈ້ງເຕືອນເມື່ອພ້ອມ; ບໍ່ຮູ້ຈັກຜູ້ໃຊ້",
     "Failed to cancel notification; unknown user" : "ບໍ່ສາມາດຍົກເລີກການແຈ້ງເຕືອນ; ບໍ່ຮູ້ຈັກຜູ້ໃຊ້",
-    "Assistant task submitted successfully" : "ສົ່ງໜ້າວຽກຜູ້ຊ່ວຍສຳເລັດແລ້ວ",
-    "Transcription task submitted successfully" : "ສົ່ງໜ້າວຽກການຖອດຂໍ້ຄວາມຈາກສຽງສຳເລັດແລ້ວ",
-    "Summarization task submitted successfully" : "ສົ່ງໜ້າວຽກການສະຫຼຸບຫຍໍ້ສຳເລັດແລ້ວ",
-    "Text-to-speech task submitted successfully" : "ສົ່ງໜ້າວຽກຂໍ້ຄວາມເປັນສຽງສຳເລັດແລ້ວ",
     "Send a message to a Talk conversation" : "ສົ່ງຂໍ້ຄວາມໄປທີ່ການສົນທະນາໃນ Talk",
     "Create a conversation" : "ສ້າງການສົນທະນາ",
     "Send an email" : "ສົ່ງອີເມວ",
@@ -351,6 +347,10 @@
     "Failed to launch the AI file action" : "ບໍ່ສາມາດເລີ່ມການກະທຳກັບຟາຍດ້ວຍ AI ໄດ້",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ສ້າງສຽງເວົ້າ\".",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "ມັນຍັງສາມາດກວດສອບໄດ້ໃນຜູ້ຊ່ວຍໃນເມນູ \"ເຮັດວຽກກັບສຽງ -> ຖອດຂໍ້ຄວາມຈາກສຽງ\".",
+    "Assistant task submitted successfully" : "ສົ່ງໜ້າວຽກຜູ້ຊ່ວຍສຳເລັດແລ້ວ",
+    "Transcription task submitted successfully" : "ສົ່ງໜ້າວຽກການຖອດຂໍ້ຄວາມຈາກສຽງສຳເລັດແລ້ວ",
+    "Summarization task submitted successfully" : "ສົ່ງໜ້າວຽກການສະຫຼຸບຫຍໍ້ສຳເລັດແລ້ວ",
+    "Text-to-speech task submitted successfully" : "ສົ່ງໜ້າວຽກຂໍ້ຄວາມເປັນສຽງສຳເລັດແລ້ວ",
     "Information sources" : "ແຫຼ່ງຂໍ້ມູນ"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

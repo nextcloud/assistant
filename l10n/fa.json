@@ -5,10 +5,6 @@
     "Unknown user" : "کاربر ناشناس",
     "Failed to notify when ready; unknown user" : "اعلان آماده‌سازی انجام نشد؛ کاربر ناشناس",
     "Failed to cancel notification; unknown user" : "لغو اعلان انجام نشد؛ کاربر ناشناس",
-    "Assistant task submitted successfully" : "وظیفه دستیار با موفقیت ارسال شد",
-    "Transcription task submitted successfully" : "وظیفه رونویسی با موفقیت ارسال شد",
-    "Summarization task submitted successfully" : "وظیفه خلاصه‌سازی با موفقیت ارسال شد",
-    "Text-to-speech task submitted successfully" : "وظیفه تبدیل متن به گفتار با موفقیت ارسال شد",
     "Send a message to a Talk conversation" : "ارسال پیام به گفتگوی Talk",
     "Create a conversation" : "ایجاد یک گفتگو",
     "Send an email" : "ارسال ایمیل",
@@ -460,14 +456,18 @@
     "last" : "آخرین",
     "Generate image using AI" : "تولید تصویر با هوش مصنوعی",
     "AI Assistant" : "دستیار هوش مصنوعی",
-    "Summarization AI task submitted successfully." : "وظیفه خلاصه‌سازی هوش مصنوعی با موفقیت ارسال شد.",
     "You will be notified when it is ready." : "وقتی آماده شد به شما اطلاع داده می‌شود.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "همچنین می‌توانید آن را در دستیار در منوی «کار با متن → خلاصه‌سازی» بررسی کنید.",
     "Failed to launch the AI file action" : "راه‌اندازی اقدام فایل هوش مصنوعی ناموفق بود",
-    "Text-to-Speech AI task submitted successfully." : "وظیفه تبدیل متن به گفتار هوش مصنوعی با موفقیت ارسال شد.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "همچنین می‌توانید آن را در دستیار در منوی «کار با صدا → تولید گفتار» بررسی کنید.",
-    "Transcription AI task submitted successfully." : "وظیفه رونویسی هوش مصنوعی با موفقیت ارسال شد.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "همچنین می‌توانید آن را در دستیار در منوی «کار با صدا → رونویسی صدا» بررسی کنید.",
-    "Information sources" : "منابع اطلاعاتی"
+    "Assistant task submitted successfully" : "وظیفه دستیار با موفقیت ارسال شد",
+    "Transcription task submitted successfully" : "وظیفه رونویسی با موفقیت ارسال شد",
+    "Summarization task submitted successfully" : "وظیفه خلاصه‌سازی با موفقیت ارسال شد",
+    "Text-to-speech task submitted successfully" : "وظیفه تبدیل متن به گفتار با موفقیت ارسال شد",
+    "Information sources" : "منابع اطلاعاتی",
+    "Summarization AI task submitted successfully." : "وظیفه خلاصه‌سازی هوش مصنوعی با موفقیت ارسال شد.",
+    "Text-to-Speech AI task submitted successfully." : "وظیفه تبدیل متن به گفتار هوش مصنوعی با موفقیت ارسال شد.",
+    "Transcription AI task submitted successfully." : "وظیفه رونویسی هوش مصنوعی با موفقیت ارسال شد."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

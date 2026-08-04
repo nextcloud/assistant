@@ -4,10 +4,6 @@ OC.L10N.register(
     "Unknown user" : "알 수 없는 사용자",
     "Failed to notify when ready; unknown user" : "준비 완료 알림을 전달하지 못함; 알 수 없는 사용자",
     "Failed to cancel notification; unknown user" : "알림을 취소하지 못함; 알 수 없는 사용자",
-    "Assistant task submitted successfully" : "어시스턴트 작업이 성공적으로 접수됨",
-    "Transcription task submitted successfully" : "받아쓰기 작업이 성공적으로 접수됨",
-    "Summarization task submitted successfully" : "요약 작업이 성공적으로 접수됨",
-    "Text-to-speech task submitted successfully" : "글 읽기 작업이 성공적으로 접수됨",
     "Send a message to a Talk conversation" : "메시지를 토크 대화로 보내기",
     "Create a conversation" : "대화 만들기",
     "Send an email" : "이메일 보내기",
@@ -224,6 +220,10 @@ OC.L10N.register(
     "fourth" : "네 번째",
     "fifth" : "다섯 번째",
     "second to last" : "끝에서 두 번째",
-    "last" : "마지막"
+    "last" : "마지막",
+    "Assistant task submitted successfully" : "어시스턴트 작업이 성공적으로 접수됨",
+    "Transcription task submitted successfully" : "받아쓰기 작업이 성공적으로 접수됨",
+    "Summarization task submitted successfully" : "요약 작업이 성공적으로 접수됨",
+    "Text-to-speech task submitted successfully" : "글 읽기 작업이 성공적으로 접수됨"
 },
 "nplurals=1; plural=0;");
