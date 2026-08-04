@@ -744,7 +744,8 @@ class AssistantService {
 	 * @throws NotPermittedException
 	 */
 	private function getTargetFileName(File $file): string {
-		$mimeType = mime_content_type($file->fopen('rb'));
+		$head = fread($file->fopen('rb'), 4096);
+		$mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
 		$fileName = $file->getName();
 
 		$mimes = new \Mimey\MimeTypes;
@@ -808,7 +809,8 @@ class AssistantService {
 	 */
 	public function getOutputFilePreviewFile(string $userId, int $taskId, int $fileId, ?int $x = 100, ?int $y = 100): ?array {
 		$taskOutputFile = $this->getTaskOutputFile($userId, $taskId, $fileId);
-		$realMime = mime_content_type($taskOutputFile->fopen('rb'));
+		$head = fread($taskOutputFile->fopen('rb'), 4096);
+		$realMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
 		return $this->previewService->getFilePreviewFile($taskOutputFile, $x, $y, $realMime ?: null);
 	}
 
