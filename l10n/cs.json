@@ -5,10 +5,6 @@
     "Unknown user" : "Neznámý uživatel",
     "Failed to notify when ready; unknown user" : "Nepodařilo se upozornit, že připraveno – neznámý uživatel",
     "Failed to cancel notification; unknown user" : "Nepodařilo se zrušit notifikaci – neznámý uživatel",
-    "Assistant task submitted successfully" : "Úkol asistenta úspěšně odeslán",
-    "Transcription task submitted successfully" : "Úkol přepisu ze zvuku úspěšně zadán",
-    "Summarization task submitted successfully" : "Úkol shrnutí úspěšně zadán",
-    "Text-to-speech task submitted successfully" : "Úkol převodu řeči na text úspěšně zadán",
     "Send a message to a Talk conversation" : "Odeslat zprávu do konverzace v Talk",
     "Create a conversation" : "Vytvořit konverzaci",
     "Send an email" : "Odeslat e-mail",
@@ -395,14 +391,18 @@
     "last" : "poslední",
     "Generate image using AI" : "Vytvořit obrázek pomocí AI",
     "AI Assistant" : "AI asistent",
-    "Summarization AI task submitted successfully." : "Úkol shrnutí pomocí AI úspěšně zadán.",
     "You will be notified when it is ready." : "Až bude připraveno, budete upozorněni.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce s textem -> Shrnout“",
     "Failed to launch the AI file action" : "Nepodařilo se spustit AI akci ohledně souboru",
-    "Text-to-Speech AI task submitted successfully." : "Úkol převodu řeči na text pomocí AI úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Vytvořit řeč“.",
-    "Transcription AI task submitted successfully." : "Úkol přepisu ze zvuku na text pomocí AI úspěšně zadán.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Je také možné zaškrtnout  v Asistentovi, v nabídce „Práce se zvukem -> Přepsat ze zvuku“.",
-    "Information sources" : "Zdroje informací"
+    "Assistant task submitted successfully" : "Úkol asistenta úspěšně odeslán",
+    "Transcription task submitted successfully" : "Úkol přepisu ze zvuku úspěšně zadán",
+    "Summarization task submitted successfully" : "Úkol shrnutí úspěšně zadán",
+    "Text-to-speech task submitted successfully" : "Úkol převodu řeči na text úspěšně zadán",
+    "Information sources" : "Zdroje informací",
+    "Summarization AI task submitted successfully." : "Úkol shrnutí pomocí AI úspěšně zadán.",
+    "Text-to-Speech AI task submitted successfully." : "Úkol převodu řeči na text pomocí AI úspěšně zadán.",
+    "Transcription AI task submitted successfully." : "Úkol přepisu ze zvuku na text pomocí AI úspěšně zadán."
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 }

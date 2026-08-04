@@ -5,10 +5,6 @@ OC.L10N.register(
     "Unknown user" : "未知用户",
     "Failed to notify when ready; unknown user" : "就绪时通知失败；未知用户",
     "Failed to cancel notification; unknown user" : "取消通知失败；不明的使用者",
-    "Assistant task submitted successfully" : "助手任务已成功递交",
-    "Transcription task submitted successfully" : "转录任务已成功递交",
-    "Summarization task submitted successfully" : "总结任务已成功递交",
-    "Text-to-speech task submitted successfully" : "文字转语音任务递交成功",
     "Send a message to a Talk conversation" : "传送讯息到 Talk 对话",
     "Create a conversation" : "建立对话",
     "Send an email" : "发送一封电子邮件",
@@ -337,6 +333,10 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "启动人工智慧档案动作失败",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "也可以在助手的「处理音讯」→「产生语音」选单中确认。",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "也可以在助手的「处理音讯」→「转录语音」选单中确认。",
+    "Assistant task submitted successfully" : "助手任务已成功递交",
+    "Transcription task submitted successfully" : "转录任务已成功递交",
+    "Summarization task submitted successfully" : "总结任务已成功递交",
+    "Text-to-speech task submitted successfully" : "文字转语音任务递交成功",
     "Information sources" : "资讯来源"
 },
 "nplurals=1; plural=0;");

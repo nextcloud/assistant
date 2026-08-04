@@ -5,10 +5,6 @@
     "Unknown user" : "Kullanıcı bilinmiyor",
     "Failed to notify when ready; unknown user" : "Hazır olduğunda bildirilemedi. Kullanıcı bilinmiyor",
     "Failed to cancel notification; unknown user" : "Bildirim iptal edilemedi. Kullanıcı bilinmiyor",
-    "Assistant task submitted successfully" : "Yardımcı görevi gönderildi",
-    "Transcription task submitted successfully" : "Yazıya dönüştürme görevi gönderildi",
-    "Summarization task submitted successfully" : "Özetleme görevi gönderildi",
-    "Text-to-speech task submitted successfully" : "Yazıdan konuşmaya dönüştürme görevi gönderildi",
     "Send a message to a Talk conversation" : "Bir Konuş görüşmesine bir ileti gönder",
     "Create a conversation" : "Bir görüşme oluştur",
     "Send an email" : "E-posta gönder",
@@ -457,14 +453,18 @@
     "last" : "sonuncu",
     "Generate image using AI" : "YZ ile görsel oluştur",
     "AI Assistant" : "YZ Yardımcı",
-    "Summarization AI task submitted successfully." : "YZ ile özetleme görevi gönderildi.",
     "You will be notified when it is ready." : "Hazır olduğunda size bildirilecek.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Ayrıca Yardımcı içinde \"Yazı ile çalış -> Özetle\" menüsünde de bakabilirsiniz.",
     "Failed to launch the AI file action" : "Yapay zeka dosya işlemi başlatılamadı",
-    "Text-to-Speech AI task submitted successfully." : "YZ ile yazıdan konuşmaya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Konuşma oluştur\" menüsünde de bakabilirsiniz.",
-    "Transcription AI task submitted successfully." : "YZ ile sesten yazıya dönüştürme görevi gönderildi.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Ayrıca Yardımcı içinde \"Ses ile çalış -> Sesten yazıya dönüştür\" menüsünde de bakabilirsiniz.",
-    "Information sources" : "Bilgi kaynakları"
+    "Assistant task submitted successfully" : "Yardımcı görevi gönderildi",
+    "Transcription task submitted successfully" : "Yazıya dönüştürme görevi gönderildi",
+    "Summarization task submitted successfully" : "Özetleme görevi gönderildi",
+    "Text-to-speech task submitted successfully" : "Yazıdan konuşmaya dönüştürme görevi gönderildi",
+    "Information sources" : "Bilgi kaynakları",
+    "Summarization AI task submitted successfully." : "YZ ile özetleme görevi gönderildi.",
+    "Text-to-Speech AI task submitted successfully." : "YZ ile yazıdan konuşmaya dönüştürme görevi gönderildi.",
+    "Transcription AI task submitted successfully." : "YZ ile sesten yazıya dönüştürme görevi gönderildi."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

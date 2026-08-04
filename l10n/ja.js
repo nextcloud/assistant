@@ -4,10 +4,6 @@ OC.L10N.register(
     "Unknown user" : "不明なユーザー",
     "Failed to notify when ready; unknown user" : "準備完了時の通知に失敗しました;不明なユーザーです",
     "Failed to cancel notification; unknown user" : "通知をキャンセルできませんでした。不明なユーザーです。",
-    "Assistant task submitted successfully" : "アシスタントタスクが正常に送信されました",
-    "Transcription task submitted successfully" : "文字起こしタスクが正常に送信されました",
-    "Summarization task submitted successfully" : "要約タスクが正常に送信されました",
-    "Text-to-speech task submitted successfully" : "テキスト読み上げタスクが正常に送信されました",
     "Send a message to a Talk conversation" : "Talkの会話にメッセージを送信する",
     "Create a conversation" : "会話を作成",
     "Send an email" : "メールを送信",
@@ -347,6 +343,10 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "AIファイルアクションの起動に失敗しました",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "アシスタントの「オーディオの操作 -> 音声の生成」メニューでも確認できます。",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "アシスタントの「音声の操作 -> 音声の文字起こし」メニューでも確認できます。",
+    "Assistant task submitted successfully" : "アシスタントタスクが正常に送信されました",
+    "Transcription task submitted successfully" : "文字起こしタスクが正常に送信されました",
+    "Summarization task submitted successfully" : "要約タスクが正常に送信されました",
+    "Text-to-speech task submitted successfully" : "テキスト読み上げタスクが正常に送信されました",
     "Information sources" : "情報源"
 },
 "nplurals=1; plural=0;");
