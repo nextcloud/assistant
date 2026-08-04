@@ -8,10 +8,10 @@
 		:closable="false"
 		:dismissable-mask="false"
 		:close-on-escape="false"
-		:draggable="true"
+		:draggable="!isSmallMobile"
 		append-to="self"
 		:base-z-index="isInsideViewer ? 9998 : 5000"
-		class="assistant-modal">
+		:class="['assistant-modal', { 'assistant-modal--fullscreen': isSmallMobile }]">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">
@@ -59,6 +59,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import PrimeDialog from 'primevue/dialog'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
+import { useIsSmallMobile } from '@nextcloud/vue/composables/useIsMobile'
 
 import AssistantTextProcessingForm from './AssistantTextProcessingForm.vue'
 
@@ -115,6 +116,9 @@ export default {
 		'load-task',
 		'new-task',
 	],
+	setup() {
+		return { isSmallMobile: useIsSmallMobile() }
+	},
 	data() {
 		return {
 			show: true,
@@ -221,7 +225,7 @@ export default {
 	height: calc(100vh - 32px);
 	max-height: calc(100vh - 32px);
 	height: 80%;
-	width: 70%;
+	width: min(1220px, 90vw);
 	resize: both;
 	overflow: hidden;
 	filter: drop-shadow(0 0 15px rgba(77, 77, 77, 0.5));
@@ -230,13 +234,32 @@ export default {
 	border: 0;
 }
 
+.assistant-modal.p-dialog.assistant-modal--fullscreen,
+.assistant-modal.p-dialog.p-dialog-maximized {
+	inset: 0;
+	width: 100vw;
+	max-width: none;
+	height: 100vh;
+	max-height: none;
+	margin: 0;
+	border-radius: 0;
+	resize: none;
+	filter: none;
+	transform: none;
+}
+
+.assistant-modal.p-dialog.assistant-modal--fullscreen .p-dialog-header .p-dialog-maximize-button {
+	display: none;
+}
+
 .assistant-modal .p-dialog-header {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	z-index: 2;
-	min-height: 0;
+	// cover the absolutely-positioned maximize button so the drag strip stays grabbable
+	min-height: calc(var(--default-clickable-area) + 20px);
 	padding: 4px;
 	border: 0;
 	background: transparent;
@@ -245,10 +268,18 @@ export default {
 		cursor: grabbing;
 	}
 	.p-dialog-maximize-button {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		z-index: 3;
+		margin: 0 !important;
+		color: var(--color-main-text);
+		background-color: var(--color-main-background);
 		border-radius: var(--border-radius-element);
 		width: var(--default-clickable-area);
 		height: var(--default-clickable-area);
 		&:hover {
+			color: var(--color-main-text) !important;
 			background-color: var(--color-background-hover) !important;
 			border: none !important;
 		}
