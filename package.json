@@ -71,5 +71,11 @@
     "@nextcloud/vite-config": "^2.3.5",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-stylelint": "^6.0.0"
+  },
+  "allowScripts": {
+    "@parcel/watcher": true,
+    "core-js": true,
+    "esbuild": true,
+    "unrs-resolver": true
   }
 }
