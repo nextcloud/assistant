@@ -7,10 +7,6 @@ OC.L10N.register(
     "Unknown user" : "Onbekende gebruiker",
     "Failed to notify when ready; unknown user" : "Gereedmelding mislukt; onbekende gebruiker",
     "Failed to cancel notification; unknown user" : "Annuleringsmelding mislukt; onbekende gebruiker",
-    "Assistant task submitted successfully" : "Assistent taak succesvol ingedient",
-    "Transcription task submitted successfully" : "Transcriptie taak succesvol ingedient",
-    "Summarization task submitted successfully" : "Samenvatting taak succesvol ingediend",
-    "Text-to-speech task submitted successfully" : "Tekst-Naar-Spraak taak succesvol ingediend",
     "Send a message to a Talk conversation" : "Wen bericht naar een Talk-gesprek versturen",
     "Create a conversation" : "Maak een gesprek aan",
     "Send an email" : "Stuur een e-mail",
@@ -209,6 +205,10 @@ OC.L10N.register(
     "fourth" : "vierde",
     "fifth" : "vijfde",
     "second to last" : "op twee na laatste",
-    "last" : "laatste"
+    "last" : "laatste",
+    "Assistant task submitted successfully" : "Assistent taak succesvol ingedient",
+    "Transcription task submitted successfully" : "Transcriptie taak succesvol ingedient",
+    "Summarization task submitted successfully" : "Samenvatting taak succesvol ingediend",
+    "Text-to-speech task submitted successfully" : "Tekst-Naar-Spraak taak succesvol ingediend"
 },
 "nplurals=2; plural=(n != 1);");

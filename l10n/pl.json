@@ -5,10 +5,6 @@
     "Unknown user" : "Nieznany użytkownik",
     "Failed to notify when ready; unknown user" : "Nie udało się powiadomić po zakończeniu — nieznany użytkownik.",
     "Failed to cancel notification; unknown user" : "Nie udało się anulować powiadomienia: nieznany użytkownik",
-    "Assistant task submitted successfully" : "Zadanie Asystenta zostało pomyślnie wysłane",
-    "Transcription task submitted successfully" : "Zadanie transkrypcji zostało pomyślnie wysłane",
-    "Summarization task submitted successfully" : "Zadanie podsumowania zostało pomyślnie wysłane",
-    "Text-to-speech task submitted successfully" : "Zadanie zamiany tekstu na mowę zostało pomyślnie wysłane",
     "Send a message to a Talk conversation" : "Wyślij wiadomość do rozmowy Talk",
     "Create a conversation" : "Utwórz rozmowę",
     "Send an email" : "Wyślij e-mail",
@@ -371,6 +367,10 @@
     "fifth" : "piąty",
     "second to last" : "przedostatni",
     "last" : "ostatni",
+    "Assistant task submitted successfully" : "Zadanie Asystenta zostało pomyślnie wysłane",
+    "Transcription task submitted successfully" : "Zadanie transkrypcji zostało pomyślnie wysłane",
+    "Summarization task submitted successfully" : "Zadanie podsumowania zostało pomyślnie wysłane",
+    "Text-to-speech task submitted successfully" : "Zadanie zamiany tekstu na mowę zostało pomyślnie wysłane",
     "Information sources" : "Źródła informacji"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

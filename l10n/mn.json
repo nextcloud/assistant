@@ -5,10 +5,6 @@
     "Unknown user" : "–¢–æ–¥–æ—Ä—Ö–æ–π–≥“Ø–π —Ö—ç—Ä—ç–≥–ª—ç–≥—á",
     "Failed to notify when ready; unknown user" : "Бэлэн болоход мэдэгдэж чадсангүй; тодорхойгүй хэрэглэгч",
     "Failed to cancel notification; unknown user" : "Мэдэгдлийг цуцалж чадсангүй; тодорхойгүй хэрэглэгч",
-    "Assistant task submitted successfully" : "Туслахын даалгавар амжилттай илгээгдлээ",
-    "Transcription task submitted successfully" : "Хөрвүүлэлтийн даалгавар амжилттай илгээгдлээ",
-    "Summarization task submitted successfully" : "Хураангуйлах даалгавар амжилттай илгээгдлээ",
-    "Text-to-speech task submitted successfully" : "Текстээс яриа даалгавар амжилттай илгээгдлээ",
     "Send a message to a Talk conversation" : "Talk ярианд мессеж илгээх",
     "Create a conversation" : "Яриа үүсгэх",
     "Send an email" : "Имэйл илгээх",
@@ -376,14 +372,18 @@
     "last" : "сүүлийн",
     "Generate image using AI" : "AI ашиглан зураг үүсгэх",
     "AI Assistant" : "AI туслах",
-    "Summarization AI task submitted successfully." : "AI хураангуйлах даалгавар амжилттай илгээгдлээ.",
     "You will be notified when it is ready." : "Бэлэн болмогц танд мэдэгдэнэ.",
     "It can also be checked in the Assistant in the \"Work with text -> Summarize\" menu." : "Үүнийг Assistant дахь \"Work with text -> Summarize\" цэсээр мөн шалгаж болно.",
     "Failed to launch the AI file action" : "AI файлын үйлдлийг эхлүүлж чадсангүй",
-    "Text-to-Speech AI task submitted successfully." : "Текстээс яриа AI даалгавар амжилттай илгээгдлээ.",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Generate speech\" цэсээр мөн шалгаж болно.",
-    "Transcription AI task submitted successfully." : "AI хөрвүүлэлтийн даалгавар амжилттай илгээгдлээ.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Үүнийг Assistant дахь \"Work with audio -> Transcribe audio\" цэсээр мөн шалгаж болно.",
-    "Information sources" : "Мэдээллийн эх сурвалж"
+    "Assistant task submitted successfully" : "Туслахын даалгавар амжилттай илгээгдлээ",
+    "Transcription task submitted successfully" : "Хөрвүүлэлтийн даалгавар амжилттай илгээгдлээ",
+    "Summarization task submitted successfully" : "Хураангуйлах даалгавар амжилттай илгээгдлээ",
+    "Text-to-speech task submitted successfully" : "Текстээс яриа даалгавар амжилттай илгээгдлээ",
+    "Information sources" : "Мэдээллийн эх сурвалж",
+    "Summarization AI task submitted successfully." : "AI хураангуйлах даалгавар амжилттай илгээгдлээ.",
+    "Text-to-Speech AI task submitted successfully." : "Текстээс яриа AI даалгавар амжилттай илгээгдлээ.",
+    "Transcription AI task submitted successfully." : "AI хөрвүүлэлтийн даалгавар амжилттай илгээгдлээ."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

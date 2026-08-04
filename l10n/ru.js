@@ -12,6 +12,8 @@ OC.L10N.register(
     "Copy file" : "Копировать файл",
     "Delete file" : "Удалить файл",
     "Create bookmark" : "Создать закладку",
+    "Create team" : "Создать команду",
+    "Delete team" : "Удалить команду",
     "Create form" : "Создать форму",
     "Delete form" : "Удалить форму",
     "Share with group" : "Поделиться с группой",
