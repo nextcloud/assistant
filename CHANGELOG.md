@@ -10,6 +10,66 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 4.0.0 - 2026-08-04
+
+### Breaking Changes 
+- drops support for NC<35
+
+### Added
+- Assignments @marcelklehr [#522](https://github.com/nextcloud/assistant/pull/522), [#539](https://github.com/nextcloud/assistant/pull/539), [#558](https://github.com/nextcloud/assistant/pull/558), [#561](https://github.com/nextcloud/assistant/pull/561), [#567](https://github.com/nextcloud/assistant/pull/567), [#586](https://github.com/nextcloud/assistant/pull/586), [#587](https://github.com/nextcloud/assistant/pull/587), [#588](https://github.com/nextcloud/assistant/pull/588); @lukasdotcom [#550](https://github.com/nextcloud/assistant/pull/550)
+- Streaming responses @julien-nc [#545](https://github.com/nextcloud/assistant/pull/545)
+- Support for NC35 @janepie [#549](https://github.com/nextcloud/assistant/pull/549)
+- a nice label for mcp_ tools @marcelklehr [#581](https://github.com/nextcloud/assistant/pull/581)
+- Capture and display reasoning content @julien-nc [#595](https://github.com/nextcloud/assistant/pull/595)
+- expose the assistant folder's path in an api @kyteinsky [#582](https://github.com/nextcloud/assistant/pull/582)
+- Audio translation @julien-nc [#601](https://github.com/nextcloud/assistant/pull/601)
+- improve button for text outputs to allow for iteration @lukasdotcom [#596](https://github.com/nextcloud/assistant/pull/596)
+- Subtitles file action @edward-ly [#577](https://github.com/nextcloud/assistant/pull/577)
+- context agent skills endpoints and admin settings @kyteinsky [#594](https://github.com/nextcloud/assistant/pull/594)
+- multimodal chat @lukasdotcom [#602](https://github.com/nextcloud/assistant/pull/602) 
+
+### Fixed
+- Repair malformed utf-8 obtained when parsing PDFs @julien-nc [#569](https://github.com/nextcloud/assistant/pull/569)
+
+### Changed
+- added find_person_in_users to tool list @janepie [#535](https://github.com/nextcloud/assistant/pull/535)
+- Improve empty content message @marcelklehr [#563](https://github.com/nextcloud/assistant/pull/563)
+- Use the current date by default for new messages and new sessions @julien-nc [#568](https://github.com/nextcloud/assistant/pull/568)
+- Give more feedback to user @marcelklehr [#576](https://github.com/nextcloud/assistant/pull/576)
+- Make the text input larger by default @lukasdotcom [#590](https://github.com/nextcloud/assistant/pull/590)
+- Delete chat messages and assignments when user is deleted @lukasdotcom [#604](https://github.com/nextcloud/assistant/pull/604) 
+- show user facing exception for message generation in ChattyLLM @lukasdotcom [#608](https://github.com/nextcloud/assistant/pull/608) 
+- render markdown in TextInput output @n-iv [#540](https://github.com/nextcloud/assistant/pull/540) 
+- use extended markdown for all NcRichText [#613](https://github.com/nextcloud/assistant/pull/613) 
+- some translated strings @rakekniven [#617](https://github.com/nextcloud/assistant/pull/617) 
+- small UI changes @marcoambrosini [#559](https://github.com/nextcloud/assistant/pull/559) 
+- avoid mime_content_type warning on wrapped streams @olddude2 [#592](https://github.com/nextcloud/assistant/pull/592) 
+- updated dependencies
+
+## 3.5.0 2026-07-17
+
+### Added
+- Delete chat messages and assignments when user is deleted @janepie @lukasdotcom [#606](https://github.com/nextcloud/assistant/pull/606)
+
+## 3.4.3 - 2026-05-26
+
+### Fixed
+- use UnknownNotificationException instead of Activity one @janepie [#552](https://github.com/nextcloud/assistant/pull/552)
+
+## 3.4.2 - 2026-05-21
+
+### Fixed
+- correctly set the z-index @julien-nc [#547](https://github.com/nextcloud/assistant/pull/547)
+- use UnknownActivityException instead of InvalidArgumentException in Notifier @janepie [#544](https://github.com/nextcloud/assistant/pull/544)
+- translate UI issues @janepie [#536](https://github.com/nextcloud/assistant/pull/536)
+- title UI issues @janepie [#524](https://github.com/nextcloud/assistant/pull/524)
+- Prevent opening the assistant dialog multiple times @julien-nc [#523](https://github.com/nextcloud/assistant/pull/523)
+
+
+### Changed
+- updated dependencies @janepie [#548](https://github.com/nextcloud/assistant/pull/548)
+- added strings for new mail tools @janepie [#525](https://github.com/nextcloud/assistant/pull/525)
+
 ## 3.4.1 - 2026-05-04
 
 ### Fixed
