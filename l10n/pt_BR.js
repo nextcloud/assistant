@@ -16,7 +16,7 @@ OC.L10N.register(
     "Failed to store the skill" : "Falha ao armazenar a habilidade",
     "Failed to notify when ready; unknown user" : "Falha ao notificar quando estiver pronto; usuário desconhecido",
     "Failed to cancel notification; unknown user" : "Falha ao cancelar a notificação; usuário desconhecido",
-    "Assistant task submitted" : "Tarefa do assistente enviada",
+    "Assistant task submitted" : "Tarefa de assistente enviada",
     "Transcription task submitted" : "Tarefa de transcrição enviada",
     "Subtitles task submitted" : "Tarefa de legendagem enviada",
     "Summarization task submitted" : "Tarefa de resumo enviada",
