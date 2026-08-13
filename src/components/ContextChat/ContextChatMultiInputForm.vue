@@ -38,11 +38,16 @@
 			<NcButton
 				class="more-button"
 				variant="secondary"
+				:disabled="atMaxQuestions"
+				:title="atMaxQuestions ? t('assistant', 'Maximum number of questions reached') : ''"
 				@click="onAddQuestion">
 				<template #icon>
 					<PlusIcon />
 				</template>
 			</NcButton>
+			<NcNoteCard v-if="atMaxQuestions" type="warning">
+				{{ t('assistant', 'You can ask up to {max} questions at once.', { max: MAX_QUESTIONS }) }}
+			</NcNoteCard>
 		</div>
 		<NcCheckboxRadioSwitch v-model="sccEnabled" @update:model-value="onUpdateSccEnabled">
 			{{ t('assistant', 'Selective context') }}
@@ -178,6 +183,12 @@ const _ScopeType = Object.freeze({
 	PROVIDER: 'provider',
 })
 
+// Keep in sync with MAX_MULTI_QUESTIONS in
+// context_chat_backend/controller.py and task_fetcher.py — any question
+// beyond this count is silently dropped by the backend, so the UI must
+// not let the person add more than this.
+const MAX_QUESTIONS = 20
+
 const _tStrings = {
 	[_ScopeType.SOURCE]: t('assistant', 'Select Files/Folders'),
 	[_ScopeType.PROVIDER]: t('assistant', 'Select Providers'),
@@ -255,6 +266,7 @@ export default {
 		return {
 			ScopeType: _ScopeType,
 			tStrings: _tStrings,
+			MAX_QUESTIONS,
 
 			providerOptions: [],
 			providersLoading: false,
@@ -266,6 +278,9 @@ export default {
 	},
 
 	computed: {
+		atMaxQuestions() {
+			return (this.inputs.questions?.length ?? 0) >= MAX_QUESTIONS
+		},
 		scopeListMetaArray() {
 			if (!this.inputs.scopeListMeta) {
 				return []
@@ -379,6 +394,9 @@ export default {
 			this.onInputsChanged({ questions: newQuestions })
 		},
 		onAddQuestion() {
+			if (this.atMaxQuestions) {
+				return
+			}
 			const newQuestions = [...(this.inputs.questions ?? []), '']
 			this.onInputsChanged({ questions: newQuestions })
 		},
