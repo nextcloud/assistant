@@ -198,6 +198,8 @@ export default {
 						this.loading = false
 						this.showSyncTaskRunning = false
 						this.taskPosition = null
+						// the position polling would stop on the next request but why not stopping it right now
+						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
@@ -205,6 +207,7 @@ export default {
 							this.loading = false
 							this.showSyncTaskRunning = false
 							this.taskPosition = null
+							cancelTaskPositionPolling()
 							this.isNotifyEnabled = false
 							this.task.status = TASK_STATUS_STRING.unknown
 							this.task.output = null
@@ -294,6 +297,7 @@ export default {
 						this.loading = false
 						this.showSyncTaskRunning = false
 						this.taskPosition = null
+						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('Assistant poll error', error)
@@ -301,6 +305,7 @@ export default {
 							this.loading = false
 							this.showSyncTaskRunning = false
 							this.taskPosition = null
+							cancelTaskPositionPolling()
 							this.isNotifyEnabled = false
 							this.task.status = TASK_STATUS_STRING.unknown
 							this.task.output = null
