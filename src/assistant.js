@@ -233,6 +233,7 @@ export async function openAssistantForm({
 						view.loading = false
 						view.showSyncTaskRunning = false
 						view.taskPosition = null
+						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error.message)
@@ -240,6 +241,7 @@ export async function openAssistantForm({
 							view.loading = false
 							view.showSyncTaskRunning = false
 							view.taskPosition = null
+							cancelTaskPositionPolling()
 							view.isNotifyEnabled = false
 							view.outputs = null
 							view.selectedTaskId = null
@@ -342,6 +344,7 @@ export async function openAssistantForm({
 						view.loading = false
 						view.showSyncTaskRunning = false
 						view.taskPosition = null
+						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
@@ -349,6 +352,7 @@ export async function openAssistantForm({
 							view.loading = false
 							view.showSyncTaskRunning = false
 							view.taskPosition = null
+							cancelTaskPositionPolling()
 							view.isNotifyEnabled = false
 							view.outputs = null
 							view.selectedTaskId = null
@@ -843,6 +847,7 @@ export async function openAssistantTask(
 					view.loading = false
 					view.showSyncTaskRunning = false
 					view.taskPosition = null
+					cancelTaskPositionPolling()
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
@@ -851,6 +856,7 @@ export async function openAssistantTask(
 						view.loading = false
 						view.showSyncTaskRunning = false
 						view.taskPosition = null
+						cancelTaskPositionPolling()
 						view.isNotifyEnabled = false
 						view.selectedTaskId = null
 						lastTask = null
@@ -948,6 +954,7 @@ export async function openAssistantTask(
 					view.loading = false
 					view.showSyncTaskRunning = false
 					view.taskPosition = null
+					cancelTaskPositionPolling()
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
@@ -955,6 +962,7 @@ export async function openAssistantTask(
 						view.loading = false
 						view.showSyncTaskRunning = false
 						view.taskPosition = null
+						cancelTaskPositionPolling()
 						view.isNotifyEnabled = false
 						view.outputs = null
 						view.selectedTaskId = null
