@@ -1073,11 +1073,15 @@ export default {
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
 							} else if (error.response.data.task_status === TASK_STATUS_INT.scheduled) {
-								getTaskPosition(taskId).then(response => {
-									const taskPosition = response.data?.ocs?.data
-									this.loading.taskPosition = taskPosition
-									console.debug('Task position:', taskPosition)
-								})
+								getTaskPosition(taskId)
+									.then(response => {
+										const taskPosition = response.data?.ocs?.data
+										this.loading.taskPosition = taskPosition
+										console.debug('Task position:', taskPosition)
+									})
+									.catch(error => {
+										console.error('Failed to get task position', error)
+									})
 							}
 							if (!hasPush && typeof error.response.data.task_output !== 'undefined' && error.response.data.task_output !== null) {
 								this.updateStreamingMessage(error.response.data.task_output || {}, sessionId)
