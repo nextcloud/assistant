@@ -461,9 +461,9 @@ export async function pollTaskPosition(taskId, obj, callback = updateTaskPositio
 				reject(new Error('pollTaskPosition request failed'))
 			})
 		}
+		window.assistantPollPositionTimerId = setInterval(pollPositionOnce, 5000)
 		// start polling immediately
 		pollPositionOnce()
-		window.assistantPollPositionTimerId = setInterval(pollPositionOnce, 5000)
 	})
 }
 
