@@ -23,7 +23,7 @@
 
 <script>
 export default {
-	name: 'Waveform',
+	name: 'WaveForm',
 	props: {
 		title: {
 			type: String,

@@ -177,8 +177,8 @@ export default {
 			const inputs = clear
 				? {}
 				: {
-					...this.inputs,
-				}
+						...this.inputs,
+					}
 			// set default values
 			if (this.translateTaskType.inputShapeDefaults) {
 				Object.keys(this.translateTaskType.inputShapeDefaults).forEach(key => {

@@ -60,9 +60,9 @@ export default {
 		imageUrl() {
 			return this.isOutput
 				? generateOcsUrl('apps/assistant/api/v1/task/{taskId}/output-file/{fileId}/preview?x=300&y=300', {
-					taskId: this.myCurrentTaskId,
-					fileId: this.fileId,
-				})
+						taskId: this.myCurrentTaskId,
+						fileId: this.fileId,
+					})
 				: generateOcsUrl('apps/assistant/api/v1/file/{fileId}/display', { fileId: this.fileId })
 		},
 		style() {

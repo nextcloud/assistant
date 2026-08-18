@@ -21,8 +21,8 @@
 				:is-assignment="mySelectedTaskTypeId === 'assignments'"
 				class="chatty-inputs"
 				@open-chat="onOpenChatFromAssignment" />
-			<div v-else ref="container" class="container chatty-inputs">
-				<NcAppNavigation ref="appNav">
+			<div v-else class="container chatty-inputs">
+				<NcAppNavigation>
 					<NcAppNavigationList>
 						<NcAppNavigationNew :text="t('assistant', 'New task')"
 							variant="secondary"
@@ -338,7 +338,7 @@ export default {
 	],
 	data() {
 		const urlIsAssignment = new URLSearchParams(window.location.search).get('isAssignment')
-		const urlSelectedTaskTypeId = urlIsAssignment != null && urlIsAssignment !== '0' && urlIsAssignment !== 'false'
+		const urlSelectedTaskTypeId = urlIsAssignment !== null && urlIsAssignment !== '0' && urlIsAssignment !== 'false'
 			? 'assignments'
 			: null
 		return {
@@ -415,29 +415,29 @@ export default {
 				const fieldType = taskType.inputShape[k].type
 				const value = inputs[k]
 				return ([SHAPE_TYPE_NAMES.Text, SHAPE_TYPE_NAMES.Enum].includes(fieldType)
-						&& typeof value === 'string'
-						&& !!value?.trim()
-						// check that the input text is not too long for text fields
-						&& (fieldType === SHAPE_TYPE_NAMES.Enum || value.trim().length <= MAX_TEXT_INPUT_LENGTH))
-					|| ([
-						SHAPE_TYPE_NAMES.Number,
-						SHAPE_TYPE_NAMES.File,
-						SHAPE_TYPE_NAMES.Image,
-						SHAPE_TYPE_NAMES.Audio,
-						SHAPE_TYPE_NAMES.Video,
-					].includes(fieldType) && typeof value === 'number')
-					|| (fieldType === SHAPE_TYPE_NAMES.ListOfTexts && typeof value === 'object' && !!value && value.every(v => {
-						return typeof v === 'string'
-							&& !!v?.trim()
-							&& v.trim().length <= MAX_TEXT_INPUT_LENGTH
-					}))
-					|| (fieldType === SHAPE_TYPE_NAMES.ListOfNumbers && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
-					|| ([
-						SHAPE_TYPE_NAMES.ListOfFiles,
-						SHAPE_TYPE_NAMES.ListOfImages,
-						SHAPE_TYPE_NAMES.ListOfAudios,
-						SHAPE_TYPE_NAMES.ListOfVideos,
-					].includes(fieldType) && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
+					&& typeof value === 'string'
+					&& !!value?.trim()
+					// check that the input text is not too long for text fields
+					&& (fieldType === SHAPE_TYPE_NAMES.Enum || value.trim().length <= MAX_TEXT_INPUT_LENGTH))
+				|| ([
+					SHAPE_TYPE_NAMES.Number,
+					SHAPE_TYPE_NAMES.File,
+					SHAPE_TYPE_NAMES.Image,
+					SHAPE_TYPE_NAMES.Audio,
+					SHAPE_TYPE_NAMES.Video,
+				].includes(fieldType) && typeof value === 'number')
+				|| (fieldType === SHAPE_TYPE_NAMES.ListOfTexts && typeof value === 'object' && !!value && value.every(v => {
+					return typeof v === 'string'
+						&& !!v?.trim()
+						&& v.trim().length <= MAX_TEXT_INPUT_LENGTH
+				}))
+				|| (fieldType === SHAPE_TYPE_NAMES.ListOfNumbers && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
+				|| ([
+					SHAPE_TYPE_NAMES.ListOfFiles,
+					SHAPE_TYPE_NAMES.ListOfImages,
+					SHAPE_TYPE_NAMES.ListOfAudios,
+					SHAPE_TYPE_NAMES.ListOfVideos,
+				].includes(fieldType) && typeof value === 'object' && !!value && value.every(v => typeof v === 'number'))
 			})
 		},
 		syncSubmitButtonLabel() {

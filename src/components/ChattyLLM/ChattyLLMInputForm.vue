@@ -3,8 +3,8 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
   -->
 <template>
-	<div ref="container" class="container">
-		<NcAppNavigation ref="appNav">
+	<div class="container">
+		<NcAppNavigation>
 			<NcAppNavigationList>
 				<NcAppNavigationNew v-if="!isAssignment"
 					:text="t('assistant', 'New conversation')"
@@ -58,10 +58,10 @@
 					</div>
 					<div v-if="isAssignment && assignmentDetails?.id && active?.assignment_id === assignmentDetails?.id" class="session-area__top-bar__details">
 						<div class="session-area__top-bar__detail">
-							{{ t('assistant', 'Prompt: {prompt}', {prompt : assignmentDetails.prompt}) }}
+							{{ t('assistant', 'Prompt: {prompt}', { prompt: assignmentDetails.prompt }) }}
 						</div>
 						<div class="session-area__top-bar__detail">
-							{{ t('assistant', 'Recurrence: {recurrence}', {recurrence : rrule}) }}
+							{{ t('assistant', 'Recurrence: {recurrence}', { recurrence: rrule }) }}
 						</div>
 					</div>
 				</div>
@@ -451,7 +451,6 @@ export default {
 			this.editingTitle = false
 			if (this.$refs.inputComponent) {
 				this.$refs.inputComponent.focus()
-
 			}
 
 			if (this.active === null || this.loading.newSession) {
@@ -502,7 +501,7 @@ export default {
 		},
 		async checkSession(sessionId, isAssignment) {
 			try {
-				if (this.active?.id == null || this.active?.id !== sessionId) {
+				if (this.active?.id === null || this.active?.id !== sessionId) {
 					return
 				}
 				if (this.pollCheckSessionTimeout) {
@@ -544,7 +543,7 @@ export default {
 						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponseData.titleTaskId, sessionId)
 						const titleResponseData = titleResponse.data
 						console.debug('checkTaskPolling result:', titleResponse)
-						if (titleResponseData?.result == null) {
+						if (titleResponseData?.result === null) {
 							throw new Error('No title generated, response:', titleResponse)
 						}
 
@@ -579,10 +578,10 @@ export default {
 		},
 		scrollToLastMessage() {
 			console.debug('scrollToBottom: active:', this.active)
-			if (this.active == null) {
+			if (this.active === null) {
 				return
 			}
-			if (this.messages == null) {
+			if (this.messages === null) {
 				return
 			}
 
@@ -595,10 +594,10 @@ export default {
 			this.focusOnInputField()
 		},
 		scrollToBottomWhileStreaming() {
-			if (this.active == null) {
+			if (this.active === null) {
 				return
 			}
-			if (this.messages == null) {
+			if (this.messages === null) {
 				return
 			}
 			if (this.userScrolled) {
@@ -658,7 +657,7 @@ export default {
 		 * @param {{ id: number, title: string, user_id: string, timestamp: number }} session Chat session
 		 */
 		getSessionTitle(session) {
-			if (session == null) {
+			if (session === null) {
 				return ''
 			}
 
@@ -739,7 +738,7 @@ export default {
 				const titlePollResponse = await this.pollTitleGenerationTask(titleGenerationResponse.data.taskId, sessionId)
 				const titlePollResponseData = titlePollResponse.data
 				console.debug('checkTaskPolling result:', titlePollResponseData)
-				if (titlePollResponseData?.result == null) {
+				if (titlePollResponseData?.result === null) {
 					throw new Error('No title generated, response:', titlePollResponse)
 				}
 
@@ -804,7 +803,7 @@ export default {
 		},
 
 		async fetchMessages(older = false) {
-			if (this.active == null) {
+			if (this.active === null) {
 				console.debug('no active session')
 				return
 			}
@@ -817,7 +816,7 @@ export default {
 					this.loading.initialMessages = true
 				}
 
-				if (this.messagesAxiosController != null) {
+				if (this.messagesAxiosController !== null) {
 					this.messagesAxiosController.abort()
 				}
 				this.messagesAxiosController = new AbortController()
@@ -833,7 +832,7 @@ export default {
 				})
 				const messagesResponseData = messagesResponse.data
 				console.debug('fetchMessages response:', messagesResponseData)
-				if (this.messages == null) {
+				if (this.messages === null) {
 					this.messages = []
 				}
 				this.messages.unshift(...messagesResponseData)
@@ -912,7 +911,7 @@ export default {
 				console.debug('newSession response:', newSessionResponseData)
 
 				const session = newSessionResponseData?.session ?? null
-				if (session == null) {
+				if (session === null) {
 					throw new Error(t('assistant', 'Invalid response received for a new conversation request'))
 				}
 
@@ -1011,7 +1010,6 @@ export default {
 						this.active?.id,
 					)
 				}
-
 			})
 			if (hasPush) {
 				this.isListeningTo[pushTaskId] = true
@@ -1115,7 +1113,6 @@ export default {
 				title: this.active.title,
 				is_remembered: this.active.is_remembered,
 			})
-
 		},
 
 		async updateLastHumanMessageContent() {

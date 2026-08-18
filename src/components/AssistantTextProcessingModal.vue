@@ -11,7 +11,8 @@
 		:draggable="!isSmallMobile"
 		append-to="self"
 		:base-z-index="isInsideViewer ? 9998 : 5000"
-		:class="['assistant-modal', { 'assistant-modal--fullscreen': isSmallMobile }]">
+		class="assistant-modal"
+		:class="{ 'assistant-modal--fullscreen': isSmallMobile }">
 		<div ref="modal_content"
 			class="assistant-modal--wrapper">
 			<div class="assistant-modal--content">

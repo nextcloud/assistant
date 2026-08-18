@@ -25,55 +25,55 @@ export default (recurrenceRule, locale) => {
 	let freqPart = ''
 	if (recurrenceRule.interval === 1) {
 		switch (recurrenceRule.frequency) {
-		case 'MINUTELY':
-			freqPart = t('assistant', 'Minutely')
-			break
+			case 'MINUTELY':
+				freqPart = t('assistant', 'Minutely')
+				break
 
-		case 'HOURLY':
-			freqPart = t('assistant', 'Hourly')
-			break
+			case 'HOURLY':
+				freqPart = t('assistant', 'Hourly')
+				break
 
-		case 'DAILY':
-			freqPart = t('assistant', 'Daily')
-			break
+			case 'DAILY':
+				freqPart = t('assistant', 'Daily')
+				break
 
-		case 'WEEKLY':
-			freqPart = t('assistant', 'Weekly')
-			break
+			case 'WEEKLY':
+				freqPart = t('assistant', 'Weekly')
+				break
 
-		case 'MONTHLY':
-			freqPart = t('assistant', 'Monthly')
-			break
+			case 'MONTHLY':
+				freqPart = t('assistant', 'Monthly')
+				break
 
-		case 'YEARLY':
-			freqPart = t('assistant', 'Yearly')
-			break
+			case 'YEARLY':
+				freqPart = t('assistant', 'Yearly')
+				break
 		}
 	} else {
 		switch (recurrenceRule.frequency) {
-		case 'MINUTELY':
-			freqPart = n('assistant', 'Every %n minute', 'Every %n minutes', recurrenceRule.interval)
-			break
+			case 'MINUTELY':
+				freqPart = n('assistant', 'Every %n minute', 'Every %n minutes', recurrenceRule.interval)
+				break
 
-		case 'HOURLY':
-			freqPart = n('assistant', 'Every %n hour', 'Every %n hours', recurrenceRule.interval)
-			break
+			case 'HOURLY':
+				freqPart = n('assistant', 'Every %n hour', 'Every %n hours', recurrenceRule.interval)
+				break
 
-		case 'DAILY':
-			freqPart = n('assistant', 'Every %n day', 'Every %n days', recurrenceRule.interval)
-			break
+			case 'DAILY':
+				freqPart = n('assistant', 'Every %n day', 'Every %n days', recurrenceRule.interval)
+				break
 
-		case 'WEEKLY':
-			freqPart = n('assistant', 'Every %n week', 'Every %n weeks', recurrenceRule.interval)
-			break
+			case 'WEEKLY':
+				freqPart = n('assistant', 'Every %n week', 'Every %n weeks', recurrenceRule.interval)
+				break
 
-		case 'MONTHLY':
-			freqPart = n('assistant', 'Every %n month', 'Every %n months', recurrenceRule.interval)
-			break
+			case 'MONTHLY':
+				freqPart = n('assistant', 'Every %n month', 'Every %n months', recurrenceRule.interval)
+				break
 
-		case 'YEARLY':
-			freqPart = n('assistant', 'Every %n year', 'Every %n years', recurrenceRule.interval)
-			break
+			case 'YEARLY':
+				freqPart = n('assistant', 'Every %n year', 'Every %n years', recurrenceRule.interval)
+				break
 		}
 	}
 
@@ -213,29 +213,29 @@ function getTranslatedMonths(byMonthList) {
  */
 export function getTranslatedOrdinalNumber(bySetPositionNum) {
 	switch (bySetPositionNum) {
-	case 1:
-		return t('assistant', 'first')
+		case 1:
+			return t('assistant', 'first')
 
-	case 2:
-		// TRANSLATORS This refers to the second item in a series, not to the unit of time
-		return t('assistant', 'second')
+		case 2:
+			// TRANSLATORS This refers to the second item in a series, not to the unit of time
+			return t('assistant', 'second')
 
-	case 3:
-		return t('assistant', 'third')
+		case 3:
+			return t('assistant', 'third')
 
-	case 4:
-		return t('assistant', 'fourth')
+		case 4:
+			return t('assistant', 'fourth')
 
-	case 5:
-		return t('assistant', 'fifth')
+		case 5:
+			return t('assistant', 'fifth')
 
-	case -2:
-		return t('assistant', 'second to last')
+		case -2:
+			return t('assistant', 'second to last')
 
-	case -1:
-		return t('assistant', 'last')
+		case -1:
+			return t('assistant', 'last')
 
-	default:
-		return ''
+		default:
+			return ''
 	}
 }

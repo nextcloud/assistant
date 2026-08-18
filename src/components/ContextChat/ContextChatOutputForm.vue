@@ -19,7 +19,7 @@
 				:model-value="sources"
 				:placeholder="t('assistant', 'No sources referenced')"
 				:multiple="true"
-				:close-on-select="false"
+				:keep-open="true"
 				:no-wrap="false"
 				:label-outside="true"
 				:append-to-body="false"

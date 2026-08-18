@@ -87,8 +87,8 @@ export default {
 			const inputs = clear
 				? {}
 				: {
-					...this.inputs,
-				}
+						...this.inputs,
+					}
 			// set default values
 			if (this.selectedTaskType.inputShapeDefaults) {
 				Object.keys(this.selectedTaskType.inputShapeDefaults).forEach(key => {

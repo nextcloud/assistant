@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div ref="editable-text-field" class="editable-text-field">
+	<div class="editable-text-field">
 		<NcRichText v-if="!editing"
 			class="editable-text-field__output"
 			dir="auto"

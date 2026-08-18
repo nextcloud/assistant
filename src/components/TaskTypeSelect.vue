@@ -84,7 +84,7 @@ import FileIcon from 'vue-material-design-icons/File.vue'
 import TimerOutlineIcon from 'vue-material-design-icons/TimerOutline.vue'
 
 import ContentPasteSearchIcon from './icons/ContentPasteSearch.vue'
-import WaveformIcon from './icons/Waveform.vue'
+import WaveformIcon from './icons/WaveForm.vue'
 
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -230,24 +230,24 @@ export default {
 		},
 		getCategoryIcon(category) {
 			switch (category) {
-			case 'chat':
-				return MessageOutlineIcon
-			case 'assignments':
-				return TimerOutlineIcon
-			case 'context':
-				return ContentPasteSearchIcon
-			case 'text':
-				return TextLongIcon
-			case 'image':
-				return ImageOutlineIcon
-			case 'translate':
-				return WebIcon
-			case 'audio':
-				return WaveformIcon
-			case 'generate':
-				return FileIcon
-			default:
-				return DotsHorizontalIcon
+				case 'chat':
+					return MessageOutlineIcon
+				case 'assignments':
+					return TimerOutlineIcon
+				case 'context':
+					return ContentPasteSearchIcon
+				case 'text':
+					return TextLongIcon
+				case 'image':
+					return ImageOutlineIcon
+				case 'translate':
+					return WebIcon
+				case 'audio':
+					return WaveformIcon
+				case 'generate':
+					return FileIcon
+				default:
+					return DotsHorizontalIcon
 			}
 		},
 	},

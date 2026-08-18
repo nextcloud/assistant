@@ -19,7 +19,7 @@
 			</template>
 		</NoSession>
 		<div v-else>
-			<Message v-for="(message, idx) in messages"
+			<ChatMessage v-for="(message, idx) in messages"
 				:id="'message' + idx"
 				:key="'message' + idx"
 				:class="{ 'convo-box__message--dim': regenerateFromId && regenerateFromId <= message.id }"
@@ -31,15 +31,15 @@
 				:information-source-names="informationSourceNames"
 				@regenerate="regenerate(message.id)"
 				@delete="deleteMessage(message.id)" />
-			<Message v-if="streamingMessage"
-				:id="'message-streaming'"
-				:key="'message-streaming'"
+			<ChatMessage v-if="streamingMessage"
+				id="message-streaming"
+				key="message-streaming"
 				:message="streamingMessage"
 				:information-source-names="informationSourceNames"
 				:streaming="true" />
 			<LoadingPlaceholder v-else-if="loading.llmGeneration"
-				:id="'message-placeholder'"
-				:key="'message-placeholder'"
+				id="message-placeholder"
+				key="message-placeholder"
 				:slow-pickup="slowPickup" />
 		</div>
 	</div>
@@ -51,7 +51,7 @@ import AlertOutlineIcon from 'vue-material-design-icons/AlertOutline.vue'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 
 import LoadingPlaceholder from './LoadingPlaceholder.vue'
-import Message from './Message.vue'
+import ChatMessage from './ChatMessage.vue'
 import NoSession from './NoSession.vue'
 
 import { loadState } from '@nextcloud/initial-state'
@@ -65,7 +65,7 @@ export default {
 		NcLoadingIcon,
 
 		LoadingPlaceholder,
-		Message,
+		ChatMessage,
 		NoSession,
 	},
 
@@ -109,12 +109,12 @@ export default {
 	},
 
 	watch: {
-		'loading.messageDelete'() {
+		'loading.messageDelete': function() {
 			if (!this.loading.messageDelete) {
 				this.deleteMessageId = null
 			}
 		},
-		'loading.llmGeneration'() {
+		'loading.llmGeneration': function() {
 			if (!this.loading.llmGeneration) {
 				this.regenerateFromId = null
 			}

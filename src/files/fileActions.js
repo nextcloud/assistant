@@ -65,8 +65,8 @@ function registerSummarizeAction() {
 				await axios.post(url)
 				showSuccess(
 					t('assistant', 'Summarization AI task submitted.') + '\n'
-						+ t('assistant', 'You will be notified when it is ready.') + '\n'
-						+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
+					+ t('assistant', 'You will be notified when it is ready.') + '\n'
+					+ t('assistant', 'It can also be checked in the Assistant in the "Work with text -> Summarize" menu.'),
 				)
 			} catch (error) {
 				console.error(error)
@@ -104,8 +104,8 @@ function registerTtsAction() {
 				await axios.post(url)
 				showSuccess(
 					t('assistant', 'Text-to-Speech AI task submitted.') + '\n'
-						+ t('assistant', 'You will be notified when it is ready.') + '\n'
-						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
+					+ t('assistant', 'You will be notified when it is ready.') + '\n'
+					+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate speech" menu.'),
 				)
 			} catch (error) {
 				console.error(error)
@@ -143,8 +143,8 @@ function registerSttAction() {
 				await axios.post(url)
 				showSuccess(
 					t('assistant', 'Transcription AI task submitted.') + '\n'
-						+ t('assistant', 'You will be notified when it is ready.') + '\n'
-						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
+					+ t('assistant', 'You will be notified when it is ready.') + '\n'
+					+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Transcribe audio" menu.'),
 				)
 			} catch (error) {
 				console.error(error)
@@ -182,8 +182,8 @@ function registerSttSubtitlesAction() {
 				await axios.post(url)
 				showSuccess(
 					t('assistant', 'AI subtitles task submitted.') + '\n'
-						+ t('assistant', 'You will be notified when it is ready.') + '\n'
-						+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate subtitles" menu.'),
+					+ t('assistant', 'You will be notified when it is ready.') + '\n'
+					+ t('assistant', 'It can also be checked in the Assistant in the "Work with audio -> Generate subtitles" menu.'),
 				)
 			} catch (error) {
 				console.error(error)

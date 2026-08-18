@@ -16,7 +16,7 @@
 			label="name"
 			:label-outside="true"
 			:title="field.name"
-			:placeholder="field.placeholder ?? (field.description || t('assistant','Choose a value'))"
+			:placeholder="field.placeholder ?? (field.description || t('assistant', 'Choose a value'))"
 			:no-wrap="false"
 			@update:model-value="onUpdateValue" />
 	</div>
