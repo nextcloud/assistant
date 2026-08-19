@@ -64,7 +64,7 @@
 					:is-output="isOutput"
 					:clickable="isOutput"
 					@delete="onDelete(fileId)"
-					@click.native="onPreviewClick(isOutput, fileId)" />
+					@click="onPreviewClick(isOutput, fileId)" />
 				<div class="buttons">
 					<NcButton v-if="!isOutput"
 						variant="tertiary"

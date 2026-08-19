@@ -155,7 +155,7 @@ export default {
 				this.audioStream = null
 				showError(
 					t('assistant', 'Error while recording audio')
-						+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
+					+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
 				)
 				return
 			}

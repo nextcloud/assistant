@@ -18,9 +18,9 @@
 					{{ formattedRuntime }}
 				</div>
 				<div class="info-text-block">
-					{{ t('assistant', 'This task is running in the background.',) }}
+					{{ t('assistant', 'This task is running in the background.') }}
 					<br>
-					{{ t('assistant', 'You can safely close the assistant or browse other tasks.',) }}
+					{{ t('assistant', 'You can safely close the assistant or browse other tasks.') }}
 				</div>
 				<NcButton
 					@click="$emit('background-notify', !isNotifyEnabled)">

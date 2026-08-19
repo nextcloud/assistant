@@ -214,9 +214,9 @@ export default {
 			this.task = updateOutput
 				? task
 				: {
-					...task,
-					output: this.task.output,
-				}
+						...task,
+						output: this.task.output,
+					}
 		},
 		onSyncSubmit(data) {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)

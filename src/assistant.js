@@ -399,8 +399,8 @@ function updateTask(task, object, updateOutput = true) {
  * @param {number} taskId the task ID
  * @param {object} obj the object to update
  * @param {boolean} updateOutput whether to update the task output from the polling data or not
- * @param {Function} callback the function to call to update the object
- * @return {Promise<*>}
+ * @param {(task: object, object: object, updateOutput: boolean) => void} callback the function to call to update the object
+ * @return {Promise<object>}
  */
 export async function pollTask(taskId, obj, updateOutput = true, callback = updateTask) {
 	return new Promise((resolve, reject) => {
@@ -481,7 +481,7 @@ export async function cancelTask(taskId) {
  * @param {string} customId the task custom ID
  * @param {string} taskType the task type class
  * @param {Array} inputs the task input texts as an array
- * @return {Promise<*>}
+ * @return {Promise<object>}
  */
 export async function scheduleTask(appId, customId, taskType, inputs) {
 	window.assistantAbortController = new AbortController()
@@ -702,7 +702,7 @@ export async function openAssistantTask(
 				console.error('Assistant scheduling error', error)
 				showError(
 					t('assistant', 'Assistant failed to schedule your task')
-						+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
+					+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
 				)
 			})
 	})

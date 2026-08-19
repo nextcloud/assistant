@@ -87,7 +87,7 @@
 				:key="source"
 				:text="source"
 				no-close
-				:variant="index === parsedSources.length-1 ? 'primary' : 'secondary'"
+				:variant="index === parsedSources.length - 1 ? 'primary' : 'secondary'"
 				style="display: block; margin-bottom: 0.5em;" />
 		</div>
 		<NcRichText class="message__content"
@@ -110,7 +110,7 @@
 				:task-id="message.role === 'human' ? undefined : (f.ocp_task_id ?? message.ocp_task_id)"
 				:is-output="isOutput"
 				:clickable="true"
-				@click.native="onPreviewClick(f)" />
+				@click="onPreviewClick(f)" />
 		</div>
 	</div>
 </template>
@@ -141,7 +141,7 @@ const PLAIN_URL_PATTERN = /(?:\s|^|\()((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+
 const MARKDOWN_LINK_PATTERN = /\[[-A-Z0-9+&@#%?=~_|!:,.;()]+\]\(((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;]*)*))\)/ig
 
 export default {
-	name: 'Message',
+	name: 'ChatMessage',
 
 	components: {
 		AudioDisplay,
@@ -234,7 +234,7 @@ export default {
 
 	watch: {
 		// Pseudo streaming
-		async 'message.content'(messageContent, oldMessageContent) {
+		'message.content': async function(messageContent, oldMessageContent) {
 			if (!this.streaming) {
 				return
 			}

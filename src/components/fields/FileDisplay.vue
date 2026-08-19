@@ -64,9 +64,9 @@ export default {
 			// TODO find a way to get a preview for an output file (no mimetype because it's deduced from the name in core)
 			return this.isOutput
 				? generateOcsUrl('apps/assistant/api/v1/task/{taskId}/output-file/{fileId}/preview', {
-					taskId: this.myCurrentTaskId,
-					fileId: this.fileId,
-				})
+						taskId: this.myCurrentTaskId,
+						fileId: this.fileId,
+					})
 				: generateUrl('core/preview?fileId={fileId}&x=100&y=100&mimeFallback=true&a=0', { fileId: this.fileId })
 		},
 		fileName() {

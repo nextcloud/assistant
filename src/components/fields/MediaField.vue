@@ -58,7 +58,7 @@
 				:show-delete="false"
 				:is-output="isOutput"
 				:clickable="true"
-				@click.native="onPreviewClick" />
+				@click="onPreviewClick" />
 			<div v-if="isOutput"
 				class="buttons">
 				<a :href="getDownloadUrl()"

@@ -74,7 +74,7 @@
 					class="line"
 					:placeholder="tStrings[ScopeType.SOURCE]"
 					:multiple="true"
-					:close-on-select="false"
+					:keep-open="true"
 					:dropdown-should-open="() => false"
 					:label-outside="true"
 					:no-wrap="false"
@@ -95,7 +95,7 @@
 					:model-value="scopeListMetaArray"
 					:placeholder="tStrings[ScopeType.PROVIDER]"
 					:multiple="true"
-					:close-on-select="false"
+					:keep-open="true"
 					:no-wrap="false"
 					:loading="providersLoading"
 					:label-outside="true"
@@ -337,7 +337,7 @@ export default {
 				})
 		},
 		getFilePreviewUrl(fileId) {
-			if (fileId == null) {
+			if (fileId === null) {
 				return generateUrl('/apps/theming/img/core/filetypes/folder.svg')
 			}
 			return generateUrl(

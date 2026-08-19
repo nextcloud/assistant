@@ -221,7 +221,7 @@ export default {
 			}).catch(error => {
 				showError(
 					t('assistant', 'Could not upload the recorded file')
-						+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
+					+ '. ' + t('assistant', 'Please try again and inform the server administrators if this issue persists.'),
 				)
 				console.error(error)
 			})

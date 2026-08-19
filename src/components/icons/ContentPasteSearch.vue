@@ -6,7 +6,7 @@
 	<span v-bind="$attrs"
 		:aria-hidden="title ? null : 'true'"
 		:aria-label="title"
-		class="material-design-icon waveform-icon"
+		class="material-design-icon content-paste-search-icon"
 		role="img"
 		@click="$emit('click', $event)">
 		<svg :fill="fillColor"

@@ -57,7 +57,7 @@
 					<ContentCopyIcon v-else size="20" />
 				</template>
 				<span v-if="streaming()">
-					{{ t('assistant', 'Getting results...') }}
+					{{ t('assistant', 'Getting results…') }}
 				</span>
 				<span v-else>
 					{{ t('assistant', 'Copy') }}
@@ -71,7 +71,7 @@
 			<template #icon>
 				<FileDocumentOutlineIcon />
 			</template>
-			{{ t('assistant','Choose file') }}
+			{{ t('assistant', 'Choose file') }}
 		</NcButton>
 	</div>
 </template>

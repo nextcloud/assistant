@@ -57,9 +57,9 @@ export default {
 				})
 				*/
 				? generateOcsUrl('apps/assistant/api/v1/task/{taskId}/output-file/{fileId}/download', {
-					taskId: this.taskId,
-					fileId: this.fileId,
-				})
+						taskId: this.taskId,
+						fileId: this.fileId,
+					})
 				: generateOcsUrl('apps/assistant/api/v1/file/{fileId}/display', { fileId: this.fileId })
 		},
 	},
