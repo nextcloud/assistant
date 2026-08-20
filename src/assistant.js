@@ -11,6 +11,7 @@ import Aura from '@primeuix/themes/aura'
 import { listen } from '@nextcloud/notify_push'
 
 window.assistantPollTimerId = null
+window.assistantPollPositionTimerId = null
 
 listen('taskprocessing:task_update', (type, body) => {
 	console.debug('[assistant] received task update push notification', type, body)
@@ -168,6 +169,7 @@ export async function openAssistantForm({
 
 		modalMountPoint.addEventListener('cancel', () => {
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			app.unmount()
 			OCA.Assistant.isAssistantDialogOpen = false
 			reject(new Error('User cancellation'))
@@ -175,6 +177,7 @@ export async function openAssistantForm({
 		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 			view.loading = true
 			view.showSyncTaskRunning = true
+			view.taskPosition = null
 			view.isNotifyEnabled = false
 			view.progress = null
 			view.expectedRuntime = null
@@ -196,6 +199,11 @@ export async function openAssistantForm({
 					const hasPush = listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
 
+					pollTaskPosition(task.id, view).then(() => {
+						console.debug('[assistant] pollTaskPosition finished')
+					}).catch(error => {
+						console.debug('[assistant] pollPosition error', error.message)
+					})
 					// no need to update the task output with polling if we have push notifications
 					pollTask(task.id, view, !hasPush).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
@@ -224,12 +232,16 @@ export async function openAssistantForm({
 						resolve(finishedTask)
 						view.loading = false
 						view.showSyncTaskRunning = false
+						view.taskPosition = null
+						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error.message)
 						if (error.message === 'task-not-found') {
 							view.loading = false
 							view.showSyncTaskRunning = false
+							view.taskPosition = null
+							cancelTaskPositionPolling()
 							view.isNotifyEnabled = false
 							view.outputs = null
 							view.selectedTaskId = null
@@ -241,6 +253,7 @@ export async function openAssistantForm({
 				.catch(error => {
 					view.loading = false
 					view.showSyncTaskRunning = false
+					view.taskPosition = null
 					console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
 					showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
 				})
@@ -258,7 +271,9 @@ export async function openAssistantForm({
 			const task = data.detail
 			console.debug('[assistant] loading task', task)
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			view.showSyncTaskRunning = false
+			view.taskPosition = null
 			view.isNotifyEnabled = false
 			view.loading = false
 			view.taskStatus = task.status
@@ -291,6 +306,7 @@ export async function openAssistantForm({
 
 					view.loading = true
 					view.showSyncTaskRunning = true
+					view.taskPosition = null
 					view.progress = null
 					view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
 					view.startedAt = lastTask?.startedAt || null
@@ -299,6 +315,11 @@ export async function openAssistantForm({
 					const hasPush = listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
 
+					pollTaskPosition(updatedTask.id, view).then(() => {
+						console.debug('[assistant] pollTaskPosition finished')
+					}).catch(error => {
+						console.debug('[assistant] pollPosition error', error.message)
+					})
 					pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
@@ -322,12 +343,16 @@ export async function openAssistantForm({
 						// resolve(finishedTask)
 						view.loading = false
 						view.showSyncTaskRunning = false
+						view.taskPosition = null
+						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
 						if (error.message === 'task-not-found') {
 							view.loading = false
 							view.showSyncTaskRunning = false
+							view.taskPosition = null
+							cancelTaskPositionPolling()
 							view.isNotifyEnabled = false
 							view.outputs = null
 							view.selectedTaskId = null
@@ -343,8 +368,10 @@ export async function openAssistantForm({
 		modalMountPoint.addEventListener('new-task', () => {
 			console.debug('[assistant] new task')
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			view.loading = false
 			view.showSyncTaskRunning = false
+			view.taskPosition = null
 			view.isNotifyEnabled = false
 			view.outputs = null
 			view.selectedTaskId = null
@@ -358,10 +385,12 @@ export async function openAssistantForm({
 		})
 		modalMountPoint.addEventListener('cancel-task', () => {
 			cancelTaskPolling()
+			cancelTaskPositionPolling()
 			setNotifyReady(lastTask.id, false)
 			cancelTask(lastTask.id).then(res => {
 				view.loading = false
 				view.showSyncTaskRunning = false
+				view.taskPosition = null
 				view.selectedTaskId = null
 				view.outputs = null
 				view.taskStatus = null
@@ -391,6 +420,55 @@ function updateTask(task, object, updateOutput = true) {
 	}
 	object.startedAt = task?.startedAt
 	object.completionExpectedAt = task?.completionExpectedAt
+}
+
+function updateTaskPosition(position, object) {
+	object.taskPosition = position
+}
+
+/**
+ * Poll the task position
+ *
+ * @param {number} taskId the task ID
+ * @param {object} obj the object to update
+ * @param {Function} callback the function to call to update the object
+ * @return {Promise<*>}
+ */
+export async function pollTaskPosition(taskId, obj, callback = updateTaskPosition) {
+	return new Promise((resolve, reject) => {
+		const pollPositionOnce = () => {
+			if (window.assistantPollPositionTimerId === null) {
+				reject(new Error('pollTaskPosition cancelled'))
+				return
+			}
+			getTaskPosition(taskId).then(response => {
+				const taskPosition = response.data?.ocs?.data
+				if (window.assistantPollPositionTimerId === null) {
+					reject(new Error('pollTaskPosition cancelled'))
+					return
+				}
+				if (obj) {
+					callback(taskPosition, obj)
+				}
+			}).catch(error => {
+				console.debug('[assistant] pollPosition request failed', error)
+				clearInterval(window.assistantPollPositionTimerId)
+				window.assistantPollPositionTimerId = null
+				if (error.status === 404) {
+					reject(new Error('task-not-found'))
+					return
+				} else if (error.status === 412) {
+					// the task is not scheduled anymore
+					resolve()
+					return
+				}
+				reject(new Error('pollTaskPosition request failed'))
+			})
+		}
+		window.assistantPollPositionTimerId = setInterval(pollPositionOnce, 5000)
+		// start polling immediately
+		pollPositionOnce()
+	})
 }
 
 /**
@@ -443,12 +521,24 @@ export async function cancelTaskPolling() {
 	window.assistantPollTimerId = null
 }
 
+export async function cancelTaskPositionPolling() {
+	clearInterval(window.assistantPollPositionTimerId)
+	window.assistantPollPositionTimerId = null
+}
+
 export async function getTask(taskId) {
 	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	const url = generateOcsUrl('taskprocessing/task/{taskId}', { taskId })
 	return axios.get(url, { signal: window.assistantAbortController.signal })
+}
+
+export async function getTaskPosition(taskId) {
+	const { default: axios } = await import('@nextcloud/axios')
+	const { generateOcsUrl } = await import('@nextcloud/router')
+	const url = generateOcsUrl('taskprocessing/tasks/{taskId}/queue_position', { taskId })
+	return axios.get(url, {})
 }
 
 export async function getNotifyReady(taskId) {
@@ -688,6 +778,7 @@ export async function openAssistantTask(
 
 	modalMountPoint.addEventListener('cancel', () => {
 		cancelTaskPolling()
+		cancelTaskPositionPolling()
 		app.unmount()
 		OCA.Assistant.isAssistantDialogOpen = false
 	})
@@ -709,6 +800,7 @@ export async function openAssistantTask(
 	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
 		view.loading = true
 		view.showSyncTaskRunning = true
+		view.taskPosition = null
 		view.isNotifyEnabled = false
 		view.expectedRuntime = null
 		view.startedAt = null
@@ -728,6 +820,11 @@ export async function openAssistantTask(
 				const hasPush = listenToTaskNotifications(task.id)
 				console.debug('[assistant] HAS PUSH', hasPush)
 
+				pollTaskPosition(task.id, view).then(() => {
+					console.debug('[assistant] pollTaskPosition finished')
+				}).catch(error => {
+					console.debug('[assistant] pollPosition error', error.message)
+				})
 				pollTask(task.id, view, !hasPush).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
 						view.outputs = finishedTask?.output
@@ -749,6 +846,8 @@ export async function openAssistantTask(
 					// resolve(finishedTask)
 					view.loading = false
 					view.showSyncTaskRunning = false
+					view.taskPosition = null
+					cancelTaskPositionPolling()
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
@@ -756,6 +855,8 @@ export async function openAssistantTask(
 					if (error.message === 'task-not-found') {
 						view.loading = false
 						view.showSyncTaskRunning = false
+						view.taskPosition = null
+						cancelTaskPositionPolling()
 						view.isNotifyEnabled = false
 						view.selectedTaskId = null
 						lastTask = null
@@ -766,6 +867,7 @@ export async function openAssistantTask(
 			.catch(error => {
 				view.loading = false
 				view.showSyncTaskRunning = false
+				view.taskPosition = null
 				console.error('Assistant scheduling error', error?.response?.data?.ocs?.data?.message)
 				showError(t('assistant', 'Assistant error') + ': ' + t('assistant', 'Something went wrong when scheduling the task'))
 			})
@@ -780,7 +882,9 @@ export async function openAssistantTask(
 	modalMountPoint.addEventListener('load-task', (data) => {
 		const task = data.detail
 		cancelTaskPolling()
+		cancelTaskPositionPolling()
 		view.showSyncTaskRunning = false
+		view.taskPosition = null
 		view.isNotifyEnabled = false
 		view.loading = false
 		view.taskStatus = task.status
@@ -813,6 +917,7 @@ export async function openAssistantTask(
 
 				view.loading = true
 				view.showSyncTaskRunning = true
+				view.taskPosition = null
 				view.progress = null
 				view.expectedRuntime = (updatedTask?.completionExpectedAt - updatedTask?.scheduledAt) || null
 				view.startedAt = lastTask?.startedAt || null
@@ -820,6 +925,11 @@ export async function openAssistantTask(
 
 				const hasPush = listenToTaskNotifications(task.id)
 
+				pollTaskPosition(updatedTask.id, view).then(() => {
+					console.debug('[assistant] pollTaskPosition finished')
+				}).catch(error => {
+					console.debug('[assistant] pollPosition error', error.message)
+				})
 				pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
 					console.debug('pollTask.then', finishedTask)
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
@@ -843,12 +953,16 @@ export async function openAssistantTask(
 					// resolve(finishedTask)
 					view.loading = false
 					view.showSyncTaskRunning = false
+					view.taskPosition = null
+					cancelTaskPositionPolling()
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
 					if (error.message === 'task-not-found') {
 						view.loading = false
 						view.showSyncTaskRunning = false
+						view.taskPosition = null
+						cancelTaskPositionPolling()
 						view.isNotifyEnabled = false
 						view.outputs = null
 						view.selectedTaskId = null
@@ -864,8 +978,10 @@ export async function openAssistantTask(
 	modalMountPoint.addEventListener('new-task', () => {
 		console.debug('[assistant] new task')
 		cancelTaskPolling()
+		cancelTaskPositionPolling()
 		view.loading = false
 		view.showSyncTaskRunning = false
+		view.taskPosition = null
 		view.isNotifyEnabled = false
 		view.outputs = null
 		view.selectedTaskId = null
@@ -879,10 +995,12 @@ export async function openAssistantTask(
 	})
 	modalMountPoint.addEventListener('cancel-task', () => {
 		cancelTaskPolling()
+		cancelTaskPositionPolling()
 		setNotifyReady(lastTask.id, false)
 		cancelTask(lastTask.id).then(res => {
 			view.loading = false
 			view.showSyncTaskRunning = false
+			view.taskPosition = null
 			view.selectedTaskId = null
 			view.outputs = null
 			view.taskStatus = null
