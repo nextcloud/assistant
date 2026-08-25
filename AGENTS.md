@@ -5,113 +5,42 @@
 
 # Assistant agent guide
 
-This is the starting point for working with the **`assistant`** Nextcloud app.
+## What Assistant is
 
-## Table of contents
+Assistant is the Nextcloud app that provides a unified UI and API for AI-powered task processing. It is the central hub for text generation, image generation, audio transcription, translation, context chat, and more.
 
-1. [What Assistant is](#1-what-assistant-is)
-2. [Architecture](#2-architecture)
-3. [Building the app](#3-building-the-app)
-4. [Testing](#4-testing)
-5. [UI entry points](#5-ui-entry-points)
-6. [Key files](#6-key-files)
-7. [Contributing conventions](#7-contributing-conventions)
+Assistant depends on **TaskProcessing providers** registered by other apps to perform AI tasks. Without providers, most features are non-functional.
 
-## 1. What Assistant is
-
-Assistant is the Nextcloud app that provides a unified UI and API for AI-powered task processing. It acts as the central hub for users to interact with AI features such as text generation, image generation, audio transcription, translation, context chat, and more.
-
-Assistant relies heavily on **TaskProcessing providers** registered by other apps to actually perform AI tasks. Without providers, most features are non-functional. See [Testing](#4-testing) for details on setting up providers for development.
-
-## 2. Architecture
-
-The app follows the standard Nextcloud app structure:
-
-- **`appinfo/`**: App metadata (`info.xml`) and HTTP route definitions (`routes.php`).
-- **`lib/`**: PHP backend.
-  - `lib/Controller/`: HTTP controllers. `AssistantController` and `AssistantApiController` serve the main UI and REST API. `ChattyLLMController` handles the conversational interface. `ConfigController` manages admin/personal settings. `AgentSkillsApiController` and `AssignmentsApiController` expose agent-related endpoints.
-  - `lib/TaskProcessing/`: Custom TaskProcessing task types and providers shipped by the app itself (e.g. audio-to-audio chat, text-to-sticker, image-to-text translation).
-  - `lib/Service/`: Business logic services.
-  - `lib/Settings/`: Admin and personal settings page registration (`Admin.php`, `Personal.php`).
-  - `lib/Db/`: Database entities and mappers.
-  - `lib/Listener/` and `lib/Event/`: Event listeners and event classes.
-  - `lib/BackgroundJob/`: Background job definitions.
-  - `lib/Migration/`: Database schema migrations.
-  - `lib/Reference/`: Reference provider for link previews (e.g. text generation results, speech-to-text results).
-  - `lib/Notification/`: Notification handling.
-- **`src/`**: Vue 3 frontend (built with Vite into `js/`).
-  - Entry points: `src/assistant.js` (top-menu modal), `src/assistantPage.js` (dedicated page), `src/adminSettings.js`, `src/personalSettings.js`, `src/filesNewMenu.js` (files app "new" menu), `src/imageGenerationReference.js`, `src/speechToTextReference.js`, `src/textGenerationReference.js`, `src/taskOutputFileReference.js`, `src/stickerGeneration.js`.
-  - `src/components/`: Vue components including `ChattyLLM/` (conversational UI), `ContextChat/`, `Translate/`, `FilesNewMenu/`, settings forms, task list, and the main assistant form.
-  - `src/views/`: Top-level views (`AssistantPage.vue`, custom picker elements for image/text results, file reference widget).
-- **`templates/`**: PHP templates for server-rendered pages.
-- **`tests/`**: PHPUnit test suite.
-
-## 3. Building the app
-
-Install PHP and Node.js dependencies, then build:
+## Building
 
 ```bash
-# PHP backend
 composer install
-
-# Frontend
 npm ci
-npm run build          # production build (outputs to js/)
-npm run watch          # dev build with file watcher
-npm run dev            # one-shot dev build
+npm run dev     # development build (faster, outputs to js/)
+npm run build   # production build (outputs to js/)
 ```
 
-### Lint and static analysis
+## Architecture
 
-```bash
-composer lint          # PHP syntax check
-composer cs:check      # php-cs-fixer dry-run
-composer cs:fix        # php-cs-fixer auto-fix
-composer psalm         # static analysis
-composer openapi       # regenerate OpenAPI specs
+The app ships custom TaskProcessing task types and providers in `lib/TaskProcessing/` (e.g. audio-to-audio chat, text-to-sticker). Other apps register additional providers that Assistant discovers and exposes through its UI and API.
 
-npm run lint           # eslint
-npm run stylelint      # stylelint
-```
+The frontend is Vue 3, built with Vite into `js/`. Multiple entry points exist for different contexts (top-menu modal, dedicated page, files app integration, reference widgets).
 
-## 4. Testing
+### Cross-app boundaries
 
-### Backend tests
+- Assistant consumes TaskProcessing providers from any app that registers them (e.g. `llm2`, `integration_openai`, `text2image_stablediffusion`, `stt_whisper`).
+- Other apps (e.g. Text) integrate with Assistant by triggering task selection and passing input text.
+- Reference providers in `lib/Reference/` supply link previews for task results consumed by the Smart Picker and other contexts.
 
-There are **no UI tests** in this repository. Backend tests run in CI automatically.
+## Testing
 
-Running them locally **requires a running Nextcloud test instance**. The exact setup depends on how your test Nextcloud is deployed (Docker, bare metal, nextcloud-docker-dev, etc.). Once the instance is available:
+Backend unit tests run via PHPUnit (`composer run test:unit`, config in `tests/phpunit.xml`). Running them locally requires a running Nextcloud test instance.
 
-```bash
-composer run test:unit
-```
+There are no UI tests. Manual or custom Playwright testing against a running instance is the only option for frontend changes. Flag frontend changes for human review.
 
-The PHPUnit configuration lives in `tests/phpunit.xml`.
+Many features depend on TaskProcessing providers registered by other apps. Without providers, the UI shows empty or disabled states. The Nextcloud `testing` app includes some test providers for development.
 
-### TaskProcessing providers
-
-Many Assistant features depend on TaskProcessing providers registered by other apps. Without providers, the assistant UI will show empty or disabled states.
-
-Nextcloud ships a `testing` app that includes some test providers useful during development. It is up to the developer or agent to deploy additional providers as needed for the features being tested.
-
-For a list of apps that implement TaskProcessing providers, see the Nextcloud admin documentation:
-https://docs.nextcloud.com/server/latest/admin_manual/ai/app_assistant.html#related-apps
-
-### UI testing with Playwright
-
-There is no built-in Playwright test suite, but the app can be tested manually or with custom Playwright scripts against a running Nextcloud instance. See [UI entry points](#5-ui-entry-points) below for the pages and interactions to target.
-
-## 5. UI entry points
-
-These are the places where the Assistant surfaces in the Nextcloud UI:
-
-1. **Dedicated page**: `/index.php/apps/assistant` — the full assistant interface.
-2. **Top menu**: a menu entry in the Nextcloud header opens the assistant in a modal.
-3. **File actions** in the Files app (`/index.php/apps/files`): context menu entries for `text/markdown` and audio files trigger assistant tasks.
-4. **"New file" menu** in the Files app: a "Generate image using AI" entry.
-5. **Settings pages**: both admin and personal settings have an "Assistant" category at `/index.php/settings/admin/ai` and `/index.php/settings/user/ai`.
-
-## 6. Key files
+## Key files
 
 | Area | File(s) |
 |------|---------|
@@ -121,23 +50,75 @@ These are the places where the Assistant surfaces in the Nextcloud UI:
 | ChattyLLM controller | `lib/Controller/ChattyLLMController.php` |
 | Config controller | `lib/Controller/ConfigController.php` |
 | Custom task types & providers | `lib/TaskProcessing/` |
-| Admin settings | `lib/Settings/Admin.php` |
-| Personal settings | `lib/Settings/Personal.php`, `lib/Settings/PersonalSection.php` |
 | Services | `lib/Service/` |
 | DB layer | `lib/Db/` |
-| Migrations | `lib/Migration/` |
 | Reference providers | `lib/Reference/` |
 | Frontend entry points | `src/assistant.js`, `src/assistantPage.js`, `src/adminSettings.js`, `src/personalSettings.js`, `src/filesNewMenu.js` |
-| Main Vue components | `src/components/` |
-| Top-level views | `src/views/` |
-| App metadata | `appinfo/info.xml` |
-| PHPUnit config | `tests/phpunit.xml` |
+| Vue components | `src/components/` |
 | OpenAPI spec | `openapi.json` |
 
-## 7. Contributing conventions
+## Contributing
 
-- **Sign off every commit (DCO)**: `git commit -s`. The sign-off name/email must match the commit author.
-- **PHP floor 8.3**: do not use syntax requiring newer PHP versions. The minimum PHP version is determined by the `min-version` of Nextcloud declared in `appinfo/info.xml` (currently 35). The supported PHP versions for a given Nextcloud release are listed in the "PHP Runtime" row of the requirements table at `https://docs.nextcloud.com/server/NC_VERSION/admin_manual/installation/system_requirements.html`, where `NC_VERSION` can be a major version number (e.g. `33`, `34`) or `latest` for the current development version.
-- **Node 24, npm 11.3+** for frontend builds.
-- Before pushing: run `composer cs:fix && composer psalm`; if you touched the frontend, `npm run lint && npm run build`; if you touched controllers/routes, `composer openapi`. If a test Nextcloud instance is available, also run `composer run test:unit` inside it.
-- New files need an SPDX license header.
+### What CI checks
+
+CI runs `composer lint`, `composer cs:check`, `composer psalm`, and `npm run lint` on every PR. Backend unit tests run in CI when a test instance is available. These checks block merging.
+
+### How changes flow
+
+- **Backend controller or route change**: regenerate `openapi.json` with `composer openapi`.
+- **Frontend change**: run `npm run build` to produce the production bundle in `js/`.
+- **Database schema change**: add a new migration in `lib/Migration/`.
+- **New file**: add an SPDX license header.
+
+### Pitfalls
+
+- PHP 8.3 is the floor. Do not use syntax requiring newer PHP versions. The minimum PHP version is determined by the `min-version` of Nextcloud declared in `appinfo/info.xml`.
+- Commits require a `Signed-off-by` trailer (DCO). The sign-off name and email must match the commit author.
+- Node 24 and npm 11.3+ are required for frontend builds.
+
+### Completion report
+
+Every PR description includes:
+- **Intent**: why the change exists, what problem it solves.
+- **What changed**: a summary of the diff, focusing on decisions and trade-offs.
+- **What was tested**: which scenarios were verified, and how.
+- **What was not tested**: gaps in coverage, especially frontend changes or scenarios requiring external providers.
+- **What the reviewer should focus on**: areas where the agent is least confident or where design decisions were made.
+
+Reasoning, not narration. The diff shows the what. The description shows the why.
+
+---
+
+## Nextcloud Contribution Policy
+
+All contributions generated or assisted by this agent must fully comply with:
+
+- **[AI Contribution Policy](https://github.com/nextcloud/.github/blob/master/AI_POLICY.md)** - the primary reference for AI-specific rules, covering disclosure, author accountability, communication, security, licensing, code quality, and autonomous agent behavior.
+- **[Contribution Guidelines](https://github.com/nextcloud/.github/blob/master/CONTRIBUTING.md)** - covering testing requirements, the Developer Certificate of Origin (DCO), license headers, conventional commits, and translations. These apply in full to all contributions regardless of how they were produced.
+
+### What this agent must always do
+
+- Add an `Assisted-by: AGENT_NAME:MODEL_VERSION` git trailer to every commit containing AI-assisted content.
+- Ensure every pull request includes a disclosure of AI tool use in the PR description.
+- Produce focused, scoped pull requests that address exactly one concern. Do not touch unrelated files or introduce incidental refactors.
+- Verify all dependencies against actual package registries before suggesting them. Do not use hallucinated or unverified package names.
+- Write code comments that document the code, never the process that produced it:
+  - Comments describe what the code does - method signatures, behavior, and constraints the code itself cannot express (e.g. a non-obvious invariant or workaround).
+  - Never add comments that document progress, decisions, or changes (e.g. "changed X to Y", "as requested", "this fixes ...", "previously this did ..."). That belongs in the commit message or PR discussion; in the code it goes stale and becomes misleading.
+  - Do not narrate self-explanatory code. If the code is readable without a comment, omit the comment.
+  - Keep comments brief - short and simple, matching the comment density of the surrounding code.
+- Reuse existing helper functions and utilities instead of re-implementing their logic inline. When fixing a flawed pattern, fix every occurrence of it across the changed code, not only the instance that was pointed out.
+- Run permission and access-control checks before the operation they guard, never after it and never only in the UI layer.
+- When adding or changing user-facing functionality, wire it up in every context where the affected component is used - the default authenticated view, public share pages, and embedded contexts such as the Smart Picker and reference widgets. When emitting new events, verify that every consumer of the component subscribes to and handles them.
+- Explicitly inform the contributor when any action they are about to take, or have taken, would violate the AI Contribution Policy or the Contribution Guidelines. Do not silently proceed. State which rule is at risk and what the contributor should do instead.
+- Warn the contributor if a pull request is growing too large. A PR approaching several thousand lines of changed code is a signal that it should be split into smaller, focused PRs. Suggest a logical split before the PR is opened, not after.
+- Recommend opening a ticket for discussion before starting implementation whenever a feature or change is sufficiently complex - for example when it touches multiple subsystems, requires architectural decisions, or the right approach is not yet clear. A ticket allows maintainers and the contributor to align on direction before code is written, avoiding wasted effort on a PR that may be rejected or require fundamental rework.
+
+### What this agent must never do
+
+- Open issues, submit pull requests, post review comments, or send security reports autonomously. Every contribution must be reviewed and submitted by a human.
+- Add `Signed-off-by` tags to commits. Only the human contributor can certify the Developer Certificate of Origin.
+- Generate or submit security reports without independent human verification. Report verified vulnerabilities via [HackerOne](https://hackerone.com/nextcloud), not as GitHub issues.
+- Write PR descriptions, review comments, or issue reports on behalf of the contributor. These must be in the contributor's own words.
+- Fully automate the resolution of issues labeled [`good first issue`](https://github.com/issues?q=org%3Anextcloud+label%3A%22good+first+issue%22) or similar beginner-friendly labels.
+- Submit code that has not been reviewed and cleaned up by the contributor. Dead code, redundant logic, excessive comments, malformed or garbled characters (e.g. `` replacement characters), and unrelated changes must be removed before submission.
