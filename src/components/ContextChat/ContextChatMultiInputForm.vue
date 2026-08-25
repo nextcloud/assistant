@@ -27,7 +27,7 @@
 					<NcButton
 						class="delete-button"
 						variant="secondary"
-						:disabled="inputs.questions?.length <= 1"
+						:disabled="inputs.questions?.length <= 2"
 						@click="onDeleteQuestion(i)">
 						<template #icon>
 							<TrashCanOutlineIcon />
@@ -318,7 +318,7 @@ export default {
 		// initialize each input if necessary
 		this.$nextTick(() => {
 			this.$emit('update:inputs', {
-				questions: this.inputs.questions?.length > 0 ? this.inputs.questions : [''],
+				questions: this.inputs.questions?.length > 0 ? this.inputs.questions : ['', ''],
 				scopeType: this.inputs.scopeType ?? _ScopeType.NONE,
 				scopeList: this.inputs.scopeList ?? [],
 				scopeListMeta: this.inputs.scopeListMeta ?? '[]',
@@ -439,7 +439,7 @@ export default {
 		},
 		reinitializeInputs() {
 			this.$emit('update:inputs', {
-				questions: [''],
+				questions: ['', ''],
 				scopeType: _ScopeType.NONE,
 				scopeList: [],
 				scopeListMeta: '[]',
