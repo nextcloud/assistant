@@ -288,7 +288,7 @@ export default {
 			this.onTaskTypeChange()
 		},
 		inputs(newValue) {
-			if (Object.keys(newValue).length === 0) {
+			if (!newValue.questions) {
 				this.onInputsReset()
 			}
 		},
