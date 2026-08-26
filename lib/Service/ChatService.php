@@ -415,14 +415,12 @@ class ChatService {
 			// classic chat
 			$systemPrompt = '';
 			try {
-				$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1);
+				$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1, Message::ROLE_SYSTEM);
+				$systemPrompt = $firstMessage->getContent();
 			} catch (DoesNotExistException $e) {
-				throw new NotFoundException($this->l10n->t('No message found in this session'), previous: $e);
+				$this->logger->info('No system message found in the session', ['exception' => $e, 'sessionId' => $sessionId]);
 			} catch (MultipleObjectsReturnedException|Exception $e) {
 				throw new InternalException(previous: $e);
-			}
-			if ($firstMessage->getRole() === Message::ROLE_SYSTEM) {
-				$systemPrompt = $firstMessage->getContent();
 			}
 			try {
 				$history = $this->getRawLastMessages($sessionId);

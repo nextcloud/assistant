@@ -27,17 +27,22 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param integer $sessionId
 	 * @param integer $n
+	 * @param string|null $role
 	 * @return Message
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
 	 * @throws \OCP\AppFramework\Db\DoesNotExistException
 	 * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException
 	 */
-	public function getFirstNMessages(int $sessionId, int $n = 1): Message {
+	public function getFirstNMessages(int $sessionId, int $n = 1, ?string $role = null): Message {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
-			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
+			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
+		if ($role !== null) {
+			$qb->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter($role, IQueryBuilder::PARAM_STR)));
+		}
+		$qb->orderBy('timestamp', 'ASC')
 			->setMaxResults($n);
 
 		return $this->findEntity($qb);
