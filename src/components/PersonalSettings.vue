@@ -145,9 +145,13 @@ export default {
 
 	methods: {
 		delayedValueUpdate(newValue, key) {
+			// delay() shares one timer, so a second edit within the delay cancels the
+			// first callback: queue the value now rather than when the timer fires
+			this.optionsToSave[key] = newValue
 			delay(() => {
-				this.optionsToSave[key] = newValue
-				this.saveOptions(this.optionsToSave)
+				const values = { ...this.optionsToSave }
+				this.optionsToSave = {}
+				this.saveOptions(values)
 			}, 2000)
 		},
 		onCheckboxChanged(newValue, key) {

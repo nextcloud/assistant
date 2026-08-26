@@ -524,8 +524,14 @@ class AssistantService {
 	public function getAssistantDataFolder(string $userId): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 
-		$defaultFolderName = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true) ?: Application::ASSISTANT_DATA_FOLDER_NAME;
-		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', $defaultFolderName) ?: $defaultFolderName;
+		$defaultFolderName = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true);
+		if ($defaultFolderName === '') {
+			$defaultFolderName = Application::ASSISTANT_DATA_FOLDER_NAME;
+		}
+		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', $defaultFolderName);
+		if ($dataFolderName === '') {
+			$dataFolderName = $defaultFolderName;
+		}
 		if ($userFolder->nodeExists($dataFolderName)) {
 			$dataFolderNode = $userFolder->get($dataFolderName);
 			if ($dataFolderNode instanceof Folder && $dataFolderNode->isCreatable()) {
