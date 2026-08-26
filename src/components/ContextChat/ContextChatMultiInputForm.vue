@@ -181,7 +181,6 @@ const _ScopeType = Object.freeze({
 	PROVIDER: 'provider',
 })
 
-
 const _tStrings = {
 	[_ScopeType.SOURCE]: t('assistant', 'Select Files/Folders'),
 	[_ScopeType.PROVIDER]: t('assistant', 'Select Providers'),
