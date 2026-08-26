@@ -118,6 +118,19 @@
 					</div>
 				</NcNoteCard>
 			</div>
+			<div class="data-folder">
+				<h4>
+					{{ t('assistant', 'Data folder') }}
+				</h4>
+				<NcNoteCard type="info">
+					{{ t('assistant', 'Name of the folder the assistant creates in the files of each user to store generated content. Users can override this in their personal settings. Changing it does not rename folders that already exist.') }}
+				</NcNoteCard>
+				<NcTextField id="default_data_folder"
+					v-model="state.default_data_folder"
+					class="text-field"
+					:label="t('assistant', 'Default data folder name')"
+					@update:model-value="delayedValueUpdate(state.default_data_folder, 'default_data_folder')" />
+			</div>
 			<div class="chat-with-ai">
 				<h4>
 					{{ t('assistant', 'Chat with AI') }}
