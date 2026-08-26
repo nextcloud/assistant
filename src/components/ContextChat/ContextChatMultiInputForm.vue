@@ -46,7 +46,7 @@
 				</template>
 			</NcButton>
 			<NcNoteCard v-if="atMaxQuestions" type="warning">
-				{{ t('assistant', 'You can ask up to {max} questions at once.', { max: MAX_QUESTIONS }) }}
+				{{ t('assistant', 'You can ask up to {max} questions at once.', { max: taskType.inputShapeDefaults?.maxQuestions ?? 20 }) }}
 			</NcNoteCard>
 		</div>
 		<NcCheckboxRadioSwitch v-model="sccEnabled" @update:model-value="onUpdateSccEnabled">
@@ -181,11 +181,6 @@ const _ScopeType = Object.freeze({
 	PROVIDER: 'provider',
 })
 
-// Keep in sync with MAX_MULTI_QUESTIONS in
-// context_chat_backend/controller.py and task_fetcher.py — any question
-// beyond this count is silently dropped by the backend, so the UI must
-// not let the person add more than this.
-const MAX_QUESTIONS = 20
 
 const _tStrings = {
 	[_ScopeType.SOURCE]: t('assistant', 'Select Files/Folders'),
@@ -264,8 +259,6 @@ export default {
 		return {
 			ScopeType: _ScopeType,
 			tStrings: _tStrings,
-			MAX_QUESTIONS,
-
 			providerOptions: [],
 			providersLoading: false,
 			defaultProviderKey: 'files__default',
@@ -277,7 +270,7 @@ export default {
 
 	computed: {
 		atMaxQuestions() {
-			return (this.inputs.questions?.length ?? 0) >= MAX_QUESTIONS
+			return (this.inputs.questions?.length ?? 0) >= (this.taskType.inputShapeDefaults?.maxQuestions ?? 20)
 		},
 		scopeListMetaArray() {
 			if (!this.inputs.scopeListMeta) {
