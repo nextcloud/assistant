@@ -175,8 +175,6 @@ import { getFilePickerBuilder, showError } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 
-// Kept identical to ContextChatInputForm.vue's ScopeType so the two
-// components stay compatible with the same backend scope contract.
 const _ScopeType = Object.freeze({
 	NONE: 'none',
 	SOURCE: 'source',
@@ -336,6 +334,7 @@ export default {
 			return this.scopeListMetaArray.some((item) => item.id === scopeId)
 		},
 		chooseDialogCallback(nodes) {
+			console.debug('nodes:', nodes)
 			const addedScopeListMeta = []
 			for (const node of nodes) {
 				const scopeId = `${this.defaultProviderKey}: ${node.fileid}`
@@ -385,8 +384,8 @@ export default {
 		},
 		onDeleteQuestion(i) {
 			const questions = this.inputs.questions ?? []
-			// always keep at least one (possibly empty) question field visible
-			if (questions.length <= 1) {
+			// always keep at least two (possibly empty) question field visible
+			if (questions.length <= 2) {
 				return
 			}
 			const newQuestions = questions.slice()
