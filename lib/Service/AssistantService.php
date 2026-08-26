@@ -528,9 +528,14 @@ class AssistantService {
 		if ($defaultFolderName === '') {
 			$defaultFolderName = Application::ASSISTANT_DATA_FOLDER_NAME;
 		}
-		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', $defaultFolderName);
+		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', '');
 		if ($dataFolderName === '') {
-			$dataFolderName = $defaultFolderName;
+			// No folder stored for this user. If they already have one under the built-in
+			// name, from before an administrator set a default, keep using it: applying the
+			// default here would start a second folder and leave their existing output behind.
+			$dataFolderName = $userFolder->nodeExists(Application::ASSISTANT_DATA_FOLDER_NAME)
+				? Application::ASSISTANT_DATA_FOLDER_NAME
+				: $defaultFolderName;
 		}
 		if ($userFolder->nodeExists($dataFolderName)) {
 			$dataFolderNode = $userFolder->get($dataFolderName);
