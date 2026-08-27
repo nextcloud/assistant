@@ -161,7 +161,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "Manuste kodeerimine ei õnnestunud",
     "Message not found" : "Sõnumit ei leidu",
     "No user message found in this session" : "Selles sessioonis ei leidu ühtegi kasutaja koostatud sõnumit",
-    "No message found in this session" : "Selles sessioonis ei leidu ühtegi sõnumit",
     "No human message found in this session" : "Selles sessioonis ei leidu ühtegi inimese poolt koostatud sõnumit",
     "Assistant" : "Abiline",
     "Assistant fallback" : "Abilise varuvariant",

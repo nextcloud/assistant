@@ -138,7 +138,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "Nie udało się zakodować załączników",
     "Message not found" : "Nie znaleziono wiadomości",
     "No user message found in this session" : "Nie znaleziono wiadomości użytkownika w tej sesji",
-    "No message found in this session" : "Nie znaleziono wiadomości w tej sesji",
     "No human message found in this session" : "Nie znaleziono wiadomości od człowieka w tej sesji",
     "Assistant" : "Asystent",
     "Assistant fallback" : "Zapasowy Asystent",

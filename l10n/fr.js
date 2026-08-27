@@ -161,7 +161,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "Impossible d'encoder les pièces jointes",
     "Message not found" : "Message introuvable",
     "No user message found in this session" : "Aucun message utilisateur trouvé dans cette session",
-    "No message found in this session" : "Aucun message trouvé dans cette session",
     "No human message found in this session" : "Aucun message humain trouvé dans cette session",
     "Assistant" : "Assistant",
     "Assistant fallback" : "Assistant de secours",
