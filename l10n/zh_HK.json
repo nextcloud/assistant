@@ -159,7 +159,6 @@
     "Failed to encode attachments" : "無法編碼附件",
     "Message not found" : "找不到訊息",
     "No user message found in this session" : "此工作階段中找不到使用者訊息",
-    "No message found in this session" : "此工作階段中找不到訊息",
     "No human message found in this session" : "此工作階段中找不到真人訊息",
     "Assistant" : "助手",
     "Assistant fallback" : "小幫手汰退",

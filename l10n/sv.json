@@ -146,7 +146,6 @@
     "Failed to encode attachments" : "Det gick inte att koda bilagorna",
     "Message not found" : "Meddelandet hittades inte",
     "No user message found in this session" : "Inget användarmeddelande hittades i den här sessionen",
-    "No message found in this session" : "Inget meddelande hittades i den här sessionen",
     "No human message found in this session" : "Inget meddelande från en människa hittades i den här sessionen",
     "Assistant" : "Assistent",
     "Assistant fallback" : "Reservfunktion för Assistant",

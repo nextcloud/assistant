@@ -139,7 +139,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "رمزگذاری پیوست‌ها ناموفق بود",
     "Message not found" : "پیام یافت نشد",
     "No user message found in this session" : "هیچ پیام کاربری در این جلسه یافت نشد",
-    "No message found in this session" : "هیچ پیامی در این جلسه یافت نشد",
     "No human message found in this session" : "هیچ پیام انسانی در این جلسه یافت نشد",
     "Assistant" : "دستیار",
     "Assistant fallback" : "بازگشت دستیار",

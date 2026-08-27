@@ -161,7 +161,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "編碼附件失敗",
     "Message not found" : "找不到訊息",
     "No user message found in this session" : "此工作階段中找不到使用者訊息",
-    "No message found in this session" : "在此工作階段中找不到訊息",
     "No human message found in this session" : "在此工作階段中找不到人類訊息",
     "Assistant" : "助理",
     "Assistant fallback" : "小幫手汰退",

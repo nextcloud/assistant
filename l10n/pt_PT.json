@@ -137,7 +137,6 @@
     "Failed to encode attachments" : "Falha ao codificar anexos",
     "Message not found" : "Mensagem não encontrada",
     "No user message found in this session" : "Não foram encontradas mensagens de usuário nesta sessão",
-    "No message found in this session" : "Não foram encontradas mensagens nesta sessão",
     "No human message found in this session" : "Não foram encontradas mensagens de humanos nesta sessão",
     "Assistant" : "Assistente",
     "Assistant fallback" : "Fallback de assistente",

@@ -159,7 +159,6 @@
     "Failed to encode attachments" : "Nepavyko užkoduoti priedų",
     "Message not found" : "Pranešimas nerastas",
     "No user message found in this session" : "Šioje sesijoje nerasta jokių vartotojo pranešimų",
-    "No message found in this session" : "Šioje sesijoje nerasta jokių pranešimų",
     "No human message found in this session" : "Šioje sesijoje nerasta jokių žmonių žinučių",
     "Assistant" : "Asistentas",
     "Assistant fallback" : "Atsarginis asistentas",

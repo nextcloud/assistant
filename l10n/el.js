@@ -148,7 +148,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "Αποτυχία κωδικοποίησης συνημμένων",
     "Message not found" : "Το μήνυμα δεν βρέθηκε",
     "No user message found in this session" : "Δεν βρέθηκε μήνυμα χρήστη σε αυτή τη συνεδρία",
-    "No message found in this session" : "Δεν βρέθηκε μήνυμα σε αυτή τη συνεδρία",
     "No human message found in this session" : "Δεν βρέθηκε μήνυμα ανθρώπου σε αυτή τη συνεδρία",
     "Assistant" : "Βοηθός",
     "Assistant fallback" : "Εφεδρικός βοηθός",

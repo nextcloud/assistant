@@ -161,7 +161,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "Failed to encode attachments",
     "Message not found" : "Message not found",
     "No user message found in this session" : "No user message found in this session",
-    "No message found in this session" : "No message found in this session",
     "No human message found in this session" : "No human message found in this session",
     "Assistant" : "Assistant",
     "Assistant fallback" : "Assistant fallback",
