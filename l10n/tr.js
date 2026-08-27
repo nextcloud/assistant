@@ -161,7 +161,6 @@ OC.L10N.register(
     "Failed to encode attachments" : "Ek dosyalar kodlanamadı",
     "Message not found" : "İleti bulunamadı",
     "No user message found in this session" : "Bu oturumda herhangi bir kullanıcı iletisi bulunamadı",
-    "No message found in this session" : "Bu oturumda bir ileti bulunamadı",
     "No human message found in this session" : "Bu oturumda bir insan iletisi bulunamadı",
     "Assistant" : "Yardımcı",
     "Assistant fallback" : "Yardımcı varsayılanı",
