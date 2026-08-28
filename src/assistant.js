@@ -10,8 +10,12 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import { listen } from '@nextcloud/notify_push'
 
+window.assistantPollAbortController = null
 window.assistantPollTimerId = null
+window.assistantPollTaskId = null
 window.assistantPollPositionTimerId = null
+window.assistantPollPositionTaskId = null
+window.assistantPollPositionAbortController = null
 
 listen('taskprocessing:task_update', (type, body) => {
 	console.debug('[assistant] received task update push notification', type, body)
@@ -200,9 +204,9 @@ export async function openAssistantForm({
 					console.debug('[assistant] HAS PUSH', hasPush)
 
 					pollTaskPosition(task.id, view).then(() => {
-						console.debug('[assistant] pollTaskPosition finished')
+						console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore ', task.id)
 					}).catch(error => {
-						console.debug('[assistant] pollPosition error', error.message)
+						console.debug('[assistant] pollPosition error', task.id, error.message)
 					})
 					// no need to update the task output with polling if we have push notifications
 					pollTask(task.id, view, !hasPush).then(finishedTask => {
@@ -237,11 +241,11 @@ export async function openAssistantForm({
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error.message)
+						view.taskPosition = null
+						cancelTaskPositionPolling()
 						if (error.message === 'task-not-found') {
 							view.loading = false
 							view.showSyncTaskRunning = false
-							view.taskPosition = null
-							cancelTaskPositionPolling()
 							view.isNotifyEnabled = false
 							view.outputs = null
 							view.selectedTaskId = null
@@ -316,9 +320,9 @@ export async function openAssistantForm({
 					console.debug('[assistant] HAS PUSH', hasPush)
 
 					pollTaskPosition(updatedTask.id, view).then(() => {
-						console.debug('[assistant] pollTaskPosition finished')
+						console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore', updatedTask.id)
 					}).catch(error => {
-						console.debug('[assistant] pollPosition error', error.message)
+						console.debug('[assistant] pollPosition error', updatedTask.id, error.message)
 					})
 					pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
@@ -348,11 +352,11 @@ export async function openAssistantForm({
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
+						view.taskPosition = null
+						cancelTaskPositionPolling()
 						if (error.message === 'task-not-found') {
 							view.loading = false
 							view.showSyncTaskRunning = false
-							view.taskPosition = null
-							cancelTaskPositionPolling()
 							view.isNotifyEnabled = false
 							view.outputs = null
 							view.selectedTaskId = null
@@ -431,19 +435,20 @@ function updateTaskPosition(position, object) {
  *
  * @param {number} taskId the task ID
  * @param {object} obj the object to update
- * @param {Function} callback the function to call to update the object
- * @return {Promise<*>}
+ * @param {(position: number, obj: object) => void} callback the function to call to update the object
+ * @return {Promise<void>}
  */
 export async function pollTaskPosition(taskId, obj, callback = updateTaskPosition) {
+	const { isCancel } = await import('@nextcloud/axios')
 	return new Promise((resolve, reject) => {
 		const pollPositionOnce = () => {
-			if (window.assistantPollPositionTimerId === null) {
+			if (window.assistantPollPositionTaskId !== taskId) {
 				reject(new Error('pollTaskPosition cancelled'))
 				return
 			}
-			getTaskPosition(taskId).then(response => {
+			getTaskPosition(taskId, window.assistantPollPositionAbortController.signal).then(response => {
 				const taskPosition = response.data?.ocs?.data
-				if (window.assistantPollPositionTimerId === null) {
+				if (window.assistantPollPositionTaskId !== taskId) {
 					reject(new Error('pollTaskPosition cancelled'))
 					return
 				}
@@ -451,9 +456,17 @@ export async function pollTaskPosition(taskId, obj, callback = updateTaskPositio
 					callback(taskPosition, obj)
 				}
 			}).catch(error => {
+				if (window.assistantPollPositionTaskId === taskId) {
+					clearInterval(window.assistantPollPositionTimerId)
+					window.assistantPollPositionTimerId = null
+					window.assistantPollPositionTaskId = null
+				}
+				if (isCancel(error)) {
+					console.debug('[assistant] pollPosition request cancelled', error)
+					reject(new Error('pollTaskPosition request cancelled'))
+					return
+				}
 				console.debug('[assistant] pollPosition request failed', error)
-				clearInterval(window.assistantPollPositionTimerId)
-				window.assistantPollPositionTimerId = null
 				if (error.status === 404) {
 					reject(new Error('task-not-found'))
 					return
@@ -466,6 +479,8 @@ export async function pollTaskPosition(taskId, obj, callback = updateTaskPositio
 			})
 		}
 		cancelTaskPositionPolling()
+		window.assistantPollPositionTaskId = taskId
+		window.assistantPollPositionAbortController = new AbortController()
 		window.assistantPollPositionTimerId = setInterval(pollPositionOnce, 5000)
 		// start polling immediately
 		pollPositionOnce()
@@ -484,9 +499,9 @@ export async function pollTaskPosition(taskId, obj, callback = updateTaskPositio
 export async function pollTask(taskId, obj, updateOutput = true, callback = updateTask) {
 	return new Promise((resolve, reject) => {
 		const pollOnce = () => {
-			getTask(taskId).then(response => {
+			getTask(taskId, window.assistantPollAbortController.signal).then(response => {
 				const task = response.data?.ocs?.data?.task
-				if (window.assistantPollTimerId === null) {
+				if (window.assistantPollTaskId !== taskId) {
 					reject(new Error('pollTask cancelled'))
 					return
 				}
@@ -502,14 +517,20 @@ export async function pollTask(taskId, obj, updateOutput = true, callback = upda
 			}).catch(error => {
 				console.debug('[assistant] poll request failed', error)
 				if (error.status === 404) {
-					clearInterval(window.assistantPollTimerId)
-					window.assistantPollTimerId = null
+					if (window.assistantPollTaskId === taskId) {
+						clearInterval(window.assistantPollTimerId)
+						window.assistantPollTimerId = null
+						window.assistantPollTaskId = null
+					}
 					reject(new Error('task-not-found'))
 					return
 				}
 				reject(new Error('pollTask request failed'))
 			})
 		}
+		cancelTaskPolling()
+		window.assistantPollTaskId = taskId
+		window.assistantPollAbortController = new AbortController()
 		// start polling immediately
 		// pollOnce()
 		window.assistantPollTimerId = setInterval(pollOnce, 2000)
@@ -517,29 +538,33 @@ export async function pollTask(taskId, obj, updateOutput = true, callback = upda
 }
 
 export async function cancelTaskPolling() {
-	window.assistantAbortController?.abort()
+	window.assistantPollAbortController?.abort()
 	clearInterval(window.assistantPollTimerId)
 	window.assistantPollTimerId = null
+	window.assistantPollTaskId = null
 }
 
 export async function cancelTaskPositionPolling() {
+	window.assistantPollPositionAbortController?.abort()
 	clearInterval(window.assistantPollPositionTimerId)
 	window.assistantPollPositionTimerId = null
+	window.assistantPollPositionTaskId = null
 }
 
-export async function getTask(taskId) {
-	window.assistantAbortController = new AbortController()
+export async function getTask(taskId, signal = null) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	const url = generateOcsUrl('taskprocessing/task/{taskId}', { taskId })
-	return axios.get(url, { signal: window.assistantAbortController.signal })
+	const config = signal ? { signal } : {}
+	return axios.get(url, config)
 }
 
-export async function getTaskPosition(taskId) {
+export async function getTaskPosition(taskId, signal = null) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	const url = generateOcsUrl('taskprocessing/tasks/{taskId}/queue_position', { taskId })
-	return axios.get(url, {})
+	const config = signal ? { signal } : {}
+	return axios.get(url, config)
 }
 
 export async function getNotifyReady(taskId) {
@@ -575,7 +600,6 @@ export async function cancelTask(taskId) {
  * @return {Promise<object>}
  */
 export async function scheduleTask(appId, customId, taskType, inputs) {
-	window.assistantAbortController = new AbortController()
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	if (taskType === 'core:text2text:translate') {
@@ -589,7 +613,7 @@ export async function scheduleTask(appId, customId, taskType, inputs) {
 		customId,
 		preferStreaming: true,
 	}
-	return axios.post(url, params, { signal: window.assistantAbortController.signal })
+	return axios.post(url, params)
 }
 
 export async function saveLastSelectedTaskType(taskType) {
@@ -822,9 +846,9 @@ export async function openAssistantTask(
 				console.debug('[assistant] HAS PUSH', hasPush)
 
 				pollTaskPosition(task.id, view).then(() => {
-					console.debug('[assistant] pollTaskPosition finished')
+					console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore', task.id)
 				}).catch(error => {
-					console.debug('[assistant] pollPosition error', error.message)
+					console.debug('[assistant] pollPosition error', task.id, error.message)
 				})
 				pollTask(task.id, view, !hasPush).then(finishedTask => {
 					if (finishedTask.status === TASK_STATUS_STRING.successful) {
@@ -853,11 +877,11 @@ export async function openAssistantTask(
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
 					view.outputs = null
+					view.taskPosition = null
+					cancelTaskPositionPolling()
 					if (error.message === 'task-not-found') {
 						view.loading = false
 						view.showSyncTaskRunning = false
-						view.taskPosition = null
-						cancelTaskPositionPolling()
 						view.isNotifyEnabled = false
 						view.selectedTaskId = null
 						lastTask = null
@@ -927,9 +951,9 @@ export async function openAssistantTask(
 				const hasPush = listenToTaskNotifications(task.id)
 
 				pollTaskPosition(updatedTask.id, view).then(() => {
-					console.debug('[assistant] pollTaskPosition finished')
+					console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore', updatedTask.id)
 				}).catch(error => {
-					console.debug('[assistant] pollPosition error', error.message)
+					console.debug('[assistant] pollPosition error', updatedTask.id, error.message)
 				})
 				pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
 					console.debug('pollTask.then', finishedTask)
@@ -959,11 +983,11 @@ export async function openAssistantTask(
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
 					console.debug('[assistant] poll error', error)
+					view.taskPosition = null
+					cancelTaskPositionPolling()
 					if (error.message === 'task-not-found') {
 						view.loading = false
 						view.showSyncTaskRunning = false
-						view.taskPosition = null
-						cancelTaskPositionPolling()
 						view.isNotifyEnabled = false
 						view.outputs = null
 						view.selectedTaskId = null

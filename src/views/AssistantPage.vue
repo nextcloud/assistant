@@ -183,9 +183,9 @@ export default {
 					console.debug('[assistant] HAS PUSH', hasPush)
 
 					pollTaskPosition(task.id, this).then(() => {
-						console.debug('[assistant] pollTaskPosition finished')
+						console.debug('[assistant] pollTaskPosition finished', task.id)
 					}).catch(error => {
-						console.debug('[assistant] pollPosition error', error.message)
+						console.debug('[assistant] pollPosition error', task.id, error.message)
 					})
 					pollTask(task.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						if (finishedTask.status === TASK_STATUS_STRING.successful) {
@@ -203,11 +203,11 @@ export default {
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('[assistant] poll error', error)
+						this.taskPosition = null
+						cancelTaskPositionPolling()
 						if (error.message === 'task-not-found') {
 							this.loading = false
 							this.showSyncTaskRunning = false
-							this.taskPosition = null
-							cancelTaskPositionPolling()
 							this.isNotifyEnabled = false
 							this.task.status = TASK_STATUS_STRING.unknown
 							this.task.output = null
@@ -279,9 +279,9 @@ export default {
 					const hasPush = this.listenToTaskNotifications(task.id)
 
 					pollTaskPosition(updatedTask.id, this).then(() => {
-						console.debug('[assistant] pollTaskPosition finished')
+						console.debug('[assistant] pollTaskPosition finished', updatedTask.id)
 					}).catch(error => {
-						console.debug('[assistant] pollPosition error', error.message)
+						console.debug('[assistant] pollPosition error', updatedTask.id, error.message)
 					})
 					pollTask(updatedTask.id, this, !hasPush, this.updateTask).then(finishedTask => {
 						console.debug('pollTask.then', finishedTask)
@@ -301,11 +301,11 @@ export default {
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
 						console.debug('Assistant poll error', error)
+						this.taskPosition = null
+						cancelTaskPositionPolling()
 						if (error.message === 'task-not-found') {
 							this.loading = false
 							this.showSyncTaskRunning = false
-							this.taskPosition = null
-							cancelTaskPositionPolling()
 							this.isNotifyEnabled = false
 							this.task.status = TASK_STATUS_STRING.unknown
 							this.task.output = null
