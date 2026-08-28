@@ -58,6 +58,16 @@
 					{{ taskNames.join(', ') }}
 				</div>
 			</div>
+			<div class="data-folder">
+				<h3>{{ t('assistant', 'Data folder') }}</h3>
+				<p>{{ t('assistant', 'Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there.') }}</p>
+				<NcTextField id="data_folder"
+					v-model="state.data_folder"
+					class="data-folder__field"
+					:label="t('assistant', 'Folder name')"
+					:placeholder="state.default_data_folder"
+					@update:model-value="delayedValueUpdate(state.data_folder, 'data_folder')" />
+			</div>
 			<div v-if="rememberedConversations.length > 0">
 				<h3>{{ t('assistant', 'Remembered conversations') }}</h3>
 				<p>{{ t('assistant', 'The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:') }}</p>
@@ -84,10 +94,12 @@ import NcFormBox from '@nextcloud/vue/components/NcFormBox'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 import NcFormBoxButton from '@nextcloud/vue/components/NcFormBoxButton'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import { loadState } from '@nextcloud/initial-state'
+import { delay } from '../utils.js'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showSuccess, showError } from '@nextcloud/dialogs'
@@ -102,6 +114,7 @@ export default {
 		NcFormBoxSwitch,
 		NcFormBoxButton,
 		NcNoteCard,
+		NcTextField,
 		MemoryIcon,
 	},
 
@@ -112,6 +125,7 @@ export default {
 			state: loadState('assistant', 'config'),
 			providers: loadState('assistant', 'availableProviders'),
 			rememberedConversations: loadState('assistant', 'rememberedSessions'),
+			optionsToSave: {},
 		}
 	},
 
@@ -130,6 +144,16 @@ export default {
 	},
 
 	methods: {
+		delayedValueUpdate(newValue, key) {
+			// delay() shares one timer, so a second edit within the delay cancels the
+			// first callback: queue the value now rather than when the timer fires
+			this.optionsToSave[key] = newValue
+			delay(() => {
+				const values = { ...this.optionsToSave }
+				this.optionsToSave = {}
+				this.saveOptions(values)
+			}, 2000)
+		},
 		onCheckboxChanged(newValue, key) {
 			this.state[key] = newValue
 			this.saveOptions({ [key]: this.state[key] ? '1' : '0' })

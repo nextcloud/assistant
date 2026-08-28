@@ -24,6 +24,7 @@ use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotPermittedException;
+use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ITempManager;
@@ -91,6 +92,7 @@ class AssistantService {
 		private IL10N $l10n,
 		private ITempManager $tempManager,
 		private IConfig $config,
+		private IAppConfig $appConfig,
 		private IShareManager $shareManager,
 		private SystemTagService $systemTagService,
 	) {
@@ -522,7 +524,19 @@ class AssistantService {
 	public function getAssistantDataFolder(string $userId): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 
-		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', Application::ASSISTANT_DATA_FOLDER_NAME) ?: Application::ASSISTANT_DATA_FOLDER_NAME;
+		$defaultFolderName = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true);
+		if ($defaultFolderName === '') {
+			$defaultFolderName = Application::ASSISTANT_DATA_FOLDER_NAME;
+		}
+		$dataFolderName = $this->config->getUserValue($userId, Application::APP_ID, 'data_folder', '');
+		if ($dataFolderName === '') {
+			// No folder stored for this user. If they already have one under the built-in
+			// name, from before an administrator set a default, keep using it: applying the
+			// default here would start a second folder and leave their existing output behind.
+			$dataFolderName = $userFolder->nodeExists(Application::ASSISTANT_DATA_FOLDER_NAME)
+				? Application::ASSISTANT_DATA_FOLDER_NAME
+				: $defaultFolderName;
+		}
 		if ($userFolder->nodeExists($dataFolderName)) {
 			$dataFolderNode = $userFolder->get($dataFolderName);
 			if ($dataFolderNode instanceof Folder && $dataFolderNode->isCreatable()) {
@@ -530,7 +544,7 @@ class AssistantService {
 			}
 		}
 		// it does not exist or is not a folder or does not have write permissions: we create one
-		$dataFolder = $this->createAssistantDataFolder($userId);
+		$dataFolder = $this->createAssistantDataFolder($userId, $dataFolderName);
 		$dataFolderName = $dataFolder->getName();
 		$this->config->setUserValue($userId, Application::APP_ID, 'data_folder', $dataFolderName);
 		return $dataFolder;
@@ -538,17 +552,18 @@ class AssistantService {
 
 	/**
 	 * @param string $userId
+	 * @param string $baseName
 	 * @param int $try
 	 * @return Folder
 	 * @throws NoUserException
 	 * @throws NotPermittedException
 	 */
-	private function createAssistantDataFolder(string $userId, int $try = 0): Folder {
+	private function createAssistantDataFolder(string $userId, string $baseName, int $try = 0): Folder {
 		$userFolder = $this->rootFolder->getUserFolder($userId);
 		if ($try === 0) {
-			$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME;
+			$folderPath = $baseName;
 		} else {
-			$folderPath = Application::ASSISTANT_DATA_FOLDER_NAME . ' ' . $try;
+			$folderPath = $baseName . ' ' . $try;
 		}
 
 		if ($userFolder->nodeExists($folderPath)) {
@@ -556,7 +571,7 @@ class AssistantService {
 				// give up
 				throw new RuntimeException('Could not create the assistant data folder');
 			}
-			return $this->createAssistantDataFolder($userId, $try + 1);
+			return $this->createAssistantDataFolder($userId, $baseName, $try + 1);
 		}
 
 		return $userFolder->newFolder($folderPath);

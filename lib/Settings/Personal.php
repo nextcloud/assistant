@@ -47,6 +47,11 @@ class Personal implements ISettings {
 		$audioChatAvailable = (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat') && array_key_exists(\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID, $availableTaskTypes))
 			|| (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $availableTaskTypes));
 		$autoplayAudioChat = $this->config->getUserValue($this->userId, Application::APP_ID, 'autoplay_audio_chat', '1') === '1';
+		$dataFolder = $this->config->getUserValue($this->userId, Application::APP_ID, 'data_folder', '');
+		$defaultDataFolder = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true);
+		if ($defaultDataFolder === '') {
+			$defaultDataFolder = Application::ASSISTANT_DATA_FOLDER_NAME;
+		}
 
 		$assistantAvailable = $taskProcessingAvailable && $this->appConfig->getValueString(Application::APP_ID, 'assistant_enabled', '1', lazy: true) === '1';
 		$assistantEnabled = $this->config->getUserValue($this->userId, Application::APP_ID, 'assistant_enabled', '1') === '1';
@@ -77,6 +82,8 @@ class Personal implements ISettings {
 			'speech_to_text_picker_enabled' => $speechToTextPickerEnabled,
 			'audio_chat_available' => $audioChatAvailable,
 			'autoplay_audio_chat' => $autoplayAudioChat,
+			'data_folder' => $dataFolder,
+			'default_data_folder' => $defaultDataFolder,
 		];
 		$this->initialStateService->provideInitialState('config', $userConfig);
 
