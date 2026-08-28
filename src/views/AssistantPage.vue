@@ -45,6 +45,7 @@ import { emit } from '@nextcloud/event-bus'
 import { loadState } from '@nextcloud/initial-state'
 import { listen } from '@nextcloud/notify_push'
 import {
+	cancelScheduling,
 	cancelTask,
 	cancelTaskPolling,
 	cancelTaskPositionPolling,
@@ -53,6 +54,7 @@ import {
 	pollTaskPosition,
 	scheduleTask,
 	setNotifyReady,
+	TaskPollCancelledError,
 } from '../assistant.js'
 import { TASK_STATUS_STRING } from '../constants.js'
 
@@ -117,6 +119,7 @@ export default {
 			}
 		},
 		onCancel() {
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			if (this.task?.id) {
@@ -159,6 +162,7 @@ export default {
 			return hasPush
 		},
 		syncSubmit(inputs, taskTypeId, newTaskIdentifier = '') {
+			cancelScheduling()
 			this.loading = true
 			this.showSyncTaskRunning = true
 			this.taskPosition = null
@@ -170,8 +174,14 @@ export default {
 			this.task.input = inputs
 			this.task.output = null
 			this.task.type = taskTypeId
-			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs)
+			const controller = new AbortController()
+			window.assistantSchedulingAbortController = controller
+			scheduleTask('assistant', this.task.identifier, taskTypeId, inputs, controller.signal)
 				.then((response) => {
+					if (window.assistantSchedulingAbortController !== controller) {
+						return
+					}
+					cancelScheduling()
 					console.debug('Assistant SYNC result', response.data?.ocs?.data)
 					const task = response.data?.ocs?.data?.task
 					this.task.id = task.id
@@ -185,6 +195,9 @@ export default {
 					pollTaskPosition(task.id, this).then(() => {
 						console.debug('[assistant] pollTaskPosition finished', task.id)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] pollPosition error', task.id, error.message)
 					})
 					pollTask(task.id, this, !hasPush, this.updateTask).then(finishedTask => {
@@ -202,6 +215,9 @@ export default {
 						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] poll error', error)
 						this.taskPosition = null
 						cancelTaskPositionPolling()
@@ -217,6 +233,12 @@ export default {
 					})
 				})
 				.catch(error => {
+					if (controller.signal.aborted) {
+						return
+					}
+					if (window.assistantSchedulingAbortController === controller) {
+						cancelScheduling()
+					}
 					this.loading = false
 					this.showSyncTaskRunning = false
 					this.taskPosition = null
@@ -241,9 +263,11 @@ export default {
 			this.syncSubmit(data.inputs, data.selectedTaskTypeId, this.task.identifier)
 		},
 		onTryAgain(task) {
+			cancelScheduling()
 			this.syncSubmit(task.input, task.type)
 		},
 		onLoadTask(task) {
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			this.showSyncTaskRunning = false
@@ -258,6 +282,10 @@ export default {
 
 			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
 				getTask(task.id).then(response => {
+					if (task.id !== this.task.id) {
+						console.debug('[assistant] ignoring stale getTask response for task', task.id, 'selected is', this.task.id)
+						return
+					}
 					const updatedTask = response.data?.ocs?.data?.task
 
 					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
@@ -281,6 +309,9 @@ export default {
 					pollTaskPosition(updatedTask.id, this).then(() => {
 						console.debug('[assistant] pollTaskPosition finished', updatedTask.id)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] pollPosition error', updatedTask.id, error.message)
 					})
 					pollTask(updatedTask.id, this, !hasPush, this.updateTask).then(finishedTask => {
@@ -300,6 +331,9 @@ export default {
 						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('Assistant poll error', error)
 						this.taskPosition = null
 						cancelTaskPositionPolling()
@@ -319,6 +353,7 @@ export default {
 			}
 		},
 		onNewTask() {
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			this.loading = false

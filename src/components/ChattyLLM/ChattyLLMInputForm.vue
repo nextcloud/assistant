@@ -1075,6 +1075,9 @@ export default {
 							} else if (error.response.data.task_status === TASK_STATUS_INT.scheduled) {
 								getTaskPosition(taskId)
 									.then(response => {
+										if (sessionId !== this.active?.id) {
+											return
+										}
 										const taskPosition = response.data?.ocs?.data
 										this.loading.taskPosition = taskPosition
 										console.debug('Task position:', taskPosition)

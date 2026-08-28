@@ -10,12 +10,22 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import { listen } from '@nextcloud/notify_push'
 
+export class TaskPollCancelledError extends Error {
+	constructor(msg = 'pollTask cancelled') {
+		super(msg)
+		this.name = 'TaskPollCancelledError'
+	}
+}
+
 window.assistantPollAbortController = null
 window.assistantPollTimerId = null
+window.assistantPollRetryTimerId = null
 window.assistantPollTaskId = null
 window.assistantPollPositionTimerId = null
+window.assistantPollPositionRetryTimerId = null
 window.assistantPollPositionTaskId = null
 window.assistantPollPositionAbortController = null
+window.assistantSchedulingAbortController = null
 
 listen('taskprocessing:task_update', (type, body) => {
 	console.debug('[assistant] received task update push notification', type, body)
@@ -172,6 +182,7 @@ export async function openAssistantForm({
 		}
 
 		modalMountPoint.addEventListener('cancel', () => {
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			app.unmount()
@@ -179,6 +190,7 @@ export async function openAssistantForm({
 			reject(new Error('User cancellation'))
 		})
 		const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
+			cancelScheduling()
 			view.loading = true
 			view.showSyncTaskRunning = true
 			view.taskPosition = null
@@ -191,21 +203,29 @@ export async function openAssistantForm({
 			view.outputs = null
 			view.selectedTaskTypeId = taskTypeId
 
-			scheduleTask(appId, newTaskCustomId, taskTypeId, inputs)
+			const controller = new AbortController()
+			window.assistantSchedulingAbortController = controller
+			scheduleTask(appId, newTaskCustomId, taskTypeId, inputs, controller.signal)
 				.then((response) => {
+					if (window.assistantSchedulingAbortController !== controller) {
+						return
+					}
+					cancelScheduling()
 					const task = response.data?.ocs?.data?.task
 					lastTask = task
 					view.selectedTaskId = lastTask?.id
 					view.expectedRuntime = (lastTask?.completionExpectedAt - lastTask?.scheduledAt) || null
 					view.startedAt = lastTask?.startedAt || null
 					view.completionExpectedAt = lastTask?.completionExpectedAt || null
-
 					const hasPush = listenToTaskNotifications(task.id)
 					console.debug('[assistant] HAS PUSH', hasPush)
 
 					pollTaskPosition(task.id, view).then(() => {
 						console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore ', task.id)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] pollPosition error', task.id, error.message)
 					})
 					// no need to update the task output with polling if we have push notifications
@@ -240,6 +260,9 @@ export async function openAssistantForm({
 						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] poll error', error.message)
 						view.taskPosition = null
 						cancelTaskPositionPolling()
@@ -255,6 +278,12 @@ export async function openAssistantForm({
 					})
 				})
 				.catch(error => {
+					if (controller.signal.aborted) {
+						return
+					}
+					if (window.assistantSchedulingAbortController === controller) {
+						cancelScheduling()
+					}
 					view.loading = false
 					view.showSyncTaskRunning = false
 					view.taskPosition = null
@@ -267,6 +296,7 @@ export async function openAssistantForm({
 			syncSubmit(data.detail.inputs, data.detail.selectedTaskTypeId, customId || identifier)
 		})
 		modalMountPoint.addEventListener('try-again', (data) => {
+			cancelScheduling()
 			const task = data.detail
 			console.debug('[assistant] try again', task)
 			syncSubmit(task.input, task.type)
@@ -274,6 +304,7 @@ export async function openAssistantForm({
 		modalMountPoint.addEventListener('load-task', (data) => {
 			const task = data.detail
 			console.debug('[assistant] loading task', task)
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			view.showSyncTaskRunning = false
@@ -290,6 +321,10 @@ export async function openAssistantForm({
 
 			if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
 				getTask(task.id).then(response => {
+					if (task.id !== view.selectedTaskId) {
+						console.debug('[assistant] ignoring stale getTask response for task', task.id, 'selected is', view.selectedTaskId)
+						return
+					}
 					const updatedTask = response.data?.ocs?.data?.task
 
 					if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
@@ -303,6 +338,9 @@ export async function openAssistantForm({
 					}
 
 					getNotifyReady(task.id).then(response => {
+						if (task.id !== view.selectedTaskId) {
+							return
+						}
 						view.isNotifyEnabled = !!response.data?.ocs?.data?.id
 					}).catch(error => {
 						console.error('[assistant] get task notification status error', error)
@@ -322,6 +360,9 @@ export async function openAssistantForm({
 					pollTaskPosition(updatedTask.id, view).then(() => {
 						console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore', updatedTask.id)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] pollPosition error', updatedTask.id, error.message)
 					})
 					pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
@@ -351,6 +392,9 @@ export async function openAssistantForm({
 						cancelTaskPositionPolling()
 						emit('assistant:task:updated', finishedTask)
 					}).catch(error => {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.debug('[assistant] poll error', error)
 						view.taskPosition = null
 						cancelTaskPositionPolling()
@@ -371,6 +415,7 @@ export async function openAssistantForm({
 		})
 		modalMountPoint.addEventListener('new-task', () => {
 			console.debug('[assistant] new task')
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			view.loading = false
@@ -388,6 +433,7 @@ export async function openAssistantForm({
 			})
 		})
 		modalMountPoint.addEventListener('cancel-task', () => {
+			cancelScheduling()
 			cancelTaskPolling()
 			cancelTaskPositionPolling()
 			setNotifyReady(lastTask.id, false)
@@ -427,7 +473,8 @@ function updateTask(task, object, updateOutput = true) {
 }
 
 function updateTaskPosition(position, object) {
-	object.taskPosition = position
+	const n = Number(position)
+	object.taskPosition = Number.isFinite(n) ? n : null
 }
 
 /**
@@ -441,48 +488,98 @@ function updateTaskPosition(position, object) {
 export async function pollTaskPosition(taskId, obj, callback = updateTaskPosition) {
 	const { isCancel } = await import('@nextcloud/axios')
 	return new Promise((resolve, reject) => {
+		cancelTaskPositionPolling()
+		window.assistantPollPositionTaskId = taskId
+		const abortController = new AbortController()
+		window.assistantPollPositionAbortController = abortController
+		let retryDelay = 5000
+		let settled = false
+
+		const cleanup = () => {
+			clearTimeout(window.assistantPollPositionTimerId)
+			clearTimeout(window.assistantPollPositionRetryTimerId)
+			window.assistantPollPositionTimerId = null
+			window.assistantPollPositionRetryTimerId = null
+			if (window.assistantPollPositionTaskId === taskId) {
+				window.assistantPollPositionTaskId = null
+				window.assistantPollPositionAbortController = null
+			}
+		}
+
+		const safeReject = (err) => {
+			if (!settled) {
+				settled = true
+				cleanup()
+				reject(err)
+			}
+		}
+
+		const safeResolve = (val) => {
+			if (!settled) {
+				settled = true
+				cleanup()
+				resolve(val)
+			}
+		}
+
+		abortController.signal.addEventListener('abort', () => {
+			safeReject(new TaskPollCancelledError('pollTaskPosition aborted'))
+		})
+
 		const pollPositionOnce = () => {
 			if (window.assistantPollPositionTaskId !== taskId) {
-				reject(new Error('pollTaskPosition cancelled'))
+				safeReject(new TaskPollCancelledError('pollTaskPosition cancelled'))
 				return
 			}
-			getTaskPosition(taskId, window.assistantPollPositionAbortController.signal).then(response => {
-				const taskPosition = response.data?.ocs?.data
+
+			getTaskPosition(taskId, abortController.signal).then(response => {
 				if (window.assistantPollPositionTaskId !== taskId) {
-					reject(new Error('pollTaskPosition cancelled'))
+					safeReject(new TaskPollCancelledError('pollTaskPosition cancelled'))
 					return
 				}
+				const taskPosition = response.data?.ocs?.data
 				if (obj) {
 					callback(taskPosition, obj)
 				}
-			}).catch(error => {
 				if (window.assistantPollPositionTaskId === taskId) {
-					clearInterval(window.assistantPollPositionTimerId)
-					window.assistantPollPositionTimerId = null
-					window.assistantPollPositionTaskId = null
+					window.assistantPollPositionRetryTimerId = null
+					window.assistantPollPositionTimerId = setTimeout(pollPositionOnce, 5000)
 				}
+			}).catch(error => {
 				if (isCancel(error)) {
 					console.debug('[assistant] pollPosition request cancelled', error)
-					reject(new Error('pollTaskPosition request cancelled'))
+					safeReject(new TaskPollCancelledError('pollTaskPosition request cancelled'))
 					return
 				}
+
+				const status = error?.response?.status ?? error?.status
 				console.debug('[assistant] pollPosition request failed', error)
-				if (error.status === 404) {
-					reject(new Error('task-not-found'))
-					return
-				} else if (error.status === 412) {
-					// the task is not scheduled anymore
-					resolve()
+
+				if (status === 404) {
+					safeReject(new Error('task-not-found'))
 					return
 				}
-				reject(new Error('pollTaskPosition request failed'))
+				if (status === 412) {
+					safeResolve()
+					return
+				}
+				if (status >= 400 && status < 500) {
+					safeReject(new Error('pollTaskPosition non-retryable error: ' + status))
+					return
+				}
+
+				console.warn('[assistant] pollPosition temporary failure, will retry in ' + retryDelay + 'ms', error)
+				if (window.assistantPollPositionTaskId === taskId) {
+					window.assistantPollPositionRetryTimerId = setTimeout(() => {
+						retryDelay = Math.min(retryDelay * 2, 60000)
+						pollPositionOnce()
+					}, retryDelay)
+				} else {
+					safeReject(new TaskPollCancelledError('pollTaskPosition cancelled during retry backoff'))
+				}
 			})
 		}
-		cancelTaskPositionPolling()
-		window.assistantPollPositionTaskId = taskId
-		window.assistantPollPositionAbortController = new AbortController()
-		window.assistantPollPositionTimerId = setInterval(pollPositionOnce, 5000)
-		// start polling immediately
+
 		pollPositionOnce()
 	})
 }
@@ -497,58 +594,124 @@ export async function pollTaskPosition(taskId, obj, callback = updateTaskPositio
  * @return {Promise<object>}
  */
 export async function pollTask(taskId, obj, updateOutput = true, callback = updateTask) {
+	const { isCancel } = await import('@nextcloud/axios')
 	return new Promise((resolve, reject) => {
+		cancelTaskPolling()
+		window.assistantPollTaskId = taskId
+		const abortController = new AbortController()
+		window.assistantPollAbortController = abortController
+		let retryDelay = 5000
+		let settled = false
+
+		const cleanup = () => {
+			clearTimeout(window.assistantPollTimerId)
+			clearTimeout(window.assistantPollRetryTimerId)
+			window.assistantPollTimerId = null
+			window.assistantPollRetryTimerId = null
+			if (window.assistantPollTaskId === taskId) {
+				window.assistantPollTaskId = null
+				window.assistantPollAbortController = null
+			}
+		}
+
+		const safeReject = (err) => {
+			if (!settled) {
+				settled = true
+				cleanup()
+				reject(err)
+			}
+		}
+
+		const safeResolve = (val) => {
+			if (!settled) {
+				settled = true
+				cleanup()
+				resolve(val)
+			}
+		}
+
+		abortController.signal.addEventListener('abort', () => {
+			safeReject(new TaskPollCancelledError('pollTask aborted'))
+		})
+
 		const pollOnce = () => {
-			getTask(taskId, window.assistantPollAbortController.signal).then(response => {
-				const task = response.data?.ocs?.data?.task
+			if (window.assistantPollTaskId !== taskId) {
+				safeReject(new TaskPollCancelledError())
+				return
+			}
+
+			getTask(taskId, abortController.signal).then(response => {
 				if (window.assistantPollTaskId !== taskId) {
-					reject(new Error('pollTask cancelled'))
+					safeReject(new TaskPollCancelledError())
 					return
 				}
+				const task = response.data?.ocs?.data?.task
 				if (obj) {
 					callback(task, obj, updateOutput)
 				}
 				if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
-					// stop polling
-					clearInterval(window.assistantPollTimerId)
-					window.assistantPollTimerId = null
-					resolve(task)
+					safeResolve(task)
+				} else if (window.assistantPollTaskId === taskId) {
+					window.assistantPollTimerId = setTimeout(pollOnce, 2000)
 				}
 			}).catch(error => {
-				console.debug('[assistant] poll request failed', error)
-				if (error.status === 404) {
-					if (window.assistantPollTaskId === taskId) {
-						clearInterval(window.assistantPollTimerId)
-						window.assistantPollTimerId = null
-						window.assistantPollTaskId = null
-					}
-					reject(new Error('task-not-found'))
+				if (isCancel(error)) {
+					console.debug('[assistant] poll request cancelled', error)
+					safeReject(new TaskPollCancelledError())
 					return
 				}
-				reject(new Error('pollTask request failed'))
+
+				const status = error?.response?.status ?? error?.status
+				console.debug('[assistant] poll request failed', error)
+
+				if (status === 404) {
+					safeReject(new Error('task-not-found'))
+					return
+				}
+				if (status >= 400 && status < 500) {
+					safeReject(new Error('pollTask non-retryable error: ' + status))
+					return
+				}
+
+				console.warn('[assistant] poll temporary failure, will retry in ' + retryDelay + 'ms', error)
+				if (window.assistantPollTaskId === taskId) {
+					window.assistantPollRetryTimerId = setTimeout(() => {
+						retryDelay = Math.min(retryDelay * 2, 60000)
+						pollOnce()
+					}, retryDelay)
+				} else {
+					safeReject(new TaskPollCancelledError('pollTask cancelled during retry backoff'))
+				}
 			})
 		}
-		cancelTaskPolling()
-		window.assistantPollTaskId = taskId
-		window.assistantPollAbortController = new AbortController()
-		// start polling immediately
-		// pollOnce()
-		window.assistantPollTimerId = setInterval(pollOnce, 2000)
+
+		pollOnce()
 	})
 }
 
 export async function cancelTaskPolling() {
 	window.assistantPollAbortController?.abort()
-	clearInterval(window.assistantPollTimerId)
+	clearTimeout(window.assistantPollTimerId)
+	clearTimeout(window.assistantPollRetryTimerId)
 	window.assistantPollTimerId = null
+	window.assistantPollRetryTimerId = null
 	window.assistantPollTaskId = null
+	window.assistantPollAbortController = null
 }
 
 export async function cancelTaskPositionPolling() {
 	window.assistantPollPositionAbortController?.abort()
-	clearInterval(window.assistantPollPositionTimerId)
+	clearTimeout(window.assistantPollPositionTimerId)
+	clearTimeout(window.assistantPollPositionRetryTimerId)
 	window.assistantPollPositionTimerId = null
+	window.assistantPollPositionRetryTimerId = null
 	window.assistantPollPositionTaskId = null
+	window.assistantPollPositionAbortController = null
+}
+
+export async function cancelScheduling() {
+	window.assistantSchedulingAbortController?.abort()
+	window.assistantSchedulingAbortController = null
 }
 
 export async function getTask(taskId, signal = null) {
@@ -597,9 +760,10 @@ export async function cancelTask(taskId) {
  * @param {string} customId the task custom ID
  * @param {string} taskType the task type class
  * @param {Array} inputs the task input texts as an array
+ * @param {AbortSignal} signal optional abort signal for cancellation
  * @return {Promise<object>}
  */
-export async function scheduleTask(appId, customId, taskType, inputs) {
+export async function scheduleTask(appId, customId, taskType, inputs, signal = null) {
 	const { default: axios } = await import('@nextcloud/axios')
 	const { generateOcsUrl } = await import('@nextcloud/router')
 	if (taskType === 'core:text2text:translate') {
@@ -613,7 +777,8 @@ export async function scheduleTask(appId, customId, taskType, inputs) {
 		customId,
 		preferStreaming: true,
 	}
-	return axios.post(url, params)
+	const config = signal ? { signal } : {}
+	return axios.post(url, params, config)
 }
 
 export async function saveLastSelectedTaskType(taskType) {
@@ -802,17 +967,30 @@ export async function openAssistantTask(
 	}
 
 	modalMountPoint.addEventListener('cancel', () => {
+		cancelScheduling()
 		cancelTaskPolling()
 		cancelTaskPositionPolling()
 		app.unmount()
 		OCA.Assistant.isAssistantDialogOpen = false
 	})
 	modalMountPoint.addEventListener('submit', (data) => {
-		scheduleTask(task.appId, task.identifier ?? '', data.detail.selectedTaskTypeId, data.detail.inputs)
+		const controller = new AbortController()
+		window.assistantSchedulingAbortController = controller
+		scheduleTask(task.appId, task.identifier ?? '', data.detail.selectedTaskTypeId, data.detail.inputs, controller.signal)
 			.then((response) => {
+				if (window.assistantSchedulingAbortController !== controller) {
+					return
+				}
+				cancelScheduling()
 				console.debug('scheduled task', response.data?.ocs?.data?.task)
 			})
 			.catch(error => {
+				if (controller.signal.aborted) {
+					return
+				}
+				if (window.assistantSchedulingAbortController === controller) {
+					cancelScheduling()
+				}
 				app.unmount()
 				OCA.Assistant.isAssistantDialogOpen = false
 				console.error('Assistant scheduling error', error)
@@ -823,6 +1001,7 @@ export async function openAssistantTask(
 			})
 	})
 	const syncSubmit = (inputs, taskTypeId, newTaskCustomId = '') => {
+		cancelScheduling()
 		view.loading = true
 		view.showSyncTaskRunning = true
 		view.taskPosition = null
@@ -834,8 +1013,14 @@ export async function openAssistantTask(
 		view.outputs = null
 		view.selectedTaskTypeId = taskTypeId
 
-		scheduleTask('assistant', newTaskCustomId, taskTypeId, inputs)
+		const controller = new AbortController()
+		window.assistantSchedulingAbortController = controller
+		scheduleTask('assistant', newTaskCustomId, taskTypeId, inputs, controller.signal)
 			.then((response) => {
+				if (window.assistantSchedulingAbortController !== controller) {
+					return
+				}
+				cancelScheduling()
 				const task = response.data?.ocs?.data?.task
 				lastTask = task
 				view.selectedTaskId = lastTask?.id
@@ -848,6 +1033,9 @@ export async function openAssistantTask(
 				pollTaskPosition(task.id, view).then(() => {
 					console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore', task.id)
 				}).catch(error => {
+					if (error instanceof TaskPollCancelledError) {
+						return
+					}
 					console.debug('[assistant] pollPosition error', task.id, error.message)
 				})
 				pollTask(task.id, view, !hasPush).then(finishedTask => {
@@ -875,6 +1063,9 @@ export async function openAssistantTask(
 					cancelTaskPositionPolling()
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
+					if (error instanceof TaskPollCancelledError) {
+						return
+					}
 					console.debug('[assistant] poll error', error)
 					view.outputs = null
 					view.taskPosition = null
@@ -890,6 +1081,12 @@ export async function openAssistantTask(
 				})
 			})
 			.catch(error => {
+				if (controller.signal.aborted) {
+					return
+				}
+				if (window.assistantSchedulingAbortController === controller) {
+					cancelScheduling()
+				}
 				view.loading = false
 				view.showSyncTaskRunning = false
 				view.taskPosition = null
@@ -901,11 +1098,13 @@ export async function openAssistantTask(
 		syncSubmit(data.detail.inputs, data.detail.selectedTaskTypeId, task.identifier ?? '')
 	})
 	modalMountPoint.addEventListener('try-again', (data) => {
+		cancelScheduling()
 		const task = data.detail
 		syncSubmit(task.input, task.type)
 	})
 	modalMountPoint.addEventListener('load-task', (data) => {
 		const task = data.detail
+		cancelScheduling()
 		cancelTaskPolling()
 		cancelTaskPositionPolling()
 		view.showSyncTaskRunning = false
@@ -922,6 +1121,10 @@ export async function openAssistantTask(
 
 		if ([TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(task?.status)) {
 			getTask(task.id).then(response => {
+				if (task.id !== view.selectedTaskId) {
+					console.debug('[assistant] ignoring stale getTask response for task', task.id, 'selected is', view.selectedTaskId)
+					return
+				}
 				const updatedTask = response.data?.ocs?.data?.task
 
 				if (![TASK_STATUS_STRING.scheduled, TASK_STATUS_STRING.running].includes(updatedTask?.status)) {
@@ -935,6 +1138,9 @@ export async function openAssistantTask(
 				}
 
 				getNotifyReady(task.id).then(response => {
+					if (task.id !== view.selectedTaskId) {
+						return
+					}
 					view.isNotifyEnabled = !!response.data?.ocs?.data?.id
 				}).catch(error => {
 					console.error('[assistant] get task notification status error', error)
@@ -953,6 +1159,9 @@ export async function openAssistantTask(
 				pollTaskPosition(updatedTask.id, view).then(() => {
 					console.debug('[assistant] pollTaskPosition: the task is not scheduled anymore', updatedTask.id)
 				}).catch(error => {
+					if (error instanceof TaskPollCancelledError) {
+						return
+					}
 					console.debug('[assistant] pollPosition error', updatedTask.id, error.message)
 				})
 				pollTask(updatedTask.id, view, !hasPush).then(finishedTask => {
@@ -982,6 +1191,9 @@ export async function openAssistantTask(
 					cancelTaskPositionPolling()
 					emit('assistant:task:updated', finishedTask)
 				}).catch(error => {
+					if (error instanceof TaskPollCancelledError) {
+						return
+					}
 					console.debug('[assistant] poll error', error)
 					view.taskPosition = null
 					cancelTaskPositionPolling()
@@ -1002,6 +1214,7 @@ export async function openAssistantTask(
 	})
 	modalMountPoint.addEventListener('new-task', () => {
 		console.debug('[assistant] new task')
+		cancelScheduling()
 		cancelTaskPolling()
 		cancelTaskPositionPolling()
 		view.loading = false
@@ -1019,6 +1232,7 @@ export async function openAssistantTask(
 		})
 	})
 	modalMountPoint.addEventListener('cancel-task', () => {
+		cancelScheduling()
 		cancelTaskPolling()
 		cancelTaskPositionPolling()
 		setNotifyReady(lastTask.id, false)
