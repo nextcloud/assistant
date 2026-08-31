@@ -259,7 +259,11 @@ import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
 import ICAL from 'ical.js'
 import formatRecurrenceRule from './recurrenceRule.js'
 import { getLanguage } from '@nextcloud/l10n'
-import { getTaskPosition } from '../../assistant.js'
+import {
+	cancelTaskPositionPolling,
+	pollTaskPosition,
+	TaskPollCancelledError,
+} from '../../assistant.js'
 
 import navAutoCollapse from '../../mixins/navAutoCollapse.js'
 
@@ -325,6 +329,8 @@ export default {
 			sessions: null,
 			assignmentDetails: null,
 			pollCheckSessionTimeout: null,
+			pollPositionTaskId: null,
+			pollPositionSessionId: null,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
@@ -351,6 +357,7 @@ export default {
 			titleActionsOpen: false,
 			editingTitle: false,
 			pollMessageGenerationTimerId: null,
+			pollMessageGenerationCancel: null,
 			pollTitleGenerationTimerId: null,
 			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
 			slowPickup: false,
@@ -442,6 +449,10 @@ export default {
 
 	watch: {
 		async active() {
+			this.pollMessageGenerationCancel?.()
+			cancelTaskPositionPolling()
+			this.pollPositionTaskId = null
+			this.pollPositionSessionId = null
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
@@ -476,6 +487,8 @@ export default {
 	},
 
 	beforeUnmount() {
+		this.pollMessageGenerationCancel?.()
+		cancelTaskPositionPolling()
 		if (this.pollMessageGenerationTimerId) {
 			clearInterval(this.pollMessageGenerationTimerId)
 		}
@@ -524,6 +537,8 @@ export default {
 				if (checkSessionResponseData.messageTaskId !== null) {
 					try {
 						this.loading.llmGeneration = true
+						this.loading.llmRunning = false
+						this.startTaskPositionPolling(checkSessionResponseData.messageTaskId, sessionId)
 						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
@@ -534,6 +549,9 @@ export default {
 							this.focusOnInputField()
 						}
 					} catch (error) {
+						if (error instanceof TaskPollCancelledError) {
+							return
+						}
 						console.error('checkGenerationTask error:', error)
 						showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error generating a response'))
 					}
@@ -563,6 +581,11 @@ export default {
 				console.error('check session error:', error)
 				showError(t('assistant', 'Error checking if the session is thinking'))
 			} finally {
+				if (this.pollPositionSessionId === sessionId) {
+					cancelTaskPositionPolling()
+					this.pollPositionTaskId = null
+					this.pollPositionSessionId = null
+				}
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.loading.taskPosition = null
@@ -947,6 +970,7 @@ export default {
 				const generationResponse = await axios.get(getChatURL('/generate'), { params })
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
+				this.startTaskPositionPolling(generationResponseData.taskId, sessionId)
 				const message = await this.pollGenerationTask(generationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages.push(message)
@@ -956,9 +980,17 @@ export default {
 					this.focusOnInputField()
 				}
 			} catch (error) {
+				if (error instanceof TaskPollCancelledError) {
+					return
+				}
 				console.error('scheduleGenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error generating a response'))
 			} finally {
+				if (this.pollPositionSessionId === sessionId) {
+					cancelTaskPositionPolling()
+					this.pollPositionTaskId = null
+					this.pollPositionSessionId = null
+				}
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.loading.taskPosition = null
@@ -968,8 +1000,8 @@ export default {
 		},
 
 		async runRegenerationTask(messageId) {
+			const sessionId = this.active.id
 			try {
-				const sessionId = this.active.id
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
 				this.loading.taskPosition = null
@@ -977,6 +1009,7 @@ export default {
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
+				this.startTaskPositionPolling(regenerationResponseData.taskId, sessionId)
 				const message = await this.pollGenerationTask(regenerationResponseData.taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages[this.messages.length - 1] = message
@@ -986,9 +1019,17 @@ export default {
 					this.focusOnInputField()
 				}
 			} catch (error) {
+				if (error instanceof TaskPollCancelledError) {
+					return
+				}
 				console.error('scheduleRegenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error regenerating a response'))
 			} finally {
+				if (this.pollPositionSessionId === sessionId) {
+					cancelTaskPositionPolling()
+					this.pollPositionTaskId = null
+					this.pollPositionSessionId = null
+				}
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.loading.taskPosition = null
@@ -1025,23 +1066,55 @@ export default {
 			return hasPush
 		},
 
+		startTaskPositionPolling(taskId, sessionId) {
+			if (this.pollPositionTaskId === taskId && this.pollPositionSessionId === sessionId) {
+				return
+			}
+
+			cancelTaskPositionPolling()
+			this.pollPositionTaskId = taskId
+			this.pollPositionSessionId = sessionId
+			pollTaskPosition(taskId, this, (position) => {
+				if (this.pollPositionTaskId !== taskId
+					|| this.pollPositionSessionId !== sessionId
+					|| this.active?.id !== sessionId) {
+					return
+				}
+				this.loading.taskPosition = Number.isFinite(Number(position)) ? Number(position) : null
+			}).catch(error => {
+				if (!(error instanceof TaskPollCancelledError)) {
+					console.error('Failed to poll task position', error)
+				}
+			})
+		},
+
 		async pollGenerationTask(taskId, sessionId) {
 			const hasPush = this.listenToTaskNotifications(taskId, sessionId)
 			console.debug('[assistant] HAS PUSH', hasPush)
 
 			return new Promise((resolve, reject) => {
-				this.pollMessageGenerationTimerId = setInterval(() => {
+				const timerId = setInterval(() => {
 					if (this.active === null || sessionId !== this.active.id) {
 						console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
-						clearInterval(this.pollMessageGenerationTimerId)
+						clearInterval(timerId)
+						if (this.pollMessageGenerationTimerId === timerId) {
+							this.pollMessageGenerationTimerId = null
+							this.pollMessageGenerationCancel = null
+						}
+						reject(new TaskPollCancelledError('generation polling cancelled'))
 						return
 					}
 					axios.get(
 						getChatURL('/check_generation'),
 						{ params: { taskId, sessionId } },
 					).then(response => {
+						if (this.pollMessageGenerationTimerId !== timerId) {
+							return
+						}
 						const responseData = response.data
-						clearInterval(this.pollMessageGenerationTimerId)
+						clearInterval(timerId)
+						this.pollMessageGenerationTimerId = null
+						this.pollMessageGenerationCancel = null
 						if (sessionId === this.active.id) {
 							this.active.sessionAgencyPendingActions = responseData.sessionAgencyPendingActions
 							this.active.agencyAnswered = false
@@ -1062,10 +1135,15 @@ export default {
 							// should we reject here?
 						}
 					}).catch(error => {
+						if (this.pollMessageGenerationTimerId !== timerId) {
+							return
+						}
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
 						if (error.response?.status !== 417) {
 							console.error('checkTaskPolling error', error)
-							clearInterval(this.pollMessageGenerationTimerId)
+							clearInterval(timerId)
+							this.pollMessageGenerationTimerId = null
+							this.pollMessageGenerationCancel = null
 							reject(error)
 						} else {
 							console.debug('checkTaskPolling, task is still scheduled or running')
@@ -1073,18 +1151,7 @@ export default {
 							if (error.response.data.task_status === TASK_STATUS_INT.running) {
 								this.loading.llmRunning = true
 							} else if (error.response.data.task_status === TASK_STATUS_INT.scheduled) {
-								getTaskPosition(taskId)
-									.then(response => {
-										if (sessionId !== this.active?.id) {
-											return
-										}
-										const taskPosition = response.data?.ocs?.data
-										this.loading.taskPosition = taskPosition
-										console.debug('Task position:', taskPosition)
-									})
-									.catch(error => {
-										console.error('Failed to get task position', error)
-									})
+								this.startTaskPositionPolling(taskId, sessionId)
 							}
 							if (!hasPush && typeof error.response.data.task_output !== 'undefined' && error.response.data.task_output !== null) {
 								this.updateStreamingMessage(error.response.data.task_output || {}, sessionId)
@@ -1092,6 +1159,15 @@ export default {
 						}
 					})
 				}, 2000)
+				this.pollMessageGenerationTimerId = timerId
+				this.pollMessageGenerationCancel = () => {
+					clearInterval(timerId)
+					if (this.pollMessageGenerationTimerId === timerId) {
+						this.pollMessageGenerationTimerId = null
+					}
+					reject(new TaskPollCancelledError('generation polling cancelled'))
+					this.pollMessageGenerationCancel = null
+				}
 			})
 		},
 
