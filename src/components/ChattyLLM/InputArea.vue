@@ -141,6 +141,7 @@ export default {
 				newSession: false,
 				messageDelete: false,
 				sessionDelete: false,
+				taskPosition: null,
 			}),
 		},
 	},
@@ -190,6 +191,9 @@ export default {
 				? this.loading.llmRunning
 					? this.thinkingText
 					: this.scheduledText
+						+ ((this.loading.taskPosition !== null && this.loading.taskPosition !== undefined)
+							? ' ' + t('assistant', 'Task position: {position}', { position: this.loading.taskPosition })
+							: '')
 				: this.placeholderText
 		},
 	},
