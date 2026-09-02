@@ -5,6 +5,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "E-bost Nextcloud",
     "Other" : "Arall",
     "Translate" : "Cyfieithu",
+    "Data folder" : "Plygell data",
     "Close" : "Cau",
     "Cancel" : "Cancel",
     "Delete" : "Dileu",
