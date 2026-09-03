@@ -355,6 +355,7 @@
     "Select from nextcloud" : "從 Nextcloud 選取",
     "Choose a file" : "選擇檔案",
     "Choose" : "選擇",
+    "Task position: {position}" : "任務位置：{position}",
     "Could not upload the recorded file" : "無法上傳錄製的檔案",
     "Please try again and inform the server administrators if this issue persists." : "請再試一次，如果問題仍然存在，請通知伺服器管理員。",
     "Could not upload the file" : "無法上傳檔案",

@@ -355,6 +355,7 @@
     "Select from nextcloud" : "Sélectionner depuis Nextcloud",
     "Choose a file" : "Choisir un fichier",
     "Choose" : "Choisir",
+    "Task position: {position}" : "Position de la tâche : {position}",
     "Could not upload the recorded file" : "Impossible de téléverser le fichier enregistré",
     "Please try again and inform the server administrators if this issue persists." : "Veuillez réessayer et informer les administrateurs du serveur si le problème persiste.",
     "Could not upload the file" : "Impossible de téléverser le fichier",

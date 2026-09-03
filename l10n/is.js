@@ -7,6 +7,8 @@ OC.L10N.register(
     "Copy file" : "Afrita skrá",
     "Delete file" : "Eyða skrá",
     "Create bookmark" : "Búa til bókamerki",
+    "Create team" : "Búa til teymi",
+    "Delete team" : "Eyða teymi",
     "Delete form" : "Eyða eyðuformi",
     "Share with group" : "Deila með hópi",
     "Delete share" : "Eyða sameign",
