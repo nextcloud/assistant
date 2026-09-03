@@ -355,6 +355,7 @@
     "Select from nextcloud" : "Aus Nextcloud auswählen",
     "Choose a file" : "Datei auswählen",
     "Choose" : "Auswählen",
+    "Task position: {position}" : "Aufgabenposition: {position}",
     "Could not upload the recorded file" : "Die aufgezeichnete Datei konnte nicht hochgeladen werden",
     "Please try again and inform the server administrators if this issue persists." : "Bitte erneut versuchen und die Serveradministration informieren, wenn das Problem weiterhin besteht.",
     "Could not upload the file" : "Datei konnte nicht hochgeladen werden",

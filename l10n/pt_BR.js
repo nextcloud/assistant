@@ -357,6 +357,7 @@ OC.L10N.register(
     "Select from nextcloud" : "Selecionar no Nextcloud",
     "Choose a file" : "Escolher um arquivo",
     "Choose" : "Escolher",
+    "Task position: {position}" : "Posição da tarefa: {position}",
     "Could not upload the recorded file" : "Não foi possível fazer o upload do arquivo gravado",
     "Please try again and inform the server administrators if this issue persists." : "Tente novamente e informe os administradores do servidor se o problema persistir.",
     "Could not upload the file" : "Não foi possível fazer o upload do arquivo",

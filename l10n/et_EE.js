@@ -357,6 +357,7 @@ OC.L10N.register(
     "Select from nextcloud" : "Vali Nextcloudist",
     "Choose a file" : "Vali fail",
     "Choose" : "Vali",
+    "Task position: {position}" : "Ülesande koht järjestuses: {position}",
     "Could not upload the recorded file" : "Salvestatud faili polnud võimalik üles laadida",
     "Please try again and inform the server administrators if this issue persists." : "Palun proovi uuesti ja kui viga kestab, siis palun teavita sellest serveri haldajat.",
     "Could not upload the file" : "Faili polnud võimalik üles laadida",
