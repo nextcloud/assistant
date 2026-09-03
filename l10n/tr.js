@@ -357,6 +357,7 @@ OC.L10N.register(
     "Select from nextcloud" : "Nextcloud üzerinden seçin",
     "Choose a file" : "Bir dosya seçin",
     "Choose" : "Seçin",
+    "Task position: {position}" : "Görev konumu: {position}",
     "Could not upload the recorded file" : "Kaydedilen dosya yüklenemedi",
     "Please try again and inform the server administrators if this issue persists." : "Lütfen yeniden deneyin ve bu sorun sürerse sunucu yöneticilerine bilgi verin.",
     "Could not upload the file" : "Dosya yüklenemedi",
