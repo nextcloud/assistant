@@ -6,7 +6,7 @@
 	<div class="container">
 		<NcAppNavigation>
 			<NcAppNavigationList>
-				<NcAppNavigationNew v-if="!isAssignment"
+				<NcAppNavigationNew v-if="!isAssignment && !deletionMode"
 					:text="t('assistant', 'New conversation')"
 					variant="secondary"
 					@click="newSession">
@@ -14,6 +14,40 @@
 						<PlusIcon :size="20" />
 					</template>
 				</NcAppNavigationNew>
+				<NcButton v-if="!isAssignment && !deletionMode && (sessions?.length ?? 0) > 0"
+					class="deletion-mode-button"
+					variant="secondary"
+					@click="enterDeletionMode()">
+					<template #icon>
+						<DeleteSweepOutlineIcon :size="20" />
+					</template>
+					{{ t('assistant', 'Delete multiple conversations') }}
+				</NcButton>
+				<div v-if="deletionMode" class="deletion-mode-bar">
+					<div class="deletion-mode-bar__first-line">
+						<NcButton :disabled="loading.sessionsDelete"
+							variant="secondary"
+							@click="toggleSelectAll">
+							{{ selectAllLabel }}
+						</NcButton>
+						<NcButton :disabled="loading.sessionsDelete"
+							variant="secondary"
+							@click="exitDeletionMode">
+							{{ t('assistant', 'Cancel') }}
+						</NcButton>
+					</div>
+					<NcButton v-if="selectedSessionIds.length > 0"
+						:disabled="loading.sessionsDelete"
+						variant="error"
+						class="deletion-mode-bar__delete"
+						@click="openDeletionDialog([...selectedSessionIds])">
+						<template #icon>
+							<TrashCanOutlineIcon v-if="!loading.sessionsDelete" :size="20" />
+							<NcLoadingIcon v-else :size="20" />
+						</template>
+						{{ deleteSelectedLabel }}
+					</NcButton>
+				</div>
 				<div v-if="sessions == null" class="unloaded-sessions">
 					<NcLoadingIcon :size="30" />
 					{{ isAssignment ? t('assistant', 'Loading scheduled tasks…') : t('assistant', 'Loading conversations…') }}
@@ -25,20 +59,27 @@
 					v-for="session in sessions"
 					v-else
 					:key="'conversation' + session.id"
-					:active="session.id === active?.id"
+					:active="deletionMode ? selectedSessionIds.includes(session.id) : session.id === active?.id"
 					:name="getSessionTitle(session)"
 					:title="getSessionTitle(session)"
 					:aria-description="getSessionTitle(session)"
 					:editable="false"
-					:inline-actions="1"
-					@click="onSessionSelect(session)">
+					:inline-actions="deletionMode ? 0 : 1"
+					@click="deletionMode ? toggleSessionSelection(session.id) : onSessionSelect(session)">
 					<template #actions>
-						<NcActionButton @click="sessionIdToDelete = session.id">
+						<NcActionButton @click="openDeletionDialog([session.id])">
 							<template #icon>
-								<TrashCanOutlineIcon v-if="!loading.sessionDelete" :size="20" />
+								<TrashCanOutlineIcon v-if="!loading.sessionsDelete" :size="20" />
 								<NcLoadingIcon v-else :size="20" />
 							</template>
 							{{ t('assistant', 'Delete') }}
+						</NcActionButton>
+						<NcActionButton v-if="!isAssignment && !deletionMode"
+							@click="enterDeletionMode(session.id)">
+							<template #icon>
+								<DeleteSweepOutlineIcon :size="20" />
+							</template>
+							{{ t('assistant', 'Delete multiple conversations') }}
 						</NcActionButton>
 					</template>
 				</NcAppNavigationItem>
@@ -198,22 +239,21 @@
 				@submit="handleSubmit"
 				@submit-audio="handleSubmitAudio" />
 		</NcAppContent>
-		<NcDialog :open="sessionIdToDelete !== null"
+		<NcDialog :key="deletionDialogKey"
+			v-model:open="deletionDialogOpen"
 			:name="t('assistant', 'Conversation deletion')"
 			:message="deletionConfirmationMessage"
 			:container="null"
-			@closing="sessionIdToDelete = null">
+			@closing="sessionIdsToDelete = null">
 			<template #actions>
 				<NcButton
-					@click="sessionIdToDelete = null">
+					variant="secondary"
+					@click="sessionIdsToDelete = null">
 					{{ t('assistant', 'Cancel') }}
 				</NcButton>
 				<NcButton
-					variant="warning"
-					@click="deleteSession(sessionIdToDelete)">
-					<template #icon>
-						<TrashCanOutlineIcon />
-					</template>
+					variant="error"
+					@click="deleteSessions(sessionIdsToDelete)">
 					{{ t('assistant', 'Delete') }}
 				</NcButton>
 			</template>
@@ -226,6 +266,7 @@ import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import DeleteSweepOutlineIcon from 'vue-material-design-icons/DeleteSweepOutline.vue'
 import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 import TimerOutlineIcon from 'vue-material-design-icons/TimerOutline.vue'
 
@@ -282,6 +323,7 @@ export default {
 		AgencyConfirmation,
 		AutoFixIcon,
 		TrashCanOutlineIcon,
+		DeleteSweepOutlineIcon,
 		PencilOutlineIcon,
 		PlusIcon,
 		MemoryIcon,
@@ -324,7 +366,10 @@ export default {
 		return {
 			// { id: number, title: string, user_id: string, timestamp: number }
 			active: null,
-			sessionIdToDelete: null,
+			sessionIdsToDelete: null,
+			deletionDialogKey: 0,
+			deletionMode: false,
+			selectedSessionIds: [],
 			chatContent: '',
 			sessions: null,
 			assignmentDetails: null,
@@ -349,7 +394,7 @@ export default {
 				newHumanMessage: false,
 				newSession: false,
 				messageDelete: false,
-				sessionDelete: false,
+				sessionsDelete: false,
 				taskPosition: null,
 			},
 			msgCursor: 0,
@@ -413,13 +458,37 @@ export default {
 	},
 
 	computed: {
+		deletionDialogOpen: {
+			get() {
+				return this.sessionIdsToDelete !== null
+			},
+			set(value) {
+				if (!value) {
+					this.sessionIdsToDelete = null
+				}
+			},
+		},
 		deletionConfirmationMessage() {
-			if (this.sessions === null || this.sessionIdToDelete === null) {
+			if (this.sessions === null || this.sessionIdsToDelete === null || this.sessionIdsToDelete.length === 0) {
 				return ''
 			}
-			const session = this.sessions.find(s => s.id === this.sessionIdToDelete)
-			const sessionTitle = this.getSessionTitle(session)?.trim()
-			return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
+			if (this.sessionIdsToDelete.length === 1) {
+				const session = this.sessions.find(s => s.id === this.sessionIdsToDelete[0])
+				const sessionTitle = this.getSessionTitle(session)?.trim()
+				return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
+			}
+			return n('assistant', 'Are you sure you want to delete %n conversation?', 'Are you sure you want to delete %n conversations?', this.sessionIdsToDelete.length)
+		},
+		deleteSelectedLabel() {
+			return n('assistant', 'Delete %n conversation', 'Delete %n conversations', this.selectedSessionIds.length)
+		},
+		selectAllLabel() {
+			return this.allSessionsSelected ? t('assistant', 'Deselect all') : t('assistant', 'Select all')
+		},
+		allSessionsSelected() {
+			return this.sessions !== null
+				&& this.sessions.length > 0
+				&& this.selectedSessionIds.length === this.sessions.length
 		},
 		rrule() {
 			const raw = this.assignmentDetails?.recurrence ?? ''
@@ -484,11 +553,19 @@ export default {
 			this.active = null
 			clearTimeout(this.pollCheckSessionTimeout)
 		},
+		deletionMode(enabled) {
+			if (enabled) {
+				window.addEventListener('keydown', this.onKeydownEscape, true)
+			} else {
+				window.removeEventListener('keydown', this.onKeydownEscape, true)
+			}
+		},
 	},
 
 	beforeUnmount() {
 		this.pollMessageGenerationCancel?.()
 		cancelTaskPositionPolling()
+		window.removeEventListener('keydown', this.onKeydownEscape, true)
 		if (this.pollMessageGenerationTimerId) {
 			clearInterval(this.pollMessageGenerationTimerId)
 		}
@@ -781,22 +858,67 @@ export default {
 			}
 		},
 
-		async deleteSession(sessionId) {
+		enterDeletionMode(preselectSessionId = null) {
+			this.selectedSessionIds = preselectSessionId !== null ? [preselectSessionId] : []
+			this.deletionMode = true
+		},
+
+		exitDeletionMode() {
+			this.deletionMode = false
+			this.selectedSessionIds = []
+		},
+
+		openDeletionDialog(sessionIds) {
+			this.deletionDialogKey++
+			this.sessionIdsToDelete = sessionIds
+		},
+
+		onKeydownEscape(event) {
+			if (event.key !== 'Escape' || this.sessionIdsToDelete !== null) {
+				return
+			}
+			this.exitDeletionMode()
+		},
+
+		toggleSessionSelection(sessionId) {
+			if (this.selectedSessionIds.includes(sessionId)) {
+				this.selectedSessionIds = this.selectedSessionIds.filter(id => id !== sessionId)
+			} else {
+				this.selectedSessionIds.push(sessionId)
+			}
+		},
+
+		toggleSelectAll() {
+			if (this.allSessionsSelected) {
+				this.selectedSessionIds = []
+			} else {
+				this.selectedSessionIds = this.sessions.map(session => session.id)
+			}
+		},
+
+		async deleteSessions(sessionIds) {
+			if (!Array.isArray(sessionIds) || sessionIds.length === 0) {
+				this.sessionIdsToDelete = null
+				return
+			}
 			try {
-				this.loading.sessionDelete = true
-				await axios.delete(getChatURL('/delete_session'), {
-					params: { sessionId },
+				this.loading.sessionsDelete = true
+				await axios.delete(getChatURL('/delete_sessions'), {
+					params: { sessionIds },
 				})
-				this.sessions = this.sessions.filter((session) => session.id !== sessionId)
-				if (this.active?.id === sessionId) {
+				this.sessions = this.sessions.filter((session) => !sessionIds.includes(session.id))
+				if (this.active !== null && sessionIds.includes(this.active.id)) {
 					this.active = null
 				}
+				if (this.deletionMode) {
+					this.exitDeletionMode()
+				}
 			} catch (error) {
-				console.error('deleteSession error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting conversation'))
+				console.error('deleteSessions error:', error)
+				showError(error?.response?.data?.error ?? t('assistant', 'Error deleting conversations'))
 			} finally {
-				this.loading.sessionDelete = false
-				this.sessionIdToDelete = null
+				this.loading.sessionsDelete = false
+				this.sessionIdsToDelete = null
 			}
 		},
 
@@ -1316,6 +1438,31 @@ export default {
 		font-weight: bold;
 		padding: 1em;
 		height: 100%;
+	}
+
+	.deletion-mode-button {
+		width: 100%;
+	}
+
+	.deletion-mode-bar {
+		display: flex;
+		flex-direction: column;
+		gap: var(--default-grid-baseline);
+		padding: 0;
+
+		&__first-line {
+			display: flex;
+			align-items: center;
+			gap: var(--default-grid-baseline);
+
+			:deep(button) {
+				flex: 1 1 0;
+			}
+		}
+
+		&__delete {
+			width: 100%;
+		}
 	}
 
 	:deep(.app-navigation) {

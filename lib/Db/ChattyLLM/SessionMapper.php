@@ -219,6 +219,37 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * @param string $userId
+	 * @param list<int> $sessionIds
+	 * @return list<Session>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getUserSessionsByIds(string $userId, array $sessionIds): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->in('id', $qb->createPositionalParameter($sessionIds, IQueryBuilder::PARAM_INT_ARRAY)));
+
+		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @param string $userId
+	 * @param list<int> $sessionIds
+	 * @throws \OCP\DB\Exception
+	 * @throws \RuntimeException
+	 */
+	public function deleteSessionsByUser(string $userId, array $sessionIds) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->in('id', $qb->createPositionalParameter($sessionIds, IQueryBuilder::PARAM_INT_ARRAY)));
+
+		$qb->executeStatement();
+	}
+
+	/**
 	 * @throws \OCP\DB\Exception
 	 */
 	public function deleteAllSessionsForUser(string $userId): void {

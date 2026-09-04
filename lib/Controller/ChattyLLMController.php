@@ -307,6 +307,36 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
+	 * Delete chat sessions
+	 *
+	 * Delete several chat sessions by ID
+	 *
+	 * @param list<int> $sessionIds The session IDs
+	 * @return JSONResponse<Http::STATUS_OK, list{}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 *
+	 * 200: The sessions have been deleted successfully
+	 * 400: The list of session IDs is empty or invalid
+	 * 401: Not logged in
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function deleteSessions(array $sessionIds): JSONResponse {
+		if ($sessionIds === []) {
+			return new JSONResponse(['error' => $this->l10n->t('Invalid session IDs')], Http::STATUS_BAD_REQUEST);
+		}
+		try {
+			// we don't delete the tasks
+			$this->chatService->deleteSessions($this->userId, $sessionIds);
+			return new JSONResponse();
+		} catch (InternalException $e) {
+			$this->logger->warning('Failed to delete the chat sessions', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to delete the chat sessions')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (\OCA\Assistant\Service\UnauthorizedException $e) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+	}
+
+	/**
 	 * Get chat sessions
 	 *
 	 * Get all chat sessions for the current user

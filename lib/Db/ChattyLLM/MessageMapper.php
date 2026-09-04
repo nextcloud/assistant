@@ -178,6 +178,20 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param list<int> $sessionIds
+	 * @throws \OCP\DB\Exception
+	 * @throws \RuntimeException
+	 * @return void
+	 */
+	public function deleteMessagesBySessions(array $sessionIds): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->in('session_id', $qb->createPositionalParameter($sessionIds, IQueryBuilder::PARAM_INT_ARRAY)));
+
+		$qb->executeStatement();
+	}
+
+	/**
 	 * @param int $sessionId
 	 * @param integer $messageId
 	 * @return void
