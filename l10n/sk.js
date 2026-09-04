@@ -18,6 +18,8 @@ OC.L10N.register(
     "Copy file" : "Kopírovať súbor",
     "Delete file" : "Zmazať súbor",
     "Create bookmark" : "Vytvoriť záložku",
+    "Create team" : "Vytvoriť tím",
+    "Delete team" : "Odstrániť tím",
     "Create form" : "Vytvorte formulár",
     "Delete form" : "Odstrániť formulár",
     "Share with group" : "Zdieľať so skupinou",
