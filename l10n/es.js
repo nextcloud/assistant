@@ -16,6 +16,8 @@ OC.L10N.register(
     "Copy file" : "Copiar archivo",
     "Delete file" : "Eliminar archivo",
     "Create bookmark" : "Crear marcador",
+    "Create team" : "Crear equipo",
+    "Delete team" : "Eliminar equipo",
     "Create form" : "Crear formulario",
     "Delete form" : "Eliminar formulario",
     "Share with group" : "Compartir con grupo",
