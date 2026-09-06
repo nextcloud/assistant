@@ -21,6 +21,7 @@ OC.L10N.register(
     "Other" : "Annað",
     "Translate" : "Þýða",
     "Assistant" : "Meðhjálpari",
+    "Memories" : "Minningar",
     "System prompt" : "Kerfiskvaðning",
     "Chat history" : "Spjallferill",
     "Input files" : "Inntaksskrár",
