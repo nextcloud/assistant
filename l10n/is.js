@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Unknown user" : "Óþekktur notandi",
     "Send an email" : "Senda tölvupóst",
+    "Create folder" : "Búa til möppu",
     "Move file" : "Færa skrá",
     "Copy file" : "Afrita skrá",
     "Delete file" : "Eyða skrá",
@@ -41,6 +42,7 @@ OC.L10N.register(
     "More" : "Meira",
     "Cancel" : "Hætta við",
     "You" : "Þú",
+    "Are you sure you want to delete \"{sessionTitle}\"?" : "Ertu viss um að þú viljir eyða \"{sessionTitle}\"?",
     "No conversations yet" : "Engin samtöl ennþá",
     "Delete" : "Eyða",
     "Edit title" : "Breyta titli",
@@ -81,6 +83,7 @@ OC.L10N.register(
     "_on {weekday}_::_on {weekdays}_" : ["á {weekday}","á {weekdays}"],
     "_on day {dayOfMonthList}_::_on days {dayOfMonthList}_" : ["daginn {dayOfMonthList}","dagana {dayOfMonthList}"],
     "on the {ordinalNumber} {byDaySet}" : "þann {ordinalNumber} {byDaySet}",
+    "in {monthNames} on the {dayOfMonthList}" : "í {monthNames} þann {dayOfMonthList}",
     "in {monthNames} on the {ordinalNumber} {byDaySet}" : "í {monthNames} þann {ordinalNumber} {byDaySet}",
     "until {untilDate}" : "þangað til {untilDate}",
     "_%n time_::_%n times_" : ["%n sinni","%n sinnum"],
