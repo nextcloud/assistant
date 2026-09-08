@@ -64,7 +64,7 @@
 					:title="getSessionTitle(session)"
 					:aria-description="getSessionTitle(session)"
 					:editable="false"
-					:inline-actions="deletionMode ? 0 : 1"
+					:inline-actions="1"
 					@click="deletionMode ? toggleSessionSelection(session.id) : onSessionSelect(session)">
 					<template #actions>
 						<NcActionButton @click="openDeletionDialog([session.id])">
@@ -73,13 +73,6 @@
 								<NcLoadingIcon v-else :size="20" />
 							</template>
 							{{ t('assistant', 'Delete') }}
-						</NcActionButton>
-						<NcActionButton v-if="!isAssignment && !deletionMode"
-							@click="enterDeletionMode(session.id)">
-							<template #icon>
-								<DeleteSweepOutlineIcon :size="20" />
-							</template>
-							{{ t('assistant', 'Delete multiple conversations') }}
 						</NcActionButton>
 					</template>
 				</NcAppNavigationItem>
@@ -858,8 +851,8 @@ export default {
 			}
 		},
 
-		enterDeletionMode(preselectSessionId = null) {
-			this.selectedSessionIds = preselectSessionId !== null ? [preselectSessionId] : []
+		enterDeletionMode() {
+			this.selectedSessionIds = []
 			this.deletionMode = true
 		},
 
