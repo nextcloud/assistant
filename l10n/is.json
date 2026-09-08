@@ -74,6 +74,7 @@
     "Weekly" : "Vikulega",
     "Monthly" : "Mánaðarlega",
     "Yearly" : "Árlega",
+    "_Every %n hour_::_Every %n hours_" : ["Á %n klukkustundar fresti","Á %n klukkustunda fresti"],
     "_Every %n day_::_Every %n days_" : ["Á %n dags fresti","Á %n daga fresti"],
     "_Every %n week_::_Every %n weeks_" : ["Á %n viku fresti","Á %n vikna fresti"],
     "_Every %n month_::_Every %n months_" : ["Á %n mánaðar fresti","Á %n mánaða fresti"],
