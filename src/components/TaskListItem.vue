@@ -181,6 +181,13 @@ export default {
 					const nbGeneratedImages = this.task.output?.length ?? 0
 					return n('assistant', '{n} image generated', '{n} images generated', nbGeneratedImages, { n: nbGeneratedImages })
 				}
+				if (this.task.type === 'context_chat:context_chat_multi') {
+					const questions = this.task.input.questions ?? []
+					const extraCount = questions.length - 1
+					return extraCount > 0
+						? n('assistant', '+{extraCount} more question', '+{extraCount} more questions', extraCount, { extraCount })
+						: ''
+				}
 				return this.textOutputPreview
 			} else if (this.task.status === TASK_STATUS_STRING.scheduled) {
 				if (this.isText2Image) {
@@ -203,6 +210,10 @@ export default {
 			return statusTitles[this.task.status] ?? t('assistant', 'Unknown status')
 		},
 		textInputPreview() {
+			if (this.task.type === 'context_chat:context_chat_multi') {
+				const questions = this.task.input.questions ?? []
+				return questions.length > 0 ? questions[0] : ''
+			}
 			const textInputs = []
 			Object.keys(this.taskType.inputShape).forEach(key => {
 				const field = this.taskType.inputShape[key]
