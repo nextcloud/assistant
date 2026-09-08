@@ -18,6 +18,8 @@ OC.L10N.register(
     "Copy file" : "Salin berkas",
     "Delete file" : "Hapus file",
     "Create bookmark" : "Buat penanda",
+    "Create team" : "Buat tim",
+    "Delete team" : "Hapus tim",
     "Share with group" : "Bagikan dengan grup",
     "Delete share" : "Hapus pembagian",
     "Failed to create a chat session" : "Gagal membuat sesi chat",
