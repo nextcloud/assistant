@@ -33,6 +33,7 @@ class TaskProcessingService {
 		private IRootFolder $rootFolder,
 		private LoggerInterface $logger,
 		private AssistantService $assistantService,
+		private AttachmentService $attachmentService,
 	) {
 	}
 
@@ -88,6 +89,15 @@ class TaskProcessingService {
 		return $file->getContent();
 	}
 
+	/**
+	 * Task types that take the input file itself rather than its text content.
+	 */
+	private function isAudioInputTaskType(string $taskTypeId): bool {
+		return $taskTypeId === AudioToText::ID
+			|| (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles')
+				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID);
+	}
+
 	public function isFileActionTaskTypeSupported(string $taskTypeId): bool {
 		$authorizedTaskTypes = [AudioToText::ID, TextToTextSummary::ID];
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\TextToSpeech')) {
@@ -114,9 +124,7 @@ class TaskProcessingService {
 			throw new Exception('Invalid task type for file action');
 		}
 		try {
-			$input = ($taskTypeId === AudioToText::ID) || (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToTextSubtitles') && $taskTypeId === \OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles::ID)
-				? ['input' => $fileId]
-				: ['input' => $this->assistantService->parseTextFromFile($userId, fileId: $fileId)];
+			$input = $this->buildFileActionInput($userId, $fileId, $taskTypeId);
 		} catch (NotPermittedException|GenericFileException|LockedException|\OCP\Files\NotFoundException|Exception $e) {
 			$this->logger->warning('Assistant runFileAction, impossible to read the file action input file', ['exception' => $e]);
 			throw new Exception('Impossible to read the file action input file');
@@ -139,5 +147,39 @@ class TaskProcessingService {
 			throw new Exception('The task could not be scheduled');
 		}
 		return $taskId;
+	}
+
+	/**
+	 * Build the task input for a file action.
+	 *
+	 * Audio task types consume the file directly. For the others we normally
+	 * extract the text ourselves, but when the provider can take files and the
+	 * file is one our parsers handle badly, we hand it over untouched instead.
+	 *
+	 * The mandatory text input stays empty in that case: the provider builds
+	 * its own instructions around the attachment, and anything we put there
+	 * would be untranslated and fight that prompt.
+	 *
+	 * @return array<string, mixed>
+	 * @throws GenericFileException
+	 * @throws LockedException
+	 * @throws NotPermittedException
+	 * @throws \OCP\Files\NotFoundException
+	 */
+	private function buildFileActionInput(string $userId, int $fileId, string $taskTypeId): array {
+		if ($this->isAudioInputTaskType($taskTypeId)) {
+			return ['input' => $fileId];
+		}
+
+		$file = $this->rootFolder->getUserFolder($userId)->getFirstNodeById($fileId);
+		if ($file instanceof File && $this->attachmentService->shouldAttachFile($file, $taskTypeId)) {
+			$this->logger->debug('Assistant file action: sending the file to the provider as an attachment', [
+				'fileId' => $fileId,
+				'taskTypeId' => $taskTypeId,
+			]);
+			return ['input' => '', 'input_attachments' => [$fileId]];
+		}
+
+		return ['input' => $this->assistantService->parseTextFromFile($userId, fileId: $fileId)];
 	}
 }
