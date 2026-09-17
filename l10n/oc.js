@@ -15,6 +15,7 @@ OC.L10N.register(
     "Cancel editing" : "Anullar la modificacion",
     "Submit" : "Transmetre",
     "Choose" : "Causir",
+    "Copy message" : "Copiar lo messatge",
     "Folder name" : "Nom del dorsièr",
     "Cancelled" : "Anullat",
     "Failed" : "Fracàs",
