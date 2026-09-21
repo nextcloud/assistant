@@ -8,6 +8,8 @@ OC.L10N.register(
     "Copy file" : "Fájl másolás",
     "Delete file" : "Fájl törlése",
     "Create bookmark" : "Könyvjelző létrehozása",
+    "Create team" : "Csapat létrehozása",
+    "Delete team" : "Csapat törlése",
     "Create form" : "Űrlap létrehozása",
     "Delete form" : "Űrlap törlése",
     "Delete share" : "Megosztás törlése",
