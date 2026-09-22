@@ -436,6 +436,40 @@ class AgentSkillsServiceTest extends TestCase {
 		$this->assertStringContainsString('- item two', $content);
 	}
 
+	public function testLoadSkillReturnsOnlyKnownFrontmatterKeys(): void {
+		$raw = "---\nname: my-skill\ndescription: Does something\nmaturityLevel: 3\nstate: active\n"
+			. "levelEvidence:\n  - eval-run-221\n---\n\n## Instructions here";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$content = $this->service->loadSkill(self::TEST_USER, 'my-skill');
+
+		// the dumper quotes multi-word values, so assert the value and not its quoting
+		$this->assertStringContainsString('name: my-skill', $content);
+		$this->assertStringContainsString('Does something', $content);
+		$this->assertStringContainsString('## Instructions here', $content);
+		$this->assertStringNotContainsString('maturityLevel', $content);
+		$this->assertStringNotContainsString('state: active', $content);
+		$this->assertStringNotContainsString('eval-run-221', $content);
+	}
+
+	public function testLoadSkillKeepsTheBodyByteForByte(): void {
+		$body = "## Step 1\n\nDo the first thing.\n\n---\n\nA rule line in the body.\n";
+		$raw = "---\nname: my-skill\ndescription: Does something\nextra: dropped\n---\n\n" . $body;
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$content = $this->service->loadSkill(self::TEST_USER, 'my-skill');
+
+		$this->assertStringEndsWith("\n\n" . $body, $content);
+		$this->assertStringNotContainsString('extra: dropped', $content);
+	}
+
+	public function testLoadSkillReturnsUnparsableDocumentUnchanged(): void {
+		$raw = "no frontmatter at all\n\n## Body";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$this->assertSame($raw, $this->service->loadSkill(self::TEST_USER, 'my-skill'));
+	}
+
 	public function testLoadSkillThrowsForMissingSkill(): void {
 		$this->expectException(\OCP\Files\NotFoundException::class);
 		$this->service->loadSkill(self::TEST_USER, 'non-existent-skill');

@@ -300,7 +300,51 @@ class AgentSkillsService {
 		if (!$skillFile instanceof File) {
 			throw new NotFoundException('Skill file for "' . $skillName . '" not found');
 		}
-		return $skillFile->getContent();
+		return $this->projectSkillDocument($skillFile);
+	}
+
+	/**
+	 * Return a skill document carrying only the frontmatter keys the agent needs.
+	 *
+	 * The caller of loadSkill feeds the result to a language model, so every extra
+	 * key costs tokens the model cannot spend. listSkills already answers with the
+	 * metadata fields alone. This keeps the two ends of the API saying the same thing.
+	 *
+	 * A document we cannot parse is returned as it is, so a malformed skill still loads.
+	 */
+	private function projectSkillDocument(File $skillFile): string {
+		$content = $skillFile->getContent();
+
+		try {
+			[$frontmatter, $body] = $this->splitSkillDocument($content, $skillFile->getPath());
+			$parsed = Yaml::parse($frontmatter);
+		} catch (RuntimeException|ParseException $e) {
+			$this->logger->debug(
+				'Skill frontmatter could not be read, returning the document unchanged: ' . $skillFile->getPath(),
+				['exception' => $e]
+			);
+			return $content;
+		}
+
+		if (!is_array($parsed)) {
+			return $content;
+		}
+
+		$known = [];
+		foreach (self::FRONTMATTER_METADATA_FIELDS as $field) {
+			if (isset($parsed[$field])) {
+				$known[$field] = $parsed[$field];
+			}
+		}
+
+		if ($known === []) {
+			return $content;
+		}
+
+		return self::FRONTMATTER_DELIMITER . "\n"
+			. Yaml::dump($known)
+			. self::FRONTMATTER_DELIMITER . "\n"
+			. $body;
 	}
 
 	/**
