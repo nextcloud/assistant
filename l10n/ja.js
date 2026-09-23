@@ -41,6 +41,7 @@ OC.L10N.register(
     "AI text generation" : "AIテキスト生成",
     "AI image generation" : "AIによる画像生成",
     "AI audio transcription" : "音声文字起こしAI ",
+    "AI subtitles generation" : "AI字幕生成",
     "AI context writer" : "文章作成AI",
     "Writing style: %1$s; Source material: %2$s" : "例文体: %1$s;  元ドキュメント: %2$s",
     "Context Chat" : "コンテキストチャット",
