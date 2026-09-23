@@ -399,7 +399,8 @@ class AssistantApiController extends OCSController {
 	public function getOutputFile(int $ocpTaskId, int $fileId): DataDownloadResponse|DataResponse {
 		try {
 			$taskOutputFile = $this->assistantService->getTaskOutputFile($this->userId, $ocpTaskId, $fileId);
-			$realMime = mime_content_type($taskOutputFile->fopen('rb'));
+			$head = fread($taskOutputFile->fopen('rb'), 4096);
+			$realMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
 			$response = new DataDownloadResponse(
 				$taskOutputFile->getContent(),
 				$ocpTaskId . '-' . $fileId,
