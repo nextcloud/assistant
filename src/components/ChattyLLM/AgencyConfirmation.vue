@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcNoteCard :type="radiusInfo.destructive ? 'warning' : 'info'"
+	<NcNoteCard :type="destructive.destructive ? 'warning' : 'info'"
 		class="agency-confirmation">
 		<div class="notecard-content">
 			<span>
@@ -12,7 +12,7 @@
 			<AgencyActions :actions="actions" />
 			<div class="footer">
 				<NcButton variant="tertiary"
-					:title="radiusInfo.description"
+					:title="radiusInfo.description + (destructive.destructive ? '\n' : '') + destructive.description"
 					:text="radiusInfo.label"
 					class="help radius">
 					<template #icon>
@@ -61,7 +61,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 
 const radii = {
 	self: {
-		destructive: false,
 		icon: AccountOutlineIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects only oneself
 		label: t('assistant', 'Self'),
@@ -69,7 +68,6 @@ const radii = {
 		description: t('assistant', 'These actions only affect you.'),
 	},
 	individuals: {
-		destructive: false,
 		icon: AccountMultipleOutlineIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects specific individuals
 		label: t('assistant', 'Individuals'),
@@ -77,7 +75,6 @@ const radii = {
 		description: t('assistant', 'These actions affect specific other people.'),
 	},
 	group: {
-		destructive: false,
 		icon: AccountGroupOutlineIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects groups of users
 		label: t('assistant', 'Group'),
@@ -85,47 +82,11 @@ const radii = {
 		description: t('assistant', 'These actions affect a group or team of people.'),
 	},
 	external: {
-		destructive: false,
 		icon: EarthIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
 		label: t('assistant', 'External'),
 		// TRANSLATORS Description for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
 		description: t('assistant', 'These actions affect people or services outside of this Nextcloud instance.'),
-	},
-}
-
-const destructiveRadii = {
-	self: {
-		destructive: true,
-		icon: AccountOutlineIcon,
-		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects only oneself
-		label: t('assistant', 'Self'),
-		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, affects only oneself
-		description: t('assistant', 'These actions delete content that only affect you.'),
-	},
-	individuals: {
-		destructive: true,
-		icon: AccountMultipleOutlineIcon,
-		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects specific individuals
-		label: t('assistant', 'Individuals'),
-		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, affects specific individuals
-		description: t('assistant', 'These actions delete content that affect specific other people.'),
-	},
-	group: {
-		destructive: true,
-		icon: AccountGroupOutlineIcon,
-		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects groups of users
-		label: t('assistant', 'Group'),
-		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, affects groups of users
-		description: t('assistant', 'These actions delete content that affect a group or team of people.'),
-	},
-	external: {
-		destructive: true,
-		icon: EarthIcon,
-		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
-		label: t('assistant', 'External'),
-		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
-		description: t('assistant', 'These actions delete content that affect people or services outside of this Nextcloud instance.'),
 	},
 }
 
@@ -166,15 +127,31 @@ export default {
 	},
 
 	computed: {
+		destructive() {
+			// determine if any of the pending actions are destructive
+			// for actions whose destructive state is undefined or unknown, assume they are destructive
+			for (const action in this.actions) {
+				if (typeof action.destructive !== 'number' || !!action.destructive) {
+					return {
+						destructive: true,
+						// TRANSLATORS Additional description for destructive AI agent actions
+						description: t('assistant', 'Some content may be lost.'),
+					}
+				}
+			}
+			return {
+				destructive: false,
+				description: '',
+			}
+		},
 		radiusInfo() {
 			// show the largest radius among all actions
-			// for actions with an undefined or unknown radius, assume they are external and destructive
-			const destructive = this.actions.reduce((isDestructive, action) => isDestructive || typeof action.destructive === 'undefined' || !!action.destructive, false)
+			// for actions with an undefined or unknown radius, assume they are external
 			const largest = this.actions.reduce((max, action) => {
 				const index = radiusOrder.indexOf(action?.impulse_radius)
 				return Math.max(max, index === -1 ? radiusOrder.length - 1 : index)
 			}, 0)
-			return destructive ? destructiveRadii[radiusOrder[largest]] : radii[radiusOrder[largest]]
+			return radii[radiusOrder[largest]]
 		},
 	},
 }
