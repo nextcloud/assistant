@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcNoteCard type="info"
+	<NcNoteCard :type="radiusInfo.destructive ? 'warning' : 'info'"
 		class="agency-confirmation">
 		<div class="notecard-content">
 			<span>
@@ -61,6 +61,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 
 const radii = {
 	self: {
+		destructive: false,
 		icon: AccountOutlineIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects only oneself
 		label: t('assistant', 'Self'),
@@ -68,6 +69,7 @@ const radii = {
 		description: t('assistant', 'These actions only affect you.'),
 	},
 	individuals: {
+		destructive: false,
 		icon: AccountMultipleOutlineIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects specific individuals
 		label: t('assistant', 'Individuals'),
@@ -75,6 +77,7 @@ const radii = {
 		description: t('assistant', 'These actions affect specific other people.'),
 	},
 	group: {
+		destructive: false,
 		icon: AccountGroupOutlineIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects groups of users
 		label: t('assistant', 'Group'),
@@ -82,11 +85,47 @@ const radii = {
 		description: t('assistant', 'These actions affect a group or team of people.'),
 	},
 	external: {
+		destructive: false,
 		icon: EarthIcon,
 		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
 		label: t('assistant', 'External'),
 		// TRANSLATORS Description for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
 		description: t('assistant', 'These actions affect people or services outside of this Nextcloud instance.'),
+	},
+}
+
+const destructiveRadii = {
+	self: {
+		destructive: true,
+		icon: AccountOutlineIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects only oneself
+		label: t('assistant', 'Self'),
+		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, affects only oneself
+		description: t('assistant', 'These actions delete content that only affect you.'),
+	},
+	individuals: {
+		destructive: true,
+		icon: AccountMultipleOutlineIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects specific individuals
+		label: t('assistant', 'Individuals'),
+		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, affects specific individuals
+		description: t('assistant', 'These actions delete content that affect specific other people.'),
+	},
+	group: {
+		destructive: true,
+		icon: AccountGroupOutlineIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects groups of users
+		label: t('assistant', 'Group'),
+		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, affects groups of users
+		description: t('assistant', 'These actions delete content that affect a group or team of people.'),
+	},
+	external: {
+		destructive: true,
+		icon: EarthIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
+		label: t('assistant', 'External'),
+		// TRANSLATORS Description for destructive AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
+		description: t('assistant', 'These actions delete content that affect people or services outside of this Nextcloud instance.'),
 	},
 }
 
@@ -129,12 +168,13 @@ export default {
 	computed: {
 		radiusInfo() {
 			// show the largest radius among all actions
-			// for actions with an undefined or unknown radius, assume they are EXTERNAL
+			// for actions with an undefined or unknown radius, assume they are external and destructive
+			const destructive = this.actions.reduce((isDestructive, action) => isDestructive || typeof action.destructive === 'undefined' || !!action.destructive, false)
 			const largest = this.actions.reduce((max, action) => {
-				const index = radiusOrder.indexOf(action?.radius)
+				const index = radiusOrder.indexOf(action?.impulse_radius)
 				return Math.max(max, index === -1 ? radiusOrder.length - 1 : index)
 			}, 0)
-			return radii[radiusOrder[largest]]
+			return destructive ? destructiveRadii[radiusOrder[largest]] : radii[radiusOrder[largest]]
 		},
 	},
 }
