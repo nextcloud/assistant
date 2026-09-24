@@ -62,22 +62,30 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 const radii = {
 	self: {
 		icon: AccountOutlineIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects only oneself
 		label: t('assistant', 'Self'),
+		// TRANSLATORS Description for AI agent actions whose "impulse radius", or action scope, affects only oneself
 		description: t('assistant', 'These actions only affect you.'),
 	},
 	individuals: {
 		icon: AccountMultipleOutlineIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects specific individuals
 		label: t('assistant', 'Individuals'),
+		// TRANSLATORS Description for AI agent actions whose "impulse radius", or action scope, affects specific individuals
 		description: t('assistant', 'These actions affect specific other people.'),
 	},
 	group: {
 		icon: AccountGroupOutlineIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, affects groups of users
 		label: t('assistant', 'Group'),
+		// TRANSLATORS Description for AI agent actions whose "impulse radius", or action scope, affects groups of users
 		description: t('assistant', 'These actions affect a group or team of people.'),
 	},
 	external: {
 		icon: EarthIcon,
+		// TRANSLATORS Label for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
 		label: t('assistant', 'External'),
+		// TRANSLATORS Description for AI agent actions whose "impulse radius", or action scope, extends beyond Nextcloud
 		description: t('assistant', 'These actions affect people or services outside of this Nextcloud instance.'),
 	},
 }
