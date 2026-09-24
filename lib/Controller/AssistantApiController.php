@@ -401,9 +401,16 @@ class AssistantApiController extends OCSController {
 			$taskOutputFile = $this->assistantService->getTaskOutputFile($this->userId, $ocpTaskId, $fileId);
 			$head = fread($taskOutputFile->fopen('rb'), 4096);
 			$realMime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
+
+			$fileName = $ocpTaskId . '-' . $fileId;
+			$extension = pathinfo($taskOutputFile->getName(), PATHINFO_EXTENSION);
+			if ($extension !== '') {
+				$fileName .= '.' . $extension;
+			}
+
 			$response = new DataDownloadResponse(
 				$taskOutputFile->getContent(),
-				$ocpTaskId . '-' . $fileId,
+				$fileName,
 				$realMime ?: 'application/octet-stream',
 			);
 			$response->cacheFor(60 * 60 * 24, false, true);
