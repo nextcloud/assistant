@@ -321,7 +321,7 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param int $ocpTaskId The task ID
 	 * @param int $fileId The file ID
-	 * @return DataResponse<Http::STATUS_OK, array{shareToken: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{fileId: int, path: string, mime: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>
 	 *
 	 * 200: The file was saved
 	 * 404: The file was not found

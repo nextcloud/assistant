@@ -2189,10 +2189,19 @@
                                                 "data": {
                                                     "type": "object",
                                                     "required": [
-                                                        "shareToken"
+                                                        "fileId",
+                                                        "path",
+                                                        "mime"
                                                     ],
                                                     "properties": {
-                                                        "shareToken": {
+                                                        "fileId": {
+                                                            "type": "integer",
+                                                            "format": "int64"
+                                                        },
+                                                        "path": {
+                                                            "type": "string"
+                                                        },
+                                                        "mime": {
                                                             "type": "string"
                                                         }
                                                     }
