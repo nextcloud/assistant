@@ -99,7 +99,8 @@
                     "timestamp",
                     "attachments",
                     "ocp_task_id",
-                    "sources"
+                    "sources",
+                    "reasoning"
                 ],
                 "properties": {
                     "id": {
@@ -145,6 +146,10 @@
                     },
                     "sources": {
                         "type": "string"
+                    },
+                    "reasoning": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
