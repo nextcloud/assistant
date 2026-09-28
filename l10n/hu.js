@@ -102,6 +102,7 @@ OC.L10N.register(
     "Failed" : "Sikertelen",
     "Running" : "Futás",
     "Scheduled" : "Ütemezve",
+    "Unknown status" : "Ismeretlen állapot",
     "Audio input" : "Hangbemenet",
     "Audio output" : "Hangkimenet",
     "Error while recording audio" : "Hiba a hang felvétele során",
