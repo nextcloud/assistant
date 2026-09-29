@@ -12,6 +12,10 @@
 			class="output-fields"
 			:output-shape="selectedTaskType.outputShape"
 			:output="outputs" />
+		<ContextChatMultiOutputForm v-else-if="selectedTaskTypeId === 'context_chat:context_chat_multi'"
+			class="output-fields"
+			:output-shape="selectedTaskType.outputShape"
+			:output="outputs" />
 		<TaskTypeFields v-else
 			class="output-fields"
 			:is-output="true"
@@ -44,6 +48,7 @@ import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import ContextChatOutputForm from './ContextChat/ContextChatOutputForm.vue'
 import ContextChatSearchOutputForm from './ContextChat/ContextChatSearchOutputForm.vue'
 import TaskTypeFields from './fields/TaskTypeFields.vue'
+import ContextChatMultiOutputForm from './ContextChat/ContextChatMultiOutputForm.vue'
 
 export default {
 	name: 'AssistantFormOutputs',
@@ -53,6 +58,7 @@ export default {
 		ContextChatSearchOutputForm,
 		TaskTypeFields,
 		NcNoteCard,
+		ContextChatMultiOutputForm,
 	},
 
 	props: {
