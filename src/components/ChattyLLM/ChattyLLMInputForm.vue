@@ -487,6 +487,7 @@ export default {
 	},
 
 	beforeUnmount() {
+		this.streamingMessage = null
 		this.pollMessageGenerationCancel?.()
 		cancelTaskPositionPolling()
 		if (this.pollMessageGenerationTimerId) {
@@ -633,7 +634,9 @@ export default {
 
 			this.$nextTick(() => {
 				const chatAreaElem = this.$refs.chatArea
-				chatAreaElem.scrollTop = chatAreaElem.scrollHeight
+				if (chatAreaElem) {
+					chatAreaElem.scrollTop = chatAreaElem.scrollHeight
+				}
 			})
 		},
 
