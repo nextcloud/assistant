@@ -709,6 +709,9 @@ class ChatService {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['conversation_id'])) {
+			$input['conversation_id'] = (string)$sessionId;
+		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
 		$task->setPreferStreaming(true);
@@ -751,6 +754,10 @@ class ChatService {
 			'tools' => '[]', // Empty tools as there is not a non tools version
 			'tool_message' => '',
 		];
+		/** @psalm-suppress UndefinedClass */
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID]['optionalInputShape']['conversation_id'])) {
+			$input['conversation_id'] = (string)$sessionId;
+		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
@@ -891,6 +898,10 @@ class ChatService {
 		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]['optionalInputShape']['memories'])) {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
+		}
+		/** @psalm-suppress UndefinedClass */
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]['optionalInputShape']['conversation_id'])) {
+			$input['conversation_id'] = (string)$sessionId;
 		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
