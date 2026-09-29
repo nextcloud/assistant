@@ -749,6 +749,7 @@ class AssistantService {
 		return [
 			'fileId' => $fileCopy->getId(),
 			'path' => preg_replace('/^files\//', '/', $fileCopy->getInternalPath()),
+			'mime' => $fileCopy->getMimeType(),
 		];
 	}
 

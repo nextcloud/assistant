@@ -72,6 +72,7 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *     attachments: list<array{type: string, fileId: int}>,
  *     ocp_task_id: int,
  *     sources: string,
+ *     reasoning: ?string,
  * }
  *
  * @psalm-type AssistantChatAgencyMessage = AssistantChatMessage&array{

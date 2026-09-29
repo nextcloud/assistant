@@ -118,9 +118,12 @@ import ChooseInputFileButton from './ChooseInputFileButton.vue'
 
 import { SHAPE_TYPE_NAMES, VALID_AUDIO_MIME_TYPES, VALID_IMAGE_MIME_TYPES, VALID_VIDEO_MIME_TYPES } from '../../constants.js'
 
-import { generateOcsUrl, generateUrl } from '@nextcloud/router'
+import { generateOcsUrl, generateUrl, generateRemoteUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
+import { getCurrentUser } from '@nextcloud/auth'
+import { File } from '@nextcloud/files'
+import { getViewer, registerDefaultHandlers } from '@nextcloud/viewer'
 import { uploadInputFile } from '../../utils.js'
 
 export default {
@@ -312,7 +315,16 @@ export default {
 			return axios.post(url).then(response => {
 				const savedPath = response.data.ocs.data.path
 				console.debug('[assistant] view output file', savedPath)
-				OCA.Viewer.open({ path: savedPath })
+				const user = getCurrentUser()
+				const node = new File({
+					source: generateRemoteUrl('dav') + `/files/${user.uid}${savedPath}`,
+					id: response.data.ocs.data.fileId,
+					root: `/files/${user.uid}`,
+					owner: user.uid,
+					mime: response.data.ocs.data.mime,
+				})
+				registerDefaultHandlers()
+				getViewer().open([node], node)
 			}).catch(error => {
 				console.error(error)
 			})
