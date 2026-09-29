@@ -38,6 +38,7 @@ OC.L10N.register(
     "Cancel" : "Peruuta",
     "You" : "Sinä",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Haluatko varmasti poistaa \"{sessionTitle}\"?",
+    "New conversation" : "Uusi keskustelu",
     "No conversations yet" : "Ei keskusteluja vielä",
     "Delete" : "Poista",
     "Edit title" : "Muokkaa otsikkoa",
