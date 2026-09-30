@@ -165,6 +165,17 @@ class AgentSkillsServiceTest extends TestCase {
 		return $node->newFile('SKILL.md', $rawContent);
 	}
 
+	/**
+	 * Read a SKILL.md straight off disk, so a test can see what was stored rather
+	 * than what the API chooses to return.
+	 */
+	private function readRawSkillFile(string $uid, string $skillName): string {
+		$userFolder = $this->rootFolder->getUserFolder($uid);
+		/** @var File $file */
+		$file = $userFolder->get($this->getSkillsPath($uid) . '/' . $skillName . '/SKILL.md');
+		return $file->getContent();
+	}
+
 	// -------------------------------------------------------------------------
 	// extractFrontmatter – real File node
 	// -------------------------------------------------------------------------
@@ -286,6 +297,60 @@ class AgentSkillsServiceTest extends TestCase {
 		$this->assertSame('overwritten', $result);
 	}
 
+	public function testStoreSkillPreservesUnknownFrontmatterKeys(): void {
+		$raw = "---\nname: my-skill\ndescription: First\nmaturityLevel: 3\nstate: active\n"
+			. "levelEvidence:\n  - eval-run-221\n---\n\nFirst body";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$this->service->storeSkill(self::TEST_USER, 'my-skill', 'Second', 'Second body');
+
+		$stored = $this->readRawSkillFile(self::TEST_USER, 'my-skill');
+
+		$this->assertStringContainsString('name: my-skill', $stored);
+		$this->assertStringContainsString('description: Second', $stored);
+		$this->assertStringContainsString('maturityLevel: 3', $stored);
+		$this->assertStringContainsString('state: active', $stored);
+		$this->assertStringContainsString('eval-run-221', $stored);
+		$this->assertStringContainsString('Second body', $stored);
+		$this->assertStringNotContainsString('First body', $stored);
+	}
+
+	public function testStoreSkillPreservesNumericFrontmatterKeys(): void {
+		// YAML mapping keys can be integers, and array_merge would renumber them
+		$raw = "---\nname: my-skill\ndescription: First\n2024: kept\n---\n\nBody";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$this->service->storeSkill(self::TEST_USER, 'my-skill', 'Second', 'Body');
+
+		$stored = $this->readRawSkillFile(self::TEST_USER, 'my-skill');
+
+		$this->assertStringContainsString('2024: kept', $stored);
+		$this->assertStringNotContainsString('0: kept', $stored);
+	}
+
+	public function testStoreSkillKeepsNameAndDescriptionFirst(): void {
+		$raw = "---\nname: my-skill\ndescription: First\nzzzLast: kept\n---\n\nBody";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$this->service->storeSkill(self::TEST_USER, 'my-skill', 'Second', 'Body');
+
+		$stored = $this->readRawSkillFile(self::TEST_USER, 'my-skill');
+
+		$this->assertStringStartsWith("---\nname: my-skill\ndescription: Second\n", $stored);
+	}
+
+	public function testStoreSkillOverwritesUnparsableFrontmatter(): void {
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', "no frontmatter at all\n");
+
+		$result = $this->service->storeSkill(self::TEST_USER, 'my-skill', 'Rebuilt', 'Fresh body');
+
+		$stored = $this->readRawSkillFile(self::TEST_USER, 'my-skill');
+
+		$this->assertSame('overwritten', $result);
+		$this->assertStringStartsWith("---\nname: my-skill\ndescription: Rebuilt\n---\n", $stored);
+		$this->assertStringContainsString('Fresh body', $stored);
+	}
+
 	public function testStoreSkillRejectsEmptyName(): void {
 		$this->expectException(\InvalidArgumentException::class);
 		$this->service->storeSkill(self::TEST_USER, '', 'desc', 'body');
@@ -369,6 +434,40 @@ class AgentSkillsServiceTest extends TestCase {
 		$this->assertStringContainsString('## Step 2', $content);
 		$this->assertStringContainsString('- item one', $content);
 		$this->assertStringContainsString('- item two', $content);
+	}
+
+	public function testLoadSkillReturnsOnlyKnownFrontmatterKeys(): void {
+		$raw = "---\nname: my-skill\ndescription: Does something\nmaturityLevel: 3\nstate: active\n"
+			. "levelEvidence:\n  - eval-run-221\n---\n\n## Instructions here";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$content = $this->service->loadSkill(self::TEST_USER, 'my-skill');
+
+		// the dumper quotes multi-word values, so assert the value and not its quoting
+		$this->assertStringContainsString('name: my-skill', $content);
+		$this->assertStringContainsString('Does something', $content);
+		$this->assertStringContainsString('## Instructions here', $content);
+		$this->assertStringNotContainsString('maturityLevel', $content);
+		$this->assertStringNotContainsString('state: active', $content);
+		$this->assertStringNotContainsString('eval-run-221', $content);
+	}
+
+	public function testLoadSkillKeepsTheBodyByteForByte(): void {
+		$body = "## Step 1\n\nDo the first thing.\n\n---\n\nA rule line in the body.\n";
+		$raw = "---\nname: my-skill\ndescription: Does something\nextra: dropped\n---\n\n" . $body;
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$content = $this->service->loadSkill(self::TEST_USER, 'my-skill');
+
+		$this->assertStringEndsWith("\n\n" . $body, $content);
+		$this->assertStringNotContainsString('extra: dropped', $content);
+	}
+
+	public function testLoadSkillReturnsUnparsableDocumentUnchanged(): void {
+		$raw = "no frontmatter at all\n\n## Body";
+		$this->writeRawSkillFile(self::TEST_USER, 'my-skill', $raw);
+
+		$this->assertSame($raw, $this->service->loadSkill(self::TEST_USER, 'my-skill'));
 	}
 
 	public function testLoadSkillThrowsForMissingSkill(): void {
