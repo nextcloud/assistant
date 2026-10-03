@@ -80,8 +80,13 @@ export default {
 </script>
 
 <style lang="scss">
-.agency-confirmation > div {
-	width: 100%;
+.agency-confirmation {
+	background-color: var(--color-main-background) !important;
+	border: 2px solid var(--color-border-dark) !important;
+
+	> div {
+		width: 100%;
+	}
 }
 </style>
 
