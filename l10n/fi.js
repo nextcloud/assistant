@@ -22,6 +22,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud-sähköposti",
     "Other" : "Muu",
     "Translate" : "Käännä",
+    "Generate text" : "Luo teksti",
     "Assistant" : "Avustaja",
     "Memories" : "Muistot",
     "Chat history" : "Keskusteluhistoria",
