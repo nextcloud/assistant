@@ -467,8 +467,10 @@ export default {
 			}
 			if (this.sessionIdsToDelete.length === 1) {
 				const session = this.sessions.find(s => s.id === this.sessionIdsToDelete[0])
-				const sessionTitle = this.getSessionTitle(session)?.trim()
-				return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
+				if (session) {
+					const sessionTitle = this.getSessionTitle(session)?.trim()
+					return t('assistant', 'Are you sure you want to delete "{sessionTitle}"?', { sessionTitle })
+				}
 			}
 			return n('assistant', 'Are you sure you want to delete %n conversation?', 'Are you sure you want to delete %n conversations?', this.sessionIdsToDelete.length)
 		},
@@ -754,7 +756,7 @@ export default {
 		 * @param {{ id: number, title: string, user_id: string, timestamp: number }} session Chat session
 		 */
 		getSessionTitle(session) {
-			if (session === null) {
+			if (session === null || session === undefined) {
 				return ''
 			}
 

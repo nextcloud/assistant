@@ -186,9 +186,12 @@ class MessageMapper extends QBMapper {
 	public function deleteMessagesBySessions(array $sessionIds): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
-			->where($qb->expr()->in('session_id', $qb->createPositionalParameter($sessionIds, IQueryBuilder::PARAM_INT_ARRAY)));
+			->where($qb->expr()->in('session_id', $qb->createParameter('ids')));
 
-		$qb->executeStatement();
+		foreach (array_chunk($sessionIds, IQueryBuilder::MAX_IN_PARAMETERS) as $chunk) {
+			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$qb->executeStatement();
+		}
 	}
 
 	/**

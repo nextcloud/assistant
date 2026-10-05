@@ -35,6 +35,10 @@ class ChatServiceTest extends TestCase {
 	private ChatService $service;
 	private SessionMapper $sessionMapper;
 	private MessageMapper $messageMapper;
+	/** @var list<string> user IDs created by this test, deleted again in tearDown */
+	private array $createdUsers = [];
+	/** @var array<string, list<int>> session IDs created by this test, per user ID */
+	private array $createdSessionIds = [];
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -44,6 +48,7 @@ class ChatServiceTest extends TestCase {
 		foreach ([self::TEST_USER, self::OTHER_USER] as $uid) {
 			if (!$userManager->userExists($uid)) {
 				$userManager->createUser($uid, $uid . '_password123');
+				$this->createdUsers[] = $uid;
 			}
 		}
 
@@ -53,8 +58,15 @@ class ChatServiceTest extends TestCase {
 	}
 
 	protected function tearDown(): void {
+		// only remove what this test created, the instance is not always in a clean state in CI
+		foreach ($this->createdSessionIds as $uid => $sessionIds) {
+			foreach ($sessionIds as $sessionId) {
+				$this->sessionMapper->deleteSession($uid, $sessionId);
+				$this->messageMapper->deleteMessagesBySession($sessionId);
+			}
+		}
 		$userManager = Server::get(IUserManager::class);
-		foreach ([self::TEST_USER, self::OTHER_USER] as $uid) {
+		foreach ($this->createdUsers as $uid) {
 			if ($userManager->userExists($uid)) {
 				$this->service->deleteAllUserChatData($uid);
 				$userManager->get($uid)->delete();
@@ -67,7 +79,9 @@ class ChatServiceTest extends TestCase {
 		$session = new Session();
 		$session->setUserId($userId);
 		$session->setTimestamp(time());
-		return $this->sessionMapper->insert($session);
+		$session = $this->sessionMapper->insert($session);
+		$this->createdSessionIds[$userId][] = $session->getId();
+		return $session;
 	}
 
 	private function createMessage(int $sessionId): Message {
@@ -91,7 +105,12 @@ class ChatServiceTest extends TestCase {
 
 		$this->service->deleteSessions(self::TEST_USER, [$session1->getId(), $session2->getId(), $session3->getId()]);
 
-		$this->assertCount(0, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$remainingIds = array_map(static function (Session $session) {
+			return $session->getId();
+		}, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$this->assertNotContains($session1->getId(), $remainingIds);
+		$this->assertNotContains($session2->getId(), $remainingIds);
+		$this->assertNotContains($session3->getId(), $remainingIds);
 		$this->assertCount(0, $this->messageMapper->getMessages($session1->getId(), 0, 100));
 		$this->assertCount(0, $this->messageMapper->getMessages($session2->getId(), 0, 100));
 		$this->assertCount(0, $this->messageMapper->getMessages($session3->getId(), 0, 100));
@@ -107,14 +126,19 @@ class ChatServiceTest extends TestCase {
 		// unknown IDs are ignored, duplicates are harmless
 		$this->service->deleteSessions(self::TEST_USER, [$ownSession->getId(), $otherSession->getId(), $otherSession->getId(), 999999999]);
 
-		$this->assertCount(0, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$remainingOwnIds = array_map(static function (Session $session) {
+			return $session->getId();
+		}, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$this->assertNotContains($ownSession->getId(), $remainingOwnIds);
 		$this->assertCount(0, $this->messageMapper->getMessages($ownSession->getId(), 0, 100));
 
-		$otherUserSessions = $this->sessionMapper->getUserSessions(self::OTHER_USER, false);
-		$this->assertCount(1, $otherUserSessions);
-		$this->assertEquals($otherSession->getId(), $otherUserSessions[0]->getId());
-		$this->assertCount(1, $this->messageMapper->getMessages($otherSession->getId(), 0, 100));
-		$this->assertEquals($otherMessage->getId(), $this->messageMapper->getMessageById($otherSession->getId(), $otherMessage->getId())->getId());
+		$remainingOtherIds = array_map(static function (Session $session) {
+			return $session->getId();
+		}, $this->sessionMapper->getUserSessions(self::OTHER_USER, false));
+		$this->assertContains($otherSession->getId(), $remainingOtherIds);
+		$this->assertContains($otherMessage->getContent(), array_map(static function (Message $message) {
+			return $message->getContent();
+		}, $this->messageMapper->getMessages($otherSession->getId(), 0, 100)));
 	}
 
 	public function testDeleteSessionsWithEmptyList(): void {
@@ -122,7 +146,10 @@ class ChatServiceTest extends TestCase {
 
 		$this->service->deleteSessions(self::TEST_USER, []);
 
-		$this->assertCount(1, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$remainingIds = array_map(static function (Session $session) {
+			return $session->getId();
+		}, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$this->assertContains($session->getId(), $remainingIds);
 	}
 
 	public function testDeleteSessionsWithoutUser(): void {

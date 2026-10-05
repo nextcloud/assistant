@@ -225,13 +225,16 @@ class SessionMapper extends QBMapper {
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getUserSessionsByIds(string $userId, array $sessionIds): array {
-		$qb = $this->db->getQueryBuilder();
-		$qb->select(Session::$columns)
-			->from($this->getTableName())
-			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->in('id', $qb->createPositionalParameter($sessionIds, IQueryBuilder::PARAM_INT_ARRAY)));
-
-		return $this->findEntities($qb);
+		$sessions = [];
+		foreach (array_chunk($sessionIds, IQueryBuilder::MAX_IN_PARAMETERS) as $chunk) {
+			$qb = $this->db->getQueryBuilder();
+			$qb->select(Session::$columns)
+				->from($this->getTableName())
+				->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+				->andWhere($qb->expr()->in('id', $qb->createPositionalParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)));
+			$sessions = array_merge($sessions, $this->findEntities($qb));
+		}
+		return $sessions;
 	}
 
 	/**
@@ -240,13 +243,16 @@ class SessionMapper extends QBMapper {
 	 * @throws \OCP\DB\Exception
 	 * @throws \RuntimeException
 	 */
-	public function deleteSessionsByUser(string $userId, array $sessionIds) {
+	public function deleteSessionsByUser(string $userId, array $sessionIds): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())
-			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->in('id', $qb->createPositionalParameter($sessionIds, IQueryBuilder::PARAM_INT_ARRAY)));
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->in('id', $qb->createParameter('ids')));
 
-		$qb->executeStatement();
+		foreach (array_chunk($sessionIds, IQueryBuilder::MAX_IN_PARAMETERS) as $chunk) {
+			$qb->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+			$qb->executeStatement();
+		}
 	}
 
 	/**
