@@ -18,6 +18,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use OCP\Exceptions\AppConfigTypeConflictException;
 use OCP\IAppConfig;
+use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\TaskProcessing\Exception\PreConditionNotMetException;
@@ -36,6 +37,7 @@ class ChatService {
 		private readonly IL10N $l10n,
 		private readonly SessionMapper $sessionMapper,
 		private readonly MessageMapper $messageMapper,
+		private readonly IDBConnection $db,
 		private readonly SessionSummaryService $sessionSummaryService,
 		private readonly IManager $taskProcessingManager,
 		private readonly LoggerInterface $logger,
@@ -148,6 +150,47 @@ class ChatService {
 			$this->sessionMapper->deleteSession($userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
 		} catch (Exception|\RuntimeException $e) {
+			throw new InternalException(previous: $e);
+		}
+	}
+
+	/**
+	 * @param string|null $userId
+	 * @param list<int> $sessionIds
+	 * @throws InternalException
+	 * @throws UnauthorizedException
+	 */
+	public function deleteSessions(?string $userId, array $sessionIds): void {
+		if ($userId === null) {
+			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
+		}
+
+		$sessionIds = array_values(array_unique(array_map(static function ($sessionId) {
+			return (int)$sessionId;
+		}, $sessionIds)));
+
+		if ($sessionIds === []) {
+			return;
+		}
+
+		try {
+			$ownedSessions = $this->sessionMapper->getUserSessionsByIds($userId, $sessionIds);
+			$ownedSessionIds = array_map(static function (Session $session) {
+				return $session->getId();
+			}, $ownedSessions);
+
+			if ($ownedSessionIds === []) {
+				return;
+			}
+
+			$this->db->beginTransaction();
+			$this->sessionMapper->deleteSessionsByUser($userId, $ownedSessionIds);
+			$this->messageMapper->deleteMessagesBySessions($ownedSessionIds);
+			$this->db->commit();
+		} catch (Exception|\RuntimeException $e) {
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw new InternalException(previous: $e);
 		}
 	}

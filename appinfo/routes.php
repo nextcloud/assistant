@@ -45,10 +45,12 @@ return [
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/sessions', 'verb' => 'POST', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#updateChatSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'PUT', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'DELETE', 'postfix' => 'restful'],
+		['name' => 'chattyLLM#deleteSessions', 'url' => '/chat/sessions', 'verb' => 'DELETE', 'postfix' => 'restful'],
 
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/new_session', 'verb' => 'PUT'],
 		['name' => 'chattyLLM#updateSessionTitle', 'url' => '/chat/update_session', 'verb' => 'PATCH'],
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/delete_session', 'verb' => 'DELETE'],
+		['name' => 'chattyLLM#deleteSessions', 'url' => '/chat/delete_sessions', 'verb' => 'DELETE'],
 		['name' => 'chattyLLM#getSessions', 'url' => '/chat/sessions', 'verb' => 'GET'],
 		['name' => 'chattyLLM#newMessage', 'url' => '/chat/new_message', 'verb' => 'PUT'],
 		['name' => 'chattyLLM#deleteMessage', 'url' => '/chat/delete_message', 'verb' => 'DELETE'],
