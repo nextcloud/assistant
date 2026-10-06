@@ -26,7 +26,7 @@ OC.L10N.register(
     "Send an email" : "Send en e-mail",
     "Schedule a calendar event" : "Planlæg en kalenderbegivenhed",
     "Add a calendar task" : "Tilføj en kalenderopgave",
-    "Create a Deck card" : "Opret et opslagskort",
+    "Create a Deck card" : "Opret et Deck-kort",
     "Upload file" : "Upload fil",
     "Create folder" : "Opret mappe",
     "Move file" : "Flyt fil",
