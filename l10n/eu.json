@@ -77,6 +77,8 @@
     "Cancel" : "Utzi",
     "You" : "Zu ",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Ziur zaude \"{sessionTitle}\" ezabatu nahi duzula?",
+    "Deselect all" : "Deshautatu dena",
+    "Select all" : "Hautatu dena",
     "New conversation" : "Elkarrizketa berria",
     "Delete" : "Ezabatu",
     "Edit title" : "Editatu izenburua",

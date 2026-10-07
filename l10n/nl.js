@@ -147,6 +147,8 @@ OC.L10N.register(
     "Ask assistant, what's the weather today" : "Vraag Assistent, wat voor weer het vandaag is",
     "What's the weather today?" : "Hoe is het weer vandaag?",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Weet je zeker dat je \"{sessionTitle}\" wilt verwijderen?",
+    "Deselect all" : "Deselecteer alles",
+    "Select all" : "Alles selecteren",
     "No conversations yet" : "Nog geen gesprekken",
     "Delete" : "Verwijder",
     "Edit title" : "Titel bewerken",

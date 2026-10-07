@@ -17,6 +17,8 @@ OC.L10N.register(
     "Close" : "Malfermi",
     "Less" : "Malpli",
     "Cancel" : "Cancel",
+    "Deselect all" : "Malelekti ĉion",
+    "Select all" : "Elekti ĉion",
     "Delete" : "Forigi",
     "Submit" : "Sendi",
     "Choose" : "Elekti",

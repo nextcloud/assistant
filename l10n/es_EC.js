@@ -26,6 +26,8 @@ OC.L10N.register(
     "Close" : "Cerrar",
     "Less" : "Menos",
     "Cancel" : "Cancelar",
+    "Deselect all" : "Deseleccionar todo",
+    "Select all" : "Seleccionar todo",
     "New conversation" : "Nueva conversación",
     "Delete" : "Borrar",
     "Edit title" : "Editar título",

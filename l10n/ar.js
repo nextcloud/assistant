@@ -119,13 +119,14 @@ OC.L10N.register(
     "You" : "أنت",
     "Message copied to clipboard" : "تمّ نسخ الرسالة إلى الحافظة",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "هل أنت متأكد أنك ترغب في حذف \"{sessionTitle}\"?",
+    "Deselect all" : "إلغاء تحديد الكل",
+    "Select all" : "تحديد الكل",
     "Error generating a response" : "حدث خطأ عند توليد استجابة",
     "Error getting the generated title for the conversation" : "خطأ في الحصول على العنوان المُولَّد للمحادثة",
     "Error checking if the session is thinking" : "خطأ في التحقُّق من أن الجلسة في حالة تفكير",
     "Error updating title of conversation" : "حدث خطأ أثناء تحديث عنوان المحادثة",
     "Untitled conversation" : "محادثة بدون عنوان",
     "Error generating a title for the conversation" : "حدث خطأ عند توليد عنوان للمحادثة",
-    "Error deleting conversation" : "حدث خطأ عند حذف المحادثة",
     "Error fetching conversations" : "حدث خطأ عند جلب المحادثات",
     "Error deleting message" : "حدث خطأ عند حذف الرسالة",
     "Error fetching messages" : "حدث خطأ عند جلب الرسائل",
@@ -250,6 +251,7 @@ OC.L10N.register(
     "fourth" : "رابع",
     "fifth" : "خامس",
     "second to last" : "الثاني إلى الاخير",
-    "last" : "الأخير"
+    "last" : "الأخير",
+    "Error deleting conversation" : "حدث خطأ عند حذف المحادثة"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

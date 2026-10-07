@@ -172,13 +172,14 @@ OC.L10N.register(
     "You" : "Ви",
     "Message copied to clipboard" : "Порука је копирана у клипборд",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Да ли сте сигурни да желите да обришете „{sessionTitle}”?",
+    "Deselect all" : "Поништи цео избор",
+    "Select all" : "Означи све",
     "Error generating a response" : "Грешка при генерисању одговора",
     "Error getting the generated title for the conversation" : "Грешка приликом преузимања генерисаног наслова за разговор",
     "Error checking if the session is thinking" : "Провера грешака у случају да сесија размишља",
     "Error updating title of conversation" : "Грешка приликом ажурирања наслова разговора",
     "Untitled conversation" : "Разговор без наслова",
     "Error generating a title for the conversation" : "Грешка приликом генерисања наслова за разговор",
-    "Error deleting conversation" : "Грешка приликом брисања разговора",
     "Error fetching conversations" : "Грешка приликом преузимања разговора",
     "Error deleting message" : "Грешка при брисању поруке",
     "Error fetching messages" : "Грешка при дохватању порука",
@@ -339,6 +340,7 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "Није успело покретање AI фајл акције",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Генериши говор”.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”.",
+    "Error deleting conversation" : "Грешка приликом брисања разговора",
     "Information sources" : "Извори информација"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

@@ -177,13 +177,14 @@ OC.L10N.register(
     "You" : "您",
     "Message copied to clipboard" : "消息已复制到剪贴板",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "是否确定要删除“{sessionTitle}”？",
+    "Deselect all" : "全部取消选择",
+    "Select all" : "全部选择",
     "Error generating a response" : "生成响应时发生错误",
     "Error getting the generated title for the conversation" : "产生对话的标题时发生错误",
     "Error checking if the session is thinking" : "检查工作阶段是否正在思考时发生错误",
     "Error updating title of conversation" : "更新对话标题时出错",
     "Untitled conversation" : "无标题对话",
     "Error generating a title for the conversation" : "生成对话标题时发生错误",
-    "Error deleting conversation" : "删除对话发生错误",
     "Error fetching conversations" : "获取对话时发生错误",
     "Error deleting message" : "删除消息时发生错误",
     "Error fetching messages" : "获取消息时发生错误",
@@ -339,6 +340,7 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "转录任务已成功递交",
     "Summarization task submitted successfully" : "总结任务已成功递交",
     "Text-to-speech task submitted successfully" : "文字转语音任务递交成功",
+    "Error deleting conversation" : "删除对话发生错误",
     "Information sources" : "资讯来源"
 },
 "nplurals=1; plural=0;");

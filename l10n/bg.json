@@ -30,6 +30,8 @@
     "Cancel" : "Отказ",
     "You" : "Вие",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Сигурни ли сте, че искате да изтриете  {sessionTitle}?",
+    "Deselect all" : "Откажи всички избрани",
+    "Select all" : "Избери всички",
     "New conversation" : "Нов разговор",
     "Delete" : "Изтриване",
     "Edit title" : "Редактиране на заглавието",

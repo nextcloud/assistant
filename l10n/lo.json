@@ -179,13 +179,14 @@
     "You" : "ເຈົ້າ",
     "Message copied to clipboard" : "ສຳເນົາຂໍ້ຄວາມໃສ່ຄລິບບອດແລ້ວ",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບ \"{sessionTitle}\"?",
+    "Deselect all" : "ເລືອກຄືນທັງໝົດ",
+    "Select all" : "ເລືອກທັງໝົດ",
     "Error generating a response" : "ຜິດພາດໃນການສ້າງການຕອບກັບ",
     "Error getting the generated title for the conversation" : "ຜິດພາດໃນການຮັບຫົວຂໍ້ທີ່ສ້າງຂຶ້ນສຳລັບການສົນທະນາ",
     "Error checking if the session is thinking" : "ຜິດພາດໃນການກວດສອບວ່າຊ່ວງການສົນທະນາກຳລັງຄິດຢູ່ບໍ່",
     "Error updating title of conversation" : "ຜິດພາດໃນການອັບເດດຫົວຂໍ້ຂອງການສົນທະນາ",
     "Untitled conversation" : "ການສົນທະນາທີ່ບໍ່ມີຫົວຂໍ້",
     "Error generating a title for the conversation" : "ຜິດພາດໃນການສ້າງຫົວຂໍ້ສຳລັບການສົນທະນາ",
-    "Error deleting conversation" : "ຜິດພາດໃນການລຶບການສົນທະນາ",
     "Error fetching conversations" : "ຜິດພາດໃນການດຶງຂໍ້ມູນການສົນທະນາ",
     "Error deleting message" : "ຜິດພາດໃນການລຶບຂໍ້ຄວາມ",
     "Error fetching messages" : "ຜິດພາດໃນການດຶງຂໍ້ມູນຂໍ້ຄວາມ",
@@ -353,6 +354,7 @@
     "Transcription task submitted successfully" : "ສົ່ງໜ້າວຽກການຖອດຂໍ້ຄວາມຈາກສຽງສຳເລັດແລ້ວ",
     "Summarization task submitted successfully" : "ສົ່ງໜ້າວຽກການສະຫຼຸບຫຍໍ້ສຳເລັດແລ້ວ",
     "Text-to-speech task submitted successfully" : "ສົ່ງໜ້າວຽກຂໍ້ຄວາມເປັນສຽງສຳເລັດແລ້ວ",
+    "Error deleting conversation" : "ຜິດພາດໃນການລຶບການສົນທະນາ",
     "Information sources" : "ແຫຼ່ງຂໍ້ມູນ"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

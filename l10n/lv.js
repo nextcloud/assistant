@@ -23,6 +23,8 @@ OC.L10N.register(
     "More" : "Vairāk",
     "Cancel" : "Atcelt",
     "You" : "Tu",
+    "Deselect all" : "Atcelt atzīmi",
+    "Select all" : "Atzīmēt visu",
     "Error checking if the session is thinking" : "Kļūda pārbaudot, vai sesija domā",
     "Delete" : "Izdzēst",
     "Remember this" : "Atcerēties šo",

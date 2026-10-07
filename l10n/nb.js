@@ -109,11 +109,12 @@ OC.L10N.register(
     "Cancel" : "Avbryt",
     "You" : "Du",
     "Message copied to clipboard" : "Melding kopiert til utklippstavlen",
+    "Deselect all" : "Fjern all markering",
+    "Select all" : "Velg alle",
     "Error generating a response" : "Feil ved generering av svar",
     "Error updating title of conversation" : "Feil ved oppdatering av tittel på samtale",
     "Untitled conversation" : "Samtale uten tittel",
     "Error generating a title for the conversation" : "Feil ved generering av en tittel for samtalen",
-    "Error deleting conversation" : "Feil under sletting av samtale",
     "Error fetching conversations" : "Feil under henting av samtaler",
     "Error deleting message" : "Feil under sletting av melding",
     "Error fetching messages" : "Feil under henting av meldinger",
@@ -228,6 +229,7 @@ OC.L10N.register(
     "fourth" : "fjerde",
     "fifth" : "femte",
     "second to last" : "nest sist",
-    "last" : "siste"
+    "last" : "siste",
+    "Error deleting conversation" : "Feil under sletting av samtale"
 },
 "nplurals=2; plural=(n != 1);");

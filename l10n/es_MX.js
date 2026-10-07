@@ -38,6 +38,8 @@ OC.L10N.register(
     "More" : "Más",
     "Cancel" : "Cancelar",
     "You" : "Usted",
+    "Deselect all" : "Deseleccionar todo",
+    "Select all" : "Seleccionar todo",
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
     "Waiting…" : "Esperando...",

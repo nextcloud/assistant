@@ -19,6 +19,7 @@ OC.L10N.register(
     "More" : "Ko'proq",
     "Cancel" : "Bekor qilish",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Haqiqatan ham “{sessionTitle}”ni o‘chirib tashlamoqchimisiz?",
+    "Select all" : "Barchasini tanash",
     "Delete" : "O'chirish",
     "Edit title" : "Sarlavhani tahrirlash",
     "Submit" : "Submit",

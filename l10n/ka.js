@@ -21,6 +21,8 @@ OC.L10N.register(
     "More" : "More",
     "Cancel" : "Cancel",
     "You" : "You",
+    "Deselect all" : "Deselect all",
+    "Select all" : "Select all",
     "Delete" : "Delete",
     "Edit title" : "Edit title",
     "Cancel editing" : "Cancel editing",
