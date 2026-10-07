@@ -558,6 +558,7 @@ export default {
 	},
 
 	beforeUnmount() {
+		this.streamingMessage = null
 		this.pollMessageGenerationCancel?.()
 		cancelTaskPositionPolling()
 		window.removeEventListener('keydown', this.onKeydownEscape, true)
@@ -705,7 +706,9 @@ export default {
 
 			this.$nextTick(() => {
 				const chatAreaElem = this.$refs.chatArea
-				chatAreaElem.scrollTop = chatAreaElem.scrollHeight
+				if (chatAreaElem) {
+					chatAreaElem.scrollTop = chatAreaElem.scrollHeight
+				}
 			})
 		},
 
