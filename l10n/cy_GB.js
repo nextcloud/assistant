@@ -8,6 +8,7 @@ OC.L10N.register(
     "Data folder" : "Plygell data",
     "Close" : "Cau",
     "Cancel" : "Cancel",
+    "Deselect all" : "Dad ddewis popeth",
     "Delete" : "Dileu",
     "Choose" : "Dewisa",
     "Cancelled" : "Diddymwyd",

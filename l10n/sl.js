@@ -46,6 +46,8 @@ OC.L10N.register(
     "More" : "Več",
     "Cancel" : "Prekliči",
     "You" : "Jaz",
+    "Deselect all" : "Odstrani celoten izbor",
+    "Select all" : "Izberi vse",
     "Untitled conversation" : "Neimenovan pogovor",
     "New conversation" : "Nov pogovor",
     "No conversations yet" : "Ni še začetih pogovorov",

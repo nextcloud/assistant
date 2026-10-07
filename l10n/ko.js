@@ -116,11 +116,12 @@ OC.L10N.register(
     "Cancel" : "취소",
     "You" : "당신",
     "Message copied to clipboard" : "메시지가 클립보드에 복사됨",
+    "Deselect all" : "모두 선택 해제",
+    "Select all" : "모두 선택",
     "Error generating a response" : "응답을 생성하는 중에 오류가 발생",
     "Error updating title of conversation" : "대화 제목을 업데이트하는 중에 오류가 발생",
     "Untitled conversation" : "제목 없는 대화",
     "Error generating a title for the conversation" : "대화 제목을 생성하는 중에 오류가 발생",
-    "Error deleting conversation" : "대화를 삭제하는 중에 오류가 발생",
     "Error fetching conversations" : "대화를 가져오는 중에 오류가 발생",
     "Error deleting message" : "메시지를 삭제하는 중에 오류가 발생",
     "Error fetching messages" : "메시지를 불러오는 중에 오류가 발생",
@@ -226,6 +227,7 @@ OC.L10N.register(
     "Assistant task submitted successfully" : "어시스턴트 작업이 성공적으로 접수됨",
     "Transcription task submitted successfully" : "받아쓰기 작업이 성공적으로 접수됨",
     "Summarization task submitted successfully" : "요약 작업이 성공적으로 접수됨",
-    "Text-to-speech task submitted successfully" : "글 읽기 작업이 성공적으로 접수됨"
+    "Text-to-speech task submitted successfully" : "글 읽기 작업이 성공적으로 접수됨",
+    "Error deleting conversation" : "대화를 삭제하는 중에 오류가 발생"
 },
 "nplurals=1; plural=0;");

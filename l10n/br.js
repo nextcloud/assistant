@@ -14,6 +14,8 @@ OC.L10N.register(
     "Close" : "Serriñ",
     "More" : "Muioc'h",
     "Cancel" : "Nullañ",
+    "Deselect all" : "Diziuzañ pep tra",
+    "Select all" : "Dibab pep tra",
     "Delete" : "Dilemel",
     "Submit" : "Kinnig",
     "Choose" : "Dibab",

@@ -179,13 +179,14 @@ OC.L10N.register(
     "You" : "Usted",
     "Message copied to clipboard" : "Mensaje copiado al portapapeles",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "¿Está seguro que quiere eliminar \"{sessionTitle}\"?",
+    "Deselect all" : "Deseleccionar todos",
+    "Select all" : "Seleccionar todo",
     "Error generating a response" : "Error generando una respuesta",
     "Error getting the generated title for the conversation" : "Error al obtener el título generado para la conversación",
     "Error checking if the session is thinking" : "Error al verificar que la sesión está pensando",
     "Error updating title of conversation" : "Error al actualizar el título de la conversación",
     "Untitled conversation" : "Conversación sin título",
     "Error generating a title for the conversation" : "Error al generar un título para la conversación",
-    "Error deleting conversation" : "Error al eliminar la conversación",
     "Error fetching conversations" : "Error obteniendo conversaciones",
     "Error deleting message" : "Error eliminando el mensaje",
     "Error fetching messages" : "Error al obtener mensajes",
@@ -346,6 +347,7 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\".",
+    "Error deleting conversation" : "Error al eliminar la conversación",
     "Information sources" : "Fuentes de información"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

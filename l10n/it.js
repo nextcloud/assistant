@@ -62,6 +62,8 @@ OC.L10N.register(
     "Cancel" : "Annulla",
     "You" : "Tu",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Sei sicuro di voler eliminare \"{sessionTitle}\"?",
+    "Deselect all" : "Deseleziona tutto",
+    "Select all" : "Seleziona tutto",
     "No conversations yet" : "Ancora nessuna conversazione",
     "Delete" : "Elimina",
     "Edit title" : "Modifica titolo",

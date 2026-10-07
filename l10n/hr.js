@@ -52,6 +52,8 @@ OC.L10N.register(
     "Cancel" : "Odustani",
     "You" : "Vi",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Jeste li sigurni da želite izbrisati \"{sessionTitle}\"?",
+    "Deselect all" : "Odznači sve",
+    "Select all" : "Odaberi sve",
     "No conversations yet" : "Još nema razgovora",
     "Delete" : "Izbriši",
     "Edit title" : "Uredi naslov",

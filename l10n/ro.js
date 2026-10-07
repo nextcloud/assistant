@@ -21,6 +21,8 @@ OC.L10N.register(
     "More" : "Mai mult",
     "Cancel" : "Anulare",
     "You" : "Tu",
+    "Deselect all" : "Deselectează tot",
+    "Select all" : "Selectează tot",
     "Delete" : "Șterge",
     "Edit title" : "Editează titlul",
     "Cancel editing" : "Anulează editarea",

@@ -16,6 +16,8 @@ OC.L10N.register(
     "Try again" : "Reintentar",
     "Close" : "Close",
     "Cancel" : "Cancel",
+    "Deselect all" : "Deseleccionar todo",
+    "Select all" : "Seleccionar todo",
     "Delete" : "Borrar",
     "Submit" : "Enviar",
     "Choose a file" : "Selecciona un archivo",

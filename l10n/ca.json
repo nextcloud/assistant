@@ -117,13 +117,14 @@
     "You" : "Vós",
     "Message copied to clipboard" : "S'ha copiat el missatge al porta-retalls",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Esteu segur que voleu suprimir \"{sessionTitle}\"?",
+    "Deselect all" : "No seleccionis res",
+    "Select all" : "Selecciona-ho tot",
     "Error generating a response" : "Error en generar una resposta",
     "Error getting the generated title for the conversation" : "S'ha produït un error en obtenir el títol generat per a la conversa",
     "Error checking if the session is thinking" : "S'ha produït un error en comprovar si la sessió està pensant",
     "Error updating title of conversation" : "S'ha produït un error en actualitzar el títol de la conversa",
     "Untitled conversation" : "Conversa sense títol",
     "Error generating a title for the conversation" : "S'ha produït un error en generar un títol per a la conversa",
-    "Error deleting conversation" : "S'ha produït un error en suprimir la conversa",
     "Error fetching conversations" : "S'ha produït un error en recuperar les converses",
     "Error deleting message" : "S'ha produït un error en suprimir el missatge",
     "Error fetching messages" : "S'ha produït un error en recuperar els missatges",
@@ -246,6 +247,7 @@
     "fourth" : "quart",
     "fifth" : "cinquè",
     "second to last" : "penúltim",
-    "last" : "últim"
+    "last" : "últim",
+    "Error deleting conversation" : "S'ha produït un error en suprimir la conversa"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

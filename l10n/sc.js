@@ -21,6 +21,7 @@ OC.L10N.register(
     "More" : "Prus",
     "Cancel" : "Annulla",
     "You" : "Tue",
+    "Deselect all" : "Deseletziona totu",
     "New conversation" : "Tzarrada noa",
     "Delete" : "Cantzella",
     "Edit title" : "Modìfica tìtulu",

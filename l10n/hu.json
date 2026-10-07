@@ -71,6 +71,7 @@
     "Cancel" : "Mégse",
     "You" : "Ön",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Biztos, hogy törli ezt: „{sessionTitle}”?",
+    "Deselect all" : "Kijelölés megszüntetése",
     "New conversation" : "Új beszélgetés",
     "No conversations yet" : "Még nincsenek beszélgetések",
     "Delete" : "Törlés",
