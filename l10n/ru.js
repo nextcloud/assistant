@@ -103,6 +103,8 @@ OC.L10N.register(
     "Cancel" : "Отмена",
     "You" : "Вы",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Вы действительно хотите удалить \"{sessionTitle}\"?",
+    "Deselect all" : "Снять выбор со всех",
+    "Select all" : "Выбрать всё",
     "Error creating a new message" : "Ошибка при создании нового сообщения",
     "Invalid response received for a new conversation request" : "Получен неверный ответ на новый запрос на беседу",
     "Error creating a new conversation" : "Ошибка при создании нового диалога",

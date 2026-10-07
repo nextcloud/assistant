@@ -229,13 +229,14 @@ OC.L10N.register(
     "You" : "Ty",
     "Message copied to clipboard" : "Wiadomość skopiowana do schowka",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Czy na pewno chcesz usunąć \"{sessionTitle}\"?",
+    "Deselect all" : "Odznacz wszystkie",
+    "Select all" : "Wybierz wszystko",
     "Error generating a response" : "Błąd generowania odpowiedzi",
     "Error getting the generated title for the conversation" : "Błąd podczas pobierania wygenerowanego tytułu rozmowy",
     "Error checking if the session is thinking" : "Błąd podczas sprawdzania, czy sesja przetwarza dane",
     "Error updating title of conversation" : "Błąd podczas aktualizowania tytułu rozmowy",
     "Untitled conversation" : "Rozmowa bez tytułu",
     "Error generating a title for the conversation" : "Błąd podczas generowania tytułu rozmowy",
-    "Error deleting conversation" : "Błąd usuwania rozmowy",
     "Error fetching conversations" : "Błąd podczas pobierania rozmów",
     "Error deleting message" : "Błąd usuwania wiadomości",
     "Error fetching messages" : "Błąd podczas pobierania wiadomości",
@@ -374,6 +375,7 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "Zadanie transkrypcji zostało pomyślnie wysłane",
     "Summarization task submitted successfully" : "Zadanie podsumowania zostało pomyślnie wysłane",
     "Text-to-speech task submitted successfully" : "Zadanie zamiany tekstu na mowę zostało pomyślnie wysłane",
+    "Error deleting conversation" : "Błąd usuwania rozmowy",
     "Information sources" : "Źródła informacji"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

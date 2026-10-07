@@ -21,6 +21,8 @@ OC.L10N.register(
     "Less" : "פחות:",
     "More" : "יותר",
     "Cancel" : "ביטול",
+    "Deselect all" : "ביטול בחירה",
+    "Select all" : "בחר הכל",
     "Delete" : "מחיקה",
     "Edit title" : "עריכת כותרת",
     "Submit" : "שליחה",

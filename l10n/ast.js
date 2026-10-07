@@ -42,6 +42,7 @@ OC.L10N.register(
     "More" : "Más",
     "Cancel" : "Encaboxar",
     "You" : "Tu",
+    "Select all" : "Seleicionar too",
     "New conversation" : "Conversación nueva",
     "Delete" : "Desaniciar",
     "Edit title" : "Editar el títulu",

@@ -180,13 +180,14 @@ OC.L10N.register(
     "You" : "自分",
     "Message copied to clipboard" : "メッセージがクリップボードにコピーされました",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "本当に\"{sessionTitle}\"を削除してもいいですか?",
+    "Deselect all" : "選択を全解除",
+    "Select all" : "すべて選択",
     "Error generating a response" : "応答の生成中にエラーが発生しました",
     "Error getting the generated title for the conversation" : "会話の生成されたタイトル生成取得に失敗しました",
     "Error checking if the session is thinking" : "セッションが思考しているかどうかのチェックでエラーが発生しました",
     "Error updating title of conversation" : "会話のタイトルの更新中にエラーが発生しました",
     "Untitled conversation" : "未タイトルの会話",
     "Error generating a title for the conversation" : "会話のタイトル生成中にエラーが発生しました",
-    "Error deleting conversation" : "会話の削除中にエラーが発生しました",
     "Error fetching conversations" : "会話の取得中にエラーが発生しました",
     "Error deleting message" : "メッセージの削除中にエラーが発生しました",
     "Error fetching messages" : "メッセージの取得中にエラーが発生しました",
@@ -350,6 +351,7 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "文字起こしタスクが正常に送信されました",
     "Summarization task submitted successfully" : "要約タスクが正常に送信されました",
     "Text-to-speech task submitted successfully" : "テキスト読み上げタスクが正常に送信されました",
+    "Error deleting conversation" : "会話の削除中にエラーが発生しました",
     "Information sources" : "情報源"
 },
 "nplurals=1; plural=0;");

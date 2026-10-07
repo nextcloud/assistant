@@ -43,6 +43,8 @@ OC.L10N.register(
     "Cancel" : "Hætta við",
     "You" : "Þú",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Ertu viss um að þú viljir eyða \"{sessionTitle}\"?",
+    "Deselect all" : "Afvelja allt",
+    "Select all" : "Velja allt",
     "No conversations yet" : "Engin samtöl ennþá",
     "Delete" : "Eyða",
     "Edit title" : "Breyta titli",

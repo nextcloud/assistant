@@ -44,6 +44,8 @@ OC.L10N.register(
     "More" : "Яшчэ",
     "Cancel" : "Скасаваць",
     "You" : "Вы",
+    "Deselect all" : "Скасаваць выбар усіх",
+    "Select all" : "Выбраць усе",
     "New conversation" : "Новая размова",
     "Loading conversations…" : "Загрузка размоў…",
     "No conversations yet" : "Пакуль няма размоў",

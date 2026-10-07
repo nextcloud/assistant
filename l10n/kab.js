@@ -19,6 +19,8 @@ OC.L10N.register(
     "More" : "Ugar",
     "Cancel" : "Cancel",
     "You" : "Kemm·čč",
+    "Deselect all" : "Kkes afran i meṛṛa",
+    "Select all" : "Fren-iten akk",
     "New conversation" : "Adiwenni amaynut",
     "No conversations yet" : "Ulac idiwenniyen akka tura",
     "Delete" : "Kkes",

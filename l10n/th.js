@@ -16,6 +16,8 @@ OC.L10N.register(
     "Less" : "ย่อ",
     "More" : "เพิ่มเติม",
     "Cancel" : "ยกเลิก",
+    "Deselect all" : "ยกเลิกการเลือกทั้งหมด",
+    "Select all" : "เลือกทั้งหมด",
     "Delete" : "ลบ",
     "Hello there! What can I help you with today?" : "สวัสดี! วันนี้ฉันสามารถช่วยอะไรคุณได้บ้าง?",
     "Try sending a message to spark a conversation." : "ลองส่งข้อความเพื่อเริ่มต้นบทสนทนาดูสิ",
