@@ -250,7 +250,7 @@ export default {
 		},
 		updateTask(task, _obj, updateOutput = true) {
 			if (task.status === TASK_STATUS_STRING.running) {
-				this.progress = task.progress
+				this.progress = Number.isFinite(task.progress) ? task.progress : null
 			}
 			this.task = updateOutput
 				? task
