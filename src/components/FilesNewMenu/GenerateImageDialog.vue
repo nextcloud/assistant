@@ -124,7 +124,7 @@ export default {
 				},
 				type: 'core:text2image',
 				appId: 'assistant',
-				customId: 'new-image-file:' + this.context.data.id,
+				customId: 'new-image-file:' + this.context.fileid,
 			}
 
 			axios.post(url, params)
