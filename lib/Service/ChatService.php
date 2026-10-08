@@ -749,11 +749,12 @@ class ChatService {
 			'system_prompt' => $systemPrompt,
 			'history' => $history,
 		];
-		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
+		if ($isMessage && isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['conversation_id'])) {
-			$input['conversation_id'] = (string)$sessionId;
+			// the title generation must not join the conversation state of the chat itself
+			$input['conversation_id'] = $isMessage ? (string)$sessionId : $sessionId . '-title';
 		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
