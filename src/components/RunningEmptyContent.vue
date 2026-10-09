@@ -65,6 +65,21 @@ import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import { TASK_STATUS_STRING } from '../constants.js'
 
+/**
+ * Convert a progress fraction (0..1) into a percentage, capped below 100
+ * because a task that reached 100 % is finished and shows no progress anymore.
+ * Returns null for values that cannot be displayed (null, NaN, Infinity).
+ *
+ * @param {number|null|undefined} fraction the progress reported by the backend
+ * @return {number|null} the percentage or null
+ */
+function toProgressPercent(fraction) {
+	if (!Number.isFinite(fraction)) {
+		return null
+	}
+	return Math.min(Math.max(fraction, 0), 0.9999) * 100
+}
+
 export default {
 	name: 'RunningEmptyContent',
 
@@ -84,6 +99,7 @@ export default {
 			type: String,
 			required: true,
 		},
+		/** Progress reported by the backend, a fraction between 0 and 1 */
 		progress: {
 			type: [Number, null],
 			default: null,
@@ -127,7 +143,7 @@ export default {
 		return {
 			now: Date.now() / 1000,
 			timer: null,
-			speculativeProgress: this.progress,
+			speculativeProgress: toProgressPercent(this.progress),
 		}
 	},
 
@@ -137,6 +153,9 @@ export default {
 		},
 		TASK_STATUS_STRING() {
 			return TASK_STATUS_STRING
+		},
+		progressPercent() {
+			return toProgressPercent(this.progress)
 		},
 		formattedProgress() {
 			if (this.speculativeProgress !== null) {
@@ -168,10 +187,9 @@ export default {
 	},
 
 	watch: {
-		progress() {
-			if (this.progress) {
-				this.speculativeProgress = this.progress
-			}
+		progressPercent(percent) {
+			// Progress reported by the backend takes precedence over the local estimate
+			this.speculativeProgress = percent
 		},
 	},
 
@@ -193,13 +211,19 @@ export default {
 
 	methods: {
 		updateProgressSpeculatively() {
-			if (this.progress !== null && this.startedAt !== null && this.completionExpectedAt !== null) {
-				const total = (this.completionExpectedAt - this.startedAt)
-				const elapsed = (this.now - this.startedAt)
-				const newProgress = elapsed / total
-				if (newProgress > this.speculativeProgress) {
-					this.speculativeProgress = newProgress
-				}
+			if (this.progressPercent === null || !Number.isFinite(this.startedAt) || !Number.isFinite(this.completionExpectedAt)) {
+				return
+			}
+			const total = this.completionExpectedAt - this.startedAt
+			const elapsed = this.now - this.startedAt
+			// The expected completion time can degenerate to the task start time or
+			// even to before it after a long queue wait, so guard the division here
+			if (total <= 0 || elapsed <= 0) {
+				return
+			}
+			const newProgress = toProgressPercent(elapsed / total)
+			if (newProgress > this.speculativeProgress) {
+				this.speculativeProgress = newProgress
 			}
 		},
 	},

@@ -460,7 +460,7 @@ export async function openAssistantForm({
 
 function updateTask(task, object, updateOutput = true) {
 	if (task?.status === TASK_STATUS_STRING.running) {
-		object.progress = task?.progress * 100
+		object.progress = Number.isFinite(task?.progress) ? task.progress : null
 	}
 	object.taskStatus = task?.status
 	object.scheduledAt = task?.scheduledAt
