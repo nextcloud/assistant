@@ -39,7 +39,7 @@ function registerGroupAction(mimeTypes) {
 	registerFileAction(groupAction)
 }
 
-function registerSummarizeAction() {
+function registerSummarizeAction(mimeTypes) {
 	const summarizeAction = {
 		id: 'assistant-summarize',
 		parent: 'assistant-group',
@@ -51,7 +51,7 @@ function registerSummarizeAction() {
 				&& nodes.length === 1
 				&& !nodes.some(({ permissions }) => (permissions & Permission.READ) === 0)
 				&& nodes.every(({ type }) => type === FileType.File)
-				&& nodes.every(({ mime }) => VALID_TEXT_MIME_TYPES.includes(mime))
+				&& nodes.every(({ mime }) => mimeTypes.includes(mime))
 		},
 		iconSvgInline: () => SummarizeSymbol,
 		order: 0,
@@ -199,24 +199,30 @@ const assistantEnabled = loadState('assistant', 'assistant-enabled', false)
 const summarizeAvailable = loadState('assistant', 'summarize-available', false)
 const sttAvailable = loadState('assistant', 'stt-available', false)
 const ttsAvailable = loadState('assistant', 'tts-available', false)
+// files the AI provider can read itself, so summarizing them does not depend on our text extraction
+const summarizeAttachmentMimeTypes = loadState('assistant', 'summarize-attachment-mime-types', [])
+const summarizeMimeTypes = [...new Set([...VALID_TEXT_MIME_TYPES, ...summarizeAttachmentMimeTypes])]
 
 if (assistantEnabled) {
 	if (summarizeAvailable || sttAvailable || ttsAvailable) {
-		const groupMimeTypes = []
-		if (summarizeAvailable || ttsAvailable) {
-			groupMimeTypes.push(...VALID_TEXT_MIME_TYPES)
+		const groupMimeTypes = new Set()
+		if (summarizeAvailable) {
+			summarizeMimeTypes.forEach((mime) => groupMimeTypes.add(mime))
+		}
+		if (ttsAvailable) {
+			VALID_TEXT_MIME_TYPES.forEach((mime) => groupMimeTypes.add(mime))
 		}
 		if (sttAvailable) {
-			groupMimeTypes.push(...VALID_AUDIO_MIME_TYPES)
+			VALID_AUDIO_MIME_TYPES.forEach((mime) => groupMimeTypes.add(mime))
 		}
-		registerGroupAction(groupMimeTypes)
+		registerGroupAction([...groupMimeTypes])
 	}
 	if (sttAvailable) {
 		registerSttAction()
 		registerSttSubtitlesAction()
 	}
 	if (summarizeAvailable) {
-		registerSummarizeAction()
+		registerSummarizeAction(summarizeMimeTypes)
 	}
 	if (ttsAvailable) {
 		registerTtsAction()
