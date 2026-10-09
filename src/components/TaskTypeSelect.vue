@@ -9,11 +9,13 @@
 			<NcActions v-if="hasSubMenu(variants)"
 				:key="variants.id"
 				:force-menu="true"
-				:menu-name="variants.text"
+				menu-name=" "
 				:container="$refs.taskTypeSelect"
 				:primary="isCategorySelected(variants)"
 				:class="{ categoryWithSubSelected: useModernStyle && isCategorySelected(variants) }"
-				@click="onMenuCategorySelected(variants)">
+				@click="onMenuCategorySelected(variants)"
+				@open="onMenuOpenChange(variants.id, true)"
+				@close="onMenuOpenChange(variants.id, false)">
 				<NcActionButton v-for="t in variants.tasks"
 					:key="t.id"
 					:disabled="selectedTask(t)"
@@ -26,7 +28,10 @@
 					{{ taskTypeLabel(t) }}
 				</NcActionButton>
 				<template #icon>
-					<component :is="variants.icon" />
+					<component :is="variants.icon" class="menu-trigger-icon" />
+					<span class="menu-trigger-label">{{ variants.text }}</span>
+					<ChevronUpIcon v-if="isMenuOpen(variants.id)" class="menu-trigger-icon" />
+					<ChevronDownIcon v-else class="menu-trigger-icon" />
 				</template>
 			</NcActions>
 			<NcButton v-else
@@ -82,6 +87,8 @@ import ImageOutlineIcon from 'vue-material-design-icons/ImageOutline.vue'
 import WebIcon from 'vue-material-design-icons/Web.vue'
 import FileIcon from 'vue-material-design-icons/File.vue'
 import TimerOutlineIcon from 'vue-material-design-icons/TimerOutline.vue'
+import ChevronUpIcon from 'vue-material-design-icons/ChevronUp.vue'
+import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
 
 import ContentPasteSearchIcon from './icons/ContentPasteSearch.vue'
 import WaveformIcon from './icons/WaveForm.vue'
@@ -102,6 +109,8 @@ export default {
 		MessageOutlineIcon,
 		NcButton,
 		NcAssistantButton,
+		ChevronUpIcon,
+		ChevronDownIcon,
 	},
 
 	props: {
@@ -130,6 +139,7 @@ export default {
 	data() {
 		return {
 			categorySubmenu: null,
+			openMenuId: null,
 			useModernStyle: loadState('assistant', 'use-modern-style', false),
 		}
 	},
@@ -228,6 +238,21 @@ export default {
 				this.categorySubmenu = null
 			}
 		},
+		isMenuOpen(id) {
+			return this.openMenuId === id
+		},
+		/**
+		 * Only one menu is open at a time, but the closing one may emit its
+		 * close event after the opening one emitted its open event, so the
+		 * state is cleared only when it still refers to that menu.
+		 */
+		onMenuOpenChange(id, open) {
+			if (open) {
+				this.openMenuId = id
+			} else if (this.openMenuId === id) {
+				this.openMenuId = null
+			}
+		},
 		getCategoryIcon(category) {
 			switch (category) {
 				case 'chat':
@@ -272,5 +297,37 @@ export default {
 	flex-wrap: wrap;
 	row-gap: 8px;
 	column-gap: 6px;
+}
+
+.task-type-select :deep(.action-item__menutoggle .button-vue__icon) {
+	width: auto;
+	min-width: 0;
+	gap: var(--default-grid-baseline);
+	justify-content: flex-start;
+}
+
+.task-type-select :deep(.action-item__menutoggle.button-vue) {
+	// NcButton uses grid-baseline on the inline start and grid-baseline + radius
+	// on the inline end; keep both sides symmetrical around the slot content.
+	--button-padding: var(--default-grid-baseline);
+}
+
+// Mirrors the truncation NcButton applies to its own .button-vue__text, since the
+// label is rendered in the icon slot instead of the menu-name.
+.menu-trigger-label {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.menu-trigger-icon {
+	flex: none;
+}
+
+.task-type-select :deep(.action-item__menutoggle .button-vue__text) {
+	// menu-name is a single space to keep that span non-`empty`, so hide it to
+	// reclaim its width; the label is rendered inside the icon slot.
+	display: none;
 }
 </style>
