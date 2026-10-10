@@ -287,6 +287,7 @@ import axios, { isCancel } from '@nextcloud/axios'
 import { showError } from '@nextcloud/dialogs'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
+import { subscribe, unsubscribe } from '@nextcloud/event-bus'
 import { listen } from '@nextcloud/notify_push'
 import moment from 'moment'
 import { SHAPE_TYPE_NAMES, TASK_STATUS_INT } from '../../constants.js'
@@ -1210,17 +1211,39 @@ export default {
 			console.debug('[assistant] HAS PUSH', hasPush)
 
 			return new Promise((resolve, reject) => {
-				const timerId = setInterval(() => {
+				let timerId = null
+				let checkInProgress = false
+				let checkAgain = false
+				// [eventName, handler] pairs subscribed on the event bus while polling
+				const subscriptions = []
+
+				const stopPolling = () => {
+					clearInterval(timerId)
+					subscriptions.forEach(([eventName, handler]) => unsubscribe(eventName, handler))
+					subscriptions.length = 0
+					if (this.pollMessageGenerationTimerId === timerId) {
+						this.pollMessageGenerationTimerId = null
+						this.pollMessageGenerationCancel = null
+					}
+				}
+
+				const check = () => {
+					if (this.pollMessageGenerationTimerId !== timerId) {
+						// this polling has been replaced or stopped
+						stopPolling()
+						return
+					}
+					if (checkInProgress) {
+						checkAgain = true
+						return
+					}
 					if (this.active === null || sessionId !== this.active.id) {
 						console.debug('Stop polling messages for session ' + sessionId + ' because it is not selected anymore')
-						clearInterval(timerId)
-						if (this.pollMessageGenerationTimerId === timerId) {
-							this.pollMessageGenerationTimerId = null
-							this.pollMessageGenerationCancel = null
-						}
+						stopPolling()
 						reject(new TaskPollCancelledError('generation polling cancelled'))
 						return
 					}
+					checkInProgress = true
 					axios.get(
 						getChatURL('/check_generation'),
 						{ params: { taskId, sessionId } },
@@ -1229,9 +1252,7 @@ export default {
 							return
 						}
 						const responseData = response.data
-						clearInterval(timerId)
-						this.pollMessageGenerationTimerId = null
-						this.pollMessageGenerationCancel = null
+						stopPolling()
 						if (sessionId === this.active.id) {
 							this.active.sessionAgencyPendingActions = responseData.sessionAgencyPendingActions
 							this.active.agencyAnswered = false
@@ -1258,9 +1279,7 @@ export default {
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
 						if (error.response?.status !== 417) {
 							console.error('checkTaskPolling error', error)
-							clearInterval(timerId)
-							this.pollMessageGenerationTimerId = null
-							this.pollMessageGenerationCancel = null
+							stopPolling()
 							reject(error)
 						} else {
 							console.debug('checkTaskPolling, task is still scheduled or running')
@@ -1274,16 +1293,38 @@ export default {
 								this.updateStreamingMessage(error.response.data.task_output || {}, sessionId)
 							}
 						}
+					}).finally(() => {
+						checkInProgress = false
+						if (checkAgain) {
+							checkAgain = false
+							check()
+						}
 					})
-				}, 2000)
-				this.pollMessageGenerationTimerId = timerId
-				this.pollMessageGenerationCancel = () => {
-					clearInterval(timerId)
-					if (this.pollMessageGenerationTimerId === timerId) {
-						this.pollMessageGenerationTimerId = null
+				}
+
+				// assistant.js turns the 'taskprocessing:task_update' push notification into these events.
+				// When our task has finished, check it right away instead of waiting for the next poll.
+				const onTaskUpdated = (task) => {
+					if (task?.id === taskId) {
+						check()
 					}
+				}
+				const onTaskStatusUpdated = ({ taskId: updatedTaskId, status }) => {
+					if (updatedTaskId === taskId && [TASK_STATUS_INT.failed, TASK_STATUS_INT.cancelled].includes(status)) {
+						check()
+					}
+				}
+
+				timerId = setInterval(check, 2000)
+				this.pollMessageGenerationTimerId = timerId
+				subscriptions.push(
+					['assistant:task:updated', onTaskUpdated],
+					['assistant:task:status:updated', onTaskStatusUpdated],
+				)
+				subscriptions.forEach(([eventName, handler]) => subscribe(eventName, handler))
+				this.pollMessageGenerationCancel = () => {
+					stopPolling()
 					reject(new TaskPollCancelledError('generation polling cancelled'))
-					this.pollMessageGenerationCancel = null
 				}
 			})
 		},
