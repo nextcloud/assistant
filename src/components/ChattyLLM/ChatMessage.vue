@@ -136,6 +136,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { SHAPE_TYPE_NAMES } from '../../constants.js'
 import FileDisplay from '../fields/FileDisplay.vue'
+import { getRevealLength, STREAM_REVEAL_STEP_MS } from './streamReveal.js'
 
 const PLAIN_URL_PATTERN = /(?:\s|^|\()((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;()]*)*))(?:\s|$|\))/ig
 const MARKDOWN_LINK_PATTERN = /\[[-A-Z0-9+&@#%?=~_|!:,.;()]+\]\(((?:https?:\/\/)(?:[-A-Z0-9+_.]+(?::[0-9]+)?(?:\/[-A-Z0-9+&@#%?=~_|!:,.;]*)*))\)/ig
@@ -233,24 +234,16 @@ export default {
 	},
 
 	watch: {
-		// Pseudo streaming
-		'message.content': async function(messageContent, oldMessageContent) {
-			if (!this.streaming) {
-				return
-			}
-			if (oldMessageContent) {
-				this.streamedMessageContent = oldMessageContent
-				messageContent = messageContent.replace(oldMessageContent, '')
-			}
-			let cachedStreamedMessageContent
-			for (const char of messageContent.split('')) {
-				this.streamedMessageContent += char
-				cachedStreamedMessageContent = this.streamedMessageContent
-				await new Promise(resolve => setTimeout(resolve, 5))
-				if (cachedStreamedMessageContent !== this.streamedMessageContent) {
-					break
+		// Pseudo streaming: reveal the received text progressively.
+		// Immediate, so the text received before this component was mounted (the first chunk) is shown too.
+		'message.content': {
+			immediate: true,
+			handler(messageContent) {
+				if (!this.streaming) {
+					return
 				}
-			}
+				this.revealStreamedContent(messageContent ?? '')
+			},
 		},
 	},
 
@@ -258,7 +251,26 @@ export default {
 		this.fetch()
 	},
 
+	beforeUnmount() {
+		clearTimeout(this.revealTimer)
+	},
+
 	methods: {
+		revealStreamedContent(content) {
+			clearTimeout(this.revealTimer)
+			const shown = this.streamedMessageContent
+			// if the new content does not continue the displayed text, show it all at once
+			const fromLength = content.startsWith(shown) ? shown.length : content.length
+			const receivedAt = Date.now()
+			const step = () => {
+				const length = getRevealLength(content, fromLength, Date.now() - receivedAt)
+				this.streamedMessageContent = content.slice(0, length)
+				if (length < content.length) {
+					this.revealTimer = setTimeout(step, STREAM_REVEAL_STEP_MS)
+				}
+			}
+			step()
+		},
 		copyMessage(message) {
 			navigator.clipboard.writeText(message)
 			showSuccess(t('assistant', 'Message copied to clipboard'))
