@@ -54,7 +54,17 @@
 				@update:model-value="$emit('update:chatContent', $event)"
 				@submit="onSubmitText" />
 			<div class="input-area__button-box">
-				<NcButton v-if="!audioChatAvailable || chatContent"
+				<NcButton v-if="loading.llmGeneration"
+					class="input-area__button-box__button"
+					:aria-label="cancelGenerationAriaText"
+					:title="cancelGenerationAriaText"
+					variant="primary"
+					@click="$emit('cancel-generation')">
+					<template #icon>
+						<StopIcon :size="20" />
+					</template>
+				</NcButton>
+				<NcButton v-else-if="!audioChatAvailable || chatContent"
 					class="input-area__button-box__button"
 					:aria-label="submitBtnAriaText"
 					:disabled="disabled || isUploading || !chatContent.trim() || chatContentTooLong"
@@ -78,6 +88,7 @@
 import FolderPlusOutlineIcon from 'vue-material-design-icons/FolderPlusOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import SendIcon from 'vue-material-design-icons/Send.vue'
+import StopIcon from 'vue-material-design-icons/Stop.vue'
 import UploadOutlineIcon from 'vue-material-design-icons/UploadOutline.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -113,6 +124,7 @@ export default {
 		FolderPlusOutlineIcon,
 		PlusIcon,
 		SendIcon,
+		StopIcon,
 		UploadOutlineIcon,
 		NcActionButton,
 		NcActions,
@@ -150,6 +162,7 @@ export default {
 		'update:chatContent',
 		'submit',
 		'submit-audio',
+		'cancel-generation',
 	],
 
 	data() {
@@ -158,6 +171,7 @@ export default {
 			thinkingText: t('assistant', 'Processing…'),
 			scheduledText: t('assistant', 'Waiting…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
+			cancelGenerationAriaText: t('assistant', 'Stop generating'),
 			attachFileAriaText: t('assistant', 'Attach a file'),
 			uploadFromDeviceText: t('assistant', 'Upload from device'),
 			chooseFromNextcloudText: t('assistant', 'Select from nextcloud'),
