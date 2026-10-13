@@ -64,7 +64,7 @@
 						<StopIcon :size="20" />
 					</template>
 				</NcButton>
-				<NcButton v-else-if="!audioChatAvailable || chatContent"
+				<NcButton v-else-if="!audioChatAvailable || chatContent || disabled"
 					class="input-area__button-box__button"
 					:aria-label="submitBtnAriaText"
 					:disabled="disabled || isUploading || !chatContent.trim() || chatContentTooLong"
