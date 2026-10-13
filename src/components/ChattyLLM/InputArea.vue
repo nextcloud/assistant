@@ -4,7 +4,7 @@
 -->
 <template>
 	<div class="input-area">
-		<div v-if="loading.llmGeneration && !notifyBannerDismissed"
+		<div v-if="loading.llmGeneration && notifyBannerDue && !notifyBannerDismissed"
 			class="input-area__notify-banner"
 			role="status">
 			<span class="input-area__notify-banner__text">
@@ -197,6 +197,8 @@ export default {
 			stopNotifyWhenDoneTitle: t('assistant', 'Stop notifying me when the reply is ready'),
 			dismissBtnAriaText: t('assistant', 'Dismiss'),
 			notifyBannerDismissed: false,
+			notifyBannerDue: false,
+			notifyBannerTimer: null,
 			attachFileAriaText: t('assistant', 'Attach a file'),
 			uploadFromDeviceText: t('assistant', 'Upload from device'),
 			chooseFromNextcloudText: t('assistant', 'Select from nextcloud'),
@@ -249,11 +251,22 @@ export default {
 
 	watch: {
 		'loading.llmGeneration': function(generating) {
-			if (!generating) {
+			clearTimeout(this.notifyBannerTimer)
+			this.notifyBannerDue = false
+			if (generating) {
+				// quick generations finish before waiting becomes a problem
+				this.notifyBannerTimer = setTimeout(() => {
+					this.notifyBannerDue = true
+				}, 12000)
+			} else {
 				// the banner only makes sense for the current generation
 				this.notifyBannerDismissed = false
 			}
 		},
+	},
+
+	beforeUnmount() {
+		clearTimeout(this.notifyBannerTimer)
 	},
 
 	mounted() {
