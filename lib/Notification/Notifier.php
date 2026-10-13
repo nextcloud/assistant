@@ -410,6 +410,50 @@ class Notifier implements INotifier {
 				$notification->addParsedAction($action);
 
 				return $notification;
+			case 'chat_success':
+				$subject = $l->t('Your assistant reply is ready');
+
+				$link = $params['target']
+					?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]);
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
+
+				$notification
+					->setParsedSubject($subject)
+					->setLink($link)
+					->setIcon($iconUrl);
+
+				$actionLabel = $params['actionLabel'] ?? $l->t('View reply');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($notification->getLink(), IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
+				return $notification;
+			case 'chat_failure':
+				$subject = $l->t('Your assistant reply could not be generated');
+
+				$link = $params['target']
+					?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]);
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
+
+				$notification
+					->setParsedSubject($subject)
+					->setLink($link)
+					->setIcon($iconUrl);
+
+				$actionLabel = $params['actionLabel'] ?? $l->t('View chat');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($notification->getLink(), IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
+				return $notification;
 			default:
 				// Unknown subject => Unknown notification => throw
 				throw new UnknownNotificationException();

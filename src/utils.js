@@ -36,3 +36,26 @@ export function uploadInputFile(file) {
 	formData.append('filename', file.name)
 	return axios.post(uploadEndpointUrl, formData)
 }
+
+/**
+ * Ask for browser notification permission, meant to be called from a user
+ * gesture handler. Denial is not surfaced: the in-app notification still
+ * works without browser notifications.
+ *
+ * @return {Promise<boolean>} true if the permission was freshly granted
+ * (the notifications app only registers its web push subscription on page
+ * load, so the caller should reload once to activate browser delivery)
+ */
+export async function requestBrowserNotificationPermission() {
+	if (!('Notification' in window) || Notification.permission !== 'default') {
+		return false
+	}
+	let permission
+	try {
+		permission = await Notification.requestPermission()
+	} catch (error) {
+		console.debug('Browser notification permission request failed', error)
+		return false
+	}
+	return permission === 'granted'
+}

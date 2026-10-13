@@ -4,6 +4,31 @@
 -->
 <template>
 	<div class="input-area">
+		<div v-if="loading.llmGeneration && !notifyBannerDismissed"
+			class="input-area__notify-banner"
+			role="status">
+			<span class="input-area__notify-banner__text">
+				{{ notifyBannerText }}
+			</span>
+			<span class="input-area__notify-banner__actions">
+				<NcButton class="input-area__notify-banner__notify"
+					:aria-pressed="isNotifyEnabled ? 'true' : 'false'"
+					:title="notifyBtnTitle"
+					variant="secondary"
+					@click="$emit('background-notify')">
+					{{ notifyBtnText }}
+				</NcButton>
+				<NcButton class="input-area__notify-banner__dismiss"
+					:aria-label="dismissBtnAriaText"
+					:title="dismissBtnAriaText"
+					variant="tertiary"
+					@click="dismissNotifyBanner">
+					<template #icon>
+						<CloseIcon :size="20" />
+					</template>
+				</NcButton>
+			</span>
+		</div>
 		<DocumentPreviews v-if="multimodalChatAvailable && attachedFileIds.length > 0"
 			:file-ids="attachedFileIds"
 			@delete="onDeleteAttachedFile" />
@@ -75,6 +100,7 @@
 </template>
 
 <script>
+import CloseIcon from 'vue-material-design-icons/Close.vue'
 import FolderPlusOutlineIcon from 'vue-material-design-icons/FolderPlusOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import SendIcon from 'vue-material-design-icons/Send.vue'
@@ -109,6 +135,7 @@ export default {
 
 	components: {
 		AudioRecorderWrapper,
+		CloseIcon,
 		DocumentPreviews,
 		FolderPlusOutlineIcon,
 		PlusIcon,
@@ -144,12 +171,17 @@ export default {
 				taskPosition: null,
 			}),
 		},
+		isNotifyEnabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [
 		'update:chatContent',
 		'submit',
 		'submit-audio',
+		'background-notify',
 	],
 
 	data() {
@@ -158,6 +190,13 @@ export default {
 			thinkingText: t('assistant', 'Processing…'),
 			scheduledText: t('assistant', 'Waiting…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
+			notifyBannerText: t('assistant', 'You can close this page. Want to be notified when the reply is ready?'),
+			notifyBtnLabel: t('assistant', 'Notify'),
+			notifyingBtnLabel: t('assistant', 'Notifying'),
+			notifyWhenDoneTitle: t('assistant', 'Notify me when the reply is ready'),
+			stopNotifyWhenDoneTitle: t('assistant', 'Stop notifying me when the reply is ready'),
+			dismissBtnAriaText: t('assistant', 'Dismiss'),
+			notifyBannerDismissed: false,
 			attachFileAriaText: t('assistant', 'Attach a file'),
 			uploadFromDeviceText: t('assistant', 'Upload from device'),
 			chooseFromNextcloudText: t('assistant', 'Select from nextcloud'),
@@ -196,6 +235,25 @@ export default {
 							: '')
 				: this.placeholderText
 		},
+		notifyBtnText() {
+			return this.isNotifyEnabled
+				? this.notifyingBtnLabel
+				: this.notifyBtnLabel
+		},
+		notifyBtnTitle() {
+			return this.isNotifyEnabled
+				? this.stopNotifyWhenDoneTitle
+				: this.notifyWhenDoneTitle
+		},
+	},
+
+	watch: {
+		'loading.llmGeneration': function(generating) {
+			if (!generating) {
+				// the banner only makes sense for the current generation
+				this.notifyBannerDismissed = false
+			}
+		},
 	},
 
 	mounted() {
@@ -203,6 +261,9 @@ export default {
 	},
 
 	methods: {
+		dismissNotifyBanner() {
+			this.notifyBannerDismissed = true
+		},
 		onPaste(e) {
 			if (!this.multimodalChatAvailable || e.clipboardData.files.length === 0) {
 				return
@@ -337,6 +398,51 @@ export default {
 
 		&__button {
 			height: fit-content;
+		}
+	}
+
+	&__notify-banner {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--default-grid-baseline);
+		padding: 4px 4px 4px calc(2 * var(--default-grid-baseline));
+		border-radius: var(--border-radius-large);
+		background-color: var(--color-primary-element-light);
+		color: var(--color-primary-element-light-text);
+
+		&__text {
+			flex: 0 1 auto;
+			min-width: 0;
+			max-width: 60%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		&__actions {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: var(--default-grid-baseline);
+			flex-shrink: 0;
+		}
+
+		// the custom classes land on the NcButton root elements
+		&__notify {
+			background-color: transparent;
+			color: var(--color-primary-element-light-text);
+
+			&[aria-pressed='true'] {
+				background-color: var(--color-primary-element);
+				color: var(--color-primary-element-text);
+			}
+		}
+
+		&__dismiss {
+			background-color: transparent;
+			color: var(--color-primary-element-light-text);
 		}
 	}
 }
