@@ -1223,6 +1223,9 @@ export default {
 			if (this.currentGenerationTaskId === null || !this.loading.llmGeneration) {
 				return
 			}
+			// capture before the optional permission prompt: it can stay open long
+			// enough for the generation to end or the session to switch
+			const taskId = this.currentGenerationTaskId
 			// any in-flight notify state sync is now outdated, its response must not overwrite the toggle
 			this.notifyStateSyncId++
 			const enable = !this.isNotifyEnabled
@@ -1232,7 +1235,7 @@ export default {
 				// reach the user when the tab is closed
 				reloadForPushSubscription = await requestBrowserNotificationPermission()
 			}
-			setNotifyReady(this.currentGenerationTaskId, enable).then(() => {
+			setNotifyReady(taskId, enable).then(() => {
 				this.isNotifyEnabled = enable
 				// the notifications app registers web push on page load only:
 				// reload once after a fresh grant so browser delivery actually starts.

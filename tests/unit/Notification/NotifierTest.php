@@ -49,10 +49,15 @@ class NotifierTest extends TestCase {
 			return '/route/' . $route . '?' . http_build_query($args);
 		});
 
+		$appManager = $this->createMock(IAppManager::class);
+		$appManager->method('getAppInfo')->willReturnCallback(static function (string $appId): ?array {
+			return $appId === Application::APP_ID ? ['id' => $appId, 'name' => 'Assistant'] : null;
+		});
+
 		return new Notifier(
 			$factory,
 			$url,
-			$this->createMock(IAppManager::class),
+			$appManager,
 			$this->createMock(ITaskProcessingManager::class),
 			$this->createMock(LoggerInterface::class),
 		);
@@ -67,8 +72,16 @@ class NotifierTest extends TestCase {
 			$this->recorded['parsedSubject'] = $parsedSubject;
 			return $notification;
 		});
+		$notification->method('setParsedMessage')->willReturnCallback(function (string $message) use ($notification): INotification {
+			$this->recorded['parsedMessage'] = $message;
+			return $notification;
+		});
 		$notification->method('setLink')->willReturnCallback(function (string $link) use ($notification): INotification {
 			$this->recorded['link'] = $link;
+			return $notification;
+		});
+		$notification->method('setIcon')->willReturnCallback(function (string $icon) use ($notification): INotification {
+			$this->recorded['icon'] = $icon;
 			return $notification;
 		});
 		$notification->method('getLink')->willReturnCallback(function (): string {
@@ -139,6 +152,22 @@ class NotifierTest extends TestCase {
 		$this->assertSame(self::TARGET_URL, $this->recorded['link']);
 		$this->assertSame('https://cloud.example/apps/core/actions/error.svg', $this->recorded['icon']);
 		$this->assertSame('View chat', $this->recorded['actionLabel']);
+	}
+
+	public function testPrepareTaskSuccessWithoutTarget(): void {
+		$notifier = $this->getNotifier();
+		$notification = $this->getNotification('success', [
+			'appId' => Application::APP_ID,
+			'id' => 204,
+			'inputs' => ['input' => 'Write a haiku'],
+			// no target: the link must be generated at render time
+		]);
+
+		$prepared = $notifier->prepare($notification, 'en');
+
+		$this->assertSame($notification, $prepared);
+		$this->assertSame('/route/assistant.assistant.getAssistantTaskResultPage?taskId=204', $this->recorded['link']);
+		$this->assertStringContainsString('has finished', $this->recorded['parsedSubject']);
 	}
 
 	public function testPrepareForeignAppThrows(): void {

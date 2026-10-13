@@ -71,7 +71,8 @@ class Notifier implements INotifier {
 
 		if (in_array($notification->getSubject(), ['success', 'failure'], true)) {
 			// ignore old notifications (before meta tasks were introduced)
-			if (!isset($params['target'], $params['inputs'])) {
+			// the target is optional: the link is generated at render time
+			if (!isset($params['inputs'])) {
 				throw new UnknownNotificationException();
 			}
 			$schedulingAppId = $params['appId'];
