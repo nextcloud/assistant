@@ -947,6 +947,9 @@ export default {
 			}
 			try {
 				await cancelTask(taskId)
+				// the task is cancelled server side: finalize now instead of
+				// waiting for the next check_generation poll tick
+				this.pollMessageGenerationCancel?.()
 			} catch (error) {
 				console.error('cancelGeneration error:', error)
 				if (this.loading.llmGeneration) {
