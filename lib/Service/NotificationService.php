@@ -37,17 +37,11 @@ class NotificationService {
 
 		$chatSessionId = $this->getChatMessageSessionId($task);
 
-		if ($chatSessionId !== null) {
-			$defaultTarget = $this->getChatTarget($chatSessionId);
-		} else {
-			$defaultTarget = $this->getDefaultTarget($task->getId());
-		}
-
 		$params = [
 			'appId' => $task->getAppId(),
 			'id' => $task->getId(),
 			'inputs' => $task->getInput(),
-			'target' => $customTarget ?? $defaultTarget,
+			'target' => $customTarget,
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
@@ -81,18 +75,13 @@ class NotificationService {
 			->setUser($task->getUserId())
 			->setDateTime(new DateTime())
 			->setObject($objectType, (string)($task->getId() ?? 0))
-			->setSubject($subject, $params)
-			->setLink($params['target']);
+			->setSubject($subject, $params);
 
 		$manager->notify($notification);
 	}
 
 	private function getDefaultTarget(int $taskId): string {
 		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $taskId]);
-	}
-
-	private function getChatTarget(int $sessionId): string {
-		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $sessionId]);
 	}
 
 	/**
@@ -138,8 +127,7 @@ class NotificationService {
 			->setUser($userId)
 			->setDateTime(new DateTime())
 			->setObject('task', (string)$taskId)
-			->setSubject($subject, $params)
-			->setLink($params['target']);
+			->setSubject($subject, $params);
 
 		$manager->notify($notification);
 	}
@@ -172,8 +160,7 @@ class NotificationService {
 			->setUser($userId)
 			->setDateTime(new DateTime())
 			->setObject('task', (string)$taskId)
-			->setSubject($subject, $params)
-			->setLink($params['target']);
+			->setSubject($subject, $params);
 
 		$manager->notify($notification);
 	}

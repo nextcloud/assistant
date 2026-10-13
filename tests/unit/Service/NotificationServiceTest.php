@@ -86,7 +86,8 @@ class NotificationServiceTest extends TestCase {
 		$this->assertSame('204', $captured['objectId']);
 		$params = $captured['subjectParameters'];
 		$this->assertSame('42', $params['sessionId']);
-		$this->assertSame('/absolute/assistant.assistant.getAssistantStandalonePage?sessionId=42', $params['target']);
+		// no prepared URL: the Notifier generates the link when rendering
+		$this->assertNull($params['target']);
 		$this->assertSame(Application::APP_ID . ':chatty-llm', $params['appId']);
 		$this->assertSame(204, $params['id']);
 		$this->assertSame(['input' => 'Write a haiku'], $params['inputs']);
@@ -101,7 +102,8 @@ class NotificationServiceTest extends TestCase {
 		$this->assertSame('chat_failure', $captured['subject']);
 		$params = $captured['subjectParameters'];
 		$this->assertSame('42', $params['sessionId']);
-		$this->assertSame('/absolute/assistant.assistant.getAssistantStandalonePage?sessionId=42', $params['target']);
+		// no prepared URL: the Notifier generates the link when rendering
+		$this->assertNull($params['target']);
 	}
 
 	public function testChatMessageRegenerationNotification(): void {
@@ -125,7 +127,7 @@ class NotificationServiceTest extends TestCase {
 		$this->assertSame('task', $captured['objectType']);
 		$params = $captured['subjectParameters'];
 		$this->assertArrayNotHasKey('sessionId', $params);
-		$this->assertSame('/absolute/assistant.assistant.getAssistantTaskResultPage?taskId=204', $params['target']);
+		$this->assertNull($params['target']);
 	}
 
 	public function testNonChatTaskFailureNotification(): void {
@@ -136,7 +138,7 @@ class NotificationServiceTest extends TestCase {
 
 		$this->assertSame('failure', $captured['subject']);
 		$this->assertArrayNotHasKey('sessionId', $captured['subjectParameters']);
-		$this->assertSame('/absolute/assistant.assistant.getAssistantTaskResultPage?taskId=204', $captured['subjectParameters']['target']);
+		$this->assertNull($captured['subjectParameters']['target']);
 	}
 
 	public function testChatTitleTaskKeepsDefaultNotification(): void {
@@ -148,6 +150,6 @@ class NotificationServiceTest extends TestCase {
 
 		$this->assertSame('success', $captured['subject']);
 		$this->assertArrayNotHasKey('sessionId', $captured['subjectParameters']);
-		$this->assertSame('/absolute/assistant.assistant.getAssistantTaskResultPage?taskId=204', $captured['subjectParameters']['target']);
+		$this->assertNull($captured['subjectParameters']['target']);
 	}
 }

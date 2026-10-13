@@ -136,7 +136,7 @@ class Notifier implements INotifier {
 					$content .= $l->t('Result: %1$s', [$params['result']]);
 				}
 
-				$link = $params['target'];
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 				$notification
