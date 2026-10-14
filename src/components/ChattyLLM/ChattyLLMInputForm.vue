@@ -906,7 +906,9 @@ export default {
 		},
 
 		onKeydownCancelGeneration(event) {
-			if (event.key !== 'Escape' || this.deletionMode || this.sessionIdsToDelete !== null) {
+			// assignment view has no stop control: keep its scheduled tasks away
+			// from the chat Escape cancel and let the key reach the host page
+			if (event.key !== 'Escape' || this.isAssignment || this.deletionMode || this.sessionIdsToDelete !== null) {
 				return
 			}
 			// consumed here: swallow the key so it does not leak into the host
@@ -934,8 +936,20 @@ export default {
 			if (this.pendingCancelGeneration && this.pendingCancelSeq === requestSeq) {
 				this.pendingCancelGeneration = false
 				this.pendingCancelSeq = null
-				cancelTask(taskId).catch(error => {
+				// stop requested while this task was being scheduled: cancel it
+				// now and finalize as soon as the request succeeds, the poll
+				// handle is installed right after this by the scheduling request
+				cancelTask(taskId).then(() => {
+					// the task is cancelled server side: finalize now instead of
+					// waiting for the next check_generation poll tick
+					if (this.generationTaskId === taskId) {
+						this.pollMessageGenerationCancel?.()
+					}
+				}).catch(error => {
 					console.error('cancelGeneration error:', error)
+					if (this.loading.llmGeneration && this.generationTaskId === taskId) {
+						showError(t('assistant', 'Failed to cancel the generation. It might have already finished.'))
+					}
 				})
 			}
 		},
