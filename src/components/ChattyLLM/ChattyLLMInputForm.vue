@@ -373,6 +373,8 @@ export default {
 			pollPositionSessionId: null,
 			generationTaskId: null,
 			pendingCancelGeneration: false,
+			pendingCancelSeq: null,
+			generationRequestSeq: 0,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
@@ -523,6 +525,7 @@ export default {
 			this.pollPositionSessionId = null
 			this.generationTaskId = null
 			this.pendingCancelGeneration = false
+			this.pendingCancelSeq = null
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
@@ -626,7 +629,7 @@ export default {
 						this.loading.llmGeneration = true
 						this.loading.llmRunning = false
 						checkTaskId = checkSessionResponseData.messageTaskId
-						this.trackGenerationTask(checkTaskId, sessionId)
+						this.trackGenerationTask(checkTaskId, sessionId, this.generationRequestSeq)
 						this.startTaskPositionPolling(checkSessionResponseData.messageTaskId, sessionId)
 						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
@@ -918,8 +921,9 @@ export default {
 		 *
 		 * @param {number} taskId Id of the scheduled generation task
 		 * @param {number} sessionId Id of the session the task belongs to
+		 * @param {number} requestSeq Sequence of the scheduling request
 		 */
-		trackGenerationTask(taskId, sessionId) {
+		trackGenerationTask(taskId, sessionId, requestSeq) {
 			// the request may resolve after a session switch: never track a task
 			// of a session that is not the active one, the stop control would
 			// cancel the wrong task
@@ -927,8 +931,9 @@ export default {
 				return
 			}
 			this.generationTaskId = taskId
-			if (this.pendingCancelGeneration) {
+			if (this.pendingCancelGeneration && this.pendingCancelSeq === requestSeq) {
 				this.pendingCancelGeneration = false
+				this.pendingCancelSeq = null
 				cancelTask(taskId).catch(error => {
 					console.error('cancelGeneration error:', error)
 				})
@@ -941,15 +946,20 @@ export default {
 			}
 			const taskId = this.generationTaskId
 			if (taskId === null) {
-				// stop requested before the task id is known: run it once known
+				// stop requested before the task id is known: run it once known,
+				// owned by the scheduling request currently in flight
 				this.pendingCancelGeneration = true
+				this.pendingCancelSeq = this.generationRequestSeq
 				return
 			}
+			// capture the handle now: a session switch during the cancel request
+			// replaces it with the next generation's poll
+			const pollCancel = this.pollMessageGenerationCancel
 			try {
 				await cancelTask(taskId)
 				// the task is cancelled server side: finalize now instead of
 				// waiting for the next check_generation poll tick
-				this.pollMessageGenerationCancel?.()
+				pollCancel?.()
 			} catch (error) {
 				console.error('cancelGeneration error:', error)
 				if (this.loading.llmGeneration) {
@@ -1153,6 +1163,7 @@ export default {
 		},
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
+			const requestSeq = ++this.generationRequestSeq
 			let taskId = null
 			try {
 				this.scrollToLastMessage()
@@ -1172,7 +1183,7 @@ export default {
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
 				taskId = generationResponseData.taskId
-				this.trackGenerationTask(taskId, sessionId)
+				this.trackGenerationTask(taskId, sessionId, requestSeq)
 				this.startTaskPositionPolling(taskId, sessionId)
 				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
@@ -1196,7 +1207,10 @@ export default {
 				}
 				if (taskId !== null && this.generationTaskId === taskId) {
 					this.generationTaskId = null
+				}
+				if (this.pendingCancelSeq === requestSeq) {
 					this.pendingCancelGeneration = false
+					this.pendingCancelSeq = null
 				}
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
@@ -1208,6 +1222,7 @@ export default {
 
 		async runRegenerationTask(messageId) {
 			const sessionId = this.active.id
+			const requestSeq = ++this.generationRequestSeq
 			let taskId = null
 			try {
 				this.loading.llmGeneration = true
@@ -1218,7 +1233,7 @@ export default {
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
 				taskId = regenerationResponseData.taskId
-				this.trackGenerationTask(taskId, sessionId)
+				this.trackGenerationTask(taskId, sessionId, requestSeq)
 				this.startTaskPositionPolling(taskId, sessionId)
 				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
@@ -1242,7 +1257,10 @@ export default {
 				}
 				if (taskId !== null && this.generationTaskId === taskId) {
 					this.generationTaskId = null
+				}
+				if (this.pendingCancelSeq === requestSeq) {
 					this.pendingCancelGeneration = false
+					this.pendingCancelSeq = null
 				}
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
