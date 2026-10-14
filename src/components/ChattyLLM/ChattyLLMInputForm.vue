@@ -905,6 +905,10 @@ export default {
 			if (event.key !== 'Escape' || this.isAssignment || this.deletionMode || this.sessionIdsToDelete !== null) {
 				return
 			}
+			// idle form: the key belongs to the host page, nothing to consume
+			if (!this.loading.llmGeneration) {
+				return
+			}
 			// consumed here: swallow the key so it does not leak into the host
 			// page's own Escape handlers (e.g. Talk deselecting the conversation)
 			event.stopPropagation()
