@@ -8,6 +8,7 @@ OC.L10N.register(
     "Add a calendar task" : "Создать задачу в календаре",
     "Create a Deck card" : "Создать карточку",
     "Upload file" : "Загрузить файл",
+    "Create folder" : "Создать папку",
     "Move file" : "Переместить файл",
     "Copy file" : "Копировать файл",
     "Delete file" : "Удалить файл",
