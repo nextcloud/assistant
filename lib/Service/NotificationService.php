@@ -40,11 +40,15 @@ class NotificationService {
 		$params = [
 			'appId' => $task->getAppId(),
 			'id' => $task->getId(),
-			'inputs' => $task->getInput(),
 			'target' => $customTarget,
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
+		if ($chatSessionId === null) {
+			// chat notifications never render the task input and it can be
+			// large enough to overflow the notifications table column
+			$params['inputs'] = $task->getInput();
+		}
 		$params['taskTypeId'] = $task->getTaskTypeId();
 		if ($chatSessionId !== null) {
 			$params['sessionId'] = (string)$chatSessionId;

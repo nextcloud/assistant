@@ -12,11 +12,14 @@
 			</span>
 			<span class="input-area__notify-banner__actions">
 				<NcButton class="input-area__notify-banner__notify"
-					:aria-pressed="isNotifyEnabled ? 'true' : 'false'"
 					:title="notifyBtnTitle"
 					variant="secondary"
 					@click="$emit('background-notify')">
-					{{ notifyBtnText }}
+					<template #icon>
+						<BellRingOutlineIcon v-if="isNotifyEnabled" />
+						<BellOutlineIcon v-else />
+					</template>
+					{{ notifyBtnLabel }}
 				</NcButton>
 				<NcButton class="input-area__notify-banner__dismiss"
 					:aria-label="dismissBtnAriaText"
@@ -100,6 +103,8 @@
 </template>
 
 <script>
+import BellOutlineIcon from 'vue-material-design-icons/BellOutline.vue'
+import BellRingOutlineIcon from 'vue-material-design-icons/BellRingOutline.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import FolderPlusOutlineIcon from 'vue-material-design-icons/FolderPlusOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -135,6 +140,8 @@ export default {
 
 	components: {
 		AudioRecorderWrapper,
+		BellOutlineIcon,
+		BellRingOutlineIcon,
 		CloseIcon,
 		DocumentPreviews,
 		FolderPlusOutlineIcon,
@@ -190,11 +197,10 @@ export default {
 			thinkingText: t('assistant', 'Processing…'),
 			scheduledText: t('assistant', 'Waiting…'),
 			submitBtnAriaText: t('assistant', 'Submit'),
-			notifyBannerText: t('assistant', 'You can close this page. Want to be notified when the reply is ready?'),
-			notifyBtnLabel: t('assistant', 'Notify'),
-			notifyingBtnLabel: t('assistant', 'Notifying'),
-			notifyWhenDoneTitle: t('assistant', 'Notify me when the reply is ready'),
-			stopNotifyWhenDoneTitle: t('assistant', 'Stop notifying me when the reply is ready'),
+			notifyBannerText: t('assistant', 'You can close this page. Do you want to be notified when the reply is ready?'),
+			notifyBtnLabel: t('assistant', 'Get notified'),
+			notifyDisabledTitle: t('assistant', 'No notification'),
+			notifyEnabledTitle: t('assistant', 'You will be notified'),
 			dismissBtnAriaText: t('assistant', 'Dismiss'),
 			notifyBannerDismissed: false,
 			notifyBannerDue: false,
@@ -237,15 +243,10 @@ export default {
 							: '')
 				: this.placeholderText
 		},
-		notifyBtnText() {
-			return this.isNotifyEnabled
-				? this.notifyingBtnLabel
-				: this.notifyBtnLabel
-		},
 		notifyBtnTitle() {
 			return this.isNotifyEnabled
-				? this.stopNotifyWhenDoneTitle
-				: this.notifyWhenDoneTitle
+				? this.notifyEnabledTitle
+				: this.notifyDisabledTitle
 		},
 	},
 
@@ -426,12 +427,8 @@ export default {
 		color: var(--color-primary-element-light-text);
 
 		&__text {
-			flex: 0 1 auto;
+			flex: 1 1 auto;
 			min-width: 0;
-			max-width: 60%;
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
 		}
 
 		&__actions {
@@ -446,11 +443,6 @@ export default {
 		&__notify {
 			background-color: transparent;
 			color: var(--color-primary-element-light-text);
-
-			&[aria-pressed='true'] {
-				background-color: var(--color-primary-element);
-				color: var(--color-primary-element-text);
-			}
 		}
 
 		&__dismiss {
