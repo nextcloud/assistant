@@ -972,8 +972,12 @@ export default {
 			try {
 				await cancelTask(taskId)
 				// the task is cancelled server side: finalize now instead of
-				// waiting for the next check_generation poll tick
-				pollCancel?.()
+				// waiting for the next check_generation poll tick, but only
+				// this task's own poll: a session switch during the request
+				// may have installed another generation's
+				if (this.generationTaskId === taskId) {
+					pollCancel?.()
+				}
 			} catch (error) {
 				console.error('cancelGeneration error:', error)
 				if (this.loading.llmGeneration) {
@@ -1259,10 +1263,18 @@ export default {
 				}
 			} catch (error) {
 				if (error instanceof TaskPollCancelledError) {
+					// cancelled: the scheduling already deleted the old message,
+					// drop it instead of showing a ghost
+					this.messages = this.messages.filter((message) => message.id !== messageId)
 					return
 				}
 				console.error('scheduleRegenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error regenerating a response'))
+				if (taskId !== null) {
+					// failed after scheduling: the old message is already
+					// deleted server side
+					this.messages = this.messages.filter((message) => message.id !== messageId)
+				}
 			} finally {
 				if (this.pollPositionSessionId === sessionId) {
 					cancelTaskPositionPolling()
