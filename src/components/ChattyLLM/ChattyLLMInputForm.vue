@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
   -->
 <template>
-	<div class="container">
+	<div class="container" @keydown="onKeydownCancelGeneration">
 		<NcAppNavigation>
 			<NcAppNavigationList>
 				<NcAppNavigationNew v-if="!isAssignment && !deletionMode"
@@ -564,20 +564,12 @@ export default {
 				window.removeEventListener('keydown', this.onKeydownEscape, true)
 			}
 		},
-		'loading.llmGeneration': function(generating) {
-			if (generating) {
-				window.addEventListener('keydown', this.onKeydownCancelGeneration, true)
-			} else {
-				window.removeEventListener('keydown', this.onKeydownCancelGeneration, true)
-			}
-		},
 	},
 
 	beforeUnmount() {
 		this.pollMessageGenerationCancel?.()
 		cancelTaskPositionPolling()
 		window.removeEventListener('keydown', this.onKeydownEscape, true)
-		window.removeEventListener('keydown', this.onKeydownCancelGeneration, true)
 		if (this.pollMessageGenerationTimerId) {
 			clearInterval(this.pollMessageGenerationTimerId)
 		}
@@ -906,6 +898,8 @@ export default {
 		},
 
 		onKeydownCancelGeneration(event) {
+			// listener on the component root: only key presses from inside the
+			// form reach it, focus elsewhere belongs to the host page.
 			// assignment view has no stop control: keep its scheduled tasks away
 			// from the chat Escape cancel and let the key reach the host page
 			if (event.key !== 'Escape' || this.isAssignment || this.deletionMode || this.sessionIdsToDelete !== null) {

@@ -55,6 +55,7 @@
 				@submit="onSubmitText" />
 			<div class="input-area__button-box">
 				<NcButton v-if="loading.llmGeneration"
+					ref="stopGenerationButton"
 					class="input-area__button-box__button"
 					:aria-label="cancelGenerationAriaText"
 					:title="cancelGenerationAriaText"
@@ -209,6 +210,20 @@ export default {
 							? ' ' + t('assistant', 'Task position: {position}', { position: this.loading.taskPosition })
 							: '')
 				: this.placeholderText
+		},
+	},
+
+	watch: {
+		'loading.llmGeneration': function(generating) {
+			if (generating) {
+				// the editor is disabled while generating: keep a focus anchor
+				// inside the form so Escape stays scoped to it
+				this.$nextTick(() => {
+					this.$refs.stopGenerationButton?.$el?.focus()
+				})
+			} else {
+				this.focus()
+			}
 		},
 	},
 
