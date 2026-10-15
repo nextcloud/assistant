@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
   -->
 <template>
-	<div class="container">
+	<div class="container" @keydown="onKeydownCancelGeneration">
 		<NcAppNavigation>
 			<NcAppNavigationList>
 				<NcAppNavigationNew v-if="!isAssignment && !deletionMode"
@@ -230,7 +230,8 @@
 				class="session-area__input-area"
 				:loading="loading"
 				@submit="handleSubmit"
-				@submit-audio="handleSubmitAudio" />
+				@submit-audio="handleSubmitAudio"
+				@cancel-generation="cancelGeneration" />
 		</NcAppContent>
 		<NcDialog :key="deletionDialogKey"
 			v-model:open="deletionDialogOpen"
@@ -294,6 +295,7 @@ import ICAL from 'ical.js'
 import formatRecurrenceRule from './recurrenceRule.js'
 import { getLanguage } from '@nextcloud/l10n'
 import {
+	cancelTask,
 	cancelTaskPositionPolling,
 	pollTaskPosition,
 	TaskPollCancelledError,
@@ -369,6 +371,10 @@ export default {
 			pollCheckSessionTimeout: null,
 			pollPositionTaskId: null,
 			pollPositionSessionId: null,
+			generationTaskId: null,
+			pendingCancelGeneration: false,
+			pendingCancelSeq: null,
+			generationRequestSeq: 0,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
@@ -517,6 +523,9 @@ export default {
 			cancelTaskPositionPolling()
 			this.pollPositionTaskId = null
 			this.pollPositionSessionId = null
+			this.generationTaskId = null
+			this.pendingCancelGeneration = false
+			this.pendingCancelSeq = null
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
@@ -588,6 +597,7 @@ export default {
 			this.userScrolled = true
 		},
 		async checkSession(sessionId, isAssignment) {
+			let checkTaskId = null
 			try {
 				if (this.active?.id === null || this.active?.id !== sessionId) {
 					return
@@ -610,6 +620,12 @@ export default {
 					try {
 						this.loading.llmGeneration = true
 						this.loading.llmRunning = false
+						checkTaskId = checkSessionResponseData.messageTaskId
+						if (!this.trackGenerationTask(checkTaskId, sessionId, this.generationRequestSeq)) {
+							// the session changed since the check started: the
+							// active session's generation owns the polling state
+							return
+						}
 						this.startTaskPositionPolling(checkSessionResponseData.messageTaskId, sessionId)
 						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
@@ -658,9 +674,19 @@ export default {
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
-				this.loading.llmGeneration = false
-				this.loading.llmRunning = false
-				this.loading.taskPosition = null
+				// reset only what this run owns: a generation scheduled while the
+				// check was running keeps its tracking and its loading flags
+				const ownsGeneration = this.generationTaskId === checkTaskId
+				if (ownsGeneration || this.generationTaskId === null) {
+					if (ownsGeneration) {
+						this.generationTaskId = null
+					}
+					this.loading.llmGeneration = false
+					this.loading.llmRunning = false
+					this.loading.taskPosition = null
+					this.streamingMessage = null
+					this.userScrolled = false
+				}
 				this.loading.titleGeneration = false
 				if (isAssignment) {
 					this.pollCheckSessionTimeout = setTimeout(() => { this.checkSession(sessionId, isAssignment) }, 5000)
@@ -875,6 +901,94 @@ export default {
 			this.exitDeletionMode()
 		},
 
+		onKeydownCancelGeneration(event) {
+			// listener on the component root: only key presses from inside the
+			// form reach it, focus elsewhere belongs to the host page.
+			// assignment view has no stop control: keep its scheduled tasks away
+			// from the chat Escape cancel and let the key reach the host page
+			if (event.key !== 'Escape' || this.isAssignment || this.deletionMode || this.sessionIdsToDelete !== null) {
+				return
+			}
+			// idle form: the key belongs to the host page, nothing to consume
+			if (!this.loading.llmGeneration) {
+				return
+			}
+			// consumed here: swallow the key so it does not leak into the host
+			// page's own Escape handlers (e.g. Talk deselecting the conversation)
+			event.stopPropagation()
+			this.cancelGeneration()
+		},
+
+		/**
+		 * Track the running generation task of a session. A stop request made
+		 * before the task id was known is executed once the id is available.
+		 *
+		 * @param {number} taskId Id of the scheduled generation task
+		 * @param {number} sessionId Id of the session the task belongs to
+		 * @param {number} requestSeq Sequence of the scheduling request
+		 */
+		trackGenerationTask(taskId, sessionId, requestSeq) {
+			// the request may resolve after a session switch: never track a task
+			// of a session that is not the active one, the stop control would
+			// cancel the wrong task
+			if (this.active?.id !== sessionId) {
+				return false
+			}
+			this.generationTaskId = taskId
+			if (this.pendingCancelGeneration && this.pendingCancelSeq === requestSeq) {
+				this.pendingCancelGeneration = false
+				this.pendingCancelSeq = null
+				// stop requested while this task was being scheduled: cancel it
+				// now and finalize as soon as the request succeeds, the poll
+				// handle is installed right after this by the scheduling request
+				cancelTask(taskId).then(() => {
+					// the task is cancelled server side: finalize now instead of
+					// waiting for the next check_generation poll tick
+					if (this.generationTaskId === taskId) {
+						this.pollMessageGenerationCancel?.()
+					}
+				}).catch(error => {
+					console.error('cancelGeneration error:', error)
+					if (this.loading.llmGeneration && this.generationTaskId === taskId) {
+						showError(t('assistant', 'Failed to cancel the generation. It might have already finished.'))
+					}
+				})
+			}
+			return true
+		},
+
+		async cancelGeneration() {
+			if (!this.loading.llmGeneration) {
+				return
+			}
+			const taskId = this.generationTaskId
+			if (taskId === null) {
+				// stop requested before the task id is known: run it once known,
+				// owned by the scheduling request currently in flight
+				this.pendingCancelGeneration = true
+				this.pendingCancelSeq = this.generationRequestSeq
+				return
+			}
+			// capture the handle now: a session switch during the cancel request
+			// replaces it with the next generation's poll
+			const pollCancel = this.pollMessageGenerationCancel
+			try {
+				await cancelTask(taskId)
+				// the task is cancelled server side: finalize now instead of
+				// waiting for the next check_generation poll tick, but only
+				// this task's own poll: a session switch during the request
+				// may have installed another generation's
+				if (this.generationTaskId === taskId) {
+					pollCancel?.()
+				}
+			} catch (error) {
+				console.error('cancelGeneration error:', error)
+				if (this.loading.llmGeneration) {
+					showError(t('assistant', 'Failed to cancel the generation. It might have already finished.'))
+				}
+			}
+		},
+
 		toggleSessionSelection(sessionId) {
 			if (this.selectedSessionIds.includes(sessionId)) {
 				this.selectedSessionIds = this.selectedSessionIds.filter(id => id !== sessionId)
@@ -1070,6 +1184,8 @@ export default {
 		},
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
+			const requestSeq = ++this.generationRequestSeq
+			let taskId = null
 			try {
 				this.scrollToLastMessage()
 				this.slowPickup = false
@@ -1087,8 +1203,14 @@ export default {
 				const generationResponse = await axios.get(getChatURL('/generate'), { params })
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
-				this.startTaskPositionPolling(generationResponseData.taskId, sessionId)
-				const message = await this.pollGenerationTask(generationResponseData.taskId, sessionId)
+				taskId = generationResponseData.taskId
+				if (!this.trackGenerationTask(taskId, sessionId, requestSeq)) {
+					// the session changed while scheduling: another generation
+					// owns the polling state now, never install ours
+					return
+				}
+				this.startTaskPositionPolling(taskId, sessionId)
+				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages.push(message)
 				if (this.streamingMessage === null) {
@@ -1103,21 +1225,37 @@ export default {
 				console.error('scheduleGenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error generating a response'))
 			} finally {
-				if (this.pollPositionSessionId === sessionId) {
+				if (this.pollPositionSessionId === sessionId && this.pollPositionTaskId === taskId) {
 					cancelTaskPositionPolling()
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
-				this.loading.llmGeneration = false
-				this.loading.llmRunning = false
-				this.loading.taskPosition = null
-				this.streamingMessage = null
-				this.userScrolled = false
+				// reset only what this run owns: a generation that replaced
+				// this one (or started after its scheduling failed) keeps its
+				// tracking and its loading flags
+				const ownsGeneration = (taskId !== null && this.generationTaskId === taskId)
+					|| (taskId === null && this.generationTaskId === null)
+				if (ownsGeneration) {
+					if (taskId !== null) {
+						this.generationTaskId = null
+					}
+					this.loading.llmGeneration = false
+					this.loading.llmRunning = false
+					this.loading.taskPosition = null
+					this.streamingMessage = null
+					this.userScrolled = false
+				}
+				if (this.pendingCancelSeq === requestSeq) {
+					this.pendingCancelGeneration = false
+					this.pendingCancelSeq = null
+				}
 			}
 		},
 
 		async runRegenerationTask(messageId) {
 			const sessionId = this.active.id
+			const requestSeq = ++this.generationRequestSeq
+			let taskId = null
 			try {
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
@@ -1126,8 +1264,14 @@ export default {
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
-				this.startTaskPositionPolling(regenerationResponseData.taskId, sessionId)
-				const message = await this.pollGenerationTask(regenerationResponseData.taskId, sessionId)
+				taskId = regenerationResponseData.taskId
+				if (!this.trackGenerationTask(taskId, sessionId, requestSeq)) {
+					// the session changed while scheduling: another generation
+					// owns the polling state now, never install ours
+					return
+				}
+				this.startTaskPositionPolling(taskId, sessionId)
+				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages[this.messages.length - 1] = message
 				if (this.streamingMessage === null) {
@@ -1137,21 +1281,42 @@ export default {
 				}
 			} catch (error) {
 				if (error instanceof TaskPollCancelledError) {
+					// cancelled: the scheduling already deleted the old message,
+					// drop it instead of showing a ghost
+					this.messages = this.messages.filter((message) => message.id !== messageId)
 					return
 				}
 				console.error('scheduleRegenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error regenerating a response'))
+				// whatever made the regenerate request fail, the backend
+				// deletes the message before scheduling, drop it instead of
+				// showing a ghost
+				this.messages = this.messages.filter((message) => message.id !== messageId)
 			} finally {
-				if (this.pollPositionSessionId === sessionId) {
+				if (this.pollPositionSessionId === sessionId && this.pollPositionTaskId === taskId) {
 					cancelTaskPositionPolling()
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
-				this.loading.llmGeneration = false
-				this.loading.llmRunning = false
-				this.loading.taskPosition = null
-				this.streamingMessage = null
-				this.userScrolled = false
+				// reset only what this run owns: a generation that replaced
+				// this one (or started after its scheduling failed) keeps its
+				// tracking and its loading flags
+				const ownsGeneration = (taskId !== null && this.generationTaskId === taskId)
+					|| (taskId === null && this.generationTaskId === null)
+				if (ownsGeneration) {
+					if (taskId !== null) {
+						this.generationTaskId = null
+					}
+					this.loading.llmGeneration = false
+					this.loading.llmRunning = false
+					this.loading.taskPosition = null
+					this.streamingMessage = null
+					this.userScrolled = false
+				}
+				if (this.pendingCancelSeq === requestSeq) {
+					this.pendingCancelGeneration = false
+					this.pendingCancelSeq = null
+				}
 			}
 		},
 
@@ -1253,6 +1418,14 @@ export default {
 						}
 					}).catch(error => {
 						if (this.pollMessageGenerationTimerId !== timerId) {
+							return
+						}
+						// a cancelled task is expected after cancelling the generation, stop polling without an error
+						if (error.response?.status === 400 && error.response?.data?.task_status === TASK_STATUS_INT.cancelled) {
+							clearInterval(timerId)
+							this.pollMessageGenerationTimerId = null
+							this.pollMessageGenerationCancel = null
+							reject(new TaskPollCancelledError('generation task was cancelled'))
 							return
 						}
 						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
