@@ -1288,11 +1288,10 @@ export default {
 				}
 				console.error('scheduleRegenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error regenerating a response'))
-				if (taskId !== null) {
-					// failed after scheduling: the old message is already
-					// deleted server side
-					this.messages = this.messages.filter((message) => message.id !== messageId)
-				}
+				// whatever made the regenerate request fail, the backend
+				// deletes the message before scheduling, drop it instead of
+				// showing a ghost
+				this.messages = this.messages.filter((message) => message.id !== messageId)
 			} finally {
 				if (this.pollPositionSessionId === sessionId && this.pollPositionTaskId === taskId) {
 					cancelTaskPositionPolling()
