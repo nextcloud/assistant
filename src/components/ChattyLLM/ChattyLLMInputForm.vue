@@ -229,8 +229,10 @@
 				v-model:chat-content="chatContent"
 				class="session-area__input-area"
 				:loading="loading"
+				:is-notify-enabled="isNotifyEnabled"
 				@submit="handleSubmit"
-				@submit-audio="handleSubmitAudio" />
+				@submit-audio="handleSubmitAudio"
+				@background-notify="onBackgroundNotify" />
 		</NcAppContent>
 		<NcDialog :key="deletionDialogKey"
 			v-model:open="deletionDialogOpen"
@@ -295,11 +297,14 @@ import formatRecurrenceRule from './recurrenceRule.js'
 import { getLanguage } from '@nextcloud/l10n'
 import {
 	cancelTaskPositionPolling,
+	getNotifyReady,
 	pollTaskPosition,
+	setNotifyReady,
 	TaskPollCancelledError,
 } from '../../assistant.js'
 
 import navAutoCollapse from '../../mixins/navAutoCollapse.js'
+import { requestBrowserNotificationPermission } from '../../utils.js'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -369,6 +374,11 @@ export default {
 			pollCheckSessionTimeout: null,
 			pollPositionTaskId: null,
 			pollPositionSessionId: null,
+			// task id of the generation currently being tracked for the notify-when-ready toggle
+			currentGenerationTaskId: null,
+			isNotifyEnabled: false,
+			// bumped when the notify state is synced or toggled, to discard stale sync responses
+			notifyStateSyncId: 0,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
@@ -517,6 +527,7 @@ export default {
 			cancelTaskPositionPolling()
 			this.pollPositionTaskId = null
 			this.pollPositionSessionId = null
+			this.stopGenerationTracking()
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
@@ -610,7 +621,18 @@ export default {
 					try {
 						this.loading.llmGeneration = true
 						this.loading.llmRunning = false
+						this.startGenerationTracking(checkSessionResponseData.messageTaskId)
 						this.startTaskPositionPolling(checkSessionResponseData.messageTaskId, sessionId)
+						// resume case: sync the toggle with a notification that was enabled before reloading, don't block the polling
+						const notifyStateSyncId = ++this.notifyStateSyncId
+						getNotifyReady(checkSessionResponseData.messageTaskId).then(response => {
+							if (this.currentGenerationTaskId === checkSessionResponseData.messageTaskId
+								&& this.notifyStateSyncId === notifyStateSyncId) {
+								this.isNotifyEnabled = !!response.data?.ocs?.data?.id
+							}
+						}).catch(error => {
+							console.error('Failed to get the notification state of the generation task', error)
+						})
 						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
@@ -657,6 +679,9 @@ export default {
 					cancelTaskPositionPolling()
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
+				}
+				if (this.active?.id === sessionId) {
+					this.stopGenerationTracking()
 				}
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
@@ -1070,6 +1095,7 @@ export default {
 		},
 
 		async runGenerationTask(sessionId, agencyConfirm = null) {
+			let taskId = null
 			try {
 				this.scrollToLastMessage()
 				this.slowPickup = false
@@ -1087,8 +1113,10 @@ export default {
 				const generationResponse = await axios.get(getChatURL('/generate'), { params })
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
-				this.startTaskPositionPolling(generationResponseData.taskId, sessionId)
-				const message = await this.pollGenerationTask(generationResponseData.taskId, sessionId)
+				taskId = generationResponseData.taskId
+				this.startGenerationTracking(taskId)
+				this.startTaskPositionPolling(taskId, sessionId)
+				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages.push(message)
 				if (this.streamingMessage === null) {
@@ -1108,6 +1136,7 @@ export default {
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
+				this.stopGenerationTracking(taskId)
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.loading.taskPosition = null
@@ -1118,6 +1147,7 @@ export default {
 
 		async runRegenerationTask(messageId) {
 			const sessionId = this.active.id
+			let taskId = null
 			try {
 				this.loading.llmGeneration = true
 				this.loading.llmRunning = false
@@ -1126,8 +1156,10 @@ export default {
 				const regenerationResponse = await axios.get(getChatURL('/regenerate'), { params: { messageId, sessionId } })
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
-				this.startTaskPositionPolling(regenerationResponseData.taskId, sessionId)
-				const message = await this.pollGenerationTask(regenerationResponseData.taskId, sessionId)
+				taskId = regenerationResponseData.taskId
+				this.startGenerationTracking(taskId)
+				this.startTaskPositionPolling(taskId, sessionId)
+				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
 				this.messages[this.messages.length - 1] = message
 				if (this.streamingMessage === null) {
@@ -1147,6 +1179,7 @@ export default {
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
+				this.stopGenerationTracking(taskId)
 				this.loading.llmGeneration = false
 				this.loading.llmRunning = false
 				this.loading.taskPosition = null
@@ -1181,6 +1214,69 @@ export default {
 				this.isListeningTo[pushTaskId] = true
 			}
 			return hasPush
+		},
+
+		/**
+		 * Enable or disable the notification for the currently running generation task.
+		 */
+		async onBackgroundNotify() {
+			if (this.currentGenerationTaskId === null || !this.loading.llmGeneration) {
+				return
+			}
+			// capture before the optional permission prompt: it can stay open long
+			// enough for the generation to end or the session to switch
+			const taskId = this.currentGenerationTaskId
+			// any in-flight notify state sync is now outdated, its response must not overwrite the toggle
+			this.notifyStateSyncId++
+			const enable = !this.isNotifyEnabled
+			let reloadForPushSubscription = false
+			if (enable) {
+				// user gesture context: ask for browser notifications so the reply can also
+				// reach the user when the tab is closed
+				reloadForPushSubscription = await requestBrowserNotificationPermission()
+			}
+			setNotifyReady(taskId, enable).then(() => {
+				this.isNotifyEnabled = enable
+				// the notifications app registers web push on page load only:
+				// reload once after a fresh grant so browser delivery actually starts.
+				// The generation survives the reload (check_session resumes it).
+				if (reloadForPushSubscription && enable) {
+					setTimeout(() => {
+						if (this.isNotifyEnabled) {
+							window.location.reload()
+						}
+					}, 1000)
+				}
+			}).catch(error => {
+				console.error('Failed to toggle the notification of the generation task', error)
+				if (enable) {
+					showError(t('assistant', 'Failed to enable the notification'))
+				}
+			})
+		},
+
+		/**
+		 * Track the running generation task and reset the notify toggle state.
+		 *
+		 * @param {number} taskId Id of the scheduled generation task
+		 */
+		startGenerationTracking(taskId) {
+			this.currentGenerationTaskId = taskId
+			this.isNotifyEnabled = false
+		},
+
+		/**
+		 * Stop tracking the generation task.
+		 * If taskId is provided, only stop if it is still the tracked one.
+		 *
+		 * @param {number|null} taskId Id of the task that wants to stop the tracking
+		 */
+		stopGenerationTracking(taskId = null) {
+			if (taskId !== null && this.currentGenerationTaskId !== taskId) {
+				return
+			}
+			this.currentGenerationTaskId = null
+			this.isNotifyEnabled = false
 		},
 
 		startTaskPositionPolling(taskId, sessionId) {

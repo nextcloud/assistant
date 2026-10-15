@@ -342,10 +342,14 @@ export default {
 		'background-notify',
 	],
 	data() {
-		const urlIsAssignment = new URLSearchParams(window.location.search).get('isAssignment')
+		const urlParams = new URLSearchParams(window.location.search)
+		const urlIsAssignment = urlParams.get('isAssignment')
+		const urlSessionId = urlParams.get('sessionId')
+		// a session deep-link (chat notification) only makes sense in the chat view;
+		// isAssignment links also carry a sessionId and must keep winning
 		const urlSelectedTaskTypeId = urlIsAssignment !== null && urlIsAssignment !== '0' && urlIsAssignment !== 'false'
 			? 'assignments'
-			: null
+			: (urlSessionId !== null ? CHAT_TASK_TYPE_ID : null)
 		return {
 			myInputs: this.inputs,
 			myOutputs: this.outputs,
