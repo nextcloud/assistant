@@ -621,7 +621,11 @@ export default {
 						this.loading.llmGeneration = true
 						this.loading.llmRunning = false
 						checkTaskId = checkSessionResponseData.messageTaskId
-						this.trackGenerationTask(checkTaskId, sessionId, this.generationRequestSeq)
+						if (!this.trackGenerationTask(checkTaskId, sessionId, this.generationRequestSeq)) {
+							// the session changed since the check started: the
+							// active session's generation owns the polling state
+							return
+						}
 						this.startTaskPositionPolling(checkSessionResponseData.messageTaskId, sessionId)
 						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
@@ -928,7 +932,7 @@ export default {
 			// of a session that is not the active one, the stop control would
 			// cancel the wrong task
 			if (this.active?.id !== sessionId) {
-				return
+				return false
 			}
 			this.generationTaskId = taskId
 			if (this.pendingCancelGeneration && this.pendingCancelSeq === requestSeq) {
@@ -950,6 +954,7 @@ export default {
 					}
 				})
 			}
+			return true
 		},
 
 		async cancelGeneration() {
@@ -1199,7 +1204,11 @@ export default {
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
 				taskId = generationResponseData.taskId
-				this.trackGenerationTask(taskId, sessionId, requestSeq)
+				if (!this.trackGenerationTask(taskId, sessionId, requestSeq)) {
+					// the session changed while scheduling: another generation
+					// owns the polling state now, never install ours
+					return
+				}
 				this.startTaskPositionPolling(taskId, sessionId)
 				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
@@ -1216,23 +1225,30 @@ export default {
 				console.error('scheduleGenerationTask error:', error)
 				showError(error?.response?.data?.userFacingErrorMessage ?? t('assistant', 'Error generating a response'))
 			} finally {
-				if (this.pollPositionSessionId === sessionId) {
+				if (this.pollPositionSessionId === sessionId && this.pollPositionTaskId === taskId) {
 					cancelTaskPositionPolling()
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
-				if (taskId !== null && this.generationTaskId === taskId) {
-					this.generationTaskId = null
+				// reset only what this run owns: a generation that replaced
+				// this one (or started after its scheduling failed) keeps its
+				// tracking and its loading flags
+				const ownsGeneration = (taskId !== null && this.generationTaskId === taskId)
+					|| (taskId === null && this.generationTaskId === null)
+				if (ownsGeneration) {
+					if (taskId !== null) {
+						this.generationTaskId = null
+					}
+					this.loading.llmGeneration = false
+					this.loading.llmRunning = false
+					this.loading.taskPosition = null
+					this.streamingMessage = null
+					this.userScrolled = false
 				}
 				if (this.pendingCancelSeq === requestSeq) {
 					this.pendingCancelGeneration = false
 					this.pendingCancelSeq = null
 				}
-				this.loading.llmGeneration = false
-				this.loading.llmRunning = false
-				this.loading.taskPosition = null
-				this.streamingMessage = null
-				this.userScrolled = false
 			}
 		},
 
@@ -1249,7 +1265,11 @@ export default {
 				const regenerationResponseData = regenerationResponse.data
 				console.debug('scheduleRegenerationTask response:', regenerationResponse)
 				taskId = regenerationResponseData.taskId
-				this.trackGenerationTask(taskId, sessionId, requestSeq)
+				if (!this.trackGenerationTask(taskId, sessionId, requestSeq)) {
+					// the session changed while scheduling: another generation
+					// owns the polling state now, never install ours
+					return
+				}
 				this.startTaskPositionPolling(taskId, sessionId)
 				const message = await this.pollGenerationTask(taskId, sessionId)
 				console.debug('checkTaskPolling result:', message)
@@ -1274,23 +1294,30 @@ export default {
 					this.messages = this.messages.filter((message) => message.id !== messageId)
 				}
 			} finally {
-				if (this.pollPositionSessionId === sessionId) {
+				if (this.pollPositionSessionId === sessionId && this.pollPositionTaskId === taskId) {
 					cancelTaskPositionPolling()
 					this.pollPositionTaskId = null
 					this.pollPositionSessionId = null
 				}
-				if (taskId !== null && this.generationTaskId === taskId) {
-					this.generationTaskId = null
+				// reset only what this run owns: a generation that replaced
+				// this one (or started after its scheduling failed) keeps its
+				// tracking and its loading flags
+				const ownsGeneration = (taskId !== null && this.generationTaskId === taskId)
+					|| (taskId === null && this.generationTaskId === null)
+				if (ownsGeneration) {
+					if (taskId !== null) {
+						this.generationTaskId = null
+					}
+					this.loading.llmGeneration = false
+					this.loading.llmRunning = false
+					this.loading.taskPosition = null
+					this.streamingMessage = null
+					this.userScrolled = false
 				}
 				if (this.pendingCancelSeq === requestSeq) {
 					this.pendingCancelGeneration = false
 					this.pendingCancelSeq = null
 				}
-				this.loading.llmGeneration = false
-				this.loading.llmRunning = false
-				this.loading.taskPosition = null
-				this.streamingMessage = null
-				this.userScrolled = false
 			}
 		},
 
