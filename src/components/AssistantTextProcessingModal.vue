@@ -124,6 +124,7 @@ export default {
 	data() {
 		return {
 			show: true,
+			isUnmounted: false,
 			eventTarget: null,
 			closeButtonTitle: t('assistant', 'Close'),
 			closeButtonLabel: t('assistant', 'Close Nextcloud Assistant'),
@@ -164,6 +165,11 @@ export default {
 			const elem = this.$refs.modal_content
 			emit('viewer:trapElements:changed', elem)
 		}
+	},
+	beforeUnmount() {
+		// @nextcloud/notify_push provides no way to unregister a listener: the push
+		// handlers in assistant.js check this flag and become no-ops when set
+		this.isUnmounted = true
 	},
 	methods: {
 		dispatchModalEvent(name, detail) {

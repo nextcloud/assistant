@@ -79,6 +79,7 @@ export default {
 			loading: false,
 			isNotifyEnabled: false,
 			isListeningTo: {},
+			isUnmounted: false,
 		}
 	},
 
@@ -104,6 +105,12 @@ export default {
 		completionExpectedAt() {
 			return this?.task?.completionExpectedAt
 		},
+	},
+
+	beforeUnmount() {
+		// @nextcloud/notify_push provides no way to unregister a listener: the push
+		// handlers below become no-ops instead of touching a dead component
+		this.isUnmounted = true
 	},
 
 	mounted() {
@@ -149,8 +156,11 @@ export default {
 			// attempt to listen to push notifications to get the intermediate output
 			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
-				console.debug('[assistant] received push notification', type, body)
+				if (this.isUnmounted) {
+					return
+				}
 				if (pushTaskId === this.task.id) {
+					console.debug('[assistant] received push notification', type, body)
 					this.task.output = body ?? null
 				} else {
 					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)
