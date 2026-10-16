@@ -168,6 +168,9 @@ export async function openAssistantForm({
 			// attempt to listen to push notifications to get the intermediate output
 			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
+				if (view.isUnmounted) {
+					return
+				}
 				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === view.selectedTaskId) {
 					view.outputs = body ?? null
@@ -953,6 +956,9 @@ export async function openAssistantTask(
 		// attempt to listen to push notifications to get the intermediate output
 		const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 		const hasPush = listen(pushChannel, (type, body) => {
+			if (view.isUnmounted) {
+				return
+			}
 			console.debug('[assistant] received push notification', type, body)
 			if (pushTaskId === view.selectedTaskId) {
 				view.outputs = body ?? null
