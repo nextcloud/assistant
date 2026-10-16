@@ -159,8 +159,8 @@ export default {
 				if (this.isUnmounted) {
 					return
 				}
-				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === this.task.id) {
+					console.debug('[assistant] received push notification', type, body)
 					this.task.output = body ?? null
 				} else {
 					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', this.task.id)

@@ -171,8 +171,8 @@ export async function openAssistantForm({
 				if (view.isUnmounted) {
 					return
 				}
-				console.debug('[assistant] received push notification', type, body)
 				if (pushTaskId === view.selectedTaskId) {
+					console.debug('[assistant] received push notification', type, body)
 					view.outputs = body ?? null
 				} else {
 					console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
@@ -959,8 +959,8 @@ export async function openAssistantTask(
 			if (view.isUnmounted) {
 				return
 			}
-			console.debug('[assistant] received push notification', type, body)
 			if (pushTaskId === view.selectedTaskId) {
+				console.debug('[assistant] received push notification', type, body)
 				view.outputs = body ?? null
 			} else {
 				console.debug('[assistant] ignoring push notification for task', pushTaskId, 'the selected one is', view.selectedTaskId)
