@@ -13,6 +13,7 @@
 				type="file"
 				multiple
 				style="display: none;"
+				@cancel.stop
 				@change="onUploadFileSelected">
 			<NcActions v-if="multimodalChatAvailable"
 				class="input-area__attach"
