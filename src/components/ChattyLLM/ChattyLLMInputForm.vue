@@ -380,6 +380,7 @@ export default {
 			streamingMessage: null,
 			// only used while streaming to prevent auto scrolling after some user scrolling happened
 			userScrolled: false,
+			isUnmounted: false,
 			isListeningTo: {},
 			messagesAxiosController: null, // for request cancellation
 			allMessagesLoaded: false,
@@ -567,6 +568,9 @@ export default {
 	},
 
 	beforeUnmount() {
+		// @nextcloud/notify_push provides no way to unregister a listener: the
+		// push handlers below become no-ops instead of touching a dead component
+		this.isUnmounted = true
 		this.streamingMessage = null
 		this.pollMessageGenerationCancel?.()
 		cancelTaskPositionPolling()
@@ -1330,9 +1334,12 @@ export default {
 			}
 			const pushChannel = 'taskprocessing:task_id_' + pushTaskId
 			const hasPush = listen(pushChannel, (type, body) => {
-				console.debug('[assistant] received push notification', type, body)
+				if (this.isUnmounted) {
+					return
+				}
 				const activeSessionId = this.active?.id
 				if (pushSessionId === activeSessionId) {
+					console.debug('[assistant] received push notification', type, body)
 					this.updateStreamingMessage(body ?? {}, pushSessionId)
 				} else {
 					console.debug(
