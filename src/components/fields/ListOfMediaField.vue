@@ -119,11 +119,10 @@ import ChooseInputFileButton from './ChooseInputFileButton.vue'
 import UploadInputFileButton from './UploadInputFileButton.vue'
 import AudioRecorderWrapper from './AudioRecorderWrapper.vue'
 
-import { generateOcsUrl, generateUrl, generateRemoteUrl } from '@nextcloud/router'
+import { generateOcsUrl, generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
-import { getCurrentUser } from '@nextcloud/auth'
-import { File } from '@nextcloud/files'
+import { getClient, getDefaultPropfind, getRootPath, resultToNode } from '@nextcloud/files/dav'
 import { getViewer, registerDefaultHandlers } from '@nextcloud/viewer'
 import { uploadInputFile } from '../../utils.js'
 
@@ -335,17 +334,14 @@ export default {
 				taskId: this.providedCurrentTaskId(),
 				fileId,
 			})
-			return axios.post(url).then(response => {
+			return axios.post(url).then(async response => {
 				const savedPath = response.data.ocs.data.path
 				console.debug('[assistant] view output file', savedPath)
-				const user = getCurrentUser()
-				const node = new File({
-					source: generateRemoteUrl('dav') + `/files/${user.uid}${savedPath}`,
-					id: response.data.ocs.data.fileId,
-					root: `/files/${user.uid}`,
-					owner: user.uid,
-					mime: response.data.ocs.data.mime,
+				const { data } = await getClient().stat(`${getRootPath()}${savedPath}`, {
+					details: true,
+					data: getDefaultPropfind(),
 				})
+				const node = resultToNode(data)
 				registerDefaultHandlers()
 				getViewer().open([node], node)
 			}).catch(error => {
