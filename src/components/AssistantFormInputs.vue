@@ -7,6 +7,11 @@
 		:inputs="inputs"
 		:task-type="selectedTaskType"
 		@update:inputs="$emit('update:inputs', $event)" />
+	<ContextChatMultiInputForm v-else-if="selectedTaskTypeId === 'context_chat:context_chat_multi'"
+		:inputs="inputs"
+		:task-type="selectedTaskType"
+		@update:inputs="$emit('update:inputs', $event)" />
+
 	<div v-else class="assistant-inputs">
 		<div class="input-container">
 			<TaskTypeFields
@@ -29,12 +34,14 @@
 <script>
 import ContextChatInputForm from './ContextChat/ContextChatInputForm.vue'
 import TaskTypeFields from './fields/TaskTypeFields.vue'
+import ContextChatMultiInputForm from './ContextChat/ContextChatMultiInputForm.vue'
 
 export default {
 	name: 'AssistantFormInputs',
 	components: {
 		ContextChatInputForm,
 		TaskTypeFields,
+		ContextChatMultiInputForm,
 	},
 	props: {
 		inputs: {
