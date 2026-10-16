@@ -727,6 +727,21 @@ class ChatService {
 	}
 
 	/**
+	 * Give a chat task the conversation ID of its session, but only when the
+	 * provider of the task type declares a conversation ID as an optional input
+	 * slot. Providers generate a throwaway ID for the requests we leave unset.
+	 *
+	 * @param array<string, mixed> $input
+	 * @return array<string, mixed>
+	 */
+	private function addConversationId(array $input, string $taskTypeId, string $conversationId): array {
+		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[$taskTypeId]['optionalInputShape']['conversation_id'])) {
+			$input['conversation_id'] = $conversationId;
+		}
+		return $input;
+	}
+
+	/**
 	 * Schedule a Chat task
 	 *
 	 * @throws BadRequestException
@@ -749,9 +764,15 @@ class ChatService {
 			'system_prompt' => $systemPrompt,
 			'history' => $history,
 		];
-		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
+		if ($isMessage && isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
+		// the title generation must not join the conversation state of the chat itself
+		$input = $this->addConversationId(
+			$input,
+			TextToTextChat::ID,
+			$isMessage ? (string)$sessionId : $sessionId . '-title',
+		);
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
 		$task->setPreferStreaming(true);
@@ -795,6 +816,8 @@ class ChatService {
 			'tool_message' => '',
 		];
 		/** @psalm-suppress UndefinedClass */
+		$input = $this->addConversationId($input, \OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, (string)$sessionId);
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(\OCP\TaskProcessing\TaskTypes\MultimodalChatWithTools::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
 		$task->setPreferStreaming(true);
@@ -837,6 +860,8 @@ class ChatService {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
+		/** @psalm-suppress UndefinedClass */
+		$taskInput = $this->addConversationId($taskInput, \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, (string)$sessionId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
@@ -887,6 +912,8 @@ class ChatService {
 		];
 		$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		/** @psalm-suppress UndefinedClass */
+		$taskInput = $this->addConversationId($taskInput, \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, (string)$sessionId);
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID,
 			$taskInput,
@@ -936,6 +963,8 @@ class ChatService {
 			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
 		/** @psalm-suppress UndefinedClass */
+		$input = $this->addConversationId($input, \OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID, (string)$sessionId);
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID,
 			$input,
@@ -982,6 +1011,8 @@ class ChatService {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
+		/** @psalm-suppress UndefinedClass */
+		$taskInput = $this->addConversationId($taskInput, \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, (string)$sessionId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,
