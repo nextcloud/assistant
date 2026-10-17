@@ -359,6 +359,7 @@ OC.L10N.register(
     "Type a message…" : "Eine Nachricht eingeben …",
     "Processing…" : "Verarbeite …",
     "Waiting…" : "Warte …",
+    "Stop generating" : "Erstellung anhalten",
     "Attach a file" : "Eine Datei anhängen",
     "Upload from device" : "Von Gerät hochladen",
     "Select from nextcloud" : "Aus Nextcloud auswählen",
