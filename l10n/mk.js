@@ -39,6 +39,7 @@ OC.L10N.register(
     "Copy message" : "Копирај порака",
     "Delete message" : "Избриши порака",
     "Folder name" : "Име на папка",
+    "Succeeded" : "Успешно",
     "Cancelled" : "Откажано",
     "Failed" : "Неуспешно",
     "Running" : "Трчање",
