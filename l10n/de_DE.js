@@ -316,6 +316,7 @@ OC.L10N.register(
     "Error updating title of conversation" : "Fehler beim Aktualisieren des Titels der Unterhaltung",
     "Untitled conversation" : "Unterhaltung ohne Titel",
     "Error generating a title for the conversation" : "Fehler beim Erstellen eines Titels für die Unterhaltung",
+    "Failed to cancel the generation. It might have already finished." : "Die Erstellung konnte nicht abgebrochen werden. Möglicherweise ist sie bereits fertig.",
     "Error deleting conversations" : "Fehler beim Löschen der Unterhaltungen",
     "Error fetching assignments" : "Fehler beim Abruf der Zuordnungen",
     "Error fetching conversations" : "Fehler beim Abruf der Unterhaltungen",
