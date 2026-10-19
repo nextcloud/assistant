@@ -382,6 +382,9 @@ export default {
 			generationRequestSeq: 0,
 			// notify-when-ready toggle state of the tracked generation task
 			isNotifyEnabled: false,
+			// one toggle request at a time: overlapping requests could complete out
+			// of order server side and desync the toggle state
+			notifyTogglePending: false,
 			// bumped when the notify state is synced or toggled, to discard stale sync responses
 			notifyStateSyncId: 0,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
@@ -1387,7 +1390,7 @@ export default {
 		 * Enable or disable the notification for the currently running generation task.
 		 */
 		async onBackgroundNotify() {
-			if (this.generationTaskId === null || !this.loading.llmGeneration) {
+			if (this.generationTaskId === null || !this.loading.llmGeneration || this.notifyTogglePending) {
 				return
 			}
 			// capture before the optional permission prompt: it can stay open long
@@ -1398,21 +1401,25 @@ export default {
 			const notifyStateSyncId = ++this.notifyStateSyncId
 			const enable = !this.isNotifyEnabled
 			let reloadForPushSubscription = false
-			if (enable) {
-				// user gesture context: ask for browser notifications so the reply can also
-				// reach the user when the tab is closed
-				reloadForPushSubscription = await requestBrowserNotificationPermission()
-				// the prompt can outlive the generation: if the tracked task ended or
-				// was replaced while it was open, applying the toggle would target
-				// the wrong task and desync the banner state
-				if (this.generationTaskId !== taskId) {
-					return
+			// serialize: overlapping requests could complete out of order server
+			// side and desync the toggle state
+			this.notifyTogglePending = true
+			try {
+				if (enable) {
+					// user gesture context: ask for browser notifications so the reply can also
+					// reach the user when the tab is closed
+					reloadForPushSubscription = await requestBrowserNotificationPermission()
+					// the prompt can outlive the generation: if the tracked task ended or
+					// was replaced while it was open, applying the toggle would target
+					// the wrong task and desync the banner state
+					if (this.generationTaskId !== taskId) {
+						return
+					}
 				}
-			}
-			setNotifyReady(taskId, enable).then(() => {
+				await setNotifyReady(taskId, enable)
 				// a slow request can outlive its generation or be superseded by a
-				// newer toggle: applying it then would flip the state of whatever
-				// is tracked now
+				// newer state sync: applying it then would flip the state of
+				// whatever is tracked now
 				if (this.generationTaskId !== taskId || this.notifyStateSyncId !== notifyStateSyncId) {
 					return
 				}
@@ -1429,12 +1436,14 @@ export default {
 						}
 					}, 1000)
 				}
-			}).catch(error => {
+			} catch (error) {
 				console.error('Failed to toggle the notification of the generation task', error)
 				if (enable) {
 					showError(t('assistant', 'Failed to enable the notification'))
 				}
-			})
+			} finally {
+				this.notifyTogglePending = false
+			}
 		},
 
 		startTaskPositionPolling(taskId, sessionId) {
