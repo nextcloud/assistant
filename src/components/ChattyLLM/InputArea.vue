@@ -41,6 +41,7 @@
 				type="file"
 				multiple
 				style="display: none;"
+				@cancel.stop
 				@change="onUploadFileSelected">
 			<NcActions v-if="multimodalChatAvailable"
 				class="input-area__attach"
@@ -82,7 +83,18 @@
 				@update:model-value="$emit('update:chatContent', $event)"
 				@submit="onSubmitText" />
 			<div class="input-area__button-box">
-				<NcButton v-if="!audioChatAvailable || chatContent"
+				<NcButton v-if="loading.llmGeneration"
+					ref="stopGenerationButton"
+					class="input-area__button-box__button"
+					:aria-label="cancelGenerationAriaText"
+					:title="cancelGenerationAriaText"
+					variant="primary"
+					@click="$emit('cancel-generation')">
+					<template #icon>
+						<StopIcon :size="20" />
+					</template>
+				</NcButton>
+				<NcButton v-else-if="!audioChatAvailable || chatContent || disabled"
 					class="input-area__button-box__button"
 					:aria-label="submitBtnAriaText"
 					:disabled="disabled || isUploading || !chatContent.trim() || chatContentTooLong"
@@ -109,6 +121,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import FolderPlusOutlineIcon from 'vue-material-design-icons/FolderPlusOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import SendIcon from 'vue-material-design-icons/Send.vue'
+import StopIcon from 'vue-material-design-icons/Stop.vue'
 import UploadOutlineIcon from 'vue-material-design-icons/UploadOutline.vue'
 
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -147,6 +160,7 @@ export default {
 		FolderPlusOutlineIcon,
 		PlusIcon,
 		SendIcon,
+		StopIcon,
 		UploadOutlineIcon,
 		NcActionButton,
 		NcActions,
@@ -189,6 +203,7 @@ export default {
 		'submit',
 		'submit-audio',
 		'background-notify',
+		'cancel-generation',
 	],
 
 	data() {
@@ -205,6 +220,7 @@ export default {
 			notifyBannerDismissed: false,
 			notifyBannerDue: false,
 			notifyBannerTimer: null,
+			cancelGenerationAriaText: t('assistant', 'Stop generating'),
 			attachFileAriaText: t('assistant', 'Attach a file'),
 			uploadFromDeviceText: t('assistant', 'Upload from device'),
 			chooseFromNextcloudText: t('assistant', 'Select from nextcloud'),
@@ -259,9 +275,15 @@ export default {
 				this.notifyBannerTimer = setTimeout(() => {
 					this.notifyBannerDue = true
 				}, 12000)
+				// the editor is disabled while generating: keep a focus anchor
+				// inside the form so Escape stays scoped to it
+				this.$nextTick(() => {
+					this.$refs.stopGenerationButton?.$el?.focus()
+				})
 			} else {
 				// the banner only makes sense for the current generation
 				this.notifyBannerDismissed = false
+				this.focus()
 			}
 		},
 	},
