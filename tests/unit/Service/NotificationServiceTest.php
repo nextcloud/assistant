@@ -90,7 +90,9 @@ class NotificationServiceTest extends TestCase {
 		$this->assertNull($params['target']);
 		$this->assertSame(Application::APP_ID . ':chatty-llm', $params['appId']);
 		$this->assertSame(204, $params['id']);
-		$this->assertSame(['input' => 'Write a haiku'], $params['inputs']);
+		// the task input is deliberately omitted from chat notifications:
+		// it is never rendered and can overflow the notifications table column
+		$this->assertArrayNotHasKey('inputs', $params);
 	}
 
 	public function testChatMessageFailureNotification(): void {
