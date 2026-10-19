@@ -1401,6 +1401,12 @@ export default {
 				// user gesture context: ask for browser notifications so the reply can also
 				// reach the user when the tab is closed
 				reloadForPushSubscription = await requestBrowserNotificationPermission()
+				// the prompt can outlive the generation: if the tracked task ended or
+				// was replaced while it was open, applying the toggle would target
+				// the wrong task and desync the banner state
+				if (this.generationTaskId !== taskId) {
+					return
+				}
 			}
 			setNotifyReady(taskId, enable).then(() => {
 				this.isNotifyEnabled = enable
