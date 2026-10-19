@@ -130,8 +130,8 @@ export default {
 		destructive() {
 			// determine if any of the pending actions are destructive
 			// for actions whose destructive state is undefined or unknown, assume they are destructive
-			for (const action in this.actions) {
-				if (action.destructive) {
+			for (const action of this.actions) {
+				if (action?.destructive !== false) {
 					return {
 						destructive: true,
 						// TRANSLATORS Additional description for destructive AI agent actions
