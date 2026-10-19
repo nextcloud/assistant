@@ -1393,8 +1393,9 @@ export default {
 			// capture before the optional permission prompt: it can stay open long
 			// enough for the generation to end or the session to switch
 			const taskId = this.generationTaskId
-			// any in-flight notify state sync is now outdated, its response must not overwrite the toggle
-			this.notifyStateSyncId++
+			// one id per toggle request: in-flight sync responses, stale request
+			// responses and the reload timer must not apply after a newer toggle
+			const notifyStateSyncId = ++this.notifyStateSyncId
 			const enable = !this.isNotifyEnabled
 			let reloadForPushSubscription = false
 			if (enable) {
@@ -1409,9 +1410,10 @@ export default {
 				}
 			}
 			setNotifyReady(taskId, enable).then(() => {
-				// a slow request can outlive its generation: applying the state then
-				// would flip the toggle of whatever generation is tracked now
-				if (this.generationTaskId !== taskId) {
+				// a slow request can outlive its generation or be superseded by a
+				// newer toggle: applying it then would flip the state of whatever
+				// is tracked now
+				if (this.generationTaskId !== taskId || this.notifyStateSyncId !== notifyStateSyncId) {
 					return
 				}
 				this.isNotifyEnabled = enable
@@ -1420,7 +1422,9 @@ export default {
 				// The generation survives the reload (check_session resumes it).
 				if (reloadForPushSubscription && enable) {
 					setTimeout(() => {
-						if (this.isNotifyEnabled) {
+						// a toggle back to disabled may still be in flight: don't
+						// reload over it
+						if (this.isNotifyEnabled && this.notifyStateSyncId === notifyStateSyncId) {
 							window.location.reload()
 						}
 					}, 1000)
