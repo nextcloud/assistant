@@ -1409,6 +1409,11 @@ export default {
 				}
 			}
 			setNotifyReady(taskId, enable).then(() => {
+				// a slow request can outlive its generation: applying the state then
+				// would flip the toggle of whatever generation is tracked now
+				if (this.generationTaskId !== taskId) {
+					return
+				}
 				this.isNotifyEnabled = enable
 				// the notifications app registers web push on page load only:
 				// reload once after a fresh grant so browser delivery actually starts.
