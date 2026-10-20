@@ -15,6 +15,7 @@ OC.L10N.register(
     "Clear" : "Limpiar",
     "Try again" : "Reintentar",
     "Close" : "Close",
+    "Group" : "Grupo",
     "Cancel" : "Cancel",
     "Deselect all" : "Deseleccionar todo",
     "Select all" : "Seleccionar todo",

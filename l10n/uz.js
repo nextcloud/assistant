@@ -17,6 +17,8 @@ OC.L10N.register(
     "Clear" : "Toza",
     "Close" : "Yopish",
     "More" : "Ko'proq",
+    "Group" : "Guruh",
+    "External" : "Tashqi",
     "Cancel" : "Bekor qilish",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Haqiqatan ham “{sessionTitle}”ni o‘chirib tashlamoqchimisiz?",
     "Select all" : "Barchasini tanash",

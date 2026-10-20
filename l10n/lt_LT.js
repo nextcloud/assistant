@@ -271,6 +271,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Uždaryti „Nextcloud Asistentas“",
     "Less" : "Mažiau",
     "More" : "Daugiau",
+    "Group" : "Grupė",
+    "External" : "Išorinis",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Jei jums nepatinka veiksmai, kuriuos Asistentas nori atlikti, galite pakoreguoti savo užklausą, išsiųsdami naują žinutę, o ne spausdami mygtuką „Atšaukti“.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Asistentas nori jūsų vardu atlikti konfidencialius veiksmus.",
     "Cancel" : "Atsisakyti",

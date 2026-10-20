@@ -273,6 +273,8 @@
     "Close Nextcloud Assistant" : "Nextcloud Assistant schließen",
     "Less" : "Weniger",
     "More" : "Mehr",
+    "Group" : "Gruppe",
+    "External" : "Extern",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Wenn Sie mit den Aktionen, die der Assistent ausführen möchte, nicht zufrieden sind, können Sie Ihre Anfrage anpassen, indem Sie eine neue Nachricht senden, anstatt auf die Schaltfläche \"Abbrechen\" zu klicken.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Der Assistent möchte in Ihrem Namen sensible Aktionen ausführen.",
     "Cancel" : "Abbrechen",

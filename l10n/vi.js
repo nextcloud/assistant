@@ -18,6 +18,7 @@ OC.L10N.register(
     "Close" : "Đóng",
     "Less" : "ít",
     "More" : "Thêm",
+    "Group" : "Nhóm",
     "Cancel" : "Hủy",
     "You" : "You",
     "Deselect all" : "Bỏ chọn tất cả",

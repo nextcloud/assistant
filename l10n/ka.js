@@ -19,6 +19,7 @@ OC.L10N.register(
     "Clear" : "Clear",
     "Close" : "Close",
     "More" : "More",
+    "Group" : "Group",
     "Cancel" : "Cancel",
     "You" : "You",
     "Deselect all" : "Deselect all",

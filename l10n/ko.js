@@ -113,6 +113,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Nextcloud 어시스턴트 닫기",
     "Less" : "덜 중요함",
     "More" : "더 보기",
+    "Group" : "그룹",
+    "External" : "외부",
     "Cancel" : "취소",
     "You" : "당신",
     "Message copied to clipboard" : "메시지가 클립보드에 복사됨",

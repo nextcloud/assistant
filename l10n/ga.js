@@ -275,6 +275,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Dún Nextcloud Assistant",
     "Less" : "Níos lú",
     "More" : "Tuilleadh",
+    "Group" : "Grúpa",
+    "External" : "Seachtrach",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Mura bhfuil tú sásta leis na gníomhartha atá an Cúntóir ag iarraidh a rith, is féidir leat d’iarratas a choigeartú ach teachtaireacht nua a sheoladh seachas an cnaipe “Cealaigh” a chliceáil.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Teastaíonn ón Assistant gníomhartha íogaire a dhéanamh ar do shon.",
     "Cancel" : "Cealaigh",

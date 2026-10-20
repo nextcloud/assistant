@@ -36,6 +36,8 @@ OC.L10N.register(
     "Close" : "Sulje",
     "Less" : "Vähemmän",
     "More" : "Lisää",
+    "Group" : "Ryhmä",
+    "External" : "Ulkoinen",
     "Cancel" : "Peruuta",
     "You" : "Sinä",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Haluatko varmasti poistaa \"{sessionTitle}\"?",

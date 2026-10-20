@@ -275,6 +275,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Sulge Nextcloudi Abiline",
     "Less" : "Vähem",
     "More" : "Veel",
+    "Group" : "Grupp",
+    "External" : "Väline",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Kui sa pole rahul tegevustega, mida Abiline kavatseb käivitada, siis pigem kohenda oma päringut saates uue sõnumi, mitte aga klõpsides „Katkesta“ nuppu.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Abiline soovib sinu nimel teha delikaatseid toiminguid.",
     "Cancel" : "Tühista",

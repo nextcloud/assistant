@@ -275,6 +275,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Fermer l'assistant Nextcloud",
     "Less" : "Moins",
     "More" : "Plus",
+    "Group" : "Groupe",
+    "External" : "Externe",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Si vous n'êtes pas satisfait par les actions que l'Assistant souhaite exécuter, vous pouvez ajuster votre demande en envoyant un nouveau message au lieu de cliquer sur le bouton \"Annuler\".",
     "The Assistant wants to perform sensitive actions on your behalf." : "L'Assistant souhaite exécuter des actions sensibles en votre nom.",
     "Cancel" : "Annuler",

@@ -13,6 +13,8 @@ OC.L10N.register(
     "Close" : "Mbylleni",
     "Less" : "Më pak",
     "More" : "Më tepër",
+    "Group" : "Grup",
+    "External" : "I jashtëm",
     "Cancel" : "Anuloje",
     "Deselect all" : "Hiqi të gjithë",
     "Select all" : "Zgjidhi të gjitha",

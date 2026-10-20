@@ -106,6 +106,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Lukk Nextcloud Assistant",
     "Less" : "Mindre",
     "More" : "Mer",
+    "Group" : "Gruppe",
+    "External" : "Ekstern",
     "Cancel" : "Avbryt",
     "You" : "Du",
     "Message copied to clipboard" : "Melding kopiert til utklippstavlen",
