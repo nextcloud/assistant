@@ -273,6 +273,8 @@
     "Close Nextcloud Assistant" : "Nextcloud yardımcısını kapat",
     "Less" : "Daha az",
     "More" : "Diğer",
+    "Group" : "Grup",
+    "External" : "Dış",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Yardımcının yapmak istediği işlemleri doğru bulmazsanız, \"İptal\" düğmesine tıklamak yerine yeni bir ileti göndererek isteğinizi ayarlayabilirsiniz.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Yardımcı sizin adınıza önemli işlemler yapmak istiyor.",
     "Cancel" : "İptal",

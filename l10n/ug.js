@@ -186,6 +186,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Nextcloud ياردەمچىسىنى تاقاڭ",
     "Less" : "ئاز",
     "More" : "تېخىمۇ كۆپ",
+    "Group" : "گۇرۇپپا",
+    "External" : "سىرتقى",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "ئەگەر ياردەمچى ئىجرا قىلماقچى بولغان ھەرىكەتلەردىن رازى بولمىسىڭىز، «بىكار قىلىش» كۇنۇپكىسىنى چېكىشنىڭ ئورنىغا يېڭى ئۇچۇر ئەۋەتىش ئارقىلىق تەلىپىڭىزنى تەڭشىيەلەيسىز.",
     "The Assistant wants to perform sensitive actions on your behalf." : "ياردەمچى سىزنىڭ نامىڭىزدا سەزگۈر ھەرىكەتلەرنى قىلىشنى خالايدۇ.",
     "Cancel" : "بىكار قىلىش",

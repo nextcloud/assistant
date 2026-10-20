@@ -49,6 +49,7 @@ OC.L10N.register(
     "Close" : "Închide",
     "Less" : "Mai puțin",
     "More" : "Mai mult",
+    "Group" : "Grup",
     "Cancel" : "Anulare",
     "You" : "Tu",
     "Deselect all" : "Deselectează tot",

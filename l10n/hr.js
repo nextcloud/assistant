@@ -49,6 +49,8 @@ OC.L10N.register(
     "Close" : "Zatvori",
     "Less" : "Manje",
     "More" : "Više",
+    "Group" : "Grupa",
+    "External" : "Vanjsko",
     "Cancel" : "Odustani",
     "You" : "Vi",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Jeste li sigurni da želite izbrisati \"{sessionTitle}\"?",

@@ -44,6 +44,8 @@ OC.L10N.register(
     "Close" : "Zapri",
     "Less" : "Manj",
     "More" : "Več",
+    "Group" : "Skupina",
+    "External" : "Zunanja",
     "Cancel" : "Prekliči",
     "You" : "Jaz",
     "Deselect all" : "Odstrani celoten izbor",

@@ -19,6 +19,8 @@ OC.L10N.register(
     "Close" : "Serra",
     "Less" : "De mancu",
     "More" : "Prus",
+    "Group" : "Grupu",
+    "External" : "De foras",
     "Cancel" : "Annulla",
     "You" : "Tue",
     "Deselect all" : "Deseletziona totu",

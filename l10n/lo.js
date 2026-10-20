@@ -174,6 +174,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "ປິດຜູ້ຊ່ວຍ Nextcloud",
     "Less" : "ໜ້ອຍລົງ",
     "More" : "ເພີ່ມເຕີມ",
+    "Group" : "ກຸ່ມ",
+    "External" : "ພາຍນອກ",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "ຖ້າທ່ານບໍ່ພໍໃຈກັບການກະທຳທີ່ຜູ້ຊ່ວຍຕ້ອງການເຮັດ, ທ່ານສາມາດປັບປຸງຄຳຂໍຂອງທ່ານໂດຍການສົ່ງຂໍ້ຄວາມໃໝ່ແທນທີ່ຈະກົດປຸ່ມ \"ຍົກເລີກ\".",
     "The Assistant wants to perform sensitive actions on your behalf." : "ຜູ້ຊ່ວຍຕ້ອງການດຳເນີນການກະທຳທີ່ລະອຽດອ່ອນໃນນາມຂອງທ່ານ.",
     "Cancel" : "ຍົກເລີກ",

@@ -13,6 +13,8 @@ OC.L10N.register(
     "Clear" : "Eidel maachen",
     "Close" : "Zoumaachen",
     "Less" : "Manner",
+    "Group" : "Grupp",
+    "External" : "Extern",
     "Cancel" : "Cancel",
     "Select all" : "All auswielen",
     "Delete" : "Läschen",

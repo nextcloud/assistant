@@ -25,6 +25,8 @@ OC.L10N.register(
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
     "Less" : "Menos",
+    "Group" : "Grupo",
+    "External" : "Externo",
     "Cancel" : "Cancelar",
     "Deselect all" : "Deseleccionar todo",
     "Select all" : "Seleccionar todo",

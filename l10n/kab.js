@@ -17,6 +17,7 @@ OC.L10N.register(
     "Try again" : "Ɛreḍ tikkelt nniḍen.",
     "Close" : "Mdel",
     "More" : "Ugar",
+    "Group" : "Agraw",
     "Cancel" : "Cancel",
     "You" : "Kemm·čč",
     "Deselect all" : "Kkes afran i meṛṛa",

@@ -76,6 +76,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Itxi Nextcloud Assistant",
     "Less" : "Gutxiago",
     "More" : "Gehiago",
+    "Group" : "Taldea",
+    "External" : "Kanpokoa",
     "Cancel" : "Utzi",
     "You" : "Zu ",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Ziur zaude \"{sessionTitle}\" ezabatu nahi duzula?",

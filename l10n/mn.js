@@ -190,6 +190,7 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Nextcloud туслахыг хаах",
     "Less" : "Бага",
     "More" : "Дэлгэрэнгүй",
+    "Group" : "Бүлэг",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Assistant гүйцэтгэхийг хүсэж буй үйлдлүүдэд сэтгэл хангалуун бус бол \"Цуцлах\" товчийг дарахын оронд шинэ мессеж илгээж хүсэлтээ тохируулж болно.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Туслах таны нэрийн өмнөөс нарийн үйлдлүүд хийхийг хүсэж байна.",
     "Cancel" : "Цуцлах",

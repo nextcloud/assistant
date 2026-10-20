@@ -19,6 +19,8 @@ OC.L10N.register(
     "Close" : "Cerrar",
     "Less" : "Menos",
     "More" : "Más",
+    "Group" : "Grupo",
+    "External" : "Externo",
     "Cancel" : "Cancel",
     "Deselect all" : "Deseleccionar todo",
     "Select all" : "Seleccionar todo",

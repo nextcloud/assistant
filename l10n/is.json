@@ -38,6 +38,8 @@
     "Close" : "Loka",
     "Less" : "Minna",
     "More" : "Meira",
+    "Group" : "Hópur",
+    "External" : "Utanaðkomandi",
     "Cancel" : "Hætta við",
     "You" : "Þú",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Ertu viss um að þú viljir eyða \"{sessionTitle}\"?",

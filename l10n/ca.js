@@ -10,6 +10,7 @@ OC.L10N.register(
     "Add a calendar task" : "Afegeix una tasca de calendari",
     "Create a Deck card" : "Crea una targeta de Targetes",
     "Upload file" : "Pujada d'un fitxer",
+    "Create folder" : "Crea una carpeta",
     "Move file" : "Moure fitxer",
     "Copy file" : "Copiar fitxer",
     "Delete file" : "Suprimeix el fitxer",

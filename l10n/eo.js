@@ -16,6 +16,7 @@ OC.L10N.register(
     "Clear" : "Viŝi",
     "Close" : "Malfermi",
     "Less" : "Malpli",
+    "Group" : "Grupo",
     "Cancel" : "Cancel",
     "Deselect all" : "Malelekti ĉion",
     "Select all" : "Elekti ĉion",

@@ -141,6 +141,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Sluit Nextcloud Assistent",
     "Less" : "Minder",
     "More" : "Meer",
+    "Group" : "Groep",
+    "External" : "Extern",
     "Cancel" : "Annuleren",
     "Confirm those actions" : "Bevestig deze acties",
     "You" : "Je",

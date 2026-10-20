@@ -8,6 +8,7 @@ OC.L10N.register(
     "Data folder" : "Dossièr de donadas",
     "Clear" : "Escafar",
     "Close" : "Tampar",
+    "Group" : "Grop",
     "Cancel" : "Anullar",
     "You" : "Vos",
     "Delete" : "Suprimir",

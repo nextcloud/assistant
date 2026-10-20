@@ -70,6 +70,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Nextcloud Asszisztens bezárása",
     "Less" : "Kevesebb",
     "More" : "Továbbiak",
+    "Group" : "Csoport",
+    "External" : "Külső",
     "Cancel" : "Mégse",
     "You" : "Ön",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Biztos, hogy törli ezt: „{sessionTitle}”?",

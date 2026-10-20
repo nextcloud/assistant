@@ -21,6 +21,7 @@ OC.L10N.register(
     "Close" : "Aizvērt",
     "Less" : "Mazāk",
     "More" : "Vairāk",
+    "Group" : "Grupa",
     "Cancel" : "Atcelt",
     "You" : "Tu",
     "Deselect all" : "Atcelt atzīmi",
