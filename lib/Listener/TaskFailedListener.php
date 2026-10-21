@@ -47,7 +47,8 @@ class TaskFailedListener implements IEventListener {
 
 		// we dispatch an event to ask the app that scheduled the task if it wants a notification
 		// and what the target should be
-		if ($task->getAppId() !== Application::APP_ID) {
+		// chat tasks are scheduled by the assistant itself, with a compound appId
+		if ($task->getAppId() !== Application::APP_ID && $task->getAppId() !== Application::APP_ID . ':chatty-llm') {
 			$beforeAssistantNotificationEvent = new BeforeAssistantNotificationEvent($task);
 			$this->eventDispatcher->dispatchTyped($beforeAssistantNotificationEvent);
 			if (!$beforeAssistantNotificationEvent->getWantsNotification()) {

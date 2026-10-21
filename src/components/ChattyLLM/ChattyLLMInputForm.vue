@@ -229,8 +229,10 @@
 				v-model:chat-content="chatContent"
 				class="session-area__input-area"
 				:loading="loading"
+				:is-notify-enabled="isNotifyEnabled"
 				@submit="handleSubmit"
 				@submit-audio="handleSubmitAudio"
+				@background-notify="onBackgroundNotify"
 				@cancel-generation="cancelGeneration" />
 		</NcAppContent>
 		<NcDialog :key="deletionDialogKey"
@@ -297,11 +299,14 @@ import { getLanguage } from '@nextcloud/l10n'
 import {
 	cancelTask,
 	cancelTaskPositionPolling,
+	getNotifyReady,
 	pollTaskPosition,
+	setNotifyReady,
 	TaskPollCancelledError,
 } from '../../assistant.js'
 
 import navAutoCollapse from '../../mixins/navAutoCollapse.js'
+import { requestBrowserNotificationPermission } from '../../utils.js'
 
 // future: type (text, image, file, etc), attachments, etc support
 
@@ -375,6 +380,13 @@ export default {
 			pendingCancelGeneration: false,
 			pendingCancelSeq: null,
 			generationRequestSeq: 0,
+			// notify-when-ready toggle state of the tracked generation task
+			isNotifyEnabled: false,
+			// one toggle request at a time: overlapping requests could complete out
+			// of order server side and desync the toggle state
+			notifyTogglePending: false,
+			// bumped when the notify state is synced or toggled, to discard stale sync responses
+			notifyStateSyncId: 0,
 			// [{ id: number, session_id: number, role: string, content: string, timestamp: number, sources:string }]
 			messages: [], // null when failed to fetch
 			streamingMessage: null,
@@ -527,6 +539,7 @@ export default {
 			this.generationTaskId = null
 			this.pendingCancelGeneration = false
 			this.pendingCancelSeq = null
+			this.isNotifyEnabled = false
 			this.allMessagesLoaded = false
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
@@ -632,6 +645,16 @@ export default {
 							return
 						}
 						this.startTaskPositionPolling(checkSessionResponseData.messageTaskId, sessionId)
+						// resume case: sync the toggle with a notification that was enabled before reloading, don't block the polling
+						const notifyStateSyncId = ++this.notifyStateSyncId
+						getNotifyReady(checkSessionResponseData.messageTaskId).then(response => {
+							if (this.generationTaskId === checkSessionResponseData.messageTaskId
+								&& this.notifyStateSyncId === notifyStateSyncId) {
+								this.isNotifyEnabled = !!response.data?.ocs?.data?.id
+							}
+						}).catch(error => {
+							console.error('Failed to get the notification state of the generation task', error)
+						})
 						this.userScrolled = false
 						const message = await this.pollGenerationTask(checkSessionResponseData.messageTaskId, sessionId)
 						console.debug('checkTaskPolling result:', message)
@@ -686,6 +709,7 @@ export default {
 					if (ownsGeneration) {
 						this.generationTaskId = null
 					}
+					this.isNotifyEnabled = false
 					this.loading.llmGeneration = false
 					this.loading.llmRunning = false
 					this.loading.taskPosition = null
@@ -929,6 +953,7 @@ export default {
 		/**
 		 * Track the running generation task of a session. A stop request made
 		 * before the task id was known is executed once the id is available.
+		 * A fresh generation also resets the notify-when-ready toggle.
 		 *
 		 * @param {number} taskId Id of the scheduled generation task
 		 * @param {number} sessionId Id of the session the task belongs to
@@ -942,6 +967,7 @@ export default {
 				return false
 			}
 			this.generationTaskId = taskId
+			this.isNotifyEnabled = false
 			if (this.pendingCancelGeneration && this.pendingCancelSeq === requestSeq) {
 				this.pendingCancelGeneration = false
 				this.pendingCancelSeq = null
@@ -1246,6 +1272,7 @@ export default {
 					if (taskId !== null) {
 						this.generationTaskId = null
 					}
+					this.isNotifyEnabled = false
 					this.loading.llmGeneration = false
 					this.loading.llmRunning = false
 					this.loading.taskPosition = null
@@ -1314,6 +1341,7 @@ export default {
 					if (taskId !== null) {
 						this.generationTaskId = null
 					}
+					this.isNotifyEnabled = false
 					this.loading.llmGeneration = false
 					this.loading.llmRunning = false
 					this.loading.taskPosition = null
@@ -1356,6 +1384,66 @@ export default {
 				this.isListeningTo[pushTaskId] = true
 			}
 			return hasPush
+		},
+
+		/**
+		 * Enable or disable the notification for the currently running generation task.
+		 */
+		async onBackgroundNotify() {
+			if (this.generationTaskId === null || !this.loading.llmGeneration || this.notifyTogglePending) {
+				return
+			}
+			// capture before the optional permission prompt: it can stay open long
+			// enough for the generation to end or the session to switch
+			const taskId = this.generationTaskId
+			// one id per toggle request: in-flight sync responses, stale request
+			// responses and the reload timer must not apply after a newer toggle
+			const notifyStateSyncId = ++this.notifyStateSyncId
+			const enable = !this.isNotifyEnabled
+			let reloadForPushSubscription = false
+			// serialize: overlapping requests could complete out of order server
+			// side and desync the toggle state
+			this.notifyTogglePending = true
+			try {
+				if (enable) {
+					// user gesture context: ask for browser notifications so the reply can also
+					// reach the user when the tab is closed
+					reloadForPushSubscription = await requestBrowserNotificationPermission()
+					// the prompt can outlive the generation: if the tracked task ended or
+					// was replaced while it was open, applying the toggle would target
+					// the wrong task and desync the banner state
+					if (this.generationTaskId !== taskId) {
+						return
+					}
+				}
+				await setNotifyReady(taskId, enable)
+				// a slow request can outlive its generation or be superseded by a
+				// newer state sync: applying it then would flip the state of
+				// whatever is tracked now
+				if (this.generationTaskId !== taskId || this.notifyStateSyncId !== notifyStateSyncId) {
+					return
+				}
+				this.isNotifyEnabled = enable
+				// the notifications app registers web push on page load only:
+				// reload once after a fresh grant so browser delivery actually starts.
+				// The generation survives the reload (check_session resumes it).
+				if (reloadForPushSubscription && enable) {
+					setTimeout(() => {
+						// a toggle back to disabled may still be in flight: don't
+						// reload over it
+						if (this.isNotifyEnabled && this.notifyStateSyncId === notifyStateSyncId) {
+							window.location.reload()
+						}
+					}, 1000)
+				}
+			} catch (error) {
+				console.error('Failed to toggle the notification of the generation task', error)
+				if (enable) {
+					showError(t('assistant', 'Failed to enable the notification'))
+				}
+			} finally {
+				this.notifyTogglePending = false
+			}
 		},
 
 		startTaskPositionPolling(taskId, sessionId) {

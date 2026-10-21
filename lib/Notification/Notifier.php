@@ -71,7 +71,8 @@ class Notifier implements INotifier {
 
 		if (in_array($notification->getSubject(), ['success', 'failure'], true)) {
 			// ignore old notifications (before meta tasks were introduced)
-			if (!isset($params['target'], $params['inputs'])) {
+			// the target is optional: the link is generated at render time
+			if (!isset($params['inputs'])) {
 				throw new UnknownNotificationException();
 			}
 			$schedulingAppId = $params['appId'];
@@ -136,7 +137,7 @@ class Notifier implements INotifier {
 					$content .= $l->t('Result: %1$s', [$params['result']]);
 				}
 
-				$link = $params['target'];
+				$link = $params['target'] ?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $params['id']]);
 				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
 
 				$notification
@@ -401,6 +402,50 @@ class Notifier implements INotifier {
 					->setIcon($iconUrl);
 
 				$actionLabel = $l->t('View result');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($notification->getLink(), IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
+				return $notification;
+			case 'chat_success':
+				$subject = $l->t('Your assistant reply is ready');
+
+				$link = $params['target']
+					?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]);
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'app-dark.svg'));
+
+				$notification
+					->setParsedSubject($subject)
+					->setLink($link)
+					->setIcon($iconUrl);
+
+				$actionLabel = $params['actionLabel'] ?? $l->t('View reply');
+				$action = $notification->createAction();
+				$action->setLabel($actionLabel)
+					->setParsedLabel($actionLabel)
+					->setLink($notification->getLink(), IAction::TYPE_WEB)
+					->setPrimary(true);
+
+				$notification->addParsedAction($action);
+
+				return $notification;
+			case 'chat_failure':
+				$subject = $l->t('Your assistant reply could not be generated');
+
+				$link = $params['target']
+					?? $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantStandalonePage', ['sessionId' => $params['sessionId']]);
+				$iconUrl = $this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/error.svg'));
+
+				$notification
+					->setParsedSubject($subject)
+					->setLink($link)
+					->setIcon($iconUrl);
+
+				$actionLabel = $params['actionLabel'] ?? $l->t('View chat');
 				$action = $notification->createAction();
 				$action->setLabel($actionLabel)
 					->setParsedLabel($actionLabel)

@@ -35,25 +35,45 @@ class NotificationService {
 		$manager = $this->notificationManager;
 		$notification = $manager->createNotification();
 
+		$chatSessionId = $this->getChatMessageSessionId($task);
+
 		$params = [
 			'appId' => $task->getAppId(),
 			'id' => $task->getId(),
-			'inputs' => $task->getInput(),
-			'target' => $customTarget ?? $this->getDefaultTarget($task->getId()),
+			'target' => $customTarget,
 			'actionLabel' => $actionLabel,
 			'result' => $resultPreview,
 		];
+		if ($chatSessionId === null) {
+			// chat notifications never render the task input and it can be
+			// large enough to overflow the notifications table column
+			$params['inputs'] = $task->getInput();
+		}
 		$params['taskTypeId'] = $task->getTaskTypeId();
+		if ($chatSessionId !== null) {
+			$params['sessionId'] = (string)$chatSessionId;
+		}
 
 		$taskSuccessful = $task->getStatus() === Task::STATUS_SUCCESSFUL;
 
-		$subject = $taskSuccessful
-			? 'success'
-			: 'failure';
+		if ($chatSessionId !== null) {
+			$subject = $taskSuccessful
+				? 'chat_success'
+				: 'chat_failure';
+		} else {
+			$subject = $taskSuccessful
+				? 'success'
+				: 'failure';
+		}
 
-		$objectType = $customTarget === null
-			? 'task'
-			: 'task-with-custom-target';
+		// chat conversations must navigate to the session, not open the task
+		// result modal: the frontend notification action interceptor cancels
+		// WEB actions for notifications with the object type "task"
+		$objectType = $chatSessionId !== null
+			? 'chat'
+			: ($customTarget === null
+				? 'task'
+				: 'task-with-custom-target');
 
 		$notification->setApp(Application::APP_ID)
 			->setUser($task->getUserId())
@@ -66,6 +86,20 @@ class NotificationService {
 
 	private function getDefaultTarget(int $taskId): string {
 		return $this->url->linkToRouteAbsolute(Application::APP_ID . '.assistant.getAssistantTaskResultPage', ['taskId' => $taskId]);
+	}
+
+	/**
+	 * Chat message generation tasks share their appId with title generation tasks,
+	 * only message tasks (including regenerations) use a "chatty-llm:" prefixed customId
+	 */
+	private function getChatMessageSessionId(Task $task): ?int {
+		if ($task->getAppId() !== Application::APP_ID . ':chatty-llm') {
+			return null;
+		}
+		if (preg_match('/^chatty-llm:(\d+)/', $task->getCustomId() ?? '', $matches)) {
+			return (int)$matches[1];
+		}
+		return null;
 	}
 
 	public function sendFileActionNotification(

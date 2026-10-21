@@ -91,10 +91,12 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
 		$context->registerEventListener(LoadAdditionalScriptsEvent::class, LoadAdditionalScriptsListener::class);
 
-		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
-		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
+		// the chat listener persists the generated reply before the notify
+		// listeners run: a ready notification must not beat the message insert
 		$context->registerEventListener(TaskSuccessfulEvent::class, ChattyLLMTaskListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, ChattyLLMTaskListener::class);
+		$context->registerEventListener(TaskSuccessfulEvent::class, TaskSuccessfulListener::class);
+		$context->registerEventListener(TaskFailedEvent::class, TaskFailedListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, FileActionTaskSuccessfulListener::class);
 		$context->registerEventListener(TaskSuccessfulEvent::class, NewFileMenuTaskSuccessfulListener::class);
 		$context->registerEventListener(TaskFailedEvent::class, FileActionTaskFailedListener::class);
