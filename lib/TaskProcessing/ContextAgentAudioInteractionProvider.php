@@ -68,6 +68,11 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 				$this->l->t('The memories to be injected into the chat session.'),
 				EShapeType::ListOfTexts
 			),
+			'user_instructions' => new ShapeDescriptor(
+				$this->l->t('User instructions'),
+				$this->l->t('Additional instructions for the agent, appended to its system prompt.'),
+				EShapeType::Text
+			),
 		];
 	}
 
@@ -133,6 +138,10 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 			/** @psalm-suppress UndefinedClass */
 			if (isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 				$contextAgentTaskInput['memories'] = $input['memories'];
+			}
+			/** @psalm-suppress UndefinedClass */
+			if (isset($input['user_instructions'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentInteraction::ID]['optionalInputShape']['user_instructions'])) {
+				$contextAgentTaskInput['user_instructions'] = $input['user_instructions'];
 			}
 			/** @psalm-suppress UndefinedClass,InvalidArgument */
 			$task = new Task(

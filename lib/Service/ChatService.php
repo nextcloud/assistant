@@ -456,15 +456,7 @@ class ChatService {
 			}
 		} else {
 			// classic chat
-			$systemPrompt = '';
-			try {
-				$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1, Message::ROLE_SYSTEM);
-				$systemPrompt = $firstMessage->getContent();
-			} catch (DoesNotExistException $e) {
-				$this->logger->info('No system message found in the session', ['exception' => $e, 'sessionId' => $sessionId]);
-			} catch (MultipleObjectsReturnedException|Exception $e) {
-				throw new InternalException(previous: $e);
-			}
+			$systemPrompt = $this->getSessionSystemPrompt($sessionId);
 			try {
 				$history = $this->getRawLastMessages($sessionId);
 			} catch (Exception|AppConfigTypeConflictException $e) {
@@ -655,6 +647,39 @@ class ChatService {
 		return in_array(\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
 	}
 
+	/**
+	 * Get the user instructions stored as the system message of the session (empty string if there is none)
+	 *
+	 * @throws InternalException
+	 */
+	private function getSessionSystemPrompt(int $sessionId): string {
+		try {
+			$firstMessage = $this->messageMapper->getFirstNMessages($sessionId, 1, Message::ROLE_SYSTEM);
+			return $firstMessage->getContent();
+		} catch (DoesNotExistException $e) {
+			$this->logger->info('No system message found in the session', ['exception' => $e, 'sessionId' => $sessionId]);
+		} catch (MultipleObjectsReturnedException|Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+		return '';
+	}
+
+	/**
+	 * Pass the session's user instructions to an agency task if its provider supports them.
+	 * The agent appends them to its own system prompt, they do not replace it.
+	 *
+	 * @throws InternalException
+	 */
+	private function addAgencyUserInstructions(array &$taskInput, string $taskTypeId, int $sessionId): void {
+		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[$taskTypeId]['optionalInputShape']['user_instructions'])) {
+			return;
+		}
+		$userInstructions = $this->getSessionSystemPrompt($sessionId);
+		if ($userInstructions !== '') {
+			$taskInput['user_instructions'] = $userInstructions;
+		}
+	}
+
 	private function getAudioHistory(array $history): array {
 		// history is a list of JSON strings
 		// The content is the remote audio ID (or the transcription as fallback)
@@ -838,6 +863,8 @@ class ChatService {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
 		/** @psalm-suppress UndefinedClass */
+		$this->addAgencyUserInstructions($taskInput, \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $sessionId);
+		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
 			$taskInput,
@@ -886,6 +913,8 @@ class ChatService {
 			'conversation_token' => $conversationToken,
 		];
 		$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
+		/** @psalm-suppress UndefinedClass */
+		$this->addAgencyUserInstructions($taskInput, \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, $sessionId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID,
@@ -982,6 +1011,8 @@ class ChatService {
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
+		/** @psalm-suppress UndefinedClass */
+		$this->addAgencyUserInstructions($taskInput, \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $sessionId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,
