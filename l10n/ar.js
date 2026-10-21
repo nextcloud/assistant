@@ -112,6 +112,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "أغلِق مُساعِد نكست كلاود Nextcloud Assistant",
     "Less" : "أقل",
     "More" : "المزيد",
+    "Group" : "مجموعة",
+    "External" : "خارجي",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "إذا لم تكن راضيًا عن الإجراءات التي يريد \"المُساعِد\" تنفيذها، فيمكنك تعديل طلبك عن طريق إرسال رسالة جديدة بدلاً من النقر فوق الزر \"إلغاء\".",
     "The Assistant wants to perform sensitive actions on your behalf." : "يرغب \"المُساعِد\" في تنفيذ إجراءات حساسة نيابةً عنك.",
     "Cancel" : "إلغاء",

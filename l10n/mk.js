@@ -29,6 +29,7 @@ OC.L10N.register(
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Дали сте сигурни дека сакате да го избришете \"{sessionTitle}\"?",
     "Deselect all" : "Одселектирај се",
     "Select all" : "Избери се",
+    "New conversation" : "Нов разговор",
     "Delete" : "Избриши",
     "Edit title" : "Удери наслов",
     "Cancel editing" : "Откажи уредување",

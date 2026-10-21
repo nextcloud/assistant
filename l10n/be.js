@@ -42,6 +42,8 @@ OC.L10N.register(
     "Cancel task" : "Скасаваць заданне",
     "Close" : "Закрыць",
     "More" : "Яшчэ",
+    "Group" : "Група",
+    "External" : "Знешні",
     "Cancel" : "Скасаваць",
     "You" : "Вы",
     "Deselect all" : "Скасаваць выбар усіх",

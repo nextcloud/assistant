@@ -29,6 +29,8 @@ OC.L10N.register(
     "Close" : "Затваряне",
     "Less" : "По-малко",
     "More" : "Повече ",
+    "Group" : "Група",
+    "External" : "Външен",
     "Cancel" : "Отказ",
     "You" : "Вие",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Сигурни ли сте, че искате да изтриете  {sessionTitle}?",
