@@ -40,6 +40,7 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Zarrar l'asistente de Nextcloud",
     "Less" : "Menos",
     "More" : "Más",
+    "Group" : "Grupu",
     "Cancel" : "Encaboxar",
     "You" : "Tu",
     "Select all" : "Seleicionar too",
