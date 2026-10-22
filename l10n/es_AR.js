@@ -27,6 +27,7 @@ OC.L10N.register(
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
     "Waiting…" : "Esperando...",
+    "Dismiss" : "Despedir",
     "Choose a file" : "Seleccione un archivo",
     "Choose" : "Elige",
     "No file selected" : "No se ha seleccionado algún archivo",

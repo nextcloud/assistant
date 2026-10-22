@@ -25,6 +25,7 @@ OC.L10N.register(
     "Delete" : "O'chirish",
     "Edit title" : "Sarlavhani tahrirlash",
     "Submit" : "Submit",
+    "Dismiss" : "Rad etish",
     "Upload from device" : "Qurilmadan yuklash",
     "Choose" : "Choose",
     "Folder name" : "Papka nomi",

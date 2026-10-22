@@ -46,6 +46,7 @@ OC.L10N.register(
     "Task for \"%1$s\" has failed" : "مُهِمّة لـ \"%1$s\" أخفقت",
     "\"%1$s\" task for \"%2$s\" has failed" : "\"%1$s\" مُهِمّة لـ \"%2$s\" أخفقت",
     "View task" : "أظهِر المُهِمّة",
+    "View chat" : "عرض المحادثة",
     "Nextcloud Talk" : "تطبيق \"المحادثة\" talk من نكست كلاود",
     "OpenProject" : "\"أوبن بروجكت\" OpenProject",
     "OpenStreetMap" : "خرائط \"أوبن ستريت ماب\" OpenStreetMap",

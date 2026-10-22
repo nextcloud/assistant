@@ -28,6 +28,7 @@ OC.L10N.register(
     "Edit title" : "עריכת כותרת",
     "Submit" : "שליחה",
     "Waiting…" : "בהמתנה…",
+    "Dismiss" : "שחרור",
     "Choose a file" : "נא לבחור קובץ",
     "Choose" : "בחר",
     "No file selected" : "לא נבחר קובץ",

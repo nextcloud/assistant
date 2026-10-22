@@ -111,6 +111,7 @@ OC.L10N.register(
     "View result" : "Se resultat",
     "Scheduled task failed" : "Den planlagte opgave mislykkedes",
     "\"%s\" failed to run." : "\"%s\" kunne ikke køres.",
+    "View chat" : "Vis chat",
     "AI sticker generation" : "AI mærkat generering",
     "An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists." : "Der opstod en fejl under planlægningen af denne kørsel. Kontakt din systemadministrator, hvis problemet fortsætter.",
     "Nextcloud Deck" : "Nextcloud Deck",
