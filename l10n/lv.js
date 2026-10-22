@@ -33,6 +33,7 @@ OC.L10N.register(
     "Remove this media" : "Noņemt šo informācijas nesēju",
     "Submit" : "Iesniegt",
     "Waiting…" : "Gaida...",
+    "Dismiss" : "Atmest",
     "Upload from device" : "Augšupielādēt no ierīces",
     "Choose a file" : "Izvēlēties datni",
     "Choose" : "Izvēlēties",

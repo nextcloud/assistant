@@ -20,6 +20,7 @@ OC.L10N.register(
     "Select all" : "Zgjidhi të gjitha",
     "Delete" : "Fshi",
     "Submit" : "Dërgo",
+    "Dismiss" : "Hiq",
     "Choose a file" : "Zgjidh një Skedar",
     "Choose" : "Zgjidhni",
     "No file selected" : "S’u përzgjodh skedar",

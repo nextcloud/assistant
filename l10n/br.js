@@ -5,6 +5,7 @@ OC.L10N.register(
     "Upload file" : "Pellgas ur restr",
     "Delete file" : "Dilemel ar restr",
     "Unauthorized" : "Disaotreet",
+    "View chat" : "Gwellet ar chat",
     "Nextcloud Talk" : "Flap Nextcloud",
     "Translate" : "Treiñ",
     "Assistant" : "Skoazeller",

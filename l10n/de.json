@@ -109,6 +109,7 @@
     "View result" : "Ergebnis anzeigen",
     "Scheduled task failed" : "Geplante Aufgabe fehlgeschlagen",
     "\"%s\" failed to run." : "\"%s\" konnte nicht ausgeführt werden.",
+    "View chat" : "Chat anzeigen",
     "AI sticker generation" : "KI-Stickererstellung",
     "An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists." : "Beim Planen dieses Zuweisungslaufs ist ein Fehler aufgetreten. Bitte an die Systemadministration wenden, falls dieses Problem weiterhin besteht.",
     "Nextcloud Deck" : "Nextcloud Deck",

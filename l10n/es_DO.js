@@ -20,6 +20,7 @@ OC.L10N.register(
     "Select all" : "Seleccionar todo",
     "Delete" : "Borrar",
     "Submit" : "Enviar",
+    "Dismiss" : "Descartar",
     "Choose a file" : "Selecciona un archivo",
     "Choose" : "Seleccionar",
     "No file selected" : "No se ha seleccionado algún archivo",

@@ -19,6 +19,7 @@ OC.L10N.register(
     "Select all" : "All auswielen",
     "Delete" : "Läschen",
     "Submit" : "Iwwermëttelen",
+    "Dismiss" : "Ofbriechen",
     "Choose" : "Auswielen",
     "Folder name" : "Dossiers Numm:",
     "Cancelled" : "Ofgebrach",

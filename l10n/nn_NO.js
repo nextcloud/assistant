@@ -14,6 +14,7 @@ OC.L10N.register(
     "Select all" : "Merk alt",
     "New conversation" : "Ny samtale",
     "Delete" : "Slett",
+    "Dismiss" : "Lukk",
     "Choose a file" : "Vel ei fil",
     "Choose" : "Vel",
     "No file selected" : "Inga fil valt",

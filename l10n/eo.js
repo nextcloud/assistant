@@ -22,6 +22,7 @@ OC.L10N.register(
     "Select all" : "Elekti ĉion",
     "Delete" : "Forigi",
     "Submit" : "Sendi",
+    "Dismiss" : "Preterpasi",
     "Choose" : "Elekti",
     "No file selected" : "Neniu dosiero elektita",
     "Folder name" : "Dosierujnomo",

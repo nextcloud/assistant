@@ -45,6 +45,7 @@ OC.L10N.register(
     "Delete" : "Eliminar",
     "Submit" : "Enviar",
     "Waiting…" : "Esperando...",
+    "Dismiss" : "Descartar",
     "Upload from device" : "Cargar desde el dispositivo",
     "Choose a file" : "Selecciona un archivo",
     "Choose" : "Seleccionar",
