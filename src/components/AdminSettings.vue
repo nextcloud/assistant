@@ -144,6 +144,10 @@
 					{{ t('assistant', 'It is passed on to the LLM for it to better understand the context.') }}
 					<br>
 					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}
+					<template v-if="state.context_agent_available">
+						<br>
+						{{ t('assistant', 'When chatting through the Context Agent, these instructions are added to the agent\'s own instructions (requires Context Agent 2.10.0 or later).') }}
+					</template>
 				</NcNoteCard>
 				<NcRichContenteditable id="chat_user_instructions"
 					v-model="state.chat_user_instructions"
