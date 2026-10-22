@@ -17,6 +17,7 @@ use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\SessionSummaryService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\Exception;
 use OCP\IAppConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
@@ -126,6 +127,28 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
 
 		$this->assertNotNull($this->scheduledTask);
+		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+	}
+
+	public function testTheAgentRunsWithoutUserInstructionsWhenTheyCannotBeRead(): void {
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')->willThrowException(new Exception('database error'));
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+	}
+
+	public function testUserInstructionsAreNotSentForAssignmentRuns(): void {
+		// assignments run unattended, instructions like "ask for clarification" do not apply
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->expects($this->never())->method('getFirstNMessages');
+
+		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
 	}
 }

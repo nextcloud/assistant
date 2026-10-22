@@ -135,13 +135,19 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 				'confirmation' => $confirmation,
 				'conversation_token' => $conversationToken,
 			];
+			$availableTaskTypes = $this->taskProcessingManager->getAvailableTaskTypes();
 			/** @psalm-suppress UndefinedClass */
-			if (isset($input['memories'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
+			if (isset($input['memories'], $availableTaskTypes[ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
 				$contextAgentTaskInput['memories'] = $input['memories'];
 			}
 			/** @psalm-suppress UndefinedClass */
-			if (isset($input['user_instructions'], $this->taskProcessingManager->getAvailableTaskTypes()[ContextAgentInteraction::ID]['optionalInputShape']['user_instructions'])) {
+			if (isset($input['user_instructions'], $availableTaskTypes[ContextAgentInteraction::ID]['optionalInputShape']['user_instructions'])) {
 				$contextAgentTaskInput['user_instructions'] = $input['user_instructions'];
+			}
+			// the reply is read out loud, so the agent must not format it (e.g. with Markdown)
+			/** @psalm-suppress UndefinedClass */
+			if (isset($availableTaskTypes[ContextAgentInteraction::ID]['optionalInputShape']['output_mode'])) {
+				$contextAgentTaskInput['output_mode'] = 'speech';
 			}
 			/** @psalm-suppress UndefinedClass,InvalidArgument */
 			$task = new Task(

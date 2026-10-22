@@ -567,8 +567,10 @@ class ChatService {
 		$lastConversationToken = self::EMPTY_CONVERSATION_TOKEN;
 
 		// classic agency
+		// The chat user instructions are meant for interactive chats (e.g. asking for clarification),
+		// an assignment runs unattended with its own prompt
 		$prompt = $lastUserMessage->getContent();
-		$taskId = $this->scheduleAgencyTask($userId, $prompt, 0, $lastConversationToken, $sessionId);
+		$taskId = $this->scheduleAgencyTask($userId, $prompt, 0, $lastConversationToken, $sessionId, withUserInstructions: false);
 		return $taskId;
 	}
 
@@ -667,14 +669,18 @@ class ChatService {
 	/**
 	 * Pass the session's user instructions to an agency task if its provider supports them.
 	 * The agent appends them to its own system prompt, they do not replace it.
-	 *
-	 * @throws InternalException
+	 * If they cannot be read, the task is scheduled without them.
 	 */
-	private function addAgencyUserInstructions(array &$taskInput, string $taskTypeId, int $sessionId): void {
-		if (!isset($this->taskProcessingManager->getAvailableTaskTypes()[$taskTypeId]['optionalInputShape']['user_instructions'])) {
+	private function addAgencyUserInstructions(array &$taskInput, array $optionalInputShape, int $sessionId): void {
+		if (!isset($optionalInputShape['user_instructions'])) {
 			return;
 		}
-		$userInstructions = $this->getSessionSystemPrompt($sessionId);
+		try {
+			$userInstructions = $this->getSessionSystemPrompt($sessionId);
+		} catch (InternalException $e) {
+			$this->logger->warning('Could not get the user instructions of the session, the agent will run without them', ['exception' => $e, 'sessionId' => $sessionId]);
+			return;
+		}
 		if ($userInstructions !== '') {
 			$taskInput['user_instructions'] = $userInstructions;
 		}
@@ -850,6 +856,7 @@ class ChatService {
 		int $confirmation,
 		string $conversationToken,
 		int $sessionId,
+		bool $withUserInstructions = true,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -859,11 +866,13 @@ class ChatService {
 			'conversation_token' => $conversationToken,
 		];
 		/** @psalm-suppress UndefinedClass */
-		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape']['memories'])) {
+		$optionalInputShape = $this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape'] ?? [];
+		if (isset($optionalInputShape['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
-		/** @psalm-suppress UndefinedClass */
-		$this->addAgencyUserInstructions($taskInput, \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID, $sessionId);
+		if ($withUserInstructions) {
+			$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
+		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID,
@@ -914,7 +923,8 @@ class ChatService {
 		];
 		$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		/** @psalm-suppress UndefinedClass */
-		$this->addAgencyUserInstructions($taskInput, \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, $sessionId);
+		$optionalInputShape = $this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID]['optionalInputShape'] ?? [];
+		$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID,
@@ -1008,11 +1018,11 @@ class ChatService {
 			'conversation_token' => $conversationToken,
 		];
 		/** @psalm-suppress UndefinedClass */
-		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape']['memories'])) {
+		$optionalInputShape = $this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape'] ?? [];
+		if (isset($optionalInputShape['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
-		/** @psalm-suppress UndefinedClass */
-		$this->addAgencyUserInstructions($taskInput, \OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $sessionId);
+		$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID,
