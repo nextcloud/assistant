@@ -140,7 +140,6 @@ class MessageMapper extends QBMapper {
 	 * @param int $ocpTaskId
 	 * @return Message
 	 * @throws DoesNotExistException
-	 * @throws MultipleObjectsReturnedException
 	 * @throws \OCP\DB\Exception
 	 */
 	public function getMessageByTaskId(int $sessionId, int $ocpTaskId): Message {
@@ -148,9 +147,17 @@ class MessageMapper extends QBMapper {
 		$qb->select(Message::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('ocp_task_id', $qb->createPositionalParameter($ocpTaskId, IQueryBuilder::PARAM_INT)));
+			->andWhere($qb->expr()->eq('ocp_task_id', $qb->createPositionalParameter($ocpTaskId, IQueryBuilder::PARAM_INT)))
+			// concurrent task processing executors may run the same task twice,
+			// which results in duplicate rows with the same ocp_task_id
+			->orderBy('id', 'ASC')
+			->setMaxResults(1);
 
-		return $this->findEntity($qb);
+		$entities = $this->findEntities($qb);
+		if ($entities === []) {
+			throw new DoesNotExistException('Assistant chat message with session_id ' . $sessionId . ' and ocp_task_id ' . $ocpTaskId . ' does not exist');
+		}
+		return $entities[0];
 	}
 
 	/**

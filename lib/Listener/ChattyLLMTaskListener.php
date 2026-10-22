@@ -14,6 +14,7 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Service\TaskProcessingService;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
@@ -57,6 +58,15 @@ class ChattyLLMTaskListener implements IEventListener {
 		// message generation
 		if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
+
+			// concurrent task processing executors can process the same task twice and
+			// dispatch this event twice, in which case the message was already stored
+			try {
+				$this->messageMapper->getMessageByTaskId($sessionId, $task->getId());
+				return;
+			} catch (DoesNotExistException $e) {
+				// the message was not stored yet, continue with the normal handling
+			}
 
 			$isAgency = class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentInteraction')
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID;
