@@ -42,6 +42,11 @@ return [
 		['name' => 'agentSkillsApi#storeSkill', 'url' => '/api/{apiVersion}/skills', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'agentSkillsApi#loadSkill', 'url' => '/api/{apiVersion}/skills/{skillName}', 'verb' => 'GET', 'requirements' => $requirements],
 
+		['name' => 'agentsApi#listAgents', 'url' => '/api/{apiVersion}/agents', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'agentsApi#createAgent', 'url' => '/api/{apiVersion}/agents', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'agentsApi#updateAgent', 'url' => '/api/{apiVersion}/agents/{id}', 'verb' => 'PUT', 'requirements' => $requirements],
+		['name' => 'agentsApi#deleteAgent', 'url' => '/api/{apiVersion}/agents/{id}', 'verb' => 'DELETE', 'requirements' => $requirements],
+
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/sessions', 'verb' => 'POST', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#updateChatSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'PUT', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'DELETE', 'postfix' => 'restful'],
