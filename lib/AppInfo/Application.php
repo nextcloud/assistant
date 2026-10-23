@@ -112,7 +112,9 @@ class Application extends App implements IBootstrap {
 
 		// the Talk event classes are not necessarily autoloadable when this app
 		// file is registered, the listeners themselves guard for Talk being absent
+		/** @psalm-suppress UndefinedClass, InvalidArgument */
 		$context->registerEventListener(\OCA\Talk\Events\ChatMessageSentEvent::class, AgentMentionListener::class);
+		/** @psalm-suppress UndefinedClass, InvalidArgument */
 		$context->registerEventListener(\OCA\Talk\Events\ReactionAddedEvent::class, AgentReactionListener::class);
 
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
