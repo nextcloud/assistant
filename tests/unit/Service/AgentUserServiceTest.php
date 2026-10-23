@@ -27,7 +27,7 @@ class AgentUserServiceTest extends TestCase {
 		$this->service = new AgentUserService($this->userManager);
 	}
 
-	public function testCreatesUserWithRandomPasswordAndDisplayeName(): void {
+	public function testCreatesUserWithRandomPasswordAndDisplayName(): void {
 		$this->userManager->method('userExists')->willReturn(false);
 		$this->userManager->expects($this->once())
 			->method('createUser')
@@ -39,20 +39,20 @@ class AgentUserServiceTest extends TestCase {
 				return $user;
 			});
 
-		$user = $this->service->createAgentUser('My Agent', 'My Agent');
+		$user = $this->service->createAgentUser('My Agent', 'my_agent');
 		$this->assertSame('my_agent', $user->getUID());
 	}
 
 	public function testRejectsInvalidUserIds(): void {
 		$this->userManager->expects($this->never())->method('createUser');
 		$this->expectException(AgentUserException::class);
-		$this->service->createAgent('Agent', 'invalid uid!');
+		$this->service->createAgentUser('Agent', 'invalid uid!');
 	}
 
 	public function testRejectsExistingUserIds(): void {
 		$this->userManager->method('userExists')->willReturn(true);
 		$this->userManager->expects($this->never())->method('createUser');
 		$this->expectException(AgentUserException::class);
-		$this->service->createAgent('Agent', 'admin');
+		$this->service->createAgentUser('Agent', 'admin');
 	}
 }
