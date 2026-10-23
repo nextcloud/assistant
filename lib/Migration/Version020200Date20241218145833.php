@@ -29,7 +29,7 @@ class Version020200Date20241218145833 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('assistant_chat_sns')) {
 			$table = $schema->getTable('assistant_chat_sns');
-			if (!$table->hasColumn('conversation_token')) {
+			if (!$table->hasColumn('agency_conversation_token')) {
 				$table->addColumn('agency_conversation_token', Types::TEXT, [
 					'notnull' => false,
 				]);
