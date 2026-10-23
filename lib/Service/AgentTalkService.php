@@ -136,7 +136,7 @@ class AgentTalkService {
 	private function getOneToOnePartnerUserId(\OCA\Talk\Room $room, string $authorUserId): ?string {
 		try {
 			return $room->getSecondParticipant($authorUserId);
-		} catch (\InvalidArgumentException|JsonException $e) {
+		} catch (\InvalidArgumentException|\JsonException|\OCA\Talk\Exceptions\RoomNotFoundException $e) {
 			return null;
 		}
 	}
