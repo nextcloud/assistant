@@ -11,6 +11,7 @@ OC.L10N.register(
     "Cancel" : "Cancel",
     "Deselect all" : "Dad ddewis popeth",
     "Delete" : "Dileu",
+    "Dismiss" : "Dismiss",
     "Choose" : "Dewisa",
     "Cancelled" : "Diddymwyd",
     "Running" : "Rhedeg",

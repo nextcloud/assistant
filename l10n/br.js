@@ -19,6 +19,7 @@ OC.L10N.register(
     "Select all" : "Dibab pep tra",
     "Delete" : "Dilemel",
     "Submit" : "Kinnig",
+    "Dismiss" : "Disteurel",
     "Choose" : "Dibab",
     "No file selected" : "Restr choazet ebet",
     "Folder name" : "Anv teuliad",

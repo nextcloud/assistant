@@ -175,6 +175,7 @@ OC.L10N.register(
     "Text output" : "Έξοδος κειμένου",
     "The text translation" : "Η μετάφραση κειμένου",
     "This was generated using Artificial Intelligence." : "Αυτό δημιουργήθηκε με χρήση Τεχνητής Νοημοσύνης.",
+    "User instructions" : "Οδηγίες χρήστη",
     "Translate image" : "Μετάφραση εικόνας",
     "Translate the text content of an image" : "Μετάφραση του περιεχομένου κειμένου μιας εικόνας",
     "Input files" : "Αρχεία εισόδου",

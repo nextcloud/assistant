@@ -120,6 +120,7 @@ OC.L10N.register(
     "Transcription of the audio output" : "Transcrición da saída de son",
     "Audio transcription" : "Transcrición de son",
     "This was generated using Artificial Intelligence." : "Isto foi xerado empregando intelixencia artificial.",
+    "User instructions" : "Instrucións do usuario",
     "Translate image" : "Traducir a imaxe",
     "Translate the text content of an image" : "Traducir o contido de texto dunha imaxe",
     "Input files" : "Ficheiros de entrada",

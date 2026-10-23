@@ -190,6 +190,7 @@ OC.L10N.register(
     "Text output" : "Yazı çıktısı",
     "The text translation" : "Yazı çevirisi",
     "This was generated using Artificial Intelligence." : "Bu içerik yapay zeka tarafından oluşturulmuştur.",
+    "User instructions" : "Kullanıcı yönergesi",
     "Translate image" : "Görseli yazıya çevir",
     "Translate the text content of an image" : "Bir görseldeki içeriği yazıya çevir ",
     "Input files" : "Giriş dosyaları",

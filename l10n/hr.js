@@ -33,6 +33,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Generirani glasovni odgovor kao dio razgovora",
     "Output transcript" : "Transkript izlaza",
     "Transcription of the audio output" : "Transkript audio ulaza",
+    "User instructions" : "Upute za korisnike",
     "Input files" : "Ulazne datoteke",
     "The files to extract text from" : "Datoteke iz kojih treba izdvojiti tekst",
     "Origin language" : "Izvorni jezik",

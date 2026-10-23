@@ -27,6 +27,7 @@ OC.L10N.register(
     "Assistant" : "Avustaja",
     "Memories" : "Muistot",
     "Chat history" : "Keskusteluhistoria",
+    "User instructions" : "Käyttäjäohjeet",
     "Target language" : "Kohdekieli",
     "Prompt" : "Kehote",
     "Select" : "Valitse",

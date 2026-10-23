@@ -188,6 +188,7 @@ OC.L10N.register(
     "Text output" : "Text output",
     "The text translation" : "The text translation",
     "This was generated using Artificial Intelligence." : "This was generated using Artificial Intelligence.",
+    "User instructions" : "User instructions",
     "Translate image" : "Translate image",
     "Translate the text content of an image" : "Translate the text content of an image",
     "Input files" : "Input files",

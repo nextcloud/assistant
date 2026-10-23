@@ -116,6 +116,7 @@ OC.L10N.register(
     "Output transcript" : "Nakala ya matokeo",
     "Transcription of the audio output" : "Unukuzi wa sauti iliyotolewa",
     "Audio transcription" : "Unukuzi wa sauti",
+    "User instructions" : "Maagizo ya mtumiaji",
     "Translate image" : "Tafsiri picha",
     "Translate the text content of an image" : "Tafsiri maudhui ya maandishi ya picha",
     "Input files" : "Faili za kuingizia",

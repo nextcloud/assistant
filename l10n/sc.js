@@ -14,6 +14,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Àteru",
     "Translate" : "Borta",
+    "User instructions" : "Istrutziones utente",
     "Select" : "Seletziona",
     "Data folder" : "Cartella de datos",
     "Clear" : "Lìmpia",

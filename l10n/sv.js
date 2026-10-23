@@ -190,6 +190,7 @@ OC.L10N.register(
     "Text output" : "Textutdata",
     "The text translation" : "Textöversättningen",
     "This was generated using Artificial Intelligence." : "Detta skapades med artificiell intelligens.",
+    "User instructions" : "Användarinstruktioner",
     "Translate image" : "Översätt bild",
     "Translate the text content of an image" : "Översätt textinnehållet i en bild",
     "Input files" : "Indatafiler",

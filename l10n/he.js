@@ -13,6 +13,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "דוא״ל Nextcloud",
     "Other" : "אחר",
     "Translate" : "תרגום",
+    "User instructions" : "הוראות למשתמש",
     "Select" : "בחר",
     "Data folder" : "תיקיית נתונים",
     "Clear" : "פינוי",

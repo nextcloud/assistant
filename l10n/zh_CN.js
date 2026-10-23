@@ -113,6 +113,7 @@ OC.L10N.register(
     "Output transcript" : "输出转录",
     "Transcription of the audio output" : "音频输出的转录内容",
     "Audio transcription" : "音频转写",
+    "User instructions" : "用户指令",
     "Input files" : "输入文件",
     "The files to extract text from" : "从中提取文本的文件",
     "Origin language" : "原始语言",

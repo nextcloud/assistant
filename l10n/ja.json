@@ -112,6 +112,7 @@
     "Output transcript" : "文字起こしを出力",
     "Transcription of the audio output" : "音声出力の文字起こし",
     "Audio transcription" : "音声の文字起こし",
+    "User instructions" : "ユーザーへの手順",
     "Input files" : "入力ファイル",
     "The files to extract text from" : "テキストを抽出するファイル",
     "Origin language" : "元の言語",

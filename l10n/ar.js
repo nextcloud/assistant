@@ -160,6 +160,7 @@ OC.L10N.register(
     "Type a message…" : "أُكتُب رسالةً ...",
     "Processing…" : "قيدَ المعالجة ...",
     "Waiting…" : "قيد الانتظار…",
+    "Dismiss" : "الغاء",
     "Upload from device" : "إرفَع من الجهاز",
     "Choose a file" : "إختيار ملف",
     "Choose" : "إختر",

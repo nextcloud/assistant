@@ -49,6 +49,7 @@ OC.L10N.register(
     "Output transcript" : "Kimenet leirata",
     "Transcription of the audio output" : "A hangkimenet leirata",
     "Audio transcription" : "Hang átírása",
+    "User instructions" : "Felhasználói utasítások",
     "Input files" : "Bemeneti fájlok",
     "The files to extract text from" : "Fájlok, melyekből szöveget kell kinyerni",
     "Origin language" : "Eredeti nyelv",

@@ -190,6 +190,7 @@ OC.L10N.register(
     "Text output" : "Aschur téacs",
     "The text translation" : "An t-aistriúchán téacs",
     "This was generated using Artificial Intelligence." : "Gineadh é seo ag baint úsáide as Intleacht Shaorga.",
+    "User instructions" : "Treoracha úsáideora",
     "Translate image" : "Aistrigh íomhá",
     "Translate the text content of an image" : "Aistrigh ábhar téacs íomhá",
     "Input files" : "Comhaid ionchuir",
