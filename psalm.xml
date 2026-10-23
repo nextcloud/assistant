@@ -38,6 +38,7 @@
 				<referencedClass name="Symfony\Component\Console\Output\OutputInterface" />
 				<referencedClass name="OC\User\NoUserException" />
 				<referencedClass name="OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles" />
+				<referencedClass name="OCA\Talk\*" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -45,6 +46,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
 				<referencedClass name="OC\User\NoUserException" />
+				<referencedClass name="OCA\Talk\*" />
 			</errorLevel>
 		</UndefinedDocblockClass>
 	</issueHandlers>

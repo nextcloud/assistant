@@ -20,6 +20,8 @@ use Psr\Log\LoggerInterface;
  * Handles messages sent by users in Talk conversations with agents:
  * the agent answer is generated in a classic Assistant chat session
  * and posts back in the 1-1 Talk conversation with the human user.
+ *
+ * @psalm-suppress InvalidTemplateParam, ImplementedParamTypeMismatch
  */
 class AgentMentionListener implements IEventListener {
 

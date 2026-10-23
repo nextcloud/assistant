@@ -15,6 +15,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\DB\Exception;
 use OCP\IAppConfig;
+use OCP\IUserManager;
 use OCP\Settings\ISettings;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
@@ -30,6 +31,7 @@ class Admin implements ISettings {
 		private ITaskProcessingManager $taskProcessingManager,
 		private AgentSkillsService $agentSkillsService,
 		private AgentsService $agentsService,
+		private IUserManager $userManager,
 		private LoggerInterface $logger,
 	) {
 	}
