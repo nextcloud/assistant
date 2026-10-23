@@ -117,6 +117,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Respons suara yang dihasilkan sebagai bagian dari percakapan",
     "Output transcript" : "Transkrip keluaran",
     "Transcription of the audio output" : "Transkripsi keluaran audio",
+    "User instructions" : "Petunjuk pengguna",
     "Input files" : "File masukan",
     "The files to extract text from" : "File untuk diekstrak teksnya",
     "Origin language" : "Bahasa asal",

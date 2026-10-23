@@ -188,6 +188,7 @@ OC.L10N.register(
     "Text output" : "Teksto išvestis",
     "The text translation" : "Teksto vertimas",
     "This was generated using Artificial Intelligence." : "Tai buvo sugeneruota naudojant dirbtinį intelektą.",
+    "User instructions" : "Vartotojo instrukcijos",
     "Translate image" : "Versti tekstą paveikslėlyje",
     "Translate the text content of an image" : "Išversti vaizdo tekstinį turinį",
     "Input files" : "Įvesties failai",

@@ -159,6 +159,7 @@ OC.L10N.register(
     "Output transcript" : "Transkrypcja wyjściowa",
     "Transcription of the audio output" : "Transkrypcja audio danych wyjściowych",
     "Audio transcription" : "Transkrypcja audio",
+    "User instructions" : "Instrukcje dla użytkownika",
     "Translate image" : "Przetłumacz obraz",
     "Translate the text content of an image" : "Przetłumacz tekst zawarty na obrazie",
     "Input files" : "Pliki wejściowe",

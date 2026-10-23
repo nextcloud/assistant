@@ -164,6 +164,7 @@ OC.L10N.register(
     "Text output" : "متن خروجی",
     "The text translation" : "ترجمه متنی",
     "This was generated using Artificial Intelligence." : "این با استفاده از هوش مصنوعی تولید شده است",
+    "User instructions" : "دستورالعمل‌های کاربر",
     "Translate image" : "ترجمه تصویر",
     "Translate the text content of an image" : "ترجمه محتوای متنی یک تصویر",
     "Input files" : "فایل‌های ورودی",

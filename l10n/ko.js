@@ -83,6 +83,7 @@ OC.L10N.register(
     "Assistant" : "어시스턴트",
     "Memories" : "Memories",
     "Audio transcription" : "음성 전사",
+    "User instructions" : "사용자 지침",
     "Origin language" : "원래 언어",
     "The language of the origin text" : "원문의 언어",
     "Target language" : "목표 언어",

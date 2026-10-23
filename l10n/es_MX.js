@@ -23,6 +23,7 @@ OC.L10N.register(
     "Describe a task that you want the assistant to do or ask a question" : "Describa una tarea que quiere que haga el asistente o haga una pregunta",
     "Chat history" : "Historial de la conversación",
     "The history of chat messages before the current message, starting with a message by the user" : "El historial de mensajes del chat antes del mensaje actual, empezando con un mensaje de usuario",
+    "User instructions" : "Instrucciones para el usuario",
     "Origin language" : "Idioma de origen",
     "The language of the origin text" : "El idioma del texto de origen",
     "Target language" : "Idioma destino",

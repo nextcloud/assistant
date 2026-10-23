@@ -116,6 +116,7 @@ OC.L10N.register(
     "Transcription of the audio output" : "ئاۋاز چىقىرىشنىڭ كۆچۈرۈلۈشى",
     "Audio transcription" : "Audio transcription",
     "This was generated using Artificial Intelligence." : "بۇ سۈنئىي ئەقىل ئارقىلىق بارلىققا كەلتۈرۈلدى.",
+    "User instructions" : "ئىشلەتكۈچى كۆرسەتمىسى",
     "Input files" : "كىرگۈزگۈچى ھۆججەتلەر",
     "The files to extract text from" : "تېكىست چىقىرۋالدىغان ھۆججەتلەر",
     "Origin language" : "ئەسلى تىل",

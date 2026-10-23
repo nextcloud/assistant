@@ -190,6 +190,7 @@ OC.L10N.register(
     "Text output" : "Textový výstup",
     "The text translation" : "Preklad textu",
     "This was generated using Artificial Intelligence." : "Toto bolo generované pomocou umelej inteligencie.",
+    "User instructions" : "Pokyny pre používateľa",
     "Translate image" : "Preložiť obrázok",
     "Translate the text content of an image" : "Preložiť textový obsah obrázka",
     "Input files" : "Vstupné súbory",

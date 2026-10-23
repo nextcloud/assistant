@@ -35,6 +35,7 @@ OC.L10N.register(
     "Assistant" : "Pomočnik",
     "Memories" : "Spomini",
     "Audio transcription" : "Zvočni prepis",
+    "User instructions" : "Uporabniška navodila",
     "Target language" : "Ciljni jezik",
     "Select" : "Izbor",
     "Administration documentation" : "Skrbniška dokumentacija",

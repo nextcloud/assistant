@@ -106,6 +106,7 @@ OC.L10N.register(
     "The generated voice response as part of the conversation" : "Het gegenereerde spraakantwoord las deel van het gesprek",
     "Output transcript" : "Output-transcriptie",
     "Transcription of the audio output" : "Transcriptie van de audio output",
+    "User instructions" : "Gebruikersinstructies",
     "Translate image" : "Vertaal afbeelding",
     "Translate the text content of an image" : "Vertaal de tekst inhoud van een afbeelding",
     "Input files" : "Bron bestanden",

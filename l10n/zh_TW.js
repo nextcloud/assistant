@@ -190,6 +190,7 @@ OC.L10N.register(
     "Text output" : "文字輸出",
     "The text translation" : "文字翻譯",
     "This was generated using Artificial Intelligence." : "此內容由人工智慧產生。",
+    "User instructions" : "使用者說明",
     "Translate image" : "翻譯影像",
     "Translate the text content of an image" : "翻譯影像的文字內容",
     "Input files" : "輸入檔案",

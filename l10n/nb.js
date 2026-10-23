@@ -63,6 +63,7 @@ OC.L10N.register(
     "Chat history" : "Chathistorikk",
     "The history of chat messages before the current message, starting with a message by the user" : "Loggen over chatmeldinger før gjeldende melding, som starter med en melding fra brukeren",
     "Audio transcription" : "Lydtranskripsjon",
+    "User instructions" : "Instruksjoner",
     "Origin language" : "Opprinnelig språk",
     "The language of the origin text" : "Språket til originalteksten",
     "Target language" : "Målspråk",

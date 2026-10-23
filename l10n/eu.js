@@ -51,6 +51,7 @@ OC.L10N.register(
     "Output transcript" : "Irteerako transkripzioa",
     "Transcription of the audio output" : "Audio-irteeraren transkripzioa",
     "Audio transcription" : "Audioen transkripzioa",
+    "User instructions" : "Erabiltzaile jarraibideak",
     "Input files" : "Sarrerako fitxategiak",
     "The files to extract text from" : "Zein fitxategietatik erauzi behar da testua",
     "Origin language" : "Jatorrizko hizkuntza",
