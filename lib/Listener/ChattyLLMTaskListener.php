@@ -13,6 +13,7 @@ use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\AgentTalkService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -32,6 +33,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		private MessageMapper $messageMapper,
 		private SessionMapper $sessionMapper,
 		private TaskProcessingService $taskProcessingService,
+		private AgentTalkService $agentTalkService,
 		private LoggerInterface $logger,
 		private NotificationService $notificationService,
 	) {
@@ -43,12 +45,26 @@ class ChattyLLMTaskListener implements IEventListener {
 			$customId = $task->getCustomId();
 			if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 				$sessionId = (int)$matches[1];
-				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
+				try {
+					$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
+				} catch (\OCP\AppFramework\Db\DoesNotExistException) {
+					return;
+				} catch (\OCP\AppFramework\Db\MultipleObjectsReturnedException|\OCP\DB\Exception $e) {
+					$this->logger->error('Could not load the session of a failed chat task', ['exception' => $e]);
+					return;
+				}
 				$assignmentId = $session->getAssignmentId();
 				if ($assignmentId !== null) {
 					$this->notificationService->sendAssignmentNotification(
 						$task->getUserId(), $task, $session
 					);
+				}
+				// in the agent-as-a-user feature, the 👀 reaction of the last message
+				// becomes 🔴 when the generation failed
+				try {
+					$this->agentTalkService->markGenerationFailed($task->getUserId(), $sessionId);
+				} catch (\Throwable $e) {
+					$this->logger->error('Failed to mark the agent message as failed in Talk', ['exception' => $e]);
 				}
 			}
 			return;
@@ -180,6 +196,16 @@ class ChattyLLMTaskListener implements IEventListener {
 			}
 
 			$this->sessionMapper->update($session);
+
+			// in the agent-as-a-user feature, the generated message is posted
+			// in the 1-1 Talk conversation with the human user
+			if ($session->getAgentUserId() !== null) {
+				$this->agentTalkService->postAgentTalkReply(
+					$session,
+					$message->getContent(),
+					$taskOutput['actions'] ?? null,
+				);
+			}
 		}
 	}
 
