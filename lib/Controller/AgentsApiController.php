@@ -132,12 +132,13 @@ class AgentsApiController extends OCSController {
 	 * @param int $id The agent id
 	 * @param string|null $personality The new personality (system prompt)
 	 * @param string|null $scope The new scope
-	 * @return DataResponse<Http::STATUS_OK, array{agent: array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string}}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{agent: array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string}}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
 	 *
 	 * 200: Agent updated
 	 * 400: Invalid data
 	 * 403: User is not an admin
 	 * 404: Agent not found
+	 * 500: Agent update failed
 	 */
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['agents'])]
 	public function updateAgent(int $id, ?string $personality = null, ?string $scope = null): DataResponse {

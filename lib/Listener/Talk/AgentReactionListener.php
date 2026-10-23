@@ -19,6 +19,8 @@ use Psr\Log\LoggerInterface;
  *
  * Handles the reactions of human users on confirmation-related agent Talk messages:
  * they are sent back to the agent context as approve/reject signals.
+ *
+ * @psalm-suppress InvalidTemplateParam, ImplementedParamTypeMismatch
  */
 class AgentReactionListener implements IEventListener {
 
