@@ -14,6 +14,7 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
+use OCA\Assistant\Service\AgentTalkService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -51,6 +52,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 			$this->messageMapper,
 			$this->sessionMapper,
 			$this->createMock(TaskProcessingService::class),
+			$this->createMock(AgentTalkService::class),
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(NotificationService::class),
 		);
