@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.5.1 - 2026-10-23
+
+### Fixed
+- Handle tasks processed twice in chatty llm (idempotent assistant message insertion) @julien-nc [#714](https://github.com/nextcloud/assistant/pull/714)
+- Use context.fileid instead of context.data.id in the new file menu entry @seriAlizations [#694](https://github.com/nextcloud/assistant/pull/694)
+
 ## 3.5.0 2026-07-17
 
 ### Added
