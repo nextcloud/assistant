@@ -66,6 +66,7 @@ OC.L10N.register(
     "Chat history" : "تاريخ الدردشة",
     "The history of chat messages before the current message, starting with a message by the user" : "تاريخ رسائل الدردشة ما قبل الرسالة الحالية بدءاً برسالة من المستخدِم",
     "Audio transcription" : "الترقين الصوتي  ",
+    "User instructions" : "تعليمات المُستخدِم",
     "Origin language" : "اللغة الأصل",
     "The language of the origin text" : "لغة النص الأصلي",
     "Target language" : "اللغة المطلوبة",
