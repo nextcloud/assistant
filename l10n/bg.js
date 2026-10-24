@@ -20,6 +20,7 @@ OC.L10N.register(
     "Translate" : "Превод",
     "Assistant" : "Асистент",
     "Memories" : "Спомени",
+    "User instructions" : "Инструкции за потребителя",
     "Target language" : "Целеви език",
     "Prompt" : "Подкана",
     "Select" : "Избери",
