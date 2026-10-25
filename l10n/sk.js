@@ -114,7 +114,7 @@ OC.L10N.register(
     "Your assistant reply is ready" : "Odpoveď vášho asistenta je pripravená",
     "View reply" : "Zobraziť odpoveď",
     "Your assistant reply could not be generated" : "Nepodarilo sa vygenerovať odpoveď vášho asistenta",
-    "View chat" : "Zobraziť čet",
+    "View chat" : "Zobraziť chat",
     "AI sticker generation" : "Generovanie nálepiek AI",
     "An error occurred while scheduling this assignment run. Reach out to your system administrator if this issue persists." : "Pri plánovaní tohto spustenia úlohy sa vyskytla chyba. Ak problém pretrváva, obráťte sa na správcu systému.",
     "Nextcloud Deck" : "Nextcloud Deck",
