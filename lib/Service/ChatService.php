@@ -12,6 +12,7 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\ChatSearch\IChatMessageSearch;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -43,6 +44,7 @@ class ChatService {
 		private readonly IManager $taskProcessingManager,
 		private readonly LoggerInterface $logger,
 		private readonly ITimeFactory $timeFactory,
+		private readonly IChatMessageSearch $chatMessageSearch,
 	) {
 	}
 
@@ -228,7 +230,7 @@ class ChatService {
 	}
 
 	/**
-	 * Find the user's messages matching the query, the SEARCH_MESSAGE_LIMIT most recent ones first
+	 * Find the user's messages matching the query, at most SEARCH_MESSAGE_LIMIT of them
 	 *
 	 * @return list<Message>
 	 * @throws BadRequestException
@@ -243,11 +245,7 @@ class ChatService {
 		if ($query === '') {
 			throw new BadRequestException($this->l10n->t('The search query is empty'));
 		}
-		try {
-			return $this->messageMapper->searchUserMessages($userId, $query, $isAssignment, self::SEARCH_MESSAGE_LIMIT);
-		} catch (Exception $e) {
-			throw new InternalException(previous: $e);
-		}
+		return $this->chatMessageSearch->search($userId, $query, $isAssignment, self::SEARCH_MESSAGE_LIMIT);
 	}
 
 	/**

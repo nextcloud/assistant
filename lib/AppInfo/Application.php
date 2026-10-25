@@ -30,6 +30,8 @@ use OCA\Assistant\Reference\SpeechToTextReferenceProvider;
 use OCA\Assistant\Reference\TaskOutputFileReferenceProvider;
 use OCA\Assistant\Reference\Text2ImageReferenceProvider;
 use OCA\Assistant\Reference\Text2StickerProvider;
+use OCA\Assistant\Service\ChatSearch\DatabaseChatMessageSearch;
+use OCA\Assistant\Service\ChatSearch\IChatMessageSearch;
 use OCA\Assistant\TaskProcessing\AudioToAudioChatProvider;
 use OCA\Assistant\TaskProcessing\AudioToAudioTranslateProvider;
 use OCA\Assistant\TaskProcessing\ContextAgentAudioInteractionProvider;
@@ -107,6 +109,8 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
 
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+
+		$context->registerServiceAlias(IChatMessageSearch::class, DatabaseChatMessageSearch::class);
 
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
 			$context->registerTaskProcessingProvider(AudioToAudioChatProvider::class);

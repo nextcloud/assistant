@@ -13,6 +13,7 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\ChatSearch\IChatMessageSearch;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\SessionSummaryService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -79,6 +80,7 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->taskProcessingManager,
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(ITimeFactory::class),
+			$this->createMock(IChatMessageSearch::class),
 		);
 	}
 
