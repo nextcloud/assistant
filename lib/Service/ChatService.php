@@ -30,6 +30,7 @@ use Psr\Log\LoggerInterface;
 
 class ChatService {
 	public const EMPTY_CONVERSATION_TOKEN = '{}';
+	public const SEARCH_MESSAGE_LIMIT = 200;
 
 	public function __construct(
 		private readonly IUserManager $userManager,
@@ -221,6 +222,29 @@ class ChatService {
 		}
 		try {
 			return $this->sessionMapper->getUserSessions($userId, $isAssignment);
+		} catch (Exception $e) {
+			throw new InternalException(previous: $e);
+		}
+	}
+
+	/**
+	 * Find the user's messages matching the query, the SEARCH_MESSAGE_LIMIT most recent ones first
+	 *
+	 * @return list<Message>
+	 * @throws BadRequestException
+	 * @throws InternalException
+	 * @throws UnauthorizedException
+	 */
+	public function searchMessages(?string $userId, string $query, bool $isAssignment): array {
+		if ($userId === null) {
+			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
+		}
+		$query = trim($query);
+		if ($query === '') {
+			throw new BadRequestException($this->l10n->t('The search query is empty'));
+		}
+		try {
+			return $this->messageMapper->searchUserMessages($userId, $query, $isAssignment, self::SEARCH_MESSAGE_LIMIT);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}

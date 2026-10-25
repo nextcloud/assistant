@@ -52,6 +52,7 @@ return [
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/delete_session', 'verb' => 'DELETE'],
 		['name' => 'chattyLLM#deleteSessions', 'url' => '/chat/delete_sessions', 'verb' => 'DELETE'],
 		['name' => 'chattyLLM#getSessions', 'url' => '/chat/sessions', 'verb' => 'GET'],
+		['name' => 'chattyLLM#searchMessages', 'url' => '/chat/search', 'verb' => 'GET'],
 		['name' => 'chattyLLM#newMessage', 'url' => '/chat/new_message', 'verb' => 'PUT'],
 		['name' => 'chattyLLM#deleteMessage', 'url' => '/chat/delete_message', 'verb' => 'DELETE'],
 		['name' => 'chattyLLM#getMessages', 'url' => '/chat/messages', 'verb' => 'GET'],

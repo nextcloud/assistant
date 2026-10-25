@@ -13,6 +13,7 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\BadRequestException;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\UnauthorizedException;
 use OCP\IUserManager;
@@ -84,12 +85,12 @@ class ChatServiceTest extends TestCase {
 		return $session;
 	}
 
-	private function createMessage(int $sessionId): Message {
+	private function createMessage(int $sessionId, string $content = 'test message', string $role = Message::ROLE_HUMAN): Message {
 		$message = new Message();
 		$message->setSessionId($sessionId);
-		$message->setRole(Message::ROLE_HUMAN);
+		$message->setRole($role);
 		$message->setAttachments('[]');
-		$message->setContent('test message');
+		$message->setContent($content);
 		$message->setSources('[]');
 		$message->setTimestamp(time());
 		return $this->messageMapper->insert($message);
@@ -155,5 +156,41 @@ class ChatServiceTest extends TestCase {
 	public function testDeleteSessionsWithoutUser(): void {
 		$this->expectException(UnauthorizedException::class);
 		$this->service->deleteSessions(null, [1, 2]);
+	}
+
+	/**
+	 * @return list<int>
+	 */
+	private function searchMessageIds(string $userId, string $query): array {
+		return array_map(static function (Message $message) {
+			return $message->getId();
+		}, $this->service->searchMessages($userId, $query, false));
+	}
+
+	public function testSearchMessages(): void {
+		$session = $this->createSession(self::TEST_USER);
+		$humanMessage = $this->createMessage($session->getId(), 'Where did I put my Banana?');
+		$this->createMessage($session->getId(), 'apples only');
+		$otherSession = $this->createSession(self::TEST_USER);
+		$assistantMessage = $this->createMessage($otherSession->getId(), 'You put the banana in the fridge', Message::ROLE_ASSISTANT);
+		$otherUserSession = $this->createSession(self::OTHER_USER);
+		$this->createMessage($otherUserSession->getId(), 'banana');
+
+		// case-insensitive, both roles, only the user's own sessions, most recent first
+		$this->assertSame([$assistantMessage->getId(), $humanMessage->getId()], $this->searchMessageIds(self::TEST_USER, 'BANANA'));
+	}
+
+	public function testSearchMessagesEscapesWildcards(): void {
+		$session = $this->createSession(self::TEST_USER);
+		$literalMessage = $this->createMessage($session->getId(), 'progress is 100% done');
+		$this->createMessage($session->getId(), 'progress is 1000 done');
+
+		$this->assertSame([$literalMessage->getId()], $this->searchMessageIds(self::TEST_USER, '100%'));
+		$this->assertSame([], $this->searchMessageIds(self::TEST_USER, '1_0%'));
+	}
+
+	public function testSearchMessagesWithEmptyQuery(): void {
+		$this->expectException(BadRequestException::class);
+		$this->service->searchMessages(self::TEST_USER, '  ', false);
 	}
 }
