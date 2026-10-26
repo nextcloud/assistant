@@ -10,6 +10,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 4.1.0 - 2026-10-26
+
+### Added
+- Display the task's current position in the processing queue (generic form and chat) @julien-nc [#614](https://github.com/nextcloud/assistant/pull/614)
+- Display the impulse radius and updated dialog for pending destructive agent actions @edward-ly @marcelklehr [#661](https://github.com/nextcloud/assistant/pull/661)
+- Allow cancelling the response generation in the chat @WSHAPER [#696](https://github.com/nextcloud/assistant/pull/696)
+- Offer a notification when a chat reply is ready @WSHAPER [#697](https://github.com/nextcloud/assistant/pull/697)
+- Mass deletion of conversations @WSHAPER [#680](https://github.com/nextcloud/assistant/pull/680)
+- Add chevron icons to task type categories in the selector @julien-nc [#687](https://github.com/nextcloud/assistant/pull/687)
+- Allow the assistant data folder name to be configured server-wide and from the settings pages @bakiburakogun [#632](https://github.com/nextcloud/assistant/pull/632)
+
+### Changed
+- Pass the chat user instructions to the Context Agent @vyacheslavhulyaev-glitch [#709](https://github.com/nextcloud/assistant/pull/709)
+- Migrate off OCA.Viewer in favour of @nextcloud/viewer @julien-nc [#670](https://github.com/nextcloud/assistant/pull/670)
+
+### Fixed
+- Guard agency_conversation_token on its own column name in the migration @julien-nc [#716](https://github.com/nextcloud/assistant/pull/716)
+- Handle tasks processed twice in ChattyLLM @julien-nc [#712](https://github.com/nextcloud/assistant/pull/712)
+- Correctly create the node given to the viewer by getting it via WebDAV @julien-nc [#675](https://github.com/nextcloud/assistant/pull/675)
+- Prevent the file upload cancelation from bubbling and closing the assistant @julien-nc [#672](https://github.com/nextcloud/assistant/pull/672)
+- Properly clean up when closing the chat while it is streaming and avoid log spam from ignored push notifications @julien-nc [#673](https://github.com/nextcloud/assistant/pull/673)
+- Avoid edge cases that lead to incorrect progress values in the UI @julien-nc [#685](https://github.com/nextcloud/assistant/pull/685)
+- Use context.fileid instead of context.data.id to prevent a type error in AI image generation @seriAlizations [#684](https://github.com/nextcloud/assistant/pull/684)
+- Improve mimetype detection when serving, saving and generating a preview of a task output file @julien-nc [#660](https://github.com/nextcloud/assistant/pull/660)
+- Correctly order messages when getting the system prompt one, improve the query by applying a role filter @julien-nc [#633](https://github.com/nextcloud/assistant/pull/633)
+- Revert the primeui major version upgrade @kyteinsky [#629](https://github.com/nextcloud/assistant/pull/629)
+- Switch to the flat eslint config, fix all eslint issues and warnings @julien-nc [#626](https://github.com/nextcloud/assistant/pull/626)
+
 ## 4.0.0 - 2026-08-04
 
 ### Breaking Changes 
