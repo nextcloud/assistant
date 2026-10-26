@@ -81,12 +81,24 @@ export default {
 		console.debug('CURRENT TASK', this.myCurrentTaskId)
 		if (!this.isOutput) {
 			this.getFileInfo()
+		} else if (this.myCurrentTaskId !== null && this.myCurrentTaskId !== undefined) {
+			this.getOutputFileInfo()
 		}
 	},
 
 	methods: {
 		getFileInfo() {
 			const url = generateOcsUrl('apps/assistant/api/v1/file/{fileId}/info', { fileId: this.fileId })
+			axios.get(url)
+				.then((response) => {
+					this.fileInfo = response.data.ocs.data
+				})
+		},
+		getOutputFileInfo() {
+			const url = generateOcsUrl('apps/assistant/api/v1/task/{taskId}/output-file/{fileId}/info', {
+				taskId: this.myCurrentTaskId,
+				fileId: this.fileId,
+			})
 			axios.get(url)
 				.then((response) => {
 					this.fileInfo = response.data.ocs.data

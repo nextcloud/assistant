@@ -422,6 +422,32 @@ class AssistantApiController extends OCSController {
 	}
 
 	/**
+	 * Get task output file info
+	 *
+	 * Get information about a task output file
+	 *
+	 * @param int $ocpTaskId The task ID
+	 * @param int $fileId The task output file ID
+	 * @return DataResponse<Http::STATUS_OK, array{name: string, size: int}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 *
+	 * 200: The file info is returned
+	 * 404: The output file is not found
+	 */
+	#[NoAdminRequired]
+	#[NoCsrfRequired]
+	public function getOutputFileInfo(int $ocpTaskId, int $fileId): DataResponse {
+		try {
+			$fileInfo = $this->assistantService->getTaskOutputFileInfo($this->userId, $ocpTaskId, $fileId);
+			if ($fileInfo !== null) {
+				return new DataResponse($fileInfo);
+			}
+		} catch (Exception|Throwable $e) {
+			$this->logger->error('getOutputFileInfo error', ['exception' => $e]);
+		}
+		return new DataResponse('', Http::STATUS_NOT_FOUND);
+	}
+
+	/**
 	 * Run a file action
 	 *
 	 * Launch a task to process a file and store the result in a new file in the same directory
