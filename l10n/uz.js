@@ -29,6 +29,7 @@ OC.L10N.register(
     "Upload from device" : "Qurilmadan yuklash",
     "Choose" : "Choose",
     "Folder name" : "Papka nomi",
+    "Advanced" : "Kengaytirilgan",
     "Copy" : "Nusxalash",
     "Does not repeat" : "Takrorlanmaydi",
     "Hourly" : "Soatlik",

@@ -20,6 +20,7 @@ OC.L10N.register(
     "Unauthorized" : "Neoverjeno",
     "Session not found" : "Seje ni mogoče najti",
     "User not found" : "Uporabnika ni mogoče najti",
+    "Nextcloud Assistant" : "Pomočnik Nextcloud",
     "Input: %1$s" : "Vnos: %1$s",
     "Result: %1$s" : "Izpis: %1$s",
     "View results" : "Rezultati",
