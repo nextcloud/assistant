@@ -27,6 +27,7 @@ use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Lock\LockedException;
+use OCP\TaskProcessing\Exception\NotFoundException as TaskProcessingNotFoundException;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
@@ -428,10 +429,11 @@ class AssistantApiController extends OCSController {
 	 *
 	 * @param int $ocpTaskId The task ID
 	 * @param int $fileId The task output file ID
-	 * @return DataResponse<Http::STATUS_OK, array{name: string, size: int}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{name: string, size: int}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, '', array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
 	 *
 	 * 200: The file info is returned
 	 * 404: The output file is not found
+	 * 500: The output file info could not be retrieved
 	 */
 	#[NoAdminRequired]
 	#[NoCsrfRequired]
@@ -441,10 +443,20 @@ class AssistantApiController extends OCSController {
 			if ($fileInfo !== null) {
 				return new DataResponse($fileInfo);
 			}
-		} catch (Exception|Throwable $e) {
+			return new DataResponse('', Http::STATUS_NOT_FOUND);
+		} catch (Exception $e) {
+			// Unauthorized and not found both map to 404 so the response does
+			// not reveal whether another user's task exists.
+			if (in_array($e->getCode(), [Http::STATUS_UNAUTHORIZED, Http::STATUS_NOT_FOUND], true)) {
+				return new DataResponse('', Http::STATUS_NOT_FOUND);
+			}
+			$this->logger->error('getOutputFileInfo error', ['exception' => $e]);
+		} catch (TaskProcessingNotFoundException $e) {
+			return new DataResponse('', Http::STATUS_NOT_FOUND);
+		} catch (Throwable $e) {
 			$this->logger->error('getOutputFileInfo error', ['exception' => $e]);
 		}
-		return new DataResponse('', Http::STATUS_NOT_FOUND);
+		return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 	}
 
 	/**

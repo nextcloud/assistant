@@ -16,6 +16,7 @@ use OCA\Assistant\Service\PreviewService;
 use OCA\Assistant\Service\SystemTagService;
 use OCP\DB\Exception as DBException;
 use OCP\Files\File;
+use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\IAppConfig;
 use OCP\IConfig;
@@ -102,6 +103,9 @@ class AssistantServiceTest extends TestCase {
 		return $file;
 	}
 
+	/**
+	 * An output file of the user's own task resolves to name and size.
+	 */
 	public function testGetTaskOutputFileInfo(): void {
 		$this->taskProcessingManager->method('getTask')
 			->with(self::TASK_ID)
@@ -118,6 +122,10 @@ class AssistantServiceTest extends TestCase {
 		], $fileInfo);
 	}
 
+	/**
+	 * An output file stored in appdata instead of the user folder still
+	 * resolves through the appdata path lookup.
+	 */
 	public function testGetTaskOutputFileInfoForAppdataFile(): void {
 		$this->taskProcessingManager->method('getTask')
 			->with(self::TASK_ID)
@@ -139,6 +147,9 @@ class AssistantServiceTest extends TestCase {
 		], $fileInfo);
 	}
 
+	/**
+	 * A user cannot fetch output file info of another user's task.
+	 */
 	public function testGetTaskOutputFileInfoWrongUser(): void {
 		$this->taskProcessingManager->method('getTask')
 			->with(self::TASK_ID)
@@ -150,6 +161,9 @@ class AssistantServiceTest extends TestCase {
 		$this->service->getTaskOutputFileInfo('another_user', self::TASK_ID, self::FILE_ID);
 	}
 
+	/**
+	 * A file id that does not belong to the task is rejected as not found.
+	 */
 	public function testGetTaskOutputFileInfoUnknownFileId(): void {
 		$this->taskProcessingManager->method('getTask')
 			->with(self::TASK_ID)
@@ -161,6 +175,9 @@ class AssistantServiceTest extends TestCase {
 		$this->service->getTaskOutputFileInfo(self::USER_ID, self::TASK_ID, 999999999);
 	}
 
+	/**
+	 * A node id that resolves to nothing at all is rejected as not a file.
+	 */
 	public function testGetTaskOutputFileInfoNotAFileNode(): void {
 		$this->taskProcessingManager->method('getTask')
 			->with(self::TASK_ID)
@@ -173,6 +190,26 @@ class AssistantServiceTest extends TestCase {
 		$this->rootFolder->method('getFirstNodeByIdInPath')
 			->with(self::FILE_ID, '/assistant/')
 			->willReturn(null);
+
+		$this->expectException(TaskProcessingNotFoundException::class);
+		$this->expectExceptionMessage('Node is not a file');
+
+		$this->service->getTaskOutputFileInfo(self::USER_ID, self::TASK_ID, self::FILE_ID);
+	}
+
+	/**
+	 * A node id that resolves to a non-file node (for example a folder)
+	 * through the root lookup is rejected exactly like the missing case,
+	 * so the instance check cannot be dropped without a failing test.
+	 */
+	public function testGetTaskOutputFileInfoNotAFolderNode(): void {
+		$folder = $this->createMock(Folder::class);
+		$this->taskProcessingManager->method('getTask')
+			->with(self::TASK_ID)
+			->willReturn($this->getTask(self::USER_ID));
+		$this->rootFolder->method('getFirstNodeById')
+			->with(self::FILE_ID)
+			->willReturn($folder);
 
 		$this->expectException(TaskProcessingNotFoundException::class);
 		$this->expectExceptionMessage('Node is not a file');
