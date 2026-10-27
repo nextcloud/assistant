@@ -4,6 +4,7 @@ OC.L10N.register(
     "Unknown user" : "Përdorues i panjohur",
     "Move file" : "Lëvize kartelën",
     "Copy file" : "Kopjoje kartelën",
+    "Nextcloud Assistant" : "Asistenti Nextcloud",
     "Other" : "Tjetër",
     "Translate" : "Përkthe",
     "Select" : "Përzgjidh",
