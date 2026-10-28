@@ -94,10 +94,19 @@ export default {
 		console.debug('CURRENT TASK', this.myCurrentTaskId)
 		if (this.showName && this.isOutput && this.myCurrentTaskId !== null && this.myCurrentTaskId !== undefined) {
 			this.getOutputFileInfo()
+		} else if (this.showName && !this.isOutput) {
+			this.getFileInfo()
 		}
 	},
 
 	methods: {
+		getFileInfo() {
+			const url = generateOcsUrl('apps/assistant/api/v1/file/{fileId}/info', { fileId: this.fileId })
+			axios.get(url)
+				.then((response) => {
+					this.fileInfo = response.data.ocs.data
+				})
+		},
 		/**
 		 * Fetch the output file info through the task-scoped endpoint.
 		 * Retries once so a transient failure does not leave the caption
