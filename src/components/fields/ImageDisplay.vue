@@ -3,11 +3,12 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="image-display">
+	<div class="image-display"
+		:class="{ 'with-name': showName && fileName }">
 		<img :src="imageUrl"
 			:style="style"
 			:class="{ clickable }">
-		<span v-if="fileName"
+		<span v-if="showName && fileName"
 			class="image-name"
 			:title="fileName">
 			{{ fileName }}
@@ -50,6 +51,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		showName: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [],
@@ -87,7 +92,7 @@ export default {
 
 	mounted() {
 		console.debug('CURRENT TASK', this.myCurrentTaskId)
-		if (this.isOutput && this.myCurrentTaskId !== null && this.myCurrentTaskId !== undefined) {
+		if (this.showName && this.isOutput && this.myCurrentTaskId !== null && this.myCurrentTaskId !== undefined) {
 			this.getOutputFileInfo()
 		}
 	},
@@ -120,8 +125,6 @@ export default {
 <style lang="scss">
 .image-display {
 	display: flex;
-	flex-direction: column;
-	align-items: center;
 	img {
 		// we could use object-fit:cover instead and keep width=200 but the image preview would just show a portion of the image
 		// object-fit: cover;
@@ -138,6 +141,10 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+	&.with-name {
+		flex-direction: column;
+		align-items: center;
 	}
 }
 </style>
