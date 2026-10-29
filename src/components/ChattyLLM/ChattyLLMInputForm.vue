@@ -5,6 +5,10 @@
 <template>
 	<div class="container" @keydown="onKeydownCancelGeneration">
 		<NcAppNavigation>
+			<template #search>
+				<NcAppNavigationSearch v-model="searchQuery"
+					:label="t('assistant', 'Search messages…')" />
+			</template>
 			<NcAppNavigationList>
 				<NcAppNavigationNew v-if="!isAssignment && !deletionMode"
 					:text="t('assistant', 'New conversation')"
@@ -14,7 +18,7 @@
 						<PlusIcon :size="20" />
 					</template>
 				</NcAppNavigationNew>
-				<NcButton v-if="!isAssignment && !deletionMode && (sessions?.length ?? 0) > 0"
+				<NcButton v-if="!isAssignment && !deletionMode && (displayedSessions?.length ?? 0) > 0"
 					class="deletion-mode-button"
 					variant="secondary"
 					@click="enterDeletionMode()">
@@ -52,11 +56,18 @@
 					<NcLoadingIcon :size="30" />
 					{{ isAssignment ? t('assistant', 'Loading scheduled tasks…') : t('assistant', 'Loading conversations…') }}
 				</div>
-				<div v-else-if="sessions != null && sessions.length === 0" class="unloaded-sessions">
+				<div v-else-if="isSearching && searchResults === null" class="unloaded-sessions">
+					<NcLoadingIcon :size="30" />
+					{{ t('assistant', 'Searching messages…') }}
+				</div>
+				<div v-else-if="isSearching && displayedSessions.length === 0" class="unloaded-sessions">
+					{{ isAssignment ? t('assistant', 'No scheduled tasks with matching messages') : t('assistant', 'No conversations with matching messages') }}
+				</div>
+				<div v-else-if="sessions.length === 0" class="unloaded-sessions">
 					{{ isAssignment ? t('assistant', 'No scheduled tasks yet') : t('assistant', 'No conversations yet') }}
 				</div>
 				<NcAppNavigationItem
-					v-for="session in sessions"
+					v-for="session in displayedSessions"
 					v-else
 					:key="'conversation' + session.id"
 					:active="deletionMode ? selectedSessionIds.includes(session.id) : session.id === active?.id"
@@ -66,6 +77,10 @@
 					:editable="false"
 					:inline-actions="1"
 					@click="deletionMode ? toggleSessionSelection(session.id) : onSessionSelect(session)">
+					<template v-if="isSearching" #counter>
+						<NcCounterBubble :count="searchMatchCounts[session.id]"
+							:title="n('assistant', '%n matching message', '%n matching messages', searchMatchCounts[session.id])" />
+					</template>
 					<template #actions>
 						<NcActionButton @click="openDeletionDialog([session.id])">
 							<template #icon>
@@ -276,7 +291,9 @@ import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import NcAppNavigationList from '@nextcloud/vue/components/NcAppNavigationList'
 import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
+import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 
@@ -311,6 +328,9 @@ import { requestBrowserNotificationPermission } from '../../utils.js'
 // future: type (text, image, file, etc), attachments, etc support
 
 const getChatURL = (endpoint) => generateOcsUrl('/apps/assistant/chat' + endpoint)
+const SEARCH_DEBOUNCE_DELAY = 300
+// see ::highlight() at the bottom of this file
+const SEARCH_HIGHLIGHT_NAME = 'assistant-chat-search'
 const Roles = {
 	HUMAN: 'human',
 	ASSISTANT: 'assistant',
@@ -339,7 +359,9 @@ export default {
 		NcAppNavigationItem,
 		NcAppNavigationList,
 		NcAppNavigationNew,
+		NcAppNavigationSearch,
 		NcButton,
+		NcCounterBubble,
 		NcLoadingIcon,
 		NcDialog,
 
@@ -372,6 +394,13 @@ export default {
 			selectedSessionIds: [],
 			chatContent: '',
 			sessions: null,
+			searchQuery: '',
+			// messages matching searchedQuery, null while the search is loading
+			searchResults: null,
+			// the query of the last search request, the input can change while it is loading
+			searchedQuery: '',
+			searchDebounceTimeout: null,
+			searchAxiosController: null,
 			assignmentDetails: null,
 			pollCheckSessionTimeout: null,
 			pollPositionTaskId: null,
@@ -493,6 +522,26 @@ export default {
 			}
 			return n('assistant', 'Are you sure you want to delete %n conversation?', 'Are you sure you want to delete %n conversations?', this.sessionIdsToDelete.length)
 		},
+		isSearching() {
+			return this.searchQuery.trim() !== ''
+		},
+		// session id => number of matching messages
+		searchMatchCounts() {
+			const counts = {}
+			for (const message of this.searchResults ?? []) {
+				counts[message.session_id] = (counts[message.session_id] ?? 0) + 1
+			}
+			return counts
+		},
+		displayedSessions() {
+			if (this.sessions === null || !this.isSearching) {
+				return this.sessions
+			}
+			return this.sessions.filter(session => this.searchMatchCounts[session.id] !== undefined)
+		},
+		highlightText() {
+			return this.isSearching && this.searchResults !== null ? this.searchedQuery : ''
+		},
 		deleteSelectedLabel() {
 			return n('assistant', 'Delete %n conversation', 'Delete %n conversations', this.selectedSessionIds.length)
 		},
@@ -500,9 +549,9 @@ export default {
 			return this.allSessionsSelected ? t('assistant', 'Deselect all') : t('assistant', 'Select all')
 		},
 		allSessionsSelected() {
-			return this.sessions !== null
-				&& this.sessions.length > 0
-				&& this.selectedSessionIds.length === this.sessions.length
+			return this.displayedSessions !== null
+				&& this.displayedSessions.length > 0
+				&& this.displayedSessions.every(session => this.selectedSessionIds.includes(session.id))
 		},
 		rrule() {
 			const raw = this.assignmentDetails?.recurrence ?? ''
@@ -566,7 +615,14 @@ export default {
 			// start polling in case a message is currently being generated
 			this.checkSession(this.active.id, this.isAssignment)
 		},
+		searchQuery() {
+			this.scheduleSearch()
+		},
+		highlightText() {
+			this.updateSearchHighlight()
+		},
 		isAssignment() {
+			this.searchQuery = ''
 			this.fetchSessions()
 			this.active = null
 			clearTimeout(this.pollCheckSessionTimeout)
@@ -578,6 +634,11 @@ export default {
 				window.removeEventListener('keydown', this.onKeydownEscape, true)
 			}
 		},
+	},
+
+	created() {
+		// not reactive, see updateSearchHighlight
+		this.highlightObserver = null
 	},
 
 	beforeUnmount() {
@@ -596,6 +657,12 @@ export default {
 		}
 		if (this.pollCheckSessionTimeout) {
 			clearTimeout(this.pollCheckSessionTimeout)
+		}
+		clearTimeout(this.searchDebounceTimeout)
+		this.searchAxiosController?.abort()
+		this.highlightObserver?.disconnect()
+		if (typeof CSS !== 'undefined' && CSS.highlights) {
+			CSS.highlights.delete(SEARCH_HIGHLIGHT_NAME)
 		}
 	},
 
@@ -1034,7 +1101,8 @@ export default {
 			if (this.allSessionsSelected) {
 				this.selectedSessionIds = []
 			} else {
-				this.selectedSessionIds = this.sessions.map(session => session.id)
+				// only the displayed sessions: the ones hidden by the search should not be deleted unnoticed
+				this.selectedSessionIds = this.displayedSessions.map(session => session.id)
 			}
 		},
 
@@ -1061,6 +1129,87 @@ export default {
 			} finally {
 				this.loading.sessionsDelete = false
 				this.sessionIdsToDelete = null
+			}
+		},
+
+		scheduleSearch() {
+			clearTimeout(this.searchDebounceTimeout)
+			this.searchAxiosController?.abort()
+			this.searchResults = null
+			if (!this.isSearching) {
+				this.searchedQuery = ''
+				return
+			}
+			this.searchDebounceTimeout = setTimeout(this.searchMessages, SEARCH_DEBOUNCE_DELAY)
+		},
+
+		// The matches are highlighted with the CSS Custom Highlight API: the messages are rendered as markdown
+		// by NcRichText, so wrapping the matches in <mark> elements would mean modifying DOM nodes owned by Vue.
+		// Browsers without the API display the messages without highlighting.
+		updateSearchHighlight() {
+			if (typeof CSS === 'undefined' || !CSS.highlights) {
+				return
+			}
+			this.highlightObserver?.disconnect()
+			this.highlightObserver = null
+			CSS.highlights.delete(SEARCH_HIGHLIGHT_NAME)
+			const chatArea = this.$refs.chatArea
+			const query = this.highlightText.toLowerCase()
+			if (query === '' || !chatArea) {
+				return
+			}
+
+			const highlight = () => {
+				const ranges = []
+				for (const content of chatArea.querySelectorAll('.message__content')) {
+					// a match spanning several text nodes (like "foo bar" in "foo **bar**") is not found
+					const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT)
+					for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+						const text = node.data.toLowerCase()
+						// lowercasing some characters changes the text length, the offsets would be wrong
+						if (text.length !== node.data.length) {
+							continue
+						}
+						for (let index = text.indexOf(query); index !== -1; index = text.indexOf(query, index + query.length)) {
+							const range = new Range()
+							range.setStart(node, index)
+							range.setEnd(node, index + query.length)
+							ranges.push(range)
+						}
+					}
+				}
+				CSS.highlights.set(SEARCH_HIGHLIGHT_NAME, new Highlight(...ranges))
+			}
+			highlight()
+			// re-highlight when the displayed messages change: other session, older messages loaded, streaming,
+			// NcRichText rendering asynchronously...
+			this.highlightObserver = new MutationObserver(highlight)
+			this.highlightObserver.observe(chatArea, { childList: true, subtree: true, characterData: true })
+		},
+
+		async searchMessages() {
+			const query = this.searchQuery.trim()
+			const controller = new AbortController()
+			this.searchAxiosController = controller
+			try {
+				const response = await axios.get(getChatURL('/search'), {
+					params: { query, isAssignment: this.isAssignment },
+					signal: controller.signal,
+				})
+				this.searchedQuery = query
+				this.searchResults = response.data
+			} catch (error) {
+				if (isCancel(error)) {
+					return
+				}
+				console.error('searchMessages error:', error)
+				this.searchedQuery = query
+				this.searchResults = []
+				showError(error?.response?.data?.error ?? t('assistant', 'Error searching messages'))
+			} finally {
+				if (this.searchAxiosController === controller) {
+					this.searchAxiosController = null
+				}
 			}
 		},
 
@@ -1949,5 +2098,13 @@ export default {
 			flex-shrink: 0;
 		}
 	}
+}
+</style>
+
+<style lang="scss">
+// not scoped: Vue would add an attribute selector to the pseudo-element
+::highlight(assistant-chat-search) {
+	background-color: var(--color-primary-element-light);
+	color: var(--color-primary-element-light-text);
 }
 </style>

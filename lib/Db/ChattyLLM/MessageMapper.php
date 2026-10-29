@@ -110,6 +110,36 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * Find the messages of a user's sessions whose content contains the query (case-insensitive), most recent first
+	 *
+	 * @param string $userId
+	 * @param string $query
+	 * @param bool $isAssignment Whether to search in the sessions for assignments (true) or not (false)
+	 * @param int $limit
+	 * @return list<Message>
+	 * @throws \OCP\DB\Exception
+	 */
+	public function searchUserMessages(string $userId, string $query, bool $isAssignment, int $limit): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(array_map(static fn (string $column) => 'm.' . $column, Message::$columns))
+			->from($this->getTableName(), 'm')
+			->innerJoin('m', 'assistant_chat_sns', 's', $qb->expr()->eq('m.session_id', 's.id'))
+			->where($qb->expr()->eq('s.user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->iLike('m.content', $qb->createPositionalParameter('%' . $this->db->escapeLikeParameter($query) . '%', IQueryBuilder::PARAM_STR)))
+			->orderBy('m.timestamp', 'DESC')
+			->addOrderBy('m.id', 'DESC')
+			->setMaxResults($limit);
+
+		if ($isAssignment) {
+			$qb->andWhere($qb->expr()->isNotNull('s.assignment_id'));
+		} else {
+			$qb->andWhere($qb->expr()->isNull('s.assignment_id'));
+		}
+
+		return $this->findEntities($qb);
+	}
+
+	/**
 	 * @param int $sessionId
 	 * @param int $maxTimestamp
 	 * @return array
