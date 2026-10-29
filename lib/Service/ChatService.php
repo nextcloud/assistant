@@ -49,7 +49,7 @@ class ChatService {
 	 * @throws InternalException
 	 * @throws UnauthorizedException
 	 */
-	public function createChatSession(?string $userId, ?int $timestamp = null, ?string $title = null): Session {
+	public function createChatSession(?string $userId, ?int $timestamp = null, ?string $title = null, ?string $systemPrompt = null): Session {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
@@ -64,13 +64,18 @@ class ChatService {
 			$timestamp = intdiv($timestamp, 1000);
 		}
 
-		$userInstructions = $this->appConfig->getValueString(
-			Application::APP_ID,
-			'chat_user_instructions',
-			Application::CHAT_USER_INSTRUCTIONS,
-			lazy: true,
-		) ?: Application::CHAT_USER_INSTRUCTIONS;
-		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
+		$userInstructions = $systemPrompt;
+		if ($userInstructions === null) {
+			$userInstructions = $this->appConfig->getValueString(
+				Application::APP_ID,
+				'chat_user_instructions',
+				Application::CHAT_USER_INSTRUCTIONS,
+				lazy: true,
+			) ?: Application::CHAT_USER_INSTRUCTIONS;
+			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
+		} else {
+			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
+		}
 
 		$session = new Session();
 		$session->setUserId($userId);
