@@ -9,6 +9,7 @@ OC.L10N.register(
     "Copy file" : "Kopier fil",
     "Delete file" : "Slett fil",
     "Create bookmark" : "Opprett bokmerke",
+    "Delete team" : "Slett lag",
     "Create form" : "Opprett skjema",
     "Delete form" : "Slett skjema",
     "Share with group" : "Del med gruppe",
