@@ -56,6 +56,7 @@
 				:file-id="value"
 				:task-id="providedCurrentTaskId()"
 				:show-delete="false"
+				:show-name="true"
 				:is-output="isOutput"
 				:clickable="true"
 				@click="onPreviewClick" />

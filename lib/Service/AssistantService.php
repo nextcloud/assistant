@@ -659,6 +659,23 @@ class AssistantService {
 	 * @param string $userId
 	 * @param int $ocpTaskId
 	 * @param int $fileId
+	 * @return array|null
+	 * @throws Exception
+	 * @throws NotFoundException
+	 * @throws TaskProcessingException
+	 */
+	public function getTaskOutputFileInfo(string $userId, int $ocpTaskId, int $fileId): ?array {
+		$file = $this->getTaskOutputFile($userId, $ocpTaskId, $fileId);
+		return [
+			'name' => $file->getName(),
+			'size' => $file->getSize(),
+		];
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $ocpTaskId
+	 * @param int $fileId
 	 * @return File
 	 * @throws Exception
 	 * @throws InvalidPathException

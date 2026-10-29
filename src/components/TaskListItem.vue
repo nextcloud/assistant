@@ -178,7 +178,8 @@ export default {
 		subName() {
 			if (this.task.status === TASK_STATUS_STRING.successful) {
 				if (this.isText2Image) {
-					const nbGeneratedImages = this.task.output?.length ?? 0
+					// text2image output is {images: [fileId, ...]}, not a bare array
+					const nbGeneratedImages = this.task.output?.images?.length ?? 0
 					return n('assistant', '{n} image generated', '{n} images generated', nbGeneratedImages, { n: nbGeneratedImages })
 				}
 				return this.textOutputPreview

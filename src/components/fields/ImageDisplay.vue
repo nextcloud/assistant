@@ -3,15 +3,22 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<div class="image-display">
+	<div class="image-display"
+		:class="{ 'with-name': showName && fileName }">
 		<img :src="imageUrl"
 			:style="style"
 			:class="{ clickable }">
+		<span v-if="showName && fileName"
+			class="image-name"
+			:title="fileName">
+			{{ fileName }}
+		</span>
 	</div>
 </template>
 
 <script>
 import { generateOcsUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
 
 export default {
 	name: 'ImageDisplay',
@@ -44,18 +51,26 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		showName: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	emits: [],
 
 	data() {
 		return {
+			fileInfo: {},
 		}
 	},
 
 	computed: {
 		myCurrentTaskId() {
 			return this.taskId ?? this.providedCurrentTaskId()
+		},
+		fileName() {
+			return this.fileInfo?.name
 		},
 		imageUrl() {
 			return this.isOutput
@@ -77,9 +92,41 @@ export default {
 
 	mounted() {
 		console.debug('CURRENT TASK', this.myCurrentTaskId)
+		if (this.showName && this.isOutput && this.myCurrentTaskId !== null && this.myCurrentTaskId !== undefined) {
+			this.getOutputFileInfo()
+		} else if (this.showName && !this.isOutput) {
+			this.getFileInfo()
+		}
 	},
 
 	methods: {
+		getFileInfo() {
+			const url = generateOcsUrl('apps/assistant/api/v1/file/{fileId}/info', { fileId: this.fileId })
+			axios.get(url)
+				.then((response) => {
+					this.fileInfo = response.data.ocs.data
+				})
+		},
+		/**
+		 * Fetch the output file info through the task-scoped endpoint.
+		 * Retries once so a transient failure does not leave the caption
+		 * missing for the component's lifetime.
+		 */
+		getOutputFileInfo(retry = true) {
+			const url = generateOcsUrl('apps/assistant/api/v1/task/{taskId}/output-file/{fileId}/info', {
+				taskId: this.myCurrentTaskId,
+				fileId: this.fileId,
+			})
+			axios.get(url)
+				.then((response) => {
+					this.fileInfo = response.data.ocs.data
+				})
+				.catch(() => {
+					if (retry) {
+						this.getOutputFileInfo(false)
+					}
+				})
+		},
 	},
 }
 </script>
@@ -97,6 +144,16 @@ export default {
 		&.clickable {
 			cursor: pointer !important;
 		}
+	}
+	.image-name {
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	&.with-name {
+		flex-direction: column;
+		align-items: center;
 	}
 }
 </style>

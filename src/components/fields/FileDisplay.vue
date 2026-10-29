@@ -81,6 +81,8 @@ export default {
 		console.debug('CURRENT TASK', this.myCurrentTaskId)
 		if (!this.isOutput) {
 			this.getFileInfo()
+		} else if (this.myCurrentTaskId !== null && this.myCurrentTaskId !== undefined) {
+			this.getOutputFileInfo()
 		}
 	},
 
@@ -90,6 +92,26 @@ export default {
 			axios.get(url)
 				.then((response) => {
 					this.fileInfo = response.data.ocs.data
+				})
+		},
+		/**
+		 * Fetch the output file info through the task-scoped endpoint.
+		 * Retries once so a transient failure does not leave the chip
+		 * unnamed for the component's lifetime.
+		 */
+		getOutputFileInfo(retry = true) {
+			const url = generateOcsUrl('apps/assistant/api/v1/task/{taskId}/output-file/{fileId}/info', {
+				taskId: this.myCurrentTaskId,
+				fileId: this.fileId,
+			})
+			axios.get(url)
+				.then((response) => {
+					this.fileInfo = response.data.ocs.data
+				})
+				.catch(() => {
+					if (retry) {
+						this.getOutputFileInfo(false)
+					}
 				})
 		},
 	},

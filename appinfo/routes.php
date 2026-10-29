@@ -34,6 +34,7 @@ return [
 		['name' => 'assistantApi#shareOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/file/{fileId}/share', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#saveOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/file/{fileId}/save', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#getOutputFilePreview', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/preview', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'assistantApi#getOutputFileInfo', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/info', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#getOutputFile', 'url' => '/api/{apiVersion}/task/{ocpTaskId}/output-file/{fileId}/download', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'assistantApi#runFileAction', 'url' => '/api/{apiVersion}/file-action/{fileId}/{taskTypeId}', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'assistantApi#getAssistantFolderPath', 'url' => '/api/{apiVersion}/assistant-folder-path', 'verb' => 'GET', 'requirements' => $requirements],

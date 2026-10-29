@@ -61,6 +61,7 @@
 				<component :is="displayComponent"
 					:file-id="fileId"
 					:task-id="providedCurrentTaskId()"
+					:show-name="true"
 					:is-output="isOutput"
 					:clickable="isOutput"
 					@delete="onDelete(fileId)"
