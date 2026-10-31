@@ -208,6 +208,8 @@ OC.L10N.register(
     "Close Nextcloud Assistant" : "Zavřít Nextcloud Asistenta",
     "Less" : "Méně",
     "More" : "Další",
+    "Self" : "Sám",
+    "Individuals" : "Individuální",
     "Group" : "Skupina",
     "External" : "Externí",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Pokud nejste spokojení s akcemi, které Asistent chce spustit, je možné upravit svůj požadavek odesláním nové zprávy namísto kliknutí na tlačítko „Storno“.",
