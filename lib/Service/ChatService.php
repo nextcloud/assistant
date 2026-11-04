@@ -455,18 +455,18 @@ class ChatService {
 			) {
 				// audio agency
 				$fileId = $audioAttachment['file_id'];
-				$taskId = $this->scheduleAgencyAudioTask($userId, $fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId(), $userId);
+				$taskId = $this->scheduleAgencyAudioTask($userId, $fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId(), $memoriesUserId);
 			} elseif ($this->isMultimodalContextAgentAvailable()) {
 				// multimodal agency
 				$prompt = $lastUserMessage->getContent();
 				$inputAttachments = array_map(static function (array $attachment) {
 					return $attachment['file_id'];
 				}, $lastAttachments);
-				$taskId = $this->scheduleAgencyMultimodalTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, $inputAttachments, $userId);
+				$taskId = $this->scheduleAgencyMultimodalTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, $inputAttachments, $memoriesUserId);
 			} else {
 				// classic agency
 				$prompt = $lastUserMessage->getContent();
-				$taskId = $this->scheduleAgencyTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, memoriesUserId: $userId);
+				$taskId = $this->scheduleAgencyTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, memoriesUserId: $memoriesUserId);
 			}
 		} else {
 			// classic chat
@@ -498,7 +498,7 @@ class ChatService {
 				// for an audio chat task, let's try to get the remote audio IDs for all the previous audio messages
 				$history = $this->getAudioHistory($history);
 				$fileId = $audioAttachment['file_id'];
-				$taskId = $this->scheduleAudioChatTask($userId, $fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId(), $userId);
+				$taskId = $this->scheduleAudioChatTask($userId, $fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId(), $memoriesUserId);
 			} else {
 				if ($this->isMultimodalChatAvailable()) {
 					// for a multimodal chat also attachments need to be added to the history
@@ -523,7 +523,7 @@ class ChatService {
 					$lastAttachments = array_map(static function (array $attachment) {
 						return $attachment['file_id'];
 					}, $lastAttachments);
-					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $lastAttachments, $userId);
+					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $lastAttachments, $memoriesUserId);
 				} else {
 					// for a text chat task only use text in the history
 					$historyMessages = array_map(static function (Message $message) {
@@ -532,7 +532,7 @@ class ChatService {
 							'content' => $message->getContent(),
 						]);
 					}, $history);
-					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, memoriesUserId: $userId);
+					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, memoriesUserId: $memoriesUserId);
 				}
 			}
 		}
