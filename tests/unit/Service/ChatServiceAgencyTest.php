@@ -72,10 +72,13 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->sessionSummaryService = $this->createMock(SessionSummaryService::class);
 
+		$l10n = $this->createMock(IL10N::class);
+		$l10n->method('t')->willReturnCallback(static fn (string $text, array $parameters = []): string => $text);
+
 		$this->service = new ChatService(
 			$this->createMock(IUserManager::class),
 			$this->createMock(IAppConfig::class),
-			$this->createMock(IL10N::class),
+			$l10n,
 			$this->sessionMapper,
 			$this->messageMapper,
 			$this->createMock(IDBConnection::class),
@@ -187,5 +190,44 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame($agentUserId, $this->scheduledTask->getUserId());
 		$this->assertArrayHasKey('memories', $this->scheduledTask->getInput());
+	}
+
+	/**
+	 * The generation tasks of agent sessions must describe the human requester
+	 * and the agent: without it, the model would not know either identity.
+	 */
+	public function testAgentSessionsGetTheIdentityLine(): void {
+		$session = new Session();
+		$session->setUserId('agent_user_id');
+		$session->setRequesterUserId(self::USER_ID);
+		$this->setUserSession($session);
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')
+			->with(self::SESSION_ID, 1, Message::ROLE_SYSTEM)
+			->willReturn($this->systemMessage(self::USER_INSTRUCTIONS));
+
+		$this->service->scheduleMessageGeneration('agent_user_id', self::SESSION_ID, 0, 'My Group Room');
+
+		$this->assertNotNull($this->scheduledTask);
+		$userInstructions = $this->scheduledTask->getInput()['user_instructions'] ?? null;
+		$this->assertNotNull($userInstructions);
+		// the agent identity and the requester identity are both in the line
+		$this->assertStringContainsString('agent_user_id', $userInstructions);
+		$this->assertStringContainsString(self::USER_ID, $userInstructions);
+		$this->assertStringContainsString('My Group Room', $userInstructions);
+		// the session instructions must still be part of the agent context
+		$this->assertStringContainsString(self::USER_INSTRUCTIONS, $userInstructions);
+	}
+
+	public function testHumanSessionsGetNoIdentityLine(): void {
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')
+			->with(self::SESSION_ID, 1, Message::ROLE_SYSTEM)
+			->willReturn($this->systemMessage(self::USER_INSTRUCTIONS));
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(self::USER_INSTRUCTIONS, $this->scheduledTask->getInput()['user_instructions'] ?? null);
 	}
 }
