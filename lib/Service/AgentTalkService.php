@@ -162,8 +162,8 @@ class AgentTalkService {
 			$triggerThreadId = (int)($comment->getTopmostParentId() ?? 0);
 			if ($triggerThreadId !== 0) {
 				try {
-					$threadSession = $this->sessionMapper->getAgentSessionByThread($humanUserId, $triggerThreadId);
-					$this->storeAndSchedule($threadSession, $comment, $humanUserId, $room, $agent);
+					$threadSession = $this->sessionMapper->getAgentSessionByThread($agent->getUserId(), $triggerThreadId);
+					$this->storeAndSchedule($threadSession, $comment, $room, $agent);
 					return;
 				} catch (DoesNotExistException) {
 					// the reply is not in the thread of an agent session: handle it below
@@ -183,7 +183,7 @@ class AgentTalkService {
 		// find or create the assistant chat session dedicated to this agent/origin-room context
 		$session = $this->getOrCreateAgentSession($humanUserId, $agent, $contextRoomName, $room->getToken());
 
-		$this->storeAndSchedule($session, $comment, $humanUserId, $room, $agent);
+		$this->storeAndSchedule($session, $comment, $room, $agent);
 	}
 
 	/**
@@ -193,12 +193,12 @@ class AgentTalkService {
 	 * @throws NotFoundException
 	 * @throws BadRequestException
 	 */
-	private function storeAndSchedule(Session $session, IComment $comment, string $humanUserId, \OCA\Talk\Room $room, Agent $agent): void {
+	private function storeAndSchedule(Session $session, IComment $comment, \OCA\Talk\Room $room, Agent $agent): void {
 		// store the human Talk message in the chat session
 		$creationTimestamp = $comment->getCreationDateTime()->getTimestamp();
 		$talkContent = (string)$comment->getMessage();
 		$this->chatService->createMessage(
-			$humanUserId,
+			$session->getUserId(),
 			(int)$session->getId(),
 			Message::ROLE_HUMAN,
 			$talkContent,
@@ -220,7 +220,7 @@ class AgentTalkService {
 		}
 
 		// schedule generation of the agent answer
-		$this->chatService->scheduleMessageGeneration($humanUserId, (int)$session->getId());
+		$this->chatService->scheduleMessageGeneration($session->getUserId(), (int)$session->getId());
 	}
 
 	/**
@@ -229,12 +229,15 @@ class AgentTalkService {
 	 * All the agent answers are posted as one Talk thread of the 1-1 room
 	 * between the human and the agent.
 	 *
+	 * Agent sessions are owned by the agent user account,
+	 * the human user is recorded as the requester.
+	 *
 	 * @throws Exception
 	 */
 	private function getOrCreateAgentSession(string $humanUserId, Agent $agent, string $contextRoomName, string $originRoomToken): Session {
 		try {
 			return $this->sessionMapper->getAgentSession(
-				$humanUserId, $agent->getUserId(), $originRoomToken
+				$agent->getUserId(), $humanUserId, $originRoomToken
 			);
 		} catch (DoesNotExistException) {
 			// continue with session creation
@@ -246,12 +249,12 @@ class AgentTalkService {
 		$sessionTitle = $agentName . self::THREAD_TITLE_SEPARATOR . $contextRoomName;
 
 		$session = $this->chatService->createChatSession(
-			$humanUserId,
+			$agent->getUserId(),
 			timestamp: null,
 			title: $sessionTitle,
 			systemPrompt: $agent->getPersonality(),
+			requesterUserId: $humanUserId,
 		);
-		$session->setAgentUserId($agent->getUserId());
 		$session->setRoomToken($originRoomToken);
 		try {
 			$this->sessionMapper->update($session);
@@ -313,21 +316,21 @@ class AgentTalkService {
 		string $content,
 		?string $pendingActions,
 	): void {
-		if ($session->getAgentUserId() === null) {
+		if ($session->getRequesterUserId() === null) {
 			return;
 		}
 		// only for agent sessions
 		if (!class_exists('OCA\Talk\Chat\ChatManager')) {
 			return;
 		}
-		$agentUser = $this->userManager->get($session->getAgentUserId());
+		$agentUser = $this->userManager->get($session->getUserId());
 		if ($agentUser === null) {
 			$this->logger->warning('The agent user was deleted while an agent answer was being handled');
 			return;
 		}
-		$humanUser = $this->userManager->get($session->getUserId());
+		$humanUser = $this->userManager->get($session->getRequesterUserId());
 		if ($humanUser === null) {
-			$this->logger->warning('The session owner user was deleted while an agent answer was being handled');
+			$this->logger->warning('The requester user was deleted while an agent answer was being handled');
 			return;
 		}
 		try {
@@ -396,7 +399,7 @@ class AgentTalkService {
 			return;
 		}
 		try {
-			$session = $this->sessionMapper->getUserSession($humanUserId, $sessionId);
+			$session = $this->sessionMapper->getSessionById($sessionId);
 		} catch (DoesNotExistException|Exception $e) {
 			$this->logger->warning('Could not find the session matching the Talk reaction', [
 				'humanUserId' => $humanUserId,
@@ -404,15 +407,20 @@ class AgentTalkService {
 			]);
 			return;
 		}
-		if ($session->getAgentUserId() === null) {
+		if ($session->getRequesterUserId() === null) {
+			// the session is not an agent session
+			return;
+		}
+		if ($session->getRequesterUserId() !== $humanUserId) {
+			// the reaction was not added by the human user the agent session is dedicated to
 			return;
 		}
 
 		// remove the agent's own thumbs so only the one of the user remains,
 		// then mark the confirmation as being processed
-		$this->deleteAgentReaction($room, $session->getAgentUserId(), $messageId, self::REACTION_APPROVE);
-		$this->deleteAgentReaction($room, $session->getAgentUserId(), $messageId, self::REACTION_REJECT);
-		$this->addAgentReaction($room, $session->getAgentUserId(), $messageId, self::REACTION_READ);
+		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_APPROVE);
+		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_REJECT);
+		$this->addAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_READ);
 		// remember the seen message to later replace 👀 by ✅/🔴 after the confirmation run
 		$session->setAgentSeenRoomToken($room->getToken());
 		$session->setAgentSeenCommentId($messageId);
@@ -423,7 +431,7 @@ class AgentTalkService {
 		}
 		try {
 			$this->chatService->scheduleMessageGeneration(
-				$humanUserId,
+				$session->getUserId(),
 				$sessionId,
 				$reaction === self::REACTION_APPROVE ? 1 : 0,
 			);
@@ -443,7 +451,7 @@ class AgentTalkService {
 		if (trim($content) === '') {
 			return false;
 		}
-		$agentUser = $this->userManager->get($session->getAgentUserId());
+		$agentUser = $this->userManager->get($session->getUserId());
 		if ($agentUser === null) {
 			return false;
 		}
@@ -468,7 +476,7 @@ class AgentTalkService {
 				$room,
 				null,
 				'users',
-				$session->getAgentUserId(),
+				$session->getUserId(),
 				$content,
 				new DateTime(),
 				replyTo: null,
@@ -497,7 +505,7 @@ class AgentTalkService {
 					$room,
 					null,
 					'users',
-					$session->getAgentUserId(),
+					$session->getUserId(),
 					json_encode([
 						'message' => 'thread_created',
 						'parameters' => [
@@ -529,8 +537,8 @@ class AgentTalkService {
 		}
 
 		if ($addApproveRejectReactions) {
-			$this->addAgentReaction($room, $session->getAgentUserId(), (int)$comment->getId(), self::REACTION_APPROVE);
-			$this->addAgentReaction($room, $session->getAgentUserId(), (int)$comment->getId(), self::REACTION_REJECT);
+			$this->addAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_APPROVE);
+			$this->addAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_REJECT);
 		}
 		return true;
 	}
@@ -551,8 +559,8 @@ class AgentTalkService {
 			$this->logger->warning('Cannot update the reaction, the Talk room of the seen message was not found', ['token' => $seenRoomToken]);
 			return;
 		}
-		$this->deleteAgentReaction($room, $session->getAgentUserId(), $seenCommentId, self::REACTION_READ);
-		$this->addAgentReaction($room, $session->getAgentUserId(), $seenCommentId, $reaction);
+		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_READ);
+		$this->addAgentReaction($room, $session->getUserId(), $seenCommentId, $reaction);
 		// forget the seen message
 		$session->setAgentSeenRoomToken(null);
 		$session->setAgentSeenCommentId(null);
@@ -571,7 +579,7 @@ class AgentTalkService {
 	 * @return void
 	 */
 	public function markGenerationCompleted(Session $session, bool $postedInTalk): void {
-		if ($session->getAgentUserId() === null) {
+		if ($session->getUserId() === null) {
 			return;
 		}
 		if ($postedInTalk) {
@@ -584,18 +592,18 @@ class AgentTalkService {
 	/**
 	 * Called by ChattyLLMTaskListener when the generation task of an agent session failed
 	 *
-	 * @param string $humanUserId
+	 * @param string $sessionOwnerUserId The agent user id owning the session
 	 * @param int $sessionId
 	 * @return void
 	 */
-	public function markGenerationFailed(string $humanUserId, int $sessionId): void {
+	public function markGenerationFailed(string $sessionOwnerUserId, int $sessionId): void {
 		try {
-			$session = $this->sessionMapper->getUserSession($humanUserId, $sessionId);
+			$session = $this->sessionMapper->getUserSession($sessionOwnerUserId, $sessionId);
 		} catch (DoesNotExistException|Exception $e) {
 			$this->logger->warning('Cannot find the session of a failed agent message generation', ['sessionId' => $sessionId]);
 			return;
 		}
-		if ($session->getAgentUserId() === null) {
+		if ($session->getRequesterUserId() === null) {
 			return;
 		}
 		$this->updateSeenReaction($session, self::REACTION_ERROR);
@@ -649,9 +657,9 @@ class AgentTalkService {
 	}
 
 	private function getAgentByUserIdOrFail(Session $session): Agent {
-		$agent = $this->agentsService->getAgentByUserId($session->getAgentUserId());
+		$agent = $this->agentsService->getAgentByUserId($session->getUserId());
 		if ($agent === null) {
-			throw new AgentUserException('Agent user ' . $session->getAgentUserId() . ' not found');
+			throw new AgentUserException('Agent user ' . $session->getUserId() . ' not found');
 		}
 		return $agent;
 	}
