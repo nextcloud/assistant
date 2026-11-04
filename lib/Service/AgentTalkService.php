@@ -224,7 +224,7 @@ class AgentTalkService {
 		}
 
 		// schedule generation of the agent answer
-		$this->chatService->scheduleMessageGeneration($session->getUserId(), (int)$session->getId());
+		$this->chatService->scheduleMessageGeneration($session->getUserId(), (int)$session->getId(), 0, $this->getOriginRoomInfo($session));
 	}
 
 	/**
@@ -527,6 +527,7 @@ class AgentTalkService {
 				$session->getUserId(),
 				$sessionId,
 				$reaction === self::REACTION_APPROVE ? 1 : 0,
+				$this->getOriginRoomInfo($session),
 			);
 		} catch (InternalException|NotFoundException|BadRequestException|UnauthorizedException $e) {
 			$this->logger->error('Failed to schedule the confirmation follow-up after a Talk reaction', ['exception' => $e]);
@@ -747,6 +748,30 @@ class AgentTalkService {
 		/** @var \OCA\Talk\Manager $talkManager */
 		$talkManager = Server::get(\OCA\Talk\Manager::class);
 		return $talkManager->getRoomByToken($token);
+	}
+
+	/**
+	 * The name of the Talk room where the conversation of an agent session
+	 * started, when the origin room is a group room. The identity context of
+	 * the generation tasks mentions it, no other task attribute does.
+	 *
+	 * @param Session $session
+	 * @return string|null
+	 */
+	private function getOriginRoomInfo(Session $session): ?string {
+		if ($session->getRoomToken() === null) {
+			return null;
+		}
+		try {
+			$originRoom = $this->getRoomByToken($session->getRoomToken());
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
+			return null;
+		}
+		if ($originRoom->getType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
+			// 1-1 conversations need no origin mention, everything happens there
+			return null;
+		}
+		return $originRoom->getName();
 	}
 
 	private function getAgentByUserIdOrFail(Session $session): Agent {
