@@ -17,6 +17,8 @@ use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Comments\IComment;
 use OCP\DB\Exception;
+use OCP\IL10N;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\Server;
@@ -44,6 +46,8 @@ class AgentTalkService {
 		private AgentsService $agentsService,
 		private ChatService $chatService,
 		private SessionMapper $sessionMapper,
+		private IURLGenerator $urlGenerator,
+		private IL10N $l10n,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -356,7 +360,7 @@ class AgentTalkService {
 			}
 		}
 
-		$posted = $this->postAgentMessage(
+		$postedComment = $this->postAgentMessage(
 			$room,
 			$session,
 			$content,
@@ -373,11 +377,100 @@ class AgentTalkService {
 				referenceId: self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time(),
 				addApproveRejectReactions: true,
 				threaded: $threaded,
-			);
+			) !== null;
+		}
+
+		if ($postedComment !== null) {
+			try {
+				$this->postGroupRoomPointer($session, $room, $postedComment);
+			} catch (\Throwable $e) {
+				$this->logger->error('Failed to post the answer pointer message in the origin Talk room', ['exception' => $e]);
+			}
 		}
 
 		// an agency confirmation turn has no reply content, only the confirmation message
-		$this->markGenerationCompleted($session, $posted || $confirmPosted);
+		$this->markGenerationCompleted($session, $postedComment !== null || $confirmPosted);
+	}
+
+	/**
+	 * When the answer was requested by an @mention from a group Talk room,
+	 * post a short pointer message there, as the agent, in reply to the mention:
+	 * it mentions the human user and links to the answer posted
+	 * in the private 1-1 conversation with the agent.
+	 *
+	 * Messages sent in the 1-1 conversation or in its threads do not trigger
+	 * a pointer: their answers are posted in that same conversation.
+	 */
+	private function postGroupRoomPointer(Session $session, \OCA\Talk\Room $oneToOneRoom, IComment $answerComment): void {
+		$seenRoomToken = $session->getAgentSeenRoomToken();
+		$seenCommentId = $session->getAgentSeenCommentId();
+		if ($seenRoomToken === null || $seenCommentId === null) {
+			return;
+		}
+		try {
+			$seenRoom = $this->getRoomByToken($seenRoomToken);
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException $e) {
+			$this->logger->warning('Cannot post the answer pointer message, the Talk room of the mention was not found', ['token' => $seenRoomToken]);
+			return;
+		}
+		if ($seenRoom->getType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
+			// the message was sent in the 1-1 conversation or one of its threads,
+			// the answer was posted there: no pointer message needed
+			return;
+		}
+		$requesterUserId = $session->getRequesterUserId();
+		if ($requesterUserId === null) {
+			return;
+		}
+
+		// the mention message to reply to must be a chat message of the handled room
+		try {
+			/** @var \OCA\Talk\Chat\CommentsManager $commentsManager */
+			$commentsManager = Server::get(\OCA\Talk\Chat\CommentsManager::class);
+			$mentionComment = $commentsManager->getCommentsById([(string)$seenCommentId])[(string)$seenCommentId] ?? null;
+		} catch (\Throwable $e) {
+			$this->logger->warning('Cannot post the answer pointer message, the handled Talk message was not found', ['commentId' => $seenCommentId]);
+			return;
+		}
+		if ($mentionComment === null) {
+			return;
+		}
+		if ($mentionComment->getObjectType() !== 'chat'
+			|| $mentionComment->getObjectId() !== (string)$seenRoom->getId()
+			|| $mentionComment->getActorType() !== 'users'
+			|| $mentionComment->getActorId() !== $requesterUserId) {
+			return;
+		}
+
+		$urlParams = [
+			'token' => $oneToOneRoom->getToken(),
+			'_fragment' => 'message_' . $answerComment->getId(),
+		];
+		// like Talk's notification links: thread context is needed to open the message
+		$threadId = (int)($answerComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
+		if ($threadId !== 0) {
+			$urlParams['threadId'] = $threadId;
+		}
+		$link = $this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall', $urlParams);
+		$content = '@"' . $requesterUserId . '" '
+			. $this->l10n->t('I answered to you in our private conversation in the thread "%s"', [$session->getTitle() ?? ''])
+			. '. ' . $link;
+
+		try {
+			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+			$chatManager->sendMessage(
+				$seenRoom,
+				null,
+				'users',
+				$session->getUserId(),
+				$content,
+				new DateTime(),
+				replyTo: $mentionComment,
+			);
+		} catch (\Throwable $e) {
+			$this->logger->error('Failed to post the answer pointer message in the Talk room', ['exception' => $e]);
+		}
 	}
 
 	/**
@@ -447,13 +540,13 @@ class AgentTalkService {
 		?string $referenceId = null,
 		bool $addApproveRejectReactions = false,
 		bool $threaded = true,
-	): bool {
+	): ?IComment {
 		if (trim($content) === '') {
-			return false;
+			return null;
 		}
 		$agentUser = $this->userManager->get($session->getUserId());
 		if ($agentUser === null) {
-			return false;
+			return null;
 		}
 		/** @var \OCA\Talk\Chat\ChatManager $chatManager */
 		$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
@@ -486,7 +579,7 @@ class AgentTalkService {
 			);
 		} catch (\Throwable $e) {
 			$this->logger->error('Failed to post an agent message in Talk', ['exception' => $e]);
-			return false;
+			return null;
 		}
 
 		if ($threadId === \OCA\Talk\Model\Thread::THREAD_CREATE) {
@@ -498,7 +591,7 @@ class AgentTalkService {
 				$thread = $threadService->createThread($room, (int)$comment->getId(), $threadTitle);
 			} catch (\Throwable $e) {
 				$this->logger->error('Failed to create the Talk thread of the agent session', ['exception' => $e]);
-				return false;
+				return null;
 			}
 			try {
 				$chatManager->addSystemMessage(
@@ -540,7 +633,7 @@ class AgentTalkService {
 			$this->addAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_APPROVE);
 			$this->addAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_REJECT);
 		}
-		return true;
+		return $comment;
 	}
 
 	/**
