@@ -199,7 +199,7 @@ class ChattyLLMTaskListener implements IEventListener {
 
 			// in the agent-as-a-user feature, the generated message is posted
 			// in the 1-1 Talk conversation with the human user
-			if ($session->getAgentUserId() !== null) {
+			if ($session->getRequesterUserId() !== null) {
 				$this->agentTalkService->postAgentTalkReply(
 					$session,
 					$message->getContent(),

@@ -51,7 +51,7 @@ class ChatService {
 	 * @throws InternalException
 	 * @throws UnauthorizedException
 	 */
-	public function createChatSession(?string $userId, ?int $timestamp = null, ?string $title = null, ?string $systemPrompt = null): Session {
+	public function createChatSession(?string $userId, ?int $timestamp = null, ?string $title = null, ?string $systemPrompt = null, ?string $requesterUserId = null): Session {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
@@ -59,6 +59,10 @@ class ChatService {
 		if ($user === null) {
 			throw new UnauthorizedException($this->l10n->t('User not found'));
 		}
+		// agent sessions are owned by the agent user account,
+		// the user-related placeholders address the human requester
+		$placeholderUserId = $requesterUserId ?? $userId;
+		$placeholderUser = $placeholderUserId === $userId ? $user : $this->userManager->get($placeholderUserId);
 
 		$timestamp ??= $this->timeFactory->now()->getTimestamp();
 
@@ -74,10 +78,8 @@ class ChatService {
 				Application::CHAT_USER_INSTRUCTIONS,
 				lazy: true,
 			) ?: Application::CHAT_USER_INSTRUCTIONS;
-			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
-		} else {
-			$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 		}
+		$userInstructions = str_replace('{user}', $placeholderUser?->getDisplayName() ?: $placeholderUserId, $userInstructions);
 
 		// the user's personal instructions come after the admin's and must not override them
 		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
@@ -94,6 +96,7 @@ class ChatService {
 		$session->setTimestamp($timestamp);
 		$session->setAgencyConversationToken(null);
 		$session->setAgencyPendingActions(null);
+		$session->setRequesterUserId($requesterUserId);
 		try {
 			$this->sessionMapper->insert($session);
 		} catch (Exception $e) {
@@ -421,13 +424,15 @@ class ChatService {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
 		try {
-			$sessionExists = $this->sessionMapper->exists($userId, $sessionId);
-		} catch (Exception $e) {
+			$session = $this->sessionMapper->getUserSession($userId, $sessionId);
+		} catch (DoesNotExistException $e) {
+			throw new NotFoundException($this->l10n->t('Session not found'), previous: $e);
+		} catch (MultipleObjectsReturnedException|Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		if (!$sessionExists) {
-			throw new NotFoundException($this->l10n->t('Session not found'));
-		}
+		// agent sessions belong to the agent user account: the memories to inject
+		// come from the human requester, not from the agent
+		$memoriesUserId = $session->getRequesterUserId() ?? $userId;
 
 		if ($this->isContextAgentAvailable()) {
 			try {
@@ -438,13 +443,6 @@ class ChatService {
 				throw new InternalException(previous: $e);
 			}
 
-			try {
-				$session = $this->sessionMapper->getUserSession($userId, $sessionId);
-			} catch (DoesNotExistException $e) {
-				throw new NotFoundException($this->l10n->t('Session not found'), previous: $e);
-			} catch (MultipleObjectsReturnedException|Exception $e) {
-				throw new InternalException(previous: $e);
-			}
 			$lastConversationToken = $session->getAgencyConversationToken() ?? self::EMPTY_CONVERSATION_TOKEN;
 
 			$lastAttachments = $lastUserMessage->jsonSerialize()['attachments'];
@@ -457,18 +455,18 @@ class ChatService {
 			) {
 				// audio agency
 				$fileId = $audioAttachment['file_id'];
-				$taskId = $this->scheduleAgencyAudioTask($userId, $fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId());
+				$taskId = $this->scheduleAgencyAudioTask($userId, $fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId(), $userId);
 			} elseif ($this->isMultimodalContextAgentAvailable()) {
 				// multimodal agency
 				$prompt = $lastUserMessage->getContent();
 				$inputAttachments = array_map(static function (array $attachment) {
 					return $attachment['file_id'];
 				}, $lastAttachments);
-				$taskId = $this->scheduleAgencyMultimodalTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, $inputAttachments);
+				$taskId = $this->scheduleAgencyMultimodalTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, $inputAttachments, $userId);
 			} else {
 				// classic agency
 				$prompt = $lastUserMessage->getContent();
-				$taskId = $this->scheduleAgencyTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId);
+				$taskId = $this->scheduleAgencyTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, memoriesUserId: $userId);
 			}
 		} else {
 			// classic chat
@@ -500,7 +498,7 @@ class ChatService {
 				// for an audio chat task, let's try to get the remote audio IDs for all the previous audio messages
 				$history = $this->getAudioHistory($history);
 				$fileId = $audioAttachment['file_id'];
-				$taskId = $this->scheduleAudioChatTask($userId, $fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId());
+				$taskId = $this->scheduleAudioChatTask($userId, $fileId, $systemPrompt, $history, $sessionId, $lastUserMessage->getId(), $userId);
 			} else {
 				if ($this->isMultimodalChatAvailable()) {
 					// for a multimodal chat also attachments need to be added to the history
@@ -525,7 +523,7 @@ class ChatService {
 					$lastAttachments = array_map(static function (array $attachment) {
 						return $attachment['file_id'];
 					}, $lastAttachments);
-					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $lastAttachments);
+					$taskId = $this->scheduleMultimodalChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, $lastAttachments, $userId);
 				} else {
 					// for a text chat task only use text in the history
 					$historyMessages = array_map(static function (Message $message) {
@@ -534,7 +532,7 @@ class ChatService {
 							'content' => $message->getContent(),
 						]);
 					}, $history);
-					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId);
+					$taskId = $this->scheduleLLMChatTask($userId, $lastUserMessage->getContent(), $systemPrompt, $historyMessages, $sessionId, memoriesUserId: $userId);
 				}
 			}
 		}
@@ -786,6 +784,7 @@ class ChatService {
 		array $history,
 		int $sessionId,
 		bool $isMessage = true,
+		?string $memoriesUserId = null,
 	): int {
 		$customId = ($isMessage
 				? 'chatty-llm:'
@@ -797,7 +796,7 @@ class ChatService {
 			'history' => $history,
 		];
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[TextToTextChat::ID]['optionalInputShape']['memories'])) {
-			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
+			$input['memories'] = $this->sessionSummaryService->getMemories($memoriesUserId ?? $userId);
 		}
 		$task = new Task(TextToTextChat::ID, $input, Application::APP_ID . ':chatty-llm', $userId, $customId);
 		/** @psalm-suppress UndefinedMethod */
@@ -830,6 +829,7 @@ class ChatService {
 		array $history,
 		int $sessionId,
 		array $attachmentsHistory,
+		?string $memoriesUserId = null,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -873,6 +873,7 @@ class ChatService {
 		string $conversationToken,
 		int $sessionId,
 		bool $withUserInstructions = true,
+		?string $memoriesUserId = null,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -884,7 +885,7 @@ class ChatService {
 		/** @psalm-suppress UndefinedClass */
 		$optionalInputShape = $this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID]['optionalInputShape'] ?? [];
 		if (isset($optionalInputShape['memories'])) {
-			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
+			$taskInput['memories'] = $this->sessionSummaryService->getMemories($memoriesUserId ?? $userId);
 		}
 		if ($withUserInstructions) {
 			$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
@@ -928,6 +929,7 @@ class ChatService {
 		string $conversationToken,
 		int $sessionId,
 		array $inputAttachments,
+		?string $memoriesUserId = null,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -937,7 +939,7 @@ class ChatService {
 			'confirmation' => $confirmation,
 			'conversation_token' => $conversationToken,
 		];
-		$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
+		$taskInput['memories'] = $this->sessionSummaryService->getMemories($memoriesUserId ?? $userId);
 		/** @psalm-suppress UndefinedClass */
 		$optionalInputShape = $this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID]['optionalInputShape'] ?? [];
 		$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
@@ -978,6 +980,7 @@ class ChatService {
 		array $history,
 		int $sessionId,
 		int $queryMessageId,
+		?string $memoriesUserId = null,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId . ':' . $queryMessageId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -988,7 +991,7 @@ class ChatService {
 		];
 		/** @psalm-suppress UndefinedClass */
 		if (isset($this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID]['optionalInputShape']['memories'])) {
-			$input['memories'] = $this->sessionSummaryService->getMemories($userId);
+			$input['memories'] = $this->sessionSummaryService->getMemories($memoriesUserId ?? $userId);
 		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
@@ -1025,6 +1028,7 @@ class ChatService {
 		string $conversationToken,
 		int $sessionId,
 		int $queryMessageId,
+		?string $memoriesUserId = null,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId . ':' . $queryMessageId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -1036,7 +1040,7 @@ class ChatService {
 		/** @psalm-suppress UndefinedClass */
 		$optionalInputShape = $this->taskProcessingManager->getAvailableTaskTypes()[\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID]['optionalInputShape'] ?? [];
 		if (isset($optionalInputShape['memories'])) {
-			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
+			$taskInput['memories'] = $this->sessionSummaryService->getMemories($memoriesUserId ?? $userId);
 		}
 		$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
 		/** @psalm-suppress UndefinedClass */
