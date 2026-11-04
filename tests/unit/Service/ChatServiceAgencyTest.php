@@ -44,6 +44,12 @@ class ChatServiceAgencyTest extends TestCase {
 	private IManager&MockObject $taskProcessingManager;
 	private SessionMapper&MockObject $sessionMapper;
 	private SessionSummaryService&MockObject $sessionSummaryService;
+	private IUserManager&MockObject $userManager;
+	private IAppConfig&MockObject $appConfig;
+	private IL10N&MockObject $l10n;
+	private IDBConnection&MockObject $db;
+	private LoggerInterface&MockObject $logger;
+	private ITimeFactory&MockObject $timeFactory;
 	private ?Task $scheduledTask = null;
 
 	protected function setUp(): void {
@@ -74,25 +80,44 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->sessionSummaryService = $this->createMock(SessionSummaryService::class);
 
 		$l10n = $this->createMock(IL10N::class);
-		$l10n->method('t')->willReturnCallback(static fn (string $text, array $parameters = []): string => $text);
+		$l10n->method('t')->willReturnCallback(static fn (string $text, array $parameters = []): string => ($parameters !== [] ? vsprintf(str_replace('%n', "\n", $text), $parameters) : $text));
 
+		$this->l10n = $l10n;
+		$this->userManager = $this->createMock(IUserManager::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->db = $this->createMock(IDBConnection::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+
+		$this->rebuildService();
+	}
+
+	/**
+	 * The service must be rebuilt when the mocked SessionMapper changes:
+	 * re-stubbing an already configured mock method would not override
+	 * the previously configured return value.
+	 */
+	private function rebuildService(): void {
 		$this->service = new ChatService(
-			$this->createMock(IUserManager::class),
-			$this->createMock(IAppConfig::class),
+			$this->userManager,
+			$this->appConfig,
 			$this->createMock(IConfig::class),
-			$l10n,
+			$this->l10n,
 			$this->sessionMapper,
 			$this->messageMapper,
-			$this->createMock(IDBConnection::class),
+			$this->db,
 			$this->sessionSummaryService,
 			$this->taskProcessingManager,
-			$this->createMock(LoggerInterface::class),
-			$this->createMock(ITimeFactory::class),
+			$this->logger,
+			$this->timeFactory,
 		);
 	}
 
 	private function setUserSession(Session $session): void {
+		$this->sessionMapper = $this->createMock(SessionMapper::class);
+		$this->sessionMapper->method('exists')->willReturn(true);
 		$this->sessionMapper->method('getUserSession')->willReturn($session);
+		$this->rebuildService();
 	}
 
 	private function setAgentOptionalInputs(array $optionalInputShape): void {
