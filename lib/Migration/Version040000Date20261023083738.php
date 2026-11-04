@@ -53,21 +53,32 @@ class Version040000Date20261023083738 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('assistant_chat_sns')) {
 			$table = $schema->getTable('assistant_chat_sns');
-			if (!$table->hasColumn('agent_user_id')) {
-				$table->addColumn('agent_user_id', Types::STRING, [
+			// agent sessions are owned by the agent user account,
+			// requester_user_id is the id of the human user the agent converses with
+			if (!$table->hasColumn('requester_user_id')) {
+				$table->addColumn('requester_user_id', Types::STRING, [
 					'notnull' => false,
 					'length' => 64,
 				]);
+				$schemaChanged = true;
+			}
+			if (!$table->hasColumn('room_token')) {
 				$table->addColumn('room_token', Types::STRING, [
 					'notnull' => false,
 					'length' => 64,
 				]);
+				$schemaChanged = true;
+			}
+			if (!$table->hasColumn('thread_id')) {
 				$table->addColumn('thread_id', Types::BIGINT, [
 					'notnull' => false,
 					'length' => 20,
 					'unsigned' => true,
 				]);
-				$table->addIndex(['user_id', 'agent_user_id', 'room_token'], 'assistant_chat_agent_idx');
+				$schemaChanged = true;
+			}
+			if (!$table->hasIndex('assistant_chat_requester_idx')) {
+				$table->addIndex(['user_id', 'requester_user_id', 'room_token'], 'assistant_chat_requester_idx');
 				$schemaChanged = true;
 			}
 		}

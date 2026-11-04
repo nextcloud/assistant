@@ -27,8 +27,8 @@ use OCP\DB\Types;
  * @method \void setAgencyPendingActions(?string $agencyPendingActions)
  * @method \void setAssignmentId(?int $id)
  * @method \int|null getAssignmentId()
- * @method \string|null getAgentUserId()
- * @method \void setAgentUserId(?string $agentUserId)
+ * @method \string|null getRequesterUserId()
+ * @method \void setRequesterUserId(?string $requesterUserId)
  * @method \string|null getRoomToken()
  * @method \void setRoomToken(?string $roomToken)
  * @method \int|null getThreadId()
@@ -74,10 +74,11 @@ class Session extends Entity implements \JsonSerializable {
 	protected $assignmentId;
 
 	/**
-	 * When the session is used by an agent through Talk: the agent's NC user id
+	 * When the session is owned by an agent (agent-as-a-user feature): the NC user id
+	 * of the human user the agent converses with
 	 * @var ?string
 	 */
-	protected $agentUserId;
+	protected $requesterUserId;
 
 	/**
 	 * When the session is used by an agent through Talk: the token of the 1-1 Talk room
@@ -112,8 +113,7 @@ class Session extends Entity implements \JsonSerializable {
 		'is_summary_up_to_date',
 		'is_remembered',
 		'assignment_id',
-		'agent_user_id',
-		'room_token',
+		'requester_user_id',		'room_token',
 		'thread_id',
 		'agent_seen_room_token',
 		'agent_seen_comment_id',
@@ -129,7 +129,7 @@ class Session extends Entity implements \JsonSerializable {
 		'isSummaryUpToDate',
 		'isRemembered',
 		'assignmentId',
-		'agentUserId',
+		'requesterUserId',
 		'roomToken',
 		'threadId',
 		'agentSeenRoomToken',
@@ -146,7 +146,7 @@ class Session extends Entity implements \JsonSerializable {
 		$this->addType('isSummaryUpToDate', Types::SMALLINT);
 		$this->addType('isRemembered', Types::SMALLINT);
 		$this->addType('assignmentId', Types::BIGINT);
-		$this->addType('agentUserId', Types::STRING);
+		$this->addType('requesterUserId', Types::STRING);
 		$this->addType('roomToken', Types::STRING);
 		$this->addType('threadId', Types::BIGINT);
 		$this->addType('agentSeenRoomToken', Types::STRING);
@@ -166,7 +166,7 @@ class Session extends Entity implements \JsonSerializable {
 			'is_summary_up_to_date' => $this->getIsSummaryUpToDate(),
 			'is_remembered' => $this->getIsRemembered(),
 			'assignment_id' => $this->getAssignmentId(),
-			'agent_user_id' => $this->getAgentUserId(),
+			'requester_user_id' => $this->getRequesterUserId(),
 			'room_token' => $this->getRoomToken(),
 			'thread_id' => $this->getThreadId(),
 			'agent_seen_room_token' => $this->getAgentSeenRoomToken(),

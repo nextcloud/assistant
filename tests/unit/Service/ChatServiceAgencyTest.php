@@ -41,16 +41,18 @@ class ChatServiceAgencyTest extends TestCase {
 	private ChatService $service;
 	private MessageMapper&MockObject $messageMapper;
 	private IManager&MockObject $taskProcessingManager;
+	private SessionMapper&MockObject $sessionMapper;
+	private SessionSummaryService&MockObject $sessionSummaryService;
 	private ?Task $scheduledTask = null;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$sessionMapper = $this->createMock(SessionMapper::class);
-		$sessionMapper->method('exists')->willReturn(true);
+		$this->sessionMapper = $this->createMock(SessionMapper::class);
+		$this->sessionMapper->method('exists')->willReturn(true);
 		$session = new Session();
 		$session->setUserId(self::USER_ID);
-		$sessionMapper->method('getUserSession')->willReturn($session);
+		$this->sessionMapper->method('getUserSession')->willReturn($session);
 
 		$humanMessage = new Message();
 		$humanMessage->setSessionId(self::SESSION_ID);
@@ -68,18 +70,24 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->scheduledTask = $task;
 		});
 
+		$this->sessionSummaryService = $this->createMock(SessionSummaryService::class);
+
 		$this->service = new ChatService(
 			$this->createMock(IUserManager::class),
 			$this->createMock(IAppConfig::class),
 			$this->createMock(IL10N::class),
-			$sessionMapper,
+			$this->sessionMapper,
 			$this->messageMapper,
 			$this->createMock(IDBConnection::class),
-			$this->createMock(SessionSummaryService::class),
+			$this->sessionSummaryService,
 			$this->taskProcessingManager,
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(ITimeFactory::class),
 		);
+	}
+
+	private function setUserSession(Session $session): void {
+		$this->sessionMapper->method('getUserSession')->willReturn($session);
 	}
 
 	private function setAgentOptionalInputs(array $optionalInputShape): void {
@@ -150,5 +158,34 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+	}
+
+	public function testTaskIsScheduledAsTheSessionOwner(): void {
+		$this->setAgentOptionalInputs([]);
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(self::USER_ID, $this->scheduledTask->getUserId());
+	}
+
+	public function testAgentSessionsScheduleAsTheAgentOwnerWithTheRequesterMemories(): void {
+		$agentUserId = 'agent_user_id';
+		$session = new Session();
+		$session->setUserId($agentUserId);
+		$session->setRequesterUserId(self::USER_ID);
+		$this->setUserSession($session);
+		$this->setAgentOptionalInputs(['memories' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')->willThrowException(new DoesNotExistException('no system message'));
+		$this->sessionSummaryService->expects($this->once())
+			->method('getMemories')
+			->with(self::USER_ID)
+			->willReturn([]);
+
+		$this->service->scheduleMessageGeneration($agentUserId, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame($agentUserId, $this->scheduledTask->getUserId());
+		$this->assertArrayHasKey('memories', $this->scheduledTask->getInput());
 	}
 }

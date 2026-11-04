@@ -83,20 +83,23 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
-	 * @param string $userId
-	 * @param string $agentUserId
+	 * Get the agent session owned by the given agent user for the requester
+	 * in the origin Talk room.
+	 *
+	 * @param string $userId The agent user id (owner of the session)
+	 * @param string $requesterUserId
 	 * @param string $roomToken
 	 * @return Session
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 * @throws Exception
 	 */
-	public function getAgentSession(string $userId, string $agentUserId, string $roomToken): Session {
+	public function getAgentSession(string $userId, string $requesterUserId, string $roomToken): Session {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Session::$columns)
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->eq('agent_user_id', $qb->createPositionalParameter($agentUserId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('requester_user_id', $qb->createPositionalParameter($requesterUserId, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->eq('room_token', $qb->createPositionalParameter($roomToken, IQueryBuilder::PARAM_STR)))
 			->orderBy('timestamp', 'DESC')
 			->setMaxResults(1);
@@ -104,7 +107,9 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
-	 * @param string $userId
+	 * Get the agent session owned by the given agent user that posts in the given Talk thread.
+	 *
+	 * @param string $userId The agent user id (owner of the session)
 	 * @param int $threadId The Talk thread id (same as the id of the thread starter Talk comment)
 	 * @return Session
 	 * @throws DoesNotExistException
@@ -117,7 +122,7 @@ class SessionMapper extends QBMapper {
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
 			->andWhere($qb->expr()->eq('thread_id', $qb->createPositionalParameter($threadId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->isNotNull('agent_user_id'))
+			->andWhere($qb->expr()->isNotNull('requester_user_id'))
 			->orderBy('timestamp', 'DESC')
 			->setMaxResults(1);
 		return $this->findEntity($qb);
