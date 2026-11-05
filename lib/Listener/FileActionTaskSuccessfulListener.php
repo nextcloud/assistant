@@ -15,6 +15,7 @@ use OCA\Assistant\Service\TaskProcessingService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\IRootFolder;
+use OCP\Files\Node;
 use OCP\SystemTag\TagNotFoundException;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\TaskTypes\TextToTextSummary;
@@ -57,6 +58,13 @@ class FileActionTaskSuccessfulListener implements IEventListener {
 			$userFolder = $this->rootFolder->getUserFolder($task->getUserId());
 			$sourceFile = $userFolder->getFirstNodeById($sourceFileId);
 			$this->logger->debug('FileActionTaskListener', ['source file id' => $sourceFileId]);
+			if (!$sourceFile instanceof Node) {
+				// the source file was removed while the task was running, there is nowhere to write the result
+				$this->logger->warning('FileActionTaskListener task succeeded but the source file is gone', [
+					'source file id' => $sourceFileId,
+				]);
+				return;
+			}
 			try {
 				$sourceFileParent = $sourceFile->getParent();
 				$this->logger->debug('FileActionTaskListener', ['source file PARENT id' => $sourceFileParent->getId()]);
