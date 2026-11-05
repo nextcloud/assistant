@@ -68,6 +68,7 @@ class ConfigController extends Controller {
 	 * @return DataResponse
 	 */
 	public function setAdminConfig(array $values): DataResponse {
+		$changes = [];
 		foreach ($values as $key => $value) {
 			// do not lazy store assistant_enabled as it is needed for capabilities
 			$storedLazy = $key !== 'assistant_enabled';
@@ -78,12 +79,15 @@ class ConfigController extends Controller {
 			if ($oldValue === $value) {
 				continue;
 			}
+			$changes[] = [$key, $oldValue, $value];
+		}
+		foreach ($changes as [$key, $oldValue, $newValue]) {
 			$this->audit(
 				'The assistant admin setting "%s" was changed from "%s" to "%s" by "%s"',
 				[
 					'setting' => $key,
 					'oldValue' => $oldValue,
-					'newValue' => $value,
+					'newValue' => $newValue,
 					'user' => $this->userId,
 				],
 				'assistant.admin_setting.updated',
