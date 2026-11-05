@@ -12,48 +12,32 @@
 				:is-output="true" />
 		</div>
 		<div class="cc-output__sources">
-			<label for="v-select" class="cc-output__sources__label">
+			<label class="cc-output__sources__label">
 				{{ outputShape.sources.description }}
 			</label>
-			<NcSelect
-				:model-value="sources"
-				:placeholder="t('assistant', 'No sources referenced')"
-				:multiple="true"
-				:keep-open="true"
-				:no-wrap="false"
-				:label-outside="true"
-				:append-to-body="false"
-				:dropdown-should-open="() => false">
-				<template #option="option">
-					<a class="select-option" :href="option.url" target="_blank">
-						<NcAvatar
-							:size="24"
-							:url="option.icon"
-							:display-name="option.label" />
-						<span class="multiselect-name">
-							{{ option.label }}
-						</span>
-					</a>
-				</template>
-				<template #selected-option="option">
-					<a class="select-option" :href="option.url" target="_blank">
-						<NcAvatar
-							:size="24"
-							:url="option.icon"
-							:display-name="option.label" />
-						<span class="multiselect-name">
-							{{ option.label }}
-						</span>
-					</a>
-				</template>
-			</NcSelect>
+			<div class="cc-output__sources__list">
+				<a v-for="source in sources"
+					:key="source.url"
+					class="select-option"
+					:href="source.url"
+					target="_blank">
+					<NcChip :text="source.label" :no-close="true">
+						<template #icon>
+							<NcAvatar
+								:size="24"
+								:url="source.icon"
+								:display-name="source.label" />
+						</template>
+					</NcChip>
+				</a>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcChip from '@nextcloud/vue/components/NcChip'
 
 import TextField from '../fields/TextField.vue'
 
@@ -62,7 +46,7 @@ export default {
 
 	components: {
 		NcAvatar,
-		NcSelect,
+		NcChip,
 		TextField,
 	},
 
@@ -109,33 +93,28 @@ export default {
 		display: flex;
 		flex-direction: column;
 
-		:deep(.v-select) {
-			min-width: 400px !important;
+		&__list {
+			display: flex;
+			flex-wrap: wrap;
+			align-content: flex-start;
+			gap: 8px;
+			min-width: 400px;
+			max-height: 200px;
+			overflow-y: auto;
+			padding: 8px 12px;
+			border: 2px solid var(--color-primary-element);
+			border-radius: var(--border-radius-large);
+		}
 
-			> div {
-				border: 2px solid var(--color-primary-element) !important;
-			}
-
-			.avatardiv {
-				border-radius: 50%;
-
-				&> img {
-					border-radius: 0 !important;
-				}
-			}
-
-			.vs__actions {
-				display: none !important;
-			}
+		:deep(.nc-chip) {
+			background-color: var(--color-primary-element-light);
 		}
 
 		.select-option {
-			display: flex;
-			align-items: center;
-		}
-
-		.multiselect-name {
-			margin-left: 8px;
+			display: inline-flex;
+			max-width: 100%;
+			text-decoration: none;
+			color: inherit;
 		}
 	}
 }
