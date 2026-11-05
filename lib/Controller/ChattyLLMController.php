@@ -366,6 +366,37 @@ class ChattyLLMController extends OCSController {
 	}
 
 	/**
+	 * Search chat messages
+	 *
+	 * Get the messages of the current user's chat sessions matching the search query, most recent first
+	 *
+	 * @param string $query Text to search for in the message contents (case-insensitive)
+	 * @param bool|null $isAssignment Whether to search only the sessions for assignments (true) or not (false) defaults to false
+	 * @return JSONResponse<Http::STATUS_OK, list<AssistantChatMessage>, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED|Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
+	 *
+	 * 200: The matching messages have been obtained successfully
+	 * 400: The search query is empty
+	 * 401: Not logged in
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function searchMessages(string $query, ?bool $isAssignment = false): JSONResponse {
+		try {
+			$messages = $this->chatService->searchMessages($this->userId, $query, $isAssignment);
+			return new JSONResponse(array_map(static function (Message $message) {
+				return $message->jsonSerialize();
+			}, $messages));
+		} catch (BadRequestException $e) {
+			return new JSONResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+		} catch (InternalException $e) {
+			$this->logger->warning('Failed to search chat messages', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to search chat messages')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		} catch (\OCA\Assistant\Service\UnauthorizedException $e) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+	}
+
+	/**
 	 * Add a message
 	 *
 	 * Add a new chat message to the session
