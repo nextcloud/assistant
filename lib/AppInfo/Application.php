@@ -18,6 +18,8 @@ use OCA\Assistant\Listener\LoadAdditionalScriptsListener;
 use OCA\Assistant\Listener\NewFileMenuTaskFailedListener;
 use OCA\Assistant\Listener\NewFileMenuTaskSuccessfulListener;
 use OCA\Assistant\Listener\SpeechToText\SpeechToTextReferenceListener;
+use OCA\Assistant\Listener\Talk\AgentMentionListener;
+use OCA\Assistant\Listener\Talk\AgentReactionListener;
 use OCA\Assistant\Listener\TaskFailedListener;
 use OCA\Assistant\Listener\TaskOutputFileReferenceListener;
 use OCA\Assistant\Listener\TaskSuccessfulListener;
@@ -107,6 +109,13 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, CSPListener::class);
 
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+
+		// the Talk event classes are not necessarily autoloadable when this app
+		// file is registered, the listeners themselves guard for Talk being absent
+		/** @psalm-suppress UndefinedClass, InvalidArgument */
+		$context->registerEventListener(\OCA\Talk\Events\ChatMessageSentEvent::class, AgentMentionListener::class);
+		/** @psalm-suppress UndefinedClass, InvalidArgument */
+		$context->registerEventListener(\OCA\Talk\Events\ReactionAddedEvent::class, AgentReactionListener::class);
 
 		if (class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
 			$context->registerTaskProcessingProvider(AudioToAudioChatProvider::class);
