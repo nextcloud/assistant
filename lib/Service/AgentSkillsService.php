@@ -220,20 +220,28 @@ class AgentSkillsService {
 			$skillFolder = $skillsFolder->newFolder($skillName);
 		}
 
+		$skillFile = null;
+		if ($isOverwrite) {
+			$node = $skillFolder->get(self::SKILL_FILE_NAME);
+			if (!$node instanceof File) {
+				throw new NotPermittedException('SKILL.md path is not a file: ' . $skillFolder->getPath());
+			}
+			$skillFile = $node;
+		}
+
+		// name and description are ours to write, every other key belongs to whoever put
+		// it there. The union operator rather than array_merge, because YAML mapping keys
+		// can be integers and array_merge renumbers those.
 		$frontmatter = Yaml::dump([
 			'name' => $skillName,
 			'description' => $description,
-		]);
+		] + ($skillFile !== null ? $this->preservedFrontmatterKeys($skillFile) : []));
 		$fileContent = self::FRONTMATTER_DELIMITER . "\n"
 			. $frontmatter
 			. self::FRONTMATTER_DELIMITER . "\n\n"
 			. $content;
 
-		if ($isOverwrite) {
-			$skillFile = $skillFolder->get(self::SKILL_FILE_NAME);
-			if (!$skillFile instanceof File) {
-				throw new NotPermittedException('SKILL.md path is not a file: ' . $skillFolder->getPath());
-			}
+		if ($skillFile !== null) {
 			$skillFile->putContent($fileContent);
 		} else {
 			$skillFolder->newFile(self::SKILL_FILE_NAME, $fileContent);
@@ -292,7 +300,51 @@ class AgentSkillsService {
 		if (!$skillFile instanceof File) {
 			throw new NotFoundException('Skill file for "' . $skillName . '" not found');
 		}
-		return $skillFile->getContent();
+		return $this->projectSkillDocument($skillFile);
+	}
+
+	/**
+	 * Return a skill document carrying only the frontmatter keys the agent needs.
+	 *
+	 * The caller of loadSkill feeds the result to a language model, so every extra
+	 * key costs tokens the model cannot spend. listSkills already answers with the
+	 * metadata fields alone. This keeps the two ends of the API saying the same thing.
+	 *
+	 * A document we cannot parse is returned as it is, so a malformed skill still loads.
+	 */
+	private function projectSkillDocument(File $skillFile): string {
+		$content = $skillFile->getContent();
+
+		try {
+			[$frontmatter, $body] = $this->splitSkillDocument($content, $skillFile->getPath());
+			$parsed = Yaml::parse($frontmatter);
+		} catch (RuntimeException|ParseException $e) {
+			$this->logger->debug(
+				'Skill frontmatter could not be read, returning the document unchanged: ' . $skillFile->getPath(),
+				['exception' => $e]
+			);
+			return $content;
+		}
+
+		if (!is_array($parsed)) {
+			return $content;
+		}
+
+		$known = [];
+		foreach (self::FRONTMATTER_METADATA_FIELDS as $field) {
+			if (isset($parsed[$field])) {
+				$known[$field] = $parsed[$field];
+			}
+		}
+
+		if ($known === []) {
+			return $content;
+		}
+
+		return self::FRONTMATTER_DELIMITER . "\n"
+			. Yaml::dump($known)
+			. self::FRONTMATTER_DELIMITER . "\n"
+			. $body;
 	}
 
 	/**
@@ -304,22 +356,65 @@ class AgentSkillsService {
 	 * @throws \OCP\Lock\LockedException if the file is locked
 	 */
 	public function extractFrontmatter(File $file): string {
-		$content = $file->getContent();
+		return $this->splitSkillDocument($file->getContent(), $file->getPath())[0];
+	}
+
+	/**
+	 * Split a SKILL.md document into its YAML frontmatter and the body that follows it.
+	 *
+	 * @param string $content the full document
+	 * @param string $path used only to build error messages
+	 *
+	 * @return array{0: string, 1: string} the frontmatter, then the body
+	 *
+	 * @throws RuntimeException if the document has no valid frontmatter
+	 */
+	private function splitSkillDocument(string $content, string $path): array {
 		$delimiter = self::FRONTMATTER_DELIMITER;
 
 		// must start with the opening delimiter followed by a newline
 		if (!str_starts_with($content, $delimiter . "\n") && !str_starts_with($content, $delimiter . "\r\n")) {
-			throw new RuntimeException('Skill file missing frontmatter opening delimiter: ' . $file->getPath());
+			throw new RuntimeException('Skill file missing frontmatter opening delimiter: ' . $path);
 		}
 
 		$offset = strpos($content, "\n") + 1;
 		// match "---" on its own line (followed by a newline or end-of-line)
 		if (!preg_match('#\n' . $delimiter . '(?:\r?\n|$)#', $content, $matches, PREG_OFFSET_CAPTURE, $offset)) {
-			throw new RuntimeException('Skill file missing frontmatter closing delimiter: ' . $file->getPath());
+			throw new RuntimeException('Skill file missing frontmatter closing delimiter: ' . $path);
 		}
 		$closingPos = $matches[0][1];
 
-		return substr($content, $offset, $closingPos - $offset);
+		return [
+			substr($content, $offset, $closingPos - $offset),
+			substr($content, $closingPos + strlen($matches[0][0])),
+		];
+	}
+
+	/**
+	 * Read the frontmatter keys of an existing skill file that this API does not own.
+	 *
+	 * Anything other than the metadata fields was put there by whoever wrote the file,
+	 * so a store has to hand it back unchanged. A document we cannot parse has no keys
+	 * worth keeping, and replacing it is what the caller asked for anyway.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function preservedFrontmatterKeys(File $skillFile): array {
+		try {
+			$parsed = Yaml::parse($this->splitSkillDocument($skillFile->getContent(), $skillFile->getPath())[0]);
+		} catch (RuntimeException|ParseException $e) {
+			$this->logger->debug(
+				'Skill frontmatter could not be read, storing without preserved keys: ' . $skillFile->getPath(),
+				['exception' => $e]
+			);
+			return [];
+		}
+
+		if (!is_array($parsed)) {
+			return [];
+		}
+
+		return array_diff_key($parsed, array_flip(self::FRONTMATTER_METADATA_FIELDS));
 	}
 
 	/**
