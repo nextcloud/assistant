@@ -14,11 +14,29 @@
 				<div class="footer-left">
 					<NcButton v-if="radiusInfo"
 						variant="tertiary"
-						:title="radiusTooltip"
+						:title="radiusInfo.description"
 						:text="radiusInfo.label"
 						class="help">
 						<template #icon>
 							<component :is="radiusInfo.icon" :size="20" />
+						</template>
+					</NcButton>
+					<NcButton v-if="destructive.destructive"
+						variant="tertiary"
+						:title="destructive.description"
+						:aria-label="destructive.description"
+						class="help">
+						<template #icon>
+							<DeleteAlertOutlineIcon :size="20" />
+						</template>
+					</NcButton>
+					<NcButton v-if="irreversible.irreversible"
+						variant="tertiary"
+						:title="irreversible.description"
+						:aria-label="irreversible.description"
+						class="help">
+						<template #icon>
+							<RestoreAlertIcon :size="20" />
 						</template>
 					</NcButton>
 					<NcButton v-if="itemCount.itemCount > 1"
@@ -65,6 +83,8 @@ import AccountMultipleOutlineIcon from 'vue-material-design-icons/AccountMultipl
 import AccountGroupOutlineIcon from 'vue-material-design-icons/AccountGroupOutline.vue'
 import EarthIcon from 'vue-material-design-icons/Earth.vue'
 import TallyMark5Icon from 'vue-material-design-icons/TallyMark5.vue'
+import DeleteAlertOutlineIcon from 'vue-material-design-icons/DeleteAlertOutline.vue'
+import RestoreAlertIcon from 'vue-material-design-icons/RestoreAlert.vue'
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
 import AgencyActions from './AgencyActions.vue'
@@ -120,6 +140,8 @@ export default {
 		EarthIcon,
 		InformationOutlineIcon,
 		TallyMark5Icon,
+		DeleteAlertOutlineIcon,
+		RestoreAlertIcon,
 	},
 
 	props: {
@@ -205,14 +227,6 @@ export default {
 				return Math.max(max, index === -1 ? radiusOrder.length - 1 : index)
 			}, -1)
 			return largest === -1 ? null : radii[radiusOrder[largest]]
-		},
-
-		radiusTooltip() {
-			return [
-				this.radiusInfo?.description,
-				this.destructive.description,
-				this.irreversible.description,
-			].filter(Boolean).join('\n')
 		},
 	},
 }
