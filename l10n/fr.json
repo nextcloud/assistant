@@ -232,7 +232,7 @@
     "To enable text generation in the smart picker, please install an AI task processing provider for the \"Free text to text prompt\" task type:" : "Pour activer la génération de texte dans le sélecteur intelligent, merci d'installer un fournisseur de traitement des tâches d'IA pour le type de tâche \"Texte libre vers prompt\" :",
     "To enable the sticker generation picker or the image generation picker, please install and enable a \"Generate image\" provider:" : "Pour activer le sélecteur de génération d'autocollant ou le sélecteur de génération d'image, merci d'installer et activer un fournisseur de \"génération d'image\" :",
     "To enable speech-to-text in the smart picker, please install and enable a \"Transcribe audio\" provider:" : "Pour activer la reconnaissance vocale dans le sélecteur intelligent, merci d'installer et activer un fournisseur de \"Retranscription audio\" :",
-    "Data folder" : "Répertoire des données",
+    "Data folder" : "Dossier des données",
     "Name of the folder the assistant creates in the files of each user to store generated content. Users can override this in their personal settings. Changing it does not rename folders that already exist." : "Nom du dossier que l'assistant crée dans les fichiers de chaque utilisateur pour stocker le contenu généré. Les utilisateurs peuvent le remplacer dans leurs paramètres personnels. Le changer ne renomme pas les dossiers qui existent déjà.",
     "Default data folder name" : "Nom par défaut du dossier de données",
     "Chat User Instructions for Chat Completions" : "Instructions de l'utilisateur pour la complétion dans le chat",
