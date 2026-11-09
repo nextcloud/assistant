@@ -18,6 +18,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use OCP\Exceptions\AppConfigTypeConflictException;
 use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUserManager;
@@ -34,6 +35,7 @@ class ChatService {
 	public function __construct(
 		private readonly IUserManager $userManager,
 		private readonly IAppConfig $appConfig,
+		private readonly IConfig $config,
 		private readonly IL10N $l10n,
 		private readonly SessionMapper $sessionMapper,
 		private readonly MessageMapper $messageMapper,
@@ -71,6 +73,15 @@ class ChatService {
 			lazy: true,
 		) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
+
+		// the user's personal instructions come after the admin's and must not override them
+		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
+		$personalInstructions = $personalInstructionsEnabled
+			? trim($this->config->getUserValue($userId, Application::APP_ID, 'chat_personal_instructions', ''))
+			: '';
+		if ($personalInstructions !== '') {
+			$userInstructions .= "\n\n" . Application::CHAT_PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions;
+		}
 
 		$session = new Session();
 		$session->setUserId($userId);

@@ -159,6 +159,15 @@
 					dir="auto"
 					@update:model-value="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')"
 					@submit="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')" />
+				<NcFormBox class="chat-personal-instructions-switch">
+					<NcFormBoxSwitch :model-value="state.chat_personal_instructions_enabled"
+						@update:model-value="onCheckboxChanged($event, 'chat_personal_instructions_enabled')">
+						{{ t('assistant', 'Allow users to add their own chat instructions in their personal settings') }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+				<NcNoteCard type="info">
+					{{ t('assistant', 'Users\' instructions are added after the instructions above, which take precedence. Changes apply to new conversations.') }}
+				</NcNoteCard>
 				<div class="line">
 					<label for="chat_user_instructions_title">
 						{{ t('assistant', 'Chat User Instructions for Title Generation') }}
@@ -430,6 +439,11 @@ export default {
 		> .line > label {
 			width: 900px !important;
 			font-weight: bold;
+		}
+
+		.chat-personal-instructions-switch {
+			max-width: 900px;
+			margin-top: 12px;
 		}
 	}
 

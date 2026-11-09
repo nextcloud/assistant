@@ -58,6 +58,17 @@
 					{{ taskNames.join(', ') }}
 				</div>
 			</div>
+			<div v-if="state.assistant_available && state.chat_personal_instructions_enabled" class="chat-instructions">
+				<h3>{{ t('assistant', 'Custom chat instructions') }}</h3>
+				<p>{{ t('assistant', 'Tell the assistant how to respond to you in chat, for example which tone to use or what to know about you. These instructions are added to the instructions set by your administrator. They apply to new conversations.') }}</p>
+				<NcTextArea id="chat_personal_instructions"
+					v-model="state.chat_personal_instructions"
+					class="chat-instructions__field"
+					:label="t('assistant', 'Custom instructions')"
+					:maxlength="state.chat_personal_instructions_max_length"
+					resize="vertical"
+					@update:model-value="delayedValueUpdate(state.chat_personal_instructions, 'chat_personal_instructions')" />
+			</div>
 			<div class="data-folder">
 				<h3>{{ t('assistant', 'Data folder') }}</h3>
 				<p>{{ t('assistant', 'Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there.') }}</p>
@@ -94,6 +105,7 @@ import NcFormBox from '@nextcloud/vue/components/NcFormBox'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
 import NcFormBoxButton from '@nextcloud/vue/components/NcFormBoxButton'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 import MemoryIcon from 'vue-material-design-icons/Memory.vue'
@@ -114,6 +126,7 @@ export default {
 		NcFormBoxSwitch,
 		NcFormBoxButton,
 		NcNoteCard,
+		NcTextArea,
 		NcTextField,
 		MemoryIcon,
 	},
@@ -201,7 +214,8 @@ export default {
 		}
 	}
 
-	.switch-group {
+	.switch-group,
+	.chat-instructions__field {
 		max-width: 800px;
 	}
 

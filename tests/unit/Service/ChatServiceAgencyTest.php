@@ -19,6 +19,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\Exception;
 use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUserManager;
@@ -71,6 +72,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->service = new ChatService(
 			$this->createMock(IUserManager::class),
 			$this->createMock(IAppConfig::class),
+			$this->createMock(IConfig::class),
 			$this->createMock(IL10N::class),
 			$sessionMapper,
 			$this->messageMapper,
