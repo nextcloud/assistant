@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcNoteCard :type="destructive.destructive ? 'warning' : 'info'"
+	<NcNoteCard :type="(destructive.destructive || irreversible.irreversible) ? 'warning' : 'info'"
 		class="agency-confirmation">
 		<div class="notecard-content">
 			<span>
@@ -11,14 +11,25 @@
 			</span>
 			<AgencyActions :actions="actions" />
 			<div class="footer">
-				<NcButton variant="tertiary"
-					:title="radiusInfo.description + (destructive.destructive ? '\n' : '') + destructive.description"
-					:text="radiusInfo.label"
-					class="help radius">
-					<template #icon>
-						<component :is="radiusInfo.icon" :size="20" />
-					</template>
-				</NcButton>
+				<div class="footer-left">
+					<NcButton variant="tertiary"
+						:title="radiusInfo.description + (destructive.destructive ? '\n' : '') + destructive.description + (irreversible.irreversible ? '\n' : '') + irreversible.description"
+						:text="radiusInfo.label"
+						class="help">
+						<template #icon>
+							<component :is="radiusInfo.icon" :size="20" />
+						</template>
+					</NcButton>
+					<NcButton v-if="itemCount.itemCount > 1"
+						variant="tertiary"
+						:title="itemCount.description"
+						:text="String(itemCount.itemCount)"
+						class="help">
+						<template #icon>
+							<TallyMark5Icon :size="20" />
+						</template>
+					</NcButton>
+				</div>
 				<NcButton variant="tertiary"
 					:title="hint"
 					class="help">
@@ -52,6 +63,7 @@ import AccountOutlineIcon from 'vue-material-design-icons/AccountOutline.vue'
 import AccountMultipleOutlineIcon from 'vue-material-design-icons/AccountMultipleOutline.vue'
 import AccountGroupOutlineIcon from 'vue-material-design-icons/AccountGroupOutline.vue'
 import EarthIcon from 'vue-material-design-icons/Earth.vue'
+import TallyMark5Icon from 'vue-material-design-icons/TallyMark5.vue'
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
 import AgencyActions from './AgencyActions.vue'
@@ -106,6 +118,7 @@ export default {
 		AccountGroupOutlineIcon,
 		EarthIcon,
 		InformationOutlineIcon,
+		TallyMark5Icon,
 	},
 
 	props: {
@@ -144,6 +157,39 @@ export default {
 				description: '',
 			}
 		},
+
+		irreversible() {
+			// determine if any of the pending actions are irreversible
+			for (const action of this.actions) {
+				if (action?.reversibility === 'irreversible' || typeof action?.reversibility === 'undefined') {
+					return {
+						irreversible: true,
+						// TRANSLATORS Additional description for irreversible AI agent actions
+						description: t('assistant', 'Some actions cannot be reversed.'),
+					}
+				}
+			}
+			return {
+				irreversible: false,
+				description: '',
+			}
+		},
+
+		itemCount() {
+			// determine how many items are affected by the pending actions
+			let itemCount = 0
+			for (const action of this.actions) {
+				if (Number.isFinite(action?.item_count)) {
+					itemCount += action.item_count
+				}
+			}
+			return {
+				itemCount,
+				// TRANSLATORS Additional description for pending AI agent actions to be confirmed by the user
+				description: n('assistant', '%n item is affected by these actions.', '%n items are affected by these actions.', itemCount),
+			}
+		},
+
 		radiusInfo() {
 			// show the largest radius among all actions
 			// for actions with an undefined or unknown radius, assume they are external
@@ -177,7 +223,10 @@ export default {
 		align-items: center;
 		justify-content: end;
 
-		.radius {
+		.footer-left {
+			display: flex;
+			gap: 4px;
+			align-items: center;
 			margin-right: auto;
 		}
 	}
