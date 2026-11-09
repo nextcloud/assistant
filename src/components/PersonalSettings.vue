@@ -60,7 +60,7 @@
 			</div>
 			<div v-if="state.assistant_available && state.chat_personal_instructions_enabled" class="chat-instructions">
 				<h3>{{ t('assistant', 'Custom chat instructions') }}</h3>
-				<p>{{ t('assistant', 'Tell the assistant how to respond to you in chat, for example which tone to use or what to know about you. These instructions are added to the instructions set by your administrator and cannot override them. They apply to new conversations.') }}</p>
+				<p>{{ t('assistant', 'Tell the assistant how to respond to you in chat, for example which tone to use or what to know about you. These instructions are added to the instructions set by your administrator. They apply to new conversations.') }}</p>
 				<NcTextArea id="chat_personal_instructions"
 					v-model="state.chat_personal_instructions"
 					class="chat-instructions__field"
