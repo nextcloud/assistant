@@ -75,7 +75,10 @@ class ChatService {
 		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
 
 		// the user's personal instructions come after the admin's and must not override them
-		$personalInstructions = trim($this->config->getUserValue($userId, Application::APP_ID, 'chat_personal_instructions', ''));
+		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
+		$personalInstructions = $personalInstructionsEnabled
+			? trim($this->config->getUserValue($userId, Application::APP_ID, 'chat_personal_instructions', ''))
+			: '';
 		if ($personalInstructions !== '') {
 			$userInstructions .= "\n\n" . Application::CHAT_PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions;
 		}

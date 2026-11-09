@@ -55,6 +55,7 @@ class Admin implements ISettings {
 		$speechToTextEnabled = $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1', lazy: true) === '1';
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$chattyLLMUserInstructionsTitle = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
+		$chatPersonalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
 		$chattyLLMLastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10', lazy: true);
 		$defaultDataFolder = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true);
 		if ($defaultDataFolder === '') {
@@ -76,6 +77,7 @@ class Admin implements ISettings {
 			'speech_to_text_picker_enabled' => $speechToTextEnabled,
 			'chat_user_instructions' => $chattyLLMUserInstructions,
 			'chat_user_instructions_title' => $chattyLLMUserInstructionsTitle,
+			'chat_personal_instructions_enabled' => $chatPersonalInstructionsEnabled,
 			'chat_last_n_messages' => $chattyLLMLastNMessages,
 			'default_data_folder' => $defaultDataFolder,
 			'context_agent_available' => $contextAgentAvailable,
