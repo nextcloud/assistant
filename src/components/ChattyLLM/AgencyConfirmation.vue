@@ -12,8 +12,9 @@
 			<AgencyActions :actions="actions" />
 			<div class="footer">
 				<div class="footer-left">
-					<NcButton variant="tertiary"
-						:title="radiusInfo.description + (destructive.destructive ? '\n' : '') + destructive.description + (irreversible.irreversible ? '\n' : '') + irreversible.description"
+					<NcButton v-if="radiusInfo"
+						variant="tertiary"
+						:title="radiusTooltip"
 						:text="radiusInfo.label"
 						class="help">
 						<template #icon>
@@ -142,9 +143,9 @@ export default {
 	computed: {
 		destructive() {
 			// determine if any of the pending actions are destructive
-			// for actions whose destructive state is undefined or unknown, assume they are destructive
+			// actions that don't report a destructive state (older backends) are assumed to be non-destructive
 			for (const action of this.actions) {
-				if (action?.destructive !== false) {
+				if (action?.destructive !== undefined && action?.destructive !== null && action.destructive !== false) {
 					return {
 						destructive: true,
 						// TRANSLATORS Additional description for destructive AI agent actions
@@ -160,8 +161,9 @@ export default {
 
 		irreversible() {
 			// determine if any of the pending actions are irreversible
+			// actions that don't report their reversibility (older backends) are assumed to be reversible
 			for (const action of this.actions) {
-				if (action?.reversibility === 'irreversible' || typeof action?.reversibility === 'undefined') {
+				if (action?.reversibility === 'irreversible') {
 					return {
 						irreversible: true,
 						// TRANSLATORS Additional description for irreversible AI agent actions
@@ -192,12 +194,25 @@ export default {
 
 		radiusInfo() {
 			// show the largest radius among all actions
-			// for actions with an undefined or unknown radius, assume they are external
+			// actions that don't report a radius (older backends) are ignored
+			// actions with an unknown radius value are assumed to be external
+			// returns null if no action reports a radius
 			const largest = this.actions.reduce((max, action) => {
-				const index = radiusOrder.indexOf(action?.impulse_radius)
+				if (action?.impulse_radius === undefined || action?.impulse_radius === null) {
+					return max
+				}
+				const index = radiusOrder.indexOf(action.impulse_radius)
 				return Math.max(max, index === -1 ? radiusOrder.length - 1 : index)
-			}, 0)
-			return radii[radiusOrder[largest]]
+			}, -1)
+			return largest === -1 ? null : radii[radiusOrder[largest]]
+		},
+
+		radiusTooltip() {
+			return [
+				this.radiusInfo?.description,
+				this.destructive.description,
+				this.irreversible.description,
+			].filter(Boolean).join('\n')
 		},
 	},
 }
