@@ -63,7 +63,7 @@
 							<NcButton variant="tertiary"
 								:title="itemCount.description"
 								:aria-label="itemCount.description"
-								:text="String(itemCount.itemCount)"
+								:text="itemCount.label"
 								class="help">
 								<template #icon>
 									<TallyMark5Icon :size="20" />
@@ -237,16 +237,29 @@ export default {
 
 		itemCount() {
 			// determine how many items are affected by the pending actions
+			// the total is only exact if every action reports an exact count;
+			// counts not flagged as exact (e.g. counting stopped at a limit, or older backends) are lower bounds
 			let itemCount = 0
+			let exact = true
 			for (const action of this.actions) {
 				if (Number.isFinite(action?.item_count)) {
 					itemCount += action.item_count
+					if (action?.item_count_exact !== true) {
+						exact = false
+					}
+				} else {
+					exact = false
 				}
 			}
 			return {
 				itemCount,
-				// TRANSLATORS Additional description for pending AI agent actions to be confirmed by the user
-				description: n('assistant', '%n item is affected by these actions.', '%n items are affected by these actions.', itemCount),
+				exact,
+				label: exact ? String(itemCount) : itemCount + '+',
+				description: exact
+					// TRANSLATORS Additional description for pending AI agent actions to be confirmed by the user
+					? n('assistant', '%n item is affected by these actions.', '%n items are affected by these actions.', itemCount)
+					// TRANSLATORS Additional description for pending AI agent actions to be confirmed by the user, when the exact number of affected items is unknown
+					: n('assistant', 'At least %n item is affected by these actions.', 'At least %n items are affected by these actions.', itemCount),
 			}
 		},
 
