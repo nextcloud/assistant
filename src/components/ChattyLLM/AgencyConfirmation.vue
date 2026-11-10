@@ -3,7 +3,7 @@
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-	<NcNoteCard :type="destructive.destructive ? 'warning' : 'info'"
+	<NcNoteCard :type="(destructive.destructive || irreversible.irreversible) ? 'warning' : 'info'"
 		class="agency-confirmation">
 		<div class="notecard-content">
 			<span>
@@ -11,21 +11,85 @@
 			</span>
 			<AgencyActions :actions="actions" />
 			<div class="footer">
-				<NcButton variant="tertiary"
-					:title="radiusInfo.description + (destructive.destructive ? '\n' : '') + destructive.description"
-					:text="radiusInfo.label"
-					class="help radius">
-					<template #icon>
-						<component :is="radiusInfo.icon" :size="20" />
+				<div class="footer-left">
+					<NcPopover v-if="radiusInfo">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="radiusInfo.description"
+								:text="radiusInfo.label"
+								:aria-label="radiusInfo.label"
+								class="help">
+								<template #icon>
+									<component :is="radiusInfo.icon" :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<p class="popover-content">
+							{{ radiusInfo.description }}
+						</p>
+					</NcPopover>
+					<NcPopover v-if="destructive.destructive">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="destructive.description"
+								:aria-label="destructive.description"
+								class="help">
+								<template #icon>
+									<DeleteAlertOutlineIcon :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<p class="popover-content">
+							{{ destructive.description }}
+						</p>
+					</NcPopover>
+					<NcPopover v-if="irreversible.irreversible">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="irreversible.description"
+								:aria-label="irreversible.description"
+								class="help">
+								<template #icon>
+									<RestoreAlertIcon :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<p class="popover-content">
+							{{ irreversible.description }}
+						</p>
+					</NcPopover>
+					<NcPopover v-if="itemCount.itemCount > 1">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="itemCount.description"
+								:aria-label="itemCount.description"
+								:text="itemCount.label"
+								class="help">
+								<template #icon>
+									<TallyMark5Icon :size="20" />
+								</template>
+							</NcButton>
+						</template>
+						<p class="popover-content">
+							{{ itemCount.description }}
+						</p>
+					</NcPopover>
+				</div>
+				<NcPopover>
+					<template #trigger>
+						<NcButton variant="tertiary"
+							:title="hint"
+							:aria-label="t('assistant', 'More information')"
+							class="help">
+							<template #icon>
+								<InformationOutlineIcon :size="20" />
+							</template>
+						</NcButton>
 					</template>
-				</NcButton>
-				<NcButton variant="tertiary"
-					:title="hint"
-					class="help">
-					<template #icon>
-						<InformationOutlineIcon :size="20" />
-					</template>
-				</NcButton>
+					<p class="popover-content">
+						{{ hint }}
+					</p>
+				</NcPopover>
 				<NcButton variant="secondary"
 					@click="$emit('reject')">
 					{{ t('assistant', 'Cancel') }}
@@ -52,12 +116,16 @@ import AccountOutlineIcon from 'vue-material-design-icons/AccountOutline.vue'
 import AccountMultipleOutlineIcon from 'vue-material-design-icons/AccountMultipleOutline.vue'
 import AccountGroupOutlineIcon from 'vue-material-design-icons/AccountGroupOutline.vue'
 import EarthIcon from 'vue-material-design-icons/Earth.vue'
+import TallyMark5Icon from 'vue-material-design-icons/TallyMark5.vue'
+import DeleteAlertOutlineIcon from 'vue-material-design-icons/DeleteAlertOutline.vue'
+import RestoreAlertIcon from 'vue-material-design-icons/RestoreAlert.vue'
 import AssistantIcon from '../icons/AssistantIcon.vue'
 
 import AgencyActions from './AgencyActions.vue'
 
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 
 const radii = {
 	self: {
@@ -100,12 +168,16 @@ export default {
 		AssistantIcon,
 		NcNoteCard,
 		NcButton,
+		NcPopover,
 		CloseIcon,
 		AccountOutlineIcon,
 		AccountMultipleOutlineIcon,
 		AccountGroupOutlineIcon,
 		EarthIcon,
 		InformationOutlineIcon,
+		TallyMark5Icon,
+		DeleteAlertOutlineIcon,
+		RestoreAlertIcon,
 	},
 
 	props: {
@@ -129,9 +201,9 @@ export default {
 	computed: {
 		destructive() {
 			// determine if any of the pending actions are destructive
-			// for actions whose destructive state is undefined or unknown, assume they are destructive
+			// actions that don't report a destructive state (older backends) are assumed to be non-destructive
 			for (const action of this.actions) {
-				if (action?.destructive !== false) {
+				if (action?.destructive !== undefined && action?.destructive !== null && action.destructive !== false) {
 					return {
 						destructive: true,
 						// TRANSLATORS Additional description for destructive AI agent actions
@@ -144,14 +216,66 @@ export default {
 				description: '',
 			}
 		},
+
+		irreversible() {
+			// determine if any of the pending actions are irreversible
+			// actions that don't report their reversibility (older backends) are assumed to be reversible
+			for (const action of this.actions) {
+				if (action?.reversibility === 'irreversible') {
+					return {
+						irreversible: true,
+						// TRANSLATORS Additional description for irreversible AI agent actions
+						description: t('assistant', 'Some actions cannot be reversed.'),
+					}
+				}
+			}
+			return {
+				irreversible: false,
+				description: '',
+			}
+		},
+
+		itemCount() {
+			// determine how many items are affected by the pending actions
+			// the total is only exact if every action reports an exact count;
+			// counts not flagged as exact (e.g. counting stopped at a limit, or older backends) are lower bounds
+			let itemCount = 0
+			let exact = true
+			for (const action of this.actions) {
+				if (Number.isFinite(action?.item_count)) {
+					itemCount += action.item_count
+					if (action?.item_count_exact !== true) {
+						exact = false
+					}
+				} else {
+					exact = false
+				}
+			}
+			return {
+				itemCount,
+				exact,
+				label: exact ? String(itemCount) : itemCount + '+',
+				description: exact
+					// TRANSLATORS Additional description for pending AI agent actions to be confirmed by the user
+					? n('assistant', '%n item is affected by these actions.', '%n items are affected by these actions.', itemCount)
+					// TRANSLATORS Additional description for pending AI agent actions to be confirmed by the user, when the exact number of affected items is unknown
+					: n('assistant', 'At least %n item is affected by these actions.', 'At least %n items are affected by these actions.', itemCount),
+			}
+		},
+
 		radiusInfo() {
 			// show the largest radius among all actions
-			// for actions with an undefined or unknown radius, assume they are external
+			// actions that don't report a radius (older backends) are ignored
+			// actions with an unknown radius value are assumed to be external
+			// returns null if no action reports a radius
 			const largest = this.actions.reduce((max, action) => {
-				const index = radiusOrder.indexOf(action?.impulse_radius)
+				if (action?.impulse_radius === undefined || action?.impulse_radius === null) {
+					return max
+				}
+				const index = radiusOrder.indexOf(action.impulse_radius)
 				return Math.max(max, index === -1 ? radiusOrder.length - 1 : index)
-			}, 0)
-			return radii[radiusOrder[largest]]
+			}, -1)
+			return largest === -1 ? null : radii[radiusOrder[largest]]
 		},
 	},
 }
@@ -164,6 +288,11 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.popover-content {
+	padding: 8px 12px;
+	max-width: 300px;
+}
+
 .notecard-content {
 	display: flex;
 	flex-direction: column;
@@ -177,7 +306,10 @@ export default {
 		align-items: center;
 		justify-content: end;
 
-		.radius {
+		.footer-left {
+			display: flex;
+			gap: 4px;
+			align-items: center;
 			margin-right: auto;
 		}
 	}
