@@ -12,50 +12,84 @@
 			<AgencyActions :actions="actions" />
 			<div class="footer">
 				<div class="footer-left">
-					<NcButton v-if="radiusInfo"
-						variant="tertiary"
-						:title="radiusInfo.description"
-						:text="radiusInfo.label"
-						class="help">
-						<template #icon>
-							<component :is="radiusInfo.icon" :size="20" />
+					<NcPopover v-if="radiusInfo">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="radiusInfo.description"
+								:text="radiusInfo.label"
+								:aria-label="radiusInfo.label"
+								class="help">
+								<template #icon>
+									<component :is="radiusInfo.icon" :size="20" />
+								</template>
+							</NcButton>
 						</template>
-					</NcButton>
-					<NcButton v-if="destructive.destructive"
-						variant="tertiary"
-						:title="destructive.description"
-						:aria-label="destructive.description"
-						class="help">
-						<template #icon>
-							<DeleteAlertOutlineIcon :size="20" />
+						<p class="popover-content">
+							{{ radiusInfo.description }}
+						</p>
+					</NcPopover>
+					<NcPopover v-if="destructive.destructive">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="destructive.description"
+								:aria-label="destructive.description"
+								class="help">
+								<template #icon>
+									<DeleteAlertOutlineIcon :size="20" />
+								</template>
+							</NcButton>
 						</template>
-					</NcButton>
-					<NcButton v-if="irreversible.irreversible"
-						variant="tertiary"
-						:title="irreversible.description"
-						:aria-label="irreversible.description"
-						class="help">
-						<template #icon>
-							<RestoreAlertIcon :size="20" />
+						<p class="popover-content">
+							{{ destructive.description }}
+						</p>
+					</NcPopover>
+					<NcPopover v-if="irreversible.irreversible">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="irreversible.description"
+								:aria-label="irreversible.description"
+								class="help">
+								<template #icon>
+									<RestoreAlertIcon :size="20" />
+								</template>
+							</NcButton>
 						</template>
-					</NcButton>
-					<NcButton v-if="itemCount.itemCount > 1"
-						variant="tertiary"
-						:title="itemCount.description"
-						:text="String(itemCount.itemCount)"
-						class="help">
-						<template #icon>
-							<TallyMark5Icon :size="20" />
+						<p class="popover-content">
+							{{ irreversible.description }}
+						</p>
+					</NcPopover>
+					<NcPopover v-if="itemCount.itemCount > 1">
+						<template #trigger>
+							<NcButton variant="tertiary"
+								:title="itemCount.description"
+								:aria-label="itemCount.description"
+								:text="String(itemCount.itemCount)"
+								class="help">
+								<template #icon>
+									<TallyMark5Icon :size="20" />
+								</template>
+							</NcButton>
 						</template>
-					</NcButton>
+						<p class="popover-content">
+							{{ itemCount.description }}
+						</p>
+					</NcPopover>
 				</div>
-				<NcButton variant="tertiary"
-					:title="hint"
-					class="help">
-					<template #icon>
-						<InformationOutlineIcon :size="20" />
+				<NcPopover>
+					<template #trigger>
+						<NcButton variant="tertiary"
+							:title="hint"
+							:aria-label="t('assistant', 'More information')"
+							class="help">
+							<template #icon>
+								<InformationOutlineIcon :size="20" />
+							</template>
+						</NcButton>
 					</template>
-				</NcButton>
+					<p class="popover-content">
+						{{ hint }}
+					</p>
+				</NcPopover>
 				<NcButton variant="secondary"
 					@click="$emit('reject')">
 					{{ t('assistant', 'Cancel') }}
@@ -91,6 +125,7 @@ import AgencyActions from './AgencyActions.vue'
 
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 
 const radii = {
 	self: {
@@ -133,6 +168,7 @@ export default {
 		AssistantIcon,
 		NcNoteCard,
 		NcButton,
+		NcPopover,
 		CloseIcon,
 		AccountOutlineIcon,
 		AccountMultipleOutlineIcon,
@@ -239,6 +275,11 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.popover-content {
+	padding: 8px 12px;
+	max-width: 300px;
+}
+
 .notecard-content {
 	display: flex;
 	flex-direction: column;
