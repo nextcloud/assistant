@@ -12,6 +12,8 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\AgentSkillsService;
+use OCA\Assistant\Service\AssistantService;
 use OCA\Assistant\Service\BadRequestException;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\InternalException;
@@ -40,6 +42,9 @@ use Psr\Log\LoggerInterface;
  * @psalm-import-type AssistantChatSessionCheck from ResponseDefinitions
  */
 class ChattyLLMController extends OCSController {
+	// must match MEMORIES_RELATIVE_FOLDER_PATH in context_agent
+	private const MEMORIES_FOLDER_PATH = 'Context Agent/Memories';
+
 	private array $agencyActionData;
 
 	public function __construct(
@@ -54,6 +59,8 @@ class ChattyLLMController extends OCSController {
 		private IUserManager $userManager,
 		private ?string $userId,
 		private ChatService $chatService,
+		private AssistantService $assistantService,
+		private AgentSkillsService $agentSkillsService,
 	) {
 		parent::__construct($appName, $request);
 		$this->agencyActionData = [
@@ -815,5 +822,32 @@ class ChattyLLMController extends OCSController {
 			return new JSONResponse(['error' => 'task_failed_or_canceled', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
 		}
 		return new JSONResponse(['error' => 'unknown_error', 'task_status' => $task->getstatus()], Http::STATUS_BAD_REQUEST);
+	}
+
+	/**
+	 * Get the agent folders
+	 *
+	 * Get the file IDs of the user's Context Agent skills and memories folders, creating them if needed
+	 *
+	 * @return JSONResponse<Http::STATUS_OK, array{skills: int, memories: int}, array{}>|JSONResponse<Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
+	 *
+	 * 200: The folder IDs have been obtained successfully
+	 * 401: Not logged in
+	 */
+	#[NoAdminRequired]
+	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['chat_api'])]
+	public function getAgentFolders(): JSONResponse {
+		if ($this->userId === null) {
+			return new JSONResponse(['error' => $this->l10n->t('User not logged in')], Http::STATUS_UNAUTHORIZED);
+		}
+		try {
+			return new JSONResponse([
+				'skills' => $this->agentSkillsService->getSkillsFolder($this->userId)->getId(),
+				'memories' => $this->assistantService->getAssistantDataSubfolder($this->userId, self::MEMORIES_FOLDER_PATH)->getId(),
+			]);
+		} catch (\Exception|\Throwable $e) {
+			$this->logger->error('Failed to get the agent folders', ['exception' => $e]);
+			return new JSONResponse(['error' => $this->l10n->t('Failed to get the agent folders')], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
 	}
 }

@@ -63,5 +63,6 @@ return [
 		['name' => 'chattyLLM#checkMessageGenerationTask', 'url' => '/chat/check_generation', 'verb' => 'GET'],
 		['name' => 'chattyLLM#generateTitle', 'url' => '/chat/generate_title', 'verb' => 'GET'],
 		['name' => 'chattyLLM#checkTitleGenerationTask', 'url' => '/chat/check_title_generation', 'verb' => 'GET'],
+		['name' => 'chattyLLM#getAgentFolders', 'url' => '/chat/agent_folders', 'verb' => 'GET'],
 	],
 ];
