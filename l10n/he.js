@@ -22,6 +22,7 @@ OC.L10N.register(
     "Less" : "פחות:",
     "More" : "יותר",
     "Group" : "קבוצה",
+    "More information" : "מידע נוסף",
     "Cancel" : "ביטול",
     "Deselect all" : "ביטול בחירה",
     "Select all" : "בחר הכל",

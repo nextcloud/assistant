@@ -112,6 +112,7 @@ OC.L10N.register(
     "More" : "Mer",
     "Group" : "Gruppe",
     "External" : "Ekstern",
+    "More information" : "Mer informasjon",
     "Cancel" : "Avbryt",
     "You" : "Du",
     "Message copied to clipboard" : "Melding kopiert til utklippstavlen",

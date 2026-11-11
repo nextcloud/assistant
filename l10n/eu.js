@@ -80,6 +80,7 @@ OC.L10N.register(
     "More" : "Gehiago",
     "Group" : "Taldea",
     "External" : "Kanpokoa",
+    "More information" : "Informazio gehiago",
     "Cancel" : "Utzi",
     "You" : "Zu ",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Ziur zaude \"{sessionTitle}\" ezabatu nahi duzula?",

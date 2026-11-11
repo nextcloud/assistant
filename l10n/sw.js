@@ -194,6 +194,7 @@ OC.L10N.register(
     "External" : "Nje",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Ikiwa haujaridhika na vitendo ambavyo Mratibu anataka kutekeleza, unaweza kurekebisha ombi lako kwa kutuma ujumbe mpya badala ya kubofya kitufe cha \"Ghairi\".",
     "The Assistant wants to perform sensitive actions on your behalf." : "Mratibu anataka kutekeleza vitendo nyeti kwa niaba yako.",
+    "More information" : "Taarifa zaidi",
     "Cancel" : "Ghairi",
     "Confirm those actions" : "Thibitisha vitendo hivyo",
     "You" : "Wewe",

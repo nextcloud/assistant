@@ -43,6 +43,7 @@ OC.L10N.register(
     "More" : "Meira",
     "Group" : "Hópur",
     "External" : "Utanaðkomandi",
+    "More information" : "Nánari upplýsingar",
     "Cancel" : "Hætta við",
     "You" : "Þú",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Ertu viss um að þú viljir eyða \"{sessionTitle}\"?",

@@ -146,6 +146,7 @@ OC.L10N.register(
     "More" : "Meer",
     "Group" : "Groep",
     "External" : "Extern",
+    "More information" : "Meer informatie",
     "Cancel" : "Annuleren",
     "Confirm those actions" : "Bevestig deze acties",
     "You" : "Je",

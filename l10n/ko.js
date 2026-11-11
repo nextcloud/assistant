@@ -117,6 +117,7 @@ OC.L10N.register(
     "More" : "더 보기",
     "Group" : "그룹",
     "External" : "외부",
+    "More information" : "더 많은 정보",
     "Cancel" : "취소",
     "You" : "당신",
     "Message copied to clipboard" : "메시지가 클립보드에 복사됨",

@@ -18,6 +18,7 @@ OC.L10N.register(
     "Close" : "Mdel",
     "More" : "Ugar",
     "Group" : "Agraw",
+    "More information" : "Ugar n yisallen",
     "Cancel" : "Cancel",
     "You" : "Kemm·čč",
     "Deselect all" : "Kkes afran i meṛṛa",

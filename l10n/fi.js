@@ -40,6 +40,7 @@ OC.L10N.register(
     "More" : "Lisää",
     "Group" : "Ryhmä",
     "External" : "Ulkoinen",
+    "More information" : "Lisää tietoa",
     "Cancel" : "Peruuta",
     "You" : "Sinä",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Haluatko varmasti poistaa \"{sessionTitle}\"?",

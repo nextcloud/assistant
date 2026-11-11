@@ -28,6 +28,7 @@ OC.L10N.register(
     "More" : "Повеќе",
     "Group" : "Група",
     "External" : "Надворешен",
+    "More information" : "Повеќе информации",
     "Cancel" : "Откажи",
     "You" : "Вие",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Дали сте сигурни дека сакате да го избришете \"{sessionTitle}\"?",

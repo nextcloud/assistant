@@ -49,6 +49,7 @@ OC.L10N.register(
     "More" : "Več",
     "Group" : "Skupina",
     "External" : "Zunanja",
+    "More information" : "Več podrobnosti",
     "Cancel" : "Prekliči",
     "You" : "Jaz",
     "Deselect all" : "Odstrani celoten izbor",
