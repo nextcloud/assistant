@@ -21,6 +21,7 @@ OC.L10N.register(
     "Close" : "Close",
     "More" : "More",
     "Group" : "Group",
+    "More information" : "More information",
     "Cancel" : "Cancel",
     "You" : "You",
     "Deselect all" : "Deselect all",

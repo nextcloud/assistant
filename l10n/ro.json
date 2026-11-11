@@ -291,6 +291,7 @@
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Dacă nu ești mulțumit de acțiunile pe care vrea să le ruleze asistentul, îți poți ajusta cererea trimițând un mesaj nou, în loc să apeși butonul „Anulează”.",
     "Some content may be lost." : "O parte din conținut se poate pierde.",
     "The Assistant wants to perform sensitive actions on your behalf." : "Asistentul vrea să efectueze acțiuni sensibile în numele tău.",
+    "More information" : "Mai multe informații",
     "Cancel" : "Anulează",
     "Confirm those actions" : "Confirmă aceste acțiuni",
     "You" : "Tu",

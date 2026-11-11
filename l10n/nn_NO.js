@@ -12,6 +12,7 @@ OC.L10N.register(
     "Less" : "Mindre",
     "Group" : "Gruppe",
     "External" : "Ekstern",
+    "More information" : "Meir informasjon",
     "Cancel" : "Cancel",
     "Deselect all" : "Fjern markeringa av alt",
     "Select all" : "Merk alt",

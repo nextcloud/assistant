@@ -23,6 +23,7 @@ OC.L10N.register(
     "More" : "Prus",
     "Group" : "Grupu",
     "External" : "De foras",
+    "More information" : "Àteras informatziones",
     "Cancel" : "Annulla",
     "You" : "Tue",
     "Deselect all" : "Deseletziona totu",

@@ -63,6 +63,7 @@ OC.L10N.register(
     "More" : "Altro",
     "Group" : "Gruppo",
     "External" : "Esterno",
+    "More information" : "Altre informazioni",
     "Cancel" : "Annulla",
     "You" : "Tu",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Sei sicuro di voler eliminare \"{sessionTitle}\"?",

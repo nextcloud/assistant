@@ -74,6 +74,7 @@ OC.L10N.register(
     "More" : "Továbbiak",
     "Group" : "Csoport",
     "External" : "Külső",
+    "More information" : "További információk",
     "Cancel" : "Mégse",
     "You" : "Ön",
     "Are you sure you want to delete \"{sessionTitle}\"?" : "Biztos, hogy törli ezt: „{sessionTitle}”?",

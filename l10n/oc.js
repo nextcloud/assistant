@@ -10,6 +10,7 @@ OC.L10N.register(
     "Clear" : "Escafar",
     "Close" : "Tampar",
     "Group" : "Grop",
+    "More information" : "Mai d’informacions",
     "Cancel" : "Anullar",
     "You" : "Vos",
     "Delete" : "Suprimir",
