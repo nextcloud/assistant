@@ -514,6 +514,34 @@ class AssistantService {
 	}
 
 	/**
+	 * Get a folder inside the user's assistant data folder, creating it (and its parents) if needed
+	 *
+	 * @param string $userId
+	 * @param string $relativePath Path relative to the assistant data folder, e.g. "Context Agent/Skills"
+	 * @return Folder
+	 * @throws NotPermittedException if a folder cannot be created
+	 * @throws \OCP\Files\NotFoundException
+	 * @throws PreConditionNotMetException
+	 * @throws NoUserException
+	 * @throws RuntimeException if a node on the path exists but is not a folder
+	 */
+	public function getAssistantDataSubfolder(string $userId, string $relativePath): Folder {
+		$folder = $this->getAssistantDataFolder($userId);
+		foreach (explode('/', trim($relativePath, '/')) as $segment) {
+			if ($folder->nodeExists($segment)) {
+				$node = $folder->get($segment);
+				if (!$node instanceof Folder) {
+					throw new RuntimeException('Path exists but is not a folder: ' . $node->getPath());
+				}
+				$folder = $node;
+			} else {
+				$folder = $folder->newFolder($segment);
+			}
+		}
+		return $folder;
+	}
+
+	/**
 	 * @param string $userId
 	 * @return Folder
 	 * @throws NotPermittedException

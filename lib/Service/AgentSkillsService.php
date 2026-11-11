@@ -381,28 +381,7 @@ class AgentSkillsService {
 	 * @throws RuntimeException if the skills path or its parent exists but is not a folder
 	 * @throws \OC\User\NoUserException if the user does not exist
 	 */
-	private function getSkillsFolder(string $userId): Folder {
-		$assistantFolder = $this->assistantService->getAssistantDataFolder($userId);
-		$skillsFolderPath = self::SKILLS_FOLDER_PATH;
-
-		if ($assistantFolder->nodeExists($skillsFolderPath)) {
-			$node = $assistantFolder->get($skillsFolderPath);
-			if ($node instanceof Folder) {
-				return $node;
-			}
-			throw new RuntimeException('Skills path exists but is not a folder: ' . $node->getPath());
-		}
-
-		// recursively create the skills folder
-		$parentPath = dirname($skillsFolderPath);
-		if ($assistantFolder->nodeExists($parentPath)) {
-			$parent = $assistantFolder->get($parentPath);
-			if (!$parent instanceof Folder) {
-				throw new RuntimeException('Skills parent path exists but is not a folder: ' . $parent->getPath());
-			}
-		} else {
-			$assistantFolder->newFolder($parentPath);
-		}
-		return $assistantFolder->newFolder($skillsFolderPath);
+	public function getSkillsFolder(string $userId): Folder {
+		return $this->assistantService->getAssistantDataSubfolder($userId, self::SKILLS_FOLDER_PATH);
 	}
 }

@@ -77,6 +77,28 @@
 					</template>
 				</NcAppNavigationItem>
 			</NcAppNavigationList>
+			<template v-if="agencyAvailable && !isAssignment" #footer>
+				<div class="agent-folders">
+					<NcButton variant="tertiary"
+						alignment="start"
+						wide
+						@click="openAgentFolder('skills')">
+						<template #icon>
+							<LightbulbOutlineIcon :size="20" />
+						</template>
+						{{ t('assistant', 'Skills') }}
+					</NcButton>
+					<NcButton variant="tertiary"
+						alignment="start"
+						wide
+						@click="openAgentFolder('memories')">
+						<template #icon>
+							<MemoryIcon :size="20" />
+						</template>
+						{{ t('assistant', 'Memories') }}
+					</NcButton>
+				</div>
+			</template>
 		</NcAppNavigation>
 		<NcAppContent class="session-area">
 			<div class="session-area__top-bar">
@@ -264,6 +286,7 @@ import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import DeleteSweepOutlineIcon from 'vue-material-design-icons/DeleteSweepOutline.vue'
 import MemoryIcon from 'vue-material-design-icons/Memory.vue'
+import LightbulbOutlineIcon from 'vue-material-design-icons/LightbulbOutline.vue'
 import TimerOutlineIcon from 'vue-material-design-icons/TimerOutline.vue'
 
 import AssistantIcon from '../icons/AssistantIcon.vue'
@@ -327,6 +350,7 @@ export default {
 		PencilOutlineIcon,
 		PlusIcon,
 		MemoryIcon,
+		LightbulbOutlineIcon,
 		TimerOutlineIcon,
 
 		AssistantIcon,
@@ -611,6 +635,23 @@ export default {
 	},
 
 	methods: {
+		async openAgentFolder(folder) {
+			// open the window synchronously so popup blockers don't interfere
+			const win = window.open('', '_blank')
+			try {
+				const response = await axios.get(getChatURL('/agent_folders'))
+				const url = generateUrl('/f/{fileId}', { fileId: response.data[folder] })
+				if (win) {
+					win.location.href = url
+				} else {
+					window.location.href = url
+				}
+			} catch (error) {
+				win?.close()
+				console.error('openAgentFolder error:', error)
+				showError(error?.response?.data?.error ?? t('assistant', 'Error opening the folder'))
+			}
+		},
 		onUserScroll() {
 			this.userScrolled = true
 		},
@@ -1708,6 +1749,13 @@ export default {
 
 	.deletion-mode-button {
 		width: 100%;
+	}
+
+	.agent-folders {
+		display: flex;
+		flex-direction: column;
+		gap: var(--default-grid-baseline);
+		padding: var(--app-navigation-padding);
 	}
 
 	.deletion-mode-bar {
