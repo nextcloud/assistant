@@ -351,6 +351,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Gan aon tascanna sceidealaithe fós",
     "No conversations yet" : "Níl aon chomhrá fós",
     "Delete" : "Scrios",
+    "Skills" : "Scileanna",
     "Conversation title" : "Teideal an chomhrá",
     "Prompt: {prompt}" : "Leid: {prompt}",
     "Recurrence: {recurrence}" : "Athfhillteachas: {recurrence}",

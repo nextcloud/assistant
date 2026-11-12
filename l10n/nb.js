@@ -132,6 +132,7 @@ OC.L10N.register(
     "New conversation" : "Ny samtale",
     "No conversations yet" : "Ingen samtaler enda",
     "Delete" : "Slett",
+    "Skills" : "Evner",
     "Conversation title" : "Samtaletittel",
     "Edit title" : "Rediger tittel",
     "Generate title" : "Generer tittel",

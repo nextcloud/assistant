@@ -138,6 +138,7 @@ OC.L10N.register(
     "Loading conversations…" : "대화를 불러오는 중...",
     "No conversations yet" : "아직 대화가 존재하지 않음",
     "Delete" : "삭제",
+    "Skills" : "스킬",
     "Conversation title" : "대화 제목",
     "Edit title" : "제목 수정",
     "Generate title" : "제목 생성",

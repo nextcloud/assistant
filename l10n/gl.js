@@ -229,6 +229,7 @@ OC.L10N.register(
     "Loading conversations…" : "Cargando conversas…",
     "No conversations yet" : "Aínda non hai conversas",
     "Delete" : "Eliminar",
+    "Skills" : "Destrezas",
     "Conversation title" : "Título da conversa",
     "Remember this" : "Lembrar isto",
     "Edit title" : "Editar o título",

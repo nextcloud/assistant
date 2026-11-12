@@ -45,6 +45,7 @@ OC.L10N.register(
     "More" : "Яшчэ",
     "Group" : "Група",
     "External" : "Знешні",
+    "More information" : "Больш інфармацыі",
     "Cancel" : "Скасаваць",
     "You" : "Вы",
     "Deselect all" : "Скасаваць выбар усіх",

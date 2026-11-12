@@ -42,6 +42,7 @@ OC.L10N.register(
     "Less" : "Menos",
     "More" : "Más",
     "Group" : "Grupu",
+    "More information" : "Más información",
     "Cancel" : "Encaboxar",
     "You" : "Tu",
     "Select all" : "Seleicionar too",

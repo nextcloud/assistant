@@ -351,6 +351,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Nu există încă sarcini programate",
     "No conversations yet" : "Încă nu există conversații",
     "Delete" : "Șterge",
+    "Skills" : "Abilități",
     "Conversation title" : "Titlul conversației",
     "Prompt: {prompt}" : "Prompt: {prompt}",
     "Recurrence: {recurrence}" : "Recurență: {recurrence}",

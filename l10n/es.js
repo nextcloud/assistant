@@ -203,6 +203,7 @@ OC.L10N.register(
     "Loading conversations…" : "Cargando conversaciones…",
     "No conversations yet" : "No hay conversaciones todavía",
     "Delete" : "Eliminar",
+    "Skills" : "Habilidades",
     "Conversation title" : "Título de la conversación",
     "Edit title" : "Editar título",
     "Generate title" : "Generar título",

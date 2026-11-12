@@ -196,6 +196,7 @@ OC.L10N.register(
     "Loading conversations…" : "Учитавају се разговори…",
     "No conversations yet" : "Још увек нема разговора",
     "Delete" : "Избриши",
+    "Skills" : "Способности",
     "Conversation title" : "Наслов разговора",
     "Edit title" : "Измени наслов",
     "Generate title" : "Генериши наслов",

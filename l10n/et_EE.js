@@ -349,6 +349,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Ühtegi ülesannet pole veel ajastatud",
     "No conversations yet" : "Ühtegi vestlust veel pole",
     "Delete" : "Kustuta",
+    "Skills" : "Oskused",
     "Conversation title" : "Vestluse pealkiri",
     "Prompt: {prompt}" : "Viip: {prompt}",
     "Recurrence: {recurrence}" : "Korduvus: {recurrence}",

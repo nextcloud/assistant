@@ -308,6 +308,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Δεν υπάρχουν ακόμη προγραμματισμένες εργασίες",
     "No conversations yet" : "Δεν υπάρχουν ακόμη συνομιλίες",
     "Delete" : "Διαγραφή",
+    "Skills" : "Δεξιότητες",
     "Conversation title" : "Τίτλος συνομιλίας",
     "Prompt: {prompt}" : "Προτροπή: {prompt}",
     "Recurrence: {recurrence}" : "Επανάληψη: {recurrence}",

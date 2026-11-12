@@ -351,6 +351,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Henüz bir zamanlanmış görev yok",
     "No conversations yet" : "Henüz bir görüşme yok",
     "Delete" : "Sil",
+    "Skills" : "Yetenekler",
     "Conversation title" : "Görüşme başlığı",
     "Prompt: {prompt}" : "İstem: {prompt}",
     "Recurrence: {recurrence}" : "Yinelenme: {recurrence}",
