@@ -172,6 +172,18 @@
 						<TimerOutlineIcon />
 					</template>
 				</NoSession>
+				<NoSession v-else-if="isAssignment && active == null && (sessions?.length ?? 0) > 0"
+					:name="t('assistant', 'Select a scheduled task')"
+					:description="t('assistant', 'Pick a scheduled task from the list to see its results, or ask chat to create a new one for you.')">
+					<template #icon>
+						<TimerOutlineIcon />
+					</template>
+					<template #action>
+						<NcButton @click="openChatToCreateAssignment">
+							{{ t('assistant', 'Create in chat') }}
+						</NcButton>
+					</template>
+				</NoSession>
 				<NoSession v-else-if="isAssignment && active == null"
 					:name="t('assistant', 'No scheduled tasks yet')"
 					:description="t('assistant', 'Scheduled tasks run automatically on a recurring schedule. Ask chat to create one for you.')">
