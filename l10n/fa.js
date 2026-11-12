@@ -293,6 +293,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "هنوز وظیفه زمان‌بندی‌شده‌ای وجود ندارد",
     "No conversations yet" : "هنوز گفتگویی وجود ندارد",
     "Delete" : "حذف",
+    "Skills" : "مهارت‌ها",
     "Conversation title" : "عنوان گفتگو",
     "Prompt: {prompt}" : "دستور: {prompt}",
     "Recurrence: {recurrence}" : "تکرار: {recurrence}",

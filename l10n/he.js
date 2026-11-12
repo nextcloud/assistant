@@ -27,6 +27,7 @@ OC.L10N.register(
     "Deselect all" : "ביטול בחירה",
     "Select all" : "בחר הכל",
     "Delete" : "מחיקה",
+    "Skills" : "מיומנויות",
     "Edit title" : "עריכת כותרת",
     "Submit" : "שליחה",
     "Waiting…" : "בהמתנה…",

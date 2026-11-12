@@ -49,6 +49,7 @@ OC.L10N.register(
     "New conversation" : "Uusi keskustelu",
     "No conversations yet" : "Ei keskusteluja vielä",
     "Delete" : "Poista",
+    "Skills" : "Taidot",
     "Edit title" : "Muokkaa otsikkoa",
     "Hello there! What can I help you with today?" : "Hei! Miten voin auttaa sinua tänään?",
     "Cancel editing" : "Peruuta muokkaus",

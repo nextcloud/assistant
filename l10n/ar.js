@@ -118,6 +118,7 @@ OC.L10N.register(
     "External" : "خارجي",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "إذا لم تكن راضيًا عن الإجراءات التي يريد \"المُساعِد\" تنفيذها، فيمكنك تعديل طلبك عن طريق إرسال رسالة جديدة بدلاً من النقر فوق الزر \"إلغاء\".",
     "The Assistant wants to perform sensitive actions on your behalf." : "يرغب \"المُساعِد\" في تنفيذ إجراءات حساسة نيابةً عنك.",
+    "More information" : "المزيد من المعلومات",
     "Cancel" : "إلغاء",
     "Confirm those actions" : "أكِّد على هذه الإجراءات",
     "You" : "أنت",

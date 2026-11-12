@@ -288,6 +288,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Ainda nenhuma tarefa agendada",
     "No conversations yet" : "Sem conversas ainda",
     "Delete" : "Eliminar",
+    "Skills" : "Habilidades",
     "Conversation title" : "Título da conversa",
     "Prompt: {prompt}" : "Entrada: {prompt}",
     "Recurrence: {recurrence}" : "Recorrência: {recurrence}",

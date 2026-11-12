@@ -329,6 +329,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Dar nėra suplanuotų užduočių",
     "No conversations yet" : "Pokalbių dar nėra",
     "Delete" : "Ištrinti",
+    "Skills" : "Įgūdžiai",
     "Conversation title" : "Pokalbio pavadinimas",
     "Prompt: {prompt}" : "Užklausa: {prompt}",
     "Recurrence: {recurrence}" : "Pasikartojimas: {recurrence}",

@@ -14,6 +14,7 @@ OC.L10N.register(
     "Clear" : "Netaat",
     "Close" : "Serriñ",
     "More" : "Muioc'h",
+    "More information" : "Muioc'h a ditouroù",
     "Cancel" : "Nullañ",
     "Deselect all" : "Diziuzañ pep tra",
     "Select all" : "Dibab pep tra",

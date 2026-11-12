@@ -217,6 +217,7 @@ OC.L10N.register(
     "Loading conversations…" : "پاراڭلارنى يۈكلەۋاتىدۇ…",
     "No conversations yet" : "تېخى سۆھبەت يوق",
     "Delete" : "ئۆچۈر",
+    "Skills" : "ماھارەت",
     "Conversation title" : "سۆھبەت تېمىسى",
     "Edit title" : "ماۋزۇنى تەھرىرلەش",
     "Generate title" : "تېما ھاسىل قىلىڭ",

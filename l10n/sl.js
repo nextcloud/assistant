@@ -58,6 +58,7 @@ OC.L10N.register(
     "New conversation" : "Nov pogovor",
     "No conversations yet" : "Ni še začetih pogovorov",
     "Delete" : "Izbriši",
+    "Skills" : "Veščine",
     "Conversation title" : "Naslov pogovora",
     "Edit title" : "Uredi naslov",
     "Generate title" : "Ustvari naslov",

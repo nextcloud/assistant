@@ -82,6 +82,7 @@ OC.L10N.register(
     "New conversation" : "Új beszélgetés",
     "No conversations yet" : "Még nincsenek beszélgetések",
     "Delete" : "Törlés",
+    "Skills" : "Készségek",
     "Edit title" : "Cím szerkesztése",
     "Hello there! What can I help you with today?" : "Üdv! Mit tehetek ma Önért?",
     "Try sending a message to spark a conversation." : "Küldjön egy üzenetet egy beszélgetés elindításához.",

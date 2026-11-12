@@ -71,6 +71,7 @@ OC.L10N.register(
     "Select all" : "Seleziona tutto",
     "No conversations yet" : "Ancora nessuna conversazione",
     "Delete" : "Elimina",
+    "Skills" : "Abilità",
     "Edit title" : "Modifica titolo",
     "Hello there! What can I help you with today?" : "Ciao! Come posso aiutarti oggi?",
     "Try sending a message to spark a conversation." : "Prova a inviare un messaggio per avviare una conversazione.",

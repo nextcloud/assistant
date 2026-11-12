@@ -201,6 +201,7 @@ OC.L10N.register(
     "Loading conversations…" : "正在加载对话……",
     "No conversations yet" : "尚无对话",
     "Delete" : "删除",
+    "Skills" : "技能",
     "Conversation title" : "对话标题",
     "Edit title" : "编辑标题",
     "Generate title" : "生成标题",

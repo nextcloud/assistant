@@ -351,6 +351,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "尚未有排程工作",
     "No conversations yet" : "尚無對話",
     "Delete" : "刪除",
+    "Skills" : "技能",
     "Conversation title" : "對話標題",
     "Prompt: {prompt}" : "提示：{prompt}",
     "Recurrence: {recurrence}" : "重複週期：{recurrence}",

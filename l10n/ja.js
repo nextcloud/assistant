@@ -204,6 +204,7 @@ OC.L10N.register(
     "Loading conversations…" : "会話を読み込んでいます...",
     "No conversations yet" : "まだ会話はありません",
     "Delete" : "削除",
+    "Skills" : "スキル",
     "Conversation title" : "会話のタイトル",
     "Edit title" : "タイトルを編集",
     "Generate title" : "タイトルを生成",

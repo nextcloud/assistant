@@ -351,6 +351,7 @@ OC.L10N.register(
     "No scheduled tasks yet" : "Inga schemalagda uppgifter än",
     "No conversations yet" : "Inga konversationer än",
     "Delete" : "Ta bort",
+    "Skills" : "Färdigheter",
     "Conversation title" : "Konversationsrubrik",
     "Prompt: {prompt}" : "Uppmaning: {prompt}",
     "Recurrence: {recurrence}" : "Upprepning: {recurrence}",

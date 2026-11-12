@@ -201,6 +201,7 @@ OC.L10N.register(
     "Loading conversations…" : "Завантаження розмов...",
     "No conversations yet" : "Поки що немає розмов",
     "Delete" : "Вилучати",
+    "Skills" : "Навички",
     "Conversation title" : "Назва розмови",
     "Edit title" : "Редагувати",
     "Generate title" : "Згенерувати заголовок",

@@ -225,6 +225,7 @@ OC.L10N.register(
     "Loading conversations…" : "Memuat percakapan…",
     "No conversations yet" : "Belum ada percakapan",
     "Delete" : "Hapus",
+    "Skills" : "Keterampilan",
     "Conversation title" : "Judul percakapan",
     "Remember this" : "Ingat ini",
     "Edit title" : "Edit judul",

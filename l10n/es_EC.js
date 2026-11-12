@@ -35,6 +35,7 @@ OC.L10N.register(
     "Select all" : "Seleccionar todo",
     "New conversation" : "Nueva conversación",
     "Delete" : "Borrar",
+    "Skills" : "Habilidades",
     "Edit title" : "Editar título",
     "Cancel editing" : "Cancelar edición",
     "Submit" : "Enviar",
