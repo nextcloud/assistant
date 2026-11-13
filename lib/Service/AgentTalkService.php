@@ -459,6 +459,8 @@ class AgentTalkService {
 	 *                                     it is posted before the answer, as the agent
 	 * @param int|null $audioFileId The id of the generated speech audio task output, if any:
 	 *                              it is posted after the answer as a Talk voice message
+	 * @param list<int> $outputFileIds The ids of the generated files of a multimodal answer:
+	 *                                 they are posted after the answer as Talk file shares
 	 * @return void
 	 */
 	public function postAgentTalkReply(
@@ -467,6 +469,7 @@ class AgentTalkService {
 		?string $pendingActions,
 		?string $inputTranscript = null,
 		?int $audioFileId = null,
+		array $outputFileIds = [],
 	): void {
 		if ($session->getRequesterUserId() === null) {
 			return;
@@ -529,10 +532,13 @@ class AgentTalkService {
 			threaded: $threaded,
 		);
 
-		// when the answer was generated from an audio input, the agent also
-		// posts its spoken answer as a Talk voice message, in the same thread
+		// generated files of a multimodal answer are posted as Talk file
+		// shares, then the spoken answer as a voice message
+		foreach ($outputFileIds as $outputFileId) {
+			$this->postAgentTalkFileMessage($room, $session, $threaded, (int)$outputFileId, false);
+		}
 		if ($audioFileId !== null) {
-			$this->postAgentTalkAudioMessage($room, $session, $threaded, $audioFileId);
+			$this->postAgentTalkFileMessage($room, $session, $threaded, $audioFileId, true);
 		}
 
 		$confirmPosted = false;
@@ -578,59 +584,76 @@ class AgentTalkService {
 	}
 
 	/**
-	 * Post the spoken version of an agent answer as a Talk voice message:
-	 * the generated audio (task output) is stored in the agent's conversation
-	 * folder for the room, like Talk's own attachment flow, and posted as a
-	 * "file_shared" message as the agent, in the thread of the answer.
+	 * Post a generated file of an agent answer (task output) in Talk:
+	 * the file is copied from the task output storage into the agent's
+	 * conversation folder for the room, like Talk's own attachment flow,
+	 * and posted as a "file_shared" message as the agent, in the thread of
+	 * the answer.
 	 *
 	 * Best effort: failures are logged and skipped, the text answer is already posted.
 	 */
-	private function postAgentTalkAudioMessage(\OCA\Talk\Room $room, Session $session, bool $threaded, int $audioFileId): void {
+	private function postAgentTalkFileMessage(\OCA\Talk\Room $room, Session $session, bool $threaded, int $fileId, bool $asVoiceMessage): void {
 		if (!class_exists('OCA\Talk\Service\ConversationFolderService')) {
 			return;
 		}
 		try {
-			$content = $this->taskProcessingService->getOutputFileContent($audioFileId);
+			$node = $this->taskProcessingService->getOutputFile($fileId);
 		} catch (\Throwable $e) {
-			$this->logger->warning('Could not read the generated speech audio of an agent answer', [
-				'audioFileId' => $audioFileId,
+			$this->logger->warning('Could not resolve the generated file of an agent answer', [
+				'fileId' => $fileId,
 				'exception' => $e,
 			]);
 			return;
 		}
 
+		// the stored mimetype of task output files is unreliable
+		// (providers write extension-less names), sniff the real one
+		try {
+			$head = fread($node->fopen('rb'), 4096);
+			$sniffedMimeType = is_string($head) ? (new \finfo(FILEINFO_MIME_TYPE))->buffer($head) : false;
+		} catch (\Throwable $e) {
+			$this->logger->warning('Could not read the generated file of an agent answer', [
+				'fileId' => $fileId,
+				'exception' => $e,
+			]);
+			return;
+		}
+		/** @var string $mimeType */
+		$mimeType = is_string($sniffedMimeType) && $sniffedMimeType !== '' ? $sniffedMimeType : 'application/octet-stream';
+
 		try {
 			/** @var \OCA\Talk\Service\ConversationFolderService $conversationFolderService */
 			$conversationFolderService = Server::get(\OCA\Talk\Service\ConversationFolderService::class);
 			$subfolder = $conversationFolderService->getOrCreateSubfolder($session->getUserId(), $room, false);
-			$draftFolder = $conversationFolderService->getOrCreateDraftFolder($subfolder);
 
-			/** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-			$mimeTypeDetector = Server::get(\OCP\Files\IMimeTypeDetector::class);
-			/** @var string $mimeType */
-			$mimeType = $mimeTypeDetector->detectString($content);
 			$extension = match ($mimeType) {
+				'image/png' => 'png',
+				'image/jpeg' => 'jpg',
+				'image/webp' => 'webp',
+				'image/gif' => 'gif',
 				'audio/mpeg' => 'mp3',
 				'audio/wav', 'audio/x-wav' => 'wav',
-				default => (str_contains($mimeType, '/') ? substr($mimeType, strpos($mimeType, '/') + 1) : $mimeType) ?: 'bin',
+				'application/pdf' => 'pdf',
+				default => preg_replace('/[^A-Za-z0-9]/', '', substr($mimeType, strpos($mimeType, '/') + 1)) ?: 'bin',
 			};
-			$fileName = 'voice-message-' . time() . '.' . $extension;
+			$baseName = $asVoiceMessage ? 'voice-message' : 'generated';
+			$fileName = $baseName . '-' . time() . '-' . random_int(1000, 9999) . '.' . $extension;
 
-			$node = $draftFolder->newFile($fileName, $content);
-			$result = $conversationFolderService->finalizeUploadedFile($subfolder, $node, $fileName);
+			// a server-side copy, the task output file itself stays untouched:
+			// the chat message attachment and the task output endpoints reference it
 			/** @var \OCP\Files\Node $finalNode */
-			$finalNode = $result['node'];
+			$finalNode = $node->copy($subfolder->getPath() . '/' . $fileName);
 		} catch (\Throwable $e) {
-			$this->logger->error('Could not store the generated speech audio of an agent answer in the Talk conversation folder', [
+			$this->logger->error('Could not store the generated file of an agent answer in the Talk conversation folder', [
 				'agentUserId' => $session->getUserId(),
-				'audioFileId' => $audioFileId,
+				'fileId' => $fileId,
 				'exception' => $e,
 			]);
 			return;
 		}
 
 		$metaData = ['mimeType' => $mimeType];
-		if ($mimeType === 'audio/mpeg' || $mimeType === 'audio/wav') {
+		if ($asVoiceMessage && ($mimeType === 'audio/mpeg' || $mimeType === 'audio/wav')) {
 			// Talk only renders the voice message bubble for these mimetypes
 			$metaData['messageType'] = 'voice-message';
 		}
@@ -664,9 +687,9 @@ class AgentTalkService {
 				$threadId,
 			);
 		} catch (\Throwable $e) {
-			$this->logger->error('Failed to post the agent voice message in Talk', [
+			$this->logger->error('Failed to post the generated file of an agent answer in Talk', [
 				'agentUserId' => $session->getUserId(),
-				'audioFileId' => $audioFileId,
+				'fileId' => $fileId,
 				'exception' => $e,
 			]);
 		}

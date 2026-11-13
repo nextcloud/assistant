@@ -21,6 +21,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction;
+use OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction;
 use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -194,6 +195,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 				null,
 				'Hello agent, what do you hear?',
 				456,
+				[],
 			);
 		$this->rebuildListener($agentTalkService, $sessionMapper);
 
@@ -227,6 +229,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 				null,
 				null,
 				456,
+				[],
 			);
 		$this->rebuildListener($agentTalkService, $sessionMapper);
 
@@ -238,6 +241,49 @@ class ChattyLLMTaskListenerTest extends TestCase {
 				'input_transcript' => 'Hello agent, what do you hear?',
 			],
 		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	public function testAgentReplyReceivesTheMultimodalOutputFiles(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'Here is your image.',
+				null,
+				null,
+				null,
+				[789, 790],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = new Task(
+			MultimodalContextAgentInteraction::ID,
+			[
+				'input' => 'Generate an image of a cat',
+				'confirmation' => 0,
+				'conversation_token' => '',
+				'input_attachments' => [],
+			],
+			'assistant:chatty-llm',
+			'admin',
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(self::TASK_ID);
+		$task->setOutput([
+			'output' => 'Here is your image.',
+			'output_attachments' => [789, 790],
+		]);
 		$this->listener->handle(new TaskSuccessfulEvent($task));
 	}
 }
