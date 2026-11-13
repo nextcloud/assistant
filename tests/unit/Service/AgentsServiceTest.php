@@ -13,6 +13,7 @@ use OCA\Assistant\Db\AgentMapper;
 use OCA\Assistant\Service\AgentsService;
 use OCA\Assistant\Service\AgentUserException;
 use OCA\Assistant\Service\AgentUserService;
+use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,6 +25,7 @@ class AgentsServiceTest extends TestCase {
 	private AgentMapper|MockObject $agentMapper;
 	private AgentUserService&MockObject $agentUserService;
 	private IUserManager&MockObject $userManager;
+	private IGroupManager&MockObject $groupManager;
 	private LoggerInterface&MockObject $logger;
 	private AgentsService $service;
 
@@ -32,18 +34,19 @@ class AgentsServiceTest extends TestCase {
 		$this->agentMapper = $this->createMock(AgentMapper::class);
 		$this->agentUserService = $this->createMock(AgentUserService::class);
 		$this->userManager = $this->createMock(IUserManager::class);
+		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new AgentsService(
 			$this->agentMapper,
 			$this->agentUserService,
 			$this->userManager,
+			$this->groupManager,
 			$this->logger,
 		);
 	}
 
 	public function testCreateAgentProvisionsTheUserAndStoresTheAgent(): void {
-		$agentUser = $this->createMock(IUser::class);
 		$this->agentUserService->expects($this->once())
 			->method('createAgentUser')
 			->with('Code Agent', 'code_agent');
@@ -61,6 +64,39 @@ class AgentsServiceTest extends TestCase {
 		$this->assertSame('Be nice.', $agent->getPersonality());
 		$this->assertSame('tool:code', $agent->getScope());
 		$this->assertSame(7, $agent->getId());
+	}
+
+	public function testCreateAgentWithAccessList(): void {
+		$this->agentUserService->expects($this->once())
+			->method('createAgentUser');
+
+		$this->agentMapper->method('insert')
+			->willReturnCallback(static function ($agent) {
+				$agent->setId(7);
+				return $agent;
+			});
+		$this->agentMapper->expects($this->once())
+			->method('setAcl')
+			->with(7, [
+				['type' => 'user', 'target' => 'user1'],
+				['type' => 'group', 'target' => 'group1'],
+			]);
+
+		$this->service->createAgent('Code Agent', 'code_agent', '', '', ['user1'], ['group1']);
+	}
+
+	public function testCreateAgentWithoutAccessListStoresNoAcl(): void {
+		$this->agentUserService->expects($this->once())
+			->method('createAgentUser');
+		$this->agentMapper->method('insert')
+			->willReturnCallback(static function ($agent) {
+				$agent->setId(7);
+				return $agent;
+			});
+		$this->agentMapper->expects($this->never())
+			->method('setAcl');
+
+		$this->service->createAgent('Code Agent', 'code_agent', '', '');
 	}
 
 	public function testCreateAgentFailsIfUserProvisioningFails(): void {
@@ -115,6 +151,69 @@ class AgentsServiceTest extends TestCase {
 
 		$updated = $this->service->updateAgent(5, personality: 'New personality');
 		$this->assertSame('New personality', $updated->getPersonality());
+	}
+
+	public function testUpdateAgentKeepsTheAccessWhenNotProvided(): void {
+		$agent = $this->createAgentEntity(5, 'agent1');
+		$this->agentMapper->method('getById')->willReturn($agent);
+		$this->agentMapper->method('update')
+			->willReturnCallback(static function ($updated) {
+				return $updated;
+			});
+		$this->agentMapper->expects($this->never())->method('setAcl');
+		$this->agentMapper->expects($this->never())->method('getAcl');
+
+		$this->service->updateAgent(5, personality: 'New personality');
+	}
+
+	public function testUpdateAgentReplacesTheUsersAccessOnly(): void {
+		$agent = $this->createAgentEntity(5, 'agent1');
+		$this->agentMapper->method('getById')->willReturn($agent);
+		$this->agentMapper->method('update')
+			->willReturnCallback(static function ($updated) {
+				return $updated;
+			});
+		$this->agentMapper->expects($this->once())->method('getAcl')
+			->with(5)
+			->willReturn([
+				['type' => 'user', 'target' => 'user1'],
+				['type' => 'group', 'target' => 'group1'],
+			]);
+		$this->agentMapper->expects($this->once())->method('setAcl')
+			->with(5, [
+				['type' => 'user', 'target' => 'user2'],
+				['type' => 'group', 'target' => 'group1'],
+			]);
+
+		$this->service->updateAgent(5, accessUsers: ['user2']);
+	}
+
+	public function testCanUserAccessAgentChecksTheUserGroups(): void {
+		$agent = $this->createAgentEntity(5, 'agent1');
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('user1');
+		$this->groupManager->method('getUserGroupIds')->with($user)->willReturn(['group1']);
+		$this->agentMapper->expects($this->once())
+			->method('canUserAccess')
+			->with(5, 'user1', ['group1'])
+			->willReturn(true);
+
+		$this->assertTrue($this->service->canUserAccessAgent($agent, $user));
+	}
+
+	public function testGetAgentAccessSplitsUsersAndGroups(): void {
+		$this->agentMapper->expects($this->once())
+			->method('getAcl')
+			->with(5)
+			->willReturn([
+				['type' => 'user', 'target' => 'user1'],
+				['type' => 'group', 'target' => 'group1'],
+				['type' => 'user', 'target' => 'user2'],
+			]);
+
+		$access = $this->service->getAgentAccess(5);
+		$this->assertSame(['user1', 'user2'], $access['users']);
+		$this->assertSame(['group1'], $access['groups']);
 	}
 
 	private function createAgentEntity(int $id, string $userId): \OCA\Assistant\Db\Agent {

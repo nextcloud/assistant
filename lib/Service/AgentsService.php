@@ -14,6 +14,8 @@ use OCA\Assistant\Db\AgentMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\DB\Exception;
+use OCP\IGroupManager;
+use OCP\IUser;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
@@ -22,6 +24,9 @@ use Psr\Log\LoggerInterface;
  */
 class AgentsService {
 
+	public const ACL_TYPE_USER = 'user';
+	public const ACL_TYPE_GROUP = 'group';
+
 	private const MAX_PERSONALITY_LENGTH = 64_000;
 	private const MAX_SCOPE_LENGTH = 4_000;
 
@@ -29,6 +34,7 @@ class AgentsService {
 		private AgentMapper $agentMapper,
 		private AgentUserService $agentUserService,
 		private IUserManager $userManager,
+		private IGroupManager $groupManager,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -75,10 +81,20 @@ class AgentsService {
 	}
 
 	/**
+	 * @param string $name
+	 * @param string $userId
+	 * @param string $personality
+	 * @param string $scope
+	 * @param list<string> $accessUsers User ids that may access the agent
+	 * @param list<string> $accessGroups Group ids that may access the agent
+	 * @return Agent
 	 * @throws AgentUserException
 	 * @throws Exception
 	 */
-	public function createAgent(string $name, string $userId, string $personality, string $scope): Agent {
+	public function createAgent(
+		string $name, string $userId, string $personality, string $scope,
+		array $accessUsers = [], array $accessGroups = [],
+	): Agent {
 		$agent = new Agent();
 		$agent->setUserId(trim(mb_strtolower($userId)));
 		$agent->setPersonality(trim($personality));
@@ -89,14 +105,27 @@ class AgentsService {
 			$this->logger->warning('Failed to provision the agent user', ['exception' => $e]);
 			throw $e;
 		}
-		return $this->agentMapper->insert($agent);
+		$agent = $this->agentMapper->insert($agent);
+		if ($accessUsers !== [] || $accessGroups !== []) {
+			$this->agentMapper->setAcl((int)$agent->getId(), $this->makeAclEntries($accessUsers, $accessGroups));
+		}
+		return $agent;
 	}
 
 	/**
-	 * @throws AgentUserException when the agent user does not exist anymore
+	 * @param int $id
+	 * @param string|null $personality
+	 * @param string|null $scope
+	 * @param list<string>|null $accessUsers When not null, replaces the list of user ids that may access the agent
+	 * @param list<string>|null $accessGroups When not null, replaces the list of group ids that may access the agent
+	 * @return Agent
+	 * @throws AgentUserException when the agent does not exist anymore
 	 * @throws Exception
 	 */
-	public function updateAgent(int $id, ?string $personality = null, ?string $scope = null): Agent {
+	public function updateAgent(
+		int $id, ?string $personality = null, ?string $scope = null,
+		?array $accessUsers = null, ?array $accessGroups = null,
+	): Agent {
 		try {
 			$agent = $this->agentMapper->getById($id);
 		} catch (DoesNotExistException $e) {
@@ -114,7 +143,14 @@ class AgentsService {
 			}
 			$agent->setScope(trim($scope));
 		}
-		return $this->agentMapper->update($agent);
+		$agent = $this->agentMapper->update($agent);
+		if ($accessUsers !== null || $accessGroups !== null) {
+			$entries = $this->getAgentAccess($id);
+			$accessUsers ??= $entries['users'];
+			$accessGroups ??= $entries['groups'];
+			$this->agentMapper->setAcl($id, $this->makeAclEntries($accessUsers, $accessGroups));
+		}
+		return $agent;
 	}
 
 	/**
@@ -137,5 +173,60 @@ class AgentsService {
 				$user->delete();
 			}
 		}
+	}
+
+	/**
+	 * The user ids and group ids that may access the agent.
+	 * Both lists are empty when the access is not restricted.
+	 *
+	 * @param int $agentId
+	 * @return array{users: list<string>, groups: list<string>}
+	 * @throws Exception
+	 */
+	public function getAgentAccess(int $agentId): array {
+		$users = [];
+		$groups = [];
+		foreach ($this->agentMapper->getAcl($agentId) as $entry) {
+			if ($entry['type'] === self::ACL_TYPE_USER) {
+				$users[] = $entry['target'];
+			} elseif ($entry['type'] === self::ACL_TYPE_GROUP) {
+				$groups[] = $entry['target'];
+			}
+		}
+		return ['users' => $users, 'groups' => $groups];
+	}
+
+	/**
+	 * Whether the user may access the agent:
+	 * an empty access list means every user has access,
+	 * otherwise the user must be listed by id or belong to a listed group.
+	 *
+	 * @param Agent $agent
+	 * @param IUser $user
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function canUserAccessAgent(Agent $agent, IUser $user): bool {
+		return $this->agentMapper->canUserAccess(
+			(int)$agent->getId(),
+			$user->getUID(),
+			$this->groupManager->getUserGroupIds($user),
+		);
+	}
+
+	/**
+	 * @param list<string> $accessUsers
+	 * @param list<string> $accessGroups
+	 * @return list<array{type: string, target: string}>
+	 */
+	private function makeAclEntries(array $accessUsers, array $accessGroups): array {
+		$entries = [];
+		foreach ($accessUsers as $userId) {
+			$entries[] = ['type' => self::ACL_TYPE_USER, 'target' => $userId];
+		}
+		foreach ($accessGroups as $groupId) {
+			$entries[] = ['type' => self::ACL_TYPE_GROUP, 'target' => $groupId];
+		}
+		return $entries;
 	}
 }
