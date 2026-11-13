@@ -117,12 +117,17 @@ class ChattyLLMTaskListener implements IEventListener {
 
 			// the transcript of the human's audio input, posted in Talk for agent
 			// sessions; not on confirmation follow-ups, where the same audio was
-			// already transcribed when it was first sent
+			// already transcribed when it was first sent. The generated speech
+			// audio of the answer is posted as a Talk voice message in any case.
 			$inputTranscript = null;
+			$audioFileId = null;
 			if ($isAudioChat || $isAgencyAudioChat) {
 				$taskInput = $task->getInput();
 				$isConfirmation = isset($taskInput['confirmation']) && (int)$taskInput['confirmation'] !== 0;
 				$inputTranscript = $isConfirmation ? null : trim($taskOutput['input_transcript'] ?? '');
+				if (trim($taskOutput['output_transcript'] ?? '') !== '' && is_numeric($taskOutput['output'] ?? null)) {
+					$audioFileId = (int)$taskOutput['output'];
+				}
 			}
 
 			$message = new Message();
@@ -215,6 +220,7 @@ class ChattyLLMTaskListener implements IEventListener {
 					$message->getContent(),
 					$taskOutput['actions'] ?? null,
 					$inputTranscript !== '' ? $inputTranscript : null,
+					$audioFileId,
 				);
 			}
 		}

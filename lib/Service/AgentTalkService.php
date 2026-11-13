@@ -50,6 +50,7 @@ class AgentTalkService {
 		private IL10N $l10n,
 		private AgencyActionService $agencyActionService,
 		private AgentTalkFileService $agentTalkFileService,
+		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -456,6 +457,8 @@ class AgentTalkService {
 	 * @param string|null $pendingActions The pending sensitive actions (confirmation request) if any
 	 * @param string|null $inputTranscript The transcript of the human's audio input, if any:
 	 *                                     it is posted before the answer, as the agent
+	 * @param int|null $audioFileId The id of the generated speech audio task output, if any:
+	 *                              it is posted after the answer as a Talk voice message
 	 * @return void
 	 */
 	public function postAgentTalkReply(
@@ -463,6 +466,7 @@ class AgentTalkService {
 		string $content,
 		?string $pendingActions,
 		?string $inputTranscript = null,
+		?int $audioFileId = null,
 	): void {
 		if ($session->getRequesterUserId() === null) {
 			return;
@@ -525,6 +529,12 @@ class AgentTalkService {
 			threaded: $threaded,
 		);
 
+		// when the answer was generated from an audio input, the agent also
+		// posts its spoken answer as a Talk voice message, in the same thread
+		if ($audioFileId !== null) {
+			$this->postAgentTalkAudioMessage($room, $session, $threaded, $audioFileId);
+		}
+
 		$confirmPosted = false;
 		if ($pendingActions !== null && trim($pendingActions) !== '') {
 			// a new confirmation supersedes a previous unanswered one:
@@ -565,6 +575,101 @@ class AgentTalkService {
 
 		// an agency confirmation turn has no reply content, only the confirmation message
 		$this->markGenerationCompleted($session, $postedComment !== null || $confirmPosted);
+	}
+
+	/**
+	 * Post the spoken version of an agent answer as a Talk voice message:
+	 * the generated audio (task output) is stored in the agent's conversation
+	 * folder for the room, like Talk's own attachment flow, and posted as a
+	 * "file_shared" message as the agent, in the thread of the answer.
+	 *
+	 * Best effort: failures are logged and skipped, the text answer is already posted.
+	 */
+	private function postAgentTalkAudioMessage(\OCA\Talk\Room $room, Session $session, bool $threaded, int $audioFileId): void {
+		if (!class_exists('OCA\Talk\Service\ConversationFolderService')) {
+			return;
+		}
+		try {
+			$content = $this->taskProcessingService->getOutputFileContent($audioFileId);
+		} catch (\Throwable $e) {
+			$this->logger->warning('Could not read the generated speech audio of an agent answer', [
+				'audioFileId' => $audioFileId,
+				'exception' => $e,
+			]);
+			return;
+		}
+
+		try {
+			/** @var \OCA\Talk\Service\ConversationFolderService $conversationFolderService */
+			$conversationFolderService = Server::get(\OCA\Talk\Service\ConversationFolderService::class);
+			$subfolder = $conversationFolderService->getOrCreateSubfolder($session->getUserId(), $room, false);
+			$draftFolder = $conversationFolderService->getOrCreateDraftFolder($subfolder);
+
+			/** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+			$mimeTypeDetector = Server::get(\OCP\Files\IMimeTypeDetector::class);
+			/** @var string $mimeType */
+			$mimeType = $mimeTypeDetector->detectString($content);
+			$extension = match ($mimeType) {
+				'audio/mpeg' => 'mp3',
+				'audio/wav', 'audio/x-wav' => 'wav',
+				default => (str_contains($mimeType, '/') ? substr($mimeType, strpos($mimeType, '/') + 1) : $mimeType) ?: 'bin',
+			};
+			$fileName = 'voice-message-' . time() . '.' . $extension;
+
+			$node = $draftFolder->newFile($fileName, $content);
+			$result = $conversationFolderService->finalizeUploadedFile($subfolder, $node, $fileName);
+			/** @var \OCP\Files\Node $finalNode */
+			$finalNode = $result['node'];
+		} catch (\Throwable $e) {
+			$this->logger->error('Could not store the generated speech audio of an agent answer in the Talk conversation folder', [
+				'agentUserId' => $session->getUserId(),
+				'audioFileId' => $audioFileId,
+				'exception' => $e,
+			]);
+			return;
+		}
+
+		$metaData = ['mimeType' => $mimeType];
+		if ($mimeType === 'audio/mpeg' || $mimeType === 'audio/wav') {
+			// Talk only renders the voice message bubble for these mimetypes
+			$metaData['messageType'] = 'voice-message';
+		}
+
+		$threadId = \OCA\Talk\Model\Thread::THREAD_NONE;
+		if ($threaded && $session->getThreadId() !== null) {
+			$threadId = $session->getThreadId();
+		}
+
+		try {
+			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+			$chatManager->addSystemMessage(
+				$room,
+				null,
+				'users',
+				$session->getUserId(),
+				json_encode([
+					'message' => 'file_shared',
+					'parameters' => [
+						'fileId' => (string)$finalNode->getId(),
+						'metaData' => $metaData,
+					],
+				]),
+				new DateTime(),
+				true,
+				null,
+				null,
+				false,
+				false,
+				$threadId,
+			);
+		} catch (\Throwable $e) {
+			$this->logger->error('Failed to post the agent voice message in Talk', [
+				'agentUserId' => $session->getUserId(),
+				'audioFileId' => $audioFileId,
+				'exception' => $e,
+			]);
+		}
 	}
 
 	/**

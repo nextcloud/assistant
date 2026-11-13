@@ -193,6 +193,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 				'The agent answer',
 				null,
 				'Hello agent, what do you hear?',
+				456,
 			);
 		$this->rebuildListener($agentTalkService, $sessionMapper);
 
@@ -225,6 +226,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 				'The agent answer',
 				null,
 				null,
+				456,
 			);
 		$this->rebuildListener($agentTalkService, $sessionMapper);
 
