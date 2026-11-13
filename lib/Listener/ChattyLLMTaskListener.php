@@ -134,6 +134,16 @@ class ChattyLLMTaskListener implements IEventListener {
 					$audioFileId = (int)$taskOutput['output'];
 				}
 			}
+			// the generated files of a multimodal answer, posted as Talk file shares
+			$outputFileIds = [];
+			if ($isMultimodalChat || $isMultimodalAgencyChat) {
+				$outputAttachments = $taskOutput['output_attachments'] ?? [];
+				foreach (is_array($outputAttachments) ? $outputAttachments : [] as $outputAttachment) {
+					if (is_numeric($outputAttachment)) {
+						$outputFileIds[] = (int)$outputAttachment;
+					}
+				}
+			}
 
 			$message = new Message();
 			$message->setSessionId($sessionId);
@@ -235,6 +245,7 @@ class ChattyLLMTaskListener implements IEventListener {
 					$taskOutput['actions'] ?? null,
 					$inputTranscript !== '' ? $inputTranscript : null,
 					$audioFileId,
+					$outputFileIds,
 				);
 			}
 		}
