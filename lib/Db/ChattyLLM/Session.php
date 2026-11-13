@@ -37,6 +37,10 @@ use OCP\DB\Types;
  * @method \void setAgentSeenRoomToken(?string $agentSeenRoomToken)
  * @method \int|null getAgentSeenCommentId()
  * @method \void setAgentSeenCommentId(?int $agentSeenCommentId)
+ * @method \string|null getAgencyConfirmationRoomToken()
+ * @method \void setAgencyConfirmationRoomToken(?string $agencyConfirmationRoomToken)
+ * @method \int|null getAgencyConfirmationCommentId()
+ * @method \void setAgencyConfirmationCommentId(?int $agencyConfirmationCommentId)
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */
@@ -102,6 +106,17 @@ class Session extends Entity implements \JsonSerializable {
 	/** @var ?int */
 	protected $agentSeenCommentId;
 
+	/**
+	 * The Talk room + comment of the pending confirmation message
+	 * (sensitive actions of the agency feature), used to remove the
+	 * 👍/👎 reactions when the confirmation is answered implicitly
+	 * @var ?string
+	 */
+	protected $agencyConfirmationRoomToken;
+
+	/** @var ?int */
+	protected $agencyConfirmationCommentId;
+
 	public static $columns = [
 		'id',
 		'user_id',
@@ -117,6 +132,8 @@ class Session extends Entity implements \JsonSerializable {
 		'thread_id',
 		'agent_seen_room_token',
 		'agent_seen_comment_id',
+		'agency_confirmation_room_token',
+		'agency_confirmation_comment_id',
 	];
 	public static $fields = [
 		'id',
@@ -134,6 +151,8 @@ class Session extends Entity implements \JsonSerializable {
 		'threadId',
 		'agentSeenRoomToken',
 		'agentSeenCommentId',
+		'agencyConfirmationRoomToken',
+		'agencyConfirmationCommentId',
 	];
 
 	public function __construct() {
@@ -151,6 +170,8 @@ class Session extends Entity implements \JsonSerializable {
 		$this->addType('threadId', Types::BIGINT);
 		$this->addType('agentSeenRoomToken', Types::STRING);
 		$this->addType('agentSeenCommentId', Types::BIGINT);
+		$this->addType('agencyConfirmationRoomToken', Types::STRING);
+		$this->addType('agencyConfirmationCommentId', Types::BIGINT);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -171,6 +192,8 @@ class Session extends Entity implements \JsonSerializable {
 			'thread_id' => $this->getThreadId(),
 			'agent_seen_room_token' => $this->getAgentSeenRoomToken(),
 			'agent_seen_comment_id' => $this->getAgentSeenCommentId(),
+			'agency_confirmation_room_token' => $this->getAgencyConfirmationRoomToken(),
+			'agency_confirmation_comment_id' => $this->getAgencyConfirmationCommentId(),
 		];
 	}
 

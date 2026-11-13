@@ -199,6 +199,12 @@ class AgentTalkService {
 	 * @throws BadRequestException
 	 */
 	private function storeAndSchedule(Session $session, IComment $comment, \OCA\Talk\Room $room, Agent $agent): void {
+		// a new human message implicitly answers a pending confirmation
+		// like a rejection would: remove the now meaningless 👍/👎 reactions
+		// and the pending actions, then generate a new answer
+		$this->removePendingConfirmationReactions($session);
+		$session->setAgencyPendingActions(null);
+
 		// store the human Talk message in the chat session
 		$creationTimestamp = $comment->getCreationDateTime()->getTimestamp();
 		$talkContent = (string)$comment->getMessage();
@@ -371,17 +377,32 @@ class AgentTalkService {
 
 		$confirmPosted = false;
 		if ($pendingActions !== null && trim($pendingActions) !== '') {
+			// a new confirmation supersedes a previous unanswered one:
+			// remove the 👍/👎 reactions of the superseded confirmation message
+			$this->removePendingConfirmationReactions($session);
 			// the confirmation request is posted as natural language;
 			// fall back to the raw actions JSON if it cannot be formatted
 			$confirmationContent = $this->agencyActionService->formatConfirmationMessage($pendingActions) ?? $pendingActions;
-			$confirmPosted = $this->postAgentMessage(
+			$confirmationComment = $this->postAgentMessage(
 				$room,
 				$session,
 				$confirmationContent,
 				referenceId: self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time(),
 				addApproveRejectReactions: true,
 				threaded: $threaded,
-			) !== null;
+			);
+			if ($confirmationComment !== null) {
+				$confirmPosted = true;
+				// remember the confirmation message to remove the 👍/👎 reactions
+				// if the user sends a new message instead of reacting
+				$session->setAgencyConfirmationRoomToken($room->getToken());
+				$session->setAgencyConfirmationCommentId((int)$confirmationComment->getId());
+				try {
+					$this->sessionMapper->update($session);
+				} catch (Exception $e) {
+					$this->logger->error('Failed to store the pending confirmation of the agent session', ['exception' => $e]);
+				}
+			}
 		}
 
 		if ($postedComment !== null) {
@@ -705,6 +726,32 @@ class AgentTalkService {
 			return;
 		}
 		$this->updateSeenReaction($session, self::REACTION_ERROR);
+	}
+
+	/**
+	 * A pending agency confirmation was implicitly answered
+	 * (a new human message was sent, or a new confirmation supersedes it):
+	 * remove the agent's own 👍/👎 reactions on the pending confirmation
+	 * message and clear the confirmation tracking.
+	 *
+	 * The session caller is responsible for persisting the cleared fields.
+	 */
+	private function removePendingConfirmationReactions(Session $session): void {
+		$commentId = $session->getAgencyConfirmationCommentId();
+		$roomToken = $session->getAgencyConfirmationRoomToken();
+		if ($commentId === null || $roomToken === null) {
+			return;
+		}
+		$session->setAgencyConfirmationRoomToken(null);
+		$session->setAgencyConfirmationCommentId(null);
+		try {
+			$room = $this->getRoomByToken($roomToken);
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
+			// the room was deleted, the reactions are gone with it
+			return;
+		}
+		$this->deleteAgentReaction($room, $session->getUserId(), $commentId, self::REACTION_APPROVE);
+		$this->deleteAgentReaction($room, $session->getUserId(), $commentId, self::REACTION_REJECT);
 	}
 
 	private function deleteAgentReaction(\OCA\Talk\Room $room, string $agentUserId, int $messageId, string $reaction): void {
