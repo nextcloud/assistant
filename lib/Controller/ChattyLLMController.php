@@ -12,6 +12,7 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\AgencyActionService;
 use OCA\Assistant\Service\AgentSkillsService;
 use OCA\Assistant\Service\AssistantService;
 use OCA\Assistant\Service\BadRequestException;
@@ -45,7 +46,7 @@ class ChattyLLMController extends OCSController {
 	// must match MEMORIES_RELATIVE_FOLDER_PATH in context_agent
 	private const MEMORIES_FOLDER_PATH = 'Context Agent/Memories';
 
-	private array $agencyActionData;
+	private AgencyActionService $agencyActionService;
 
 	public function __construct(
 		string $appName,
@@ -61,140 +62,22 @@ class ChattyLLMController extends OCSController {
 		private ChatService $chatService,
 		private AssistantService $assistantService,
 		private AgentSkillsService $agentSkillsService,
+		AgencyActionService $agencyActionService,
 	) {
 		parent::__construct($appName, $request);
-		$this->agencyActionData = [
-			// talk
-			'send_message_to_conversation' => [
-				'title' => $this->l10n->t('Send a message to a Talk conversation'),
-				'icon' => 'Send',
-			],
-			'create_public_conversation' => [
-				'title' => $this->l10n->t('Create a conversation'),
-				'icon' => 'ChatPlus',
-			],
-			// mail
-			'send_email' => [
-				'title' => $this->l10n->t('Send an email'),
-				'icon' => 'EmailPlus',
-			],
-			// calendar
-			'schedule_event' => [
-				'title' => $this->l10n->t('Schedule a calendar event'),
-				'icon' => 'CalendarPlus',
-			],
-			'add_task' => [
-				'title' => $this->l10n->t('Add a calendar task'),
-				'icon' => 'CalendarCheck',
-			],
-			// deck
-			'add_card' => [
-				'title' => $this->l10n->t('Create a Deck card'),
-				'icon' => 'CardPlus',
-			],
-			'upload_file' => [
-				'title' => $this->l10n->t('Upload file'),
-				'icon' => 'Upload',
-			],
-			'create_folder' => [
-				'title' => $this->l10n->t('Create folder'),
-				'icon' => 'FolderPlus',
-			],
-			'move_file' => [
-				'title' => $this->l10n->t('Move file'),
-				'icon' => 'FileMove',
-			],
-			'copy_file' => [
-				'title' => $this->l10n->t('Copy file'),
-				'icon' => 'FileCopy',
-			],
-			'delete_file' => [
-				'title' => $this->l10n->t('Delete file'),
-				'icon' => 'Delete',
-			],
-			'create_bookmark' => [
-				'title' => $this->l10n->t('Create bookmark'),
-				'icon' => 'BookmarkPlus',
-			],
-			'update_bookmark' => [
-				'title' => $this->l10n->t('Update bookmark'),
-				'icon' => 'BookmarkEdit',
-			],
-			'delete_bookmark' => [
-				'title' => $this->l10n->t('Delete bookmark'),
-				'icon' => 'BookmarkRemove',
-			],
-			'create_bookmark_folder' => [
-				'title' => $this->l10n->t('Create bookmark folder'),
-				'icon' => 'FolderPlus',
-			],
-			'create_circle' => [
-				'title' => $this->l10n->t('Create team'),
-				'icon' => 'AccountGroupPlus',
-			],
-			'add_member_to_circle' => [
-				'title' => $this->l10n->t('Add member to team'),
-				'icon' => 'AccountPlus',
-			],
-			'remove_member_from_circle' => [
-				'title' => $this->l10n->t('Remove member from team'),
-				'icon' => 'AccountRemove',
-			],
-			'update_circle' => [
-				'title' => $this->l10n->t('Update team'),
-				'icon' => 'AccountGroupEdit',
-			],
-			'delete_circle' => [
-				'title' => $this->l10n->t('Delete team'),
-				'icon' => 'AccountGroupRemove',
-			],
-			'share_with_circle' => [
-				'title' => $this->l10n->t('Share with team'),
-				'icon' => 'ShareVariant',
-			],
-			'create_form' => [
-				'title' => $this->l10n->t('Create form'),
-				'icon' => 'FormTextbox',
-			],
-			'add_question_to_form' => [
-				'title' => $this->l10n->t('Add question to form'),
-				'icon' => 'CommentPlus',
-			],
-			'delete_form' => [
-				'title' => $this->l10n->t('Delete form'),
-				'icon' => 'Delete',
-			],
-			'update_form_settings' => [
-				'title' => $this->l10n->t('Update form settings'),
-				'icon' => 'Cog',
-			],
-			'share_with_user' => [
-				'title' => $this->l10n->t('Share with user'),
-				'icon' => 'AccountShare',
-			],
-			'share_with_group' => [
-				'title' => $this->l10n->t('Share with group'),
-				'icon' => 'AccountGroup',
-			],
-			'update_share_permissions' => [
-				'title' => $this->l10n->t('Update share permissions'),
-				'icon' => 'LockOpen',
-			],
-			'delete_share' => [
-				'title' => $this->l10n->t('Delete share'),
-				'icon' => 'Delete',
-			],
-		];
+		$this->agencyActionService = $agencyActionService;
 	}
 
 	private function improveAgencyActionNames(array $actions): array {
 		return array_map(function ($action) {
-			if (isset($action->name, $this->agencyActionData[$action->name])) {
-				if (isset($this->agencyActionData[$action->name]['icon'])) {
-					$action->icon = $this->agencyActionData[$action->name]['icon'];
+			if (isset($action->name)) {
+				$icon = $this->agencyActionService->getActionIcon($action->name);
+				$title = $this->agencyActionService->getActionTitle($action->name);
+				if ($icon !== null) {
+					$action->icon = $icon;
 				}
-				if (isset($this->agencyActionData[$action->name]['title'])) {
-					$action->name = $this->agencyActionData[$action->name]['title'];
+				if ($title !== null) {
+					$action->name = $title;
 				}
 			}
 			return $action;

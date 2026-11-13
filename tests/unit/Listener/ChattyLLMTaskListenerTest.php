@@ -14,11 +14,14 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
+use OCA\Assistant\Service\AgentTalkService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction;
+use OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction;
 use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -47,10 +50,15 @@ class ChattyLLMTaskListenerTest extends TestCase {
 		$session->setAssignmentId(null);
 		$this->sessionMapper->method('getUserSession')->willReturn($session);
 
+		$this->rebuildListener($this->createMock(AgentTalkService::class));
+	}
+
+	private function rebuildListener(AgentTalkService $agentTalkService, ?SessionMapper $sessionMapper = null): void {
 		$this->listener = new ChattyLLMTaskListener(
 			$this->messageMapper,
-			$this->sessionMapper,
+			$sessionMapper ?? $this->sessionMapper,
 			$this->createMock(TaskProcessingService::class),
+			$agentTalkService,
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(NotificationService::class),
 		);
@@ -137,5 +145,145 @@ class ChattyLLMTaskListenerTest extends TestCase {
 			->with('admin', self::SESSION_ID, 'Cats');
 
 		$this->listener->handle($event);
+	}
+
+	private function makeAudioTask(array $input, array $output): Task {
+		$task = new Task(
+			ContextAgentAudioInteraction::ID,
+			$input,
+			'assistant:chatty-llm',
+			'admin',
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(self::TASK_ID);
+		$task->setOutput($output);
+		return $task;
+	}
+
+	private function givenUnstoredMessage(): void {
+		$this->messageMapper->method('getMessageByTaskId')
+			->with(self::SESSION_ID, self::TASK_ID)
+			->willThrowException(new DoesNotExistException('Message not found'));
+		$this->messageMapper->method('insert')
+			->willReturnCallback(static function (Message $message): Message {
+				$message->setId(3);
+				return $message;
+			});
+	}
+
+	private function givenAgentSession(SessionMapper&MockObject $sessionMapper, Session $session): void {
+		$sessionMapper->method('getUserSession')->willReturn($session);
+		$sessionMapper->method('update');
+	}
+
+	public function testAgentReplyReceivesTheAudioTranscript(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'The agent answer',
+				null,
+				'Hello agent, what do you hear?',
+				456,
+				[],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = $this->makeAudioTask(
+			['input' => 123, 'confirmation' => 0, 'conversation_token' => ''],
+			[
+				'output' => 456,
+				'output_transcript' => 'The agent answer',
+				'input_transcript' => 'Hello agent, what do you hear?',
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	public function testAgentReplyReceivesNoTranscriptOnConfirmationFollowUp(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'The agent answer',
+				null,
+				null,
+				456,
+				[],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = $this->makeAudioTask(
+			['input' => 123, 'confirmation' => 1, 'conversation_token' => 'token'],
+			[
+				'output' => 456,
+				'output_transcript' => 'The agent answer',
+				'input_transcript' => 'Hello agent, what do you hear?',
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	public function testAgentReplyReceivesTheMultimodalOutputFiles(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'Here is your image.',
+				null,
+				null,
+				null,
+				[789, 790],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = new Task(
+			MultimodalContextAgentInteraction::ID,
+			[
+				'input' => 'Generate an image of a cat',
+				'confirmation' => 0,
+				'conversation_token' => '',
+				'input_attachments' => [],
+			],
+			'assistant:chatty-llm',
+			'admin',
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(self::TASK_ID);
+		$task->setOutput([
+			'output' => 'Here is your image.',
+			'output_attachments' => [789, 790],
+		]);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
 	}
 }

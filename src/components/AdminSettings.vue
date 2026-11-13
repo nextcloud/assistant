@@ -240,6 +240,15 @@
 					<span>{{ t('assistant', 'No global skills folder configured') }}</span>
 				</div>
 			</div>
+			<div class="agents">
+				<h4>
+					{{ t('assistant', 'Talk agents') }}
+				</h4>
+				<TalkAgentUsers :agents="state.agents"
+					@agent-created="onAgentCreated"
+					@agent-updated="onAgentUpdated"
+					@agent-deleted="onAgentDeleted" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -267,6 +276,8 @@ import { generateUrl } from '@nextcloud/router'
 
 import { delay } from '../utils.js'
 
+import TalkAgentUsers from './TalkAgentUsers.vue'
+
 export default {
 	name: 'AdminSettings',
 
@@ -282,6 +293,7 @@ export default {
 		NcFormBox,
 		NcFormBoxSwitch,
 		OpenInNewIcon,
+		TalkAgentUsers,
 	},
 
 	data() {
@@ -297,6 +309,18 @@ export default {
 	},
 
 	methods: {
+		onAgentCreated(agent) {
+			this.state.agents.push(agent)
+		},
+		onAgentUpdated(agent) {
+			const index = this.state.agents.findIndex((a) => a.id === agent.id)
+			if (index !== -1) {
+				this.state.agents.splice(index, 1, agent)
+			}
+		},
+		onAgentDeleted(agent) {
+			this.state.agents = this.state.agents.filter((a) => a.id !== agent.id)
+		},
 		isUnsignedIntStr(value) {
 			return /^\d+$/.test(value)
 		},

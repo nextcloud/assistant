@@ -13,6 +13,7 @@ use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\AgentTalkService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -32,6 +33,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		private MessageMapper $messageMapper,
 		private SessionMapper $sessionMapper,
 		private TaskProcessingService $taskProcessingService,
+		private AgentTalkService $agentTalkService,
 		private LoggerInterface $logger,
 		private NotificationService $notificationService,
 	) {
@@ -43,12 +45,26 @@ class ChattyLLMTaskListener implements IEventListener {
 			$customId = $task->getCustomId();
 			if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 				$sessionId = (int)$matches[1];
-				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
+				try {
+					$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
+				} catch (\OCP\AppFramework\Db\DoesNotExistException) {
+					return;
+				} catch (\OCP\AppFramework\Db\MultipleObjectsReturnedException|\OCP\DB\Exception $e) {
+					$this->logger->error('Could not load the session of a failed chat task', ['exception' => $e]);
+					return;
+				}
 				$assignmentId = $session->getAssignmentId();
 				if ($assignmentId !== null) {
 					$this->notificationService->sendAssignmentNotification(
 						$task->getUserId(), $task, $session
 					);
+				}
+				// in the agent-as-a-user feature, the 👀 reaction of the last message
+				// becomes 🔴 when the generation failed
+				try {
+					$this->agentTalkService->markGenerationFailed($task->getUserId(), $sessionId);
+				} catch (\Throwable $e) {
+					$this->logger->error('Failed to mark the agent message as failed in Talk', ['exception' => $e]);
 				}
 			}
 			return;
@@ -98,6 +114,31 @@ class ChattyLLMTaskListener implements IEventListener {
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID;
 
 			$taskOutput = $task->getOutput();
+
+			// the transcript of the human's audio input, posted in Talk for agent
+			// sessions; not on confirmation follow-ups, where the same audio was
+			// already transcribed when it was first sent. The generated speech
+			// audio of the answer is posted as a Talk voice message in any case.
+			$inputTranscript = null;
+			$audioFileId = null;
+			if ($isAudioChat || $isAgencyAudioChat) {
+				$taskInput = $task->getInput();
+				$isConfirmation = isset($taskInput['confirmation']) && (int)$taskInput['confirmation'] !== 0;
+				$inputTranscript = $isConfirmation ? null : trim($taskOutput['input_transcript'] ?? '');
+				if (trim($taskOutput['output_transcript'] ?? '') !== '' && is_numeric($taskOutput['output'] ?? null)) {
+					$audioFileId = (int)$taskOutput['output'];
+				}
+			}
+			// the generated files of a multimodal answer, posted as Talk file shares
+			$outputFileIds = [];
+			if ($isMultimodalChat || $isMultimodalAgencyChat) {
+				$outputAttachments = $taskOutput['output_attachments'] ?? [];
+				foreach (is_array($outputAttachments) ? $outputAttachments : [] as $outputAttachment) {
+					if (is_numeric($outputAttachment)) {
+						$outputFileIds[] = (int)$outputAttachment;
+					}
+				}
+			}
 
 			$message = new Message();
 			$message->setSessionId($sessionId);
@@ -180,6 +221,19 @@ class ChattyLLMTaskListener implements IEventListener {
 			}
 
 			$this->sessionMapper->update($session);
+
+			// in the agent-as-a-user feature, the generated message is posted
+			// in the 1-1 Talk conversation with the human user
+			if ($session->getRequesterUserId() !== null) {
+				$this->agentTalkService->postAgentTalkReply(
+					$session,
+					$message->getContent(),
+					$taskOutput['actions'] ?? null,
+					$inputTranscript !== '' ? $inputTranscript : null,
+					$audioFileId,
+					$outputFileIds,
+				);
+			}
 		}
 	}
 
