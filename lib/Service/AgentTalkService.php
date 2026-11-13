@@ -48,6 +48,7 @@ class AgentTalkService {
 		private SessionMapper $sessionMapper,
 		private IURLGenerator $urlGenerator,
 		private IL10N $l10n,
+		private AgencyActionService $agencyActionService,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -370,10 +371,13 @@ class AgentTalkService {
 
 		$confirmPosted = false;
 		if ($pendingActions !== null && trim($pendingActions) !== '') {
+			// the confirmation request is posted as natural language;
+			// fall back to the raw actions JSON if it cannot be formatted
+			$confirmationContent = $this->agencyActionService->formatConfirmationMessage($pendingActions) ?? $pendingActions;
 			$confirmPosted = $this->postAgentMessage(
 				$room,
 				$session,
-				$pendingActions,
+				$confirmationContent,
 				referenceId: self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time(),
 				addApproveRejectReactions: true,
 				threaded: $threaded,
