@@ -41,6 +41,7 @@ OC.L10N.register(
     "Select all" : "Избери всички",
     "New conversation" : "Нов разговор",
     "Delete" : "Изтриване",
+    "Skills" : "Умения",
     "Edit title" : "Редактиране на заглавието",
     "Hello there! What can I help you with today?" : "Здравейте! С какво да ви помогна днес?",
     "Try sending a message to spark a conversation." : "Изпратете съобщение за да започнете разговор.",
