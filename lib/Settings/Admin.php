@@ -75,12 +75,15 @@ class Admin implements ISettings {
 		try {
 			foreach ($this->agentsService->getAllAgents() as $agent) {
 				$user = $this->userManager->get($agent->getUserId());
+				$access = $this->agentsService->getAgentAccess((int)$agent->getId());
 				$agents[] = [
 					'id' => (int)$agent->getId(),
 					'user_id' => $agent->getUserId(),
 					'display_name' => $user?->getDisplayName() ?: $agent->getUserId(),
 					'personality' => $agent->getPersonality(),
 					'scope' => $agent->getScope(),
+					'access_users' => $access['users'],
+					'access_groups' => $access['groups'],
 				];
 			}
 		} catch (Exception $e) {

@@ -3963,7 +3963,9 @@
                                                                     "user_id",
                                                                     "display_name",
                                                                     "personality",
-                                                                    "scope"
+                                                                    "scope",
+                                                                    "access_users",
+                                                                    "access_groups"
                                                                 ],
                                                                 "properties": {
                                                                     "id": {
@@ -3983,6 +3985,18 @@
                                                                     "scope": {
                                                                         "type": "string",
                                                                         "nullable": true
+                                                                    },
+                                                                    "access_users": {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "access_groups": {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "string"
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -4130,6 +4144,22 @@
                                         "type": "string",
                                         "default": "",
                                         "description": "Optional scope for later use"
+                                    },
+                                    "accessUsers": {
+                                        "type": "array",
+                                        "default": [],
+                                        "description": "User ids that may access the agent (empty = every user)",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "accessGroups": {
+                                        "type": "array",
+                                        "default": [],
+                                        "description": "Group ids that may access the agent (empty = every user)",
+                                        "items": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
@@ -4194,7 +4224,9 @@
                                                                 "user_id",
                                                                 "display_name",
                                                                 "personality",
-                                                                "scope"
+                                                                "scope",
+                                                                "access_users",
+                                                                "access_groups"
                                                             ],
                                                             "properties": {
                                                                 "id": {
@@ -4214,6 +4246,18 @@
                                                                 "scope": {
                                                                     "type": "string",
                                                                     "nullable": true
+                                                                },
+                                                                "access_users": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "access_groups": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -4430,6 +4474,24 @@
                                         "nullable": true,
                                         "default": null,
                                         "description": "The new scope"
+                                    },
+                                    "accessUsers": {
+                                        "type": "array",
+                                        "nullable": true,
+                                        "default": null,
+                                        "description": "When not null, replaces the user ids that may access the agent",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "accessGroups": {
+                                        "type": "array",
+                                        "nullable": true,
+                                        "default": null,
+                                        "description": "When not null, replaces the group ids that may access the agent",
+                                        "items": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
@@ -4504,7 +4566,9 @@
                                                                 "user_id",
                                                                 "display_name",
                                                                 "personality",
-                                                                "scope"
+                                                                "scope",
+                                                                "access_users",
+                                                                "access_groups"
                                                             ],
                                                             "properties": {
                                                                 "id": {
@@ -4524,6 +4588,18 @@
                                                                 "scope": {
                                                                     "type": "string",
                                                                     "nullable": true
+                                                                },
+                                                                "access_users": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "access_groups": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
                                                                 }
                                                             }
                                                         }

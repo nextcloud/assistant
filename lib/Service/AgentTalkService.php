@@ -87,6 +87,11 @@ class AgentTalkService {
 				return;
 			}
 
+			if (!$this->agentsService->canUserAccessAgent($agent, $humanUser)) {
+				$this->handleAgentAccessDenied($agent, $humanUser, $comment, $room);
+				return;
+			}
+
 			$this->processAgentInteraction(
 				$room,
 				$agent,
@@ -143,6 +148,78 @@ class AgentTalkService {
 			return $room->getSecondParticipant($authorUserId);
 		} catch (\InvalidArgumentException|\JsonException|\OCA\Talk\Exceptions\RoomNotFoundException $e) {
 			return null;
+		}
+	}
+
+	/**
+	 * The user does not have access to the agent: no session is created and no
+	 * answer is generated. A short notice is sent as the agent in the private
+	 * 1-1 conversation, as a reply to the triggering message when it was
+	 * written in that 1-1 conversation (or one of its threads).
+	 *
+	 * The reaction lifecycle of the handled message and the pointer message
+	 * posted in a group room are identical to the answer flow, so that room
+	 * members cannot infer who has access to the agent.
+	 */
+	private function handleAgentAccessDenied(Agent $agent, IUser $humanUser, IComment $comment, \OCA\Talk\Room $originRoom): void {
+		if (!class_exists('OCA\Talk\Chat\ChatManager')) {
+			return;
+		}
+		$agentUserId = $agent->getUserId();
+		$messageId = (int)$comment->getId();
+
+		// like the answer flow: 👀 while being handled, ✅ once the notice is posted
+		$this->addAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_READ);
+		try {
+			$oneToOneRoom = $this->getOrCreateOneToOneRoom($humanUser, $agentUserId);
+		} catch (AgentUserException|\OCA\Talk\Exceptions\RoomNotFoundException $e) {
+			$this->logger->warning('Could not get the 1-1 Talk room to post the access notice', [
+				'agentUserId' => $agentUserId,
+				'humanUserId' => $humanUser->getUID(),
+				'exception' => $e,
+			]);
+			$this->deleteAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_READ);
+			$this->addAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_ERROR);
+			return;
+		}
+
+		$content = $this->l10n->t(
+			'You do not have access to the agent "%s". Please contact your administrator if you need access.',
+			[$this->getAgentDisplayName($agent)]
+		);
+		try {
+			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+			$handledInOneToOne = ($comment->getObjectType() === 'chat'
+				&& $comment->getObjectId() === (string)$oneToOneRoom->getId());
+			$noticeComment = $chatManager->sendMessage(
+				$oneToOneRoom,
+				null,
+				'users',
+				$agentUserId,
+				$content,
+				new DateTime(),
+				replyTo: $handledInOneToOne ? $comment : null,
+			);
+		} catch (\Throwable $e) {
+			$this->logger->error('Failed to post the agent access notice in Talk', ['exception' => $e]);
+			$this->deleteAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_READ);
+			$this->addAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_ERROR);
+			return;
+		}
+
+		$this->deleteAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_READ);
+		$this->addAgentReaction($originRoom, $agentUserId, $messageId, self::REACTION_DONE);
+
+		if ($originRoom->getType() !== \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
+			// the mention happened in a group room: post the same pointer
+			// message as the answer flow, so that room members cannot infer
+			// who has access to the agent
+			try {
+				$this->postRoomPointer($originRoom, $comment, $oneToOneRoom, $noticeComment, $agentUserId);
+			} catch (\Throwable $e) {
+				$this->logger->error('Failed to post the access notice pointer message in the origin Talk room', ['exception' => $e]);
+			}
 		}
 	}
 
@@ -460,10 +537,34 @@ class AgentTalkService {
 		if ($mentionComment === null) {
 			return;
 		}
+		if ($mentionComment->getActorId() !== $requesterUserId) {
+			return;
+		}
+
+		$threadId = (int)($answerComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
+		$this->postRoomPointer($seenRoom, $mentionComment, $oneToOneRoom, $answerComment, $session->getUserId(), $threadId !== 0 ? $threadId : null);
+	}
+
+	/**
+	 * Post a pointer message in the origin Talk room, as the agent, in reply to
+	 * the human's message: it mentions the human user and links, inside the
+	 * sentence, to the message posted in the private 1-1 conversation with
+	 * the agent.
+	 *
+	 * The message is identical whether the agent answered or refused access,
+	 * so that room members cannot infer who has access to the agent.
+	 */
+	private function postRoomPointer(
+		\OCA\Talk\Room $originRoom,
+		IComment $mentionComment,
+		\OCA\Talk\Room $oneToOneRoom,
+		IComment $answerComment,
+		string $agentUserId,
+		?int $threadId = null,
+	): void {
 		if ($mentionComment->getObjectType() !== 'chat'
-			|| $mentionComment->getObjectId() !== (string)$seenRoom->getId()
-			|| $mentionComment->getActorType() !== 'users'
-			|| $mentionComment->getActorId() !== $requesterUserId) {
+			|| $mentionComment->getObjectId() !== (string)$originRoom->getId()
+			|| $mentionComment->getActorType() !== 'users') {
 			return;
 		}
 
@@ -471,31 +572,25 @@ class AgentTalkService {
 			'token' => $oneToOneRoom->getToken(),
 			'_fragment' => 'message_' . $answerComment->getId(),
 		];
-		// like Talk's notification links: thread context is needed to open the message
-		$threadId = (int)($answerComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
-		if ($threadId !== 0) {
+		if ($threadId !== null) {
+			// like Talk's notification links: thread context is needed to open the message
 			$urlParams['threadId'] = $threadId;
 		}
 		$link = $this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall', $urlParams);
-		$content = '@"' . $requesterUserId . '" '
-			. $this->l10n->t('I answered to you in our private conversation in the thread "%s"', [$session->getTitle() ?? ''])
-			. '. ' . $link;
+		$content = '@"' . $mentionComment->getActorId() . '" '
+			. $this->l10n->t('I answered to you in [our private conversation](%s)', [$link]);
 
-		try {
-			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
-			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
-			$chatManager->sendMessage(
-				$seenRoom,
-				null,
-				'users',
-				$session->getUserId(),
-				$content,
-				new DateTime(),
-				replyTo: $mentionComment,
-			);
-		} catch (\Throwable $e) {
-			$this->logger->error('Failed to post the answer pointer message in the Talk room', ['exception' => $e]);
-		}
+		/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+		$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+		$chatManager->sendMessage(
+			$originRoom,
+			null,
+			'users',
+			$agentUserId,
+			$content,
+			new DateTime(),
+			replyTo: $mentionComment,
+		);
 	}
 
 	/**
