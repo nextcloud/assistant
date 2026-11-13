@@ -143,6 +143,7 @@ OC.L10N.register(
     "Loading conversations…" : "تحميل المحادثات جارٍ ...",
     "No conversations yet" : "لا توجد أي محادثات حتى الآن",
     "Delete" : "حذف",
+    "Skills" : "المهارات",
     "Conversation title" : "عنوان المحادثة",
     "Edit title" : "تحرير عنوان",
     "Generate title" : "اقتراح عنوان",
