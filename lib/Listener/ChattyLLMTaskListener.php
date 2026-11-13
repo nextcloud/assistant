@@ -115,6 +115,16 @@ class ChattyLLMTaskListener implements IEventListener {
 
 			$taskOutput = $task->getOutput();
 
+			// the transcript of the human's audio input, posted in Talk for agent
+			// sessions; not on confirmation follow-ups, where the same audio was
+			// already transcribed when it was first sent
+			$inputTranscript = null;
+			if ($isAudioChat || $isAgencyAudioChat) {
+				$taskInput = $task->getInput();
+				$isConfirmation = isset($taskInput['confirmation']) && (int)$taskInput['confirmation'] !== 0;
+				$inputTranscript = $isConfirmation ? null : trim($taskOutput['input_transcript'] ?? '');
+			}
+
 			$message = new Message();
 			$message->setSessionId($sessionId);
 			$message->setOcpTaskId($task->getId());
@@ -204,6 +214,7 @@ class ChattyLLMTaskListener implements IEventListener {
 					$session,
 					$message->getContent(),
 					$taskOutput['actions'] ?? null,
+					$inputTranscript !== '' ? $inputTranscript : null,
 				);
 			}
 		}

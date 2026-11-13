@@ -49,6 +49,7 @@ class AgentTalkService {
 		private IURLGenerator $urlGenerator,
 		private IL10N $l10n,
 		private AgencyActionService $agencyActionService,
+		private AgentTalkFileService $agentTalkFileService,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -77,7 +78,22 @@ class AgentTalkService {
 				return;
 			}
 
-			$agent = $this->getAgentTarget($room, $comment, $authorActorId);
+			// only chat messages and file shares are handled;
+			// other system messages (calls, polls, ...) never trigger an agent
+			$verb = $comment->getVerb();
+			$fileShare = null;
+			if ($verb === \OCA\Talk\Chat\ChatManager::VERB_OBJECT_SHARED) {
+				// file shares (voice messages, attachments) are "file_shared"
+				// system messages; other object shares (polls, ...) are ignored
+				$fileShare = $this->agentTalkFileService->parseFileShareMessage($comment);
+				if ($fileShare === null) {
+					return;
+				}
+			} elseif ($verb !== \OCA\Talk\Chat\ChatManager::VERB_MESSAGE) {
+				return;
+			}
+
+			$agent = $this->getAgentTarget($room, $comment, $authorActorId, $fileShare);
 			if ($agent === null) {
 				return;
 			}
@@ -97,6 +113,7 @@ class AgentTalkService {
 				$agent,
 				$humanUser,
 				$comment,
+				$fileShare,
 			);
 		} catch (\Throwable $e) {
 			$this->logger->error('Failed to handle a Talk message for an agent', ['exception' => $e]);
@@ -107,6 +124,7 @@ class AgentTalkService {
 	 * Find the agent user targeted by a Talk message:
 	 * - in a 1-1 conversation: the other attendee, if it is a registered agent
 	 * - in a group room: a mentioned registered agent that is a participant of the room.
+	 *   Mentions of a file share are stored in its caption, not in the message.
 	 * The agent must always answer in the private 1-1 conversation
 	 * with the user who sent the message.
 	 */
@@ -114,6 +132,7 @@ class AgentTalkService {
 		\OCA\Talk\Room $room,
 		IComment $comment,
 		string $authorActorId,
+		?array $fileShare,
 	): ?Agent {
 		if ($room->getType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
 			$partnerUserId = $this->getOneToOnePartnerUserId($room, $authorActorId);
@@ -127,6 +146,9 @@ class AgentTalkService {
 		/** @var \OCA\Talk\Manager $talkManager */
 		$talkManager = Server::get(\OCA\Talk\Manager::class);
 		$mentions = $comment->getMentions();
+		if ($fileShare !== null) {
+			$mentions = $this->agentTalkFileService->getCaptionMentions($comment, $fileShare);
+		}
 		foreach ($mentions as $mention) {
 			if ($mention['type'] !== 'user') {
 				continue;
@@ -235,6 +257,7 @@ class AgentTalkService {
 		Agent $agent,
 		IUser $humanUser,
 		IComment $comment,
+		?array $fileShare,
 	): void {
 		$humanUserId = $humanUser->getUID();
 
@@ -245,7 +268,7 @@ class AgentTalkService {
 			if ($triggerThreadId !== 0) {
 				try {
 					$threadSession = $this->sessionMapper->getAgentSessionByThread($agent->getUserId(), $triggerThreadId);
-					$this->storeAndSchedule($threadSession, $comment, $room, $agent);
+					$this->storeAndSchedule($threadSession, $comment, $room, $agent, $fileShare);
 					return;
 				} catch (DoesNotExistException) {
 					// the reply is not in the thread of an agent session: handle it below
@@ -265,7 +288,7 @@ class AgentTalkService {
 		// find or create the assistant chat session dedicated to this agent/origin-room context
 		$session = $this->getOrCreateAgentSession($humanUserId, $agent, $contextRoomName, $room->getToken());
 
-		$this->storeAndSchedule($session, $comment, $room, $agent);
+		$this->storeAndSchedule($session, $comment, $room, $agent, $fileShare);
 	}
 
 	/**
@@ -275,7 +298,7 @@ class AgentTalkService {
 	 * @throws NotFoundException
 	 * @throws BadRequestException
 	 */
-	private function storeAndSchedule(Session $session, IComment $comment, \OCA\Talk\Room $room, Agent $agent): void {
+	private function storeAndSchedule(Session $session, IComment $comment, \OCA\Talk\Room $room, Agent $agent, ?array $fileShare): void {
 		// a new human message implicitly answers a pending confirmation
 		// like a rejection would: remove the now meaningless 👍/👎 reactions
 		// and the pending actions, then generate a new answer
@@ -284,14 +307,14 @@ class AgentTalkService {
 
 		// store the human Talk message in the chat session
 		$creationTimestamp = $comment->getCreationDateTime()->getTimestamp();
-		$talkContent = (string)$comment->getMessage();
+		[$talkContent, $attachments] = $this->getTalkMessageContentAndAttachments($comment, $room, $fileShare);
 		$this->chatService->createMessage(
 			$session->getUserId(),
 			(int)$session->getId(),
 			Message::ROLE_HUMAN,
 			$talkContent,
 			$creationTimestamp,
-			null,
+			$attachments,
 		);
 
 		// mark the message as seen before scheduling, so that the reaction
@@ -309,6 +332,40 @@ class AgentTalkService {
 
 		// schedule generation of the agent answer
 		$this->chatService->scheduleMessageGeneration($session->getUserId(), (int)$session->getId(), 0, $this->getOriginRoomInfo($session));
+	}
+
+	/**
+	 * Build the chat session content and attachments to store for a Talk message.
+	 *
+	 * A file share (voice message, attachment) is stored as a chat message with
+	 * an attachment referencing the shared file, and its caption (if any) as
+	 * the content; plain messages are stored as they are.
+	 *
+	 * @return array{string, list<array{type: string, file_id: int}>|null} [content, attachments]
+	 */
+	private function getTalkMessageContentAndAttachments(IComment $comment, \OCA\Talk\Room $room, ?array $fileShare): array {
+		if ($fileShare === null) {
+			return [(string)$comment->getMessage(), null];
+		}
+
+		// the file is read through the storage of the sender, it is an
+		// attachment of the room only when the room has a share covering it
+		$node = $this->agentTalkFileService->getRoomAttachmentNode($room->getToken(), $comment->getActorId(), $fileShare);
+		$caption = $fileShare['caption'];
+		if ($node === null) {
+			// the file is not accessible as a room attachment (deleted, revoked):
+			// fall back to a plain text message
+			if ($caption !== '') {
+				return [$caption, null];
+			}
+			return [$this->l10n->t('[A file was shared, but it is no longer available]'), null];
+		}
+
+		$attachment = [
+			'type' => $this->agentTalkFileService->getAttachmentType($fileShare, $node),
+			'file_id' => $node->getId(),
+		];
+		return [$caption, [$attachment]];
 	}
 
 	/**
@@ -397,12 +454,15 @@ class AgentTalkService {
 	 * @param Session $session
 	 * @param string $content The assistant message content
 	 * @param string|null $pendingActions The pending sensitive actions (confirmation request) if any
+	 * @param string|null $inputTranscript The transcript of the human's audio input, if any:
+	 *                                     it is posted before the answer, as the agent
 	 * @return void
 	 */
 	public function postAgentTalkReply(
 		Session $session,
 		string $content,
 		?string $pendingActions,
+		?string $inputTranscript = null,
 	): void {
 		if ($session->getRequesterUserId() === null) {
 			return;
@@ -442,6 +502,19 @@ class AgentTalkService {
 			} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
 				// the origin room may have been deleted, still answer threaded
 			}
+		}
+
+		// when the human sent a voice message, the agent posts its transcript
+		// first, so the human sees what was heard, then the answer;
+		// the transcript is the raw speech-to-text output, not translated
+		if ($inputTranscript !== null && trim($inputTranscript) !== '') {
+			$this->postAgentMessage(
+				$room,
+				$session,
+				'🎙️: _"' . trim($inputTranscript) . '"_',
+				referenceId: null,
+				threaded: $threaded,
+			);
 		}
 
 		$postedComment = $this->postAgentMessage(
