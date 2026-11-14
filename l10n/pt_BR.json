@@ -366,6 +366,7 @@
     "Creating a new conversation" : "Criando uma nova conversa",
     "No results yet" : "Ainda não há resultados",
     "This task has not run yet. Results will appear here after the next scheduled run." : "Esta tarefa ainda não foi executada. Os resultados aparecerão aqui após a próxima execução programada.",
+    "Select a scheduled task" : "Selecione uma tarefa agendada",
     "Create in chat" : "Criar no bate-papo",
     "Scheduled tasks run automatically on a recurring schedule. Ask chat to create one for you." : "As tarefas programadas são executadas automaticamente em intervalos regulares. Peça ao bate-papo para criar uma para você.",
     "Hello there! What can I help you with today?" : "Oi! Em que posso ajudá-lo hoje?",

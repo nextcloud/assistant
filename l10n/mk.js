@@ -17,6 +17,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Електронска пошта",
     "Other" : "Останато",
     "Translate" : "Преведи",
+    "Generate text" : "Генерирај текст",
     "Assistant" : "Асистент",
     "Memories" : "Memories",
     "Chat history" : "Историја на разговор",
