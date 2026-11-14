@@ -366,6 +366,8 @@
     "Creating a new conversation" : "Vytváram novú konverzáciu",
     "No results yet" : "Zatiaľ žiadne výsledky",
     "This task has not run yet. Results will appear here after the next scheduled run." : "Táto úloha sa ešte nespustila. Výsledky sa zobrazia tu po najbližšom naplánovanom spustení.",
+    "Select a scheduled task" : "Vybrať naplánovanú úlohu",
+    "Pick a scheduled task from the list to see its results, or ask chat to create a new one for you." : "Vyberte zo zoznamu naplánovanú úlohu, aby ste videli jej výsledky, alebo požiadajte v chate o vytvorenie novej úlohy.",
     "Create in chat" : "Vytvoriť v chate",
     "Scheduled tasks run automatically on a recurring schedule. Ask chat to create one for you." : "Naplánované úlohy sa spúšťajú automaticky podľa opakovaného plánu. Požiadajte chat, aby vám ju vytvoril.",
     "Hello there! What can I help you with today?" : "Dobrý deň! S čím vám dnes môžem pomôcť?",
