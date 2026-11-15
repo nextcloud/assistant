@@ -292,6 +292,8 @@
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Si vous n'êtes pas satisfait par les actions que l'Assistant souhaite exécuter, vous pouvez ajuster votre demande en envoyant un nouveau message au lieu de cliquer sur le bouton \"Annuler\".",
     "Some content may be lost." : "Du contenu peut être perdu.",
     "Some actions cannot be reversed." : "Certaines actions ne peuvent pas être annulées.",
+    "_%n item is affected by these actions._::_%n items are affected by these actions._" : ["%n élément est concerné par ces actions.","%n éléments sont concernés par ces actions.","%n éléments sont concernés par ces actions."],
+    "_At least %n item is affected by these actions._::_At least %n items are affected by these actions._" : ["Au moins %n élément est concerné par ces actions.","Au moins %n éléments sont concernés par ces actions.","Au moins %n éléments sont concernés par ces actions."],
     "The Assistant wants to perform sensitive actions on your behalf." : "L'Assistant souhaite exécuter des actions sensibles en votre nom.",
     "More information" : "Plus d'informations",
     "Cancel" : "Annuler",
