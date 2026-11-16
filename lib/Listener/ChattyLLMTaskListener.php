@@ -134,6 +134,10 @@ class ChattyLLMTaskListener implements IEventListener {
 					$olderMessages = $this->messageMapper->getMessagesBefore($sessionId, $queryMessage->getTimestamp());
 					if (count($olderMessages) === 0) {
 						$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $queryMessageContent);
+						// the frontend can only generate a title from a text message, generate it now that we have the transcript
+						if ($queryMessageContent !== '') {
+							$this->scheduleTitleGeneration($task->getUserId(), $sessionId);
+						}
 					}
 				}
 			} else {
@@ -182,6 +186,18 @@ class ChattyLLMTaskListener implements IEventListener {
 			}
 
 			$this->sessionMapper->update($session);
+		}
+	}
+
+	private function scheduleTitleGeneration(?string $userId, int $sessionId): void {
+		try {
+			$this->chatService->scheduleTitleGeneration($userId, $sessionId);
+		} catch (\Throwable $e) {
+			// not fatal: the session keeps the transcript as its title
+			$this->logger->warning('Failed to schedule the title generation of a chat session', [
+				'exception' => $e,
+				'sessionId' => $sessionId,
+			]);
 		}
 	}
 

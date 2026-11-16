@@ -721,7 +721,9 @@ export default {
 					this.userScrolled = false
 				}
 				if (checkSessionResponseData.titleTaskId !== null) {
-					await this.trackTitleTask(checkSessionResponseData.titleTaskId, sessionId)
+					// not awaited: the title task must not delay the next session check
+					// silent: the title generation is automatic, its failure is not fatal
+					this.trackTitleTask(checkSessionResponseData.titleTaskId, sessionId, { silent: true })
 				}
 			} catch (error) {
 				console.error('check session error:', error)
@@ -746,7 +748,8 @@ export default {
 					this.streamingMessage = null
 					this.userScrolled = false
 				}
-				if (isAssignment) {
+				// a stale check must not replace the timer of the active session
+				if (isAssignment && this.active?.id === sessionId) {
 					this.pollCheckSessionTimeout = setTimeout(() => { this.checkSession(sessionId, isAssignment) }, 5000)
 				}
 			}
@@ -821,15 +824,16 @@ export default {
 
 		async onEditSessionTitle(newTitle) {
 			this.loading.updateTitle = true
-			const session = this.sessions.find((session) => session.id === this.active.id)
-			// the backend cancels the title generation tasks of the session, a late result must not replace the new title
-			this.cancelTitlePolls(this.active.id)
+			const sessionId = this.active.id
+			const session = this.sessions.find((session) => session.id === sessionId)
 
 			try {
 				await axios.patch(getChatURL('/update_session'), {
-					sessionId: this.active.id,
+					sessionId,
 					title: newTitle,
 				})
+				// the backend cancelled the title generation tasks of the session, a late result must not replace the new title
+				this.cancelTitlePolls(sessionId)
 				this.editingTitle = false
 				session.title = newTitle
 			} catch (error) {
@@ -1121,6 +1125,7 @@ export default {
 					params: { sessionIds },
 				})
 				this.sessions = this.sessions.filter((session) => !sessionIds.includes(session.id))
+				sessionIds.forEach(sessionId => this.cancelTitlePolls(sessionId))
 				if (this.active !== null && sessionIds.includes(this.active.id)) {
 					this.active = null
 				}
@@ -1255,7 +1260,8 @@ export default {
 					session.title = content
 				}
 
-				// only generate a title from a text message, audio messages get their content later
+				// only generate a title from a text message, for audio messages the backend
+				// schedules the title generation once it has the transcript
 				const generateTitle = firstHumanMessage && content.trim() !== ''
 				await this.runGenerationTask(sessionId, agencyConfirm, generateTitle)
 			} catch (error) {
@@ -1690,7 +1696,28 @@ export default {
 				if (isFirstHumanMessage) {
 					const session = this.sessions.find((session) => session.id === lastHumanMessage.session_id)
 					session.title = updatedMessage.data.content
+					if (updatedMessage.data.content?.trim()) {
+						this.trackScheduledTitleTask(lastHumanMessage.session_id)
+					}
 				}
+			}
+		},
+
+		/**
+		 * Follow the title generation task the backend scheduled for a session, if any
+		 *
+		 * @param {number} sessionId The session ID
+		 */
+		async trackScheduledTitleTask(sessionId) {
+			try {
+				const checkSessionResponse = await axios.get(getChatURL('/check_session'), { params: { sessionId } })
+				const titleTaskId = checkSessionResponse.data?.titleTaskId ?? null
+				if (titleTaskId !== null) {
+					// not fatal: the session keeps the title derived from the transcript
+					await this.trackTitleTask(titleTaskId, sessionId, { silent: true })
+				}
+			} catch (error) {
+				console.error('trackScheduledTitleTask error:', error)
 			}
 		},
 
