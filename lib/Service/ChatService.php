@@ -145,7 +145,35 @@ class ChatService {
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
+		if ($title !== null) {
+			// a pending title generation must not overwrite the title the user just set
+			$this->cancelTitleGenerationTasks($userId, $sessionId);
+		}
 		return $session;
+	}
+
+	/**
+	 * Cancel the scheduled and running title generation tasks of a session.
+	 * The task processing manager drops the result of a task that was cancelled while running,
+	 * so the task listener will not set its title.
+	 */
+	private function cancelTitleGenerationTasks(string $userId, int $sessionId): void {
+		try {
+			$tasks = $this->taskProcessingManager->getUserTasksByApp($userId, Application::APP_ID . ':chatty-llm', 'chatty-title:' . $sessionId);
+		} catch (\OCP\TaskProcessing\Exception\Exception|\JsonException $e) {
+			$this->logger->warning('Failed to get the title generation tasks of a chat session', ['exception' => $e, 'sessionId' => $sessionId]);
+			return;
+		}
+		foreach ($tasks as $task) {
+			if ($task->getStatus() !== Task::STATUS_SCHEDULED && $task->getStatus() !== Task::STATUS_RUNNING) {
+				continue;
+			}
+			try {
+				$this->taskProcessingManager->cancelTask((int)$task->getId());
+			} catch (\OCP\TaskProcessing\Exception\Exception|\OCP\TaskProcessing\Exception\NotFoundException $e) {
+				$this->logger->warning('Failed to cancel a title generation task', ['exception' => $e, 'taskId' => $task->getId()]);
+			}
+		}
 	}
 
 	/**
