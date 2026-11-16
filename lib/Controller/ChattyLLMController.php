@@ -796,26 +796,9 @@ class ChattyLLMController extends OCSController {
 		}
 
 		if ($task->getStatus() === Task::STATUS_SUCCESSFUL) {
-			try {
-				$taskOutput = trim($task->getOutput()['output'] ?? '');
-				$userInstructions = $this->appConfig->getValueString(
-					Application::APP_ID,
-					'chat_user_instructions_title',
-					Application::CHAT_USER_INSTRUCTIONS_TITLE,
-					lazy: true,
-				) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
-				$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
-				$title = str_replace($userInstructions, '', $taskOutput);
-				$title = str_replace('"', '', $title);
-				$title = explode(PHP_EOL, $title)[0];
-				$title = trim($title);
-				// do not write the title here since it's done in the listener
-
-				return new JSONResponse(['result' => $title]);
-			} catch (\OCP\DB\Exception $e) {
-				$this->logger->warning('Failed to generate a title for the chat session', ['exception' => $e]);
-				return new JSONResponse(['error' => $this->l10n->t('Failed to generate a title for the chat session')], Http::STATUS_INTERNAL_SERVER_ERROR);
-			}
+			// do not write the title here since it's done in the listener
+			$title = $this->chatService->cleanGeneratedTitle($this->userId, $task->getOutput()['output'] ?? '');
+			return new JSONResponse(['result' => $title]);
 		} elseif ($task->getstatus() === Task::STATUS_RUNNING || $task->getstatus() === Task::STATUS_SCHEDULED) {
 			return new JSONResponse(['task_status' => $task->getstatus()], Http::STATUS_EXPECTATION_FAILED);
 		} elseif ($task->getstatus() === Task::STATUS_FAILED || $task->getstatus() === Task::STATUS_CANCELLED) {

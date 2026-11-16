@@ -13,6 +13,7 @@ use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -34,6 +35,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		private TaskProcessingService $taskProcessingService,
 		private LoggerInterface $logger,
 		private NotificationService $notificationService,
+		private ChatService $chatService,
 	) {
 	}
 
@@ -69,7 +71,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		// title generation
 		if (preg_match('/^chatty-title:(\d+)$/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
-			$title = trim($task->getOutput()['output'] ?? '');
+			$title = $this->chatService->cleanGeneratedTitle($task->getUserId(), $task->getOutput()['output'] ?? '');
 			$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $title);
 		}
 

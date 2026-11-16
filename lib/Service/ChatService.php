@@ -637,13 +637,7 @@ class ChatService {
 			throw new InternalException($this->l10n->t('User not found'));
 		}
 
-		$userInstructions = $this->appConfig->getValueString(
-			Application::APP_ID,
-			'chat_user_instructions_title',
-			Application::CHAT_USER_INSTRUCTIONS_TITLE,
-			lazy: true,
-		) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
-		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
+		$userInstructions = $this->getTitleInstructions($user->getDisplayName());
 
 		try {
 			$history = $this->getRawLastMessages($sessionId);
@@ -658,6 +652,34 @@ class ChatService {
 			], JSON_THROW_ON_ERROR);
 		}, $history);
 		return $this->scheduleLLMChatTask($userId, $userInstructions, $userInstructions, $history, $sessionId, false);
+	}
+
+	/**
+	 * Extract the title from the output of a title generation task
+	 *
+	 * @param string|null $userId The owner of the task
+	 * @param string $output The raw task output
+	 * @return string The title, can be empty
+	 */
+	public function cleanGeneratedTitle(?string $userId, string $output): string {
+		$user = $userId === null ? null : $this->userManager->get($userId);
+		if ($user !== null) {
+			// some models repeat the instructions
+			$output = str_replace($this->getTitleInstructions($user->getDisplayName()), '', $output);
+		}
+		$output = str_replace('"', '', $output);
+		$output = explode(PHP_EOL, trim($output))[0];
+		return trim($output);
+	}
+
+	private function getTitleInstructions(string $userDisplayName): string {
+		$userInstructions = $this->appConfig->getValueString(
+			Application::APP_ID,
+			'chat_user_instructions_title',
+			Application::CHAT_USER_INSTRUCTIONS_TITLE,
+			lazy: true,
+		) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
+		return str_replace('{user}', $userDisplayName, $userInstructions);
 	}
 
 	public function isContextAgentAvailable(): bool {

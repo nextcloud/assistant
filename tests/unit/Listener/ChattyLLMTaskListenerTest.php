@@ -14,6 +14,7 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
+use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -35,6 +36,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 
 	private MessageMapper&MockObject $messageMapper;
 	private SessionMapper&MockObject $sessionMapper;
+	private ChatService&MockObject $chatService;
 	private ChattyLLMTaskListener $listener;
 
 	protected function setUp(): void {
@@ -42,6 +44,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->sessionMapper = $this->createMock(SessionMapper::class);
+		$this->chatService = $this->createMock(ChatService::class);
 
 		$session = new Session();
 		$session->setAssignmentId(null);
@@ -53,6 +56,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 			$this->createMock(TaskProcessingService::class),
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(NotificationService::class),
+			$this->chatService,
 		);
 	}
 
@@ -127,11 +131,15 @@ class ChattyLLMTaskListenerTest extends TestCase {
 			'chatty-title:' . self::SESSION_ID,
 		);
 		$task->setId(self::TASK_ID);
-		$task->setOutput(['output' => 'Cats']);
+		$task->setOutput(['output' => "\"Cats\"\nmore text"]);
 
 		$event = new TaskSuccessfulEvent($task);
 		$this->messageMapper->expects($this->never())->method('getMessageByTaskId');
 		$this->messageMapper->expects($this->never())->method('insert');
+		$this->chatService->expects($this->once())
+			->method('cleanGeneratedTitle')
+			->with('admin', "\"Cats\"\nmore text")
+			->willReturn('Cats');
 		$this->sessionMapper->expects($this->once())
 			->method('updateSessionTitle')
 			->with('admin', self::SESSION_ID, 'Cats');
