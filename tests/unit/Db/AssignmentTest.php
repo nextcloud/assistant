@@ -54,7 +54,18 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYDAY=-1FR'],
 			['FREQ=DAILY;COUNT=3'],
 			['FREQ=DAILY;UNTIL=19700105T000000Z'],
+			['FREQ=DAILY;BYHOUR=0,8,23;BYMINUTE=0,59;BYSECOND=60'],
+			['FREQ=MONTHLY;BYMONTHDAY=-1,1,31'],
+			['FREQ=MONTHLY;BYDAY=MO,TU;BYSETPOS=-1'],
+			['FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=-366,366;BYWEEKNO=-53,53'],
 		];
+	}
+
+	public function testSetRecurrenceDoesNotEvaluateRule(): void {
+		// Recurr never terminates when evaluating this rule, so setRecurrence() must not evaluate it
+		$assignment = new Assignment();
+		$assignment->setRecurrence('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30');
+		self::assertSame('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30', $assignment->getRecurrence());
 	}
 
 	/**
@@ -74,9 +85,19 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 
 	public function invalidRecurrenceDataProvider(): array {
 		return [
-			// accepted by the Rule constructor, only rejected on evaluation
-			['FREQ=WEEKLY;BYDAY=XX', 'Day is not a valid weekday'],
-			['FREQ=MONTHLY;BYDAY=1XX', 'Day is not a valid weekday'],
+			// accepted by the Rule constructor
+			['FREQ=WEEKLY;BYDAY=XX', 'BYDAY values must be weekdays'],
+			['FREQ=MONTHLY;BYDAY=1XX', 'BYDAY values must be weekdays'],
+			['FREQ=WEEKLY;BYDAY=XYZ', 'BYDAY values must be weekdays'],
+			['FREQ=WEEKLY;BYDAY=MO,', 'BYDAY values must be weekdays'],
+			['FREQ=DAILY;BYHOUR=XX', 'BYHOUR must contain integers'],
+			['FREQ=DAILY;BYHOUR=24', 'BYHOUR values must be between 0 and 23'],
+			['FREQ=DAILY;BYMINUTE=-1', 'BYMINUTE values must be between 0 and 59'],
+			['FREQ=YEARLY;BYMONTH=13', 'BYMONTH values must be between 1 and 12'],
+			['FREQ=MONTHLY;BYMONTHDAY=32', 'BYMONTHDAY values must be between -31 and 31, but not 0'],
+			['FREQ=MONTHLY;BYMONTHDAY=0', 'BYMONTHDAY values must be between -31 and 31, but not 0'],
+			['FREQ=MONTHLY;BYMONTHDAY=1.5', 'BYMONTHDAY must contain integers'],
+			['FREQ=YEARLY;BYWEEKNO=54', 'BYWEEKNO values must be between -53 and 53, but not 0'],
 			// rejected by the Rule constructor
 			['FREQ=NOPE', 'FREQ is invalid'],
 			['FREQ=DAILY;INTERVAL=0', 'Interval must be a positive integer'],

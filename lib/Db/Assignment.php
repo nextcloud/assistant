@@ -17,8 +17,6 @@ use Recurr\Exception as RecurrException;
 use Recurr\Exception\InvalidRRule;
 use Recurr\RecurrenceCollection;
 use Recurr\Rule;
-use Recurr\Transformer\ArrayTransformer;
-use Recurr\Transformer\ArrayTransformerConfig;
 use Recurr\Transformer\Constraint\AfterConstraint;
 use function OCP\Log\logger;
 
@@ -111,15 +109,50 @@ class Assignment extends Entity implements \JsonSerializable {
 	 */
 	public function setRecurrence(string $recurrence): void {
 		try {
-			// The Rule constructor only parses the string. Some values (e.g. BYDAY weekdays)
-			// are only validated when the rule is evaluated, so evaluate it once here.
-			$config = new ArrayTransformerConfig();
-			$config->setVirtualLimit(1);
-			(new ArrayTransformer($config))->transform(new Rule($recurrence, new \DateTime()));
+			self::validateRuleParts(new Rule($recurrence));
 		} catch (RecurrException $e) {
 			throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 		}
 		$this->setter('recurrence', [$recurrence]);
+	}
+
+	/**
+	 * The Rule constructor only parses the string and does not check the BY* values.
+	 * Evaluating a rule with invalid values throws, emits PHP warnings or never terminates,
+	 * so the values are checked here against RFC 5545 without evaluating the rule.
+	 *
+	 * @throws InvalidRRule
+	 */
+	private static function validateRuleParts(Rule $rule): void {
+		foreach ($rule->getByDay() ?? [] as $day) {
+			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', (string)$day) !== 1) {
+				throw new InvalidRRule('BYDAY values must be weekdays (SU, MO, ...) with an optional position, e.g. MO or -1FR');
+			}
+		}
+
+		// part name => [values, min, max, negative values allowed]
+		$parts = [
+			'BYSECOND' => [$rule->getBySecond(), 0, 60, false],
+			'BYMINUTE' => [$rule->getByMinute(), 0, 59, false],
+			'BYHOUR' => [$rule->getByHour(), 0, 23, false],
+			'BYMONTH' => [$rule->getByMonth(), 1, 12, false],
+			'BYMONTHDAY' => [$rule->getByMonthDay(), 1, 31, true],
+			'BYYEARDAY' => [$rule->getByYearDay(), 1, 366, true],
+			'BYWEEKNO' => [$rule->getByWeekNumber(), 1, 53, true],
+			'BYSETPOS' => [$rule->getBySetPosition(), 1, 366, true],
+		];
+		foreach ($parts as $name => [$values, $min, $max, $negativeAllowed]) {
+			foreach ($values ?? [] as $value) {
+				if (preg_match('/^[+-]?\d+$/', (string)$value) !== 1) {
+					throw new InvalidRRule($name . ' must contain integers');
+				}
+				$number = (int)$value;
+				$magnitude = $negativeAllowed ? abs($number) : $number;
+				if ($magnitude < $min || $magnitude > $max) {
+					throw new InvalidRRule($name . ' values must be between ' . ($negativeAllowed ? '-' . $max . ' and ' . $max . ', but not 0' : $min . ' and ' . $max));
+				}
+			}
+		}
 	}
 
 	/**
