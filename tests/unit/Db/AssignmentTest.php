@@ -34,6 +34,36 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '1970-01-02T10:00:00Z', true],
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '1970-01-02T10:00:00Z', true],
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '2027-01-02T10:00:00Z', true],
+			// more than 732 occurrences (Recurr's default virtual limit) between the start and the last run
+			['FREQ=DAILY;BYHOUR=8', '2020-01-01T00:00:00Z', '2026-01-01T08:00:00Z', 'UTC', '2026-01-02T08:00:00Z', true],
+			['FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29', '2026-03-01T00:00:00Z', '@0', 'UTC', '2028-02-29T00:00:00Z', true],
+			['FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29', '2026-03-01T00:00:00Z', '@0', 'UTC', '2028-02-28T00:00:00Z', false],
+		];
+	}
+
+	/**
+	 * Rules that never occur may already be stored, from before they were rejected on save
+	 *
+	 * @dataProvider neverOccurringRuleDataProvider
+	 */
+	public function testIsDueTerminatesForStoredRuleThatNeverOccurs(string $rrule): void {
+		$assignment = Assignment::fromRow([
+			'recurrence' => $rrule,
+			'starts_at' => (new \DateTimeImmutable('2026-01-01T00:00:00Z'))->getTimestamp(),
+			'last_run_at' => 0,
+			'timezone' => 'UTC',
+		]);
+		self::assertFalse($assignment->isDueToRun(new \DateTimeImmutable('2026-06-01T00:00:00Z')));
+	}
+
+	public function neverOccurringRuleDataProvider(): array {
+		return [
+			['FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30'],
+			['FREQ=WEEKLY;BYMONTH=2;BYMONTHDAY=30'],
+			['FREQ=MONTHLY;BYMONTH=2;BYMONTHDAY=30'],
+			['FREQ=HOURLY;BYMONTH=2;BYMONTHDAY=30'],
+			// 2026-01-01 is a Thursday, so a Monday is never hit
+			['FREQ=DAILY;INTERVAL=7;BYDAY=MO'],
 		];
 	}
 
@@ -53,19 +83,33 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=8'],
 			['FREQ=MONTHLY;BYDAY=-1FR'],
 			['FREQ=DAILY;COUNT=3'],
-			['FREQ=DAILY;UNTIL=19700105T000000Z'],
 			['FREQ=DAILY;BYHOUR=0,8,23;BYMINUTE=0,59;BYSECOND=60'],
 			['FREQ=MONTHLY;BYMONTHDAY=-1,1,31'],
 			['FREQ=MONTHLY;BYDAY=MO,TU;BYSETPOS=-1'],
-			['FREQ=YEARLY;BYMONTH=1,12;BYYEARDAY=-366,366;BYWEEKNO=-53,53'],
+			['FREQ=YEARLY;BYMONTH=1,12'],
+			['FREQ=YEARLY;BYYEARDAY=-366,366'],
+			['FREQ=YEARLY;BYWEEKNO=-53,53;BYDAY=MO'],
+			['FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29'],
 		];
 	}
 
-	public function testSetRecurrenceDoesNotEvaluateRule(): void {
-		// Recurr never terminates when evaluating this rule, so setRecurrence() must not evaluate it
+	/**
+	 * @dataProvider neverOccurringRuleDataProvider
+	 */
+	public function testSetRecurrenceRejectsRuleThatNeverOccurs(string $rrule): void {
 		$assignment = new Assignment();
-		$assignment->setRecurrence('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30');
-		self::assertSame('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30', $assignment->getRecurrence());
+		$assignment->setStartsAt((new \DateTimeImmutable('2026-01-01T00:00:00Z'))->getTimestamp());
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('the rule never occurs, or its first occurrence is too far from the start date');
+		$assignment->setRecurrence($rrule);
+	}
+
+	public function testSetRecurrenceRejectsRuleThatEnded(): void {
+		$assignment = new Assignment();
+		$assignment->setStartsAt((new \DateTimeImmutable('2026-01-01T00:00:00Z'))->getTimestamp());
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('the rule never occurs');
+		$assignment->setRecurrence('FREQ=DAILY;UNTIL=20251231T000000Z');
 	}
 
 	/**
