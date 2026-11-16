@@ -72,7 +72,10 @@ class ChattyLLMTaskListener implements IEventListener {
 		if (preg_match('/^chatty-title:(\d+)$/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
 			$title = $this->chatService->cleanGeneratedTitle($task->getUserId(), $task->getOutput()['output'] ?? '');
-			$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $title);
+			// keep the current title if nothing usable was generated
+			if ($title !== '') {
+				$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $title);
+			}
 		}
 
 		// message generation

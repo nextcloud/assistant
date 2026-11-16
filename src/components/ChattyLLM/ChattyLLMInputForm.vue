@@ -1678,8 +1678,9 @@ export default {
 		},
 
 		async updateSession() {
+			// only send is_remembered: sending the title would cancel a pending automatic title generation
+			// and could overwrite a freshly generated title with a stale one
 			await axios.put(getChatURL(`/sessions/${this.active.id}`), {
-				title: this.active.title,
 				is_remembered: this.active.is_remembered,
 			})
 		},
@@ -1734,40 +1735,69 @@ export default {
 			if (existingPoll) {
 				return existingPoll.promise
 			}
-			const poll = { sessionId, intervalId: null, promise: null, cancel: null }
+			const pollInterval = 2000
+			const maxRetryDelay = 60000
+			const poll = { sessionId, timerId: null, abortController: new AbortController(), promise: null, cancel: null }
 			poll.promise = new Promise((resolve, reject) => {
-				const stop = () => {
-					clearInterval(poll.intervalId)
+				let settled = false
+				let retryDelay = 5000
+				const settle = (fn, value) => {
+					if (settled) {
+						return
+					}
+					settled = true
+					clearTimeout(poll.timerId)
 					if (this.titlePolls.get(taskId) === poll) {
 						this.titlePolls.delete(taskId)
 					}
+					fn(value)
 				}
 				poll.cancel = () => {
-					stop()
-					reject(new TaskPollCancelledError('Title generation poll cancelled'))
+					poll.abortController.abort()
+					settle(reject, new TaskPollCancelledError('Title generation poll cancelled'))
 				}
-				poll.intervalId = setInterval(() => {
+				// chain the requests with setTimeout so that they never overlap
+				let scheduleNext = null
+				const pollOnce = () => {
 					axios.get(
 						getChatURL('/check_title_generation'),
-						{ params: { taskId, sessionId } },
+						{ params: { taskId, sessionId }, signal: poll.abortController.signal },
 					).then(response => {
-						stop()
 						const title = response.data?.result
 						if (title) {
-							resolve(title)
+							settle(resolve, title)
 						} else {
-							reject(new Error('No title generated', { cause: response.data }))
+							settle(reject, new Error('No title generated', { cause: response.data }))
 						}
 					}).catch(error => {
-						// Http::STATUS_EXPECTATION_FAILED (417): the task is still scheduled or running
-						if (error.response?.status === 417) {
-							console.debug('checkTitleGeneration, task is still scheduled or running')
+						if (isCancel(error)) {
+							settle(reject, new TaskPollCancelledError('Title generation poll cancelled'))
 							return
 						}
-						stop()
-						reject(error)
+						const status = error.response?.status
+						// Http::STATUS_EXPECTATION_FAILED (417): the task is still scheduled or running
+						if (status === 417) {
+							console.debug('checkTitleGeneration, task is still scheduled or running')
+							retryDelay = 5000
+							scheduleNext(pollInterval)
+							return
+						}
+						// network errors and server errors are retried with a backoff
+						if (status === undefined || status >= 500) {
+							console.warn('[assistant] title generation poll temporary failure, will retry in ' + retryDelay + 'ms', error)
+							scheduleNext(retryDelay)
+							retryDelay = Math.min(retryDelay * 2, maxRetryDelay)
+							return
+						}
+						settle(reject, error)
 					})
-				}, 2000)
+				}
+				scheduleNext = (delay) => {
+					if (!settled) {
+						poll.timerId = setTimeout(pollOnce, delay)
+					}
+				}
+				scheduleNext(pollInterval)
 			})
 			this.titlePolls.set(taskId, poll)
 			return poll.promise
