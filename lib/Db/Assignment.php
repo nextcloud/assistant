@@ -13,9 +13,12 @@ use OCP\AppFramework\Db\Entity;
 use OCP\DB\Types;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Recurr\Exception as RecurrException;
 use Recurr\Exception\InvalidRRule;
 use Recurr\RecurrenceCollection;
 use Recurr\Rule;
+use Recurr\Transformer\ArrayTransformer;
+use Recurr\Transformer\ArrayTransformerConfig;
 use Recurr\Transformer\Constraint\AfterConstraint;
 use function OCP\Log\logger;
 
@@ -108,9 +111,13 @@ class Assignment extends Entity implements \JsonSerializable {
 	 */
 	public function setRecurrence(string $recurrence): void {
 		try {
-			new Rule($recurrence);
-		} catch (InvalidRRule $e) {
-			throw new \InvalidArgumentException('Invalid recurrence rule: ' . $recurrence, previous: $e);
+			// The Rule constructor only parses the string. Some values (e.g. BYDAY weekdays)
+			// are only validated when the rule is evaluated, so evaluate it once here.
+			$config = new ArrayTransformerConfig();
+			$config->setVirtualLimit(1);
+			(new ArrayTransformer($config))->transform(new Rule($recurrence, new \DateTime()));
+		} catch (RecurrException $e) {
+			throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 		}
 		$this->setter('recurrence', [$recurrence]);
 	}

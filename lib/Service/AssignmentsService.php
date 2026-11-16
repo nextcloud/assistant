@@ -58,7 +58,7 @@ class AssignmentsService {
 		try {
 			$assignment->setRecurrence($recurrence);
 		} catch (\InvalidArgumentException $e) {
-			throw new BadRequestException('Invalid recurrence rule', previous: $e);
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		if ($timezone === null) {
 			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId)->getName();
@@ -66,7 +66,7 @@ class AssignmentsService {
 		try {
 			$assignment->setTimezone($timezone);
 		} catch (\InvalidArgumentException $e) {
-			throw new BadRequestException('Invalid recurrence rule', previous: $e);
+			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		try {
 			$this->assignmentMapper->insert($assignment);

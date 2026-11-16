@@ -36,4 +36,57 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '2027-01-02T10:00:00Z', true],
 		];
 	}
+
+	/**
+	 * @dataProvider validRecurrenceDataProvider
+	 */
+	public function testSetValidRecurrence(string $rrule): void {
+		$assignment = new Assignment();
+		$assignment->setRecurrence($rrule);
+		self::assertSame($rrule, $assignment->getRecurrence());
+	}
+
+	public function validRecurrenceDataProvider(): array {
+		return [
+			['FREQ=DAILY'],
+			['FREQ=WEEKLY;BYDAY=MO'],
+			['FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=8'],
+			['FREQ=MONTHLY;BYDAY=-1FR'],
+			['FREQ=DAILY;COUNT=3'],
+			['FREQ=DAILY;UNTIL=19700105T000000Z'],
+		];
+	}
+
+	/**
+	 * @dataProvider invalidRecurrenceDataProvider
+	 */
+	public function testSetInvalidRecurrence(string $rrule, string $expectedReason): void {
+		$assignment = new Assignment();
+		try {
+			$assignment->setRecurrence($rrule);
+			self::fail('Expected an InvalidArgumentException for ' . $rrule);
+		} catch (\InvalidArgumentException $e) {
+			self::assertStringContainsString($rrule, $e->getMessage());
+			self::assertStringContainsString($expectedReason, $e->getMessage());
+		}
+		self::assertNull($assignment->getRecurrence());
+	}
+
+	public function invalidRecurrenceDataProvider(): array {
+		return [
+			// accepted by the Rule constructor, only rejected on evaluation
+			['FREQ=WEEKLY;BYDAY=XX', 'Day is not a valid weekday'],
+			['FREQ=MONTHLY;BYDAY=1XX', 'Day is not a valid weekday'],
+			// rejected by the Rule constructor
+			['FREQ=NOPE', 'FREQ is invalid'],
+			['FREQ=DAILY;INTERVAL=0', 'Interval must be a positive integer'],
+		];
+	}
+
+	public function testSetInvalidTimezone(): void {
+		$assignment = new Assignment();
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid timezone: Not/AZone');
+		$assignment->setTimezone('Not/AZone');
+	}
 }
