@@ -938,8 +938,12 @@ export default {
 		 */
 		async generateSessionTitle(sessionId) {
 			try {
-				this.loading.titleGeneration = true
 				const titleGenerationResponse = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
+				// the backend listener persists the title: only track it in the UI for the active session
+				if (this.active?.id !== sessionId) {
+					return
+				}
+				this.loading.titleGeneration = true
 				const titlePollResponse = await this.pollTitleGenerationTask(titleGenerationResponse.data.taskId, sessionId)
 				const titlePollResponseData = titlePollResponse.data
 				console.debug('checkTaskPolling result:', titlePollResponseData)
