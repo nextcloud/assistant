@@ -143,13 +143,6 @@
 							</template>
 							{{ t('assistant', 'Edit title') }}
 						</NcActionButton>
-						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onGenerateSessionTitle">
-							<template #icon>
-								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
-								<NcLoadingIcon v-else :size="20" />
-							</template>
-							{{ t('assistant', 'Generate title') }}
-						</NcActionButton>
 					</NcActions>
 				</div>
 			</div>
@@ -292,7 +285,6 @@
 </template>
 
 <script>
-import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -356,7 +348,6 @@ export default {
 
 	components: {
 		AgencyConfirmation,
-		AutoFixIcon,
 		TrashCanOutlineIcon,
 		DeleteSweepOutlineIcon,
 		PencilOutlineIcon,
@@ -939,10 +930,15 @@ export default {
 			this.fetchMessages(true)
 		},
 
-		async onGenerateSessionTitle() {
+		/**
+		 * Generate a title for the session in the background.
+		 * The backend task listener persists the title, this only updates the frontend data.
+		 *
+		 * @param {number} sessionId The session ID
+		 */
+		async generateSessionTitle(sessionId) {
 			try {
 				this.loading.titleGeneration = true
-				const sessionId = this.active.id
 				const titleGenerationResponse = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
 				const titlePollResponse = await this.pollTitleGenerationTask(titleGenerationResponse.data.taskId, sessionId)
 				const titlePollResponseData = titlePollResponse.data
@@ -956,10 +952,12 @@ export default {
 					session.title = titlePollResponseData?.result
 				}
 			} catch (error) {
-				console.error('onGenerateSessionTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title for the conversation'))
+				// not fatal: the session keeps the title derived from the first message
+				console.error('generateSessionTitle error:', error)
 			} finally {
-				this.loading.titleGeneration = false
+				if (this.active?.id === sessionId) {
+					this.loading.titleGeneration = false
+				}
 			}
 		},
 
@@ -1236,7 +1234,9 @@ export default {
 					session.title = content
 				}
 
-				await this.runGenerationTask(sessionId, agencyConfirm)
+				// only generate a title from a text message, audio messages get their content later
+				const generateTitle = firstHumanMessage && content.trim() !== ''
+				await this.runGenerationTask(sessionId, agencyConfirm, generateTitle)
 			} catch (error) {
 				this.loading.newHumanMessage = false
 				console.error('newMessage error:', error)
@@ -1269,7 +1269,7 @@ export default {
 			}
 		},
 
-		async runGenerationTask(sessionId, agencyConfirm = null) {
+		async runGenerationTask(sessionId, agencyConfirm = null, generateTitle = false) {
 			const requestSeq = ++this.generationRequestSeq
 			let taskId = null
 			try {
@@ -1290,6 +1290,10 @@ export default {
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
 				taskId = generationResponseData.taskId
+				if (generateTitle) {
+					// scheduled after the answer so the title task does not delay it, not awaited
+					this.generateSessionTitle(sessionId)
+				}
 				if (!this.trackGenerationTask(taskId, sessionId, requestSeq)) {
 					// the session changed while scheduling: another generation
 					// owns the polling state now, never install ours
