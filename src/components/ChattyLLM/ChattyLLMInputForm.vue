@@ -1716,6 +1716,12 @@ export default {
 				if (titleTaskId !== null) {
 					// not fatal: the session keeps the title derived from the transcript
 					await this.trackTitleTask(titleTaskId, sessionId, { silent: true })
+				} else if (checkSessionResponse.data?.sessionTitle) {
+					// the title task may already have finished, the listener persisted its title
+					const session = this.sessions.find(s => s.id === sessionId)
+					if (session) {
+						session.title = checkSessionResponse.data.sessionTitle
+					}
 				}
 			} catch (error) {
 				console.error('trackScheduledTitleTask error:', error)

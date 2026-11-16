@@ -131,6 +131,10 @@ class ChatService {
 			return $session;
 		}
 		if ($title !== null) {
+			// a pending title generation must not overwrite the title the user just set.
+			// cancel before saving: a task that finishes in between has its title overwritten by ours,
+			// a task cancelled while running has its result dropped
+			$this->cancelTitleGenerationTasks($userId, $sessionId);
 			$session->setTitle($title);
 		}
 		if ($isRemembered !== null) {
@@ -144,10 +148,6 @@ class ChatService {
 			$this->sessionMapper->update($session);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
-		}
-		if ($title !== null) {
-			// a pending title generation must not overwrite the title the user just set
-			$this->cancelTitleGenerationTasks($userId, $sessionId);
 		}
 		return $session;
 	}
