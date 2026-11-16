@@ -138,7 +138,7 @@ class ChattyLLMTaskListener implements IEventListener {
 					if (count($olderMessages) === 0) {
 						$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $queryMessageContent);
 						// the frontend can only generate a title from a text message, generate it now that we have the transcript
-						if ($queryMessageContent !== '') {
+						if ($queryMessageContent !== '' && $this->chatService->isAutoTitleGenerationEnabled()) {
 							$this->scheduleTitleGeneration($task->getUserId(), $sessionId);
 						}
 					}

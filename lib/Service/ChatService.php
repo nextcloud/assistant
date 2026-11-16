@@ -672,6 +672,15 @@ class ChatService {
 		return trim($output);
 	}
 
+	/**
+	 * Whether a title is generated automatically after the first message of a chat session.
+	 * Admins can disable it since it costs an extra LLM call per session.
+	 * Manual title generation is always available.
+	 */
+	public function isAutoTitleGenerationEnabled(): bool {
+		return $this->appConfig->getValueString(Application::APP_ID, 'chat_auto_title_enabled', '1', lazy: true) === '1';
+	}
+
 	private function getTitleInstructions(string $userDisplayName): string {
 		$userInstructions = $this->appConfig->getValueString(
 			Application::APP_ID,

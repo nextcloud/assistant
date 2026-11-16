@@ -143,6 +143,13 @@
 							</template>
 							{{ t('assistant', 'Edit title') }}
 						</NcActionButton>
+						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onRegenerateSessionTitle">
+							<template #icon>
+								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
+								<NcLoadingIcon v-else :size="20" />
+							</template>
+							{{ t('assistant', 'Regenerate title') }}
+						</NcActionButton>
 					</NcActions>
 				</div>
 			</div>
@@ -286,6 +293,7 @@
 
 <script>
 import { markRaw } from 'vue'
+import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import TrashCanOutlineIcon from 'vue-material-design-icons/TrashCanOutline.vue'
@@ -349,6 +357,7 @@ export default {
 
 	components: {
 		AgencyConfirmation,
+		AutoFixIcon,
 		TrashCanOutlineIcon,
 		DeleteSweepOutlineIcon,
 		PencilOutlineIcon,
@@ -448,6 +457,7 @@ export default {
 			// number of title generations in flight by session ID
 			titleGenerationCounts: markRaw(new Map()),
 			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
+			autoTitleEnabled: loadState('assistant', 'chat_auto_title_enabled', true),
 			slowPickup: false,
 			agencyAvailable: loadState('assistant', 'agency_available', false),
 			agencySuggestions: [
@@ -921,21 +931,30 @@ export default {
 			this.fetchMessages(true)
 		},
 
+		onRegenerateSessionTitle() {
+			this.generateSessionTitle(this.active.id, { silent: false })
+		},
+
 		/**
 		 * Generate a title for the session in the background.
 		 * The backend task listener persists the title, this only updates the frontend data.
 		 *
 		 * @param {number} sessionId The session ID
+		 * @param {object} options Options
+		 * @param {boolean} options.silent Do not show an error to the user if the generation fails
 		 */
-		async generateSessionTitle(sessionId) {
+		async generateSessionTitle(sessionId, { silent = true } = {}) {
 			// count the request too, so the title cannot be edited before the task is scheduled
 			this.updateTitleGenerationCount(sessionId, 1)
 			try {
 				const titleGenerationResponse = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
-				// not fatal: the session keeps the title derived from the first message
-				await this.trackTitleTask(titleGenerationResponse.data.taskId, sessionId, { silent: true })
+				// automatic generation is not fatal: the session keeps the title derived from the first message
+				await this.trackTitleTask(titleGenerationResponse.data.taskId, sessionId, { silent })
 			} catch (error) {
 				console.error('generateSessionTitle error:', error)
+				if (!silent) {
+					showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title for the conversation'))
+				}
 			} finally {
 				this.updateTitleGenerationCount(sessionId, -1)
 			}
@@ -1262,7 +1281,7 @@ export default {
 
 				// only generate a title from a text message, for audio messages the backend
 				// schedules the title generation once it has the transcript
-				const generateTitle = firstHumanMessage && content.trim() !== ''
+				const generateTitle = this.autoTitleEnabled && firstHumanMessage && content.trim() !== ''
 				await this.runGenerationTask(sessionId, agencyConfirm, generateTitle)
 			} catch (error) {
 				this.loading.newHumanMessage = false
@@ -1697,7 +1716,7 @@ export default {
 				if (isFirstHumanMessage) {
 					const session = this.sessions.find((session) => session.id === lastHumanMessage.session_id)
 					session.title = updatedMessage.data.content
-					if (updatedMessage.data.content?.trim()) {
+					if (this.autoTitleEnabled && updatedMessage.data.content?.trim()) {
 						this.trackScheduledTitleTask(lastHumanMessage.session_id)
 					}
 				}
