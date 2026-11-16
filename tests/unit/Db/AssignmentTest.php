@@ -34,10 +34,16 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '1970-01-02T10:00:00Z', true],
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '1970-01-02T10:00:00Z', true],
 			['FREQ=DAILY;BYHOUR=8', '@0', '1970-01-01T10:00:00Z', '+0200', '2027-01-02T10:00:00Z', true],
-			// more than 732 occurrences (Recurr's default virtual limit) between the start and the last run
+			// more than 732 occurrences between the start and the last run
 			['FREQ=DAILY;BYHOUR=8', '2020-01-01T00:00:00Z', '2026-01-01T08:00:00Z', 'UTC', '2026-01-02T08:00:00Z', true],
 			['FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29', '2026-03-01T00:00:00Z', '@0', 'UTC', '2028-02-29T00:00:00Z', true],
 			['FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29', '2026-03-01T00:00:00Z', '@0', 'UTC', '2028-02-28T00:00:00Z', false],
+			// COUNT also includes the occurrences before the last run
+			['FREQ=DAILY;COUNT=3', '2026-01-01T00:00:00Z', '2026-01-02T00:00:00Z', 'UTC', '2026-01-03T00:00:01Z', true],
+			['FREQ=DAILY;COUNT=3', '2026-01-01T00:00:00Z', '2026-01-03T00:00:00Z', 'UTC', '2026-01-04T00:00:01Z', false],
+			// the next occurrence after this one is 3 years later
+			['FREQ=MONTHLY;INTERVAL=36;BYDAY=MO;BYSETPOS=1', '2026-01-01T00:00:00Z', '@0', 'UTC', '2026-01-05T00:00:01Z', true],
+			['FREQ=HOURLY;BYHOUR=8;BYSETPOS=1', '2026-01-01T00:00:00Z', '@0', 'UTC', '2026-01-01T08:00:00Z', true],
 		];
 	}
 
@@ -56,12 +62,22 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse($assignment->isDueToRun(new \DateTimeImmutable('2026-06-01T00:00:00Z')));
 	}
 
+	public function testIsDueIgnoresStoredRuleWithItsOwnStart(): void {
+		$assignment = Assignment::fromRow([
+			'recurrence' => "DTSTART:20260101T000000Z\nRRULE:FREQ=DAILY",
+			'starts_at' => (new \DateTimeImmutable('2026-01-01T00:00:00Z'))->getTimestamp(),
+			'last_run_at' => 0,
+			'timezone' => 'UTC',
+		]);
+		self::assertFalse($assignment->isDueToRun(new \DateTimeImmutable('2026-06-01T00:00:00Z')));
+	}
+
 	public function neverOccurringRuleDataProvider(): array {
 		return [
 			['FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30'],
-			['FREQ=WEEKLY;BYMONTH=2;BYMONTHDAY=30'],
 			['FREQ=MONTHLY;BYMONTH=2;BYMONTHDAY=30'],
 			['FREQ=HOURLY;BYMONTH=2;BYMONTHDAY=30'],
+			['FREQ=SECONDLY;BYMONTH=2;BYMONTHDAY=30'],
 			// 2026-01-01 is a Thursday, so a Monday is never hit
 			['FREQ=DAILY;INTERVAL=7;BYDAY=MO'],
 		];
@@ -95,6 +111,7 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=YEARLY;BYDAY=53FR'],
 			['FREQ=YEARLY;BYDAY=-53TH'],
 			['FREQ=WEEKLY;BYDAY=MO,WE,FR'],
+			['FREQ=HOURLY;BYHOUR=8;BYSETPOS=1'],
 		];
 	}
 
@@ -105,7 +122,7 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 		$assignment = new Assignment();
 		$assignment->setStartsAt((new \DateTimeImmutable('2026-01-01T00:00:00Z'))->getTimestamp());
 		$this->expectException(\InvalidArgumentException::class);
-		$this->expectExceptionMessage('the rule never occurs, or its first occurrence is too far from the start date');
+		$this->expectExceptionMessage('the rule never occurs');
 		$assignment->setRecurrence($rrule);
 	}
 
@@ -134,7 +151,7 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 
 	public function invalidRecurrenceDataProvider(): array {
 		return [
-			// accepted by the Rule constructor
+			// checked by Assignment
 			['FREQ=WEEKLY;BYDAY=XX', 'BYDAY values must be weekdays'],
 			['FREQ=MONTHLY;BYDAY=1XX', 'BYDAY values must be weekdays'],
 			['FREQ=WEEKLY;BYDAY=XYZ', 'BYDAY values must be weekdays'],
@@ -152,9 +169,11 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYMONTHDAY=0', 'BYMONTHDAY values must be between -31 and 31, but not 0'],
 			['FREQ=MONTHLY;BYMONTHDAY=1.5', 'BYMONTHDAY must contain integers'],
 			['FREQ=YEARLY;BYWEEKNO=54', 'BYWEEKNO values must be between -53 and 53, but not 0'],
-			// rejected by the Rule constructor
-			['FREQ=NOPE', 'FREQ is invalid'],
-			['FREQ=DAILY;INTERVAL=0', 'Interval must be a positive integer'],
+			// checked by RRule
+			['FREQ=NOPE', 'The FREQ rule part must be one of'],
+			['FREQ=DAILY;INTERVAL=0', 'The INTERVAL rule part must be a positive integer'],
+			['FREQ=WEEKLY;BYMONTHDAY=1', 'The BYMONTHDAY rule part MUST NOT be specified when the FREQ rule part is set to WEEKLY'],
+			["DTSTART:20260101T000000Z\nRRULE:FREQ=DAILY", 'Too many DTSTART properties'],
 		];
 	}
 

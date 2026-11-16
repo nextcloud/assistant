@@ -55,16 +55,17 @@ class AssignmentsService {
 		$assignment->setLastRunAt(0);
 		$assignment->setCreatedAt($now);
 		$assignment->setUpdatedAt($now);
-		try {
-			$assignment->setRecurrence($recurrence);
-		} catch (\InvalidArgumentException $e) {
-			throw new BadRequestException($e->getMessage(), previous: $e);
-		}
 		if ($timezone === null) {
 			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId)->getName();
 		}
 		try {
 			$assignment->setTimezone($timezone);
+		} catch (\InvalidArgumentException $e) {
+			throw new BadRequestException($e->getMessage(), previous: $e);
+		}
+		// set after the start and the timezone, the rule is checked against them
+		try {
+			$assignment->setRecurrence($recurrence);
 		} catch (\InvalidArgumentException $e) {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}

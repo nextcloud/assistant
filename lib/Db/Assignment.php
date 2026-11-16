@@ -11,15 +11,7 @@ namespace OCA\Assistant\Db;
 
 use OCP\AppFramework\Db\Entity;
 use OCP\DB\Types;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Recurr\Exception as RecurrException;
-use Recurr\Exception\InvalidRRule;
-use Recurr\RecurrenceCollection;
-use Recurr\Rule;
-use Recurr\Transformer\ArrayTransformer;
-use Recurr\Transformer\ArrayTransformerConfig;
-use Recurr\Transformer\Constraint\AfterConstraint;
+use RRule\RRule;
 use function OCP\Log\logger;
 
 /**
@@ -39,10 +31,6 @@ use function OCP\Log\logger;
  * @method \string getTimezone()
  */
 class Assignment extends Entity implements \JsonSerializable {
-	private const OCCURRENCE_CHECK_YEARS = 10;
-	// about 0.5s of searching, bounds SECONDLY/MINUTELY rules that occur very rarely
-	private const OCCURRENCE_CHECK_MAX_STEPS = 100000;
-
 	/** @var string */
 	protected $userId;
 	/** @var string */
@@ -111,84 +99,81 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
+	 * Rejects invalid rules and rules that never occur after the start
+	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function setRecurrence(string $recurrence): void {
 		try {
-			$rule = new Rule($recurrence);
-			self::validateRuleParts($rule);
-			$this->validateRuleOccurs($rule);
-		} catch (RecurrException $e) {
+			self::validateRuleParts($recurrence);
+			// startsAt and timezone are still null if they are set after the recurrence
+			/** @psalm-suppress RedundantPropertyInitializationCheck */
+			$start = self::startDate($this->startsAt ?? time(), $this->timezone ?? 'UTC');
+			// RRule stops searching after a full calendar cycle without an occurrence
+			if ((new RRule($recurrence, $start))->getOccurrencesAfter($start, true, 1) === []) {
+				throw new \InvalidArgumentException('the rule never occurs');
+			}
+		} catch (\InvalidArgumentException $e) {
 			throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 		}
 		$this->setter('recurrence', [$recurrence]);
 	}
 
 	/**
-	 * Rejects rules that never occur, e.g. FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30
-	 *
-	 * @throws InvalidRRule
+	 * The rule is evaluated from this start. RRule rejects a rule string with its own DTSTART when a start is given.
 	 */
-	private function validateRuleOccurs(Rule $rule): void {
-		// startsAt is still null if the recurrence is set before the start
-		/** @psalm-suppress RedundantPropertyInitializationCheck */
-		$start = $this->startsAt ?? time();
-		$deadline = (new \DateTimeImmutable('@' . $start))->modify('+' . self::OCCURRENCE_CHECK_YEARS . ' years');
-		$rule->setStartDate(new BoundedDateTime('@' . $start, $deadline, self::OCCURRENCE_CHECK_MAX_STEPS));
-		$config = new ArrayTransformerConfig();
-		$config->setVirtualLimit(1);
-		try {
-			$occurs = !(new ArrayTransformer($config))->transform($rule)->isEmpty();
-		} catch (\OverflowException) {
-			$occurs = false;
-		}
-		if (!$occurs) {
-			throw new InvalidRRule('the rule never occurs, or its first occurrence is too far from the start date');
-		}
+	private static function startDate(int $startsAt, string $timezone): \DateTime {
+		return (new \DateTime('@' . $startsAt))->setTimezone(new \DateTimeZone($timezone));
 	}
 
 	/**
-	 * The Rule constructor only parses the string and does not check the BY* values.
-	 * Evaluating a rule with invalid values throws, emits PHP warnings or never terminates,
-	 * so the values are checked here against RFC 5545 without evaluating the rule.
+	 * Checks the BY* values against RFC 5545. RRule validates them as well,
+	 * these checks give more specific error messages.
 	 *
-	 * @throws InvalidRRule
+	 * @throws \InvalidArgumentException
 	 */
-	private static function validateRuleParts(Rule $rule): void {
+	private static function validateRuleParts(string $recurrence): void {
+		$parts = [];
+		foreach (explode(';', $recurrence) as $part) {
+			[$name, $value] = array_pad(explode('=', $part, 2), 2, '');
+			$parts[strtoupper(trim($name))] = trim($value);
+		}
+		$values = static fn (string $name): array => isset($parts[$name]) ? explode(',', $parts[$name]) : [];
+
 		// the position is the nth weekday of the month for MONTHLY rules, of the year otherwise
-		$maxDayPosition = $rule->getFreqAsText() === 'MONTHLY' ? 5 : 53;
-		foreach ($rule->getByDay() ?? [] as $day) {
-			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', (string)$day, $matches) !== 1) {
-				throw new InvalidRRule('BYDAY values must be weekdays (SU, MO, ...) with an optional position, e.g. MO or -1FR');
+		$maxDayPosition = strtoupper($parts['FREQ'] ?? '') === 'MONTHLY' ? 5 : 53;
+		foreach ($values('BYDAY') as $day) {
+			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', $day, $matches) !== 1) {
+				throw new \InvalidArgumentException('BYDAY values must be weekdays (SU, MO, ...) with an optional position, e.g. MO or -1FR');
 			}
 			if ($matches[1] !== '') {
 				$position = abs((int)$matches[1]);
 				if ($position < 1 || $position > $maxDayPosition) {
-					throw new InvalidRRule('BYDAY position must be between -' . $maxDayPosition . ' and ' . $maxDayPosition . ', but not 0');
+					throw new \InvalidArgumentException('BYDAY position must be between -' . $maxDayPosition . ' and ' . $maxDayPosition . ', but not 0');
 				}
 			}
 		}
 
-		// part name => [values, min, max, negative values allowed]
-		$parts = [
-			'BYSECOND' => [$rule->getBySecond(), 0, 60, false],
-			'BYMINUTE' => [$rule->getByMinute(), 0, 59, false],
-			'BYHOUR' => [$rule->getByHour(), 0, 23, false],
-			'BYMONTH' => [$rule->getByMonth(), 1, 12, false],
-			'BYMONTHDAY' => [$rule->getByMonthDay(), 1, 31, true],
-			'BYYEARDAY' => [$rule->getByYearDay(), 1, 366, true],
-			'BYWEEKNO' => [$rule->getByWeekNumber(), 1, 53, true],
-			'BYSETPOS' => [$rule->getBySetPosition(), 1, 366, true],
+		// part name => [min, max, negative values allowed]
+		$ranges = [
+			'BYSECOND' => [0, 60, false],
+			'BYMINUTE' => [0, 59, false],
+			'BYHOUR' => [0, 23, false],
+			'BYMONTH' => [1, 12, false],
+			'BYMONTHDAY' => [1, 31, true],
+			'BYYEARDAY' => [1, 366, true],
+			'BYWEEKNO' => [1, 53, true],
+			'BYSETPOS' => [1, 366, true],
 		];
-		foreach ($parts as $name => [$values, $min, $max, $negativeAllowed]) {
-			foreach ($values ?? [] as $value) {
-				if (preg_match('/^[+-]?\d+$/', (string)$value) !== 1) {
-					throw new InvalidRRule($name . ' must contain integers');
+		foreach ($ranges as $name => [$min, $max, $negativeAllowed]) {
+			foreach ($values($name) as $value) {
+				if (preg_match('/^[+-]?\d+$/', $value) !== 1) {
+					throw new \InvalidArgumentException($name . ' must contain integers');
 				}
 				$number = (int)$value;
 				$magnitude = $negativeAllowed ? abs($number) : $number;
 				if ($magnitude < $min || $magnitude > $max) {
-					throw new InvalidRRule($name . ' values must be between ' . ($negativeAllowed ? '-' . $max . ' and ' . $max . ', but not 0' : $min . ' and ' . $max));
+					throw new \InvalidArgumentException($name . ' values must be between ' . ($negativeAllowed ? '-' . $max . ' and ' . $max . ', but not 0' : $min . ' and ' . $max));
 				}
 			}
 		}
@@ -211,30 +196,20 @@ class Assignment extends Entity implements \JsonSerializable {
 	 */
 	public function isDueToRun(\DateTimeImmutable $now): bool {
 		try {
-			// The search stops at the deadline, so rules that never occur don't block the job.
-			// It is far after $now because the search position of YEARLY rules can be months ahead of their occurrences.
-			$startsAt = new BoundedDateTime('@' . $this->getStartsAt(), $now->modify('+2 years'));
-			$lastRunAt = new \DateTime('@' . $this->getLastRunAt());
+			$start = self::startDate($this->getStartsAt(), $this->getTimezone());
+			$rule = new RRule($this->getRecurrence(), $start);
 			// Find the first recurrence after the last run or after the start if this assignment has never run
-			$rule = new Rule($this->getRecurrence(), $startsAt, timezone: $this->getTimezone());
-			$config = new ArrayTransformerConfig();
-			$config->setVirtualLimit(1);
-			$transformer = new ArrayTransformer($config);
-			$constraint = $this->getLastRunAt() !== 0 ? new AfterConstraint($lastRunAt, false) : new AfterConstraint($startsAt, true);
-			try {
-				/** @var RecurrenceCollection $collection */
-				$collection = $transformer->transform($rule, $constraint, countConstraintFailures: false);
-			} catch (\OverflowException) {
+			$next = $this->getLastRunAt() !== 0
+				? $rule->getOccurrencesAfter(new \DateTime('@' . $this->getLastRunAt()), false, 1)
+				: $rule->getOccurrencesAfter($start, true, 1);
+			if ($next === []) {
 				return false;
 			}
-			if ($collection->isEmpty()) {
-				return false;
-			}
-			$nextRecurrence = $collection->first();
-			$isDue = $nextRecurrence->getStart()->getTimestamp() <= $now->getTimestamp() && $nextRecurrence->getStart()->getTimestamp() > $this->getLastRunAt();
-			logger('assistant')->debug('Next recurrence of assignment ' . $this->getId() . ' of user ' . $this->getUserId() . ': ' . $nextRecurrence->getStart()->format('Y-m-d H:i:s') . ' - isDue: ' . ($isDue ? 'true' : 'false'));
+			$nextRecurrence = $next[0];
+			$isDue = $nextRecurrence->getTimestamp() <= $now->getTimestamp() && $nextRecurrence->getTimestamp() > $this->getLastRunAt();
+			logger('assistant')->debug('Next recurrence of assignment ' . $this->getId() . ' of user ' . $this->getUserId() . ': ' . $nextRecurrence->format('Y-m-d H:i:s') . ' - isDue: ' . ($isDue ? 'true' : 'false'));
 			return $isDue;
-		} catch (InvalidRRule|\Exception|NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+		} catch (\Exception $e) {
 			// this should not happen, as we validate the rule on setRecurrence, but just in case, we catch the exception and log it
 			logger('assistant')->error($e->getMessage(), ['exception' => $e]);
 		}

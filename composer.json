@@ -17,7 +17,7 @@
 		"html2text/html2text": "^4.3",
 		"phpoffice/phpword": "^1.2",
 		"ralouphie/mimey": "^1.0",
-		"simshaun/recurr": "^5.0",
+		"rlanvin/php-rrule": "^3.0",
 		"smalot/pdfparser": "^2.11",
 		"symfony/yaml": "^7.4"
 	},

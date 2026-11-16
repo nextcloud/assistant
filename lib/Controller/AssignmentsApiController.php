@@ -161,19 +161,20 @@ class AssignmentsApiController extends OCSController {
 				if ($prompt !== null) {
 					$assignment->setPrompt($prompt);
 				}
-				if ($recurrence !== null) {
-					try {
-						$assignment->setRecurrence($recurrence);
-					} catch (\InvalidArgumentException $e) {
-						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
-					}
-				}
 				if ($startsAt !== null) {
 					$assignment->setStartsAt($startsAt);
 				}
 				if ($timezone !== null) {
 					try {
 						$assignment->setTimezone($timezone);
+					} catch (\InvalidArgumentException $e) {
+						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+					}
+				}
+				// set after the start and the timezone, the rule is checked against them
+				if ($recurrence !== null) {
+					try {
+						$assignment->setRecurrence($recurrence);
 					} catch (\InvalidArgumentException $e) {
 						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 					}
