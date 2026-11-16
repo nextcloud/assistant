@@ -155,9 +155,17 @@ class Assignment extends Entity implements \JsonSerializable {
 	 * @throws InvalidRRule
 	 */
 	private static function validateRuleParts(Rule $rule): void {
+		// the position is the nth weekday of the month for MONTHLY rules, of the year otherwise
+		$maxDayPosition = $rule->getFreqAsText() === 'MONTHLY' ? 5 : 53;
 		foreach ($rule->getByDay() ?? [] as $day) {
-			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', (string)$day) !== 1) {
+			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', (string)$day, $matches) !== 1) {
 				throw new InvalidRRule('BYDAY values must be weekdays (SU, MO, ...) with an optional position, e.g. MO or -1FR');
+			}
+			if ($matches[1] !== '') {
+				$position = abs((int)$matches[1]);
+				if ($position < 1 || $position > $maxDayPosition) {
+					throw new InvalidRRule('BYDAY position must be between -' . $maxDayPosition . ' and ' . $maxDayPosition . ', but not 0');
+				}
 			}
 		}
 

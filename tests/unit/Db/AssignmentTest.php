@@ -90,6 +90,11 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=YEARLY;BYYEARDAY=-366,366'],
 			['FREQ=YEARLY;BYWEEKNO=-53,53;BYDAY=MO'],
 			['FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=29'],
+			['FREQ=MONTHLY;BYDAY=5MO'],
+			['FREQ=MONTHLY;BYDAY=-5SU'],
+			['FREQ=YEARLY;BYDAY=53FR'],
+			['FREQ=YEARLY;BYDAY=-53TH'],
+			['FREQ=WEEKLY;BYDAY=MO,WE,FR'],
 		];
 	}
 
@@ -134,6 +139,11 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYDAY=1XX', 'BYDAY values must be weekdays'],
 			['FREQ=WEEKLY;BYDAY=XYZ', 'BYDAY values must be weekdays'],
 			['FREQ=WEEKLY;BYDAY=MO,', 'BYDAY values must be weekdays'],
+			['FREQ=MONTHLY;BYDAY=0MO', 'BYDAY position must be between -5 and 5, but not 0'],
+			['FREQ=MONTHLY;BYDAY=6MO', 'BYDAY position must be between -5 and 5, but not 0'],
+			['FREQ=MONTHLY;BYDAY=99MO', 'BYDAY position must be between -5 and 5, but not 0'],
+			['FREQ=YEARLY;BYDAY=0MO', 'BYDAY position must be between -53 and 53, but not 0'],
+			['FREQ=YEARLY;BYDAY=54MO', 'BYDAY position must be between -53 and 53, but not 0'],
 			['FREQ=DAILY;BYHOUR=XX', 'BYHOUR must contain integers'],
 			['FREQ=DAILY;BYHOUR=24', 'BYHOUR values must be between 0 and 23'],
 			['FREQ=DAILY;BYMINUTE=-1', 'BYMINUTE values must be between 0 and 59'],
