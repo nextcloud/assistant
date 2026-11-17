@@ -13,6 +13,7 @@ OC.L10N.register(
     "Failed to delete the last message" : "Neizdevās izdzēst pēdējo ziņu",
     "User not found" : "Lietotājs nav atrasts",
     "Nextcloud Assistant" : "Nextcloud palīgs",
+    "Nextcloud Forms" : "Nextcloud veidlapas",
     "Nextcloud Tasks" : "Nextcloud uzdevumi",
     "Other" : "Cits",
     "Translate" : "Tulkot",

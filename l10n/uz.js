@@ -9,6 +9,7 @@ OC.L10N.register(
     "Nextcloud Assistant" : "Next bulut yordamchisi",
     "Context Chat" : "Kontekst suhbati",
     "Nextcloud Talk" : "Keyingi bulut suhbati",
+    "Nextcloud Tables" : "Nextcloud jadvallari",
     "Other" : "Boshqa",
     "Translate" : "Tarjima",
     "Prompt" : "Tezkor",

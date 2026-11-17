@@ -7,6 +7,7 @@ OC.L10N.register(
     "Delete file" : "Kkes afaylu",
     "User not found" : "Ur yettwaf ara useqdac",
     "Nextcloud Assistant" : "Amallal n Nextcloud",
+    "Date and time" : "Azemz aked usrag",
     "Nextcloud Mail" : "Imayl n Nextcloud",
     "Other" : "Wayeḍ",
     "Translate" : "Suqel",
