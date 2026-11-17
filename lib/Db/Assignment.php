@@ -101,6 +101,7 @@ class Assignment extends Entity implements \JsonSerializable {
 	/**
 	 * Rejects invalid rules and rules that never occur after the start.
 	 * An empty rule means the assignment runs once, at its start.
+	 * The rule is stored without a DTSTART and without the "RRULE:" prefix.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -123,6 +124,8 @@ class Assignment extends Entity implements \JsonSerializable {
 				// RRule parses dates like UNTIL with DateTime, which throws DateMalformedStringException
 				throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 			}
+			// the DTSTART is ignored, so it is not stored either
+			$recurrence = self::withoutStart($recurrence);
 		}
 		$this->setter('recurrence', [$recurrence]);
 	}

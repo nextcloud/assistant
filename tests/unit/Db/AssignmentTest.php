@@ -176,24 +176,30 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYMONTHDAY=01,-01;INTERVAL=02;COUNT=010'],
 			['FREQ=WEEKLY;BYDAY=mo,We'],
 			['FREQ=MONTHLY;BYDAY=-1fr'],
-			["DTSTART:20200101T000000Z\nRRULE:FREQ=DAILY"],
-			['DTSTART=20200101T000000Z;FREQ=DAILY'],
 		];
 	}
 
 	/**
-	 * @dataProvider untrimmedRecurrenceDataProvider
+	 * @dataProvider cleanedUpRecurrenceDataProvider
 	 */
-	public function testSetRecurrenceTrimsRule(string $rrule, string $expected): void {
+	public function testSetRecurrenceStoresCleanedUpRule(string $rrule, string $expected): void {
 		$assignment = new Assignment();
 		$assignment->setRecurrence($rrule);
 		self::assertSame($expected, $assignment->getRecurrence());
 	}
 
-	public function untrimmedRecurrenceDataProvider(): array {
+	public function cleanedUpRecurrenceDataProvider(): array {
 		return [
+			// trimmed
 			['   ', ''],
 			[" FREQ=DAILY\n", 'FREQ=DAILY'],
+			// without DTSTART and the "RRULE:" prefix
+			["DTSTART:20200101T000000Z\nRRULE:FREQ=DAILY", 'FREQ=DAILY'],
+			["DTSTART:20200101T000000Z\r\nRRULE:FREQ=DAILY;BYHOUR=8\r\n", 'FREQ=DAILY;BYHOUR=8'],
+			["DTSTART;TZID=Europe/Berlin:20200101T000000\nRRULE:FREQ=DAILY", 'FREQ=DAILY'],
+			['DTSTART=20200101T000000Z;FREQ=DAILY', 'FREQ=DAILY'],
+			['FREQ=DAILY;DTSTART=20200101T000000Z;INTERVAL=2', 'FREQ=DAILY;INTERVAL=2'],
+			['RRULE:FREQ=DAILY', 'FREQ=DAILY'],
 		];
 	}
 
@@ -257,6 +263,8 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			// the rule is still checked when it has a DTSTART
 			["DTSTART:20260101T000000Z\nRRULE:FREQ=WEEKLY;BYDAY=XX", 'BYDAY values must be weekdays'],
 			["DTSTART:20260101T000000Z\nRRULE:FREQ=NOPE", 'The FREQ rule part must be one of'],
+			// a rule with only a DTSTART is not stored as an empty rule, which would run once
+			['DTSTART:20260101T000000Z', 'malformed RRULE property'],
 			// checked by RRule
 			['FREQ=NOPE', 'The FREQ rule part must be one of'],
 			['FREQ=DAILY;INTERVAL=0', 'The INTERVAL rule part must be a positive integer'],
