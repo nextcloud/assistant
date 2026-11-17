@@ -44,6 +44,40 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			// the next occurrence after this one is 3 years later
 			['FREQ=MONTHLY;INTERVAL=36;BYDAY=MO;BYSETPOS=1', '2026-01-01T00:00:00Z', '@0', 'UTC', '2026-01-05T00:00:01Z', true],
 			['FREQ=HOURLY;BYHOUR=8;BYSETPOS=1', '2026-01-01T00:00:00Z', '@0', 'UTC', '2026-01-01T08:00:00Z', true],
+			// an empty rule runs once, at the start
+			['', '2026-01-01T00:00:00Z', '@0', 'UTC', '2025-12-31T23:59:59Z', false],
+			['', '2026-01-01T00:00:00Z', '@0', 'UTC', '2026-01-01T00:00:00Z', true],
+			['', '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z', 'UTC', '2027-01-01T00:00:00Z', false],
+		];
+	}
+
+	/**
+	 * Rules written loosely may already be stored, the start is in the past so a past UNTIL is accepted
+	 *
+	 * @dataProvider looseRuleDataProvider
+	 */
+	public function testIsDueForLooselyWrittenRule(string $rrule, string $lastRunAt, string $now, bool $expected): void {
+		$assignment = Assignment::fromRow([
+			'recurrence' => $rrule,
+			// 09:00 in Berlin
+			'starts_at' => (new \DateTimeImmutable('2026-01-01T08:00:00Z'))->getTimestamp(),
+			'last_run_at' => (new \DateTimeImmutable($lastRunAt))->getTimestamp(),
+			'timezone' => 'Europe/Berlin',
+		]);
+		self::assertSame($expected, $assignment->isDueToRun(new \DateTimeImmutable($now)));
+	}
+
+	public function looseRuleDataProvider(): array {
+		return [
+			['FREQ=DAILY;', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', true],
+			[' FREQ=DAILY ; INTERVAL=2 ', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', false],
+			[' FREQ=DAILY ; INTERVAL=2 ', '2026-01-01T08:00:00Z', '2026-01-03T08:00:00Z', true],
+			// an UNTIL date includes the whole day in the assignment's timezone
+			['FREQ=DAILY;UNTIL=20260102', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', true],
+			['FREQ=DAILY;UNTIL=20260102', '2026-01-02T08:00:00Z', '2026-01-03T08:00:00Z', false],
+			// 08:59 in Berlin is before the 09:00 occurrence, in UTC it would be after it
+			['FREQ=DAILY;UNTIL=20260102T085900', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', false],
+			['FREQ=DAILY;UNTIL=20260102T090000', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', true],
 		];
 	}
 
@@ -112,6 +146,12 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=YEARLY;BYDAY=-53TH'],
 			['FREQ=WEEKLY;BYDAY=MO,WE,FR'],
 			['FREQ=HOURLY;BYHOUR=8;BYSETPOS=1'],
+			// stored as given
+			[''],
+			['FREQ=DAILY;'],
+			['FREQ=DAILY; INTERVAL=2'],
+			['FREQ=DAILY;UNTIL=20991231'],
+			['FREQ=DAILY;UNTIL=20991231T120000'],
 		];
 	}
 

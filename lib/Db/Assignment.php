@@ -99,24 +99,70 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
-	 * Rejects invalid rules and rules that never occur after the start
+	 * Rejects invalid rules and rules that never occur after the start.
+	 * An empty rule means the assignment runs once, at its start.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function setRecurrence(string $recurrence): void {
-		try {
-			self::validateRuleParts($recurrence);
-			// startsAt and timezone are still null if they are set after the recurrence
-			/** @psalm-suppress RedundantPropertyInitializationCheck */
-			$start = self::startDate($this->startsAt ?? time(), $this->timezone ?? 'UTC');
-			// RRule stops searching after a full calendar cycle without an occurrence
-			if ((new RRule($recurrence, $start))->getOccurrencesAfter($start, true, 1) === []) {
-				throw new \InvalidArgumentException('the rule never occurs');
+		if (trim($recurrence) !== '') {
+			try {
+				self::validateRuleParts($recurrence);
+				// startsAt and timezone are still null if they are set after the recurrence
+				/** @psalm-suppress RedundantPropertyInitializationCheck */
+				$timezone = $this->timezone ?? 'UTC';
+				/** @psalm-suppress RedundantPropertyInitializationCheck */
+				$start = self::startDate($this->startsAt ?? time(), $timezone);
+				// RRule stops searching after a full calendar cycle without an occurrence
+				$rule = new RRule(self::normalizeRule($recurrence, $timezone), $start);
+				if ($rule->getOccurrencesAfter($start, true, 1) === []) {
+					throw new \InvalidArgumentException('the rule never occurs');
+				}
+			} catch (\InvalidArgumentException $e) {
+				throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 			}
-		} catch (\InvalidArgumentException $e) {
-			throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 		}
 		$this->setter('recurrence', [$recurrence]);
+	}
+
+	/**
+	 * Accepts rules as people and LLMs write them: spaces around the parts, a trailing ";"
+	 * and an UNTIL without "Z". RRule requires UNTIL in UTC when the start has a timezone,
+	 * so such an UNTIL is read in the assignment's timezone and converted to UTC.
+	 */
+	private static function normalizeRule(string $recurrence, string $timezone): string {
+		$parts = [];
+		foreach (explode(';', $recurrence) as $part) {
+			if (trim($part) === '') {
+				continue;
+			}
+			if (str_contains($part, '=')) {
+				[$name, $value] = explode('=', $part, 2);
+				$name = trim($name);
+				$value = trim($value);
+				if (strtoupper($name) === 'UNTIL') {
+					$value = self::untilInUtc($value, new \DateTimeZone($timezone));
+				}
+				$part = $name . '=' . $value;
+			}
+			$parts[] = trim($part);
+		}
+		return implode(';', $parts);
+	}
+
+	private static function untilInUtc(string $until, \DateTimeZone $timezone): string {
+		if (preg_match('/^\d{8}$/', $until) === 1) {
+			// a date without a time includes the whole day
+			$until .= 'T235959';
+		} elseif (preg_match('/^\d{8}T\d{6}$/', $until) !== 1) {
+			// already in UTC, or invalid and rejected by RRule
+			return $until;
+		}
+		$date = \DateTime::createFromFormat('!Ymd\THis', $until, $timezone);
+		if ($date === false) {
+			return $until;
+		}
+		return $date->setTimezone(new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
 	}
 
 	/**
@@ -195,9 +241,13 @@ class Assignment extends Entity implements \JsonSerializable {
 	 * Evaluates the recurrence rule and checks if a run is due
 	 */
 	public function isDueToRun(\DateTimeImmutable $now): bool {
+		if (trim($this->getRecurrence()) === '') {
+			// runs once, at the start
+			return $this->getLastRunAt() === 0 && $this->getStartsAt() <= $now->getTimestamp();
+		}
 		try {
 			$start = self::startDate($this->getStartsAt(), $this->getTimezone());
-			$rule = new RRule($this->getRecurrence(), $start);
+			$rule = new RRule(self::normalizeRule($this->getRecurrence(), $this->getTimezone()), $start);
 			// Find the first recurrence after the last run or after the start if this assignment has never run
 			$next = $this->getLastRunAt() !== 0
 				? $rule->getOccurrencesAfter(new \DateTime('@' . $this->getLastRunAt()), false, 1)
