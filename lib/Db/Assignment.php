@@ -119,7 +119,8 @@ class Assignment extends Entity implements \JsonSerializable {
 				if ($rule->getOccurrencesAfter($start, true, 1) === []) {
 					throw new \InvalidArgumentException('the rule never occurs');
 				}
-			} catch (\InvalidArgumentException $e) {
+			} catch (\InvalidArgumentException|\DateMalformedStringException $e) {
+				// RRule parses dates like UNTIL with DateTime, which throws DateMalformedStringException
 				throw new \InvalidArgumentException('Invalid recurrence rule "' . $recurrence . '": ' . $e->getMessage(), previous: $e);
 			}
 		}

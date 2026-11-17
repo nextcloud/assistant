@@ -261,6 +261,7 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=NOPE', 'The FREQ rule part must be one of'],
 			['FREQ=DAILY;INTERVAL=0', 'The INTERVAL rule part must be a positive integer'],
 			['FREQ=WEEKLY;BYMONTHDAY=1', 'The BYMONTHDAY rule part MUST NOT be specified when the FREQ rule part is set to WEEKLY'],
+			['FREQ=DAILY;UNTIL=20991231T250000Z', 'Failed to parse time string'],
 		];
 	}
 
