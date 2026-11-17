@@ -105,7 +105,8 @@ class Assignment extends Entity implements \JsonSerializable {
 	 * @throws \InvalidArgumentException
 	 */
 	public function setRecurrence(string $recurrence): void {
-		if (trim($recurrence) !== '') {
+		$recurrence = trim($recurrence);
+		if ($recurrence !== '') {
 			try {
 				self::validateRuleParts($recurrence);
 				// startsAt and timezone are still null if they are set after the recurrence
@@ -134,7 +135,7 @@ class Assignment extends Entity implements \JsonSerializable {
 	 */
 	private static function normalizeRule(string $recurrence, string $timezone): string {
 		$parts = [];
-		foreach (explode(';', $recurrence) as $part) {
+		foreach (explode(';', self::withoutStart($recurrence)) as $part) {
 			if (trim($part) === '') {
 				continue;
 			}
@@ -176,8 +177,29 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
-	 * The rule is evaluated from this start. RRule rejects a rule string with its own DTSTART when a start is given.
+	 * The rule is evaluated from the assignment's start, so a DTSTART in the rule is ignored:
+	 * both as its own line ("DTSTART:20260101T090000Z\nRRULE:FREQ=DAILY") and as a part ("DTSTART=...;FREQ=DAILY").
+	 * Returns the rule parts joined with ";", without the "RRULE:" prefix.
 	 */
+	private static function withoutStart(string $recurrence): string {
+		$parts = [];
+		foreach (preg_split('/\R/', $recurrence) ?: [] as $line) {
+			$line = trim($line);
+			if (preg_match('/^DTSTART[:;]/i', $line) === 1) {
+				continue;
+			}
+			if (stripos($line, 'RRULE:') === 0) {
+				$line = substr($line, strlen('RRULE:'));
+			}
+			foreach (explode(';', $line) as $part) {
+				if (stripos(trim($part), 'DTSTART=') !== 0) {
+					$parts[] = $part;
+				}
+			}
+		}
+		return implode(';', $parts);
+	}
+
 	private static function startDate(int $startsAt, string $timezone): \DateTime {
 		return (new \DateTime('@' . $startsAt))->setTimezone(new \DateTimeZone($timezone));
 	}
@@ -190,7 +212,7 @@ class Assignment extends Entity implements \JsonSerializable {
 	 */
 	private static function validateRuleParts(string $recurrence): void {
 		$parts = [];
-		foreach (explode(';', $recurrence) as $part) {
+		foreach (explode(';', self::withoutStart($recurrence)) as $part) {
 			[$name, $value] = array_pad(explode('=', $part, 2), 2, '');
 			$parts[strtoupper(trim($name))] = trim($value);
 		}

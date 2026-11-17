@@ -99,14 +99,31 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 		self::assertFalse($assignment->isDueToRun(new \DateTimeImmutable('2026-06-01T00:00:00Z')));
 	}
 
-	public function testIsDueIgnoresStoredRuleWithItsOwnStart(): void {
+	/**
+	 * The rule runs from the assignment's start, a DTSTART in the rule is ignored
+	 *
+	 * @dataProvider ruleWithStartDataProvider
+	 */
+	public function testIsDueIgnoresStartInStoredRule(string $rrule): void {
 		$assignment = Assignment::fromRow([
-			'recurrence' => "DTSTART:20260101T000000Z\nRRULE:FREQ=DAILY",
-			'starts_at' => (new \DateTimeImmutable('2026-01-01T00:00:00Z'))->getTimestamp(),
-			'last_run_at' => 0,
+			'recurrence' => $rrule,
+			'starts_at' => (new \DateTimeImmutable('2026-01-01T09:00:00Z'))->getTimestamp(),
+			'last_run_at' => (new \DateTimeImmutable('2026-01-01T09:00:00Z'))->getTimestamp(),
 			'timezone' => 'UTC',
 		]);
-		self::assertFalse($assignment->isDueToRun(new \DateTimeImmutable('2026-06-01T00:00:00Z')));
+		self::assertFalse($assignment->isDueToRun(new \DateTimeImmutable('2026-01-02T08:59:59Z')));
+		self::assertTrue($assignment->isDueToRun(new \DateTimeImmutable('2026-01-02T09:00:00Z')));
+	}
+
+	public function ruleWithStartDataProvider(): array {
+		return [
+			["DTSTART:20200101T000000Z\nRRULE:FREQ=DAILY"],
+			["DTSTART:20200101T000000Z\r\nRRULE:FREQ=DAILY\r\n"],
+			["DTSTART;TZID=Europe/Berlin:20200101T000000\nRRULE:FREQ=DAILY"],
+			['DTSTART=20200101T000000Z;FREQ=DAILY'],
+			['FREQ=DAILY;DTSTART=20200101T000000Z'],
+			['RRULE:FREQ=DAILY'],
+		];
 	}
 
 	public function neverOccurringRuleDataProvider(): array {
@@ -159,6 +176,24 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYMONTHDAY=01,-01;INTERVAL=02;COUNT=010'],
 			['FREQ=WEEKLY;BYDAY=mo,We'],
 			['FREQ=MONTHLY;BYDAY=-1fr'],
+			["DTSTART:20200101T000000Z\nRRULE:FREQ=DAILY"],
+			['DTSTART=20200101T000000Z;FREQ=DAILY'],
+		];
+	}
+
+	/**
+	 * @dataProvider untrimmedRecurrenceDataProvider
+	 */
+	public function testSetRecurrenceTrimsRule(string $rrule, string $expected): void {
+		$assignment = new Assignment();
+		$assignment->setRecurrence($rrule);
+		self::assertSame($expected, $assignment->getRecurrence());
+	}
+
+	public function untrimmedRecurrenceDataProvider(): array {
+		return [
+			['   ', ''],
+			[" FREQ=DAILY\n", 'FREQ=DAILY'],
 		];
 	}
 
@@ -219,11 +254,13 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYDAY=6mo', 'BYDAY position must be between -5 and 5, but not 0'],
 			['FREQ=DAILY;UNTIL=20991301', 'UNTIL is not a valid date'],
 			['FREQ=DAILY;UNTIL=20991231T250000', 'UNTIL is not a valid date'],
+			// the rule is still checked when it has a DTSTART
+			["DTSTART:20260101T000000Z\nRRULE:FREQ=WEEKLY;BYDAY=XX", 'BYDAY values must be weekdays'],
+			["DTSTART:20260101T000000Z\nRRULE:FREQ=NOPE", 'The FREQ rule part must be one of'],
 			// checked by RRule
 			['FREQ=NOPE', 'The FREQ rule part must be one of'],
 			['FREQ=DAILY;INTERVAL=0', 'The INTERVAL rule part must be a positive integer'],
 			['FREQ=WEEKLY;BYMONTHDAY=1', 'The BYMONTHDAY rule part MUST NOT be specified when the FREQ rule part is set to WEEKLY'],
-			["DTSTART:20260101T000000Z\nRRULE:FREQ=DAILY", 'Too many DTSTART properties'],
 		];
 	}
 
