@@ -456,6 +456,9 @@ export default {
 			titlePolls: markRaw(new Map()),
 			// number of title generations in flight by session ID
 			titleGenerationCounts: markRaw(new Map()),
+			// sessions whose title generation waits for the response generation to be scheduled
+			// kept when the scheduling fails, so that retrying the response generation also generates the title
+			pendingTitleSessionIds: markRaw(new Set()),
 			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
 			autoTitleEnabled: loadState('assistant', 'chat_auto_title_enabled', true),
 			slowPickup: false,
@@ -844,6 +847,7 @@ export default {
 				})
 				// the backend cancelled the title generation tasks of the session, a late result must not replace the new title
 				this.cancelTitlePolls(sessionId)
+				this.pendingTitleSessionIds.delete(sessionId)
 				this.editingTitle = false
 				session.title = newTitle
 			} catch (error) {
@@ -1144,7 +1148,10 @@ export default {
 					params: { sessionIds },
 				})
 				this.sessions = this.sessions.filter((session) => !sessionIds.includes(session.id))
-				sessionIds.forEach(sessionId => this.cancelTitlePolls(sessionId))
+				sessionIds.forEach(sessionId => {
+					this.cancelTitlePolls(sessionId)
+					this.pendingTitleSessionIds.delete(sessionId)
+				})
 				if (this.active !== null && sessionIds.includes(this.active.id)) {
 					this.active = null
 				}
@@ -1318,6 +1325,9 @@ export default {
 		async runGenerationTask(sessionId, agencyConfirm = null, generateTitle = false) {
 			const requestSeq = ++this.generationRequestSeq
 			let taskId = null
+			if (generateTitle) {
+				this.pendingTitleSessionIds.add(sessionId)
+			}
 			try {
 				this.scrollToLastMessage()
 				this.slowPickup = false
@@ -1336,7 +1346,7 @@ export default {
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
 				taskId = generationResponseData.taskId
-				if (generateTitle) {
+				if (this.pendingTitleSessionIds.delete(sessionId)) {
 					// scheduled after the answer so the title task does not delay it, not awaited
 					this.generateSessionTitle(sessionId)
 				}
@@ -1800,7 +1810,9 @@ export default {
 						} else {
 							settle(reject, new Error('No title generated', { cause: response.data }))
 						}
-					}).catch(error => {
+						// second argument of then(): only request failures are retried,
+						// not the rejection of a completed task without a title
+					}, error => {
 						if (isCancel(error)) {
 							settle(reject, new TaskPollCancelledError('Title generation poll cancelled'))
 							return
