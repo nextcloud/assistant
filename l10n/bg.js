@@ -15,6 +15,7 @@ OC.L10N.register(
     "Nextcloud Deck" : "Nextcloud Deck",
     "OpenProject" : "OpenProject",
     "OpenStreetMap" : "Приложение OpenStreetMap",
+    "Date and time" : "Дата и час",
     "Nextcloud Mail" : "Nextcloud Имейл",
     "Other" : "Други",
     "Translate" : "Превод",

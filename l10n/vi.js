@@ -8,6 +8,8 @@ OC.L10N.register(
     "User not found" : "Không tìm thấy người dùng",
     "Nextcloud Assistant" : "Trợ lý Nextcloud",
     "View chat" : "Xem trò chuyện",
+    "Nextcloud Tables" : "Bảng Nextcloud",
+    "Date and time" : "Ngày và giờ",
     "Nextcloud Mail" : "Thư vWorkspace",
     "Other" : "Khác",
     "Translate" : "Dịch thuật",

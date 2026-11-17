@@ -11,6 +11,7 @@ OC.L10N.register(
     "Unauthorized" : "Peruna autorizatzione",
     "User not found" : "Utèntzia no agatada",
     "View chat" : "Visualiza sa tzarrada",
+    "Date and time" : "Data e ora",
     "Nextcloud Mail" : "Nextcloud Mail",
     "Other" : "Àteru",
     "Translate" : "Borta",
