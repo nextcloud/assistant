@@ -126,9 +126,11 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
-	 * Accepts rules as people and LLMs write them: spaces around the parts, a trailing ";"
-	 * and an UNTIL without "Z". RRule requires UNTIL in UTC when the start has a timezone,
-	 * so such an UNTIL is read in the assignment's timezone and converted to UTC.
+	 * Accepts rules as people and LLMs write them: spaces around the parts, a trailing ";",
+	 * numbers with leading zeros (BYHOUR=08) and an UNTIL without "Z". RRule requires UNTIL in UTC
+	 * when the start has a timezone, so such an UNTIL is read in the assignment's timezone and converted to UTC.
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	private static function normalizeRule(string $recurrence, string $timezone): string {
 		$parts = [];
@@ -142,6 +144,9 @@ class Assignment extends Entity implements \JsonSerializable {
 				$value = trim($value);
 				if (strtoupper($name) === 'UNTIL') {
 					$value = self::untilInUtc($value, new \DateTimeZone($timezone));
+				} elseif (preg_match('/^[+-]?\d+(,[+-]?\d+)*$/', $value) === 1) {
+					// RRule rejects leading zeros, "08" becomes "8" and "00" becomes "0"
+					$value = preg_replace('/(?<!\d)0+(?=\d)/', '', $value);
 				}
 				$part = $name . '=' . $value;
 			}
@@ -150,6 +155,9 @@ class Assignment extends Entity implements \JsonSerializable {
 		return implode(';', $parts);
 	}
 
+	/**
+	 * @throws \InvalidArgumentException
+	 */
 	private static function untilInUtc(string $until, \DateTimeZone $timezone): string {
 		if (preg_match('/^\d{8}$/', $until) === 1) {
 			// a date without a time includes the whole day
@@ -159,8 +167,10 @@ class Assignment extends Entity implements \JsonSerializable {
 			return $until;
 		}
 		$date = \DateTime::createFromFormat('!Ymd\THis', $until, $timezone);
-		if ($date === false) {
-			return $until;
+		// an invalid date like month 13 only gives a warning and rolls over into the next year
+		$errors = \DateTime::getLastErrors();
+		if ($date === false || ($errors !== false && $errors['warning_count'] > 0)) {
+			throw new \InvalidArgumentException('UNTIL is not a valid date: ' . $until);
 		}
 		return $date->setTimezone(new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
 	}
@@ -189,7 +199,7 @@ class Assignment extends Entity implements \JsonSerializable {
 		// the position is the nth weekday of the month for MONTHLY rules, of the year otherwise
 		$maxDayPosition = strtoupper($parts['FREQ'] ?? '') === 'MONTHLY' ? 5 : 53;
 		foreach ($values('BYDAY') as $day) {
-			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', $day, $matches) !== 1) {
+			if (preg_match('/^([+-]?\d{1,2})?(SU|MO|TU|WE|TH|FR|SA)$/', strtoupper($day), $matches) !== 1) {
 				throw new \InvalidArgumentException('BYDAY values must be weekdays (SU, MO, ...) with an optional position, e.g. MO or -1FR');
 			}
 			if ($matches[1] !== '') {

@@ -78,6 +78,9 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			// 08:59 in Berlin is before the 09:00 occurrence, in UTC it would be after it
 			['FREQ=DAILY;UNTIL=20260102T085900', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', false],
 			['FREQ=DAILY;UNTIL=20260102T090000', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', true],
+			// numbers with leading zeros
+			['FREQ=DAILY;BYHOUR=09;BYMINUTE=00', '2026-01-01T08:00:00Z', '2026-01-02T08:00:00Z', true],
+			['FREQ=DAILY;INTERVAL=02', '2026-01-01T08:00:00Z', '2026-01-03T08:00:00Z', true],
 		];
 	}
 
@@ -152,6 +155,10 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=DAILY; INTERVAL=2'],
 			['FREQ=DAILY;UNTIL=20991231'],
 			['FREQ=DAILY;UNTIL=20991231T120000'],
+			['FREQ=DAILY;BYHOUR=08;BYMINUTE=00'],
+			['FREQ=MONTHLY;BYMONTHDAY=01,-01;INTERVAL=02;COUNT=010'],
+			['FREQ=WEEKLY;BYDAY=mo,We'],
+			['FREQ=MONTHLY;BYDAY=-1fr'],
 		];
 	}
 
@@ -209,6 +216,9 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYMONTHDAY=0', 'BYMONTHDAY values must be between -31 and 31, but not 0'],
 			['FREQ=MONTHLY;BYMONTHDAY=1.5', 'BYMONTHDAY must contain integers'],
 			['FREQ=YEARLY;BYWEEKNO=54', 'BYWEEKNO values must be between -53 and 53, but not 0'],
+			['FREQ=MONTHLY;BYDAY=6mo', 'BYDAY position must be between -5 and 5, but not 0'],
+			['FREQ=DAILY;UNTIL=20991301', 'UNTIL is not a valid date'],
+			['FREQ=DAILY;UNTIL=20991231T250000', 'UNTIL is not a valid date'],
 			// checked by RRule
 			['FREQ=NOPE', 'The FREQ rule part must be one of'],
 			['FREQ=DAILY;INTERVAL=0', 'The INTERVAL rule part must be a positive integer'],

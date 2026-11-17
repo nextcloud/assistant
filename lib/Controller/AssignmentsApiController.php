@@ -171,7 +171,11 @@ class AssignmentsApiController extends OCSController {
 						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 					}
 				}
-				// set after the start and the timezone, the rule is checked against them
+				// set after the start and the timezone, the rule is checked against them.
+				// The stored rule is checked again when they change, e.g. a new start after its UNTIL
+				if ($recurrence === null && ($startsAt !== null || $timezone !== null)) {
+					$recurrence = $assignment->getRecurrence();
+				}
 				if ($recurrence !== null) {
 					try {
 						$assignment->setRecurrence($recurrence);
