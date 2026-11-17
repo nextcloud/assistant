@@ -143,12 +143,12 @@
 							</template>
 							{{ t('assistant', 'Edit title') }}
 						</NcActionButton>
-						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onGenerateSessionTitle">
+						<NcActionButton :disabled="loading.titleGeneration || editingTitle" @click="onRegenerateSessionTitle">
 							<template #icon>
 								<AutoFixIcon v-if="!loading.titleGeneration" :size="20" />
 								<NcLoadingIcon v-else :size="20" />
 							</template>
-							{{ t('assistant', 'Generate title') }}
+							{{ t('assistant', 'Regenerate title') }}
 						</NcActionButton>
 					</NcActions>
 				</div>
@@ -292,6 +292,7 @@
 </template>
 
 <script>
+import { markRaw } from 'vue'
 import AutoFixIcon from 'vue-material-design-icons/AutoFix.vue'
 import PencilOutlineIcon from 'vue-material-design-icons/PencilOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -451,8 +452,15 @@ export default {
 			editingTitle: false,
 			pollMessageGenerationTimerId: null,
 			pollMessageGenerationCancel: null,
-			pollTitleGenerationTimerId: null,
+			// title generation polls by task ID, shared between their trackers
+			titlePolls: markRaw(new Map()),
+			// number of title generations in flight by session ID
+			titleGenerationCounts: markRaw(new Map()),
+			// sessions whose title generation waits for the response generation to be scheduled
+			// kept when the scheduling fails, so that retrying the response generation also generates the title
+			pendingTitleSessionIds: markRaw(new Set()),
 			autoplayAudioChat: loadState('assistant', 'autoplay_audio_chat', true),
+			autoTitleEnabled: loadState('assistant', 'chat_auto_title_enabled', true),
 			slowPickup: false,
 			agencyAvailable: loadState('assistant', 'agency_available', false),
 			agencySuggestions: [
@@ -580,7 +588,7 @@ export default {
 			this.loading.llmGeneration = false
 			this.loading.llmRunning = false
 			this.loading.taskPosition = null
-			this.loading.titleGeneration = false
+			this.syncTitleGenerationLoading()
 			this.streamingMessage = null
 			this.chatContent = ''
 			this.msgCursor = 0
@@ -627,9 +635,7 @@ export default {
 		if (this.pollMessageGenerationTimerId) {
 			clearInterval(this.pollMessageGenerationTimerId)
 		}
-		if (this.pollTitleGenerationTimerId) {
-			clearInterval(this.pollTitleGenerationTimerId)
-		}
+		this.cancelTitlePolls()
 		if (this.pollCheckSessionTimeout) {
 			clearTimeout(this.pollCheckSessionTimeout)
 		}
@@ -728,23 +734,9 @@ export default {
 					this.userScrolled = false
 				}
 				if (checkSessionResponseData.titleTaskId !== null) {
-					try {
-						this.loading.titleGeneration = true
-						const titleResponse = await this.pollTitleGenerationTask(checkSessionResponseData.titleTaskId, sessionId)
-						const titleResponseData = titleResponse.data
-						console.debug('checkTaskPolling result:', titleResponse)
-						if (titleResponseData?.result === null) {
-							throw new Error('No title generated, response:', titleResponse)
-						}
-
-						const session = this.sessions.find(s => s.id === sessionId)
-						if (session) {
-							session.title = titleResponseData?.result
-						}
-					} catch (error) {
-						console.error('onCheckSessionTitle error:', error)
-						showError(error?.response?.data?.error ?? t('assistant', 'Error getting the generated title for the conversation'))
-					}
+					// not awaited: the title task must not delay the next session check
+					// silent: the title generation is automatic, its failure is not fatal
+					this.trackTitleTask(checkSessionResponseData.titleTaskId, sessionId, { silent: true })
 				}
 			} catch (error) {
 				console.error('check session error:', error)
@@ -769,8 +761,8 @@ export default {
 					this.streamingMessage = null
 					this.userScrolled = false
 				}
-				this.loading.titleGeneration = false
-				if (isAssignment) {
+				// a stale check must not replace the timer of the active session
+				if (isAssignment && this.active?.id === sessionId) {
 					this.pollCheckSessionTimeout = setTimeout(() => { this.checkSession(sessionId, isAssignment) }, 5000)
 				}
 			}
@@ -845,13 +837,17 @@ export default {
 
 		async onEditSessionTitle(newTitle) {
 			this.loading.updateTitle = true
-			const session = this.sessions.find((session) => session.id === this.active.id)
+			const sessionId = this.active.id
+			const session = this.sessions.find((session) => session.id === sessionId)
 
 			try {
 				await axios.patch(getChatURL('/update_session'), {
-					sessionId: this.active.id,
+					sessionId,
 					title: newTitle,
 				})
+				// the backend cancelled the title generation tasks of the session, a late result must not replace the new title
+				this.cancelTitlePolls(sessionId)
+				this.pendingTitleSessionIds.delete(sessionId)
 				this.editingTitle = false
 				session.title = newTitle
 			} catch (error) {
@@ -939,28 +935,78 @@ export default {
 			this.fetchMessages(true)
 		},
 
-		async onGenerateSessionTitle() {
-			try {
-				this.loading.titleGeneration = true
-				const sessionId = this.active.id
-				const titleGenerationResponse = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
-				const titlePollResponse = await this.pollTitleGenerationTask(titleGenerationResponse.data.taskId, sessionId)
-				const titlePollResponseData = titlePollResponse.data
-				console.debug('checkTaskPolling result:', titlePollResponseData)
-				if (titlePollResponseData?.result === null) {
-					throw new Error('No title generated, response:', titlePollResponse)
-				}
+		onRegenerateSessionTitle() {
+			this.generateSessionTitle(this.active.id, { silent: false })
+		},
 
+		/**
+		 * Generate a title for the session in the background.
+		 * The backend task listener persists the title, this only updates the frontend data.
+		 *
+		 * @param {number} sessionId The session ID
+		 * @param {object} options Options
+		 * @param {boolean} options.silent Do not show an error to the user if the generation fails
+		 */
+		async generateSessionTitle(sessionId, { silent = true } = {}) {
+			// count the request too, so the title cannot be edited before the task is scheduled
+			this.updateTitleGenerationCount(sessionId, 1)
+			try {
+				const titleGenerationResponse = await axios.get(getChatURL('/generate_title'), { params: { sessionId } })
+				// automatic generation is not fatal: the session keeps the title derived from the first message
+				await this.trackTitleTask(titleGenerationResponse.data.taskId, sessionId, { silent })
+			} catch (error) {
+				console.error('generateSessionTitle error:', error)
+				if (!silent) {
+					showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title for the conversation'))
+				}
+			} finally {
+				this.updateTitleGenerationCount(sessionId, -1)
+			}
+		},
+
+		/**
+		 * Follow a title generation task and update the session title in the frontend data
+		 * when it finishes, even if the session is not active anymore.
+		 * The backend task listener persists the title.
+		 *
+		 * @param {number} taskId The title generation task ID
+		 * @param {number} sessionId The session ID
+		 * @param {object} options Options
+		 * @param {boolean} options.silent Do not show an error to the user if the generation fails
+		 */
+		async trackTitleTask(taskId, sessionId, { silent = false } = {}) {
+			this.updateTitleGenerationCount(sessionId, 1)
+			try {
+				const title = await this.pollTitleGenerationTask(taskId, sessionId)
 				const session = this.sessions.find(s => s.id === sessionId)
 				if (session) {
-					session.title = titlePollResponseData?.result
+					session.title = title
 				}
 			} catch (error) {
-				console.error('onGenerateSessionTitle error:', error)
-				showError(error?.response?.data?.error ?? t('assistant', 'Error generating a title for the conversation'))
+				if (error instanceof TaskPollCancelledError) {
+					return
+				}
+				console.error('Title generation error:', error)
+				if (!silent) {
+					showError(error?.response?.data?.error ?? t('assistant', 'Error getting the generated title for the conversation'))
+				}
 			} finally {
-				this.loading.titleGeneration = false
+				this.updateTitleGenerationCount(sessionId, -1)
 			}
+		},
+
+		updateTitleGenerationCount(sessionId, delta) {
+			const count = (this.titleGenerationCounts.get(sessionId) ?? 0) + delta
+			if (count > 0) {
+				this.titleGenerationCounts.set(sessionId, count)
+			} else {
+				this.titleGenerationCounts.delete(sessionId)
+			}
+			this.syncTitleGenerationLoading()
+		},
+
+		syncTitleGenerationLoading() {
+			this.loading.titleGeneration = this.active !== null && this.titleGenerationCounts.has(this.active.id)
 		},
 
 		enterDeletionMode() {
@@ -1102,6 +1148,10 @@ export default {
 					params: { sessionIds },
 				})
 				this.sessions = this.sessions.filter((session) => !sessionIds.includes(session.id))
+				sessionIds.forEach(sessionId => {
+					this.cancelTitlePolls(sessionId)
+					this.pendingTitleSessionIds.delete(sessionId)
+				})
 				if (this.active !== null && sessionIds.includes(this.active.id)) {
 					this.active = null
 				}
@@ -1236,7 +1286,10 @@ export default {
 					session.title = content
 				}
 
-				await this.runGenerationTask(sessionId, agencyConfirm)
+				// only generate a title from a text message, for audio messages the backend
+				// schedules the title generation once it has the transcript
+				const generateTitle = this.autoTitleEnabled && firstHumanMessage && content.trim() !== ''
+				await this.runGenerationTask(sessionId, agencyConfirm, generateTitle)
 			} catch (error) {
 				this.loading.newHumanMessage = false
 				console.error('newMessage error:', error)
@@ -1269,9 +1322,12 @@ export default {
 			}
 		},
 
-		async runGenerationTask(sessionId, agencyConfirm = null) {
+		async runGenerationTask(sessionId, agencyConfirm = null, generateTitle = false) {
 			const requestSeq = ++this.generationRequestSeq
 			let taskId = null
+			if (generateTitle) {
+				this.pendingTitleSessionIds.add(sessionId)
+			}
 			try {
 				this.scrollToLastMessage()
 				this.slowPickup = false
@@ -1290,6 +1346,10 @@ export default {
 				const generationResponseData = generationResponse.data
 				console.debug('scheduleGenerationTask response:', generationResponseData)
 				taskId = generationResponseData.taskId
+				if (this.pendingTitleSessionIds.delete(sessionId)) {
+					// scheduled after the answer so the title task does not delay it, not awaited
+					this.generateSessionTitle(sessionId)
+				}
 				if (!this.trackGenerationTask(taskId, sessionId, requestSeq)) {
 					// the session changed while scheduling: another generation
 					// owns the polling state now, never install ours
@@ -1647,8 +1707,9 @@ export default {
 		},
 
 		async updateSession() {
+			// only send is_remembered: sending the title would cancel a pending automatic title generation
+			// and could overwrite a freshly generated title with a stale one
 			await axios.put(getChatURL(`/sessions/${this.active.id}`), {
-				title: this.active.title,
 				is_remembered: this.active.is_remembered,
 			})
 		},
@@ -1662,45 +1723,140 @@ export default {
 				lastHumanMessage.content = updatedMessage.data.content
 				// update session title (just in the frontend data, the db session is updated in the backend listener)
 				const isFirstHumanMessage = this.messages.filter(m => m.role === Roles.HUMAN).length === 1
-				if (isFirstHumanMessage) {
-					const session = this.sessions.find((session) => session.id === lastHumanMessage.session_id)
+				const session = this.sessions.find((session) => session.id === lastHumanMessage.session_id)
+				// the title of an audio-first session stays empty until we have the transcript,
+				// a non-empty title was set by the user in the meantime and the backend kept it
+				if (isFirstHumanMessage && session && !session.title?.trim()) {
 					session.title = updatedMessage.data.content
+					if (this.autoTitleEnabled && updatedMessage.data.content?.trim() && !this.isUnmounted) {
+						this.trackScheduledTitleTask(lastHumanMessage.session_id)
+					}
 				}
 			}
 		},
 
-		async pollTitleGenerationTask(taskId, sessionId) {
-			return new Promise((resolve, reject) => {
-				this.pollTitleGenerationTimerId = setInterval(() => {
-					if (this.active === null || sessionId !== this.active.id) {
-						console.debug('Stop polling title for session ' + sessionId + ' because it is not selected anymore')
-						clearInterval(this.pollTitleGenerationTimerId)
+		/**
+		 * Follow the title generation task the backend scheduled for a session, if any
+		 *
+		 * @param {number} sessionId The session ID
+		 */
+		async trackScheduledTitleTask(sessionId) {
+			try {
+				const checkSessionResponse = await axios.get(getChatURL('/check_session'), { params: { sessionId } })
+				const titleTaskId = checkSessionResponse.data?.titleTaskId ?? null
+				if (titleTaskId !== null) {
+					// not fatal: the session keeps the title derived from the transcript
+					await this.trackTitleTask(titleTaskId, sessionId, { silent: true })
+				} else if (checkSessionResponse.data?.sessionTitle) {
+					// the title task may already have finished, the listener persisted its title
+					const session = this.sessions.find(s => s.id === sessionId)
+					if (session) {
+						session.title = checkSessionResponse.data.sessionTitle
+					}
+				}
+			} catch (error) {
+				console.error('trackScheduledTitleTask error:', error)
+			}
+		},
+
+		/**
+		 * Poll a title generation task until it finishes, independently of the active session.
+		 * Concurrent calls for the same task share one poll.
+		 *
+		 * @param {number} taskId The title generation task ID
+		 * @param {number} sessionId The session ID
+		 * @return {Promise<string>} The generated title, rejects with TaskPollCancelledError when cancelled
+		 */
+		pollTitleGenerationTask(taskId, sessionId) {
+			// a request that was pending during unmount must not start a poll that nothing can cancel anymore
+			if (this.isUnmounted) {
+				return Promise.reject(new TaskPollCancelledError('Title generation poll cancelled'))
+			}
+			const existingPoll = this.titlePolls.get(taskId)
+			if (existingPoll) {
+				return existingPoll.promise
+			}
+			const pollInterval = 2000
+			const maxRetryDelay = 60000
+			const poll = { sessionId, timerId: null, abortController: new AbortController(), promise: null, cancel: null }
+			poll.promise = new Promise((resolve, reject) => {
+				let settled = false
+				let retryDelay = 5000
+				const settle = (fn, value) => {
+					if (settled) {
 						return
 					}
+					settled = true
+					clearTimeout(poll.timerId)
+					if (this.titlePolls.get(taskId) === poll) {
+						this.titlePolls.delete(taskId)
+					}
+					fn(value)
+				}
+				poll.cancel = () => {
+					poll.abortController.abort()
+					settle(reject, new TaskPollCancelledError('Title generation poll cancelled'))
+				}
+				// chain the requests with setTimeout so that they never overlap
+				let scheduleNext = null
+				const pollOnce = () => {
 					axios.get(
 						getChatURL('/check_title_generation'),
-						{ params: { taskId, sessionId } },
+						{ params: { taskId, sessionId }, signal: poll.abortController.signal },
 					).then(response => {
-						if (sessionId === this.active.id) {
-							resolve(response)
+						const title = response.data?.result
+						if (title) {
+							settle(resolve, title)
 						} else {
-							console.debug('Ignoring received title for session ' + sessionId + ' that is not selected anymore')
-							// should we reject here?
+							settle(reject, new Error('No title generated', { cause: response.data }))
 						}
-						clearInterval(this.pollTitleGenerationTimerId)
-					}).catch(error => {
-						// do not reject if response code is Http::STATUS_EXPECTATION_FAILED (417)
-						if (error.response?.status !== 417) {
-							console.error('checkTaskPolling error', error)
-							clearInterval(this.pollTitleGenerationTimerId)
-							reject(new Error('Title generation task check failed'))
-						} else {
-							console.debug('checkTaskPolling, task is still scheduled or running')
+						// second argument of then(): only request failures are retried,
+						// not the rejection of a completed task without a title
+					}, error => {
+						if (isCancel(error)) {
+							settle(reject, new TaskPollCancelledError('Title generation poll cancelled'))
+							return
 						}
+						const status = error.response?.status
+						// Http::STATUS_EXPECTATION_FAILED (417): the task is still scheduled or running
+						if (status === 417) {
+							console.debug('checkTitleGeneration, task is still scheduled or running')
+							retryDelay = 5000
+							scheduleNext(pollInterval)
+							return
+						}
+						// network errors and server errors are retried with a backoff
+						if (status === undefined || status >= 500) {
+							console.warn('[assistant] title generation poll temporary failure, will retry in ' + retryDelay + 'ms', error)
+							scheduleNext(retryDelay)
+							retryDelay = Math.min(retryDelay * 2, maxRetryDelay)
+							return
+						}
+						settle(reject, error)
 					})
-				}, 2000)
+				}
+				scheduleNext = (delay) => {
+					if (!settled) {
+						poll.timerId = setTimeout(pollOnce, delay)
+					}
+				}
+				scheduleNext(pollInterval)
 			})
+			this.titlePolls.set(taskId, poll)
+			return poll.promise
 		},
+
+		/**
+		 * @param {number|null} sessionId Only cancel the polls of this session, all polls if null
+		 */
+		cancelTitlePolls(sessionId = null) {
+			for (const poll of [...this.titlePolls.values()]) {
+				if (sessionId === null || poll.sessionId === sessionId) {
+					poll.cancel()
+				}
+			}
+		},
+
 		async onAgencyAnswer(confirm) {
 			this.active.agencyAnswered = true
 			// send accept/reject message

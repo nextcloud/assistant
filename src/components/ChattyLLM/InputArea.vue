@@ -244,7 +244,7 @@ export default {
 
 	computed: {
 		disabled() {
-			return this.loading.llmGeneration || this.loading.olderMessages || this.loading.initialMessages || this.loading.titleGeneration || this.loading.newHumanMessage || this.loading.newSession
+			return this.loading.llmGeneration || this.loading.olderMessages || this.loading.initialMessages || this.loading.newHumanMessage || this.loading.newSession
 		},
 		chatContentTooLong() {
 			return this.chatContent.length > MAX_TEXT_INPUT_LENGTH || this.attachedFileIds.length > MAX_ATTACHED_FILES

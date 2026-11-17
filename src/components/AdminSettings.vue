@@ -168,6 +168,15 @@
 				<NcNoteCard type="info">
 					{{ t('assistant', 'Users\' instructions are added after the instructions above, which take precedence. Changes apply to new conversations.') }}
 				</NcNoteCard>
+				<NcFormBox class="chat-auto-title-switch">
+					<NcFormBoxSwitch :model-value="state.chat_auto_title_enabled"
+						@update:model-value="onCheckboxChanged($event, 'chat_auto_title_enabled')">
+						{{ t('assistant', 'Automatically generate a title after the first message of a conversation') }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+				<NcNoteCard type="info">
+					{{ t('assistant', 'This costs one extra LLM call per conversation. Users can always regenerate a title manually.') }}
+				</NcNoteCard>
 				<div class="line">
 					<label for="chat_user_instructions_title">
 						{{ t('assistant', 'Chat User Instructions for Title Generation') }}
@@ -441,7 +450,8 @@ export default {
 			font-weight: bold;
 		}
 
-		.chat-personal-instructions-switch {
+		.chat-personal-instructions-switch,
+		.chat-auto-title-switch {
 			max-width: 900px;
 			margin-top: 12px;
 		}

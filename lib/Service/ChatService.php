@@ -31,6 +31,8 @@ use Psr\Log\LoggerInterface;
 
 class ChatService {
 	public const EMPTY_CONVERSATION_TOKEN = '{}';
+	/** Maximum length of a session title, without the ellipsis, the title column is limited to 256 characters */
+	public const MAX_TITLE_LENGTH = 140;
 
 	public function __construct(
 		private readonly IUserManager $userManager,
@@ -131,6 +133,10 @@ class ChatService {
 			return $session;
 		}
 		if ($title !== null) {
+			// a pending title generation must not overwrite the title the user just set.
+			// cancel before saving: a task that finishes in between has its title overwritten by ours,
+			// a task cancelled while running has its result dropped
+			$this->cancelTitleGenerationTasks($userId, $sessionId);
 			$session->setTitle($title);
 		}
 		if ($isRemembered !== null) {
@@ -146,6 +152,30 @@ class ChatService {
 			throw new InternalException(previous: $e);
 		}
 		return $session;
+	}
+
+	/**
+	 * Cancel the scheduled and running title generation tasks of a session.
+	 * The task processing manager drops the result of a task that was cancelled while running,
+	 * so the task listener will not set its title.
+	 */
+	private function cancelTitleGenerationTasks(string $userId, int $sessionId): void {
+		try {
+			$tasks = $this->taskProcessingManager->getUserTasksByApp($userId, Application::APP_ID . ':chatty-llm', 'chatty-title:' . $sessionId);
+		} catch (\OCP\TaskProcessing\Exception\Exception|\JsonException $e) {
+			$this->logger->warning('Failed to get the title generation tasks of a chat session', ['exception' => $e, 'sessionId' => $sessionId]);
+			return;
+		}
+		foreach ($tasks as $task) {
+			if ($task->getStatus() !== Task::STATUS_SCHEDULED && $task->getStatus() !== Task::STATUS_RUNNING) {
+				continue;
+			}
+			try {
+				$this->taskProcessingManager->cancelTask((int)$task->getId());
+			} catch (\OCP\TaskProcessing\Exception\Exception|\OCP\TaskProcessing\Exception\NotFoundException $e) {
+				$this->logger->warning('Failed to cancel a title generation task', ['exception' => $e, 'taskId' => $task->getId()]);
+			}
+		}
 	}
 
 	/**
@@ -307,7 +337,7 @@ class ChatService {
 				$this->sessionMapper->updateSessionTitle(
 					$userId,
 					$sessionId,
-					strlen($content) > 140 ? mb_substr($content, 0, 140) . '...' : $content,
+					$this->truncateTitle($content),
 				);
 			} catch (Exception $e) {
 				$this->logger->error('Failed to update session title', ['exception' => $e]);
@@ -609,13 +639,7 @@ class ChatService {
 			throw new InternalException($this->l10n->t('User not found'));
 		}
 
-		$userInstructions = $this->appConfig->getValueString(
-			Application::APP_ID,
-			'chat_user_instructions_title',
-			Application::CHAT_USER_INSTRUCTIONS_TITLE,
-			lazy: true,
-		) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
-		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
+		$userInstructions = $this->getTitleInstructions($user->getDisplayName());
 
 		try {
 			$history = $this->getRawLastMessages($sessionId);
@@ -630,6 +654,52 @@ class ChatService {
 			], JSON_THROW_ON_ERROR);
 		}, $history);
 		return $this->scheduleLLMChatTask($userId, $userInstructions, $userInstructions, $history, $sessionId, false);
+	}
+
+	/**
+	 * Extract the title from the output of a title generation task
+	 *
+	 * @param string|null $userId The owner of the task
+	 * @param string $output The raw task output
+	 * @return string The title, can be empty
+	 */
+	public function cleanGeneratedTitle(?string $userId, string $output): string {
+		$user = $userId === null ? null : $this->userManager->get($userId);
+		if ($user !== null) {
+			// some models repeat the instructions
+			$output = str_replace($this->getTitleInstructions($user->getDisplayName()), '', $output);
+		}
+		$output = str_replace('"', '', $output);
+		$output = explode(PHP_EOL, trim($output))[0];
+		return $this->truncateTitle(trim($output));
+	}
+
+	/**
+	 * Limit the length of a session title so it fits in the title column
+	 */
+	public function truncateTitle(string $title): string {
+		return mb_strlen($title) > self::MAX_TITLE_LENGTH
+			? mb_substr($title, 0, self::MAX_TITLE_LENGTH) . '...'
+			: $title;
+	}
+
+	/**
+	 * Whether a title is generated automatically after the first message of a chat session.
+	 * Admins can disable it since it costs an extra LLM call per session.
+	 * Manual title generation is always available.
+	 */
+	public function isAutoTitleGenerationEnabled(): bool {
+		return $this->appConfig->getValueString(Application::APP_ID, 'chat_auto_title_enabled', '1', lazy: true) === '1';
+	}
+
+	private function getTitleInstructions(string $userDisplayName): string {
+		$userInstructions = $this->appConfig->getValueString(
+			Application::APP_ID,
+			'chat_user_instructions_title',
+			Application::CHAT_USER_INSTRUCTIONS_TITLE,
+			lazy: true,
+		) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
+		return str_replace('{user}', $userDisplayName, $userInstructions);
 	}
 
 	public function isContextAgentAvailable(): bool {
