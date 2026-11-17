@@ -110,21 +110,28 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * Whether the session has human messages that were created before the given message
+	 *
 	 * @param int $sessionId
-	 * @param int $maxTimestamp
-	 * @return array
+	 * @param int $messageId
+	 * @return bool
 	 * @throws Exception
 	 */
-	public function getMessagesBefore(int $sessionId, int $maxTimestamp): array {
+	public function hasHumanMessagesBefore(int $sessionId, int $messageId): bool {
 		$qb = $this->db->getQueryBuilder();
-		$qb->select(Message::$columns)
+		$qb->select('id')
 			->from($this->getTableName())
 			->where($qb->expr()->eq('session_id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->lt('timestamp', $qb->createPositionalParameter($maxTimestamp, IQueryBuilder::PARAM_INT)))
-			->orderBy('id', 'DESC');
+			->andWhere($qb->expr()->eq('role', $qb->createPositionalParameter(Message::ROLE_HUMAN, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->lt('id', $qb->createPositionalParameter($messageId, IQueryBuilder::PARAM_INT)))
+			->setMaxResults(1);
 
-		$messages = $this->findEntities($qb);
-		return array_reverse($messages);
+		$result = $qb->executeQuery();
+		try {
+			return $result->fetchOne() !== false;
+		} finally {
+			$result->closeCursor();
+		}
 	}
 
 	/**

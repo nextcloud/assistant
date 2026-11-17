@@ -133,10 +133,15 @@ class ChattyLLMTaskListener implements IEventListener {
 					$queryMessageContent = trim($taskOutput['input_transcript'] ?? '');
 					$queryMessage->setContent($queryMessageContent);
 					$this->messageMapper->update($queryMessage);
-					// update session title if it's the first message
-					$olderMessages = $this->messageMapper->getMessagesBefore($sessionId, $queryMessage->getTimestamp());
-					if (count($olderMessages) === 0) {
-						$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $queryMessageContent);
+					// update session title if it's the first human message (the session also contains a system message)
+					// and the user did not set a title manually while the response was generated:
+					// the title of an audio-first session stays empty until we have the transcript
+					$isFirstHumanMessage = !$this->messageMapper->hasHumanMessagesBefore($sessionId, $queryMessageId);
+					$currentTitle = $isFirstHumanMessage
+						? $this->sessionMapper->getUserSession($task->getUserId(), $sessionId)->getTitle()
+						: null;
+					if ($isFirstHumanMessage && trim($currentTitle ?? '') === '') {
+						$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $this->chatService->truncateTitle($queryMessageContent));
 						// the frontend can only generate a title from a text message, generate it now that we have the transcript
 						if ($queryMessageContent !== '' && $this->chatService->isAutoTitleGenerationEnabled()) {
 							$this->scheduleTitleGeneration($task->getUserId(), $sessionId);

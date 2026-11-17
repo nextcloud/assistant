@@ -31,6 +31,8 @@ use Psr\Log\LoggerInterface;
 
 class ChatService {
 	public const EMPTY_CONVERSATION_TOKEN = '{}';
+	/** Maximum length of a session title, without the ellipsis, the title column is limited to 256 characters */
+	public const MAX_TITLE_LENGTH = 140;
 
 	public function __construct(
 		private readonly IUserManager $userManager,
@@ -335,7 +337,7 @@ class ChatService {
 				$this->sessionMapper->updateSessionTitle(
 					$userId,
 					$sessionId,
-					strlen($content) > 140 ? mb_substr($content, 0, 140) . '...' : $content,
+					$this->truncateTitle($content),
 				);
 			} catch (Exception $e) {
 				$this->logger->error('Failed to update session title', ['exception' => $e]);
@@ -669,7 +671,16 @@ class ChatService {
 		}
 		$output = str_replace('"', '', $output);
 		$output = explode(PHP_EOL, trim($output))[0];
-		return trim($output);
+		return $this->truncateTitle(trim($output));
+	}
+
+	/**
+	 * Limit the length of a session title so it fits in the title column
+	 */
+	public function truncateTitle(string $title): string {
+		return mb_strlen($title) > self::MAX_TITLE_LENGTH
+			? mb_substr($title, 0, self::MAX_TITLE_LENGTH) . '...'
+			: $title;
 	}
 
 	/**

@@ -56,7 +56,7 @@ class Admin implements ISettings {
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$chattyLLMUserInstructionsTitle = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
 		$chatAutoTitleEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_auto_title_enabled', '1', lazy: true) === '1';
-		$chatPersonalInstructionsEnabled =$this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
+		$chatPersonalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
 		$chattyLLMLastNMessages = (int)$this->appConfig->getValueString(Application::APP_ID, 'chat_last_n_messages', '10', lazy: true);
 		$defaultDataFolder = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true);
 		if ($defaultDataFolder === '') {

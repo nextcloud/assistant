@@ -1713,10 +1713,12 @@ export default {
 				lastHumanMessage.content = updatedMessage.data.content
 				// update session title (just in the frontend data, the db session is updated in the backend listener)
 				const isFirstHumanMessage = this.messages.filter(m => m.role === Roles.HUMAN).length === 1
-				if (isFirstHumanMessage) {
-					const session = this.sessions.find((session) => session.id === lastHumanMessage.session_id)
+				const session = this.sessions.find((session) => session.id === lastHumanMessage.session_id)
+				// the title of an audio-first session stays empty until we have the transcript,
+				// a non-empty title was set by the user in the meantime and the backend kept it
+				if (isFirstHumanMessage && session && !session.title?.trim()) {
 					session.title = updatedMessage.data.content
-					if (this.autoTitleEnabled && updatedMessage.data.content?.trim()) {
+					if (this.autoTitleEnabled && updatedMessage.data.content?.trim() && !this.isUnmounted) {
 						this.trackScheduledTitleTask(lastHumanMessage.session_id)
 					}
 				}
@@ -1756,6 +1758,10 @@ export default {
 		 * @return {Promise<string>} The generated title, rejects with TaskPollCancelledError when cancelled
 		 */
 		pollTitleGenerationTask(taskId, sessionId) {
+			// a request that was pending during unmount must not start a poll that nothing can cancel anymore
+			if (this.isUnmounted) {
+				return Promise.reject(new TaskPollCancelledError('Title generation poll cancelled'))
+			}
 			const existingPoll = this.titlePolls.get(taskId)
 			if (existingPoll) {
 				return existingPoll.promise
