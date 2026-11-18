@@ -191,11 +191,11 @@ OC.L10N.register(
     "Deselect all" : "ເລືອກຄືນທັງໝົດ",
     "Select all" : "ເລືອກທັງໝົດ",
     "Error generating a response" : "ຜິດພາດໃນການສ້າງການຕອບກັບ",
-    "Error getting the generated title for the conversation" : "ຜິດພາດໃນການຮັບຫົວຂໍ້ທີ່ສ້າງຂຶ້ນສຳລັບການສົນທະນາ",
     "Error checking if the session is thinking" : "ຜິດພາດໃນການກວດສອບວ່າຊ່ວງການສົນທະນາກຳລັງຄິດຢູ່ບໍ່",
     "Error updating title of conversation" : "ຜິດພາດໃນການອັບເດດຫົວຂໍ້ຂອງການສົນທະນາ",
     "Untitled conversation" : "ການສົນທະນາທີ່ບໍ່ມີຫົວຂໍ້",
     "Error generating a title for the conversation" : "ຜິດພາດໃນການສ້າງຫົວຂໍ້ສຳລັບການສົນທະນາ",
+    "Error getting the generated title for the conversation" : "ຜິດພາດໃນການຮັບຫົວຂໍ້ທີ່ສ້າງຂຶ້ນສຳລັບການສົນທະນາ",
     "Error fetching conversations" : "ຜິດພາດໃນການດຶງຂໍ້ມູນການສົນທະນາ",
     "Error deleting message" : "ຜິດພາດໃນການລຶບຂໍ້ຄວາມ",
     "Error fetching messages" : "ຜິດພາດໃນການດຶງຂໍ້ມູນຂໍ້ຄວາມ",
@@ -210,7 +210,6 @@ OC.L10N.register(
     "Skills" : "ທັກສະ",
     "Conversation title" : "ຫົວຂໍ້ການສົນທະນາ",
     "Edit title" : "ແກ້ໄຂຫົວຂໍ້",
-    "Generate title" : "ສ້າງຫົວຂໍ້",
     "Creating a new conversation" : "ກຳລັງສ້າງການສົນທະນາໃໝ່",
     "Hello there! What can I help you with today?" : "ສະບາຍດີ! ມີຫຍັງໃຫ້ຂ້ອຍຊ່ວຍມື້ນີ້ບໍ່?",
     "Try sending a message to spark a conversation." : "ລອງສົ່ງຂໍ້ຄວາມເພື່ອເລີ່ມການສົນທະນາ.",
@@ -366,6 +365,7 @@ OC.L10N.register(
     "Summarization task submitted successfully" : "ສົ່ງໜ້າວຽກການສະຫຼຸບຫຍໍ້ສຳເລັດແລ້ວ",
     "Text-to-speech task submitted successfully" : "ສົ່ງໜ້າວຽກຂໍ້ຄວາມເປັນສຽງສຳເລັດແລ້ວ",
     "Error deleting conversation" : "ຜິດພາດໃນການລຶບການສົນທະນາ",
+    "Generate title" : "ສ້າງຫົວຂໍ້",
     "Information sources" : "ແຫຼ່ງຂໍ້ມູນ"
 },
 "nplurals=1; plural=0;");

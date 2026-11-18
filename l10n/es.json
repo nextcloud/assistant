@@ -188,11 +188,11 @@
     "Deselect all" : "Deseleccionar todos",
     "Select all" : "Seleccionar todo",
     "Error generating a response" : "Error generando una respuesta",
-    "Error getting the generated title for the conversation" : "Error al obtener el título generado para la conversación",
     "Error checking if the session is thinking" : "Error al verificar que la sesión está pensando",
     "Error updating title of conversation" : "Error al actualizar el título de la conversación",
     "Untitled conversation" : "Conversación sin título",
     "Error generating a title for the conversation" : "Error al generar un título para la conversación",
+    "Error getting the generated title for the conversation" : "Error al obtener el título generado para la conversación",
     "Error fetching conversations" : "Error obteniendo conversaciones",
     "Error deleting message" : "Error eliminando el mensaje",
     "Error fetching messages" : "Error al obtener mensajes",
@@ -207,7 +207,6 @@
     "Skills" : "Habilidades",
     "Conversation title" : "Título de la conversación",
     "Edit title" : "Editar título",
-    "Generate title" : "Generar título",
     "Creating a new conversation" : "Creando una conversación nueva",
     "Hello there! What can I help you with today?" : "¡Hola!, ¿En qué te puedo ayudar hoy?",
     "Try sending a message to spark a conversation." : "Intente enviar un mensaje para iniciar una conversación.",
@@ -356,6 +355,7 @@
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\".",
     "Error deleting conversation" : "Error al eliminar la conversación",
+    "Generate title" : "Generar título",
     "Information sources" : "Fuentes de información"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

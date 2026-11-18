@@ -63,7 +63,6 @@ OC.L10N.register(
     "Skills" : "Veščine",
     "Conversation title" : "Naslov pogovora",
     "Edit title" : "Uredi naslov",
-    "Generate title" : "Ustvari naslov",
     "Cancel editing" : "Prekliči urejanje",
     "Submit" : "Pošlji",
     "Waiting…" : "Čakanje na povezavo ...",
@@ -118,6 +117,7 @@ OC.L10N.register(
     "fourth" : "4.",
     "fifth" : "5.",
     "second to last" : "predzadnji",
-    "last" : "Zadnji"
+    "last" : "Zadnji",
+    "Generate title" : "Ustvari naslov"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

@@ -130,11 +130,11 @@ OC.L10N.register(
     "Deselect all" : "إلغاء تحديد الكل",
     "Select all" : "تحديد الكل",
     "Error generating a response" : "حدث خطأ عند توليد استجابة",
-    "Error getting the generated title for the conversation" : "خطأ في الحصول على العنوان المُولَّد للمحادثة",
     "Error checking if the session is thinking" : "خطأ في التحقُّق من أن الجلسة في حالة تفكير",
     "Error updating title of conversation" : "حدث خطأ أثناء تحديث عنوان المحادثة",
     "Untitled conversation" : "محادثة بدون عنوان",
     "Error generating a title for the conversation" : "حدث خطأ عند توليد عنوان للمحادثة",
+    "Error getting the generated title for the conversation" : "خطأ في الحصول على العنوان المُولَّد للمحادثة",
     "Error fetching conversations" : "حدث خطأ عند جلب المحادثات",
     "Error deleting message" : "حدث خطأ عند حذف الرسالة",
     "Error fetching messages" : "حدث خطأ عند جلب الرسائل",
@@ -149,7 +149,6 @@ OC.L10N.register(
     "Skills" : "المهارات",
     "Conversation title" : "عنوان المحادثة",
     "Edit title" : "تحرير عنوان",
-    "Generate title" : "اقتراح عنوان",
     "Creating a new conversation" : "إنشاء محادثة جديدة",
     "Hello there! What can I help you with today?" : "أهلاً بك! كيف يمكنني مساعدتك اليوم؟",
     "Try sending a message to spark a conversation." : "حاول إرسالة رسالة لإثارة محادثة.",
@@ -262,6 +261,7 @@ OC.L10N.register(
     "fifth" : "خامس",
     "second to last" : "الثاني إلى الاخير",
     "last" : "الأخير",
-    "Error deleting conversation" : "حدث خطأ عند حذف المحادثة"
+    "Error deleting conversation" : "حدث خطأ عند حذف المحادثة",
+    "Generate title" : "اقتراح عنوان"
 },
 "nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;");

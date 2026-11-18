@@ -188,11 +188,11 @@ OC.L10N.register(
     "Deselect all" : "全部取消选择",
     "Select all" : "全部选择",
     "Error generating a response" : "生成响应时发生错误",
-    "Error getting the generated title for the conversation" : "产生对话的标题时发生错误",
     "Error checking if the session is thinking" : "检查工作阶段是否正在思考时发生错误",
     "Error updating title of conversation" : "更新对话标题时出错",
     "Untitled conversation" : "无标题对话",
     "Error generating a title for the conversation" : "生成对话标题时发生错误",
+    "Error getting the generated title for the conversation" : "产生对话的标题时发生错误",
     "Error fetching conversations" : "获取对话时发生错误",
     "Error deleting message" : "删除消息时发生错误",
     "Error fetching messages" : "获取消息时发生错误",
@@ -207,7 +207,6 @@ OC.L10N.register(
     "Skills" : "技能",
     "Conversation title" : "对话标题",
     "Edit title" : "编辑标题",
-    "Generate title" : "生成标题",
     "Creating a new conversation" : "创建新对话",
     "Hello there! What can I help you with today?" : "您好！请问我能帮您些什么？",
     "Try sending a message to spark a conversation." : "尝试发送消息来发起对话。",
@@ -351,6 +350,7 @@ OC.L10N.register(
     "Summarization task submitted successfully" : "总结任务已成功递交",
     "Text-to-speech task submitted successfully" : "文字转语音任务递交成功",
     "Error deleting conversation" : "删除对话发生错误",
+    "Generate title" : "生成标题",
     "Information sources" : "资讯来源"
 },
 "nplurals=1; plural=0;");

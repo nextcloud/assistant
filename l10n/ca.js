@@ -130,11 +130,11 @@ OC.L10N.register(
     "Deselect all" : "No seleccionis res",
     "Select all" : "Selecciona-ho tot",
     "Error generating a response" : "Error en generar una resposta",
-    "Error getting the generated title for the conversation" : "S'ha produït un error en obtenir el títol generat per a la conversa",
     "Error checking if the session is thinking" : "S'ha produït un error en comprovar si la sessió està pensant",
     "Error updating title of conversation" : "S'ha produït un error en actualitzar el títol de la conversa",
     "Untitled conversation" : "Conversa sense títol",
     "Error generating a title for the conversation" : "S'ha produït un error en generar un títol per a la conversa",
+    "Error getting the generated title for the conversation" : "S'ha produït un error en obtenir el títol generat per a la conversa",
     "Error fetching conversations" : "S'ha produït un error en recuperar les converses",
     "Error deleting message" : "S'ha produït un error en suprimir el missatge",
     "Error fetching messages" : "S'ha produït un error en recuperar els missatges",
@@ -149,7 +149,6 @@ OC.L10N.register(
     "Skills" : "Habilitats i experiència",
     "Conversation title" : "Títol de la conversa",
     "Edit title" : "Edició del títol",
-    "Generate title" : "Genera títol",
     "Creating a new conversation" : "Creació d'una nova conversa",
     "Hello there! What can I help you with today?" : "Hola! En què et puc ajudar avui?",
     "Try sending a message to spark a conversation." : "Prova d'enviar un missatge per iniciar una conversa.",
@@ -260,6 +259,7 @@ OC.L10N.register(
     "fifth" : "cinquè",
     "second to last" : "penúltim",
     "last" : "últim",
-    "Error deleting conversation" : "S'ha produït un error en suprimir la conversa"
+    "Error deleting conversation" : "S'ha produït un error en suprimir la conversa",
+    "Generate title" : "Genera títol"
 },
 "nplurals=2; plural=(n != 1);");
