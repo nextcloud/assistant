@@ -12,10 +12,13 @@
 		</div>
 		<span v-for="(argValue, argName) in previewArguments"
 			ref="params"
-			:key="argName + argValue"
+			:key="argName"
 			class="param"
 			:title="getParamText(argName, argValue)">
 			<strong>{{ getParamName(argName) }}:</strong> {{ getParamValue(argValue) }}
+		</span>
+		<span v-if="hiddenArgsCount > 0" class="hidden-params">
+			{{ n('assistant', '+%n more parameter', '+%n more parameters', hiddenArgsCount) }}
 		</span>
 		<NcButton v-if="needsDetails"
 			class="details"
@@ -34,7 +37,7 @@
 				<strong>{{ getParamName(argName) }}:</strong> {{ getParamValue(argValue) }}
 			</p>
 			<template #actions>
-				<NcButton variant="primary"
+				<NcButton variant="tertiary"
 					@click="detailsOpen = false">
 					{{ t('assistant', 'Close') }}
 				</NcButton>
@@ -78,14 +81,25 @@ export default {
 	},
 
 	computed: {
-		hasHiddenArgs() {
-			return Object.keys(this.action.args).length > maxDisplayedArgs
+		hiddenArgsCount() {
+			return Math.max(0, Object.keys(this.action.args).length - maxDisplayedArgs)
 		},
 		needsDetails() {
-			return this.hasHiddenArgs || this.hasTruncatedParams
+			return this.hiddenArgsCount > 0 || this.hasTruncatedParams
 		},
 		previewArguments() {
 			return Object.fromEntries(Object.entries(this.action.args).slice(0, maxDisplayedArgs))
+		},
+	},
+
+	watch: {
+		'action.args': {
+			handler() {
+				if (this.resizeObserver) {
+					this.$nextTick(this.updateTruncation)
+				}
+			},
+			deep: true,
 		},
 	},
 
@@ -99,10 +113,17 @@ export default {
 		// the observer callback also runs once right after observe(), which covers the initial render
 		this.resizeObserver = new ResizeObserver(this.updateTruncation)
 		this.resizeObserver.observe(this.$el)
+		// a late web font changes text width without resizing the card
+		document.fonts?.ready.then(() => {
+			if (this.resizeObserver) {
+				this.updateTruncation()
+			}
+		})
 	},
 
 	beforeUnmount() {
 		this.resizeObserver?.disconnect()
+		this.resizeObserver = null
 	},
 
 	methods: {
@@ -159,6 +180,10 @@ export default {
 		text-overflow: ellipsis;
 		width: 100%;
 		overflow: hidden;
+	}
+
+	.hidden-params {
+		color: var(--color-text-maxcontrast);
 	}
 
 	.details {
