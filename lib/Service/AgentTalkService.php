@@ -38,7 +38,6 @@ class AgentTalkService {
 	public const REACTION_APPROVE = '👍';
 	public const REACTION_REJECT = '👎';
 	public const REACTION_STOP = '⏹️';
-	public const REACTION_STOPPED = '🛑';
 
 	private const THREAD_TITLE_SEPARATOR = ' - ';
 
@@ -317,15 +316,9 @@ class AgentTalkService {
 		// status is also set when the generation cannot be scheduled right
 		// away (the session answers one message at a time)
 		$this->markTalkMessageRead($room, $agent->getUserId(), (int)$comment->getId());
-		// ⏹️ is a one-click stop button: clicking an existing Talk reaction adds
-		// it as the clicking user, which triggers the stop in the listener
-		$this->addAgentReaction($room, $agent->getUserId(), (int)$comment->getId(), self::REACTION_STOP);
-		// a new message supersedes the one currently being answered:
-		// only the latest message keeps the ⏹️ stop button
-		$this->supersedeSeenMessage($session);
-		// remember the seen message to later remove its ⏹️ stop button,
-		// post the failure notice if the generation fails, and find the
-		// mention to reply to with the pointer message
+		// remember the seen message to post the failure notice if the
+		// generation fails, and to find the mention to reply to with the
+		// pointer message
 		$session->setAgentSeenRoomToken($room->getToken());
 		$session->setAgentSeenCommentId((int)$comment->getId());
 		try {
@@ -335,8 +328,8 @@ class AgentTalkService {
 		}
 
 		// tell the user the answer is being generated, in the place where it
-		// will be posted, unless an explanation is already displayed for a
-		// superseded generation
+		// will be posted: the explanation message carries the ⏹️ stop button,
+		// so a new message supersedes the previous explanation with its own
 		$this->postGenerationExplanation($session);
 
 		// schedule generation of the agent answer; the generation for a
@@ -378,28 +371,6 @@ class AgentTalkService {
 	}
 
 	/**
-	 * A new human input supersedes the message that was being answered:
-	 * its generation is cancelled, so it will never be answered directly.
-	 * Its content is part of the context of the answer to the latest message
-	 * instead. The ⏹️ stop button is removed: the newest handled message
-	 * got its own ⏹️.
-	 */
-	private function supersedeSeenMessage(Session $session): void {
-		$seenRoomToken = $session->getAgentSeenRoomToken();
-		$seenCommentId = $session->getAgentSeenCommentId();
-		if ($seenRoomToken === null || $seenCommentId === null) {
-			return;
-		}
-		try {
-			$room = $this->getRoomByToken($seenRoomToken);
-		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
-			// the room was deleted, the reactions are gone with it
-			return;
-		}
-		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_STOP);
-	}
-
-	/**
 	 * Post the "generating an answer" explanation message of a pending
 	 * generation, as the agent, in the private 1-1 conversation, where the
 	 * answer will be posted: threaded like the answers.
@@ -411,6 +382,11 @@ class AgentTalkService {
 	 * replaced: it stands before the latest human message, and the answer is
 	 * later edited into the explanation, so the explanation must always stand
 	 * after the last human message.
+	 *
+	 * The explanation message carries the ⏹️ stop button as a reaction:
+	 * clicking it adds the ⏹️ as the clicking user, which triggers the stop
+	 * in the listener. As the reaction stands on the agent's own message, it
+	 * generates no notification, unlike a stop button on the human message.
 	 */
 	private function postGenerationExplanation(Session $session): void {
 		$this->deleteGenerationExplanation($session);
@@ -455,6 +431,9 @@ class AgentTalkService {
 		} catch (Exception $e) {
 			$this->logger->error('Failed to store the generation explanation of the agent session', ['exception' => $e]);
 		}
+		// the stop button is added after the tracking was persisted, so that
+		// the listener can resolve the session when the user clicks it
+		$this->addAgentReaction($oneToOneRoom, $agentUserId, (int)$explanationComment->getId(), self::REACTION_STOP);
 	}
 
 	/**
@@ -510,6 +489,9 @@ class AgentTalkService {
 	 * @return IComment|null The edited comment, null when the edit failed
 	 */
 	private function editGenerationExplanation(Session $session, \OCA\Talk\Room $room, IComment $explanationComment, string $content): ?IComment {
+		// the ⏹️ stop button of the explanation must not survive as a dead
+		// button on the message it is edited into
+		$this->deleteAgentReaction($room, (string)$session->getUserId(), (int)$explanationComment->getId(), self::REACTION_STOP);
 		try {
 			$metaData = $explanationComment->getMetaData() ?? [];
 			unset($metaData[\OCA\Talk\Model\Message::METADATA_SILENT]);
@@ -1138,11 +1120,11 @@ class AgentTalkService {
 	 * Called by AgentReactionListener when a human user reacts ⏹️ in Talk
 	 * to stop the current generation of an agent session.
 	 *
-	 * The reaction must be added by the requester on the message the agent is
-	 * currently handling (the one marked as read, with the ⏹️ stop button).
+	 * The reaction is added by the requester on the ⏹️ reaction of the
+	 * pending "generating an answer" explanation message.
 	 * The pending generation task is cancelled; when one was cancelled, the
-	 * ⏹️ becomes 🛑 (stopped by the user, the message will not be answered)
-	 * and the ⏹️ reactions are removed.
+	 * ⏹️ reactions are removed and the explanation message is edited into a
+	 * short "stopped" notice (the message will not be answered).
 	 * When nothing is running, the reaction is ignored so that a generation
 	 * that just completed can still remove its ⏹️ stop button.
 	 *
@@ -1156,7 +1138,7 @@ class AgentTalkService {
 	 */
 	public function handleStopReaction(string $humanUserId, \OCA\Talk\Room $room, IComment $comment): void {
 		try {
-			$session = $this->sessionMapper->getAgentSessionBySeenMessage($room->getToken(), (int)$comment->getId());
+			$session = $this->sessionMapper->getAgentSessionByExplanationMessage($room->getToken(), (int)$comment->getId());
 		} catch (DoesNotExistException|Exception $e) {
 			// no session is currently handling this message
 			return;
@@ -1172,21 +1154,27 @@ class AgentTalkService {
 			return;
 		}
 
-		// the generation will not answer: the agent marks the message as
-		// stopped and forgets it, so no late answer can be applied to it;
-		// the stop button is spent, the stop reactions are cleaned up
-		// and the generation explanation message is deleted
-		$this->deleteGenerationExplanation($session);
-		$this->deleteAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_STOP);
-		$this->deleteReaction($room, $humanUserId, (int)$comment->getId(), self::REACTION_STOP);
-		$this->addAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_STOPPED);
-		$session->setAgentSeenRoomToken(null);
-		$session->setAgentSeenCommentId(null);
-		try {
-			$this->sessionMapper->update($session);
-		} catch (Exception $e) {
-			$this->logger->error('Failed to forget the seen message of a stopped agent session', ['exception' => $e]);
+		// the generation will not answer: the agent forgets the message, so
+		// no late answer can be applied to it; the stop button is spent, the
+		// stop reactions are cleaned up and the explanation message becomes
+		// a short "stopped" notice
+		$messageId = (int)$comment->getId();
+		$this->deleteAgentReaction($room, (string)$session->getUserId(), $messageId, self::REACTION_STOP);
+		$this->deleteReaction($room, $humanUserId, $messageId, self::REACTION_STOP);
+		$explanationComment = $this->getGenerationExplanationComment($session);
+		$stoppedComment = null;
+		if ($explanationComment !== null) {
+			// italic, like the explanation message, so that the notice is
+			// visually distinct from the agent answers
+			$content = '_' . $this->getUserL10n($humanUserId)->t('🛑 You stopped me.') . '_';
+			$stoppedComment = $this->editGenerationExplanation($session, $room, $explanationComment, $content);
 		}
+		if ($stoppedComment === null) {
+			// no pending explanation or the edit failed: the stale
+			// "generating an answer" message is deleted
+			$this->deleteGenerationExplanation($session);
+		}
+		$this->forgetSeenMessage($session);
 	}
 
 	/**
@@ -1230,12 +1218,9 @@ class AgentTalkService {
 		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_APPROVE);
 		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_REJECT);
 		$this->markTalkMessageRead($room, $session->getUserId(), $messageId);
-		// like the answers: the follow-up generation gets a one-click stop button
-		$this->addAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_STOP);
-		// a confirmation follow-up supersedes a message that was still being answered
-		$this->supersedeSeenMessage($session);
-		// remember the seen message to later remove its ⏹️ stop button and
-		// post the failure notice if the generation fails
+		// remember the seen message to post the failure notice if the
+		// generation fails, and to find the mention to reply to with the
+		// pointer message
 		$session->setAgentSeenRoomToken($room->getToken());
 		$session->setAgentSeenCommentId($messageId);
 		try {
@@ -1360,23 +1345,15 @@ class AgentTalkService {
 	}
 
 	/**
-	 * Close the seen message once the answer flow is done: the ⏹️ stop
-	 * button is removed and the seen message is forgotten, so that no late
-	 * answer can be applied to it.
+	 * Forget the seen message once the answer flow is done, so that no late
+	 * answer can be applied to it. Its ⏹️ stop button was already handled
+	 * through the explanation message lifecycle.
 	 */
-	private function closeSeenMessage(Session $session): void {
-		$seenRoomToken = $session->getAgentSeenRoomToken();
-		$seenCommentId = $session->getAgentSeenCommentId();
-		if ($seenRoomToken === null || $seenCommentId === null) {
+	private function forgetSeenMessage(Session $session): void {
+		if ($session->getAgentSeenRoomToken() === null
+			&& $session->getAgentSeenCommentId() === null) {
 			return;
 		}
-		try {
-			$room = $this->getRoomByToken($seenRoomToken);
-			$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_STOP);
-		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
-			// the room was deleted, the reactions are gone with it
-		}
-		// forget the seen message
 		$session->setAgentSeenRoomToken(null);
 		$session->setAgentSeenCommentId(null);
 		try {
@@ -1388,12 +1365,12 @@ class AgentTalkService {
 
 	/**
 	 * The generation failed and no answer will be posted: a failure notice
-	 * is posted where the answer would have been posted, the ⏹️ stop button
-	 * is removed and the seen message is forgotten.
+	 * is posted where the answer would have been posted and the seen message
+	 * is forgotten.
 	 */
 	private function handleGenerationFailure(Session $session): void {
 		$this->postGenerationFailureNotice($session);
-		$this->closeSeenMessage($session);
+		$this->forgetSeenMessage($session);
 	}
 
 	/**
@@ -1429,7 +1406,7 @@ class AgentTalkService {
 		// italic, like the explanation message, so that the notice is
 		// visually distinct from the agent answers
 		$content = '_' . $this->getUserL10n($humanUser->getUID())->t(
-			'Something went wrong when answering your message.'
+			'🔴 Something went wrong when answering your message.'
 		) . '_';
 		$explanationComment = $this->getGenerationExplanationComment($session);
 		$noticeComment = null;
@@ -1476,7 +1453,7 @@ class AgentTalkService {
 			$this->handleGenerationFailure($session);
 			return;
 		}
-		$this->closeSeenMessage($session);
+		$this->forgetSeenMessage($session);
 	}
 
 	/**

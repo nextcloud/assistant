@@ -142,12 +142,20 @@ class SessionMapper extends QBMapper {
 	 * @throws MultipleObjectsReturnedException
 	 * @throws Exception
 	 */
-	public function getAgentSessionBySeenMessage(string $roomToken, int $commentId): Session {
+	/**
+	 * @param string $roomToken
+	 * @param int $commentId
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSessionByExplanationMessage(string $roomToken, int $commentId): Session {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select(Session::$columns)
 			->from($this->getTableName())
-			->where($qb->expr()->eq('agent_seen_room_token', $qb->createPositionalParameter($roomToken, IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->eq('agent_seen_comment_id', $qb->createPositionalParameter($commentId, IQueryBuilder::PARAM_INT)))
+			->where($qb->expr()->eq('agent_explanation_room_token', $qb->createPositionalParameter($roomToken, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('agent_explanation_message_id', $qb->createPositionalParameter($commentId, IQueryBuilder::PARAM_INT)))
 			->andWhere($qb->expr()->isNotNull('requester_user_id'))
 			->orderBy('timestamp', 'DESC')
 			->setMaxResults(1);

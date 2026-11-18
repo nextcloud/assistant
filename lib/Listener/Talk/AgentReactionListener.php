@@ -18,7 +18,8 @@ use Psr\Log\LoggerInterface;
  * @template-implements IEventListener<\OCA\Talk\Events\ReactionAddedEvent>
  *
  * Handles the reactions of human users on agent Talk messages:
- * - ⏹️ on the message being handled stops the current generation
+ * - ⏹️ on the pending "generating an answer" explanation message stops the
+ *   current generation
  * - 👍/👎 on confirmation-related messages (sensitive actions of the agency
  *   feature) are sent back to the agent context as approve/reject signals
  *

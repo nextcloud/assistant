@@ -59,9 +59,11 @@ class AgentTalkServiceTest extends TestCase {
 		$this->session->setRequesterUserId(self::HUMAN_USER_ID);
 		$this->session->setAgentSeenRoomToken(self::ROOM_TOKEN);
 		$this->session->setAgentSeenCommentId(self::COMMENT_ID);
+		$this->session->setAgentExplanationRoomToken(self::ROOM_TOKEN);
+		$this->session->setAgentExplanationMessageId(self::COMMENT_ID);
 
 		$this->sessionMapper = $this->createMock(SessionMapper::class);
-		$this->sessionMapper->method('getAgentSessionBySeenMessage')->willReturn($this->session);
+		$this->sessionMapper->method('getAgentSessionByExplanationMessage')->willReturn($this->session);
 
 		$this->chatService = $this->createMock(ChatService::class);
 
@@ -95,25 +97,30 @@ class AgentTalkServiceTest extends TestCase {
 	}
 
 	/**
-	 * A ⏹️ reaction of the requester on the message being handled stops the
-	 * generation: the pending task is cancelled, the message is forgotten so no
-	 * late outcome can be applied to it.
+	 * A ⏹️ reaction of the requester on the pending "generating an answer"
+	 * explanation message stops the generation: the pending task is
+	 * cancelled, the stop reactions are cleaned up, the explanation tracking
+	 * is cleared and the message is forgotten so no late answer can be
+	 * applied to it.
 	 */
 	public function testStopReactionCancelsTheRunningGeneration(): void {
 		$this->chatService->method('cancelPendingGenerationTasks')
 			->with(self::AGENT_USER_ID, self::SESSION_ID)
 			->willReturn(2);
-		$this->sessionMapper->expects($this->once())->method('update');
+		$this->sessionMapper->expects($this->atLeast()->once())->method('update');
 
 		$this->service->handleStopReaction(self::HUMAN_USER_ID, $this->getRoom(), $this->getComment());
 
 		$this->assertNull($this->session->getAgentSeenRoomToken());
 		$this->assertNull($this->session->getAgentSeenCommentId());
+		$this->assertNull($this->session->getAgentExplanationRoomToken());
+		$this->assertNull($this->session->getAgentExplanationMessageId());
 	}
 
 	/**
 	 * When nothing is scheduled or running, the stop reaction is ignored so
-	 * that a generation that just completed can still mark its outcome.
+	 * that a generation that just completed can still remove its ⏹️ stop
+	 * button.
 	 */
 	public function testStopReactionIsIgnoredWhenNothingIsCancelled(): void {
 		$this->chatService->method('cancelPendingGenerationTasks')->willReturn(0);
@@ -123,31 +130,8 @@ class AgentTalkServiceTest extends TestCase {
 
 		$this->assertSame(self::ROOM_TOKEN, $this->session->getAgentSeenRoomToken());
 		$this->assertSame(self::COMMENT_ID, $this->session->getAgentSeenCommentId());
-	}
-
-	/**
-	 * Only the human user the agent session is dedicated to may stop it:
-	 * other members of a group room must not be able to cancel a generation.
-	 */
-	/**
-	 * An accepted stop reaction also deletes the pending generation
-	 * explanation message: the "generating an answer" notice would be stale
-	 * after the stop. The tracking is cleared and persisted.
-	 */
-	public function testStopReactionDeletesTheGenerationExplanation(): void {
-		$this->session->setAgentExplanationRoomToken(self::ROOM_TOKEN);
-		$this->session->setAgentExplanationMessageId(self::COMMENT_ID);
-		$this->chatService->method('cancelPendingGenerationTasks')
-			->with(self::AGENT_USER_ID, self::SESSION_ID)
-			->willReturn(1);
-		$this->sessionMapper->expects($this->atLeast()->once())->method('update');
-
-		$this->service->handleStopReaction(self::HUMAN_USER_ID, $this->getRoom(), $this->getComment());
-
-		$this->assertNull($this->session->getAgentExplanationRoomToken());
-		$this->assertNull($this->session->getAgentExplanationMessageId());
-		$this->assertNull($this->session->getAgentSeenRoomToken());
-		$this->assertNull($this->session->getAgentSeenCommentId());
+		$this->assertSame(self::ROOM_TOKEN, $this->session->getAgentExplanationRoomToken());
+		$this->assertSame(self::COMMENT_ID, $this->session->getAgentExplanationMessageId());
 	}
 
 	/**
@@ -164,7 +148,7 @@ class AgentTalkServiceTest extends TestCase {
 
 	public function testStopReactionOnUnhandledMessageIsIgnored(): void {
 		$sessionMapper = $this->createMock(SessionMapper::class);
-		$sessionMapper->method('getAgentSessionBySeenMessage')
+		$sessionMapper->method('getAgentSessionByExplanationMessage')
 			->willThrowException(new DoesNotExistException('no session handles this message'));
 		$this->chatService->expects($this->never())->method('cancelPendingGenerationTasks');
 
@@ -184,5 +168,32 @@ class AgentTalkServiceTest extends TestCase {
 		);
 
 		$service->handleStopReaction(self::HUMAN_USER_ID, $this->getRoom(), $this->getComment());
+	}
+
+	/**
+	 * A completed generation closes the seen message: it is forgotten, so
+	 * that no late answer can be applied to it.
+	 */
+	public function testGenerationCompletedClosesTheSeenMessage(): void {
+		$this->sessionMapper->expects($this->once())->method('update');
+
+		$this->service->markGenerationCompleted($this->session, true);
+
+		$this->assertNull($this->session->getAgentSeenRoomToken());
+		$this->assertNull($this->session->getAgentSeenCommentId());
+	}
+
+	/**
+	 * When nothing could be posted, the generation is handled as a failure:
+	 * the seen message is forgotten, so that no late answer can be applied
+	 * to it.
+	 */
+	public function testGenerationFailureClearsTheSeenState(): void {
+		$this->sessionMapper->expects($this->once())->method('update');
+
+		$this->service->markGenerationCompleted($this->session, false);
+
+		$this->assertNull($this->session->getAgentSeenRoomToken());
+		$this->assertNull($this->session->getAgentSeenCommentId());
 	}
 }
