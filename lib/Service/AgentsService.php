@@ -176,6 +176,24 @@ class AgentsService {
 	}
 
 	/**
+	 * Deletes the agent entity of the given user, if there is one.
+	 * Called when an agent user is deleted outside of this app.
+	 *
+	 * @param string $userId
+	 * @return void
+	 * @throws Exception
+	 */
+	public function deleteAgentForUser(string $userId): void {
+		try {
+			$agent = $this->agentMapper->getByUserId($userId);
+		} catch (DoesNotExistException $e) {
+			// Not an agent user, nothing to clean up
+			return;
+		}
+		$this->agentMapper->deleteAgent($agent);
+	}
+
+	/**
 	 * The user ids and group ids that may access the agent.
 	 * Both lists are empty when the access is not restricted.
 	 *

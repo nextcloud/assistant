@@ -141,6 +141,22 @@ class AgentsServiceTest extends TestCase {
 		$this->service->deleteAgent(5, true);
 	}
 
+	public function testDeleteAgentForUserDeletesTheAgentEntity(): void {
+		$agent = $this->createAgentEntity(5, 'agent1');
+		$this->agentMapper->method('getByUserId')->willReturn($agent);
+		$this->agentMapper->expects($this->once())->method('deleteAgent')->with($agent);
+
+		$this->service->deleteAgentForUser('agent1');
+	}
+
+	public function testDeleteAgentForUserWithoutAgentIsANoOp(): void {
+		$this->agentMapper->method('getByUserId')
+			->willThrowException(new \OCP\AppFramework\Db\DoesNotExistException('not an agent'));
+		$this->agentMapper->expects($this->never())->method('deleteAgent');
+
+		$this->service->deleteAgentForUser('user1');
+	}
+
 	public function testUpdateAgent() {
 		$agent = $this->createAgentEntity(5, 'agent1');
 		$this->agentMapper->method('getById')->willReturn($agent);

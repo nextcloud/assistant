@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Listener;
 
+use OCA\Assistant\Service\AgentsService;
 use OCA\Assistant\Service\AssignmentsService;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\InternalException;
 use OCA\Assistant\Service\SessionSummaryService;
+use OCP\DB\Exception;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
@@ -28,6 +30,7 @@ class UserDeletedListener implements IEventListener {
 		private AssignmentsService $assignmentsService,
 		private LoggerInterface $logger,
 		private SessionSummaryService $sessionSummaryService,
+		private AgentsService $agentsService,
 	) {
 	}
 
@@ -54,6 +57,12 @@ class UserDeletedListener implements IEventListener {
 			$this->sessionSummaryService->deleteSummaryJobsForUser($userId);
 		} catch (InternalException $e) {
 			$this->logger->error('Error while deleting summary jobs for user ' . $userId, ['exception' => $e]);
+		}
+
+		try {
+			$this->agentsService->deleteAgentForUser($userId);
+		} catch (Exception $e) {
+			$this->logger->error('Error while deleting agent data for user ' . $userId, ['exception' => $e]);
 		}
 	}
 }
