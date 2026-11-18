@@ -92,6 +92,8 @@ export default {
 	mounted() {
 		this.getIcon()
 		if (typeof ResizeObserver === 'undefined') {
+			// truncation cannot be detected, so always offer the full view
+			this.hasTruncatedParams = Object.keys(this.previewArguments).length > 0
 			return
 		}
 		// the observer callback also runs once right after observe(), which covers the initial render
@@ -108,7 +110,10 @@ export default {
 			return argName.replace(/_/g, ' ').replace(/(^|\s)\S/g, (char) => char.toUpperCase())
 		},
 		getParamValue(argValue) {
-			return Array.isArray(argValue) ? argValue.join(', ') : String(argValue)
+			return Array.isArray(argValue) ? argValue.map(this.formatValue).join(', ') : this.formatValue(argValue)
+		},
+		formatValue(value) {
+			return typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value)
 		},
 		getParamText(argName, argValue) {
 			return this.getParamName(argName) + ': ' + this.getParamValue(argValue)
