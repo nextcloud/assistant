@@ -84,7 +84,7 @@ class AgentSkillsService {
 		$userSkillsWithFileIds = [];
 		foreach ($userSkills as $folderName => $metadata) {
 			try {
-				$fileId = $skillsFolder->get((string)$folderName)->get(self::SKILL_FILE_NAME)->getId();
+				$fileId = $skillsFolder->get($folderName . '/' . self::SKILL_FILE_NAME)->getId();
 			} catch (NotFoundException $e) {
 				$fileId = null;
 			}
