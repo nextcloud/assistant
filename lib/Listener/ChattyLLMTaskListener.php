@@ -61,8 +61,8 @@ class ChattyLLMTaskListener implements IEventListener {
 						$task->getUserId(), $task, $session
 					);
 				}
-				// in the agent-as-a-user feature, the last message read by the agent
-				// gets a 🔴 reaction when the generation failed
+				// in the agent-as-a-user feature, a failure notice is posted
+				// in the agent 1-1 conversation when the generation failed
 				try {
 					$this->agentTalkService->markGenerationFailed($task->getUserId(), $sessionId);
 				} catch (\Throwable $e) {

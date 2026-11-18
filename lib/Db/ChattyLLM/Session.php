@@ -102,8 +102,9 @@ class Session extends Entity implements \JsonSerializable {
 
 	/**
 	 * The Talk room + comment of the last human message read by the agent,
-	 * getting the ✅ or 🔴 outcome reaction once the requested message
-	 * generation completed/failed
+	 * carrying the ⏹️ stop button while the requested message generation
+	 * is pending, and used to post the failure notice and the origin room
+	 * pointer message once the generation completed/failed
 	 * @var ?string
 	 */
 	protected $agentSeenRoomToken;
