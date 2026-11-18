@@ -117,14 +117,9 @@ export default {
 			return this.getParamName(argName) + ': ' + this.getParamValue(argValue)
 		},
 		updateTruncation() {
-			const params = this.$refs.params ?? []
-			const hasTruncatedParams = params.some(el => el.scrollWidth > el.clientWidth)
-			if (hasTruncatedParams === this.hasTruncatedParams) {
-				return
-			}
 			// defer to the next frame to avoid "ResizeObserver loop" warnings
 			window.requestAnimationFrame(() => {
-				this.hasTruncatedParams = hasTruncatedParams
+				this.hasTruncatedParams = this.$refs.params?.some(el => el.scrollWidth > el.clientWidth) ?? false
 			})
 		},
 		async getIcon() {
