@@ -209,6 +209,35 @@ class Assignment extends Entity implements \JsonSerializable {
 	}
 
 	/**
+	 * RRule walks and caches every occurrence from the start. For SECONDLY, MINUTELY and HOURLY rules this
+	 * moves the start to about one day before the last run, by whole intervals on the local wall clock as RRule
+	 * steps them. Rules with COUNT keep their start, their occurrences are counted from it.
+	 */
+	private static function fastForwardStart(RRule $rule, \DateTime $start, int $lastRunAt): \DateTime {
+		$parts = $rule->getRule();
+		$unit = ['SECONDLY' => 1, 'MINUTELY' => 60, 'HOURLY' => 3600][$parts['FREQ']] ?? null;
+		if ($unit === null || !empty($parts['COUNT'])) {
+			return $start;
+		}
+		$step = max(1, (int)$parts['INTERVAL']) * $unit;
+		$utc = new \DateTimeZone('UTC');
+		$timezone = $start->getTimezone();
+		$wallStart = new \DateTimeImmutable($start->format('Y-m-d H:i:s'), $utc);
+		$wallLastRun = new \DateTimeImmutable((new \DateTime('@' . $lastRunAt))->setTimezone($timezone)->format('Y-m-d H:i:s'), $utc);
+		// one day of margin, so a DST change cannot move the new start past the last run
+		$elapsed = $wallLastRun->getTimestamp() - 86400 - $wallStart->getTimestamp();
+		for ($intervals = intdiv(max(0, $elapsed), $step); $intervals > 0; $intervals--) {
+			$wall = $wallStart->modify('+' . ($intervals * $step) . ' seconds')->format('Y-m-d H:i:s');
+			$newStart = new \DateTime($wall, $timezone);
+			// a wall time in a DST gap does not exist, so take the interval before it
+			if ($newStart->format('Y-m-d H:i:s') === $wall) {
+				return $newStart;
+			}
+		}
+		return $start;
+	}
+
+	/**
 	 * Checks the BY* values against RFC 5545. RRule validates them as well,
 	 * these checks give more specific error messages.
 	 *
@@ -283,7 +312,11 @@ class Assignment extends Entity implements \JsonSerializable {
 		}
 		try {
 			$start = self::startDate($this->getStartsAt(), $this->getTimezone());
-			$rule = new RRule(self::normalizeRule($this->getRecurrence(), $this->getTimezone()), $start);
+			$recurrence = self::normalizeRule($this->getRecurrence(), $this->getTimezone());
+			$rule = new RRule($recurrence, $start);
+			if ($this->getLastRunAt() !== 0) {
+				$rule = new RRule($recurrence, self::fastForwardStart($rule, $start, $this->getLastRunAt()));
+			}
 			// Find the first recurrence after the last run or after the start if this assignment has never run
 			$next = $this->getLastRunAt() !== 0
 				? $rule->getOccurrencesAfter(new \DateTime('@' . $this->getLastRunAt()), false, 1)

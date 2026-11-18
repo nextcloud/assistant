@@ -85,6 +85,36 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Frequent rules are not walked from the start, the occurrences after the last run stay the same
+	 *
+	 * @dataProvider frequentRuleDataProvider
+	 */
+	public function testIsDueForFrequentRuleStartedLongAgo(string $rrule, string $startsAt, string $lastRunAt, string $timezone, string $now, bool $expected): void {
+		$assignment = Assignment::fromRow([
+			'recurrence' => $rrule,
+			'starts_at' => (new \DateTimeImmutable($startsAt))->getTimestamp(),
+			'last_run_at' => (new \DateTimeImmutable($lastRunAt))->getTimestamp(),
+			'timezone' => $timezone,
+		]);
+		self::assertSame($expected, $assignment->isDueToRun(new \DateTimeImmutable($now)));
+	}
+
+	public function frequentRuleDataProvider(): array {
+		return [
+			// walking all occurrences from the start needs more than 512 MB
+			['FREQ=MINUTELY', '2023-11-18T00:00:00Z', '2026-11-18T11:59:30Z', 'UTC', '2026-11-18T12:00:00Z', true],
+			// 217440 minutes from the start to June 1st, the occurrences are at 217434 and 217441
+			['FREQ=MINUTELY;INTERVAL=7', '2026-01-01T00:00:00Z', '2026-06-01T00:00:30Z', 'UTC', '2026-06-01T00:00:59Z', false],
+			['FREQ=MINUTELY;INTERVAL=7', '2026-01-01T00:00:00Z', '2026-06-01T00:00:30Z', 'UTC', '2026-06-01T00:01:00Z', true],
+			// every 5 hours on the Berlin wall clock from 09:00: after the DST change on April 10th at 08:00 and 13:00 (11:00Z)
+			['FREQ=HOURLY;INTERVAL=5', '2026-01-01T08:00:00Z', '2026-04-10T06:30:00Z', 'Europe/Berlin', '2026-04-10T10:59:59Z', false],
+			['FREQ=HOURLY;INTERVAL=5', '2026-01-01T08:00:00Z', '2026-04-10T06:30:00Z', 'Europe/Berlin', '2026-04-10T11:00:00Z', true],
+			// COUNT also includes the occurrences before the last run
+			['FREQ=HOURLY;COUNT=3', '2026-01-01T00:00:00Z', '2026-01-01T02:00:00Z', 'UTC', '2026-01-03T00:00:00Z', false],
+		];
+	}
+
+	/**
 	 * Rules that never occur may already be stored, from before they were rejected on save
 	 *
 	 * @dataProvider neverOccurringRuleDataProvider
