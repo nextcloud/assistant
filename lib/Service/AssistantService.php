@@ -883,13 +883,44 @@ class AssistantService {
 		$mimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($head);
 		$fileName = $file->getName();
 
-		$mimes = new \Mimey\MimeTypes;
-
-		$extension = $mimes->getExtension($mimeType);
-		if (is_string($extension) && $extension !== '' && !str_ends_with($fileName, $extension)) {
+		$extension = $this->getExtensionForMimeType($mimeType);
+		if ($extension !== null && !str_ends_with($fileName, $extension)) {
 			return $fileName . '.' . $extension;
 		}
 		return $fileName;
+	}
+
+	/**
+	 * Get the download name for a task output file, based on the task and file IDs,
+	 * keeping the extension of the original file name when there is one
+	 * and otherwise deriving one from the detected MIME type
+	 *
+	 * @param File $taskOutputFile
+	 * @param int $ocpTaskId The task ID
+	 * @param int $fileId The task output file ID
+	 * @param string $mimeType The MIME type detected for the file content
+	 * @return string
+	 */
+	public function getTaskOutputFileDownloadName(File $taskOutputFile, int $ocpTaskId, int $fileId, string $mimeType): string {
+		$fileName = $ocpTaskId . '-' . $fileId;
+		$extension = pathinfo($taskOutputFile->getName(), PATHINFO_EXTENSION);
+		if ($extension === '') {
+			$extension = $this->getExtensionForMimeType($mimeType);
+		}
+		if ($extension !== null) {
+			$fileName .= '.' . $extension;
+		}
+		return $fileName;
+	}
+
+	/**
+	 * @param string $mimeType
+	 * @return string|null The extension for the MIME type or null when unknown
+	 */
+	private function getExtensionForMimeType(string $mimeType): ?string {
+		$mimes = new \Mimey\MimeTypes;
+		$extension = $mimes->getExtension($mimeType);
+		return is_string($extension) && $extension !== '' ? $extension : null;
 	}
 
 	/**
