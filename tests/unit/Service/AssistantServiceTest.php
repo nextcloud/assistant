@@ -263,4 +263,18 @@ class AssistantServiceTest extends TestCase {
 			$this->service->getTaskOutputFileDownloadName($file, self::TASK_ID, self::FILE_ID, 'application/x-unknown-type'),
 		);
 	}
+
+	/**
+	 * The generic application/octet-stream MIME type, used by the controller
+	 * when content detection fails, must not yield an extension even though
+	 * Mimey maps it to "bin".
+	 */
+	public function testGetTaskOutputFileDownloadNameGenericMimeType(): void {
+		$file = $this->getOutputFileWithName('42-4242');
+
+		$this->assertSame(
+			self::TASK_ID . '-' . self::FILE_ID,
+			$this->service->getTaskOutputFileDownloadName($file, self::TASK_ID, self::FILE_ID, 'application/octet-stream'),
+		);
+	}
 }

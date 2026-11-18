@@ -893,7 +893,9 @@ class AssistantService {
 	/**
 	 * Get the download name for a task output file, based on the task and file IDs,
 	 * keeping the extension of the original file name when there is one
-	 * and otherwise deriving one from the detected MIME type
+	 * and otherwise deriving one from the detected MIME type.
+	 * The generic application/octet-stream MIME type, used when content
+	 * detection fails, is treated like an unknown MIME type
 	 *
 	 * @param File $taskOutputFile
 	 * @param int $ocpTaskId The task ID
@@ -905,9 +907,13 @@ class AssistantService {
 		$fileName = $ocpTaskId . '-' . $fileId;
 		$extension = pathinfo($taskOutputFile->getName(), PATHINFO_EXTENSION);
 		if ($extension === '') {
-			$extension = $this->getExtensionForMimeType($mimeType);
-		}
-		if ($extension !== null) {
+			if ($mimeType !== 'application/octet-stream') {
+				$extension = $this->getExtensionForMimeType($mimeType);
+				if ($extension !== null) {
+					$fileName .= '.' . $extension;
+				}
+			}
+		} else {
 			$fileName .= '.' . $extension;
 		}
 		return $fileName;
