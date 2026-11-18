@@ -41,6 +41,10 @@ use OCP\DB\Types;
  * @method \void setAgencyConfirmationRoomToken(?string $agencyConfirmationRoomToken)
  * @method \int|null getAgencyConfirmationCommentId()
  * @method \void setAgencyConfirmationCommentId(?int $agencyConfirmationCommentId)
+ * @method \string|null getAgentExplanationRoomToken()
+ * @method \void setAgentExplanationRoomToken(?string $agentExplanationRoomToken)
+ * @method \int|null getAgentExplanationMessageId()
+ * @method \void setAgentExplanationMessageId(?int $agentExplanationMessageId)
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */
@@ -118,6 +122,18 @@ class Session extends Entity implements \JsonSerializable {
 	/** @var ?int */
 	protected $agencyConfirmationCommentId;
 
+	/**
+	 * The Talk room + comment of the pending "generating an answer"
+	 * explanation message, posted where the answer will be posted and
+	 * deleted again when the answer is posted or the generation
+	 * fails or is stopped
+	 * @var ?string
+	 */
+	protected $agentExplanationRoomToken;
+
+	/** @var ?int */
+	protected $agentExplanationMessageId;
+
 	public static $columns = [
 		'id',
 		'user_id',
@@ -135,6 +151,8 @@ class Session extends Entity implements \JsonSerializable {
 		'agent_seen_comment_id',
 		'agency_confirmation_room_token',
 		'agency_confirmation_comment_id',
+		'agent_explanation_room_token',
+		'agent_explanation_message_id',
 	];
 	public static $fields = [
 		'id',
@@ -154,6 +172,8 @@ class Session extends Entity implements \JsonSerializable {
 		'agentSeenCommentId',
 		'agencyConfirmationRoomToken',
 		'agencyConfirmationCommentId',
+		'agentExplanationRoomToken',
+		'agentExplanationMessageId',
 	];
 
 	public function __construct() {
@@ -173,6 +193,8 @@ class Session extends Entity implements \JsonSerializable {
 		$this->addType('agentSeenCommentId', Types::BIGINT);
 		$this->addType('agencyConfirmationRoomToken', Types::STRING);
 		$this->addType('agencyConfirmationCommentId', Types::BIGINT);
+		$this->addType('agentExplanationRoomToken', Types::STRING);
+		$this->addType('agentExplanationMessageId', Types::BIGINT);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -195,6 +217,8 @@ class Session extends Entity implements \JsonSerializable {
 			'agent_seen_comment_id' => $this->getAgentSeenCommentId(),
 			'agency_confirmation_room_token' => $this->getAgencyConfirmationRoomToken(),
 			'agency_confirmation_comment_id' => $this->getAgencyConfirmationCommentId(),
+			'agent_explanation_room_token' => $this->getAgentExplanationRoomToken(),
+			'agent_explanation_message_id' => $this->getAgentExplanationMessageId(),
 		];
 	}
 

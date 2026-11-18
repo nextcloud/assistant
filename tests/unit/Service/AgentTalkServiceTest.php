@@ -19,9 +19,11 @@ use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Comments\IComment;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
+use OCP\L10N\IFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Test\TestCase;
@@ -74,6 +76,8 @@ class AgentTalkServiceTest extends TestCase {
 			$this->createMock(AgentTalkFileService::class),
 			$this->createMock(TaskProcessingService::class),
 			$this->createMock(LoggerInterface::class),
+			$this->createMock(IConfig::class),
+			$this->createMock(IFactory::class),
 		);
 	}
 
@@ -125,6 +129,31 @@ class AgentTalkServiceTest extends TestCase {
 	 * Only the human user the agent session is dedicated to may stop it:
 	 * other members of a group room must not be able to cancel a generation.
 	 */
+	/**
+	 * An accepted stop reaction also deletes the pending generation
+	 * explanation message: the "generating an answer" notice would be stale
+	 * after the stop. The tracking is cleared and persisted.
+	 */
+	public function testStopReactionDeletesTheGenerationExplanation(): void {
+		$this->session->setAgentExplanationRoomToken(self::ROOM_TOKEN);
+		$this->session->setAgentExplanationMessageId(self::COMMENT_ID);
+		$this->chatService->method('cancelPendingGenerationTasks')
+			->with(self::AGENT_USER_ID, self::SESSION_ID)
+			->willReturn(1);
+		$this->sessionMapper->expects($this->atLeast()->once())->method('update');
+
+		$this->service->handleStopReaction(self::HUMAN_USER_ID, $this->getRoom(), $this->getComment());
+
+		$this->assertNull($this->session->getAgentExplanationRoomToken());
+		$this->assertNull($this->session->getAgentExplanationMessageId());
+		$this->assertNull($this->session->getAgentSeenRoomToken());
+		$this->assertNull($this->session->getAgentSeenCommentId());
+	}
+
+	/**
+	 * Only the human user the agent session is dedicated to may stop it:
+	 * other members of a group room must not be able to cancel a generation.
+	 */
 	public function testStopReactionByAnotherUserIsIgnored(): void {
 		$this->chatService->expects($this->never())->method('cancelPendingGenerationTasks');
 
@@ -150,6 +179,8 @@ class AgentTalkServiceTest extends TestCase {
 			$this->createMock(AgentTalkFileService::class),
 			$this->createMock(TaskProcessingService::class),
 			$this->createMock(LoggerInterface::class),
+			$this->createMock(IConfig::class),
+			$this->createMock(IFactory::class),
 		);
 
 		$service->handleStopReaction(self::HUMAN_USER_ID, $this->getRoom(), $this->getComment());
