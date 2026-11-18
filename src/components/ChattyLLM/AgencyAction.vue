@@ -54,6 +54,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 const maxDisplayedArgs = 3
+const canDetectTruncation = typeof ResizeObserver !== 'undefined'
 
 export default {
 	name: 'AgencyAction',
@@ -85,6 +86,10 @@ export default {
 			return Math.max(0, Object.keys(this.action.args).length - maxDisplayedArgs)
 		},
 		needsDetails() {
+			if (!canDetectTruncation) {
+				// truncation cannot be detected, so always offer the full view
+				return Object.keys(this.action.args).length > 0
+			}
 			return this.hiddenArgsCount > 0 || this.hasTruncatedParams
 		},
 		previewArguments() {
@@ -95,9 +100,7 @@ export default {
 	watch: {
 		'action.args': {
 			handler() {
-				if (this.resizeObserver) {
-					this.$nextTick(this.updateTruncation)
-				}
+				this.$nextTick(this.updateTruncation)
 			},
 			deep: true,
 		},
@@ -105,25 +108,20 @@ export default {
 
 	mounted() {
 		this.getIcon()
-		if (typeof ResizeObserver === 'undefined') {
-			// truncation cannot be detected, so always offer the full view
-			this.hasTruncatedParams = Object.keys(this.previewArguments).length > 0
+		if (!canDetectTruncation) {
 			return
 		}
 		// the observer callback also runs once right after observe(), which covers the initial render
 		this.resizeObserver = new ResizeObserver(this.updateTruncation)
 		this.resizeObserver.observe(this.$el)
 		// a late web font changes text width without resizing the card
-		document.fonts?.ready.then(() => {
-			if (this.resizeObserver) {
-				this.updateTruncation()
-			}
-		})
+		document.fonts?.ready.then(this.updateTruncation)
 	},
 
 	beforeUnmount() {
 		this.resizeObserver?.disconnect()
 		this.resizeObserver = null
+		window.cancelAnimationFrame(this.truncationFrame)
 	},
 
 	methods: {
@@ -140,13 +138,18 @@ export default {
 			return this.getParamName(argName) + ': ' + this.getParamValue(argValue)
 		},
 		updateTruncation() {
+			window.cancelAnimationFrame(this.truncationFrame)
+			// unmounted, or truncation cannot be detected
+			if (!this.resizeObserver) {
+				return
+			}
 			const params = this.$refs.params ?? []
 			const hasTruncatedParams = params.some(el => el.scrollWidth > el.clientWidth)
 			if (hasTruncatedParams === this.hasTruncatedParams) {
 				return
 			}
 			// defer to the next frame to avoid "ResizeObserver loop" warnings
-			window.requestAnimationFrame(() => {
+			this.truncationFrame = window.requestAnimationFrame(() => {
 				this.hasTruncatedParams = hasTruncatedParams
 			})
 		},
