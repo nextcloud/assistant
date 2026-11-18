@@ -63,6 +63,45 @@ class AgentSkillsService {
 	 * @throws \OCP\Lock\LockedException if a SKILL.md file is locked
 	 */
 	public function listSkills(string $userId): array {
+		[, $userSkills, $globalSkills] = $this->listUserAndGlobalSkills($userId);
+		// user skills take precedence on name collision
+		return array_values(array_replace($globalSkills, $userSkills));
+	}
+
+	/**
+	 * List the skills available to a user, split into the user's own skills and the admin-configured global ones.
+	 * User skills include the file ID of their SKILL.md (null if it disappeared meanwhile).
+	 * Global skills overridden by a user skill of the same name are left out.
+	 *
+	 * @return array{user: list<array{name: string, description: string, fileId: ?int}>, global: list<array{name: string, description: string}>}
+	 * @throws NotFoundException if the skills folder cannot be resolved
+	 * @throws NotPermittedException if the skills folder cannot be created or read
+	 * @throws RuntimeException if the skills path or its parent exists but is not a folder
+	 * @throws \OC\User\NoUserException if the user does not exist
+	 */
+	public function listSkillsBySource(string $userId): array {
+		[$skillsFolder, $userSkills, $globalSkills] = $this->listUserAndGlobalSkills($userId);
+		$userSkillsWithFileIds = [];
+		foreach ($userSkills as $folderName => $metadata) {
+			try {
+				$fileId = $skillsFolder->get((string)$folderName)->get(self::SKILL_FILE_NAME)->getId();
+			} catch (NotFoundException $e) {
+				$fileId = null;
+			}
+			$userSkillsWithFileIds[] = $metadata + ['fileId' => $fileId];
+		}
+		return [
+			'user' => $userSkillsWithFileIds,
+			'global' => array_values(array_diff_key($globalSkills, $userSkills)),
+		];
+	}
+
+	/**
+	 * Get the user's skills folder, then the user's skills and the global skills, each indexed by folder name.
+	 *
+	 * @return array{0: Folder, 1: array<string, array{name: string, description: string}>, 2: array<string, array{name: string, description: string}>}
+	 */
+	private function listUserAndGlobalSkills(string $userId): array {
 		$skillsFolder = $this->getSkillsFolder($userId);
 		$userSkills = $this->listSkillsFromFolder(
 			$skillsFolder,
@@ -71,21 +110,14 @@ class AgentSkillsService {
 		);
 
 		$globalFolder = $this->getGlobalSkillsFolder();
-		if ($globalFolder === null) {
-			return array_values($userSkills);
-		}
-		$globalSkills = $this->listSkillsFromFolder(
-			$globalFolder,
-			self::GLOBAL_CACHE_KEY,
-			self::GLOBAL_SKILL_CACHE_PREFIX,
-		);
-
-		// user skills take precedence on name collision
-		$merged = $globalSkills;
-		foreach ($userSkills as $name => $metadata) {
-			$merged[$name] = $metadata;
-		}
-		return array_values($merged);
+		$globalSkills = $globalFolder === null
+			? []
+			: $this->listSkillsFromFolder(
+				$globalFolder,
+				self::GLOBAL_CACHE_KEY,
+				self::GLOBAL_SKILL_CACHE_PREFIX,
+			);
+		return [$skillsFolder, $userSkills, $globalSkills];
 	}
 
 	/**

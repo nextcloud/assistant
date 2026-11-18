@@ -9,6 +9,9 @@ namespace OCA\Assistant\Settings;
 
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\AgentMemoriesService;
+use OCA\Assistant\Service\AgentSkillsService;
+use OCA\Assistant\Service\ChatService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IAppConfig;
@@ -19,6 +22,7 @@ use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use Psr\Log\LoggerInterface;
 
 class Personal implements ISettings {
 
@@ -29,6 +33,10 @@ class Personal implements ISettings {
 		private ?string $userId,
 		private ITaskProcessingManager $taskProcessingManager,
 		private SessionMapper $sessionMapper,
+		private AgentSkillsService $agentSkillsService,
+		private AgentMemoriesService $agentMemoriesService,
+		private ChatService $chatService,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -117,7 +125,31 @@ class Personal implements ISettings {
 		}
 
 		$this->initialStateService->provideInitialState('rememberedSessions', $rememberedSessionsShort);
+
+		$this->initialStateService->provideInitialState('agentContent', $this->chatService->isContextAgentAvailable() ? $this->getAgentContent() : false);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
+	}
+
+	/**
+	 * List the Context Agent skills and memories of the current user. A list is null if it could not be loaded.
+	 *
+	 * @return array{skills: ?array{user: list<array{name: string, description: string, fileId: ?int}>, global: list<array{name: string, description: string}>}, skillsFolderId: ?int, memories: ?list<array{path: string, fileId: int}>, memoriesFolderId: ?int}
+	 */
+	private function getAgentContent(): array {
+		$content = ['skills' => null, 'skillsFolderId' => null, 'memories' => null, 'memoriesFolderId' => null];
+		try {
+			$content['skills'] = $this->agentSkillsService->listSkillsBySource($this->userId);
+			$content['skillsFolderId'] = $this->agentSkillsService->getSkillsFolder($this->userId)->getId();
+		} catch (\Throwable $e) {
+			$this->logger->warning('Failed to list the agent skills', ['exception' => $e]);
+		}
+		try {
+			$content['memories'] = $this->agentMemoriesService->listMemories($this->userId);
+			$content['memoriesFolderId'] = $this->agentMemoriesService->getMemoriesFolder($this->userId)->getId();
+		} catch (\Throwable $e) {
+			$this->logger->warning('Failed to list the agent memories', ['exception' => $e]);
+		}
+		return $content;
 	}
 
 	public function getSection(): string {
