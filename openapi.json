@@ -3964,6 +3964,7 @@
                                                                     "display_name",
                                                                     "personality",
                                                                     "scope",
+                                                                    "status",
                                                                     "access_users",
                                                                     "access_groups"
                                                                 ],
@@ -3985,6 +3986,9 @@
                                                                     "scope": {
                                                                         "type": "string",
                                                                         "nullable": true
+                                                                    },
+                                                                    "status": {
+                                                                        "type": "string"
                                                                     },
                                                                     "access_users": {
                                                                         "type": "array",
@@ -4160,6 +4164,11 @@
                                         "items": {
                                             "type": "string"
                                         }
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "default": "",
+                                        "description": "The user status message shown for the agent (empty = default status message)"
                                     }
                                 }
                             }
@@ -4225,6 +4234,7 @@
                                                                 "display_name",
                                                                 "personality",
                                                                 "scope",
+                                                                "status",
                                                                 "access_users",
                                                                 "access_groups"
                                                             ],
@@ -4246,6 +4256,9 @@
                                                                 "scope": {
                                                                     "type": "string",
                                                                     "nullable": true
+                                                                },
+                                                                "status": {
+                                                                    "type": "string"
                                                                 },
                                                                 "access_users": {
                                                                     "type": "array",
@@ -4492,6 +4505,12 @@
                                         "items": {
                                             "type": "string"
                                         }
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "default": null,
+                                        "description": "When not null, replaces the user status message shown for the agent"
                                     }
                                 }
                             }
@@ -4567,6 +4586,7 @@
                                                                 "display_name",
                                                                 "personality",
                                                                 "scope",
+                                                                "status",
                                                                 "access_users",
                                                                 "access_groups"
                                                             ],
@@ -4588,6 +4608,9 @@
                                                                 "scope": {
                                                                     "type": "string",
                                                                     "nullable": true
+                                                                },
+                                                                "status": {
+                                                                    "type": "string"
                                                                 },
                                                                 "access_users": {
                                                                     "type": "array",
