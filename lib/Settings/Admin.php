@@ -10,6 +10,7 @@ namespace OCA\Assistant\Settings;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\AgentSkillsService;
 use OCA\Assistant\Service\AgentsService;
+use OCA\Assistant\Service\AgentStatusService;
 use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -31,6 +32,7 @@ class Admin implements ISettings {
 		private ITaskProcessingManager $taskProcessingManager,
 		private AgentSkillsService $agentSkillsService,
 		private AgentsService $agentsService,
+		private AgentStatusService $agentStatusService,
 		private IUserManager $userManager,
 		private LoggerInterface $logger,
 	) {
@@ -83,6 +85,7 @@ class Admin implements ISettings {
 					'display_name' => $user?->getDisplayName() ?: $agent->getUserId(),
 					'personality' => $agent->getPersonality(),
 					'scope' => $agent->getScope(),
+					'status' => $this->agentStatusService->getStatus($agent->getUserId()),
 					'access_users' => $access['users'],
 					'access_groups' => $access['groups'],
 				];
@@ -111,6 +114,7 @@ class Admin implements ISettings {
 			'context_agent_available' => $contextAgentAvailable,
 			'global_skills_admin_uid' => $globalSkillsConfig['admin_uid'],
 			'global_skills_path' => $globalSkillsConfig['path'],
+			'default_status' => $this->agentStatusService->getDefaultStatusMessage(),
 			'agents' => $agents,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);

@@ -11,6 +11,7 @@ namespace OCA\Assistant\Tests\Unit\Service;
 
 use OCA\Assistant\Db\AgentMapper;
 use OCA\Assistant\Service\AgentsService;
+use OCA\Assistant\Service\AgentStatusService;
 use OCA\Assistant\Service\AgentUserException;
 use OCA\Assistant\Service\AgentUserService;
 use OCP\IGroupManager;
@@ -24,6 +25,7 @@ class AgentsServiceTest extends TestCase {
 
 	private AgentMapper|MockObject $agentMapper;
 	private AgentUserService&MockObject $agentUserService;
+	private AgentStatusService&MockObject $agentStatusService;
 	private IUserManager&MockObject $userManager;
 	private IGroupManager&MockObject $groupManager;
 	private LoggerInterface&MockObject $logger;
@@ -33,6 +35,9 @@ class AgentsServiceTest extends TestCase {
 		parent::setUp();
 		$this->agentMapper = $this->createMock(AgentMapper::class);
 		$this->agentUserService = $this->createMock(AgentUserService::class);
+		$this->agentStatusService = $this->createMock(AgentStatusService::class);
+		$this->agentStatusService->method('getDefaultStatusMessage')
+			->willReturn('Default status');
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
@@ -40,6 +45,7 @@ class AgentsServiceTest extends TestCase {
 		$this->service = new AgentsService(
 			$this->agentMapper,
 			$this->agentUserService,
+			$this->agentStatusService,
 			$this->userManager,
 			$this->groupManager,
 			$this->logger,
@@ -50,6 +56,9 @@ class AgentsServiceTest extends TestCase {
 		$this->agentUserService->expects($this->once())
 			->method('createAgentUser')
 			->with('Code Agent', 'code_agent');
+		$this->agentStatusService->expects($this->once())
+			->method('setAgentStatus')
+			->with('code_agent', 'Default status');
 
 		$stored = null;
 		$this->agentMapper->method('insert')
@@ -69,6 +78,9 @@ class AgentsServiceTest extends TestCase {
 	public function testCreateAgentWithAccessList(): void {
 		$this->agentUserService->expects($this->once())
 			->method('createAgentUser');
+		$this->agentStatusService->expects($this->once())
+			->method('setAgentStatus')
+			->with('code_agent', 'Default status');
 
 		$this->agentMapper->method('insert')
 			->willReturnCallback(static function ($agent) {
@@ -88,6 +100,9 @@ class AgentsServiceTest extends TestCase {
 	public function testCreateAgentWithoutAccessListStoresNoAcl(): void {
 		$this->agentUserService->expects($this->once())
 			->method('createAgentUser');
+		$this->agentStatusService->expects($this->once())
+			->method('setAgentStatus')
+			->with('code_agent', 'Default status');
 		$this->agentMapper->method('insert')
 			->willReturnCallback(static function ($agent) {
 				$agent->setId(7);
@@ -107,6 +122,30 @@ class AgentsServiceTest extends TestCase {
 
 		$this->expectException(AgentUserException::class);
 		$this->service->createAgent('Code Agent', 'code_agent', 'Be nice.', '');
+	}
+
+	public function testCreateAgentAppliesTheGivenStatus(): void {
+		$this->agentUserService->expects($this->once())
+			->method('createAgentUser');
+		$this->agentStatusService->expects($this->once())
+			->method('setAgentStatus')
+			->with('code_agent', 'Busy until tomorrow');
+		$this->agentMapper->method('insert')
+			->willReturnCallback(static function ($agent) {
+				$agent->setId(7);
+				return $agent;
+			});
+
+		$this->service->createAgent('Code Agent', 'code_agent', '', '', status: 'Busy until tomorrow');
+	}
+
+	public function testCreateAgentRejectsATooLongStatus(): void {
+		$this->agentUserService->expects($this->never())->method('createAgentUser');
+		$this->agentStatusService->expects($this->never())->method('setAgentStatus');
+
+		$this->expectException(AgentUserException::class);
+		$this->service->createAgent('Code Agent', 'code_agent', '', '',
+			status: str_repeat('a', AgentStatusService::MAX_STATUS_MESSAGE_LENGTH + 1));
 	}
 
 	public function testDeleteAgentWithoutUserDeletion(): void {
@@ -160,6 +199,7 @@ class AgentsServiceTest extends TestCase {
 	public function testUpdateAgent() {
 		$agent = $this->createAgentEntity(5, 'agent1');
 		$this->agentMapper->method('getById')->willReturn($agent);
+		$this->agentStatusService->expects($this->never())->method('setAgentStatus');
 		$this->agentMapper->expects($this->once())->method('update')
 			->willReturnCallback(static function ($updated) {
 				return $updated;
@@ -167,6 +207,30 @@ class AgentsServiceTest extends TestCase {
 
 		$updated = $this->service->updateAgent(5, personality: 'New personality');
 		$this->assertSame('New personality', $updated->getPersonality());
+	}
+
+	public function testUpdateAgentSetsTheStatus(): void {
+		$agent = $this->createAgentEntity(5, 'agent1');
+		$this->agentMapper->method('getById')->willReturn($agent);
+		$this->agentStatusService->expects($this->once())
+			->method('setAgentStatus')
+			->with('agent1', 'New status');
+		$this->agentMapper->method('update')
+			->willReturnCallback(static function ($updated) {
+				return $updated;
+			});
+
+		$this->service->updateAgent(5, status: 'New status');
+	}
+
+	public function testUpdateAgentRejectsATooLongStatus(): void {
+		$agent = $this->createAgentEntity(5, 'agent1');
+		$this->agentMapper->method('getById')->willReturn($agent);
+		$this->agentStatusService->expects($this->never())->method('setAgentStatus');
+		$this->agentMapper->expects($this->never())->method('update');
+
+		$this->expectException(AgentUserException::class);
+		$this->service->updateAgent(5, status: str_repeat('a', AgentStatusService::MAX_STATUS_MESSAGE_LENGTH + 1));
 	}
 
 	public function testUpdateAgentKeepsTheAccessWhenNotProvided(): void {

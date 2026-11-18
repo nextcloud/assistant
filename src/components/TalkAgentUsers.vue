@@ -18,6 +18,7 @@
 				<div class="talk-agents__info">
 					<span class="talk-agents__name">{{ agent.display_name }}</span>
 					<span class="talk-agents__uid">{{ agent.user_id }}</span>
+					<span v-if="agent.status" class="talk-agents__status">{{ agent.status }}</span>
 					<span v-if="agent.personality" class="talk-agents__personality">{{ agent.personality }}</span>
 				</div>
 				<div class="talk-agents__actions">
@@ -43,7 +44,7 @@
 		</ul>
 
 		<NcButton variant="secondary"
-			@click="showCreateModal = true">
+			@click="openCreateModal">
 			<template #icon>
 				<AccountPlusOutlineIcon :size="16" />
 			</template>
@@ -62,6 +63,9 @@
 				<NcTextField v-model="newAgent.userId"
 					:label="t('assistant', 'User id')"
 					:helper-text="t('assistant', 'The id of the agent\'s Nextcloud user, created in the default database backend. Lowercase letters, digits, dot, dash, underscore and @ only.')" />
+				<NcTextField v-model="newAgent.status"
+					:label="t('assistant', 'Status')"
+					:helper-text="t('assistant', 'Shown as the agent\'s status message in Talk. The agent user always shows as online.')" />
 				<NcRichContenteditable v-model="newAgent.personality"
 					class="text-field"
 					:auto-complete="() => {}"
@@ -111,6 +115,9 @@
 					:link-auto-complete="false"
 					:aria-label="t('assistant', 'Agent personality (system prompt)')"
 					:placeholder="t('assistant', 'Describe the agent\'s personality, tone, what it can do, in which language it should reply…')" />
+				<NcTextField v-model="editingAgentData.status"
+					:label="t('assistant', 'Status')"
+					:helper-text="t('assistant', 'Shown as the agent\'s status message in Talk. The agent user always shows as online.')" />
 				<NcTextField v-model="editingAgentData.scope"
 					:label="t('assistant', 'Scope (optional)')" />
 				<NcSelectUsers
@@ -232,6 +239,13 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		/**
+		 * The default status message, already translated in the instance default language
+		 */
+		defaultStatus: {
+			type: String,
+			default: '',
+		},
 	},
 
 	emits: ['agent-created', 'agent-updated', 'agent-deleted'],
@@ -244,8 +258,8 @@ export default {
 			saving: false,
 			deletingAgent: null,
 			alsoDeleteUser: false,
-			newAgent: { name: '', userId: '', personality: '', scope: '', access: [] },
-			editingAgentData: { id: null, display_name: '', personality: '', scope: '', access: [] },
+			newAgent: { name: '', userId: '', personality: '', scope: '', status: '', access: [] },
+			editingAgentData: { id: null, display_name: '', personality: '', scope: '', status: '', access: [] },
 			accessOptions: [],
 			searchingAccess: false,
 			accessSearchTimeout: null,
@@ -298,7 +312,11 @@ export default {
 				this.$emit('agent-created', agent)
 			}
 			this.showCreateModal = false
-			this.newAgent = { name: '', userId: '', personality: '', scope: '', access: [] }
+			this.newAgent = { name: '', userId: '', personality: '', scope: '', status: this.defaultStatus, access: [] }
+		},
+		openCreateModal() {
+			this.newAgent = { name: '', userId: '', personality: '', scope: '', status: this.defaultStatus, access: [] }
+			this.showCreateModal = true
 		},
 		openEditModal(agent) {
 			this.editingAgentData = {
@@ -306,6 +324,7 @@ export default {
 				display_name: agent.display_name,
 				personality: agent.personality ?? '',
 				scope: agent.scope ?? '',
+				status: agent.status ?? '',
 				access: [
 					...(agent.access_users ?? []).map((userId) => makeUserAccessEntry(userId)),
 					...(agent.access_groups ?? []).map((groupId) => makeGroupAccessEntry(groupId)),
@@ -357,6 +376,7 @@ export default {
 					userId: this.newAgent.userId,
 					personality: this.newAgent.personality,
 					scope: this.newAgent.scope,
+					status: this.newAgent.status,
 					accessUsers: this.accessUserIds(this.newAgent.access),
 					accessGroups: this.accessGroupIds(this.newAgent.access),
 				})
@@ -377,6 +397,7 @@ export default {
 				const response = await axios.put(agentUrl(this.editingAgentData.id), {
 					personality: this.editingAgentData.personality,
 					scope: this.editingAgentData.scope,
+					status: this.editingAgentData.status,
 					accessUsers: this.accessUserIds(this.editingAgentData.access),
 					accessGroups: this.accessGroupIds(this.editingAgentData.access),
 				})
@@ -450,12 +471,17 @@ export default {
 		font-size: 0.8em;
 	}
 
-	&__personality {
+	&__personality,
+	&__status {
 		font-size: 0.85em;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		max-width: 500px;
+	}
+
+	&__status {
+		color: var(--color-text-maxcontrast);
 	}
 
 	&__actions {

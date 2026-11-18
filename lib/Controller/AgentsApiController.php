@@ -11,6 +11,7 @@ namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\Db\Agent;
 use OCA\Assistant\Service\AgentsService;
+use OCA\Assistant\Service\AgentStatusService;
 use OCA\Assistant\Service\AgentUserException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
@@ -33,6 +34,7 @@ class AgentsApiController extends OCSController {
 		IRequest $request,
 		private IL10N $l10n,
 		private AgentsService $agentsService,
+		private AgentStatusService $agentStatusService,
 		private IUserManager $userManager,
 		private IUserSession $userSession,
 		private IGroupManager $groupManager,
@@ -41,7 +43,7 @@ class AgentsApiController extends OCSController {
 	}
 
 	/**
-	 * @return list<array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, access_users: list<string>, access_groups: list<string>}>
+	 * @return list<array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, status: string, access_users: list<string>, access_groups: list<string>}>
 	 */
 	private function serializeAgents(): array {
 		$agents = $this->agentsService->getAllAgents();
@@ -61,6 +63,7 @@ class AgentsApiController extends OCSController {
 			'display_name' => $user?->getDisplayName() ?: $agent->getUserId(),
 			'personality' => $agent->getPersonality(),
 			'scope' => $agent->getScope(),
+			'status' => $this->agentStatusService->getStatus($agent->getUserId()),
 			'access_users' => $access['users'],
 			'access_groups' => $access['groups'],
 		];
@@ -96,7 +99,7 @@ class AgentsApiController extends OCSController {
 	/**
 	 * List all agents (admin only)
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{agents: list<array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, access_users: list<string>, access_groups: list<string>}>}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{agents: list<array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, status: string, access_users: list<string>, access_groups: list<string>}>}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>
 	 *
 	 * 200: Agents returned
 	 * 403: User is not an admin
@@ -120,7 +123,8 @@ class AgentsApiController extends OCSController {
 	 * @param string $scope Optional scope for later use
 	 * @param list<string> $accessUsers User ids that may access the agent (empty = every user)
 	 * @param list<string> $accessGroups Group ids that may access the agent (empty = every user)
-	 * @return DataResponse<Http::STATUS_CREATED, array{agent: array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, access_users: list<string>, access_groups: list<string>}}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
+	 * @param string $status The user status message shown for the agent (empty = default status message)
+	 * @return DataResponse<Http::STATUS_CREATED, array{agent: array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, status: string, access_users: list<string>, access_groups: list<string>}}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
 	 *
 	 * 201: Agent created
 	 * 400: Invalid data
@@ -130,25 +134,30 @@ class AgentsApiController extends OCSController {
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['agents'])]
 	public function createAgent(
 		string $name = '', string $userId = '', string $personality = '', string $scope = '',
-		array $accessUsers = [], array $accessGroups = [],
+		array $accessUsers = [], array $accessGroups = [], string $status = '',
 	): DataResponse {
 		if (!$this->checkAdmin()) {
 			return new DataResponse(['error' => $this->l10n->t('Only administrators can manage agents')], Http::STATUS_FORBIDDEN);
 		}
 		$name = trim($name);
 		$userId = trim($userId);
+		$status = trim($status);
 		if ($name === '' || $userId === '') {
 			return new DataResponse(['error' => $this->l10n->t('Name and user id are required')], Http::STATUS_BAD_REQUEST);
 		}
 		if (strlen($personality) > 64_000) {
 			return new DataResponse(['error' => $this->l10n->t('The agent personality is too long')], Http::STATUS_BAD_REQUEST);
 		}
+		if (mb_strlen($status) > AgentStatusService::MAX_STATUS_MESSAGE_LENGTH) {
+			return new DataResponse(['error' => $this->l10n->t('The agent status is too long')], Http::STATUS_BAD_REQUEST);
+		}
 		$validationError = $this->validateAccessLists($accessUsers, $accessGroups);
 		if ($validationError !== null) {
 			return new DataResponse(['error' => $validationError], Http::STATUS_BAD_REQUEST);
 		}
 		try {
-			$agent = $this->agentsService->createAgent($name, $userId, $personality, $scope, $accessUsers, $accessGroups);
+			// an empty status means "use the default status message"
+			$agent = $this->agentsService->createAgent($name, $userId, $personality, $scope, $accessUsers, $accessGroups, $status !== '' ? $status : null);
 			return new DataResponse(['agent' => $this->serializeAgent($agent)], Http::STATUS_CREATED);
 		} catch (AgentUserException $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
@@ -165,7 +174,8 @@ class AgentsApiController extends OCSController {
 	 * @param string|null $scope The new scope
 	 * @param list<string>|null $accessUsers When not null, replaces the user ids that may access the agent
 	 * @param list<string>|null $accessGroups When not null, replaces the group ids that may access the agent
-	 * @return DataResponse<Http::STATUS_OK, array{agent: array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, access_users: list<string>, access_groups: list<string>}}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
+	 * @param string|null $status When not null, replaces the user status message shown for the agent
+	 * @return DataResponse<Http::STATUS_OK, array{agent: array{id: int, user_id: string, display_name: string, personality: ?string, scope: ?string, status: string, access_users: list<string>, access_groups: list<string>}}, array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>|DataResponse<Http::STATUS_FORBIDDEN, array{error: string}, array{}>|DataResponse<Http::STATUS_NOT_FOUND, array{error: string}, array{}>|DataResponse<Http::STATUS_INTERNAL_SERVER_ERROR, array{error: string}, array{}>
 	 *
 	 * 200: Agent updated
 	 * 400: Invalid data
@@ -176,7 +186,7 @@ class AgentsApiController extends OCSController {
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['agents'])]
 	public function updateAgent(
 		int $id, ?string $personality = null, ?string $scope = null,
-		?array $accessUsers = null, ?array $accessGroups = null,
+		?array $accessUsers = null, ?array $accessGroups = null, ?string $status = null,
 	): DataResponse {
 		if (!$this->checkAdmin()) {
 			return new DataResponse(['error' => $this->l10n->t('Only administrators can manage agents')], Http::STATUS_FORBIDDEN);
@@ -185,6 +195,9 @@ class AgentsApiController extends OCSController {
 		if ($agent === null) {
 			return new DataResponse(['error' => $this->l10n->t('Agent not found')], Http::STATUS_NOT_FOUND);
 		}
+		if ($status !== null && mb_strlen($status) > AgentStatusService::MAX_STATUS_MESSAGE_LENGTH) {
+			return new DataResponse(['error' => $this->l10n->t('The agent status is too long')], Http::STATUS_BAD_REQUEST);
+		}
 		if ($accessUsers !== null || $accessGroups !== null) {
 			$validationError = $this->validateAccessLists($accessUsers ?? [], $accessGroups ?? []);
 			if ($validationError !== null) {
@@ -192,7 +205,7 @@ class AgentsApiController extends OCSController {
 			}
 		}
 		try {
-			$agent = $this->agentsService->updateAgent($id, $personality, $scope, $accessUsers, $accessGroups);
+			$agent = $this->agentsService->updateAgent($id, $personality, $scope, $accessUsers, $accessGroups, $status);
 			return new DataResponse(['agent' => $this->serializeAgent($agent)]);
 		} catch (AgentUserException $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);

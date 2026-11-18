@@ -33,6 +33,7 @@ class AgentsService {
 	public function __construct(
 		private AgentMapper $agentMapper,
 		private AgentUserService $agentUserService,
+		private AgentStatusService $agentStatusService,
 		private IUserManager $userManager,
 		private IGroupManager $groupManager,
 		private LoggerInterface $logger,
@@ -87,14 +88,18 @@ class AgentsService {
 	 * @param string $scope
 	 * @param list<string> $accessUsers User ids that may access the agent
 	 * @param list<string> $accessGroups Group ids that may access the agent
+	 * @param string|null $status When null, the default status message is applied to the agent user
 	 * @return Agent
 	 * @throws AgentUserException
 	 * @throws Exception
 	 */
 	public function createAgent(
 		string $name, string $userId, string $personality, string $scope,
-		array $accessUsers = [], array $accessGroups = [],
+		array $accessUsers = [], array $accessGroups = [], ?string $status = null,
 	): Agent {
+		if ($status !== null && mb_strlen($status) > AgentStatusService::MAX_STATUS_MESSAGE_LENGTH) {
+			throw new AgentUserException('The agent status is too long');
+		}
 		$agent = new Agent();
 		$agent->setUserId(trim(mb_strtolower($userId)));
 		$agent->setPersonality(trim($personality));
@@ -109,6 +114,10 @@ class AgentsService {
 		if ($accessUsers !== [] || $accessGroups !== []) {
 			$this->agentMapper->setAcl((int)$agent->getId(), $this->makeAclEntries($accessUsers, $accessGroups));
 		}
+		$this->agentStatusService->setAgentStatus(
+			$agent->getUserId(),
+			$status ?? $this->agentStatusService->getDefaultStatusMessage(),
+		);
 		return $agent;
 	}
 
@@ -118,18 +127,22 @@ class AgentsService {
 	 * @param string|null $scope
 	 * @param list<string>|null $accessUsers When not null, replaces the list of user ids that may access the agent
 	 * @param list<string>|null $accessGroups When not null, replaces the list of group ids that may access the agent
+	 * @param string|null $status When not null, replaces the user status message of the agent user
 	 * @return Agent
 	 * @throws AgentUserException when the agent does not exist anymore
 	 * @throws Exception
 	 */
 	public function updateAgent(
 		int $id, ?string $personality = null, ?string $scope = null,
-		?array $accessUsers = null, ?array $accessGroups = null,
+		?array $accessUsers = null, ?array $accessGroups = null, ?string $status = null,
 	): Agent {
 		try {
 			$agent = $this->agentMapper->getById($id);
 		} catch (DoesNotExistException $e) {
 			throw new AgentUserException('Agent not found');
+		}
+		if ($status !== null && mb_strlen($status) > AgentStatusService::MAX_STATUS_MESSAGE_LENGTH) {
+			throw new AgentUserException('The agent status is too long');
 		}
 		if ($personality !== null) {
 			if (strlen($personality) > self::MAX_PERSONALITY_LENGTH) {
@@ -149,6 +162,9 @@ class AgentsService {
 			$accessUsers ??= $entries['users'];
 			$accessGroups ??= $entries['groups'];
 			$this->agentMapper->setAcl($id, $this->makeAclEntries($accessUsers, $accessGroups));
+		}
+		if ($status !== null) {
+			$this->agentStatusService->setAgentStatus($agent->getUserId(), $status);
 		}
 		return $agent;
 	}

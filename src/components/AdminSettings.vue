@@ -254,6 +254,7 @@
 					{{ t('assistant', 'Talk agents') }}
 				</h4>
 				<TalkAgentUsers :agents="state.agents"
+					:default-status="state.default_status"
 					@agent-created="onAgentCreated"
 					@agent-updated="onAgentUpdated"
 					@agent-deleted="onAgentDeleted" />
