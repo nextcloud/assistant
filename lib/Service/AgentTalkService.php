@@ -38,6 +38,7 @@ class AgentTalkService {
 	public const REACTION_READ = '👀';
 	public const REACTION_DONE = '✅';
 	public const REACTION_ERROR = '🔴';
+	public const REACTION_SUPERSEDED = '⏭️';
 
 	private const THREAD_TITLE_SEPARATOR = ' - ';
 
@@ -322,6 +323,9 @@ class AgentTalkService {
 		// also happens when the generation cannot be scheduled right away
 		// (the session answers one message at a time)
 		$this->addAgentReaction($room, $agent->getUserId(), (int)$comment->getId(), self::REACTION_READ);
+		// a new message supersedes the one currently being answered:
+		// only the latest message keeps the 👀 → ✅/🔴 lifecycle
+		$this->supersedeSeenMessage($session);
 		// remember the seen message to later replace 👀 by ✅/🔴 after the generation
 		$session->setAgentSeenRoomToken($room->getToken());
 		$session->setAgentSeenCommentId((int)$comment->getId());
@@ -331,8 +335,66 @@ class AgentTalkService {
 			$this->logger->error('Failed to store the seen message of the agent session', ['exception' => $e]);
 		}
 
-		// schedule generation of the agent answer
-		$this->chatService->scheduleMessageGeneration($session->getUserId(), (int)$session->getId(), 0, $this->getOriginRoomInfo($session));
+		// schedule generation of the agent answer; the generation for a
+		// superseded message is cancelled, so only the latest message is answered
+		try {
+			$this->scheduleAgentGeneration($session);
+		} catch (\Throwable $e) {
+			// the message will not be answered: replace 👀 by 🔴 rather than leaving it stuck
+			$this->logger->error('Failed to schedule the generation of an agent answer', ['exception' => $e]);
+			$this->updateSeenReaction($session, self::REACTION_ERROR);
+		}
+	}
+
+	/**
+	 * Schedule the generation of an agent answer, cancelling the pending
+	 * generation of a superseded message if there is one.
+	 *
+	 * A concurrent request can schedule a task between the cancellation and the
+	 * "session is thinking" check: in that case the tasks are cancelled again
+	 * and the scheduling is retried once, so that the latest input wins and no
+	 * two generations of the session overlap.
+	 *
+	 * @throws BadRequestException
+	 * @throws InternalException
+	 * @throws NotFoundException
+	 * @throws UnauthorizedException
+	 */
+	private function scheduleAgentGeneration(Session $session, int $agencyConfirm = 0): void {
+		$userId = $session->getUserId();
+		$sessionId = (int)$session->getId();
+		$originRoomInfo = $this->getOriginRoomInfo($session);
+		try {
+			$this->chatService->scheduleMessageGeneration($userId, $sessionId, $agencyConfirm, $originRoomInfo, cancelRunningTask: true);
+			return;
+		} catch (BadRequestException $e) {
+			// fall through to the retry below
+		}
+		$this->chatService->cancelPendingGenerationTasks($userId, $sessionId);
+		$this->chatService->scheduleMessageGeneration($userId, $sessionId, $agencyConfirm, $originRoomInfo, cancelRunningTask: true);
+	}
+
+	/**
+	 * A new human input supersedes the message that was being answered:
+	 * its generation is cancelled, so it will never be answered directly.
+	 * Its 👀 reaction becomes ⏭️, meaning that its content is part of the
+	 * context of the answer to the latest message instead. The 👀 is deleted
+	 * first, so a failed ⏭️ can never leave the message stuck on 👀.
+	 */
+	private function supersedeSeenMessage(Session $session): void {
+		$seenRoomToken = $session->getAgentSeenRoomToken();
+		$seenCommentId = $session->getAgentSeenCommentId();
+		if ($seenRoomToken === null || $seenCommentId === null) {
+			return;
+		}
+		try {
+			$room = $this->getRoomByToken($seenRoomToken);
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
+			// the room was deleted, the reactions are gone with it
+			return;
+		}
+		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_READ);
+		$this->addAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_SUPERSEDED);
 	}
 
 	/**
@@ -835,6 +897,8 @@ class AgentTalkService {
 		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_APPROVE);
 		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_REJECT);
 		$this->addAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_READ);
+		// a confirmation follow-up supersedes a message that was still being answered
+		$this->supersedeSeenMessage($session);
 		// remember the seen message to later replace 👀 by ✅/🔴 after the confirmation run
 		$session->setAgentSeenRoomToken($room->getToken());
 		$session->setAgentSeenCommentId($messageId);
@@ -844,14 +908,10 @@ class AgentTalkService {
 			$this->logger->error('Failed to store the seen confirmation of the agent session', ['exception' => $e]);
 		}
 		try {
-			$this->chatService->scheduleMessageGeneration(
-				$session->getUserId(),
-				$sessionId,
-				$reaction === self::REACTION_APPROVE ? 1 : 0,
-				$this->getOriginRoomInfo($session),
-			);
+			$this->scheduleAgentGeneration($session, $reaction === self::REACTION_APPROVE ? 1 : 0);
 		} catch (InternalException|NotFoundException|BadRequestException|UnauthorizedException $e) {
 			$this->logger->error('Failed to schedule the confirmation follow-up after a Talk reaction', ['exception' => $e]);
+			$this->updateSeenReaction($session, self::REACTION_ERROR);
 		}
 	}
 

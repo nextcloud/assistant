@@ -168,10 +168,28 @@ class ChatService {
 	 * so the task listener will not set its title.
 	 */
 	private function cancelTitleGenerationTasks(string $userId, int $sessionId): void {
+		$this->cancelTasksByCustomId($userId, 'chatty-title:' . $sessionId, 'title generation');
+	}
+
+	/**
+	 * Cancel the scheduled and running message generation tasks of a session.
+	 *
+	 * Used by the Talk integration when a new human message supersedes the one
+	 * currently being answered: the result of a task cancelled while running is
+	 * dropped, so no stale answer will be generated or posted for it.
+	 */
+	public function cancelPendingGenerationTasks(?string $userId, int $sessionId): void {
+		$this->cancelTasksByCustomId($userId, 'chatty-llm:' . $sessionId, 'message generation');
+	}
+
+	/**
+	 * Cancel the scheduled and running tasks of the app matching the given custom id
+	 */
+	private function cancelTasksByCustomId(?string $userId, string $customId, string $logContext): void {
 		try {
-			$tasks = $this->taskProcessingManager->getUserTasksByApp($userId, Application::APP_ID . ':chatty-llm', 'chatty-title:' . $sessionId);
+			$tasks = $this->taskProcessingManager->getUserTasksByApp($userId, Application::APP_ID . ':chatty-llm', $customId);
 		} catch (\OCP\TaskProcessing\Exception\Exception|\JsonException $e) {
-			$this->logger->warning('Failed to get the title generation tasks of a chat session', ['exception' => $e, 'sessionId' => $sessionId]);
+			$this->logger->warning('Failed to get the ' . $logContext . ' tasks of a chat session', ['exception' => $e]);
 			return;
 		}
 		foreach ($tasks as $task) {
@@ -181,7 +199,7 @@ class ChatService {
 			try {
 				$this->taskProcessingManager->cancelTask((int)$task->getId());
 			} catch (\OCP\TaskProcessing\Exception\Exception|\OCP\TaskProcessing\Exception\NotFoundException $e) {
-				$this->logger->warning('Failed to cancel a title generation task', ['exception' => $e, 'taskId' => $task->getId()]);
+				$this->logger->warning('Failed to cancel a ' . $logContext . ' task', ['exception' => $e, 'taskId' => $task->getId()]);
 			}
 		}
 	}
@@ -449,7 +467,7 @@ class ChatService {
 	 * @throws NotFoundException
 	 * @throws UnauthorizedException
 	 */
-	public function scheduleMessageGeneration(?string $userId, int $sessionId, int $agencyConfirm = 0, ?string $originRoomInfo = null): int {
+	public function scheduleMessageGeneration(?string $userId, int $sessionId, int $agencyConfirm = 0, ?string $originRoomInfo = null, bool $cancelRunningTask = false): int {
 		if ($userId === null) {
 			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
 		}
@@ -463,6 +481,14 @@ class ChatService {
 		// agent sessions belong to the agent user account: the memories to inject
 		// come from the human requester, not from the agent
 		$memoriesUserId = $session->getRequesterUserId() ?? $userId;
+
+		// in the Talk integration a new human message supersedes the one currently
+		// being answered: the pending generation is cancelled (the task processing
+		// manager drops the result of a task cancelled while running) and a new one
+		// is scheduled below, so that only the latest message gets an answer
+		if ($cancelRunningTask) {
+			$this->cancelPendingGenerationTasks($userId, $sessionId);
+		}
 
 		if ($this->isContextAgentAvailable()) {
 			$identityLine = $this->getIdentityLine($session, $originRoomInfo);
@@ -489,14 +515,14 @@ class ChatService {
 				$taskId = $this->scheduleAgencyAudioTask($userId, $fileId, $agencyConfirm, $lastConversationToken, $sessionId, $lastUserMessage->getId(), $memoriesUserId, $identityLine);
 			} elseif ($this->isMultimodalContextAgentAvailable()) {
 				// multimodal agency
-				$prompt = $lastUserMessage->getContent();
+				$prompt = $this->getAgencyTurnInput($sessionId, $lastUserMessage->getContent());
 				$inputAttachments = array_map(static function (array $attachment) {
 					return $attachment['file_id'];
 				}, $lastAttachments);
 				$taskId = $this->scheduleAgencyMultimodalTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, $inputAttachments, $memoriesUserId, $identityLine);
 			} else {
 				// classic agency
-				$prompt = $lastUserMessage->getContent();
+				$prompt = $this->getAgencyTurnInput($sessionId, $lastUserMessage->getContent());
 				$taskId = $this->scheduleAgencyTask($userId, $prompt, $agencyConfirm, $lastConversationToken, $sessionId, memoriesUserId: $memoriesUserId, identityLine: $identityLine);
 			}
 		} else {
@@ -855,6 +881,37 @@ class ChatService {
 			array_shift($messages);
 		}
 		return $messages;
+	}
+
+	/**
+	 * The input of an agency interaction is the content of the last human message.
+	 * When several human messages are pending without an answer in between
+	 * (e.g. they were sent while a generation was running, which was then
+	 * superseded), they all belong to the same turn: their contents are joined
+	 * so that the agent receives the whole input, not only the latest message.
+	 *
+	 * @param int $sessionId
+	 * @param string $lastContent The content of the last human message
+	 * @return string
+	 */
+	private function getAgencyTurnInput(int $sessionId, string $lastContent): string {
+		try {
+			$history = $this->getRawLastMessages($sessionId);
+		} catch (Exception|AppConfigTypeConflictException $e) {
+			return $lastContent;
+		}
+		$pending = [];
+		for ($i = count($history) - 1; $i >= 0; $i--) {
+			if ($history[$i]->getRole() !== Message::ROLE_HUMAN) {
+				break;
+			}
+			$pending[] = trim($history[$i]->getContent());
+		}
+		$pending = array_values(array_filter(array_reverse($pending), static fn (string $content) => $content !== ''));
+		if ($pending === []) {
+			return $lastContent;
+		}
+		return implode("\n\n", $pending);
 	}
 
 	/**
