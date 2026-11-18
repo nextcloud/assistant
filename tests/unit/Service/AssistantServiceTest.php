@@ -37,6 +37,9 @@ use Psr\Log\LoggerInterface;
  *
  * Covers the authorization and resolution logic delegated to getTaskOutputFile
  * and the shape of the returned info array.
+ *
+ * Also covers AssistantService::getTaskOutputFileDownloadName, which builds
+ * the download file name for task output files.
  */
 class AssistantServiceTest extends TestCase {
 
@@ -215,5 +218,63 @@ class AssistantServiceTest extends TestCase {
 		$this->expectExceptionMessage('Node is not a file');
 
 		$this->service->getTaskOutputFileInfo(self::USER_ID, self::TASK_ID, self::FILE_ID);
+	}
+
+	private function getOutputFileWithName(string $name): File&MockObject {
+		$file = $this->createMock(File::class);
+		$file->method('getName')->willReturn($name);
+		return $file;
+	}
+
+	/**
+	 * An original file name with an extension keeps it for the download name,
+	 * even when it does not match the detected MIME type.
+	 */
+	public function testGetTaskOutputFileDownloadNameKeepsOriginalExtension(): void {
+		$file = $this->getOutputFileWithName('generated document.docx');
+
+		$this->assertSame(
+			self::TASK_ID . '-' . self::FILE_ID . '.docx',
+			$this->service->getTaskOutputFileDownloadName($file, self::TASK_ID, self::FILE_ID, 'application/zip'),
+		);
+	}
+
+	/**
+	 * An original file name without an extension falls back to one derived
+	 * from the detected MIME type.
+	 */
+	public function testGetTaskOutputFileDownloadNameDerivesExtensionFromMimeType(): void {
+		$file = $this->getOutputFileWithName('42-4242');
+
+		$this->assertSame(
+			self::TASK_ID . '-' . self::FILE_ID . '.docx',
+			$this->service->getTaskOutputFileDownloadName($file, self::TASK_ID, self::FILE_ID, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+		);
+	}
+
+	/**
+	 * No extension is invented for an unknown MIME type.
+	 */
+	public function testGetTaskOutputFileDownloadNameUnknownMimeType(): void {
+		$file = $this->getOutputFileWithName('42-4242');
+
+		$this->assertSame(
+			self::TASK_ID . '-' . self::FILE_ID,
+			$this->service->getTaskOutputFileDownloadName($file, self::TASK_ID, self::FILE_ID, 'application/x-unknown-type'),
+		);
+	}
+
+	/**
+	 * The generic application/octet-stream MIME type, used by the controller
+	 * when content detection fails, must not yield an extension even though
+	 * Mimey maps it to "bin".
+	 */
+	public function testGetTaskOutputFileDownloadNameGenericMimeType(): void {
+		$file = $this->getOutputFileWithName('42-4242');
+
+		$this->assertSame(
+			self::TASK_ID . '-' . self::FILE_ID,
+			$this->service->getTaskOutputFileDownloadName($file, self::TASK_ID, self::FILE_ID, 'application/octet-stream'),
+		);
 	}
 }
