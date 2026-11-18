@@ -502,7 +502,7 @@ class AgentTalkService {
 			$participant = $participantService->getParticipant($room, (string)$session->getUserId());
 			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
 			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
-			$comment = $chatManager->editMessage($room, $explanationComment, $participant, new DateTime(), $content);
+			$chatManager->editMessage($room, $explanationComment, $participant, new DateTime(), $content);
 		} catch (\Throwable $e) {
 			$this->logger->error('Failed to edit the generation explanation message of an agent session in Talk', ['exception' => $e]);
 			return null;
@@ -513,7 +513,26 @@ class AgentTalkService {
 		} catch (Exception $e) {
 			$this->logger->error('Failed to clear the generation explanation of the agent session', ['exception' => $e]);
 		}
-		return $comment;
+		// editMessage() edited the explanation comment in place and only
+		// returns the message_edited system message: the edited comment is
+		// the explanation comment itself
+		return $explanationComment;
+	}
+
+	/**
+	 * Talk generates no chat notification for edited messages: notify the
+	 * other participants of an edited agent message (answer, confirmation
+	 * request, failure notice) like ChatManager::sendMessage would do.
+	 */
+	private function notifyEditedAgentMessage(\OCA\Talk\Room $room, IComment $comment): void {
+		try {
+			$threadId = (int)($comment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
+			/** @var \OCA\Talk\Chat\Notifier $notifier */
+			$notifier = Server::get(\OCA\Talk\Chat\Notifier::class);
+			$notifier->notifyOtherParticipant($room, $comment, [], silent: false, threadId: $threadId);
+		} catch (\Throwable $e) {
+			$this->logger->warning('Failed to notify the recipients of an edited agent message', ['exception' => $e]);
+		}
 	}
 
 	/**
@@ -825,25 +844,21 @@ class AgentTalkService {
 			);
 		} else {
 			$postedComment = null;
-			if ($explanationComment !== null) {
+			// an empty answer content means the turn only carries a confirmation
+			// request: the explanation stays pending for it instead of being
+			// edited into an empty message
+			if (trim($content) !== '' && $explanationComment !== null) {
 				$postedComment = $this->editGenerationExplanation($session, $room, $explanationComment, $content);
 			}
 			if ($postedComment !== null) {
-				// Talk generates no chat notification for edited messages:
-				// notify the other participants like ChatManager::sendMessage
-				// would do for the answer
-				try {
-					$threadId = (int)($postedComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
-					/** @var \OCA\Talk\Chat\Notifier $notifier */
-					$notifier = Server::get(\OCA\Talk\Chat\Notifier::class);
-					$notifier->notifyOtherParticipant($room, $postedComment, [], silent: false, threadId: $threadId);
-				} catch (\Throwable $e) {
-					$this->logger->warning('Failed to notify the recipients of an edited agent answer', ['exception' => $e]);
-				}
+				$this->notifyEditedAgentMessage($room, $postedComment);
 			} else {
 				// no explanation or the edit failed: it is deleted and the
-				// answer is posted as a new message
-				$this->deleteGenerationExplanation($session);
+				// answer is posted as a new message; an empty answer content
+				// leaves the explanation pending for the confirmation request
+				if (trim($content) !== '') {
+					$this->deleteGenerationExplanation($session);
+				}
 				$postedComment = $this->postAgentMessage(
 					$room,
 					$session,
@@ -871,14 +886,35 @@ class AgentTalkService {
 			// the confirmation request is posted as natural language;
 			// fall back to the raw actions JSON if it cannot be formatted
 			$confirmationContent = $this->agencyActionService->formatConfirmationMessage($pendingActions) ?? $pendingActions;
-			$confirmationComment = $this->postAgentMessage(
-				$room,
-				$session,
-				$confirmationContent,
-				referenceId: self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time(),
-				addApproveRejectReactions: true,
-				threaded: $threaded,
-			);
+			// the pending explanation message becomes the confirmation request,
+			// so that no deleted-message tombstone is left: confirmation requests
+			// come alone, without reply content, transcript or attachments
+			$confirmationComment = null;
+			$explanationComment = $this->getGenerationExplanationComment($session);
+			if ($explanationComment !== null) {
+				// the reference id is required for the listener to resolve the
+				// session when the user reacts 👍/👎 on the confirmation message
+				$explanationComment->setReferenceId(self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time());
+				$confirmationComment = $this->editGenerationExplanation($session, $room, $explanationComment, $confirmationContent);
+				if ($confirmationComment !== null) {
+					$this->addAgentReaction($room, $session->getUserId(), (int)$confirmationComment->getId(), self::REACTION_APPROVE);
+					$this->addAgentReaction($room, $session->getUserId(), (int)$confirmationComment->getId(), self::REACTION_REJECT);
+					$this->notifyEditedAgentMessage($room, $confirmationComment);
+				}
+			}
+			if ($confirmationComment === null) {
+				// no pending explanation or the edit failed: it is deleted and
+				// the confirmation request is posted as a new message
+				$this->deleteGenerationExplanation($session);
+				$confirmationComment = $this->postAgentMessage(
+					$room,
+					$session,
+					$confirmationContent,
+					referenceId: self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time(),
+					addApproveRejectReactions: true,
+					threaded: $threaded,
+				);
+			}
 			if ($confirmationComment !== null) {
 				$confirmPosted = true;
 				// remember the confirmation message to remove the 👍/👎 reactions
@@ -1414,16 +1450,7 @@ class AgentTalkService {
 			$noticeComment = $this->editGenerationExplanation($session, $oneToOneRoom, $explanationComment, $content);
 		}
 		if ($noticeComment !== null) {
-			// Talk generates no chat notification for edited messages: notify
-			// the other participants like ChatManager::sendMessage would do
-			try {
-				$threadId = (int)($noticeComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
-				/** @var \OCA\Talk\Chat\Notifier $notifier */
-				$notifier = Server::get(\OCA\Talk\Chat\Notifier::class);
-				$notifier->notifyOtherParticipant($oneToOneRoom, $noticeComment, [], silent: false, threadId: $threadId);
-			} catch (\Throwable $e) {
-				$this->logger->warning('Failed to notify the recipients of an edited agent failure notice', ['exception' => $e]);
-			}
+			$this->notifyEditedAgentMessage($oneToOneRoom, $noticeComment);
 			return;
 		}
 		// no pending explanation or the edit failed
