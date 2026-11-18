@@ -188,11 +188,11 @@ OC.L10N.register(
     "Deselect all" : "Зняти всі мітки",
     "Select all" : "Вибрати все",
     "Error generating a response" : "Помилка при формуванні відповіді",
-    "Error getting the generated title for the conversation" : "Помилка при отриманні згенерованої назви для розмови",
     "Error checking if the session is thinking" : "Перевірка помилки, якщо сесія думає",
     "Error updating title of conversation" : "Помилка оновлення назви розмови",
     "Untitled conversation" : "Розмова без назви",
     "Error generating a title for the conversation" : "Помилка при створенні заголовка для розмови",
+    "Error getting the generated title for the conversation" : "Помилка при отриманні згенерованої назви для розмови",
     "Error fetching conversations" : "Помилка при отриманні розмов",
     "Error deleting message" : "Помилка видалення повідомлення",
     "Error fetching messages" : "Повідомлення про помилки при отриманні даних",
@@ -207,7 +207,6 @@ OC.L10N.register(
     "Skills" : "Навички",
     "Conversation title" : "Назва розмови",
     "Edit title" : "Редагувати",
-    "Generate title" : "Згенерувати заголовок",
     "Creating a new conversation" : "Створення нової розмови",
     "Hello there! What can I help you with today?" : "Привіт! Чим я можу вам сьогодні допомогти?",
     "Try sending a message to spark a conversation." : "Спробуйте надіслати повідомлення, щоб розпочати розмову.",
@@ -356,6 +355,7 @@ OC.L10N.register(
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо».",
     "Error deleting conversation" : "Помилка видалення розмови",
+    "Generate title" : "Згенерувати заголовок",
     "Information sources" : "Джерела інформації"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

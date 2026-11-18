@@ -240,11 +240,11 @@ OC.L10N.register(
     "Deselect all" : "Odznacz wszystkie",
     "Select all" : "Wybierz wszystko",
     "Error generating a response" : "Błąd generowania odpowiedzi",
-    "Error getting the generated title for the conversation" : "Błąd podczas pobierania wygenerowanego tytułu rozmowy",
     "Error checking if the session is thinking" : "Błąd podczas sprawdzania, czy sesja przetwarza dane",
     "Error updating title of conversation" : "Błąd podczas aktualizowania tytułu rozmowy",
     "Untitled conversation" : "Rozmowa bez tytułu",
     "Error generating a title for the conversation" : "Błąd podczas generowania tytułu rozmowy",
+    "Error getting the generated title for the conversation" : "Błąd podczas pobierania wygenerowanego tytułu rozmowy",
     "Error fetching conversations" : "Błąd podczas pobierania rozmów",
     "Error deleting message" : "Błąd usuwania wiadomości",
     "Error fetching messages" : "Błąd podczas pobierania wiadomości",
@@ -259,7 +259,6 @@ OC.L10N.register(
     "Skills" : "Umiejętności",
     "Conversation title" : "Tytuł rozmowy",
     "Edit title" : "Edytuj tytuł",
-    "Generate title" : "Wygeneruj tytuł",
     "Creating a new conversation" : "Tworzenie nowej rozmowy",
     "Hello there! What can I help you with today?" : "Cześć! W czym mogę Ci dziś pomóc?",
     "Try sending a message to spark a conversation." : "Spróbuj wysłać wiadomość, aby rozpocząć rozmowę.",
@@ -386,6 +385,7 @@ OC.L10N.register(
     "Summarization task submitted successfully" : "Zadanie podsumowania zostało pomyślnie wysłane",
     "Text-to-speech task submitted successfully" : "Zadanie zamiany tekstu na mowę zostało pomyślnie wysłane",
     "Error deleting conversation" : "Błąd usuwania rozmowy",
+    "Generate title" : "Wygeneruj tytuł",
     "Information sources" : "Źródła informacji"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

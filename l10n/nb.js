@@ -138,7 +138,6 @@ OC.L10N.register(
     "Skills" : "Evner",
     "Conversation title" : "Samtaletittel",
     "Edit title" : "Rediger tittel",
-    "Generate title" : "Generer tittel",
     "Creating a new conversation" : "Oppretter en ny samtale",
     "Hello there! What can I help you with today?" : "Hallo der! Hva kan jeg hjelpe deg med i dag?",
     "Try sending a message to spark a conversation." : "Prøv å sende en melding for å starte en samtale.",
@@ -242,6 +241,7 @@ OC.L10N.register(
     "fifth" : "femte",
     "second to last" : "nest sist",
     "last" : "siste",
-    "Error deleting conversation" : "Feil under sletting av samtale"
+    "Error deleting conversation" : "Feil under sletting av samtale",
+    "Generate title" : "Generer tittel"
 },
 "nplurals=2; plural=(n != 1);");
