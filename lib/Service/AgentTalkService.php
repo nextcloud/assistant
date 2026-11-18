@@ -415,14 +415,14 @@ class AgentTalkService {
 	 *
 	 * The message is silent: the user just sent a message to the agent, they
 	 * do not need a notification about the agent starting to answer.
-	 * When an explanation message is already displayed for the session
-	 * (a superseding message was sent during the generation), it is kept
-	 * until the answer of the latest message is posted.
+	 * When an explanation message is already displayed for the session (a
+	 * superseding message was sent during the generation), it is deleted and
+	 * replaced: it stands before the latest human message, and the answer is
+	 * later edited into the explanation, so the explanation must always stand
+	 * after the last human message.
 	 */
 	private function postGenerationExplanation(Session $session): void {
-		if ($session->getAgentExplanationMessageId() !== null) {
-			return;
-		}
+		$this->deleteGenerationExplanation($session);
 		$humanUser = $this->userManager->get((string)$session->getRequesterUserId());
 		if ($humanUser === null) {
 			return;
@@ -467,11 +467,102 @@ class AgentTalkService {
 	}
 
 	/**
+	 * The pending "generating an answer" explanation message of a session,
+	 * to be edited into the answer: null when there is none, or when it
+	 * cannot be edited anymore (gone, tombstoned by a moderator).
+	 * The tracking is not touched, the caller decides to edit or delete.
+	 */
+	private function getGenerationExplanationComment(Session $session): ?IComment {
+		$commentId = $session->getAgentExplanationMessageId();
+		$roomToken = $session->getAgentExplanationRoomToken();
+		if ($commentId === null || $roomToken === null) {
+			return null;
+		}
+		$agentUserId = (string)$session->getUserId();
+		try {
+			$room = $this->getRoomByToken($roomToken);
+			if ($this->userManager->get($agentUserId) === null) {
+				return null;
+			}
+			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+			$comment = $chatManager->getComment($room, (string)$commentId);
+			if ($comment->getVerb() !== \OCA\Talk\Chat\ChatManager::VERB_MESSAGE
+				|| $comment->getActorType() !== 'users'
+				|| $comment->getActorId() !== $agentUserId) {
+				// not the agent's own message, or already tombstoned
+				return null;
+			}
+			return $comment;
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
+			// the room was deleted, the message is gone with it
+			return null;
+		} catch (\Throwable $e) {
+			$this->logger->warning('Failed to get the generation explanation message of an agent session in Talk', ['exception' => $e]);
+			return null;
+		}
+	}
+
+	/**
+	 * Edit the pending generation explanation message into the given content,
+	 * so that the answer replaces the explanation in place, at the position
+	 * the user expects it, without leaving a deleted-message tombstone.
+	 * The editing actor is the agent, the author of the message.
+	 *
+	 * The silent flag of the explanation is removed, so that mentions of the
+	 * answer notify their targets like a non-silent message would.
+	 *
+	 * The cleared explanation tracking is persisted right away, but only when
+	 * the edit succeeded, so a failed edit can still fall back to deleting
+	 * the message.
+	 *
+	 * @return IComment|null The edited comment, null when the edit failed
+	 */
+	private function editGenerationExplanation(Session $session, \OCA\Talk\Room $room, IComment $explanationComment, string $content): ?IComment {
+		try {
+			$metaData = $explanationComment->getMetaData() ?? [];
+			unset($metaData[\OCA\Talk\Model\Message::METADATA_SILENT]);
+			$explanationComment->setMetaData($metaData);
+
+			/** @var \OCA\Talk\Service\ParticipantService $participantService */
+			$participantService = Server::get(\OCA\Talk\Service\ParticipantService::class);
+			$participant = $participantService->getParticipant($room, (string)$session->getUserId());
+			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+			$comment = $chatManager->editMessage($room, $explanationComment, $participant, new DateTime(), $content);
+		} catch (\Throwable $e) {
+			$this->logger->error('Failed to edit the generation explanation message of an agent session in Talk', ['exception' => $e]);
+			return null;
+		}
+		$this->clearGenerationExplanation($session);
+		try {
+			$this->sessionMapper->update($session);
+		} catch (Exception $e) {
+			$this->logger->error('Failed to clear the generation explanation of the agent session', ['exception' => $e]);
+		}
+		return $comment;
+	}
+
+	/**
+	 * Clear the generation explanation tracking on the session.
+	 * The session caller is responsible for persisting the cleared fields.
+	 */
+	private function clearGenerationExplanation(Session $session): void {
+		if ($session->getAgentExplanationMessageId() === null
+			&& $session->getAgentExplanationRoomToken() === null) {
+			return;
+		}
+		$session->setAgentExplanationRoomToken(null);
+		$session->setAgentExplanationMessageId(null);
+	}
+
+	/**
 	 * Delete the pending "generating an answer" explanation message.
 	 *
 	 * Talk deletes messages with a tombstone: the deleted message stays in
 	 * the conversation as a "Message deleted by author" placeholder, which
-	 * is the accepted trade-off for removing it.
+	 * is the accepted trade-off when the explanation cannot be edited into
+	 * the answer (superseded generation, stop, failure).
 	 *
 	 * The cleared explanation tracking is persisted right away, so callers
 	 * do not have to care about it.
@@ -482,8 +573,7 @@ class AgentTalkService {
 		if ($commentId === null || $roomToken === null) {
 			return;
 		}
-		$session->setAgentExplanationRoomToken(null);
-		$session->setAgentExplanationMessageId(null);
+		$this->clearGenerationExplanation($session);
 		try {
 			$this->sessionMapper->update($session);
 		} catch (Exception $e) {
@@ -690,17 +780,18 @@ class AgentTalkService {
 		if (!class_exists('OCA\Talk\Chat\ChatManager')) {
 			return;
 		}
-		// the answer is ready: the generation explanation message goes away,
-		// whether the answer posting below succeeds or not
-		$this->deleteGenerationExplanation($session);
 		$agentUser = $this->userManager->get($session->getUserId());
 		if ($agentUser === null) {
 			$this->logger->warning('The agent user was deleted while an agent answer was being handled');
+			// the answer will never be posted: the explanation must not linger
+			$this->deleteGenerationExplanation($session);
 			return;
 		}
 		$humanUser = $this->userManager->get($session->getRequesterUserId());
 		if ($humanUser === null) {
 			$this->logger->warning('The requester user was deleted while an agent answer was being handled');
+			// the answer will never be posted: the explanation must not linger
+			$this->deleteGenerationExplanation($session);
 			return;
 		}
 		try {
@@ -711,6 +802,8 @@ class AgentTalkService {
 				'humanUserId' => $humanUser->getUID(),
 				'exception' => $e,
 			]);
+			// the answer will never be posted: the explanation must not linger
+			$this->deleteGenerationExplanation($session);
 			return;
 		}
 
@@ -718,26 +811,75 @@ class AgentTalkService {
 		// the ones of a 1-1 conversation are plain 1-1 messages
 		$threaded = $this->isAnswerThreaded($session);
 
+		// the answer replaces the pending explanation message in place, so
+		// that no deleted-message tombstone is left: the explanation is the
+		// last message, standing after the latest human input
+		$explanationComment = $this->getGenerationExplanationComment($session);
+
 		// when the human sent a voice message, the agent posts its transcript
 		// first, so the human sees what was heard, then the answer;
 		// the transcript is the raw speech-to-text output, not translated
+		$transcriptContent = null;
 		if ($inputTranscript !== null && trim($inputTranscript) !== '') {
-			$this->postAgentMessage(
+			$transcriptContent = '🎙️: _"' . trim($inputTranscript) . '"_';
+		}
+		if ($transcriptContent !== null) {
+			$transcriptComment = null;
+			if ($explanationComment !== null) {
+				// the transcript becomes the explanation message, the answer
+				// is posted right after it as a new message
+				$transcriptComment = $this->editGenerationExplanation($session, $room, $explanationComment, $transcriptContent);
+			}
+			if ($transcriptComment === null) {
+				// no explanation or the edit failed: it stands before the
+				// newest message, it is deleted and the transcript is posted
+				// as a new message
+				$this->deleteGenerationExplanation($session);
+				$this->postAgentMessage(
+					$room,
+					$session,
+					$transcriptContent,
+					referenceId: null,
+					threaded: $threaded,
+				);
+			}
+			$postedComment = $this->postAgentMessage(
 				$room,
 				$session,
-				'🎙️: _"' . trim($inputTranscript) . '"_',
+				$content,
 				referenceId: null,
 				threaded: $threaded,
 			);
+		} else {
+			$postedComment = null;
+			if ($explanationComment !== null) {
+				$postedComment = $this->editGenerationExplanation($session, $room, $explanationComment, $content);
+			}
+			if ($postedComment !== null) {
+				// Talk generates no chat notification for edited messages:
+				// notify the other participants like ChatManager::sendMessage
+				// would do for the answer
+				try {
+					$threadId = (int)($postedComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
+					/** @var \OCA\Talk\Chat\Notifier $notifier */
+					$notifier = Server::get(\OCA\Talk\Chat\Notifier::class);
+					$notifier->notifyOtherParticipant($room, $postedComment, [], silent: false, threadId: $threadId);
+				} catch (\Throwable $e) {
+					$this->logger->warning('Failed to notify the recipients of an edited agent answer', ['exception' => $e]);
+				}
+			} else {
+				// no explanation or the edit failed: it is deleted and the
+				// answer is posted as a new message
+				$this->deleteGenerationExplanation($session);
+				$postedComment = $this->postAgentMessage(
+					$room,
+					$session,
+					$content,
+					referenceId: null,
+					threaded: $threaded,
+				);
+			}
 		}
-
-		$postedComment = $this->postAgentMessage(
-			$room,
-			$session,
-			$content,
-			referenceId: null,
-			threaded: $threaded,
-		);
 
 		// generated files of a multimodal answer are posted as Talk file
 		// shares, then the spoken answer as a voice message
