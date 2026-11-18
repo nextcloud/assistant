@@ -223,7 +223,7 @@ export default {
 			cancelGenerationAriaText: t('assistant', 'Stop generating'),
 			attachFileAriaText: t('assistant', 'Attach a file'),
 			uploadFromDeviceText: t('assistant', 'Upload from device'),
-			chooseFromNextcloudText: t('assistant', 'Select from nextcloud'),
+			chooseFromNextcloudText: t('assistant', 'Select from Nextcloud'),
 			isRecording: false,
 			isUploading: false,
 			attachedFileIds: [],
