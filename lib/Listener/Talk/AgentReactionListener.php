@@ -17,8 +17,10 @@ use Psr\Log\LoggerInterface;
 /**
  * @template-implements IEventListener<\OCA\Talk\Events\ReactionAddedEvent>
  *
- * Handles the reactions of human users on confirmation-related agent Talk messages:
- * they are sent back to the agent context as approve/reject signals.
+ * Handles the reactions of human users on agent Talk messages:
+ * - ⏹️ on the message being handled stops the current generation
+ * - 👍/👎 on confirmation-related messages (sensitive actions of the agency
+ *   feature) are sent back to the agent context as approve/reject signals
  *
  * @psalm-suppress InvalidTemplateParam, ImplementedParamTypeMismatch
  */
@@ -49,6 +51,14 @@ class AgentReactionListener implements IEventListener {
 				return;
 			}
 			$comment = $event->getMessage();
+			if ($reaction === AgentTalkService::REACTION_STOP) {
+				$this->agentTalkService->handleStopReaction(
+					$event->getActorId(),
+					$event->getRoom(),
+					$comment,
+				);
+				return;
+			}
 			$referenceId = $comment->getReferenceId();
 			if (!preg_match('/^' . AgentTalkService::CONFIRMATION_REFERENCE_PREFIX . '(\d+)(:[0-9]+)?$/', $referenceId ?? '', $matches)) {
 				return;

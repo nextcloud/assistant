@@ -175,33 +175,46 @@ class ChatService {
 	 * Cancel the scheduled and running message generation tasks of a session.
 	 *
 	 * Used by the Talk integration when a new human message supersedes the one
-	 * currently being answered: the result of a task cancelled while running is
-	 * dropped, so no stale answer will be generated or posted for it.
+	 * currently being answered, or when the requester stops the generation:
+	 * the result of a task cancelled while running is dropped, so no stale
+	 * answer will be generated or posted for it.
+	 *
+	 * @return int The number of tasks that were cancelled
 	 */
-	public function cancelPendingGenerationTasks(?string $userId, int $sessionId): void {
-		$this->cancelTasksByCustomId($userId, 'chatty-llm:' . $sessionId, 'message generation');
+	public function cancelPendingGenerationTasks(?string $userId, int $sessionId): int {
+		return $this->cancelTasksByCustomId($userId, 'chatty-llm:' . $sessionId, 'message generation');
 	}
 
 	/**
 	 * Cancel the scheduled and running tasks of the app matching the given custom id
+	 *
+	 * @return int The number of tasks that were actually cancelled
 	 */
-	private function cancelTasksByCustomId(?string $userId, string $customId, string $logContext): void {
+	private function cancelTasksByCustomId(?string $userId, string $customId, string $logContext): int {
 		try {
 			$tasks = $this->taskProcessingManager->getUserTasksByApp($userId, Application::APP_ID . ':chatty-llm', $customId);
 		} catch (\OCP\TaskProcessing\Exception\Exception|\JsonException $e) {
 			$this->logger->warning('Failed to get the ' . $logContext . ' tasks of a chat session', ['exception' => $e]);
-			return;
+			return 0;
 		}
+		$cancelledCount = 0;
 		foreach ($tasks as $task) {
 			if ($task->getStatus() !== Task::STATUS_SCHEDULED && $task->getStatus() !== Task::STATUS_RUNNING) {
 				continue;
 			}
 			try {
 				$this->taskProcessingManager->cancelTask((int)$task->getId());
+				// cancelTask silently ignores a task that completed in the meantime:
+				// only count it when its status is actually cancelled now
+				$cancelledTask = $this->taskProcessingManager->getTask((int)$task->getId());
+				if ($cancelledTask->getStatus() === Task::STATUS_CANCELLED) {
+					$cancelledCount++;
+				}
 			} catch (\OCP\TaskProcessing\Exception\Exception|\OCP\TaskProcessing\Exception\NotFoundException $e) {
 				$this->logger->warning('Failed to cancel a ' . $logContext . ' task', ['exception' => $e, 'taskId' => $task->getId()]);
 			}
 		}
+		return $cancelledCount;
 	}
 
 	/**

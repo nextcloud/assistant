@@ -290,11 +290,16 @@ class ChatServiceAgencyTest extends TestCase {
 
 	/**
 	 * A fresh IManager mock tracking the cancelled task ids and the pending
-	 * tasks: cancelTask removes the cancelled task from the ones returned
-	 * by getUserTasksByApp, like the task processing manager does.
+	 * tasks: cancelTask marks the task cancelled and removes it from the ones
+	 * returned by getUserTasksByApp, getTask still returns it (as cancelled),
+	 * like the task processing manager does.
 	 */
 	private function setPendingGenerationTasks(array $tasks): void {
 		$pending = $tasks;
+		$allTasks = [];
+		foreach ($tasks as $task) {
+			$allTasks[$task->getId()] = $task;
+		}
 		$taskProcessingManager = $this->createMock(IManager::class);
 		$taskProcessingManager->method('getAvailableTaskTypeIds')->willReturn([ContextAgentInteraction::ID]);
 		$taskProcessingManager->method('getAvailableTaskTypes')->willReturn([
@@ -303,9 +308,13 @@ class ChatServiceAgencyTest extends TestCase {
 		$taskProcessingManager->method('getUserTasksByApp')->willReturnCallback(static function () use (&$pending): array {
 			return $pending;
 		});
-		$taskProcessingManager->method('cancelTask')->willReturnCallback(function (int $taskId) use (&$pending): void {
+		$taskProcessingManager->method('cancelTask')->willReturnCallback(function (int $taskId) use (&$pending, &$allTasks): void {
 			$this->cancelledTaskIds[] = $taskId;
+			$allTasks[$taskId]?->setStatus(Task::STATUS_CANCELLED);
 			$pending = array_values(array_filter($pending, static fn (Task $task) => $task->getId() !== $taskId));
+		});
+		$taskProcessingManager->method('getTask')->willReturnCallback(static function (int $taskId) use (&$allTasks): Task {
+			return $allTasks[$taskId];
 		});
 		$taskProcessingManager->method('scheduleTask')->willReturnCallback(function (Task $task): void {
 			$this->scheduledTask = $task;
@@ -348,6 +357,17 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertSame([], $this->cancelledTaskIds);
 		$this->assertNotNull($this->scheduledTask);
+	}
+
+	/**
+	 * The Talk stop feature needs to know whether a generation was actually
+	 * cancelled to decide between the ⏹️ (ignored) and 🛑 (stopped) outcomes.
+	 */
+	public function testCancelPendingGenerationTasksReturnsTheCancelledCount(): void {
+		$this->setPendingGenerationTasks([$this->pendingGenerationTask(7), $this->pendingGenerationTask(8)]);
+
+		$this->assertSame(2, $this->service->cancelPendingGenerationTasks(self::USER_ID, self::SESSION_ID));
+		$this->assertSame([7, 8], $this->cancelledTaskIds);
 	}
 
 	/**

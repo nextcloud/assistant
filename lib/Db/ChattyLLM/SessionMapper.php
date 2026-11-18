@@ -129,6 +129,32 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * Get the agent session whose currently seen Talk message is the given one.
+	 *
+	 * The 👀 reaction of an agent session is always added in the origin room of
+	 * the message it is handling, so the room token and the comment id identify
+	 * the session that is currently handling that message.
+	 *
+	 * @param string $roomToken The Talk room token of the seen message
+	 * @param int $commentId The Talk comment id of the seen message
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSessionBySeenMessage(string $roomToken, int $commentId): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('agent_seen_room_token', $qb->createPositionalParameter($roomToken, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('agent_seen_comment_id', $qb->createPositionalParameter($commentId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->isNotNull('requester_user_id'))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * @param int $sessionId
 	 * @return Session
 	 * @throws DoesNotExistException

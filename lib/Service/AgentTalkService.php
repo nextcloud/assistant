@@ -39,6 +39,8 @@ class AgentTalkService {
 	public const REACTION_DONE = '✅';
 	public const REACTION_ERROR = '🔴';
 	public const REACTION_SUPERSEDED = '⏭️';
+	public const REACTION_STOP = '⏹️';
+	public const REACTION_STOPPED = '🛑';
 
 	private const THREAD_TITLE_SEPARATOR = ' - ';
 
@@ -323,6 +325,9 @@ class AgentTalkService {
 		// also happens when the generation cannot be scheduled right away
 		// (the session answers one message at a time)
 		$this->addAgentReaction($room, $agent->getUserId(), (int)$comment->getId(), self::REACTION_READ);
+		// ⏹️ is a one-click stop button: clicking an existing Talk reaction adds
+		// it as the clicking user, which triggers the stop in the listener
+		$this->addAgentReaction($room, $agent->getUserId(), (int)$comment->getId(), self::REACTION_STOP);
 		// a new message supersedes the one currently being answered:
 		// only the latest message keeps the 👀 → ✅/🔴 lifecycle
 		$this->supersedeSeenMessage($session);
@@ -394,6 +399,7 @@ class AgentTalkService {
 			return;
 		}
 		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_READ);
+		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_STOP);
 		$this->addAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_SUPERSEDED);
 	}
 
@@ -857,6 +863,59 @@ class AgentTalkService {
 	}
 
 	/**
+	 * Called by AgentReactionListener when a human user reacts ⏹️ in Talk
+	 * to stop the current generation of an agent session.
+	 *
+	 * The reaction must be added by the requester on the message the agent is
+	 * currently handling (the one marked with 👀). The pending generation task
+	 * is cancelled; when one was cancelled, the 👀 becomes 🛑 (stopped by the
+	 * user, the message will not be answered) and the ⏹️ reactions are removed.
+	 * When nothing is running, the reaction is ignored so that a generation
+	 * that just completed can still replace 👀 by its outcome.
+	 *
+	 * A stopped message stays in the session as a pending human message:
+	 * the generation of the next message includes it in the agent context.
+	 *
+	 * @param string $humanUserId
+	 * @param \OCA\Talk\Room $room
+	 * @param IComment $comment
+	 * @return void
+	 */
+	public function handleStopReaction(string $humanUserId, \OCA\Talk\Room $room, IComment $comment): void {
+		try {
+			$session = $this->sessionMapper->getAgentSessionBySeenMessage($room->getToken(), (int)$comment->getId());
+		} catch (DoesNotExistException|Exception $e) {
+			// no session is currently handling this message
+			return;
+		}
+		if ($session->getRequesterUserId() !== $humanUserId) {
+			// only the human user the agent session is dedicated to may stop it
+			return;
+		}
+
+		$cancelledCount = $this->chatService->cancelPendingGenerationTasks($session->getUserId(), (int)$session->getId());
+		if ($cancelledCount === 0) {
+			// nothing is scheduled or running: keep 👀 for the completing generation
+			return;
+		}
+
+		// the generation will not answer: the agent marks the message as
+		// stopped and forgets it, so no late outcome can be applied to it;
+		// the stop button is spent, the stop reactions are cleaned up
+		$this->deleteAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_READ);
+		$this->deleteAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_STOP);
+		$this->deleteReaction($room, $humanUserId, (int)$comment->getId(), self::REACTION_STOP);
+		$this->addAgentReaction($room, $session->getUserId(), (int)$comment->getId(), self::REACTION_STOPPED);
+		$session->setAgentSeenRoomToken(null);
+		$session->setAgentSeenCommentId(null);
+		try {
+			$this->sessionMapper->update($session);
+		} catch (Exception $e) {
+			$this->logger->error('Failed to forget the seen message of a stopped agent session', ['exception' => $e]);
+		}
+	}
+
+	/**
 	 * Called by a listener when a human user reacts in Talk to a confirmation message
 	 * (sensitive actions of the agency feature).
 	 *
@@ -897,6 +956,8 @@ class AgentTalkService {
 		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_APPROVE);
 		$this->deleteAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_REJECT);
 		$this->addAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_READ);
+		// like the answers: the follow-up generation gets a one-click stop button
+		$this->addAgentReaction($room, $session->getUserId(), $messageId, self::REACTION_STOP);
 		// a confirmation follow-up supersedes a message that was still being answered
 		$this->supersedeSeenMessage($session);
 		// remember the seen message to later replace 👀 by ✅/🔴 after the confirmation run
@@ -1035,6 +1096,7 @@ class AgentTalkService {
 			return;
 		}
 		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_READ);
+		$this->deleteAgentReaction($room, $session->getUserId(), $seenCommentId, self::REACTION_STOP);
 		$this->addAgentReaction($room, $session->getUserId(), $seenCommentId, $reaction);
 		// forget the seen message
 		$session->setAgentSeenRoomToken(null);
@@ -1111,7 +1173,16 @@ class AgentTalkService {
 	}
 
 	private function deleteAgentReaction(\OCA\Talk\Room $room, string $agentUserId, int $messageId, string $reaction): void {
-		if (trim($reaction) === '' || $this->userManager->get($agentUserId) === null) {
+		$this->deleteReaction($room, $agentUserId, $messageId, $reaction);
+	}
+
+	/**
+	 * Delete a reaction of the given user in a Talk room.
+	 * Used for the agent's own automatic reactions and, when a stop was
+	 * processed, for the ⏹️ of the human user who requested the stop.
+	 */
+	private function deleteReaction(\OCA\Talk\Room $room, string $userId, int $messageId, string $reaction): void {
+		if (trim($reaction) === '' || $this->userManager->get($userId) === null) {
 			return;
 		}
 		try {
@@ -1120,13 +1191,13 @@ class AgentTalkService {
 			$reactionManager->deleteReactionMessage(
 				$room,
 				'users',
-				$agentUserId,
-				$agentUserId,
+				$userId,
+				$userId,
 				$messageId,
 				$reaction,
 			);
 		} catch (\Throwable $e) {
-			$this->logger->warning('Failed to remove an automatic reaction on an agent message in Talk', ['exception' => $e]);
+			$this->logger->warning('Failed to remove a reaction on a Talk message', ['exception' => $e, 'userId' => $userId, 'messageId' => $messageId]);
 		}
 	}
 
