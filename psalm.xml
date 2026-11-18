@@ -39,6 +39,7 @@
 				<referencedClass name="OC\User\NoUserException" />
 				<referencedClass name="OCP\TaskProcessing\TaskTypes\AudioToTextSubtitles" />
 				<referencedClass name="OCA\Talk\*" />
+				<referencedClass name="OCA\UserStatus\*" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -47,6 +48,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Schema" />
 				<referencedClass name="OC\User\NoUserException" />
 				<referencedClass name="OCA\Talk\*" />
+				<referencedClass name="OCA\UserStatus\*" />
 			</errorLevel>
 		</UndefinedDocblockClass>
 	</issueHandlers>

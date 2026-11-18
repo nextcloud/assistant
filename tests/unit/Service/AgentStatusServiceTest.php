@@ -90,8 +90,9 @@ class AgentStatusServiceTest extends TestCase {
 	}
 
 	public function testGetStatusReturnsTheCustomMessage(): void {
-		$status = $this->createMock(UserStatus::class);
-		$status->method('getCustomMessage')->willReturn('Doing something');
+		// the custom message is a magic Entity getter, it cannot be mocked
+		$status = new UserStatus();
+		$status->setCustomMessage('Doing something');
 		$this->userStatusService->method('findByUserId')
 			->with('bob')
 			->willReturn($status);
