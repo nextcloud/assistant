@@ -10,30 +10,45 @@
 				{{ action.name }}
 			</strong>
 		</div>
-		<span v-for="(argValue, argName) in actionArguments"
+		<span v-for="(argValue, argName) in previewArguments"
+			ref="params"
 			:key="argName + argValue"
 			class="param"
 			:title="getParamText(argName, argValue)">
-			{{ getParamText(argName, argValue) }}
+			<strong>{{ getParamName(argName) }}:</strong> {{ getParamValue(argValue) }}
 		</span>
-		<NcButton v-if="needsExpand"
-			class="expand"
-			@click="expanded = !expanded">
-			{{ expanded ? t('assistant', 'Less') : t('assistant', 'More') }}
+		<NcButton v-if="needsDetails"
+			class="details"
+			@click="detailsOpen = true">
+			{{ t('assistant', 'Details') }}
 			<template #icon>
-				<ChevronDoubleUpIcon v-if="expanded" />
-				<ChevronDoubleDownIcon v-else />
+				<ArrowExpandIcon />
 			</template>
 		</NcButton>
+		<NcDialog v-model:open="detailsOpen"
+			:name="action.name"
+			size="normal">
+			<p v-for="(argValue, argName) in action.args"
+				:key="argName"
+				class="details-param">
+				<strong>{{ getParamName(argName) }}:</strong> {{ getParamValue(argValue) }}
+			</p>
+			<template #actions>
+				<NcButton variant="primary"
+					@click="detailsOpen = false">
+					{{ t('assistant', 'Close') }}
+				</NcButton>
+			</template>
+		</NcDialog>
 	</div>
 </template>
 
 <script>
-import ChevronDoubleDownIcon from 'vue-material-design-icons/ChevronDoubleDown.vue'
-import ChevronDoubleUpIcon from 'vue-material-design-icons/ChevronDoubleUp.vue'
+import ArrowExpandIcon from 'vue-material-design-icons/ArrowExpand.vue'
 
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
 
 const maxDisplayedArgs = 3
 
@@ -43,8 +58,8 @@ export default {
 	components: {
 		NcIconSvgWrapper,
 		NcButton,
-		ChevronDoubleDownIcon,
-		ChevronDoubleUpIcon,
+		NcDialog,
+		ArrowExpandIcon,
 	},
 
 	props: {
@@ -57,33 +72,57 @@ export default {
 	data: () => {
 		return {
 			iconPath: null,
-			expanded: false,
+			detailsOpen: false,
+			hasTruncatedParams: false,
 		}
 	},
 
 	computed: {
-		needsExpand() {
+		hasHiddenArgs() {
 			return Object.keys(this.action.args).length > maxDisplayedArgs
 		},
-		actionArguments() {
-			if (this.needsExpand && !this.expanded) {
-				const keys = Object.keys(this.action.args).slice(0, maxDisplayedArgs)
-				return keys.reduce((acc, val) => {
-					acc[val] = this.action.args[val]
-					return acc
-				}, {})
-			}
-			return this.action.args
+		needsDetails() {
+			return this.hasHiddenArgs || this.hasTruncatedParams
+		},
+		previewArguments() {
+			return Object.fromEntries(Object.entries(this.action.args).slice(0, maxDisplayedArgs))
 		},
 	},
 
 	mounted() {
 		this.getIcon()
+		if (typeof ResizeObserver === 'undefined') {
+			return
+		}
+		// the observer callback also runs once right after observe(), which covers the initial render
+		this.resizeObserver = new ResizeObserver(this.updateTruncation)
+		this.resizeObserver.observe(this.$el)
+	},
+
+	beforeUnmount() {
+		this.resizeObserver?.disconnect()
 	},
 
 	methods: {
+		getParamName(argName) {
+			return argName.replace(/_/g, ' ').replace(/(^|\s)\S/g, (char) => char.toUpperCase())
+		},
+		getParamValue(argValue) {
+			return Array.isArray(argValue) ? argValue.join(', ') : String(argValue)
+		},
 		getParamText(argName, argValue) {
-			return argName.replace(/_/g, ' ') + ': ' + argValue
+			return this.getParamName(argName) + ': ' + this.getParamValue(argValue)
+		},
+		updateTruncation() {
+			const params = this.$refs.params ?? []
+			const hasTruncatedParams = params.some(el => el.scrollWidth > el.clientWidth)
+			if (hasTruncatedParams === this.hasTruncatedParams) {
+				return
+			}
+			// defer to the next frame to avoid "ResizeObserver loop" warnings
+			window.requestAnimationFrame(() => {
+				this.hasTruncatedParams = hasTruncatedParams
+			})
 		},
 		async getIcon() {
 			const { ['mdi' + (this.action.icon ?? 'Tools')]: icon } = await import('@mdi/js')
@@ -117,8 +156,14 @@ export default {
 		overflow: hidden;
 	}
 
-	.expand {
+	.details {
 		align-self: center;
 	}
+}
+
+.details-param {
+	margin-bottom: 8px;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
 }
 </style>
