@@ -131,8 +131,8 @@ class SessionMapper extends QBMapper {
 	/**
 	 * Get the agent session whose currently seen Talk message is the given one.
 	 *
-	 * The 👀 reaction of an agent session is always added in the origin room of
-	 * the message it is handling, so the room token and the comment id identify
+	 * The agent session marks the human message it is handling as read in the
+	 * origin room of that message, so the room token and the comment id identify
 	 * the session that is currently handling that message.
 	 *
 	 * @param string $roomToken The Talk room token of the seen message

@@ -97,8 +97,9 @@ class Session extends Entity implements \JsonSerializable {
 	protected $threadId;
 
 	/**
-	 * The Talk room + comment of the last 👀 reaction of the agent on a human message,
-	 * replaced by ✅ or 🔴 once the requested message generation completed/failed
+	 * The Talk room + comment of the last human message read by the agent,
+	 * getting the ✅ or 🔴 outcome reaction once the requested message
+	 * generation completed/failed
 	 * @var ?string
 	 */
 	protected $agentSeenRoomToken;

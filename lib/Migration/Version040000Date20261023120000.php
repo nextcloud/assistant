@@ -30,7 +30,7 @@ class Version040000Date20261023120000 extends SimpleMigrationStep {
 
 		if ($schema->hasTable('assistant_chat_sns')) {
 			$table = $schema->getTable('assistant_chat_sns');
-			// the Talk room + message of the last 👀 reaction of the agent,
+			// the Talk room + message of the last human message read by the agent,
 			// so it can be replaced by the generated answer state (✅/🔴)
 			if (!$table->hasColumn('agent_seen_room_token')) {
 				$table->addColumn('agent_seen_room_token', Types::STRING, [

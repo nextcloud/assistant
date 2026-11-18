@@ -92,7 +92,7 @@ class AgentTalkServiceTest extends TestCase {
 
 	/**
 	 * A ⏹️ reaction of the requester on the message being handled stops the
-	 * generation: the pending task is cancelled, the 👀 is forgotten so no
+	 * generation: the pending task is cancelled, the message is forgotten so no
 	 * late outcome can be applied to it.
 	 */
 	public function testStopReactionCancelsTheRunningGeneration(): void {
@@ -109,7 +109,7 @@ class AgentTalkServiceTest extends TestCase {
 
 	/**
 	 * When nothing is scheduled or running, the stop reaction is ignored so
-	 * that a generation that just completed can still replace 👀 by its outcome.
+	 * that a generation that just completed can still mark its outcome.
 	 */
 	public function testStopReactionIsIgnoredWhenNothingIsCancelled(): void {
 		$this->chatService->method('cancelPendingGenerationTasks')->willReturn(0);
