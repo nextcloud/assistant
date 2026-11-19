@@ -44,6 +44,8 @@ class AgentTalkServiceTest extends TestCase {
 	private AgentTalkService $service;
 	private ChatService&MockObject $chatService;
 	private SessionMapper&MockObject $sessionMapper;
+	private IURLGenerator&MockObject $urlGenerator;
+	private IL10N&MockObject $l10n;
 	private Session $session;
 
 	protected function setUp(): void {
@@ -67,13 +69,19 @@ class AgentTalkServiceTest extends TestCase {
 
 		$this->chatService = $this->createMock(ChatService::class);
 
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->l10n = $this->createMock(IL10N::class);
+		$this->l10n->method('t')->willReturnCallback(
+			static fn (string $text, array $parameters = []): string => str_replace('%s', (string)($parameters[0] ?? ''), $text)
+		);
+
 		$this->service = new AgentTalkService(
 			$this->createMock(IUserManager::class),
 			$this->createMock(AgentsService::class),
 			$this->chatService,
 			$this->sessionMapper,
-			$this->createMock(IURLGenerator::class),
-			$this->createMock(IL10N::class),
+			$this->urlGenerator,
+			$this->l10n,
 			$this->createMock(AgencyActionService::class),
 			$this->createMock(AgentTalkFileService::class),
 			$this->createMock(TaskProcessingService::class),
@@ -249,6 +257,65 @@ class AgentTalkServiceTest extends TestCase {
 
 		$this->assertSame('ocs.spreed.chat.postattachmenttoroom', $routeInside);
 		$this->assertSame('my.route', $request->getParam('_route'));
+	}
+
+	/**
+	 * The pointer message content mentions the requester and links to the
+	 * answer in the 1-1 conversation, with the thread context when the
+	 * answer is threaded: it is needed to open the message, like in Talk's
+	 * notification links.
+	 */
+	public function testRoomPointerContentWithThread(): void {
+		$link = 'https://nextcloud.local/call/room-token?threadId=42';
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('spreed.Page.showCall', [
+				'token' => self::ROOM_TOKEN,
+				'_fragment' => 'message_' . self::COMMENT_ID,
+				'threadId' => 42,
+			])
+			->willReturn($link);
+
+		$answerComment = $this->getComment();
+		$answerComment->method('getMetaData')->willReturn([
+			\OCA\Talk\Model\Message::METADATA_THREAD_ID => 42,
+		]);
+
+		$content = $this->invokeRoomPointerContent($answerComment);
+
+		$this->assertSame(
+			'@"' . self::HUMAN_USER_ID . '" I answered to you in [our private conversation](' . $link . ')',
+			$content
+		);
+	}
+
+	/**
+	 * An answer posted outside a Talk thread links without thread context.
+	 */
+	public function testRoomPointerContentWithoutThread(): void {
+		$link = 'https://nextcloud.local/call/room-token';
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRouteAbsolute')
+			->with('spreed.Page.showCall', [
+				'token' => self::ROOM_TOKEN,
+				'_fragment' => 'message_' . self::COMMENT_ID,
+			])
+			->willReturn($link);
+
+		$answerComment = $this->getComment();
+		$answerComment->method('getMetaData')->willReturn([]);
+
+		$content = $this->invokeRoomPointerContent($answerComment);
+
+		$this->assertSame(
+			'@"' . self::HUMAN_USER_ID . '" I answered to you in [our private conversation](' . $link . ')',
+			$content
+		);
+	}
+
+	private function invokeRoomPointerContent(IComment $answerComment): string {
+		$method = new \ReflectionMethod(AgentTalkService::class, 'getRoomPointerContent');
+		return $method->invoke($this->service, $this->getRoom(), $answerComment, self::HUMAN_USER_ID);
 	}
 
 	private function runWithAttachmentFolderRoute(callable $callback) {

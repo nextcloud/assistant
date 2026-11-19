@@ -380,8 +380,14 @@ class AgentTalkService {
 
 	/**
 	 * Post the "generating an answer" explanation message of a pending
-	 * generation, as the agent, in the private 1-1 conversation, where the
-	 * answer will be posted: threaded like the answers.
+	 * generation, as the agent.
+	 *
+	 * When the handled message was a mention in a group room, the explanation
+	 * is posted there, as a reply to the mention: the group room shows that
+	 * the answer is being generated, and the explanation is later edited
+	 * into the pointer to the answer posted in the private 1-1 conversation.
+	 * Otherwise, the explanation is posted in the private 1-1 conversation,
+	 * where the answer will be posted: threaded like the answers.
 	 *
 	 * The message is silent: the user just sent a message to the agent, they
 	 * do not need a notification about the agent starting to answer.
@@ -407,6 +413,45 @@ class AgentTalkService {
 		if ($this->userManager->get($agentUserId) === null) {
 			return;
 		}
+
+		// italic, like the voice message transcript, so that the explanation
+		// is visually distinct from the agent answers
+		$content = $this->getGenerationExplanationContent($humanUser->getUID());
+
+		$mentionComment = $this->getGroupMentionComment($session);
+		if ($mentionComment !== null) {
+			try {
+				$groupRoom = $this->getRoomByToken((string)$session->getAgentSeenRoomToken());
+			} catch (\OCA\Talk\Exceptions\RoomNotFoundException $e) {
+				$groupRoom = null;
+			}
+			if ($groupRoom !== null) {
+				$explanationComment = $this->postAgentMessage(
+					$groupRoom,
+					$session,
+					$content,
+					threaded: false,
+					silent: true,
+					replyTo: $mentionComment,
+				);
+				if ($explanationComment !== null) {
+					$session->setAgentExplanationRoomToken($groupRoom->getToken());
+					$session->setAgentExplanationMessageId((int)$explanationComment->getId());
+					try {
+						$this->sessionMapper->update($session);
+					} catch (Exception $e) {
+						$this->logger->error('Failed to store the generation explanation of the agent session', ['exception' => $e]);
+					}
+					// the stop button is added after the tracking was persisted, so that
+					// the listener can resolve the session when the user clicks it
+					$this->addAgentReaction($groupRoom, $agentUserId, (int)$explanationComment->getId(), self::REACTION_STOP);
+					return;
+				}
+				// the explanation could not be posted in the group room: fall
+				// back to the 1-1 conversation below
+			}
+		}
+
 		try {
 			$oneToOneRoom = $this->getOrCreateOneToOneRoom($humanUser, $agentUserId);
 		} catch (AgentUserException|\OCA\Talk\Exceptions\RoomNotFoundException $e) {
@@ -418,9 +463,6 @@ class AgentTalkService {
 			return;
 		}
 
-		// italic, like the voice message transcript, so that the explanation
-		// is visually distinct from the agent answers
-		$content = $this->getGenerationExplanationContent($humanUser->getUID());
 		$explanationComment = $this->postAgentMessage(
 			$oneToOneRoom,
 			$session,
@@ -441,6 +483,49 @@ class AgentTalkService {
 		// the stop button is added after the tracking was persisted, so that
 		// the listener can resolve the session when the user clicks it
 		$this->addAgentReaction($oneToOneRoom, $agentUserId, (int)$explanationComment->getId(), self::REACTION_STOP);
+	}
+
+	/**
+	 * The mention message handled by a session, when it was posted in a group
+	 * room: the generation explanation is posted as a reply to it there, and
+	 * is later edited into the pointer to the answer.
+	 * null when the message was sent in the 1-1 conversation (or one of its
+	 * threads), or when the mention cannot be resolved.
+	 */
+	private function getGroupMentionComment(Session $session): ?IComment {
+		$seenRoomToken = $session->getAgentSeenRoomToken();
+		$seenCommentId = $session->getAgentSeenCommentId();
+		if ($seenRoomToken === null || $seenCommentId === null) {
+			return null;
+		}
+		try {
+			$seenRoom = $this->getRoomByToken($seenRoomToken);
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException $e) {
+			return null;
+		}
+		if ($seenRoom->getType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
+			return null;
+		}
+		$requesterUserId = $session->getRequesterUserId();
+		if ($requesterUserId === null) {
+			return null;
+		}
+		try {
+			/** @var \OCA\Talk\Chat\CommentsManager $commentsManager */
+			$commentsManager = Server::get(\OCA\Talk\Chat\CommentsManager::class);
+			$mentionComment = $commentsManager->getCommentsById([(string)$seenCommentId])[(string)$seenCommentId] ?? null;
+		} catch (\Throwable $e) {
+			$this->logger->warning('Cannot resolve the handled Talk message of an agent session', ['commentId' => $seenCommentId]);
+			return null;
+		}
+		if ($mentionComment === null
+			|| $mentionComment->getObjectType() !== 'chat'
+			|| $mentionComment->getObjectId() !== (string)$seenRoom->getId()
+			|| $mentionComment->getActorType() !== 'users'
+			|| $mentionComment->getActorId() !== $requesterUserId) {
+			return null;
+		}
+		return $mentionComment;
 	}
 
 	/**
@@ -529,6 +614,24 @@ class AgentTalkService {
 	}
 
 	/**
+	 * The Talk room of the pending generation explanation message of a
+	 * session: null when there is no pending explanation, or when the room
+	 * is gone.
+	 */
+	private function getGenerationExplanationRoom(Session $session): ?\OCA\Talk\Room {
+		$roomToken = $session->getAgentExplanationRoomToken();
+		if ($roomToken === null) {
+			return null;
+		}
+		try {
+			return $this->getRoomByToken($roomToken);
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
+			// the room was deleted, the message is gone with it
+			return null;
+		}
+	}
+
+	/**
 	 * Edit the pending generation explanation message into the given content,
 	 * so that the answer replaces the explanation in place, at the position
 	 * the user expects it, without leaving a deleted-message tombstone.
@@ -576,15 +679,38 @@ class AgentTalkService {
 
 	/**
 	 * Talk generates no chat notification for edited messages: notify the
-	 * other participants of an edited agent message (answer, confirmation
-	 * request, failure notice) like ChatManager::sendMessage would do.
+	 * recipients of an edited agent message (answer, confirmation request,
+	 * failure notice, pointer) like ChatManager::sendMessage would do:
+	 * the author of the replied-to message, the mentioned users, then the
+	 * other participants according to their notification levels.
 	 */
 	private function notifyEditedAgentMessage(\OCA\Talk\Room $room, IComment $comment): void {
 		try {
 			$threadId = (int)($comment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
 			/** @var \OCA\Talk\Chat\Notifier $notifier */
 			$notifier = Server::get(\OCA\Talk\Chat\Notifier::class);
-			$notifier->notifyOtherParticipant($room, $comment, [], silent: false, threadId: $threadId);
+			$alreadyNotifiedUsers = [];
+			$parentComment = null;
+			$parentId = $comment->getParentId();
+			if ($parentId !== null && $parentId !== '0') {
+				/** @var \OCA\Talk\Chat\CommentsManager $commentsManager */
+				$commentsManager = Server::get(\OCA\Talk\Chat\CommentsManager::class);
+				$parentComment = $commentsManager->getCommentsById([$parentId])[$parentId] ?? null;
+				if ($parentComment !== null) {
+					$alreadyNotifiedUsers = $notifier->notifyReplyToAuthor($room, $comment, $parentComment, false, $threadId);
+				}
+			}
+			$usersDirectlyMentioned = $notifier->getMentionedUserIds($comment);
+			if ($parentComment !== null && $parentComment->getActorType() === 'users') {
+				$usersDirectlyMentioned[] = $parentComment->getActorId();
+			}
+			$alreadyNotifiedUsers = $notifier->notifyMentionedUsers($room, $comment, $alreadyNotifiedUsers, silent: false, threadId: $threadId);
+			$notifier->notifyOtherParticipant($room, $comment, $alreadyNotifiedUsers, silent: false, threadId: $threadId);
+			if (!empty($alreadyNotifiedUsers)) {
+				/** @var \OCA\Talk\Service\ParticipantService $participantService */
+				$participantService = Server::get(\OCA\Talk\Service\ParticipantService::class);
+				$participantService->markUsersAsMentioned($room, 'users', array_column($alreadyNotifiedUsers, 'id'), (int)$comment->getId(), $usersDirectlyMentioned);
+			}
 		} catch (\Throwable $e) {
 			$this->logger->warning('Failed to notify the recipients of an edited agent message', ['exception' => $e]);
 		}
@@ -801,6 +927,11 @@ class AgentTalkService {
 	 * Called by ChattyLLMTaskListener instead of posting the agent answer
 	 * in Talk: it will post the answer in the 1-1 Talk conversation thread.
 	 *
+	 * When the generation was triggered by a mention in a group room, the
+	 * answer is still posted in the private 1-1 conversation, and the
+	 * explanation message standing in the group room is edited into the
+	 * pointer to the answer (see postGroupRoomPointer).
+	 *
 	 * @param Session $session
 	 * @param string $content The assistant message content
 	 * @param string|null $pendingActions The pending sensitive actions (confirmation request) if any
@@ -863,6 +994,19 @@ class AgentTalkService {
 		// last message, standing after the latest human input
 		$explanationComment = $this->getGenerationExplanationComment($session);
 
+		// when the session was triggered by a mention in a group room, the
+		// pending explanation message stands there, as a reply to the
+		// mention: it must not be edited into the messages posted in the
+		// 1-1 conversation, it is later edited into the pointer message
+		$explanationRoom = $this->getGenerationExplanationRoom($session);
+		$groupExplanationRoom = ($explanationRoom !== null
+				&& $explanationRoom->getType() !== \OCA\Talk\Room::TYPE_ONE_TO_ONE)
+			? $explanationRoom
+			: null;
+		if ($groupExplanationRoom !== null) {
+			$explanationComment = null;
+		}
+
 		// when the human sent a voice message, the agent posts its transcript
 		// first, so the human sees what was heard, then the answer;
 		// the transcript is the raw speech-to-text output, not translated
@@ -878,10 +1022,12 @@ class AgentTalkService {
 				$transcriptComment = $this->editGenerationExplanation($session, $room, $explanationComment, $transcriptContent);
 			}
 			if ($transcriptComment === null) {
-				// no explanation or the edit failed: it stands before the
-				// newest message, it is deleted and the transcript is posted
-				// as a new message
-				$this->deleteGenerationExplanation($session);
+				// no editable explanation (none, tombstoned, or it stands in
+				// the group room of the mention): the 1-1 explanation is
+				// deleted and the transcript is posted as a new message
+				if ($groupExplanationRoom === null) {
+					$this->deleteGenerationExplanation($session);
+				}
 				$this->postAgentMessage(
 					$room,
 					$session,
@@ -911,7 +1057,7 @@ class AgentTalkService {
 				// no explanation or the edit failed: it is deleted and the
 				// answer is posted as a new message; an empty answer content
 				// leaves the explanation pending for the confirmation request
-				if (trim($content) !== '') {
+				if (trim($content) !== '' && $groupExplanationRoom === null) {
 					$this->deleteGenerationExplanation($session);
 				}
 				$postedComment = $this->postAgentMessage(
@@ -934,6 +1080,7 @@ class AgentTalkService {
 		}
 
 		$confirmPosted = false;
+		$confirmationComment = null;
 		if ($pendingActions !== null && trim($pendingActions) !== '') {
 			// a new confirmation supersedes a previous unanswered one:
 			// remove the 👍/👎 reactions of the superseded confirmation message
@@ -946,7 +1093,7 @@ class AgentTalkService {
 			// come alone, without reply content, transcript or attachments
 			$confirmationComment = null;
 			$explanationComment = $this->getGenerationExplanationComment($session);
-			if ($explanationComment !== null) {
+			if ($explanationComment !== null && $groupExplanationRoom === null) {
 				// the reference id is required for the listener to resolve the
 				// session when the user reacts 👍/👎 on the confirmation message
 				$explanationComment->setReferenceId(self::CONFIRMATION_REFERENCE_PREFIX . $session->getId() . ':' . time());
@@ -960,7 +1107,9 @@ class AgentTalkService {
 			if ($confirmationComment === null) {
 				// no pending explanation or the edit failed: it is deleted and
 				// the confirmation request is posted as a new message
-				$this->deleteGenerationExplanation($session);
+				if ($groupExplanationRoom === null) {
+					$this->deleteGenerationExplanation($session);
+				}
 				$confirmationComment = $this->postAgentMessage(
 					$room,
 					$session,
@@ -984,9 +1133,12 @@ class AgentTalkService {
 			}
 		}
 
-		if ($postedComment !== null) {
+		if ($postedComment !== null || $confirmPosted) {
+			// the pointer links to the answer, or to the confirmation request
+			// when the turn only carries it
+			$pointerComment = $postedComment ?? $confirmationComment;
 			try {
-				$this->postGroupRoomPointer($session, $room, $postedComment);
+				$this->postGroupRoomPointer($session, $room, $pointerComment, $groupExplanationRoom);
 			} catch (\Throwable $e) {
 				$this->logger->error('Failed to post the answer pointer message in the origin Talk room', ['exception' => $e]);
 			}
@@ -1159,13 +1311,17 @@ class AgentTalkService {
 	/**
 	 * When the answer was requested by an @mention from a group Talk room,
 	 * post a short pointer message there, as the agent, in reply to the mention:
-	 * it mentions the human user and links to the answer posted
+	 * it mentions the human user and links to the message posted
 	 * in the private 1-1 conversation with the agent.
+	 *
+	 * When the generation explanation stands in the group room (it was posted
+	 * as a reply to the mention), it is edited into the pointer message
+	 * instead, so that no tombstone and no additional message is left.
 	 *
 	 * Messages sent in the 1-1 conversation or in its threads do not trigger
 	 * a pointer: their answers are posted in that same conversation.
 	 */
-	private function postGroupRoomPointer(Session $session, \OCA\Talk\Room $oneToOneRoom, IComment $answerComment): void {
+	private function postGroupRoomPointer(Session $session, \OCA\Talk\Room $oneToOneRoom, IComment $answerComment, ?\OCA\Talk\Room $explanationRoom = null): void {
 		$seenRoomToken = $session->getAgentSeenRoomToken();
 		$seenCommentId = $session->getAgentSeenCommentId();
 		if ($seenRoomToken === null || $seenCommentId === null) {
@@ -1203,8 +1359,45 @@ class AgentTalkService {
 			return;
 		}
 
+		if ($explanationRoom !== null) {
+			// the explanation message posted as a reply to the mention becomes
+			// the pointer message: no tombstone, no additional message.
+			// Only edit while it is still the explanation, so that a notice
+			// (interrupted, failure) is not turned into a pointer
+			$explanationComment = $this->getGenerationExplanationComment($session);
+			if ($explanationComment !== null
+				&& $explanationComment->getMessage() === $this->getGenerationExplanationContent($requesterUserId)) {
+				$pointerComment = $this->editGenerationExplanation($session, $explanationRoom, $explanationComment, $this->getRoomPointerContent($oneToOneRoom, $answerComment, $requesterUserId));
+				if ($pointerComment !== null) {
+					$this->notifyEditedAgentMessage($explanationRoom, $pointerComment);
+					return;
+				}
+			}
+		}
+
+		// no pending explanation, it was already turned into a notice, or the
+		// edit failed: the pointer is posted as a new message
+		$this->postRoomPointer($seenRoom, $mentionComment, $oneToOneRoom, $answerComment, $session->getUserId());
+	}
+
+	/**
+	 * The content of a pointer message: it mentions the human user and links,
+	 * inside the sentence, to the message posted in the private 1-1
+	 * conversation with the agent.
+	 */
+	private function getRoomPointerContent(\OCA\Talk\Room $oneToOneRoom, IComment $answerComment, string $requesterUserId): string {
 		$threadId = (int)($answerComment->getMetaData()[\OCA\Talk\Model\Message::METADATA_THREAD_ID] ?? 0);
-		$this->postRoomPointer($seenRoom, $mentionComment, $oneToOneRoom, $answerComment, $session->getUserId(), $threadId !== 0 ? $threadId : null);
+		$urlParams = [
+			'token' => $oneToOneRoom->getToken(),
+			'_fragment' => 'message_' . $answerComment->getId(),
+		];
+		if ($threadId !== 0) {
+			// like Talk's notification links: thread context is needed to open the message
+			$urlParams['threadId'] = $threadId;
+		}
+		$link = $this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall', $urlParams);
+		return '@"' . $requesterUserId . '" '
+			. $this->l10n->t('I answered to you in [our private conversation](%s)', [$link]);
 	}
 
 	/**
@@ -1222,7 +1415,6 @@ class AgentTalkService {
 		\OCA\Talk\Room $oneToOneRoom,
 		IComment $answerComment,
 		string $agentUserId,
-		?int $threadId = null,
 	): void {
 		if ($mentionComment->getObjectType() !== 'chat'
 			|| $mentionComment->getObjectId() !== (string)$originRoom->getId()
@@ -1230,17 +1422,7 @@ class AgentTalkService {
 			return;
 		}
 
-		$urlParams = [
-			'token' => $oneToOneRoom->getToken(),
-			'_fragment' => 'message_' . $answerComment->getId(),
-		];
-		if ($threadId !== null) {
-			// like Talk's notification links: thread context is needed to open the message
-			$urlParams['threadId'] = $threadId;
-		}
-		$link = $this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall', $urlParams);
-		$content = '@"' . $mentionComment->getActorId() . '" '
-			. $this->l10n->t('I answered to you in [our private conversation](%s)', [$link]);
+		$content = $this->getRoomPointerContent($oneToOneRoom, $answerComment, $mentionComment->getActorId());
 
 		/** @var \OCA\Talk\Chat\ChatManager $chatManager */
 		$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
@@ -1386,6 +1568,7 @@ class AgentTalkService {
 		bool $addApproveRejectReactions = false,
 		bool $threaded = true,
 		bool $silent = false,
+		?IComment $replyTo = null,
 	): ?IComment {
 		if (trim($content) === '') {
 			return null;
@@ -1399,6 +1582,11 @@ class AgentTalkService {
 
 		$threadId = \OCA\Talk\Model\Thread::THREAD_NONE;
 		$threadTitle = '';
+		if ($replyTo !== null) {
+			// a reply joins the thread of the replied-to message: the session
+			// thread logic does not apply
+			$threaded = false;
+		}
 		if ($threaded) {
 			if ($session->getThreadId() !== null) {
 				// answer in the existing thread of the session
@@ -1418,7 +1606,7 @@ class AgentTalkService {
 				$session->getUserId(),
 				$content,
 				new DateTime(),
-				replyTo: null,
+				replyTo: $replyTo,
 				referenceId: $referenceId ?? '',
 				silent: $silent,
 				threadId: $threadId,
@@ -1514,13 +1702,16 @@ class AgentTalkService {
 
 	/**
 	 * Post the failure notice of a generation that will not be answered,
-	 * as the agent, in the private 1-1 conversation, where the answer would
-	 * have been posted: threaded like the answers.
+	 * as the agent: it replaces the pending explanation message in place,
+	 * wherever it stands (the group room of the mention, or the private 1-1
+	 * conversation where the answer would have been posted, threaded like
+	 * the answers).
 	 *
 	 * The pending explanation message is edited into the notice, so that no
 	 * deleted-message tombstone is left; otherwise the notice is posted as a
-	 * new message. The notice is not silent: the user must learn that their
-	 * message will not be answered.
+	 * new message, as a reply to the group mention when there is one. The
+	 * notice is not silent: the user must learn that their message will not
+	 * be answered.
 	 */
 	private function postGenerationFailureNotice(Session $session): void {
 		$humanUser = $this->userManager->get((string)$session->getRequesterUserId());
@@ -1549,15 +1740,34 @@ class AgentTalkService {
 		) . '_';
 		$explanationComment = $this->getGenerationExplanationComment($session);
 		$noticeComment = null;
-		if ($explanationComment !== null) {
-			$noticeComment = $this->editGenerationExplanation($session, $oneToOneRoom, $explanationComment, $content);
+		$explanationRoom = $this->getGenerationExplanationRoom($session);
+		if ($explanationComment !== null && $explanationRoom !== null) {
+			$noticeComment = $this->editGenerationExplanation($session, $explanationRoom, $explanationComment, $content);
 		}
 		if ($noticeComment !== null) {
-			$this->notifyEditedAgentMessage($oneToOneRoom, $noticeComment);
+			$this->notifyEditedAgentMessage($explanationRoom, $noticeComment);
 			return;
 		}
 		// no pending explanation or the edit failed
 		$this->deleteGenerationExplanation($session);
+		$mentionComment = $this->getGroupMentionComment($session);
+		if ($mentionComment !== null) {
+			try {
+				$groupRoom = $this->getRoomByToken((string)$session->getAgentSeenRoomToken());
+			} catch (\OCA\Talk\Exceptions\RoomNotFoundException $e) {
+				$groupRoom = null;
+			}
+			if ($groupRoom !== null) {
+				$this->postAgentMessage(
+					$groupRoom,
+					$session,
+					$content,
+					threaded: false,
+					replyTo: $mentionComment,
+				);
+				return;
+			}
+		}
 		$this->postAgentMessage(
 			$oneToOneRoom,
 			$session,
