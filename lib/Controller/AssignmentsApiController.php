@@ -50,11 +50,11 @@ class AssignmentsApiController extends OCSController {
 	 * @param int $startsAt The timestamp when the assignment should start being executed
 	 * @param string $recurrence The recurrence rule for the assignment, in RRULE format (e.g. "FREQ=DAILY;INTERVAL=1" for a daily assignment)
 	 * @param string|null $timezone The timezone for this assignment (either the timezone name or a timezone offset, e.g. "Europe/Berlin" or "+0100" for UTC+1). Defaults to the user's current timezone
-	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR|Http::STATUS_BAD_REQUEST, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: User assignments returned
 	 * 403: User not logged in
-	 * 400: Validation error
+	 * 400: Invalid recurrence rule or timezone
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
@@ -70,7 +70,7 @@ class AssignmentsApiController extends OCSController {
 		} catch (UnauthorizedException $e) {
 			return new DataResponse('', Http::STATUS_FORBIDDEN);
 		} catch (BadRequestException $e) {
-			return new DataResponse('', Http::STATUS_BAD_REQUEST);
+			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
 	}
 
@@ -144,11 +144,11 @@ class AssignmentsApiController extends OCSController {
 	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
 	 * @param string|null $timezone The timezone for this assignment, omit to leave the current value in place. the value should be either the timezone name or a timezone offset, e.g. "Europe/Berlin" or "+0100" for UTC+1
 	 *
-	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_BAD_REQUEST|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>
+	 * @return DataResponse<Http::STATUS_OK, array{assignment: AssistantAssignment}, array{}>|DataResponse<Http::STATUS_FORBIDDEN|Http::STATUS_NOT_FOUND|Http::STATUS_INTERNAL_SERVER_ERROR, '', array{}>|DataResponse<Http::STATUS_BAD_REQUEST, array{error: string}, array{}>
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
-	 * 400: Malformed input
+	 * 400: Invalid recurrence rule or timezone
 	 * 404: Assignment not found
 	 */
 	#[NoAdminRequired]
@@ -161,13 +161,6 @@ class AssignmentsApiController extends OCSController {
 				if ($prompt !== null) {
 					$assignment->setPrompt($prompt);
 				}
-				if ($recurrence !== null) {
-					try {
-						$assignment->setRecurrence($recurrence);
-					} catch (\InvalidArgumentException $e) {
-						return new DataResponse('', Http::STATUS_BAD_REQUEST);
-					}
-				}
 				if ($startsAt !== null) {
 					$assignment->setStartsAt($startsAt);
 				}
@@ -175,7 +168,19 @@ class AssignmentsApiController extends OCSController {
 					try {
 						$assignment->setTimezone($timezone);
 					} catch (\InvalidArgumentException $e) {
-						return new DataResponse('', Http::STATUS_BAD_REQUEST);
+						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+					}
+				}
+				// set after the start and the timezone, the rule is checked against them.
+				// The stored rule is checked again when they change, e.g. a new start after its UNTIL
+				if ($recurrence === null && ($startsAt !== null || $timezone !== null)) {
+					$recurrence = $assignment->getRecurrence();
+				}
+				if ($recurrence !== null) {
+					try {
+						$assignment->setRecurrence($recurrence);
+					} catch (\InvalidArgumentException $e) {
+						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 					}
 				}
 				$assignment->setUpdatedAt($this->timeFactory->now()->getTimestamp());
