@@ -12,7 +12,7 @@ OC.L10N.register(
     "Data folder" : "Daten-Dossier",
     "Clear" : "Eidel maachen",
     "Close" : "Zoumaachen",
-    "Less" : "Manner",
+    "Details" : "Detailer",
     "Group" : "Grupp",
     "External" : "Extern",
     "Cancel" : "Cancel",
@@ -30,6 +30,7 @@ OC.L10N.register(
     "Hourly" : "All Stonn",
     "Daily" : "All Dag",
     "Weekly" : "All Woch",
-    "second" : "zweet"
+    "second" : "zweet",
+    "Less" : "Manner"
 },
 "nplurals=2; plural=(n != 1);");

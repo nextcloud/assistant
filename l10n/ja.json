@@ -174,8 +174,7 @@
     "Cancel task" : "タスクをキャンセル",
     "Close" : "閉じる",
     "Close Nextcloud Assistant" : "Nextcloudアシスタントを閉じる",
-    "Less" : "以下",
-    "More" : "さらに表示",
+    "Details" : "詳細",
     "Group" : "グループ",
     "External" : "外部",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "アシスタントが実行しようとしているアクションが気に入らない場合は、[キャンセル] ボタンをクリックしなくても新しいメッセージを送信してリクエストを調整できます。",
@@ -358,6 +357,8 @@
     "Transcription task submitted successfully" : "文字起こしタスクが正常に送信されました",
     "Summarization task submitted successfully" : "要約タスクが正常に送信されました",
     "Text-to-speech task submitted successfully" : "テキスト読み上げタスクが正常に送信されました",
+    "Less" : "以下",
+    "More" : "さらに表示",
     "Error deleting conversation" : "会話の削除中にエラーが発生しました",
     "Generate title" : "タイトルを生成",
     "Information sources" : "情報源"

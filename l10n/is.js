@@ -39,8 +39,7 @@ OC.L10N.register(
     "Clear" : "Hreinsa",
     "Try again" : "Reyndu aftur",
     "Close" : "Loka",
-    "Less" : "Minna",
-    "More" : "Meira",
+    "Details" : "Nánar",
     "Group" : "Hópur",
     "External" : "Utanaðkomandi",
     "More information" : "Nánari upplýsingar",
@@ -101,6 +100,8 @@ OC.L10N.register(
     "fourth" : "fjórða",
     "fifth" : "fimmta",
     "second to last" : "næstsíðasta",
-    "last" : "síðasta"
+    "last" : "síðasta",
+    "Less" : "Minna",
+    "More" : "Meira"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

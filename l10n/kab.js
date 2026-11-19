@@ -17,7 +17,7 @@ OC.L10N.register(
     "Clear" : "Ṣfeḍ",
     "Try again" : "Ɛreḍ tikkelt nniḍen.",
     "Close" : "Mdel",
-    "More" : "Ugar",
+    "Details" : "Talqayt",
     "Group" : "Agraw",
     "More information" : "Ugar n yisallen",
     "Cancel" : "Cancel",
@@ -52,6 +52,7 @@ OC.L10N.register(
     "Yearly" : "Yal aseggas",
     "first" : "amezwaru",
     "second" : "tasint",
-    "last" : "aneggaru"
+    "last" : "aneggaru",
+    "More" : "Ugar"
 },
 "nplurals=2; plural=(n != 1);");

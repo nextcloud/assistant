@@ -15,7 +15,7 @@ OC.L10N.register(
     "Data folder" : "Datuma dosierujo",
     "Clear" : "Viŝi",
     "Close" : "Malfermi",
-    "Less" : "Malpli",
+    "Details" : "Detaloj",
     "Group" : "Grupo",
     "Cancel" : "Cancel",
     "Deselect all" : "Malelekti ĉion",
@@ -37,6 +37,7 @@ OC.L10N.register(
     "third" : "Tria",
     "fourth" : "Kvara",
     "fifth" : "Kvina",
-    "last" : "Lasta"
+    "last" : "Lasta",
+    "Less" : "Malpli"
 },
 "nplurals=2; plural=(n != 1);");

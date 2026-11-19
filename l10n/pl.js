@@ -225,8 +225,7 @@ OC.L10N.register(
     "Cancel task" : "Anuluj zadanie",
     "Close" : "Zamknij",
     "Close Nextcloud Assistant" : "Zamknij Asystenta Nextcloud",
-    "Less" : "Mniej",
-    "More" : "Więcej",
+    "Details" : "Szczegóły",
     "Group" : "Grupa",
     "External" : "Zewnętrzny",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Jeśli nie jesteś zadowolony z działań, które Asystent chce wykonać, możesz dostosować swoje zapytanie, wysyłając nową wiadomość zamiast klikać przycisk „Anuluj”.",
@@ -384,6 +383,8 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "Zadanie transkrypcji zostało pomyślnie wysłane",
     "Summarization task submitted successfully" : "Zadanie podsumowania zostało pomyślnie wysłane",
     "Text-to-speech task submitted successfully" : "Zadanie zamiany tekstu na mowę zostało pomyślnie wysłane",
+    "Less" : "Mniej",
+    "More" : "Więcej",
     "Error deleting conversation" : "Błąd usuwania rozmowy",
     "Generate title" : "Wygeneruj tytuł",
     "Information sources" : "Źródła informacji"

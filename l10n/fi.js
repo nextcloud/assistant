@@ -39,8 +39,7 @@ OC.L10N.register(
     "Clear" : "Tyhjennä",
     "Try again" : "Yritä uudelleen",
     "Close" : "Sulje",
-    "Less" : "Vähemmän",
-    "More" : "Lisää",
+    "Details" : "Tiedot",
     "Group" : "Ryhmä",
     "External" : "Ulkoinen",
     "More information" : "Lisää tietoa",
@@ -105,6 +104,8 @@ OC.L10N.register(
     "fourth" : "neljäs",
     "fifth" : "viides",
     "second to last" : "toiseksi viimeinen",
-    "last" : "viimeinen"
+    "last" : "viimeinen",
+    "Less" : "Vähemmän",
+    "More" : "Lisää"
 },
 "nplurals=2; plural=(n != 1);");

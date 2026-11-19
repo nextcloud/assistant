@@ -27,8 +27,7 @@ OC.L10N.register(
     "Clear" : "Исчисти",
     "Try again" : "Обиди се повторно",
     "Close" : "Затвори",
-    "Less" : "Помалку",
-    "More" : "Повеќе",
+    "Details" : "Детали",
     "Group" : "Група",
     "External" : "Надворешен",
     "More information" : "Повеќе информации",
@@ -84,6 +83,8 @@ OC.L10N.register(
     "fourth" : "четврти",
     "fifth" : "петти",
     "second to last" : "претпоследен",
-    "last" : "последен"
+    "last" : "последен",
+    "Less" : "Помалку",
+    "More" : "Повеќе"
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

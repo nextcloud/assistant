@@ -173,8 +173,7 @@ OC.L10N.register(
     "Cancel task" : "取消任务",
     "Close" : "关闭",
     "Close Nextcloud Assistant" : "关闭云助手",
-    "Less" : "更少",
-    "More" : "更多",
+    "Details" : "详情",
     "Group" : "群组",
     "External" : "外部",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "如果您不满意助手要执行的动作，您可以传送新讯息来调整您的要求，而非按「取消」按钮。",
@@ -349,6 +348,8 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "转录任务已成功递交",
     "Summarization task submitted successfully" : "总结任务已成功递交",
     "Text-to-speech task submitted successfully" : "文字转语音任务递交成功",
+    "Less" : "更少",
+    "More" : "更多",
     "Error deleting conversation" : "删除对话发生错误",
     "Generate title" : "生成标题",
     "Information sources" : "资讯来源"

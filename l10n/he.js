@@ -19,8 +19,7 @@ OC.L10N.register(
     "Clear" : "פינוי",
     "Try again" : "ניסיון חוזר",
     "Close" : "סגירה",
-    "Less" : "פחות:",
-    "More" : "יותר",
+    "Details" : "פרטים",
     "Group" : "קבוצה",
     "More information" : "מידע נוסף",
     "Cancel" : "ביטול",
@@ -65,6 +64,8 @@ OC.L10N.register(
     "fourth" : "רביעי",
     "fifth" : "חמישי",
     "second to last" : "אחד לפני האחרון",
-    "last" : "אחרון"
+    "last" : "אחרון",
+    "Less" : "פחות:",
+    "More" : "יותר"
 },
 "nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;");

@@ -10,7 +10,7 @@
     "Data folder" : "Daten-Dossier",
     "Clear" : "Eidel maachen",
     "Close" : "Zoumaachen",
-    "Less" : "Manner",
+    "Details" : "Detailer",
     "Group" : "Grupp",
     "External" : "Extern",
     "Cancel" : "Cancel",
@@ -28,6 +28,7 @@
     "Hourly" : "All Stonn",
     "Daily" : "All Dag",
     "Weekly" : "All Woch",
-    "second" : "zweet"
+    "second" : "zweet",
+    "Less" : "Manner"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

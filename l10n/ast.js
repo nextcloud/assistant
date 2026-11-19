@@ -41,8 +41,6 @@ OC.L10N.register(
     "Getting results…" : "Consiguiendo los resultaos…",
     "Close" : "Zarrar",
     "Close Nextcloud Assistant" : "Zarrar l'asistente de Nextcloud",
-    "Less" : "Menos",
-    "More" : "Más",
     "Group" : "Grupu",
     "More information" : "Más información",
     "Cancel" : "Encaboxar",
@@ -86,6 +84,8 @@ OC.L10N.register(
     "second" : "segundu",
     "third" : "tercer",
     "fourth" : "cuartu",
-    "fifth" : "quintu"
+    "fifth" : "quintu",
+    "Less" : "Menos",
+    "More" : "Más"
 },
 "nplurals=2; plural=(n != 1);");

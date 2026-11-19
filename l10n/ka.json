@@ -17,7 +17,7 @@
     "Data folder" : "მონაცემების საქაღალდე",
     "Clear" : "Clear",
     "Close" : "Close",
-    "More" : "More",
+    "Details" : "Details",
     "Group" : "Group",
     "More information" : "More information",
     "Cancel" : "Cancel",
@@ -68,6 +68,7 @@
     "fourth" : "fourth",
     "fifth" : "fifth",
     "second to last" : "second to last",
-    "last" : "last"
+    "last" : "last",
+    "More" : "More"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

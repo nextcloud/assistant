@@ -20,8 +20,7 @@ OC.L10N.register(
     "Data folder" : "Cartella de datos",
     "Clear" : "Lìmpia",
     "Close" : "Serra",
-    "Less" : "De mancu",
-    "More" : "Prus",
+    "Details" : "Detàllios",
     "Group" : "Grupu",
     "External" : "De foras",
     "More information" : "Àteras informatziones",
@@ -72,6 +71,8 @@ OC.L10N.register(
     "fourth" : "de bator",
     "fifth" : "de chimbe",
     "second to last" : "penùltimu",
-    "last" : "ùltimu"
+    "last" : "ùltimu",
+    "Less" : "De mancu",
+    "More" : "Prus"
 },
 "nplurals=2; plural=(n != 1);");

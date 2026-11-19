@@ -21,8 +21,7 @@ OC.L10N.register(
     "Data folder" : "Datu mape",
     "Clear" : "Notīrīt",
     "Close" : "Aizvērt",
-    "Less" : "Mazāk",
-    "More" : "Vairāk",
+    "Details" : "Informācija",
     "Group" : "Grupa",
     "External" : "Ārējs",
     "Cancel" : "Atcelt",
@@ -70,6 +69,8 @@ OC.L10N.register(
     "fifth" : "piektais",
     "second to last" : "pirmspēdējais",
     "last" : "pēdējais",
-    "Failed to launch the AI file action" : "Neizdevās palaist AI datnes darbību"
+    "Failed to launch the AI file action" : "Neizdevās palaist AI datnes darbību",
+    "Less" : "Mazāk",
+    "More" : "Vairāk"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

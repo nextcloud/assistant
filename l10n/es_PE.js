@@ -13,6 +13,7 @@ OC.L10N.register(
     "Data folder" : "Carpeta de datos",
     "Try again" : "Reintentar",
     "Close" : "Cerrar",
+    "Details" : "Detalles",
     "Group" : "Grupo",
     "Cancel" : "Cancel",
     "Deselect all" : "Deseleccionar todo",

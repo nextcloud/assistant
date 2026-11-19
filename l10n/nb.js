@@ -111,8 +111,7 @@ OC.L10N.register(
     "Getting results…" : "Får resultater...",
     "Close" : "Lukk",
     "Close Nextcloud Assistant" : "Lukk Nextcloud Assistant",
-    "Less" : "Mindre",
-    "More" : "Mer",
+    "Details" : "Detaljer",
     "Group" : "Gruppe",
     "External" : "Ekstern",
     "More information" : "Mer informasjon",
@@ -241,6 +240,8 @@ OC.L10N.register(
     "fifth" : "femte",
     "second to last" : "nest sist",
     "last" : "siste",
+    "Less" : "Mindre",
+    "More" : "Mer",
     "Error deleting conversation" : "Feil under sletting av samtale",
     "Generate title" : "Generer tittel"
 },

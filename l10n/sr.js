@@ -168,8 +168,7 @@ OC.L10N.register(
     "Cancel task" : "Откажи задатак",
     "Close" : "Затвори",
     "Close Nextcloud Assistant" : "Затвори Nextcloud Асистент",
-    "Less" : "Мање",
-    "More" : "Више",
+    "Details" : "Детаљи",
     "Group" : "Група",
     "External" : "Спољно",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Ако нисте задовољни са акцијама које Асистент жели да изврши, уместо да кликнете на дугме „Откажи”, свој захтев можете да преправите тако што ћете послати нову поруку.",
@@ -349,6 +348,8 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "Није успело покретање AI фајл акције",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Генериши говор”.",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Такође може да се провери у Асистенту у менију „Рад са звуком -> Транскрибуј звук”.",
+    "Less" : "Мање",
+    "More" : "Више",
     "Error deleting conversation" : "Грешка приликом брисања разговора",
     "Generate title" : "Генериши наслов",
     "Information sources" : "Извори информација"

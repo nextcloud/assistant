@@ -62,8 +62,7 @@ OC.L10N.register(
     "Clear" : "Pulisci",
     "Try again" : "Riprova",
     "Close" : "Chiudi",
-    "Less" : "Meno",
-    "More" : "Altro",
+    "Details" : "Dettagli",
     "Group" : "Gruppo",
     "External" : "Esterno",
     "More information" : "Altre informazioni",
@@ -134,6 +133,8 @@ OC.L10N.register(
     "fourth" : "quarto",
     "fifth" : "quinto",
     "second to last" : "penultimo",
-    "last" : "ultimo"
+    "last" : "ultimo",
+    "Less" : "Meno",
+    "More" : "Altro"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

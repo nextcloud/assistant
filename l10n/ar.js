@@ -115,8 +115,6 @@ OC.L10N.register(
     "Cancel task" : "إلغاء المهمة",
     "Close" : "إغلاق",
     "Close Nextcloud Assistant" : "أغلِق مُساعِد نكست كلاود Nextcloud Assistant",
-    "Less" : "أقل",
-    "More" : "المزيد",
     "Group" : "مجموعة",
     "External" : "خارجي",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "إذا لم تكن راضيًا عن الإجراءات التي يريد \"المُساعِد\" تنفيذها، فيمكنك تعديل طلبك عن طريق إرسال رسالة جديدة بدلاً من النقر فوق الزر \"إلغاء\".",
@@ -261,6 +259,8 @@ OC.L10N.register(
     "fifth" : "خامس",
     "second to last" : "الثاني إلى الاخير",
     "last" : "الأخير",
+    "Less" : "أقل",
+    "More" : "المزيد",
     "Error deleting conversation" : "حدث خطأ عند حذف المحادثة",
     "Generate title" : "اقتراح عنوان"
 },

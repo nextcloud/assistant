@@ -12,8 +12,7 @@ OC.L10N.register(
     "Clear" : "Pastro",
     "Try again" : "Provo përsëri",
     "Close" : "Mbylleni",
-    "Less" : "Më pak",
-    "More" : "Më tepër",
+    "Details" : "Detajet",
     "Group" : "Grup",
     "External" : "I jashtëm",
     "Cancel" : "Anuloje",
@@ -32,6 +31,8 @@ OC.L10N.register(
     "Hourly" : "Çdo orë",
     "Daily" : "Përditë",
     "Weekly" : "Çdo javë",
-    "second" : "sekondë"
+    "second" : "sekondë",
+    "Less" : "Më pak",
+    "More" : "Më tepër"
 },
 "nplurals=2; plural=(n != 1);");
