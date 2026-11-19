@@ -386,8 +386,9 @@ class AgentTalkService {
 	 * The message is silent: the user just sent a message to the agent, they
 	 * do not need a notification about the agent starting to answer.
 	 * When an explanation message is already displayed for the session (a
-	 * superseding message was sent during the generation), it is deleted and
-	 * replaced: it stands before the latest human message, and the answer is
+	 * superseding message was sent during the generation), it is turned into
+	 * a "✋ You interrupted me." notice and a new explanation is posted: the
+	 * explanation stands before the latest human message, and the answer is
 	 * later edited into the explanation, so the explanation must always stand
 	 * after the last human message.
 	 *
@@ -397,7 +398,7 @@ class AgentTalkService {
 	 * generates no notification, unlike a stop button on the human message.
 	 */
 	private function postGenerationExplanation(Session $session): void {
-		$this->deleteGenerationExplanation($session);
+		$this->markGenerationExplanationInterrupted($session);
 		$humanUser = $this->userManager->get((string)$session->getRequesterUserId());
 		if ($humanUser === null) {
 			return;
@@ -419,9 +420,7 @@ class AgentTalkService {
 
 		// italic, like the voice message transcript, so that the explanation
 		// is visually distinct from the agent answers
-		$content = '_' . $this->getUserL10n($humanUser->getUID())->t(
-			'I am generating an answer, you can interrupt me by clicking the ⏹️ reaction or by sending another message.'
-		) . '_';
+		$content = $this->getGenerationExplanationContent($humanUser->getUID());
 		$explanationComment = $this->postAgentMessage(
 			$oneToOneRoom,
 			$session,
@@ -442,6 +441,54 @@ class AgentTalkService {
 		// the stop button is added after the tracking was persisted, so that
 		// the listener can resolve the session when the user clicks it
 		$this->addAgentReaction($oneToOneRoom, $agentUserId, (int)$explanationComment->getId(), self::REACTION_STOP);
+	}
+
+	/**
+	 * The content of the "generating an answer" explanation message, italic
+	 * like the voice message transcript, so that it is visually distinct
+	 * from the agent answers.
+	 */
+	private function getGenerationExplanationContent(string $humanUserId): string {
+		return '_' . $this->getUserL10n($humanUserId)->t(
+			'I am generating an answer, you can interrupt me by clicking the ⏹️ reaction or by sending another message.'
+		) . '_';
+	}
+
+	/**
+	 * Turn the pending "generating an answer" explanation message of a
+	 * superseded generation into a "✋ You interrupted me." notice, instead
+	 * of deleting it: the notice explains why the message before the latest
+	 * one was not answered, without leaving a "message deleted" tombstone.
+	 *
+	 * A running generation can edit its answer into the explanation right
+	 * before clearing the tracking: only edit while the message is still the
+	 * explanation, so that a just-posted answer is not overwritten.
+	 *
+	 * Called before a new explanation is posted; the tracking is cleared by
+	 * the edit, or left alone when there is nothing to edit.
+	 */
+	private function markGenerationExplanationInterrupted(Session $session): void {
+		$explanationComment = $this->getGenerationExplanationComment($session);
+		if ($explanationComment === null) {
+			return;
+		}
+		$humanUserId = (string)$session->getRequesterUserId();
+		if ($explanationComment->getMessage() !== $this->getGenerationExplanationContent($humanUserId)) {
+			// the pending generation already edited its answer in
+			return;
+		}
+		try {
+			$room = $this->getRoomByToken((string)$session->getAgentExplanationRoomToken());
+		} catch (\OCA\Talk\Exceptions\RoomNotFoundException) {
+			// the room was deleted, the message is gone with it
+			return;
+		}
+		$content = '_' . $this->getUserL10n($humanUserId)->t('✋ You interrupted me.') . '_';
+		$editedComment = $this->editGenerationExplanation($session, $room, $explanationComment, $content);
+		if ($editedComment === null) {
+			// the edit failed: fall back to the tombstone
+			$this->deleteGenerationExplanation($session);
+		}
 	}
 
 	/**
@@ -562,7 +609,7 @@ class AgentTalkService {
 	 * Talk deletes messages with a tombstone: the deleted message stays in
 	 * the conversation as a "Message deleted by author" placeholder, which
 	 * is the accepted trade-off when the explanation cannot be edited into
-	 * the answer (superseded generation, stop, failure).
+	 * the answer (stop, failure).
 	 *
 	 * The cleared explanation tracking is persisted right away, so callers
 	 * do not have to care about it.
