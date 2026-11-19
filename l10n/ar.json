@@ -113,8 +113,6 @@
     "Cancel task" : "إلغاء المهمة",
     "Close" : "إغلاق",
     "Close Nextcloud Assistant" : "أغلِق مُساعِد نكست كلاود Nextcloud Assistant",
-    "Less" : "أقل",
-    "More" : "المزيد",
     "Group" : "مجموعة",
     "External" : "خارجي",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "إذا لم تكن راضيًا عن الإجراءات التي يريد \"المُساعِد\" تنفيذها، فيمكنك تعديل طلبك عن طريق إرسال رسالة جديدة بدلاً من النقر فوق الزر \"إلغاء\".",
@@ -259,6 +257,8 @@
     "fifth" : "خامس",
     "second to last" : "الثاني إلى الاخير",
     "last" : "الأخير",
+    "Less" : "أقل",
+    "More" : "المزيد",
     "Error deleting conversation" : "حدث خطأ عند حذف المحادثة",
     "Generate title" : "اقتراح عنوان"
 },"pluralForm" :"nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;"

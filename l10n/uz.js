@@ -17,7 +17,7 @@ OC.L10N.register(
     "Data folder" : "Ma'lumotlar jildi",
     "Clear" : "Toza",
     "Close" : "Yopish",
-    "More" : "Ko'proq",
+    "Details" : "Tafsilotlar",
     "Group" : "Guruh",
     "External" : "Tashqi",
     "Cancel" : "Bekor qilish",
@@ -55,6 +55,7 @@ OC.L10N.register(
     "fourth" : "to`rtinchi",
     "fifth" : "beshinchi",
     "second to last" : "oxiridan ikkinchi",
-    "last" : "oxirgi"
+    "last" : "oxirgi",
+    "More" : "Ko'proq"
 },
 "nplurals=1; plural=0;");

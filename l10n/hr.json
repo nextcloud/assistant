@@ -49,8 +49,7 @@
     "Clear" : "Izbriši",
     "Try again" : "Pokušajte ponovno",
     "Close" : "Zatvori",
-    "Less" : "Manje",
-    "More" : "Više",
+    "Details" : "Pojedinosti",
     "Group" : "Grupa",
     "External" : "Vanjsko",
     "More information" : "Više informacija",
@@ -115,6 +114,8 @@
     "fourth" : "četvrti",
     "fifth" : "peti",
     "second to last" : "predzadnji",
-    "last" : "zadnji"
+    "last" : "zadnji",
+    "Less" : "Manje",
+    "More" : "Više"
 },"pluralForm" :"nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
 }

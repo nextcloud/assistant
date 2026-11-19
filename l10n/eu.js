@@ -78,8 +78,7 @@ OC.L10N.register(
     "Getting results…" : "Emaitzak lortzen...",
     "Close" : "Itxi",
     "Close Nextcloud Assistant" : "Itxi Nextcloud Assistant",
-    "Less" : "Gutxiago",
-    "More" : "Gehiago",
+    "Details" : "Xehetasunak",
     "Group" : "Taldea",
     "External" : "Kanpokoa",
     "More information" : "Informazio gehiago",
@@ -168,6 +167,8 @@ OC.L10N.register(
     "fourth" : "laugarrena",
     "fifth" : "bosgarrena",
     "second to last" : "bigarren azkena",
-    "last" : "azkena"
+    "last" : "azkena",
+    "Less" : "Gutxiago",
+    "More" : "Gehiago"
 },
 "nplurals=2; plural=(n != 1);");

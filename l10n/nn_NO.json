@@ -7,7 +7,7 @@
     "Select" : "Vel",
     "Data folder" : "Datamappe",
     "Close" : "Lat att",
-    "Less" : "Mindre",
+    "Details" : "Detaljar",
     "Group" : "Gruppe",
     "External" : "Ekstern",
     "More information" : "Meir informasjon",
@@ -30,6 +30,7 @@
     "Weekly" : "Kvar veke",
     "Monthly" : "Månadleg",
     "second" : "andre",
-    "last" : "siste"
+    "last" : "siste",
+    "Less" : "Mindre"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

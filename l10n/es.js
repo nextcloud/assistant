@@ -175,8 +175,7 @@ OC.L10N.register(
     "Cancel task" : "Cancelar tarea",
     "Close" : "Cerrar",
     "Close Nextcloud Assistant" : "Cerrar el Asistente Nextcloud",
-    "Less" : "Menos",
-    "More" : "Más",
+    "Details" : "Detalles",
     "Group" : "Grupo",
     "External" : "Externo",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Si no está satisfecho con las acciones que el Asistente desea ejecutar, puede ajustar su solicitud enviando un mensaje nuevo en vez de hacer clic en el botón \"Cancelar\".",
@@ -356,6 +355,8 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "Fallo al lanzar la acción de archivo IA",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Generar dictado\".",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "También puede ser verificada en el Asistente en el menú \"Trabajar con audio -> Transcribir audio\".",
+    "Less" : "Menos",
+    "More" : "Más",
     "Error deleting conversation" : "Error al eliminar la conversación",
     "Generate title" : "Generar título",
     "Information sources" : "Fuentes de información"

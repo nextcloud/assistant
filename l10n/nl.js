@@ -144,8 +144,7 @@ OC.L10N.register(
     "Provider name" : "Providernaam",
     "Close" : "Sluit",
     "Close Nextcloud Assistant" : "Sluit Nextcloud Assistent",
-    "Less" : "Minder",
-    "More" : "Meer",
+    "Details" : "Details",
     "Group" : "Groep",
     "External" : "Extern",
     "More information" : "Meer informatie",
@@ -223,6 +222,8 @@ OC.L10N.register(
     "Assistant task submitted successfully" : "Assistent taak succesvol ingedient",
     "Transcription task submitted successfully" : "Transcriptie taak succesvol ingedient",
     "Summarization task submitted successfully" : "Samenvatting taak succesvol ingediend",
-    "Text-to-speech task submitted successfully" : "Tekst-Naar-Spraak taak succesvol ingediend"
+    "Text-to-speech task submitted successfully" : "Tekst-Naar-Spraak taak succesvol ingediend",
+    "Less" : "Minder",
+    "More" : "Meer"
 },
 "nplurals=2; plural=(n != 1);");

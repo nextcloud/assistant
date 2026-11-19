@@ -28,8 +28,6 @@
     "Clear" : "Изчистване",
     "Try again" : "Опитай отново",
     "Close" : "Затваряне",
-    "Less" : "По-малко",
-    "More" : "Повече ",
     "Group" : "Група",
     "External" : "Външен",
     "More information" : "Повече информация",
@@ -89,6 +87,8 @@
     "fourth" : "четвърти",
     "fifth" : "пети",
     "second to last" : "предпоследен",
-    "last" : "последен"
+    "last" : "последен",
+    "Less" : "По-малко",
+    "More" : "Повече "
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

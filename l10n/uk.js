@@ -173,8 +173,7 @@ OC.L10N.register(
     "Cancel task" : "Скасувати завдання",
     "Close" : "Закрити",
     "Close Nextcloud Assistant" : "Закрити Помічник Nextcloud",
-    "Less" : "Менше",
-    "More" : "Більше",
+    "Details" : "Докладно",
     "Group" : "Група",
     "External" : "Зовнішнє",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Якщо вас не влаштовують дії, які хоче виконати Помічник, ви можете відкоригувати свій запит, надіславши нове повідомлення замість того, щоб натискати кнопку \"Скасувати\".",
@@ -354,6 +353,8 @@ OC.L10N.register(
     "Failed to launch the AI file action" : "Не вдалося запустити дію файлу ШІ",
     "It can also be checked in the Assistant in the \"Work with audio -> Generate speech\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Створити мовлення».",
     "It can also be checked in the Assistant in the \"Work with audio -> Transcribe audio\" menu." : "Це також можна перевірити в Асистенті в меню «Робота з аудіо -> Транскрибувати аудіо».",
+    "Less" : "Менше",
+    "More" : "Більше",
     "Error deleting conversation" : "Помилка видалення розмови",
     "Generate title" : "Згенерувати заголовок",
     "Information sources" : "Джерела інформації"

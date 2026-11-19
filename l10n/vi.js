@@ -19,8 +19,7 @@ OC.L10N.register(
     "Clear" : "Xóa",
     "Try again" : "Thử lại",
     "Close" : "Đóng",
-    "Less" : "ít",
-    "More" : "Thêm",
+    "Details" : "Chi tiết",
     "Group" : "Nhóm",
     "More information" : "Thêm thông tin",
     "Cancel" : "Hủy",
@@ -62,6 +61,8 @@ OC.L10N.register(
     "fourth" : "vị trí thứ tư",
     "fifth" : "vị trí thứ năm",
     "second to last" : "kế cuối",
-    "last" : "cuối cùng"
+    "last" : "cuối cùng",
+    "Less" : "ít",
+    "More" : "Thêm"
 },
 "nplurals=1; plural=0;");

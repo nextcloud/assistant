@@ -9,7 +9,7 @@ OC.L10N.register(
     "Select" : "Vel",
     "Data folder" : "Datamappe",
     "Close" : "Lat att",
-    "Less" : "Mindre",
+    "Details" : "Detaljar",
     "Group" : "Gruppe",
     "External" : "Ekstern",
     "More information" : "Meir informasjon",
@@ -32,6 +32,7 @@ OC.L10N.register(
     "Weekly" : "Kvar veke",
     "Monthly" : "Månadleg",
     "second" : "andre",
-    "last" : "siste"
+    "last" : "siste",
+    "Less" : "Mindre"
 },
 "nplurals=2; plural=(n != 1);");

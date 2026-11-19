@@ -71,8 +71,7 @@
     "Try again" : "Próbálja újra",
     "Close" : "Bezárás",
     "Close Nextcloud Assistant" : "Nextcloud Asszisztens bezárása",
-    "Less" : "Kevesebb",
-    "More" : "Továbbiak",
+    "Details" : "Részletek",
     "Group" : "Csoport",
     "External" : "Külső",
     "More information" : "További információk",
@@ -147,6 +146,8 @@
     "fourth" : "negyedik",
     "fifth" : "ötödik",
     "second to last" : "utolsó előtti",
-    "last" : "utolsó"
+    "last" : "utolsó",
+    "Less" : "Kevesebb",
+    "More" : "Továbbiak"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

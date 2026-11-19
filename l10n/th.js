@@ -13,8 +13,7 @@ OC.L10N.register(
     "Data folder" : "โฟลเดอร์เก็บข้อมูล",
     "Clear" : "ล้าง",
     "Close" : "ปิด",
-    "Less" : "ย่อ",
-    "More" : "เพิ่มเติม",
+    "Details" : "รายละเอียด",
     "Group" : "กลุ่ม",
     "Cancel" : "ยกเลิก",
     "Deselect all" : "ยกเลิกการเลือกทั้งหมด",
@@ -37,6 +36,8 @@ OC.L10N.register(
     "Weekly" : "รายสัปดาห์",
     "Monthly" : "ทุก ๆ เดือน",
     "Yearly" : "ทุก ๆ ปี",
-    "second" : "วินาที"
+    "second" : "วินาที",
+    "Less" : "ย่อ",
+    "More" : "เพิ่มเติม"
 },
 "nplurals=1; plural=0;");

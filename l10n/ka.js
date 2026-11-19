@@ -19,7 +19,7 @@ OC.L10N.register(
     "Data folder" : "მონაცემების საქაღალდე",
     "Clear" : "Clear",
     "Close" : "Close",
-    "More" : "More",
+    "Details" : "Details",
     "Group" : "Group",
     "More information" : "More information",
     "Cancel" : "Cancel",
@@ -70,6 +70,7 @@ OC.L10N.register(
     "fourth" : "fourth",
     "fifth" : "fifth",
     "second to last" : "second to last",
-    "last" : "last"
+    "last" : "last",
+    "More" : "More"
 },
 "nplurals=2; plural=(n!=1);");

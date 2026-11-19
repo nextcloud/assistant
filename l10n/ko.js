@@ -116,8 +116,7 @@ OC.L10N.register(
     "Getting results…" : "결과를 가져오는 중...",
     "Close" : "닫기",
     "Close Nextcloud Assistant" : "Nextcloud 어시스턴트 닫기",
-    "Less" : "덜 중요함",
-    "More" : "더 보기",
+    "Details" : "세부사항",
     "Group" : "그룹",
     "External" : "외부",
     "More information" : "더 많은 정보",
@@ -237,6 +236,8 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "받아쓰기 작업이 성공적으로 접수됨",
     "Summarization task submitted successfully" : "요약 작업이 성공적으로 접수됨",
     "Text-to-speech task submitted successfully" : "글 읽기 작업이 성공적으로 접수됨",
+    "Less" : "덜 중요함",
+    "More" : "더 보기",
     "Error deleting conversation" : "대화를 삭제하는 중에 오류가 발생",
     "Generate title" : "제목 생성"
 },

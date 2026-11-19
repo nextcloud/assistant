@@ -176,8 +176,7 @@ OC.L10N.register(
     "Cancel task" : "ຍົກເລີກໜ້າວຽກ",
     "Close" : "ປິດ",
     "Close Nextcloud Assistant" : "ປິດຜູ້ຊ່ວຍ Nextcloud",
-    "Less" : "ໜ້ອຍລົງ",
-    "More" : "ເພີ່ມເຕີມ",
+    "Details" : "ລາຍລະອຽດ",
     "Group" : "ກຸ່ມ",
     "External" : "ພາຍນອກ",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "ຖ້າທ່ານບໍ່ພໍໃຈກັບການກະທຳທີ່ຜູ້ຊ່ວຍຕ້ອງການເຮັດ, ທ່ານສາມາດປັບປຸງຄຳຂໍຂອງທ່ານໂດຍການສົ່ງຂໍ້ຄວາມໃໝ່ແທນທີ່ຈະກົດປຸ່ມ \"ຍົກເລີກ\".",
@@ -364,6 +363,8 @@ OC.L10N.register(
     "Transcription task submitted successfully" : "ສົ່ງໜ້າວຽກການຖອດຂໍ້ຄວາມຈາກສຽງສຳເລັດແລ້ວ",
     "Summarization task submitted successfully" : "ສົ່ງໜ້າວຽກການສະຫຼຸບຫຍໍ້ສຳເລັດແລ້ວ",
     "Text-to-speech task submitted successfully" : "ສົ່ງໜ້າວຽກຂໍ້ຄວາມເປັນສຽງສຳເລັດແລ້ວ",
+    "Less" : "ໜ້ອຍລົງ",
+    "More" : "ເພີ່ມເຕີມ",
     "Error deleting conversation" : "ຜິດພາດໃນການລຶບການສົນທະນາ",
     "Generate title" : "ສ້າງຫົວຂໍ້",
     "Information sources" : "ແຫຼ່ງຂໍ້ມູນ"

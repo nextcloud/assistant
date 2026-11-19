@@ -73,8 +73,7 @@ OC.L10N.register(
     "Try again" : "Próbálja újra",
     "Close" : "Bezárás",
     "Close Nextcloud Assistant" : "Nextcloud Asszisztens bezárása",
-    "Less" : "Kevesebb",
-    "More" : "Továbbiak",
+    "Details" : "Részletek",
     "Group" : "Csoport",
     "External" : "Külső",
     "More information" : "További információk",
@@ -149,6 +148,8 @@ OC.L10N.register(
     "fourth" : "negyedik",
     "fifth" : "ötödik",
     "second to last" : "utolsó előtti",
-    "last" : "utolsó"
+    "last" : "utolsó",
+    "Less" : "Kevesebb",
+    "More" : "Továbbiak"
 },
 "nplurals=2; plural=(n != 1);");
