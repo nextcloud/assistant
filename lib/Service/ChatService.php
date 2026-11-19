@@ -21,7 +21,9 @@ use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
+use OCP\IUser;
 use OCP\IUserManager;
+use OCP\L10N\IFactory;
 use OCP\TaskProcessing\Exception\PreConditionNotMetException;
 use OCP\TaskProcessing\Exception\ValidationException;
 use OCP\TaskProcessing\IManager;
@@ -46,6 +48,7 @@ class ChatService {
 		private readonly IManager $taskProcessingManager,
 		private readonly LoggerInterface $logger,
 		private readonly ITimeFactory $timeFactory,
+		private readonly IFactory $l10nFactory,
 	) {
 	}
 
@@ -68,7 +71,7 @@ class ChatService {
 			$timestamp = intdiv($timestamp, 1000);
 		}
 
-		$userInstructions = $this->getInstructions($userId, $user->getDisplayName(), 'chat');
+		$userInstructions = $this->getInstructions($userId, $user, 'chat');
 
 		$session = new Session();
 		$session->setUserId($userId);
@@ -598,7 +601,7 @@ class ChatService {
 		// They are built at every run so that changes to the settings apply to existing assignments.
 		$prompt = $lastUserMessage->getContent();
 		$user = $this->userManager->get($userId);
-		$assignmentInstructions = $this->getInstructions($userId, $user?->getDisplayName() ?? $userId, 'assignment');
+		$assignmentInstructions = $this->getInstructions($userId, $user, 'assignment');
 		$taskId = $this->scheduleAgencyTask($userId, $prompt, 0, $lastConversationToken, $sessionId, userInstructions: $assignmentInstructions);
 		return $taskId;
 	}
@@ -724,19 +727,23 @@ class ChatService {
 	 * then (if allowed by the admin) the user's own instructions for both and for this scope.
 	 * The user's instructions come last and must not override the admin's.
 	 *
+	 * Scheduled tasks additionally start with a hardcoded instruction to write in the user's UI language,
+	 * since there is no user message in the conversation whose language could be detected.
+	 *
 	 * @param 'chat'|'assignment' $scope
 	 */
-	private function getInstructions(string $userId, string $userDisplayName, string $scope): string {
+	private function getInstructions(string $userId, ?IUser $user, string $scope): string {
 		if ($scope === 'chat') {
 			$adminScopeInstructions = ($this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS);
 		} else {
 			$adminScopeInstructions = ($this->appConfig->getValueString(Application::APP_ID, 'assignment_user_instructions', Application::ASSIGNMENT_USER_INSTRUCTIONS, lazy: true) ?: Application::ASSIGNMENT_USER_INSTRUCTIONS);
 		}
 		$adminInstructions = self::joinInstructions([
+			$scope === 'assignment' ? $this->getUserLanguageInstructions($user) : '',
 			$this->appConfig->getValueString(Application::APP_ID, 'common_user_instructions', '', lazy: true),
 			$adminScopeInstructions,
 		]);
-		$adminInstructions = str_replace('{user}', $userDisplayName, $adminInstructions);
+		$adminInstructions = str_replace('{user}', $user?->getDisplayName() ?? $userId, $adminInstructions);
 
 		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
 		if (!$personalInstructionsEnabled) {
@@ -753,6 +760,19 @@ class ChatService {
 			$adminInstructions,
 			Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions,
 		]);
+	}
+
+	/**
+	 * Instruct the model to write in the language the user has configured for the Nextcloud UI
+	 */
+	private function getUserLanguageInstructions(?IUser $user): string {
+		$languageCode = $this->l10nFactory->getUserLanguage($user);
+		// e.g. "German (de)", or just the code if the intl extension is missing or does not know it
+		$languageName = class_exists(\Locale::class) ? \Locale::getDisplayLanguage($languageCode, 'en') : '';
+		$language = $languageName !== '' && $languageName !== $languageCode
+			? $languageName . ' (' . $languageCode . ')'
+			: $languageCode;
+		return 'Write your output in ' . $language . ', which is the language the user has set for their user interface, unless the task explicitly asks for a different language.';
 	}
 
 	/**

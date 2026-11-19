@@ -24,6 +24,7 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUserManager;
+use OCP\L10N\IFactory;
 use OCP\TaskProcessing\IManager;
 use OCP\TaskProcessing\Task;
 use OCP\TaskProcessing\TaskTypes\ContextAgentInteraction;
@@ -39,6 +40,8 @@ class ChatServiceAgencyTest extends TestCase {
 	private const USER_ID = 'agency_test_user';
 	private const SESSION_ID = 42;
 	private const USER_INSTRUCTIONS = 'Always answer like a pirate.';
+	// the user's UI language is mocked as "de"
+	private const LANGUAGE_INSTRUCTIONS = 'Write your output in German (de), which is the language the user has set for their user interface, unless the task explicitly asks for a different language.';
 
 	private ChatService $service;
 	private MessageMapper&MockObject $messageMapper;
@@ -75,6 +78,9 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->appConfig = $this->createMock(IAppConfig::class);
 		$this->config = $this->createMock(IConfig::class);
 
+		$l10nFactory = $this->createMock(IFactory::class);
+		$l10nFactory->method('getUserLanguage')->willReturn('de');
+
 		$this->service = new ChatService(
 			$this->createMock(IUserManager::class),
 			$this->appConfig,
@@ -87,6 +93,7 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->taskProcessingManager,
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(ITimeFactory::class),
+			$l10nFactory,
 		);
 	}
 
@@ -157,8 +164,11 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
-		// no scheduled task instructions are configured
-		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+		// only the language instruction and the default scheduled task instructions
+		$this->assertSame(
+			[self::LANGUAGE_INSTRUCTIONS, Application::ASSIGNMENT_USER_INSTRUCTIONS],
+			explode("\n\n", $this->scheduledTask->getInput()['user_instructions'] ?? ''),
+		);
 	}
 
 	/**
@@ -190,7 +200,7 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(
-			"Admin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.",
+			self::LANGUAGE_INSTRUCTIONS . "\n\nAdmin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.",
 			$this->scheduledTask->getInput()['user_instructions'] ?? null,
 		);
 	}
@@ -208,7 +218,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
 
 		$this->assertNotNull($this->scheduledTask);
-		$this->assertSame('Admin assignment.', $this->scheduledTask->getInput()['user_instructions'] ?? null);
+		$this->assertSame(self::LANGUAGE_INSTRUCTIONS . "\n\nAdmin assignment.", $this->scheduledTask->getInput()['user_instructions'] ?? null);
 	}
 
 	public function testAssignmentInstructionsAreNotSentWhenTheAgentDoesNotSupportThem(): void {
