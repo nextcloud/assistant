@@ -213,10 +213,10 @@ class AgentTalkService {
 			return;
 		}
 
-		$content = $this->l10n->t(
+		$content = '🚫 _' . $this->l10n->t(
 			'You do not have access to the agent "%s". Please contact your administrator if you need access.',
 			[$this->getAgentDisplayName($agent)]
-		);
+		) . '_';
 		try {
 			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
 			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
@@ -568,7 +568,7 @@ class AgentTalkService {
 			// the room was deleted, the message is gone with it
 			return;
 		}
-		$content = '_' . $this->getUserL10n($humanUserId)->t('✋ You interrupted me.') . '_';
+		$content = '✋ _' . $this->getUserL10n($humanUserId)->t('You interrupted me.') . '_';
 		$editedComment = $this->editGenerationExplanation($session, $room, $explanationComment, $content);
 		if ($editedComment === null) {
 			// the edit failed: fall back to the tombstone
@@ -1487,7 +1487,7 @@ class AgentTalkService {
 		if ($explanationComment !== null) {
 			// italic, like the explanation message, so that the notice is
 			// visually distinct from the agent answers
-			$content = '_' . $this->getUserL10n($humanUserId)->t('🛑 You stopped me.') . '_';
+			$content = '🛑 _' . $this->getUserL10n($humanUserId)->t('You stopped me.') . '_';
 			$stoppedComment = $this->editGenerationExplanation($session, $room, $explanationComment, $content);
 		}
 		if ($stoppedComment === null) {
@@ -1735,9 +1735,7 @@ class AgentTalkService {
 
 		// italic, like the explanation message, so that the notice is
 		// visually distinct from the agent answers
-		$content = '_' . $this->getUserL10n($humanUser->getUID())->t(
-			'🔴 Something went wrong when answering your message.'
-		) . '_';
+		$content = '🔴 _' . $this->getUserL10n($humanUser->getUID())->t('Something went wrong when answering your message.') . '_';
 		$explanationComment = $this->getGenerationExplanationComment($session);
 		$noticeComment = null;
 		$explanationRoom = $this->getGenerationExplanationRoom($session);
