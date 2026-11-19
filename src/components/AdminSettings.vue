@@ -136,6 +136,26 @@
 					{{ t('assistant', 'Chat with AI') }}
 				</h4>
 				<div class="line">
+					<label for="common_user_instructions">
+						{{ t('assistant', 'Instructions for chat and scheduled tasks') }}
+					</label>
+				</div>
+				<NcNoteCard type="info">
+					{{ t('assistant', 'These instructions are passed on to the LLM both in chat and in scheduled tasks. They come before the more specific instructions below.') }}
+					<br>
+					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}
+				</NcNoteCard>
+				<NcRichContenteditable id="common_user_instructions"
+					v-model="state.common_user_instructions"
+					class="text-field"
+					:auto-complete="() => {}"
+					:link-auto-complete="false"
+					:placeholder="t('assistant', 'Instructions for chat and scheduled tasks')"
+					:aria-label="t('assistant', 'Instructions for chat and scheduled tasks')"
+					dir="auto"
+					@update:model-value="delayedValueUpdate(state.common_user_instructions, 'common_user_instructions')"
+					@submit="delayedValueUpdate(state.common_user_instructions, 'common_user_instructions')" />
+				<div class="line">
 					<label for="chat_user_instructions">
 						{{ t('assistant', 'Chat User Instructions for Chat Completions') }}
 					</label>
@@ -143,7 +163,7 @@
 				<NcNoteCard type="info">
 					{{ t('assistant', 'It is passed on to the LLM for it to better understand the context.') }}
 					<br>
-					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name.') }}
+					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}
 					<template v-if="state.context_agent_available">
 						<br>
 						{{ t('assistant', 'When chatting through the Context Agent, these instructions are added to the agent\'s own instructions (requires Context Agent 2.10.0 or later).') }}
@@ -159,14 +179,34 @@
 					dir="auto"
 					@update:model-value="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')"
 					@submit="delayedValueUpdate(state.chat_user_instructions, 'chat_user_instructions')" />
+				<div class="line">
+					<label for="assignment_user_instructions">
+						{{ t('assistant', 'Instructions for scheduled tasks') }}
+					</label>
+				</div>
+				<NcNoteCard type="info">
+					{{ t('assistant', 'These instructions are added to the Context Agent\'s own instructions when a scheduled task runs (requires Context Agent 2.10.0 or later). Scheduled tasks run unattended and do not use the chat instructions above. Changes apply from the next run.') }}
+					<br>
+					{{ t('assistant', '"{user}" is a placeholder for the user\'s display name here as well.') }}
+				</NcNoteCard>
+				<NcRichContenteditable id="assignment_user_instructions"
+					v-model="state.assignment_user_instructions"
+					class="text-field"
+					:auto-complete="() => {}"
+					:link-auto-complete="false"
+					:placeholder="t('assistant', 'Instructions for scheduled tasks')"
+					:aria-label="t('assistant', 'Instructions for scheduled tasks')"
+					dir="auto"
+					@update:model-value="delayedValueUpdate(state.assignment_user_instructions, 'assignment_user_instructions')"
+					@submit="delayedValueUpdate(state.assignment_user_instructions, 'assignment_user_instructions')" />
 				<NcFormBox class="chat-personal-instructions-switch">
 					<NcFormBoxSwitch :model-value="state.chat_personal_instructions_enabled"
 						@update:model-value="onCheckboxChanged($event, 'chat_personal_instructions_enabled')">
-						{{ t('assistant', 'Allow users to add their own chat instructions in their personal settings') }}
+						{{ t('assistant', 'Allow users to add their own instructions for chat and scheduled tasks in their personal settings') }}
 					</NcFormBoxSwitch>
 				</NcFormBox>
 				<NcNoteCard type="info">
-					{{ t('assistant', 'Users\' instructions are added after the instructions above, which take precedence. Changes apply to new conversations.') }}
+					{{ t('assistant', 'Users\' instructions are added after the instructions above, which take precedence. Changes apply to new conversations and to the next run of scheduled tasks.') }}
 				</NcNoteCard>
 				<NcFormBox class="chat-auto-title-switch">
 					<NcFormBoxSwitch :model-value="state.chat_auto_title_enabled"

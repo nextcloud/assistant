@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Tests\Unit\Service;
 
+use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
@@ -42,6 +43,8 @@ class ChatServiceAgencyTest extends TestCase {
 	private ChatService $service;
 	private MessageMapper&MockObject $messageMapper;
 	private IManager&MockObject $taskProcessingManager;
+	private IAppConfig&MockObject $appConfig;
+	private IConfig&MockObject $config;
 	private ?Task $scheduledTask = null;
 
 	protected function setUp(): void {
@@ -69,10 +72,13 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->scheduledTask = $task;
 		});
 
+		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->config = $this->createMock(IConfig::class);
+
 		$this->service = new ChatService(
 			$this->createMock(IUserManager::class),
-			$this->createMock(IAppConfig::class),
-			$this->createMock(IConfig::class),
+			$this->appConfig,
+			$this->config,
 			$this->createMock(IL10N::class),
 			$sessionMapper,
 			$this->messageMapper,
@@ -142,7 +148,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
 	}
 
-	public function testUserInstructionsAreNotSentForAssignmentRuns(): void {
+	public function testChatUserInstructionsAreNotSentForAssignmentRuns(): void {
 		// assignments run unattended, instructions like "ask for clarification" do not apply
 		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
 		$this->messageMapper->expects($this->never())->method('getFirstNMessages');
@@ -151,6 +157,67 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
+		// no scheduled task instructions are configured
+		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+	}
+
+	/**
+	 * @param array<string, string> $appValues
+	 * @param array<string, string> $userValues
+	 */
+	private function setInstructionSettings(array $appValues, array $userValues): void {
+		$this->appConfig->method('getValueString')
+			->willReturnCallback(static fn (string $app, string $key, string $default = '') => $appValues[$key] ?? $default);
+		$this->config->method('getUserValue')
+			->willReturnCallback(static fn (string $userId, string $app, string $key, $default = '') => $userValues[$key] ?? $default);
+	}
+
+	public function testAssignmentInstructionsArePassedToTheAgent(): void {
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->expects($this->never())->method('getFirstNMessages');
+		$this->setInstructionSettings([
+			'common_user_instructions' => 'Admin common.',
+			'chat_user_instructions' => 'Admin chat.',
+			'assignment_user_instructions' => 'Admin assignment.',
+			'chat_personal_instructions_enabled' => '1',
+		], [
+			'common_personal_instructions' => 'User common.',
+			'chat_personal_instructions' => 'User chat.',
+			'assignment_personal_instructions' => 'User assignment.',
+		]);
+
+		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(
+			"Admin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.",
+			$this->scheduledTask->getInput()['user_instructions'] ?? null,
+		);
+	}
+
+	public function testPersonalAssignmentInstructionsAreIgnoredWhenDisabledByTheAdmin(): void {
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->setInstructionSettings([
+			'assignment_user_instructions' => 'Admin assignment.',
+			'chat_personal_instructions_enabled' => '0',
+		], [
+			'common_personal_instructions' => 'User common.',
+			'assignment_personal_instructions' => 'User assignment.',
+		]);
+
+		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame('Admin assignment.', $this->scheduledTask->getInput()['user_instructions'] ?? null);
+	}
+
+	public function testAssignmentInstructionsAreNotSentWhenTheAgentDoesNotSupportThem(): void {
+		$this->setAgentOptionalInputs([]);
+		$this->setInstructionSettings(['assignment_user_instructions' => 'Admin assignment.'], []);
+
+		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
 	}
 }

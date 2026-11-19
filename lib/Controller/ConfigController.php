@@ -45,9 +45,11 @@ class ConfigController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function setConfig(array $values): DataResponse {
-		if (isset($values['chat_personal_instructions'])
-			&& mb_strlen((string)$values['chat_personal_instructions']) > Application::MAX_CHAT_PERSONAL_INSTRUCTIONS_LENGTH) {
-			return new DataResponse('Custom chat instructions are too long', Http::STATUS_BAD_REQUEST);
+		foreach (Application::PERSONAL_INSTRUCTIONS_KEYS as $instructionsKey) {
+			if (isset($values[$instructionsKey])
+				&& mb_strlen((string)$values[$instructionsKey]) > Application::MAX_PERSONAL_INSTRUCTIONS_LENGTH) {
+				return new DataResponse('Custom instructions are too long', Http::STATUS_BAD_REQUEST);
+			}
 		}
 		foreach ($values as $key => $value) {
 			$this->config->setUserValue($this->userId, Application::APP_ID, $key, $value);
