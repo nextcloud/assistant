@@ -183,6 +183,7 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=8'],
 			['FREQ=MONTHLY;BYDAY=-1FR'],
 			['FREQ=DAILY;COUNT=3'],
+			['FREQ=MINUTELY;COUNT=10000'],
 			['FREQ=DAILY;BYHOUR=0,8,23;BYMINUTE=0,59;BYSECOND=60'],
 			['FREQ=MONTHLY;BYMONTHDAY=-1,1,31'],
 			['FREQ=MONTHLY;BYDAY=MO,TU;BYSETPOS=-1'],
@@ -288,6 +289,8 @@ class AssignmentTest extends \PHPUnit\Framework\TestCase {
 			['FREQ=MONTHLY;BYMONTHDAY=1.5', 'BYMONTHDAY must contain integers'],
 			['FREQ=YEARLY;BYWEEKNO=54', 'BYWEEKNO values must be between -53 and 53, but not 0'],
 			['FREQ=MONTHLY;BYDAY=6mo', 'BYDAY position must be between -5 and 5, but not 0'],
+			['FREQ=SECONDLY;COUNT=40000000', 'COUNT must not be greater than 10000'],
+			['FREQ=MINUTELY;COUNT=010001', 'COUNT must not be greater than 10000'],
 			['FREQ=DAILY;UNTIL=20991301', 'UNTIL is not a valid date'],
 			['FREQ=DAILY;UNTIL=20991231T250000', 'UNTIL is not a valid date'],
 			// the rule is still checked when it has a DTSTART

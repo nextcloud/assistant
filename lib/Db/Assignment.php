@@ -31,6 +31,8 @@ use function OCP\Log\logger;
  * @method \string getTimezone()
  */
 class Assignment extends Entity implements \JsonSerializable {
+	private const MAX_COUNT = 10000;
+
 	/** @var string */
 	protected $userId;
 	/** @var string */
@@ -287,6 +289,11 @@ class Assignment extends Entity implements \JsonSerializable {
 					throw new \InvalidArgumentException($name . ' values must be between ' . ($negativeAllowed ? '-' . $max . ' and ' . $max . ', but not 0' : $min . ' and ' . $max));
 				}
 			}
+		}
+
+		// rules with COUNT are searched from the start, see fastForwardStart()
+		if (preg_match('/^\d+$/', $parts['COUNT'] ?? '') === 1 && (int)$parts['COUNT'] > self::MAX_COUNT) {
+			throw new \InvalidArgumentException('COUNT must not be greater than ' . self::MAX_COUNT);
 		}
 	}
 
