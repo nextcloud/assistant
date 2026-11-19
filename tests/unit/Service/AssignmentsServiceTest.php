@@ -47,12 +47,23 @@ class AssignmentsServiceTest extends TestCase {
 		);
 	}
 
-	public function testCreateRejectsTooLongTitle(): void {
+	public static function dataInvalidTitle(): array {
+		return [
+			['', 'The title must not be empty'],
+			[" \t\n", 'The title must not be empty'],
+			[str_repeat('ä', 257), 'The title must be at most 256 characters'],
+		];
+	}
+
+	/**
+	 * @dataProvider dataInvalidTitle
+	 */
+	public function testCreateRejectsInvalidTitle(string $title, string $error): void {
 		$this->assignmentMapper->expects(self::never())->method('insert');
 		$this->chatService->expects(self::never())->method('createChatSession');
 
 		$this->expectException(BadRequestException::class);
-		$this->expectExceptionMessage('The title must be at most 256 characters');
-		$this->service->createAssignment('alice', str_repeat('ä', 257), 'say hi', 1767225600, 'FREQ=DAILY', 'UTC');
+		$this->expectExceptionMessage($error);
+		$this->service->createAssignment('alice', $title, 'say hi', 1767225600, 'FREQ=DAILY', 'UTC');
 	}
 }

@@ -12,10 +12,8 @@ namespace OCA\Assistant\Tests\Unit\Controller;
 use OCA\Assistant\Controller\AssignmentsApiController;
 use OCA\Assistant\Db\Assignment;
 use OCA\Assistant\Db\AssignmentMapper;
-use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Service\AssignmentsService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
@@ -65,126 +63,54 @@ class AssignmentsApiControllerTest extends TestCase {
 		]);
 	}
 
-	private static function session(int $id, int $assignmentId, ?string $title): Session {
-		$session = new Session();
-		$session->setId($id);
-		$session->setUserId('alice');
-		$session->setAssignmentId($assignmentId);
-		$session->setTitle($title);
-		return $session;
-	}
-
-	public function testListReturnsTitleAndSessionId(): void {
+	public function testListReturnsSessionId(): void {
 		$this->assignmentMapper->method('findForUser')->with('alice')
 			->willReturnCallback(static fn () => yield from [self::assignment(1), self::assignment(2), self::assignment(3)]);
-		$this->sessionMapper->expects(self::once())->method('getUserSessionsForAssignments')
+		$this->sessionMapper->expects(self::once())->method('getSessionIdsForAssignments')
 			->with('alice', [1, 2, 3])
-			->willReturn([self::session(20, 2, 'Second'), self::session(10, 1, 'First')]);
+			->willReturn([2 => 20, 1 => 10]);
 
 		$response = $this->controller->getUserAssignments();
 
 		self::assertSame(Http::STATUS_OK, $response->getStatus());
 		$assignments = $response->getData()['assignments'];
-		self::assertSame(['First', 'Second', null], array_column($assignments, 'title'));
 		self::assertSame([10, 20, null], array_column($assignments, 'session_id'));
 		self::assertSame('say hi', $assignments[0]['prompt']);
 	}
 
-	public function testGetReturnsTitleAndSessionId(): void {
+	public function testGetReturnsSessionId(): void {
 		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->method('getUserSessionsForAssignments')->with('alice', [1])
-			->willReturn([self::session(10, 1, 'Daily news')]);
+		$this->sessionMapper->method('getSessionIdsForAssignments')->with('alice', [1])
+			->willReturn([1 => 10]);
 
 		$response = $this->controller->getUserAssignment(1);
 
 		self::assertSame(Http::STATUS_OK, $response->getStatus());
-		self::assertSame('Daily news', $response->getData()['assignment']['title']);
 		self::assertSame(10, $response->getData()['assignment']['session_id']);
 	}
 
-	public function testCreateReturnsTitleAndSessionId(): void {
+	public function testCreateReturnsSessionId(): void {
 		$this->assignmentsService->method('createAssignment')
 			->with('alice', 'Daily news', 'say hi', 1767225600, 'FREQ=DAILY', null)
 			->willReturn(self::assignment(1));
-		$this->sessionMapper->method('getUserSessionsForAssignments')->with('alice', [1])
-			->willReturn([self::session(10, 1, 'Daily news')]);
+		$this->sessionMapper->method('getSessionIdsForAssignments')->with('alice', [1])
+			->willReturn([1 => 10]);
 
 		$response = $this->controller->createUserAssignment('Daily news', 'say hi', 1767225600, 'FREQ=DAILY', null);
 
 		self::assertSame(Http::STATUS_OK, $response->getStatus());
-		self::assertSame('Daily news', $response->getData()['assignment']['title']);
 		self::assertSame(10, $response->getData()['assignment']['session_id']);
 	}
 
-	public function testUpdateRenamesSession(): void {
-		$session = self::session(10, 1, 'Old title');
+	public function testUpdateReturnsSessionId(): void {
 		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->method('getUserSessionForAssignment')->with('alice', 1)->willReturn($session);
-		$this->sessionMapper->expects(self::once())->method('update')
-			->with(self::callback(static fn (Session $updated): bool => $updated->getTitle() === 'New title'));
-		$this->sessionMapper->method('getUserSessionsForAssignments')->willReturn([$session]);
-
-		$response = $this->controller->updateUserAssignment(1, null, null, null, null, 'New title');
-
-		self::assertSame(Http::STATUS_OK, $response->getStatus());
-		self::assertSame('New title', $response->getData()['assignment']['title']);
-	}
-
-	public function testUpdateWithoutTitleKeepsSession(): void {
-		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->expects(self::never())->method('getUserSessionForAssignment');
-		$this->sessionMapper->expects(self::never())->method('update');
-		$this->sessionMapper->method('getUserSessionsForAssignments')
-			->willReturn([self::session(10, 1, 'Old title')]);
+		$this->sessionMapper->method('getSessionIdsForAssignments')->with('alice', [1])
+			->willReturn([1 => 10]);
 
 		$response = $this->controller->updateUserAssignment(1, 'new prompt', null, null, null);
 
 		self::assertSame(Http::STATUS_OK, $response->getStatus());
-		self::assertSame('Old title', $response->getData()['assignment']['title']);
+		self::assertSame(10, $response->getData()['assignment']['session_id']);
 		self::assertSame('new prompt', $response->getData()['assignment']['prompt']);
-	}
-
-	public function testUpdateDoesNotRenameSessionWhenRuleIsInvalid(): void {
-		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->method('getUserSessionForAssignment')->willReturn(self::session(10, 1, 'Old title'));
-		$this->sessionMapper->expects(self::never())->method('update');
-		$this->assignmentMapper->expects(self::never())->method('update');
-
-		$response = $this->controller->updateUserAssignment(1, null, 'FREQ=NOPE', null, null, 'New title');
-
-		self::assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
-	}
-
-	public function testUpdateRejectsTooLongTitle(): void {
-		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->expects(self::never())->method('update');
-		$this->assignmentMapper->expects(self::never())->method('update');
-
-		$response = $this->controller->updateUserAssignment(1, null, null, null, null, str_repeat('ä', 257));
-
-		self::assertSame(Http::STATUS_BAD_REQUEST, $response->getStatus());
-		self::assertSame(['error' => 'The title must be at most 256 characters'], $response->getData());
-	}
-
-	public function testUpdateAcceptsTitleOfMaxLength(): void {
-		$title = str_repeat('ä', 256);
-		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->method('getUserSessionForAssignment')->willReturn(self::session(10, 1, 'Old title'));
-		$this->sessionMapper->expects(self::once())->method('update');
-		$this->sessionMapper->method('getUserSessionsForAssignments')->willReturn([self::session(10, 1, $title)]);
-
-		$response = $this->controller->updateUserAssignment(1, null, null, null, null, $title);
-
-		self::assertSame(Http::STATUS_OK, $response->getStatus());
-	}
-
-	public function testUpdateTitleWithoutSessionReturnsNotFound(): void {
-		$this->assignmentMapper->method('find')->with('alice', 1)->willReturn(self::assignment(1));
-		$this->sessionMapper->method('getUserSessionForAssignment')->willThrowException(new DoesNotExistException(''));
-		$this->assignmentMapper->expects(self::never())->method('update');
-
-		$response = $this->controller->updateUserAssignment(1, null, null, null, null, 'New title');
-
-		self::assertSame(Http::STATUS_NOT_FOUND, $response->getStatus());
 	}
 }

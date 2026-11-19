@@ -46,7 +46,7 @@ class AssignmentsApiController extends OCSController {
 	}
 
 	/**
-	 * Adds the title and the id of each assignment's chat session, the title is stored on the session
+	 * Adds the id of each assignment's chat session, which holds the title and the results
 	 *
 	 * @param list<Assignment> $assignments
 	 * @return list<AssistantAssignment>
@@ -54,17 +54,10 @@ class AssignmentsApiController extends OCSController {
 	 */
 	private function serializeAssignments(string $userId, array $assignments): array {
 		$assignmentIds = array_map(static fn (Assignment $assignment): int => $assignment->getId(), $assignments);
-		$sessions = [];
-		foreach ($this->sessionMapper->getUserSessionsForAssignments($userId, $assignmentIds) as $session) {
-			$sessions[$session->getAssignmentId()] = $session;
-		}
-		return array_map(static function (Assignment $assignment) use ($sessions): array {
-			$session = $sessions[$assignment->getId()] ?? null;
-			return array_merge($assignment->jsonSerialize(), [
-				'title' => $session?->getTitle(),
-				'session_id' => $session?->getId(),
-			]);
-		}, $assignments);
+		$sessionIds = $this->sessionMapper->getSessionIdsForAssignments($userId, $assignmentIds);
+		return array_map(static fn (Assignment $assignment): array => array_merge($assignment->jsonSerialize(), [
+			'session_id' => $sessionIds[$assignment->getId()] ?? null,
+		]), $assignments);
 	}
 
 	/**
@@ -156,7 +149,6 @@ class AssignmentsApiController extends OCSController {
 	 * Update a user's assignment
 	 *
 	 * @param int $id The id of the assignment
-	 * @param string|null $title The title of the assignment
 	 * @param string|null $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int|null $startsAt The timestamp when the assignment should start being executed
 	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
@@ -166,27 +158,16 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
-	 * 400: Invalid title, recurrence rule or timezone
+	 * 400: Invalid recurrence rule or timezone
 	 * 404: Assignment not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
 	#[Http\Attribute\ApiRoute(verb: 'PATCH', url: '/assignments/{id}')]
-	public function updateUserAssignment(int $id, ?string $prompt, ?string $recurrence, ?int $startsAt, ?string $timezone, ?string $title = null): DataResponse {
+	public function updateUserAssignment(int $id, ?string $prompt, ?string $recurrence, ?int $startsAt, ?string $timezone): DataResponse {
 		if ($this->userId !== null) {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
-				$session = null;
-				if ($title !== null) {
-					try {
-						AssignmentsService::validateTitle($title);
-					} catch (BadRequestException $e) {
-						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
-					}
-					// the title is stored on the assignment's chat session
-					$session = $this->sessionMapper->getUserSessionForAssignment($this->userId, $id);
-					$session->setTitle($title);
-				}
 				if ($prompt !== null) {
 					$assignment->setPrompt($prompt);
 				}
@@ -214,9 +195,6 @@ class AssignmentsApiController extends OCSController {
 				}
 				$assignment->setUpdatedAt($this->timeFactory->now()->getTimestamp());
 				$this->assignmentMapper->update($assignment);
-				if ($session !== null) {
-					$this->sessionMapper->update($session);
-				}
 				return new DataResponse(['assignment' => $this->serializeAssignments($this->userId, [$assignment])[0]]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);

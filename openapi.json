@@ -32,7 +32,6 @@
                     "starts_at",
                     "last_run_at",
                     "timezone",
-                    "title",
                     "session_id"
                 ],
                 "properties": {
@@ -67,10 +66,6 @@
                     },
                     "timezone": {
                         "type": "string"
-                    },
-                    "title": {
-                        "type": "string",
-                        "nullable": true
                     },
                     "session_id": {
                         "type": "integer",
@@ -7538,12 +7533,6 @@
                                         "type": "string",
                                         "nullable": true,
                                         "description": "The timezone for this assignment, omit to leave the current value in place. the value should be either the timezone name or a timezone offset, e.g. \"Europe/Berlin\" or \"+0100\" for UTC+1"
-                                    },
-                                    "title": {
-                                        "type": "string",
-                                        "nullable": true,
-                                        "default": null,
-                                        "description": "The title of the assignment"
                                     }
                                 }
                             }
@@ -7702,7 +7691,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid title, recurrence rule or timezone",
+                        "description": "Invalid recurrence rule or timezone",
                         "content": {
                             "application/json": {
                                 "schema": {
