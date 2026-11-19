@@ -1184,15 +1184,23 @@ class AgentTalkService {
 		$request = Server::get(IRequest::class);
 		$previousRoute = null;
 		$routeOverridden = false;
-		if ($request instanceof \OC\AppFramework\Http\Request) {
+		if (method_exists($request, 'setUrlParameters')) {
 			$previousRoute = $request->getParam('_route');
+			/** @psalm-suppress UndefinedMethod
+			 * not part of the public OCP\IRequest API, but provided by the
+			 * core request implementation */
 			$request->setUrlParameters(['_route' => self::TALK_ATTACHMENT_FOLDER_ROUTE]);
 			$routeOverridden = true;
+		} else {
+			$this->logger->warning(
+				'The request does not support overriding URL parameters: Talk will post a generic file_shared message for the agent conversation folder'
+			);
 		}
 		try {
 			return $callback();
 		} finally {
 			if ($routeOverridden) {
+				/** @psalm-suppress UndefinedMethod */
 				$request->setUrlParameters(['_route' => $previousRoute ?? '']);
 			}
 		}
