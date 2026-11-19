@@ -25,6 +25,9 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class AssignmentsService {
+	// the length of the title column of the chat sessions, the title is stored on the assignment's session
+	public const MAX_TITLE_LENGTH = 256;
+
 	public function __construct(
 		private AssignmentMapper $assignmentMapper,
 		private SessionMapper $sessionMapper,
@@ -47,6 +50,7 @@ class AssignmentsService {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
+		self::validateTitle($title);
 		$now = $this->timeFactory->now()->getTimestamp();
 		$assignment = new Assignment();
 		$assignment->setUserId($userId);
@@ -85,6 +89,15 @@ class AssignmentsService {
 			$this->jobList->add(RunAssignmentsJob::class, ['userId' => $userId]);
 		}
 		return $assignment;
+	}
+
+	/**
+	 * @throws BadRequestException
+	 */
+	public static function validateTitle(string $title): void {
+		if (mb_strlen($title) > self::MAX_TITLE_LENGTH) {
+			throw new BadRequestException('The title must be at most ' . self::MAX_TITLE_LENGTH . ' characters');
+		}
 	}
 
 	/**

@@ -9,6 +9,7 @@ namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\Db\Assignment;
 use OCA\Assistant\Db\AssignmentMapper;
+use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\ResponseDefinitions;
 use OCA\Assistant\Service\AssignmentsService;
 use OCA\Assistant\Service\BadRequestException;
@@ -39,8 +40,31 @@ class AssignmentsApiController extends OCSController {
 		private LoggerInterface $logger,
 		private ITimeFactory $timeFactory,
 		private AssignmentsService $assignmentsService,
+		private SessionMapper $sessionMapper,
 	) {
 		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * Adds the title and the id of each assignment's chat session, the title is stored on the session
+	 *
+	 * @param list<Assignment> $assignments
+	 * @return list<AssistantAssignment>
+	 * @throws Exception
+	 */
+	private function serializeAssignments(string $userId, array $assignments): array {
+		$assignmentIds = array_map(static fn (Assignment $assignment): int => $assignment->getId(), $assignments);
+		$sessions = [];
+		foreach ($this->sessionMapper->getUserSessionsForAssignments($userId, $assignmentIds) as $session) {
+			$sessions[$session->getAssignmentId()] = $session;
+		}
+		return array_map(static function (Assignment $assignment) use ($sessions): array {
+			$session = $sessions[$assignment->getId()] ?? null;
+			return array_merge($assignment->jsonSerialize(), [
+				'title' => $session?->getTitle(),
+				'session_id' => $session?->getId(),
+			]);
+		}, $assignments);
 	}
 
 	/**
@@ -54,7 +78,7 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * 200: User assignments returned
 	 * 403: User not logged in
-	 * 400: Invalid recurrence rule or timezone
+	 * 400: Invalid title, recurrence rule or timezone
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
@@ -62,9 +86,8 @@ class AssignmentsApiController extends OCSController {
 	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): DataResponse {
 		try {
 			$assignment = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence, $timezone);
-			$serializedAssignment = $assignment->jsonSerialize();
-			return new DataResponse(['assignment' => $serializedAssignment]);
-		} catch (InternalException $e) {
+			return new DataResponse(['assignment' => $this->serializeAssignments($assignment->getUserId(), [$assignment])[0]]);
+		} catch (InternalException|Exception $e) {
 			$this->logger->error('Error while creating assignment for user ' . $this->userId, ['exception' => $e]);
 			return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 		} catch (UnauthorizedException $e) {
@@ -90,12 +113,8 @@ class AssignmentsApiController extends OCSController {
 	public function getUserAssignments(): DataResponse {
 		if ($this->userId !== null) {
 			try {
-				$assignments = iterator_to_array($this->assignmentMapper->findForUser($this->userId));
-				/** @var list<AssistantAssignment> $serializedAssignments */
-				$serializedAssignments = array_map(static function (Assignment $assignments) {
-					return $assignments->jsonSerialize();
-				}, $assignments);
-				return new DataResponse(['assignments' => $serializedAssignments]);
+				$assignments = array_values(iterator_to_array($this->assignmentMapper->findForUser($this->userId)));
+				return new DataResponse(['assignments' => $this->serializeAssignments($this->userId, $assignments)]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignments for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -122,9 +141,7 @@ class AssignmentsApiController extends OCSController {
 		if ($this->userId !== null) {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
-				/** @var AssistantAssignment $serializedAssignment */
-				$serializedAssignment = $assignment->jsonSerialize();
-				return new DataResponse(['assignment' => $serializedAssignment]);
+				return new DataResponse(['assignment' => $this->serializeAssignments($this->userId, [$assignment])[0]]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -139,6 +156,7 @@ class AssignmentsApiController extends OCSController {
 	 * Update a user's assignment
 	 *
 	 * @param int $id The id of the assignment
+	 * @param string|null $title The title of the assignment
 	 * @param string|null $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int|null $startsAt The timestamp when the assignment should start being executed
 	 * @param string|null $recurrence The recurrence rule for the assignment, in RRULE format
@@ -148,16 +166,27 @@ class AssignmentsApiController extends OCSController {
 	 *
 	 * 200: User tasks returned
 	 * 403: User not logged in
-	 * 400: Invalid recurrence rule or timezone
+	 * 400: Invalid title, recurrence rule or timezone
 	 * 404: Assignment not found
 	 */
 	#[NoAdminRequired]
 	#[OpenAPI(scope: OpenAPI::SCOPE_DEFAULT, tags: ['assignments'])]
 	#[Http\Attribute\ApiRoute(verb: 'PATCH', url: '/assignments/{id}')]
-	public function updateUserAssignment(int $id, ?string $prompt, ?string $recurrence, ?int $startsAt, ?string $timezone): DataResponse {
+	public function updateUserAssignment(int $id, ?string $prompt, ?string $recurrence, ?int $startsAt, ?string $timezone, ?string $title = null): DataResponse {
 		if ($this->userId !== null) {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
+				$session = null;
+				if ($title !== null) {
+					try {
+						AssignmentsService::validateTitle($title);
+					} catch (BadRequestException $e) {
+						return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+					}
+					// the title is stored on the assignment's chat session
+					$session = $this->sessionMapper->getUserSessionForAssignment($this->userId, $id);
+					$session->setTitle($title);
+				}
 				if ($prompt !== null) {
 					$assignment->setPrompt($prompt);
 				}
@@ -185,9 +214,10 @@ class AssignmentsApiController extends OCSController {
 				}
 				$assignment->setUpdatedAt($this->timeFactory->now()->getTimestamp());
 				$this->assignmentMapper->update($assignment);
-				/** @var AssistantAssignment $serializedAssignment */
-				$serializedAssignment = $assignment->jsonSerialize();
-				return new DataResponse(['assignment' => $serializedAssignment]);
+				if ($session !== null) {
+					$this->sessionMapper->update($session);
+				}
+				return new DataResponse(['assignment' => $this->serializeAssignments($this->userId, [$assignment])[0]]);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
