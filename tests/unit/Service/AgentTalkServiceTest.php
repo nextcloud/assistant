@@ -196,4 +196,63 @@ class AgentTalkServiceTest extends TestCase {
 		$this->assertNull($this->session->getAgentSeenRoomToken());
 		$this->assertNull($this->session->getAgentSeenCommentId());
 	}
+
+	/**
+	 * Like in a background job, there is no request route beforehand: while
+	 * the agent conversation folder is resolved, the request route is Talk's
+	 * attachment endpoint, for which Talk posts no generic file_shared message
+	 * for the folder-level room share, and the callback return value is passed
+	 * through.
+	 */
+	public function testRunWithAttachmentFolderRouteSetsTheTalkAttachmentRoute(): void {
+		$request = \OCP\Server::get(\OCP\IRequest::class);
+		$request->setUrlParameters(['_route' => '']);
+
+		$routeInside = null;
+		$result = $this->runWithAttachmentFolderRoute(function () use (&$routeInside, $request) {
+			$routeInside = $request->getParam('_route');
+			return 'result';
+		});
+
+		$this->assertSame('result', $result);
+		$this->assertSame('ocs.spreed.chat.postattachmenttoroom', $routeInside);
+	}
+
+	/**
+	 * The request parameters cannot be removed again: a former empty route
+	 * value is restored, which is handled like no route by the route checks
+	 * of Talk's system message listener.
+	 */
+	public function testRunWithAttachmentFolderRouteRestoresAnEmptyRoute(): void {
+		$request = \OCP\Server::get(\OCP\IRequest::class);
+		$request->setUrlParameters(['_route' => '']);
+
+		$this->runWithAttachmentFolderRoute(static function (): void {
+		});
+
+		$this->assertSame('', $request->getParam('_route'));
+	}
+
+	/**
+	 * A request route that existed before the folder resolution is restored,
+	 * so that later share events of the same process are handled with the
+	 * original route semantics.
+	 */
+	public function testRunWithAttachmentFolderRouteRestoresTheFormerRoute(): void {
+		$request = \OCP\Server::get(\OCP\IRequest::class);
+		$request->setUrlParameters(['_route' => 'my.route']);
+
+		$routeInside = null;
+		$this->runWithAttachmentFolderRoute(function () use (&$routeInside, $request): void {
+			$routeInside = $request->getParam('_route');
+		});
+
+		$this->assertSame('ocs.spreed.chat.postattachmenttoroom', $routeInside);
+		$this->assertSame('my.route', $request->getParam('_route'));
+	}
+
+	private function runWithAttachmentFolderRoute(callable $callback) {
+		$method = new \ReflectionMethod(AgentTalkService::class, 'runWithAttachmentFolderRoute');
+		return $method->invoke($this->service, $callback);
+	}
 }

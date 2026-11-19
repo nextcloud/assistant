@@ -19,6 +19,7 @@ use OCP\Comments\IComment;
 use OCP\DB\Exception;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -40,6 +41,13 @@ class AgentTalkService {
 	public const REACTION_STOP = '⏹️';
 
 	private const THREAD_TITLE_SEPARATOR = ' - ';
+
+	/**
+	 * Talk does not post a generic "file_shared" system message for the
+	 * folder-level room share created by its attachment endpoint, because
+	 * that endpoint posts its own file_shared message like the agent does.
+	 */
+	private const TALK_ATTACHMENT_FOLDER_ROUTE = 'ocs.spreed.chat.postattachmenttoroom';
 
 	public function __construct(
 		private IUserManager $userManager,
@@ -942,6 +950,56 @@ class AgentTalkService {
 	}
 
 	/**
+	 * Get or create the agent's conversation subfolder for the room, like
+	 * Talk's attachment flow does.
+	 *
+	 * The folder-level room share Talk creates for access control makes Talk
+	 * post a generic "file_shared" system message for the folder. The share is
+	 * created from a background job without a user session, so that message
+	 * would be posted as "Guest". While the folder is resolved, the request
+	 * route is set to Talk's attachment endpoint, for which Talk posts no such
+	 * message, and restored afterwards.
+	 */
+	private function getOrCreateAgentConversationFolder(\OCA\Talk\Room $room, Session $session): \OCP\Files\Folder {
+		return $this->runWithAttachmentFolderRoute(function () use ($room, $session): \OCP\Files\Folder {
+			/** @var \OCA\Talk\Service\ConversationFolderService $conversationFolderService */
+			$conversationFolderService = Server::get(\OCA\Talk\Service\ConversationFolderService::class);
+			return $conversationFolderService->getOrCreateSubfolder($session->getUserId(), $room, false);
+		});
+	}
+
+	/**
+	 * Run the callback while the request route points to Talk's attachment
+	 * endpoint, so that Talk's system message listener treats the room share
+	 * created inside like one of its own attachment flow: no generic
+	 * "file_shared" message for the folder share.
+	 *
+	 * The request parameters cannot be removed again, so the former route
+	 * value is restored, or an empty one when there was none (background job).
+	 *
+	 * @template T
+	 * @param callable():T $callback
+	 * @return T
+	 */
+	private function runWithAttachmentFolderRoute(callable $callback) {
+		$request = Server::get(IRequest::class);
+		$previousRoute = null;
+		$routeOverridden = false;
+		if ($request instanceof \OC\AppFramework\Http\Request) {
+			$previousRoute = $request->getParam('_route');
+			$request->setUrlParameters(['_route' => self::TALK_ATTACHMENT_FOLDER_ROUTE]);
+			$routeOverridden = true;
+		}
+		try {
+			return $callback();
+		} finally {
+			if ($routeOverridden) {
+				$request->setUrlParameters(['_route' => $previousRoute ?? '']);
+			}
+		}
+	}
+
+	/**
 	 * Post a generated file of an agent answer (task output) in Talk:
 	 * the file is copied from the task output storage into the agent's
 	 * conversation folder for the room, like Talk's own attachment flow,
@@ -980,9 +1038,7 @@ class AgentTalkService {
 		$mimeType = is_string($sniffedMimeType) && $sniffedMimeType !== '' ? $sniffedMimeType : 'application/octet-stream';
 
 		try {
-			/** @var \OCA\Talk\Service\ConversationFolderService $conversationFolderService */
-			$conversationFolderService = Server::get(\OCA\Talk\Service\ConversationFolderService::class);
-			$subfolder = $conversationFolderService->getOrCreateSubfolder($session->getUserId(), $room, false);
+			$subfolder = $this->getOrCreateAgentConversationFolder($room, $session);
 
 			$extension = match ($mimeType) {
 				'image/png' => 'png',
