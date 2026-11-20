@@ -19,9 +19,12 @@ use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Comments\IComment;
+use OCP\Files\ISetupManager;
+use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\IUser;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -88,6 +91,7 @@ class AgentTalkServiceTest extends TestCase {
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(IConfig::class),
 			$this->createMock(IFactory::class),
+			$this->createMock(ISetupManager::class),
 		);
 	}
 
@@ -173,6 +177,7 @@ class AgentTalkServiceTest extends TestCase {
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(IConfig::class),
 			$this->createMock(IFactory::class),
+			$this->createMock(ISetupManager::class),
 		);
 
 		$service->handleStopReaction(self::HUMAN_USER_ID, $this->getRoom(), $this->getComment());
@@ -203,6 +208,98 @@ class AgentTalkServiceTest extends TestCase {
 
 		$this->assertNull($this->session->getAgentSeenRoomToken());
 		$this->assertNull($this->session->getAgentSeenCommentId());
+	}
+
+	/**
+	 * When the first posting attempt of a generated file fails, the
+	 * filesystem of the agent user is re-set up and the posting is retried:
+	 * the task processing worker may have mounted the agent home storage
+	 * before it was registered in the database, leaving the freshly created
+	 * conversation folder unresolvable ("Node does not exist").
+	 */
+	public function testGeneratedFilePostingIsRetriedAfterFilesystemReSetup(): void {
+		[$userManager, $setupManager] = $this->createFilePostingMocks();
+		$setupManager->expects($this->once())->method('tearDown');
+		$setupManager->expects($this->once())->method('setupForUser');
+
+		$service = $this->createFilePostingService($userManager, $setupManager);
+		$service->expects($this->exactly(2))
+			->method('doPostAgentTalkFileMessage')
+			->willReturnOnConsecutiveCalls(
+				$this->throwException(new NotFoundException('Node does not exist')),
+				null,
+			);
+		$this->assertTrue($this->postGeneratedFile($service));
+	}
+
+	/**
+	 * When the posting still fails after the filesystem was re-set up, the
+	 * failure is reported, so that the caller can post a fallback text
+	 * instead of silently dropping the generated file.
+	 */
+	public function testGeneratedFilePostingFailsAfterRetrying(): void {
+		[$userManager, $setupManager] = $this->createFilePostingMocks();
+		$setupManager->expects($this->once())->method('tearDown');
+		$setupManager->expects($this->once())->method('setupForUser');
+
+		$service = $this->createFilePostingService($userManager, $setupManager);
+		$service->expects($this->exactly(2))
+			->method('doPostAgentTalkFileMessage')
+			->willReturnOnConsecutiveCalls(
+				$this->throwException(new NotFoundException('Node does not exist')),
+				$this->throwException(new NotFoundException('Node does not exist')),
+			);
+
+		$this->assertFalse($this->postGeneratedFile($service));
+	}
+
+	/**
+	 * A successful posting never touches the filesystem setup of the agent
+	 * user: the teardown would clear the mounts of the whole process.
+	 */
+	public function testGeneratedFilePostingSuccessSkipsTheFilesystemReSetup(): void {
+		[$userManager, $setupManager] = $this->createFilePostingMocks();
+		$setupManager->expects($this->never())->method('tearDown');
+
+		$service = $this->createFilePostingService($userManager, $setupManager);
+		$service->expects($this->once())->method('doPostAgentTalkFileMessage');
+
+		$this->assertTrue($this->postGeneratedFile($service));
+	}
+
+	private function createFilePostingMocks(): array {
+		$setupManager = $this->createMock(ISetupManager::class);
+		$userManager = $this->createMock(IUserManager::class);
+		$agentUser = $this->createMock(IUser::class);
+		$agentUser->method('getUID')->willReturn(self::AGENT_USER_ID);
+		$userManager->method('get')->willReturn($agentUser);
+		return [$userManager, $setupManager];
+	}
+
+	private function createFilePostingService(IUserManager $userManager, ISetupManager $setupManager): AgentTalkService {
+		return $this->getMockBuilder(AgentTalkService::class)
+			->setConstructorArgs([
+				$userManager,
+				$this->createMock(AgentsService::class),
+				$this->createMock(ChatService::class),
+				$this->createMock(SessionMapper::class),
+				$this->createMock(IURLGenerator::class),
+				$this->l10n,
+				$this->createMock(AgencyActionService::class),
+				$this->createMock(AgentTalkFileService::class),
+				$this->createMock(TaskProcessingService::class),
+				$this->createMock(LoggerInterface::class),
+				$this->createMock(IConfig::class),
+				$this->createMock(IFactory::class),
+				$setupManager,
+			])
+			->onlyMethods(['doPostAgentTalkFileMessage'])
+			->getMock();
+	}
+
+	private function postGeneratedFile(AgentTalkService $service, int $fileId = 77, bool $asVoiceMessage = true): bool {
+		$method = new \ReflectionMethod(AgentTalkService::class, 'postAgentTalkFileMessage');
+		return $method->invoke($service, $this->getRoom(), $this->session, true, $fileId, $asVoiceMessage);
 	}
 
 	/**

@@ -17,6 +17,7 @@ use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Comments\IComment;
 use OCP\DB\Exception;
+use OCP\Files\ISetupManager;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -62,6 +63,7 @@ class AgentTalkService {
 		private LoggerInterface $logger,
 		private IConfig $config,
 		private IFactory $l10nFactory,
+		private ISetupManager $setupManager,
 	) {
 	}
 
@@ -1076,7 +1078,18 @@ class AgentTalkService {
 			$this->postAgentTalkFileMessage($room, $session, $threaded, (int)$outputFileId, false);
 		}
 		if ($audioFileId !== null) {
-			$this->postAgentTalkFileMessage($room, $session, $threaded, $audioFileId, true);
+			$voicePosted = $this->postAgentTalkFileMessage($room, $session, $threaded, $audioFileId, true);
+			if (!$voicePosted) {
+				// the audio task did produce the spoken answer, but it could
+				// not be shared in Talk: the human must not be left without
+				// any clue about the missing voice message
+				$this->postAgentMessage(
+					$room,
+					$session,
+					$this->l10n->t('(the voice version of this answer could not be posted)'),
+					threaded: $threaded,
+				);
+			}
 		}
 
 		$confirmPosted = false;
@@ -1213,65 +1226,98 @@ class AgentTalkService {
 	 * and posted as a "file_shared" message as the agent, in the thread of
 	 * the answer.
 	 *
-	 * Best effort: failures are logged and skipped, the text answer is already posted.
+	 * The task processing worker may mount the agent home storage before it
+	 * is registered in the database, in which case the freshly created
+	 * conversation folder cannot be re-resolved when its room share is
+	 * created ("Node does not exist"). The process mounts are therefore torn
+	 * down and set up again for the agent user before a single retry.
+	 *
+	 * Best effort: failures are logged, the text answer is already posted.
+	 *
+	 * @return bool Whether the file was posted
 	 */
-	private function postAgentTalkFileMessage(\OCA\Talk\Room $room, Session $session, bool $threaded, int $fileId, bool $asVoiceMessage): void {
+	private function postAgentTalkFileMessage(\OCA\Talk\Room $room, Session $session, bool $threaded, int $fileId, bool $asVoiceMessage): bool {
 		if (!class_exists('OCA\Talk\Service\ConversationFolderService')) {
-			return;
+			return false;
 		}
 		try {
-			$node = $this->taskProcessingService->getOutputFile($fileId);
+			$this->doPostAgentTalkFileMessage($room, $session, $threaded, $fileId, $asVoiceMessage);
+			return true;
 		} catch (\Throwable $e) {
-			$this->logger->warning('Could not resolve the generated file of an agent answer', [
+			$this->logger->warning('Could not post the generated file of an agent answer on the first attempt', [
+				'agentUserId' => $session->getUserId(),
 				'fileId' => $fileId,
 				'exception' => $e,
 			]);
-			return;
 		}
 
-		// the stored mimetype of task output files is unreliable
-		// (providers write extension-less names), sniff the real one
-		try {
-			$head = fread($node->fopen('rb'), 4096);
-			$sniffedMimeType = is_string($head) ? (new \finfo(FILEINFO_MIME_TYPE))->buffer($head) : false;
-		} catch (\Throwable $e) {
-			$this->logger->warning('Could not read the generated file of an agent answer', [
-				'fileId' => $fileId,
-				'exception' => $e,
-			]);
-			return;
+		$agentUser = $this->userManager->get($session->getUserId());
+		if ($agentUser !== null) {
+			try {
+				$this->setupManager->tearDown();
+				$this->setupManager->setupForUser($agentUser);
+				$this->logger->warning('The filesystem of the agent user was re-set up to retry posting a generated file of an agent answer', [
+					'agentUserId' => $agentUser->getUID(),
+					'fileId' => $fileId,
+				]);
+			} catch (\Throwable $e) {
+				$this->logger->warning('Could not re-set up the filesystem of the agent user', [
+					'agentUserId' => $agentUser->getUID(),
+					'exception' => $e,
+				]);
+			}
 		}
-		/** @var string $mimeType */
-		$mimeType = is_string($sniffedMimeType) && $sniffedMimeType !== '' ? $sniffedMimeType : 'application/octet-stream';
 
 		try {
-			$subfolder = $this->getOrCreateAgentConversationFolder($room, $session);
-
-			$extension = match ($mimeType) {
-				'image/png' => 'png',
-				'image/jpeg' => 'jpg',
-				'image/webp' => 'webp',
-				'image/gif' => 'gif',
-				'audio/mpeg' => 'mp3',
-				'audio/wav', 'audio/x-wav' => 'wav',
-				'application/pdf' => 'pdf',
-				default => preg_replace('/[^A-Za-z0-9]/', '', substr($mimeType, strpos($mimeType, '/') + 1)) ?: 'bin',
-			};
-			$baseName = $asVoiceMessage ? 'voice-message' : 'generated';
-			$fileName = $baseName . '-' . time() . '-' . random_int(1000, 9999) . '.' . $extension;
-
-			// a server-side copy, the task output file itself stays untouched:
-			// the chat message attachment and the task output endpoints reference it
-			/** @var \OCP\Files\Node $finalNode */
-			$finalNode = $node->copy($subfolder->getPath() . '/' . $fileName);
+			$this->doPostAgentTalkFileMessage($room, $session, $threaded, $fileId, $asVoiceMessage);
+			return true;
 		} catch (\Throwable $e) {
 			$this->logger->error('Could not store the generated file of an agent answer in the Talk conversation folder', [
 				'agentUserId' => $session->getUserId(),
 				'fileId' => $fileId,
 				'exception' => $e,
 			]);
-			return;
+			return false;
 		}
+	}
+
+	/**
+	 * Attempt to copy a generated file of an agent answer (task output) into
+	 * the agent's conversation folder for the room and post it as a Talk
+	 * file share.
+	 *
+	 * @throws \OCP\Files\NotFoundException
+	 * @throws \OCP\Files\NotPermittedException
+	 */
+	protected function doPostAgentTalkFileMessage(\OCA\Talk\Room $room, Session $session, bool $threaded, int $fileId, bool $asVoiceMessage): void {
+		$node = $this->taskProcessingService->getOutputFile($fileId);
+
+		// the stored mimetype of task output files is unreliable
+		// (providers write extension-less names), sniff the real one
+		$head = fread($node->fopen('rb'), 4096);
+		$sniffedMimeType = is_string($head) ? (new \finfo(FILEINFO_MIME_TYPE))->buffer($head) : false;
+		/** @var string $mimeType */
+		$mimeType = is_string($sniffedMimeType) && $sniffedMimeType !== '' ? $sniffedMimeType : 'application/octet-stream';
+
+		$subfolder = $this->getOrCreateAgentConversationFolder($room, $session);
+
+		$extension = match ($mimeType) {
+			'image/png' => 'png',
+			'image/jpeg' => 'jpg',
+			'image/webp' => 'webp',
+			'image/gif' => 'gif',
+			'audio/mpeg' => 'mp3',
+			'audio/wav', 'audio/x-wav' => 'wav',
+			'application/pdf' => 'pdf',
+			default => preg_replace('/[^A-Za-z0-9]/', '', substr($mimeType, strpos($mimeType, '/') + 1)) ?: 'bin',
+		};
+		$baseName = $asVoiceMessage ? 'voice-message' : 'generated';
+		$fileName = $baseName . '-' . time() . '-' . random_int(1000, 9999) . '.' . $extension;
+
+		// a server-side copy, the task output file itself stays untouched:
+		// the chat message attachment and the task output endpoints reference it
+		/** @var \OCP\Files\Node $finalNode */
+		$finalNode = $node->copy($subfolder->getPath() . '/' . $fileName);
 
 		$metaData = ['mimeType' => $mimeType];
 		if ($asVoiceMessage && ($mimeType === 'audio/mpeg' || $mimeType === 'audio/wav')) {
@@ -1284,36 +1330,28 @@ class AgentTalkService {
 			$threadId = $session->getThreadId();
 		}
 
-		try {
-			/** @var \OCA\Talk\Chat\ChatManager $chatManager */
-			$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
-			$chatManager->addSystemMessage(
-				$room,
-				null,
-				'users',
-				$session->getUserId(),
-				json_encode([
-					'message' => 'file_shared',
-					'parameters' => [
-						'fileId' => (string)$finalNode->getId(),
-						'metaData' => $metaData,
-					],
-				]),
-				new DateTime(),
-				true,
-				null,
-				null,
-				false,
-				false,
-				$threadId,
-			);
-		} catch (\Throwable $e) {
-			$this->logger->error('Failed to post the generated file of an agent answer in Talk', [
-				'agentUserId' => $session->getUserId(),
-				'fileId' => $fileId,
-				'exception' => $e,
-			]);
-		}
+		/** @var \OCA\Talk\Chat\ChatManager $chatManager */
+		$chatManager = Server::get(\OCA\Talk\Chat\ChatManager::class);
+		$chatManager->addSystemMessage(
+			$room,
+			null,
+			'users',
+			$session->getUserId(),
+			json_encode([
+				'message' => 'file_shared',
+				'parameters' => [
+					'fileId' => (string)$finalNode->getId(),
+					'metaData' => $metaData,
+				],
+			]),
+			new DateTime(),
+			true,
+			null,
+			null,
+			false,
+			false,
+			$threadId,
+		);
 	}
 
 	/**
