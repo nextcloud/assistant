@@ -87,6 +87,7 @@
 						{{ t('assistant', 'Failed to load the skills') }}
 					</NcNoteCard>
 					<template v-else>
+						<!-- only needed to tell the user's skills apart from the administrator's ones below -->
 						<h4 v-if="agentContent.skills.global.length > 0">
 							{{ t('assistant', 'Your skills') }}
 						</h4>
@@ -95,7 +96,7 @@
 						</p>
 						<NcFormBox v-else>
 							<NcFormBoxButton v-for="(skill, index) in agentContent.skills.user"
-								:key="index"
+								:key="`user-${skill.name}-${index}`"
 								:label="skill.name"
 								:description="skill.description"
 								:href="skill.fileId !== null ? getFileUrl(skill.fileId) : undefined"
@@ -118,7 +119,7 @@
 							<h4>{{ t('assistant', 'Provided by your administrator') }}</h4>
 							<NcFormBox>
 								<NcFormBoxButton v-for="(skill, index) in agentContent.skills.global"
-									:key="index"
+									:key="`global-${skill.name}-${index}`"
 									:label="skill.name"
 									:description="skill.description">
 									<template #icon>

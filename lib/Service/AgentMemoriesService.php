@@ -13,6 +13,7 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class AgentMemoriesService {
@@ -25,6 +26,7 @@ class AgentMemoriesService {
 
 	public function __construct(
 		private AssistantService $assistantService,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -47,15 +49,26 @@ class AgentMemoriesService {
 	 * @return list<array{path: string, fileId: int}>
 	 */
 	private function listMemoriesInFolder(Folder $folder, string $prefix, int $depth): array {
+		try {
+			$nodes = $folder->getDirectoryListing();
+		} catch (\Exception $e) {
+			if ($depth === 0) {
+				throw $e;
+			}
+			// an unreadable subfolder must not hide the memories in the other folders
+			$this->logger->warning('Could not list the agent memories in a folder', ['exception' => $e, 'path' => $folder->getPath()]);
+			return [];
+		}
+
 		$memories = [];
-		foreach ($folder->getDirectoryListing() as $node) {
+		foreach ($nodes as $node) {
 			$path = $prefix . $node->getName();
 			if ($node instanceof Folder) {
 				if ($depth < self::MAX_FOLDER_DEPTH) {
 					array_push($memories, ...$this->listMemoriesInFolder($node, $path . '/', $depth + 1));
 				}
 			} elseif ($node instanceof File
-				&& in_array(pathinfo($node->getName(), PATHINFO_EXTENSION), self::MEMORY_FILE_EXTENSIONS, true)) {
+				&& in_array(strtolower(pathinfo($node->getName(), PATHINFO_EXTENSION)), self::MEMORY_FILE_EXTENSIONS, true)) {
 				$memories[] = ['path' => $path, 'fileId' => $node->getId()];
 			}
 		}
