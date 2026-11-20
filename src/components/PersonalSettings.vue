@@ -79,6 +79,88 @@
 					:placeholder="state.default_data_folder"
 					@update:model-value="delayedValueUpdate(state.data_folder, 'data_folder')" />
 			</div>
+			<template v-if="agentContent">
+				<div class="agent-content">
+					<h3>{{ t('assistant', 'Skills') }}</h3>
+					<p>{{ t('assistant', 'Instructions the assistant can follow in chat for specific tasks. Your skills are stored in your files and managed by the assistant.') }}</p>
+					<NcNoteCard v-if="agentContent.skills === null" type="error">
+						{{ t('assistant', 'Failed to load the skills') }}
+					</NcNoteCard>
+					<template v-else>
+						<!-- only needed to tell the user's skills apart from the administrator's ones below -->
+						<h4 v-if="agentContent.skills.global.length > 0">
+							{{ t('assistant', 'Your skills') }}
+						</h4>
+						<p v-if="agentContent.skills.user.length === 0" class="agent-content__empty">
+							{{ t('assistant', 'No skills yet') }}
+						</p>
+						<NcFormBox v-else>
+							<NcFormBoxButton v-for="(skill, index) in agentContent.skills.user"
+								:key="`user-${skill.name}-${index}`"
+								:label="skill.name"
+								:description="skill.description"
+								:href="skill.fileId !== null ? getFileUrl(skill.fileId) : undefined"
+								:target="skill.fileId !== null ? '_blank' : undefined">
+								<template #icon>
+									<LightbulbOutlineIcon />
+								</template>
+							</NcFormBoxButton>
+						</NcFormBox>
+						<NcButton v-if="agentContent.skillsFolderId !== null"
+							variant="tertiary"
+							:href="getFileUrl(agentContent.skillsFolderId)"
+							target="_blank">
+							<template #icon>
+								<LightbulbOutlineIcon :size="20" />
+							</template>
+							{{ t('assistant', 'Skills folder') }}
+						</NcButton>
+						<template v-if="agentContent.skills.global.length > 0">
+							<h4>{{ t('assistant', 'Provided by your administrator') }}</h4>
+							<NcFormBox>
+								<NcFormBoxButton v-for="(skill, index) in agentContent.skills.global"
+									:key="`global-${skill.name}-${index}`"
+									:label="skill.name"
+									:description="skill.description">
+									<template #icon>
+										<LightbulbOutlineIcon />
+									</template>
+								</NcFormBoxButton>
+							</NcFormBox>
+						</template>
+					</template>
+				</div>
+				<div class="agent-content">
+					<h3>{{ t('assistant', 'Memories') }}</h3>
+					<p>{{ t('assistant', 'What the assistant remembers about you across conversations. They are stored in your files and managed by the assistant.') }}</p>
+					<NcNoteCard v-if="agentContent.memories === null" type="error">
+						{{ t('assistant', 'Failed to load the memories') }}
+					</NcNoteCard>
+					<p v-else-if="agentContent.memories.length === 0" class="agent-content__empty">
+						{{ t('assistant', 'No memories yet') }}
+					</p>
+					<NcFormBox v-else>
+						<NcFormBoxButton v-for="memory in agentContent.memories"
+							:key="memory.fileId"
+							:label="memory.path"
+							:href="getFileUrl(memory.fileId)"
+							target="_blank">
+							<template #icon>
+								<MemoryIcon />
+							</template>
+						</NcFormBoxButton>
+					</NcFormBox>
+					<NcButton v-if="agentContent.memoriesFolderId !== null"
+						variant="tertiary"
+						:href="getFileUrl(agentContent.memoriesFolderId)"
+						target="_blank">
+						<template #icon>
+							<MemoryIcon :size="20" />
+						</template>
+						{{ t('assistant', 'Memories folder') }}
+					</NcButton>
+				</div>
+			</template>
 			<div v-if="rememberedConversations.length > 0">
 				<h3>{{ t('assistant', 'Remembered conversations') }}</h3>
 				<p>{{ t('assistant', 'The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:') }}</p>
@@ -100,6 +182,7 @@
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
 
+import NcButton from '@nextcloud/vue/components/NcButton'
 import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
 import NcFormBox from '@nextcloud/vue/components/NcFormBox'
 import NcFormBoxSwitch from '@nextcloud/vue/components/NcFormBoxSwitch'
@@ -108,6 +191,7 @@ import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 
+import LightbulbOutlineIcon from 'vue-material-design-icons/LightbulbOutline.vue'
 import MemoryIcon from 'vue-material-design-icons/Memory.vue'
 
 import { loadState } from '@nextcloud/initial-state'
@@ -121,6 +205,7 @@ export default {
 
 	components: {
 		AssistantIcon,
+		NcButton,
 		NcFormGroup,
 		NcFormBox,
 		NcFormBoxSwitch,
@@ -128,6 +213,7 @@ export default {
 		NcNoteCard,
 		NcTextArea,
 		NcTextField,
+		LightbulbOutlineIcon,
 		MemoryIcon,
 	},
 
@@ -138,6 +224,7 @@ export default {
 			state: loadState('assistant', 'config'),
 			providers: loadState('assistant', 'availableProviders'),
 			rememberedConversations: loadState('assistant', 'rememberedSessions'),
+			agentContent: loadState('assistant', 'agentContent', false),
 			optionsToSave: {},
 		}
 	},
@@ -157,6 +244,9 @@ export default {
 	},
 
 	methods: {
+		getFileUrl(fileId) {
+			return generateUrl('/f/{fileId}', { fileId })
+		},
 		delayedValueUpdate(newValue, key) {
 			// delay() shares one timer, so a second edit within the delay cancels the
 			// first callback: queue the value now rather than when the timer fires
@@ -215,8 +305,13 @@ export default {
 	}
 
 	.switch-group,
-	.chat-instructions__field {
+	.chat-instructions__field,
+	.agent-content {
 		max-width: 800px;
+	}
+
+	.agent-content__empty {
+		color: var(--color-text-maxcontrast);
 	}
 
 	.checkbox-text {

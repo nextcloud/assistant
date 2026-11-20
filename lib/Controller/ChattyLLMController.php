@@ -12,8 +12,8 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\ResponseDefinitions;
+use OCA\Assistant\Service\AgentMemoriesService;
 use OCA\Assistant\Service\AgentSkillsService;
-use OCA\Assistant\Service\AssistantService;
 use OCA\Assistant\Service\BadRequestException;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\InternalException;
@@ -42,9 +42,6 @@ use Psr\Log\LoggerInterface;
  * @psalm-import-type AssistantChatSessionCheck from ResponseDefinitions
  */
 class ChattyLLMController extends OCSController {
-	// must match MEMORIES_RELATIVE_FOLDER_PATH in context_agent
-	private const MEMORIES_FOLDER_PATH = 'Context Agent/Memories';
-
 	private array $agencyActionData;
 
 	public function __construct(
@@ -59,8 +56,8 @@ class ChattyLLMController extends OCSController {
 		private IUserManager $userManager,
 		private ?string $userId,
 		private ChatService $chatService,
-		private AssistantService $assistantService,
 		private AgentSkillsService $agentSkillsService,
+		private AgentMemoriesService $agentMemoriesService,
 	) {
 		parent::__construct($appName, $request);
 		$this->agencyActionData = [
@@ -826,7 +823,7 @@ class ChattyLLMController extends OCSController {
 		try {
 			return new JSONResponse([
 				'skills' => $this->agentSkillsService->getSkillsFolder($this->userId)->getId(),
-				'memories' => $this->assistantService->getAssistantDataSubfolder($this->userId, self::MEMORIES_FOLDER_PATH)->getId(),
+				'memories' => $this->agentMemoriesService->getMemoriesFolder($this->userId)->getId(),
 			]);
 		} catch (\Exception|\Throwable $e) {
 			$this->logger->error('Failed to get the agent folders', ['exception' => $e]);

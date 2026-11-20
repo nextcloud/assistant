@@ -114,6 +114,12 @@ class AgentSkillsServiceTest extends TestCase {
 		return $dataFolder->getName() . '/' . AgentSkillsService::SKILLS_FOLDER_PATH;
 	}
 
+	private function getSkillFileId(string $uid, string $skillName): int {
+		return $this->rootFolder->getUserFolder($uid)
+			->get($this->getSkillsPath($uid) . '/' . $skillName . '/SKILL.md')
+			->getId();
+	}
+
 	/**
 	 * Write a properly formatted SKILL.md directly into the global pool folder,
 	 * bypassing storeSkill so that the admin's personal skills folder stays separate.
@@ -428,6 +434,30 @@ class AgentSkillsServiceTest extends TestCase {
 
 		$this->assertSame('User version', $byName['popular-skill']['description']);
 		$this->assertArrayHasKey('global-only', $byName);
+	}
+
+	public function testListSkillsBySourceSplitsUserAndGlobalSkills(): void {
+		$this->storeGlobalSkill('popular-skill', 'Global version', '## Global');
+		$this->storeGlobalSkill('global-only', 'Only global', '## Global only');
+		$this->service->setGlobalSkillsFolder(self::ADMIN_USER, self::GLOBAL_POOL_FOLDER);
+
+		$this->service->storeSkill(self::TEST_USER, 'popular-skill', 'User version', '## User');
+		$fileId = $this->getSkillFileId(self::TEST_USER, 'popular-skill');
+
+		$this->assertSame([
+			'user' => [['name' => 'popular-skill', 'description' => 'User version', 'fileId' => $fileId]],
+			'global' => [['name' => 'global-only', 'description' => 'Only global']],
+		], $this->service->listSkillsBySource(self::TEST_USER));
+	}
+
+	public function testListSkillsBySourceWithoutGlobalFolder(): void {
+		$this->service->storeSkill(self::TEST_USER, 'my-skill', 'Mine', '## Body');
+		$fileId = $this->getSkillFileId(self::TEST_USER, 'my-skill');
+
+		$this->assertSame([
+			'user' => [['name' => 'my-skill', 'description' => 'Mine', 'fileId' => $fileId]],
+			'global' => [],
+		], $this->service->listSkillsBySource(self::TEST_USER));
 	}
 
 	public function testLoadSkillPrefersUserSkillOverGlobalOnNameCollision(): void {
