@@ -115,6 +115,7 @@ OC.L10N.register(
     "Cancel task" : "Cancel·la la tasca",
     "Close" : "Tanca",
     "Close Nextcloud Assistant" : "Tanca l'assistent de Nextcloud",
+    "Details" : "Detalls",
     "Group" : "Grup",
     "External" : "Extern",
     "If you are not satisfied with the actions the Assistant wants to run, you can adjust your request by sending a new message instead of clicking the \"Cancel\" button." : "Si no esteu satisfet amb les accions que l'Assistent vol executar, podeu ajustar la vostra sol·licitud enviant un missatge nou en lloc de fer clic al botó \"Cancel·la\".",

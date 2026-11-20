@@ -7,6 +7,7 @@ OC.L10N.register(
     "Translate" : "Cyfieithu",
     "Data folder" : "Plygell data",
     "Close" : "Cau",
+    "Details" : "Manylion",
     "Group" : "Grŵp",
     "Cancel" : "Cancel",
     "Deselect all" : "Dad ddewis popeth",

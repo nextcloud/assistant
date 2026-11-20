@@ -212,6 +212,7 @@ OC.L10N.register(
     "Cancel task" : "Zrušit úkol",
     "Close" : "Zavřít",
     "Close Nextcloud Assistant" : "Zavřít Nextcloud Asistenta",
+    "Details" : "Podrobnosti",
     "Self" : "Sám",
     "Individuals" : "Individuální",
     "Group" : "Skupina",

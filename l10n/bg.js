@@ -30,6 +30,7 @@ OC.L10N.register(
     "Clear" : "Изчистване",
     "Try again" : "Опитай отново",
     "Close" : "Затваряне",
+    "Details" : "Подробности",
     "Group" : "Група",
     "External" : "Външен",
     "More information" : "Повече информация",

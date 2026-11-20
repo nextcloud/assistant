@@ -294,6 +294,7 @@
     "Close" : "關閉",
     "Close Nextcloud Assistant" : "關閉 Nextcloud 小幫手",
     "Details" : "詳細資訊",
+    "_+%n more parameter_::_+%n more parameters_" : ["還有 %n 個參數"],
     "Self" : "自己",
     "These actions only affect you." : "這些動作僅會影響您。",
     "Individuals" : "個人",

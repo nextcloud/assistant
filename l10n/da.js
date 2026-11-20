@@ -295,6 +295,8 @@ OC.L10N.register(
     "Cancel task" : "Annuller opgave",
     "Close" : "Luk",
     "Close Nextcloud Assistant" : "Luk Nextcloud Assistent",
+    "Details" : "Detaljer",
+    "_+%n more parameter_::_+%n more parameters_" : ["+%n parameter mere","+%n parametre mere"],
     "Self" : "Kun dig",
     "These actions only affect you." : "Disse handlinger påvirker kun dig.",
     "Individuals" : "Enkeltpersoner",
