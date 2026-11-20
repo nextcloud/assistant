@@ -239,6 +239,7 @@
 						:label="t('assistant', 'Selected folder')"
 						:readonly="true" />
 					<span class="global-skills__set-by">
+						<!-- TRANSLATORS Followed by the avatar and user ID of the admin who selected the global skills folder -->
 						{{ t('assistant', 'Set by') }}
 					</span>
 					<NcAvatar :user="state.global_skills_admin_uid"
@@ -246,6 +247,7 @@
 					<span>{{ state.global_skills_admin_uid }}</span>
 				</div>
 				<div v-else class="global-skills__current">
+					<!-- TRANSLATORS There is only one global skills folder. It contains the skills (sub-folders) that are available to all users -->
 					<span>{{ t('assistant', 'No global skills folder configured') }}</span>
 				</div>
 			</div>
