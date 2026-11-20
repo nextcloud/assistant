@@ -13,6 +13,7 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\BadRequestException;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\SessionSummaryService;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -42,16 +43,26 @@ class ChatServiceAgencyTest extends TestCase {
 	private ChatService $service;
 	private MessageMapper&MockObject $messageMapper;
 	private IManager&MockObject $taskProcessingManager;
+	private SessionMapper&MockObject $sessionMapper;
+	private SessionSummaryService&MockObject $sessionSummaryService;
+	private IUserManager&MockObject $userManager;
+	private IAppConfig&MockObject $appConfig;
+	private IL10N&MockObject $l10n;
+	private IDBConnection&MockObject $db;
+	private LoggerInterface&MockObject $logger;
+	private ITimeFactory&MockObject $timeFactory;
 	private ?Task $scheduledTask = null;
+	/** @var list<int> */
+	private array $cancelledTaskIds = [];
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$sessionMapper = $this->createMock(SessionMapper::class);
-		$sessionMapper->method('exists')->willReturn(true);
+		$this->sessionMapper = $this->createMock(SessionMapper::class);
+		$this->sessionMapper->method('exists')->willReturn(true);
 		$session = new Session();
 		$session->setUserId(self::USER_ID);
-		$sessionMapper->method('getUserSession')->willReturn($session);
+		$this->sessionMapper->method('getUserSession')->willReturn($session);
 
 		$humanMessage = new Message();
 		$humanMessage->setSessionId(self::SESSION_ID);
@@ -69,19 +80,47 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->scheduledTask = $task;
 		});
 
+		$this->sessionSummaryService = $this->createMock(SessionSummaryService::class);
+
+		$l10n = $this->createMock(IL10N::class);
+		$l10n->method('t')->willReturnCallback(static fn (string $text, array $parameters = []): string => ($parameters !== [] ? vsprintf(str_replace('%n', "\n", $text), $parameters) : $text));
+
+		$this->l10n = $l10n;
+		$this->userManager = $this->createMock(IUserManager::class);
+		$this->appConfig = $this->createMock(IAppConfig::class);
+		$this->db = $this->createMock(IDBConnection::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
+
+		$this->rebuildService();
+	}
+
+	/**
+	 * The service must be rebuilt when the mocked SessionMapper changes:
+	 * re-stubbing an already configured mock method would not override
+	 * the previously configured return value.
+	 */
+	private function rebuildService(): void {
 		$this->service = new ChatService(
-			$this->createMock(IUserManager::class),
-			$this->createMock(IAppConfig::class),
+			$this->userManager,
+			$this->appConfig,
 			$this->createMock(IConfig::class),
-			$this->createMock(IL10N::class),
-			$sessionMapper,
+			$this->l10n,
+			$this->sessionMapper,
 			$this->messageMapper,
-			$this->createMock(IDBConnection::class),
-			$this->createMock(SessionSummaryService::class),
+			$this->db,
+			$this->sessionSummaryService,
 			$this->taskProcessingManager,
-			$this->createMock(LoggerInterface::class),
-			$this->createMock(ITimeFactory::class),
+			$this->logger,
+			$this->timeFactory,
 		);
+	}
+
+	private function setUserSession(Session $session): void {
+		$this->sessionMapper = $this->createMock(SessionMapper::class);
+		$this->sessionMapper->method('exists')->willReturn(true);
+		$this->sessionMapper->method('getUserSession')->willReturn($session);
+		$this->rebuildService();
 	}
 
 	private function setAgentOptionalInputs(array $optionalInputShape): void {
@@ -152,5 +191,227 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+	}
+
+	public function testTaskIsScheduledAsTheSessionOwner(): void {
+		$this->setAgentOptionalInputs([]);
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(self::USER_ID, $this->scheduledTask->getUserId());
+	}
+
+	public function testAgentSessionsScheduleAsTheAgentOwnerWithTheRequesterMemories(): void {
+		$agentUserId = 'agent_user_id';
+		$session = new Session();
+		$session->setUserId($agentUserId);
+		$session->setRequesterUserId(self::USER_ID);
+		$this->setUserSession($session);
+		$this->setAgentOptionalInputs(['memories' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')->willThrowException(new DoesNotExistException('no system message'));
+		$this->sessionSummaryService->expects($this->once())
+			->method('getMemories')
+			->with(self::USER_ID)
+			->willReturn([]);
+
+		$this->service->scheduleMessageGeneration($agentUserId, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame($agentUserId, $this->scheduledTask->getUserId());
+		$this->assertArrayHasKey('memories', $this->scheduledTask->getInput());
+	}
+
+	/**
+	 * The generation tasks of agent sessions must describe the human requester
+	 * and the agent: without it, the model would not know either identity.
+	 */
+	public function testAgentSessionsGetTheIdentityLine(): void {
+		$session = new Session();
+		$session->setUserId('agent_user_id');
+		$session->setRequesterUserId(self::USER_ID);
+		$this->setUserSession($session);
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')
+			->with(self::SESSION_ID, 1, Message::ROLE_SYSTEM)
+			->willReturn($this->systemMessage(self::USER_INSTRUCTIONS));
+
+		$this->service->scheduleMessageGeneration('agent_user_id', self::SESSION_ID, 0, 'My Group Room');
+
+		$this->assertNotNull($this->scheduledTask);
+		$userInstructions = $this->scheduledTask->getInput()['user_instructions'] ?? null;
+		$this->assertNotNull($userInstructions);
+		// the agent identity and the requester identity are both in the line
+		$this->assertStringContainsString('agent_user_id', $userInstructions);
+		$this->assertStringContainsString(self::USER_ID, $userInstructions);
+		$this->assertStringContainsString('My Group Room', $userInstructions);
+		// the session instructions must still be part of the agent context
+		$this->assertStringContainsString(self::USER_INSTRUCTIONS, $userInstructions);
+	}
+
+	public function testHumanSessionsGetNoIdentityLine(): void {
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->messageMapper->method('getFirstNMessages')
+			->with(self::SESSION_ID, 1, Message::ROLE_SYSTEM)
+			->willReturn($this->systemMessage(self::USER_INSTRUCTIONS));
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(self::USER_INSTRUCTIONS, $this->scheduledTask->getInput()['user_instructions'] ?? null);
+	}
+
+	private function humanMessage(string $content, int $timestamp): Message {
+		$message = new Message();
+		$message->setSessionId(self::SESSION_ID);
+		$message->setRole(Message::ROLE_HUMAN);
+		$message->setContent($content);
+		$message->setTimestamp($timestamp);
+		$message->setAttachments('[]');
+		return $message;
+	}
+
+	private function assistantMessage(string $content, int $timestamp): Message {
+		$message = new Message();
+		$message->setSessionId(self::SESSION_ID);
+		$message->setRole(Message::ROLE_ASSISTANT);
+		$message->setContent($content);
+		$message->setTimestamp($timestamp);
+		$message->setAttachments('[]');
+		return $message;
+	}
+
+	private function pendingGenerationTask(int $id): Task {
+		$task = new Task(ContextAgentInteraction::ID, [], 'assistant:chatty-llm', self::USER_ID, 'chatty-llm:' . self::SESSION_ID);
+		$task->setId($id);
+		$task->setStatus(Task::STATUS_SCHEDULED);
+		return $task;
+	}
+
+	/**
+	 * A fresh IManager mock tracking the cancelled task ids and the pending
+	 * tasks: cancelTask marks the task cancelled and removes it from the ones
+	 * returned by getUserTasksByApp, getTask still returns it (as cancelled),
+	 * like the task processing manager does.
+	 */
+	private function setPendingGenerationTasks(array $tasks): void {
+		$pending = $tasks;
+		$allTasks = [];
+		foreach ($tasks as $task) {
+			$allTasks[$task->getId()] = $task;
+		}
+		$taskProcessingManager = $this->createMock(IManager::class);
+		$taskProcessingManager->method('getAvailableTaskTypeIds')->willReturn([ContextAgentInteraction::ID]);
+		$taskProcessingManager->method('getAvailableTaskTypes')->willReturn([
+			ContextAgentInteraction::ID => ['optionalInputShape' => []],
+		]);
+		$taskProcessingManager->method('getUserTasksByApp')->willReturnCallback(static function () use (&$pending): array {
+			return $pending;
+		});
+		$taskProcessingManager->method('cancelTask')->willReturnCallback(function (int $taskId) use (&$pending, &$allTasks): void {
+			$this->cancelledTaskIds[] = $taskId;
+			$allTasks[$taskId]?->setStatus(Task::STATUS_CANCELLED);
+			$pending = array_values(array_filter($pending, static fn (Task $task) => $task->getId() !== $taskId));
+		});
+		$taskProcessingManager->method('getTask')->willReturnCallback(static function (int $taskId) use (&$allTasks): Task {
+			return $allTasks[$taskId];
+		});
+		$taskProcessingManager->method('scheduleTask')->willReturnCallback(function (Task $task): void {
+			$this->scheduledTask = $task;
+		});
+		$this->taskProcessingManager = $taskProcessingManager;
+		$this->rebuildService();
+	}
+
+	/**
+	 * A message generation task must not be scheduled while another one is
+	 * scheduled or running for the session, unless cancellation is requested.
+	 */
+	public function testSchedulingFailsWhileTheSessionIsThinking(): void {
+		$this->setPendingGenerationTasks([$this->pendingGenerationTask(7)]);
+
+		$this->expectException(BadRequestException::class);
+		$this->expectExceptionMessage('session_already_thinking');
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+	}
+
+	/**
+	 * In the Talk integration a new human message supersedes the one being
+	 * answered: the pending generation is cancelled and a new one is scheduled
+	 * for the latest message.
+	 */
+	public function testSchedulingCancelsThePendingGenerationWhenRequested(): void {
+		$this->setPendingGenerationTasks([$this->pendingGenerationTask(7)]);
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID, 0, null, cancelRunningTask: true);
+
+		$this->assertSame([7], $this->cancelledTaskIds);
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
+	}
+
+	public function testNoGenerationIsCancelledWhenTheSessionIsNotThinking(): void {
+		$this->setPendingGenerationTasks([]);
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID, 0, null, cancelRunningTask: true);
+
+		$this->assertSame([], $this->cancelledTaskIds);
+		$this->assertNotNull($this->scheduledTask);
+	}
+
+	/**
+	 * The Talk stop feature needs to know whether a generation was actually
+	 * cancelled to decide between the ⏹️ (ignored) and 🛑 (stopped) outcomes.
+	 */
+	public function testCancelPendingGenerationTasksReturnsTheCancelledCount(): void {
+		$this->setPendingGenerationTasks([$this->pendingGenerationTask(7), $this->pendingGenerationTask(8)]);
+
+		$this->assertSame(2, $this->service->cancelPendingGenerationTasks(self::USER_ID, self::SESSION_ID));
+		$this->assertSame([7, 8], $this->cancelledTaskIds);
+	}
+
+	/**
+	 * Human messages that are pending without an answer in between belong to
+	 * the same agency turn: the agent gets all of them as its input.
+	 */
+	public function testPendingHumanMessagesAreMergedIntoTheAgencyInput(): void {
+		$this->setAgentOptionalInputs([]);
+		$first = $this->humanMessage('What is your name?', 100);
+		$second = $this->humanMessage('And how old are you?', 200);
+		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->messageMapper->method('getLastHumanMessage')->willReturn($second);
+		$this->messageMapper->method('getMessages')->willReturn([$first, $second]);
+		$this->rebuildService();
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame("What is your name?\n\nAnd how old are you?", $this->scheduledTask->getInput()['input'] ?? null);
+	}
+
+	public function testOnlyTrailingHumanMessagesAreMergedIntoTheAgencyInput(): void {
+		$this->setAgentOptionalInputs([]);
+		$first = $this->humanMessage('What is your name?', 100);
+		$answer = $this->assistantMessage('I am the assistant.', 150);
+		$second = $this->humanMessage('And how old are you?', 200);
+		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->messageMapper->method('getLastHumanMessage')->willReturn($second);
+		$this->messageMapper->method('getMessages')->willReturn([$first, $answer, $second]);
+		$this->rebuildService();
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame('And how old are you?', $this->scheduledTask->getInput()['input'] ?? null);
+	}
+
+	public function testTheAgencyInputIsTheLastHumanMessageWithoutPendingOnes(): void {
+		$this->setAgentOptionalInputs([]);
+		$this->messageMapper->method('getMessages')->willReturn([$this->humanMessage('What is your name?', 100)]);
+
+		$this->service->scheduleMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame('What is your name?', $this->scheduledTask->getInput()['input'] ?? null);
 	}
 }

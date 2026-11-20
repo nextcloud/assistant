@@ -27,6 +27,24 @@ use OCP\DB\Types;
  * @method \void setAgencyPendingActions(?string $agencyPendingActions)
  * @method \void setAssignmentId(?int $id)
  * @method \int|null getAssignmentId()
+ * @method \string|null getRequesterUserId()
+ * @method \void setRequesterUserId(?string $requesterUserId)
+ * @method \string|null getRoomToken()
+ * @method \void setRoomToken(?string $roomToken)
+ * @method \int|null getThreadId()
+ * @method \void setThreadId(?int $threadId)
+ * @method \string|null getAgentSeenRoomToken()
+ * @method \void setAgentSeenRoomToken(?string $agentSeenRoomToken)
+ * @method \int|null getAgentSeenCommentId()
+ * @method \void setAgentSeenCommentId(?int $agentSeenCommentId)
+ * @method \string|null getAgencyConfirmationRoomToken()
+ * @method \void setAgencyConfirmationRoomToken(?string $agencyConfirmationRoomToken)
+ * @method \int|null getAgencyConfirmationCommentId()
+ * @method \void setAgencyConfirmationCommentId(?int $agencyConfirmationCommentId)
+ * @method \string|null getAgentExplanationRoomToken()
+ * @method \void setAgentExplanationRoomToken(?string $agentExplanationRoomToken)
+ * @method \int|null getAgentExplanationMessageId()
+ * @method \void setAgentExplanationMessageId(?int $agentExplanationMessageId)
  */
 class Session extends Entity implements \JsonSerializable {
 	/** @var string */
@@ -63,6 +81,59 @@ class Session extends Entity implements \JsonSerializable {
 	 */
 	protected $assignmentId;
 
+	/**
+	 * When the session is owned by an agent (agent-as-a-user feature): the NC user id
+	 * of the human user the agent converses with
+	 * @var ?string
+	 */
+	protected $requesterUserId;
+
+	/**
+	 * When the session is used by an agent through Talk: the token of the 1-1 Talk room
+	 * @var ?string
+	 */
+	protected $roomToken;
+
+	/**
+	 * When the session is used by an agent through Talk: the id of the Talk thread for this session
+	 * @var ?int
+	 */
+	protected $threadId;
+
+	/**
+	 * The Talk room + comment of the last human message read by the agent,
+	 * used to post the failure notice and the origin room pointer message
+	 * once the requested message generation completed/failed
+	 * @var ?string
+	 */
+	protected $agentSeenRoomToken;
+
+	/** @var ?int */
+	protected $agentSeenCommentId;
+
+	/**
+	 * The Talk room + comment of the pending confirmation message
+	 * (sensitive actions of the agency feature), used to remove the
+	 * 👍/👎 reactions when the confirmation is answered implicitly
+	 * @var ?string
+	 */
+	protected $agencyConfirmationRoomToken;
+
+	/** @var ?int */
+	protected $agencyConfirmationCommentId;
+
+	/**
+	 * The Talk room + comment of the pending "generating an answer"
+	 * explanation message, posted where the answer will be posted and
+	 * deleted again when the answer is posted or the generation
+	 * fails or is stopped
+	 * @var ?string
+	 */
+	protected $agentExplanationRoomToken;
+
+	/** @var ?int */
+	protected $agentExplanationMessageId;
+
 	public static $columns = [
 		'id',
 		'user_id',
@@ -73,7 +144,15 @@ class Session extends Entity implements \JsonSerializable {
 		'summary',
 		'is_summary_up_to_date',
 		'is_remembered',
-		'assignment_id'
+		'assignment_id',
+		'requester_user_id',		'room_token',
+		'thread_id',
+		'agent_seen_room_token',
+		'agent_seen_comment_id',
+		'agency_confirmation_room_token',
+		'agency_confirmation_comment_id',
+		'agent_explanation_room_token',
+		'agent_explanation_message_id',
 	];
 	public static $fields = [
 		'id',
@@ -85,7 +164,16 @@ class Session extends Entity implements \JsonSerializable {
 		'summary',
 		'isSummaryUpToDate',
 		'isRemembered',
-		'assignmentId'
+		'assignmentId',
+		'requesterUserId',
+		'roomToken',
+		'threadId',
+		'agentSeenRoomToken',
+		'agentSeenCommentId',
+		'agencyConfirmationRoomToken',
+		'agencyConfirmationCommentId',
+		'agentExplanationRoomToken',
+		'agentExplanationMessageId',
 	];
 
 	public function __construct() {
@@ -98,6 +186,15 @@ class Session extends Entity implements \JsonSerializable {
 		$this->addType('isSummaryUpToDate', Types::SMALLINT);
 		$this->addType('isRemembered', Types::SMALLINT);
 		$this->addType('assignmentId', Types::BIGINT);
+		$this->addType('requesterUserId', Types::STRING);
+		$this->addType('roomToken', Types::STRING);
+		$this->addType('threadId', Types::BIGINT);
+		$this->addType('agentSeenRoomToken', Types::STRING);
+		$this->addType('agentSeenCommentId', Types::BIGINT);
+		$this->addType('agencyConfirmationRoomToken', Types::STRING);
+		$this->addType('agencyConfirmationCommentId', Types::BIGINT);
+		$this->addType('agentExplanationRoomToken', Types::STRING);
+		$this->addType('agentExplanationMessageId', Types::BIGINT);
 	}
 
 	#[\ReturnTypeWillChange]
@@ -113,6 +210,15 @@ class Session extends Entity implements \JsonSerializable {
 			'is_summary_up_to_date' => $this->getIsSummaryUpToDate(),
 			'is_remembered' => $this->getIsRemembered(),
 			'assignment_id' => $this->getAssignmentId(),
+			'requester_user_id' => $this->getRequesterUserId(),
+			'room_token' => $this->getRoomToken(),
+			'thread_id' => $this->getThreadId(),
+			'agent_seen_room_token' => $this->getAgentSeenRoomToken(),
+			'agent_seen_comment_id' => $this->getAgentSeenCommentId(),
+			'agency_confirmation_room_token' => $this->getAgencyConfirmationRoomToken(),
+			'agency_confirmation_comment_id' => $this->getAgencyConfirmationCommentId(),
+			'agent_explanation_room_token' => $this->getAgentExplanationRoomToken(),
+			'agent_explanation_message_id' => $this->getAgentExplanationMessageId(),
 		];
 	}
 

@@ -9,15 +9,20 @@ namespace OCA\Assistant\Settings;
 
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\AgentSkillsService;
+use OCA\Assistant\Service\AgentsService;
+use OCA\Assistant\Service\AgentStatusService;
 use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\DB\Exception;
 use OCP\IAppConfig;
+use OCP\IUserManager;
 use OCP\Settings\ISettings;
 use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use OCP\TaskProcessing\TaskTypes\AudioToText;
 use OCP\TaskProcessing\TaskTypes\TextToImage;
 use OCP\TaskProcessing\TaskTypes\TextToText;
+use Psr\Log\LoggerInterface;
 
 class Admin implements ISettings {
 
@@ -26,6 +31,10 @@ class Admin implements ISettings {
 		private IInitialState $initialStateService,
 		private ITaskProcessingManager $taskProcessingManager,
 		private AgentSkillsService $agentSkillsService,
+		private AgentsService $agentsService,
+		private AgentStatusService $agentStatusService,
+		private IUserManager $userManager,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -65,6 +74,26 @@ class Admin implements ISettings {
 
 		$globalSkillsConfig = $this->agentSkillsService->getGlobalSkillsConfig();
 
+		$agents = [];
+		try {
+			foreach ($this->agentsService->getAllAgents() as $agent) {
+				$user = $this->userManager->get($agent->getUserId());
+				$access = $this->agentsService->getAgentAccess((int)$agent->getId());
+				$agents[] = [
+					'id' => (int)$agent->getId(),
+					'user_id' => $agent->getUserId(),
+					'display_name' => $user?->getDisplayName() ?: $agent->getUserId(),
+					'personality' => $agent->getPersonality(),
+					'scope' => $agent->getScope(),
+					'status' => $this->agentStatusService->getStatus($agent->getUserId()),
+					'access_users' => $access['users'],
+					'access_groups' => $access['groups'],
+				];
+			}
+		} catch (Exception $e) {
+			$this->logger->warning('Could not load the agents', ['exception' => $e]);
+		}
+
 		$adminConfig = [
 			'task_processing_available' => $taskProcessingAvailable,
 			'assistant_enabled' => $assistantEnabled,
@@ -85,6 +114,8 @@ class Admin implements ISettings {
 			'context_agent_available' => $contextAgentAvailable,
 			'global_skills_admin_uid' => $globalSkillsConfig['admin_uid'],
 			'global_skills_path' => $globalSkillsConfig['path'],
+			'default_status' => $this->agentStatusService->getDefaultStatusMessage(),
+			'agents' => $agents,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

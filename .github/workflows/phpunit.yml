@@ -71,6 +71,8 @@ jobs:
           # fix "General error: 1 no such table: oc_external_mounts" since the app is not enabled but loaded directly by bootstrap.php
           # so we enable it explicitly to run the DB migrations
           ./occ app:enable --force files_external
+          # the agent status is backed by the user_status app
+          ./occ app:enable --force user_status
           ./occ app:enable --force ${{ env.APP_NAME }}
 
       - name: PHPUnit
