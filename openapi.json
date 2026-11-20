@@ -6932,7 +6932,7 @@
                                 "properties": {
                                     "title": {
                                         "type": "string",
-                                        "description": "The title of the new assignment"
+                                        "description": "The title of the new assignment, stored on its chat session without surrounding whitespace. Must not be empty and at most 256 characters long"
                                     },
                                     "prompt": {
                                         "type": "string",

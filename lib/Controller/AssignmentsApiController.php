@@ -55,14 +55,19 @@ class AssignmentsApiController extends OCSController {
 	private function serializeAssignments(string $userId, array $assignments): array {
 		$assignmentIds = array_map(static fn (Assignment $assignment): int => $assignment->getId(), $assignments);
 		$sessionIds = $this->sessionMapper->getSessionIdsForAssignments($userId, $assignmentIds);
-		return array_map(static fn (Assignment $assignment): array => array_merge($assignment->jsonSerialize(), [
-			'session_id' => $sessionIds[$assignment->getId()] ?? null,
-		]), $assignments);
+		return array_map(static fn (Assignment $assignment): array => self::serializeAssignment($assignment, $sessionIds[$assignment->getId()] ?? null), $assignments);
+	}
+
+	/**
+	 * @return AssistantAssignment
+	 */
+	private static function serializeAssignment(Assignment $assignment, ?int $sessionId): array {
+		return array_merge($assignment->jsonSerialize(), ['session_id' => $sessionId]);
 	}
 
 	/**
 	 * Create a new assignment
-	 * @param string $title The title of the new assignment
+	 * @param string $title The title of the new assignment, stored on its chat session without surrounding whitespace. Must not be empty and at most 256 characters long
 	 * @param string $prompt The prompt to be sent to the assistant when the assignment is executed
 	 * @param int $startsAt The timestamp when the assignment should start being executed
 	 * @param string $recurrence The recurrence rule for the assignment, in RRULE format (e.g. "FREQ=DAILY;INTERVAL=1" for a daily assignment)
@@ -78,9 +83,9 @@ class AssignmentsApiController extends OCSController {
 	#[Http\Attribute\ApiRoute(verb: 'POST', url: '/assignments')]
 	public function createUserAssignment(string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): DataResponse {
 		try {
-			$assignment = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence, $timezone);
-			return new DataResponse(['assignment' => $this->serializeAssignments($assignment->getUserId(), [$assignment])[0]]);
-		} catch (InternalException|Exception $e) {
+			['assignment' => $assignment, 'sessionId' => $sessionId] = $this->assignmentsService->createAssignment($this->userId, $title, $prompt, $startsAt, $recurrence, $timezone);
+			return new DataResponse(['assignment' => self::serializeAssignment($assignment, $sessionId)]);
+		} catch (InternalException $e) {
 			$this->logger->error('Error while creating assignment for user ' . $this->userId, ['exception' => $e]);
 			return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 		} catch (UnauthorizedException $e) {
@@ -194,10 +199,12 @@ class AssignmentsApiController extends OCSController {
 					}
 				}
 				$assignment->setUpdatedAt($this->timeFactory->now()->getTimestamp());
+				// read before the write, so a failed read does not return an error for a saved change
+				$serialized = $this->serializeAssignments($this->userId, [$assignment])[0];
 				$this->assignmentMapper->update($assignment);
-				return new DataResponse(['assignment' => $this->serializeAssignments($this->userId, [$assignment])[0]]);
+				return new DataResponse(['assignment' => $serialized]);
 			} catch (Exception $e) {
-				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
+				$this->logger->error('Error while updating the assignment for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 			} catch (DoesNotExistException|MultipleObjectsReturnedException) {
 				return new DataResponse('', Http::STATUS_NOT_FOUND);
@@ -225,7 +232,7 @@ class AssignmentsApiController extends OCSController {
 				$this->assignmentMapper->delete($assignment);
 				return new DataResponse('', Http::STATUS_OK);
 			} catch (Exception $e) {
-				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
+				$this->logger->error('Error while deleting the assignment for user ' . $this->userId, ['exception' => $e]);
 				return new DataResponse('', Http::STATUS_INTERNAL_SERVER_ERROR);
 			} catch (DoesNotExistException|MultipleObjectsReturnedException) {
 				// 200 OK because of idempotence, if we send DELETE twice, we return the same response twice
