@@ -83,6 +83,28 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * @param list<int> $assignmentIds
+	 * @return array<int, int> session ids by assignment id
+	 * @throws \OCP\DB\Exception
+	 */
+	public function getSessionIdsForAssignments(string $userId, array $assignmentIds): array {
+		$sessionIds = [];
+		foreach (array_chunk($assignmentIds, IQueryBuilder::MAX_IN_PARAMETERS) as $chunk) {
+			$qb = $this->db->getQueryBuilder();
+			$qb->select('id', 'assignment_id')
+				->from($this->getTableName())
+				->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+				->andWhere($qb->expr()->in('assignment_id', $qb->createPositionalParameter($chunk, IQueryBuilder::PARAM_INT_ARRAY)));
+			$result = $qb->executeQuery();
+			while ($row = $result->fetch()) {
+				$sessionIds[(int)$row['assignment_id']] = (int)$row['id'];
+			}
+			$result->closeCursor();
+		}
+		return $sessionIds;
+	}
+
+	/**
 	 * @return \Generator<array-key, Session>
 	 * @throws \OCP\DB\Exception
 	 */

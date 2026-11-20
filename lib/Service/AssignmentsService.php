@@ -16,15 +16,22 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
 use OCP\IDateTimeZone;
+use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
 class AssignmentsService {
+	use TTransactional;
+
+	// the length of the title column of the chat sessions, the title is stored on the assignment's session
+	private const MAX_TITLE_LENGTH = 256;
+
 	public function __construct(
 		private AssignmentMapper $assignmentMapper,
 		private SessionMapper $sessionMapper,
@@ -35,17 +42,28 @@ class AssignmentsService {
 		private IL10N $l10n,
 		private IDateTimeZone $dateTimeZone,
 		private IUserManager $userManager,
+		private IDBConnection $db,
 	) {
 	}
 
 	/**
+	 * Creates the assignment, its chat session and the user's background job, all or nothing
+	 *
+	 * @return array{assignment: Assignment, sessionId: int}
 	 * @throws InternalException
 	 * @throws UnauthorizedException
 	 * @throws BadRequestException
 	 */
-	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): Assignment {
+	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): array {
 		if ($userId === null) {
 			throw new UnauthorizedException();
+		}
+		$title = trim($title);
+		if ($title === '') {
+			throw new BadRequestException('The title must not be empty');
+		}
+		if (mb_strlen($title) > self::MAX_TITLE_LENGTH) {
+			throw new BadRequestException('The title must be at most ' . self::MAX_TITLE_LENGTH . ' characters');
 		}
 		$now = $this->timeFactory->now()->getTimestamp();
 		$assignment = new Assignment();
@@ -70,21 +88,20 @@ class AssignmentsService {
 			throw new BadRequestException($e->getMessage(), previous: $e);
 		}
 		try {
-			$this->assignmentMapper->insert($assignment);
+			$sessionId = $this->atomic(function () use ($userId, $title, $assignment): int {
+				$this->assignmentMapper->insert($assignment);
+				$session = $this->chatService->createChatSession($userId, title: $title);
+				$session->setAssignmentId($assignment->getId());
+				$this->sessionMapper->update($session);
+				if (!$this->jobList->has(RunAssignmentsJob::class, ['userId' => $userId])) {
+					$this->jobList->add(RunAssignmentsJob::class, ['userId' => $userId]);
+				}
+				return $session->getId();
+			}, $this->db);
 		} catch (Exception $e) {
 			throw new InternalException(previous: $e);
 		}
-		$session = $this->chatService->createChatSession($userId, title: $title);
-		$session->setAssignmentId($assignment->getId());
-		try {
-			$this->sessionMapper->update($session);
-		} catch (Exception $e) {
-			throw new InternalException(previous: $e);
-		}
-		if (!$this->jobList->has(RunAssignmentsJob::class, ['userId' => $userId])) {
-			$this->jobList->add(RunAssignmentsJob::class, ['userId' => $userId]);
-		}
-		return $assignment;
+		return ['assignment' => $assignment, 'sessionId' => $sessionId];
 	}
 
 	/**

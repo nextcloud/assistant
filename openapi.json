@@ -31,7 +31,8 @@
                     "updated_at",
                     "starts_at",
                     "last_run_at",
-                    "timezone"
+                    "timezone",
+                    "session_id"
                 ],
                 "properties": {
                     "id": {
@@ -65,6 +66,11 @@
                     },
                     "timezone": {
                         "type": "string"
+                    },
+                    "session_id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "nullable": true
                     }
                 }
             },
@@ -6926,7 +6932,7 @@
                                 "properties": {
                                     "title": {
                                         "type": "string",
-                                        "description": "The title of the new assignment"
+                                        "description": "The title of the new assignment, stored on its chat session without surrounding whitespace. Must not be empty and at most 256 characters long"
                                     },
                                     "prompt": {
                                         "type": "string",
@@ -7063,7 +7069,7 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid recurrence rule or timezone",
+                        "description": "Invalid title, recurrence rule or timezone",
                         "content": {
                             "application/json": {
                                 "schema": {
