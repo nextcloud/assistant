@@ -44,6 +44,7 @@ OC.L10N.register(
     "New task" : "Новае заданне",
     "Cancel task" : "Скасаваць заданне",
     "Close" : "Закрыць",
+    "Details" : "Падрабязнасці",
     "Group" : "Група",
     "External" : "Знешні",
     "More information" : "Больш інфармацыі",

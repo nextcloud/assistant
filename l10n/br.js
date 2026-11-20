@@ -13,6 +13,7 @@ OC.L10N.register(
     "Data folder" : "Teuliat roadennoù",
     "Clear" : "Netaat",
     "Close" : "Serriñ",
+    "Details" : "Munudoù",
     "More information" : "Muioc'h a ditouroù",
     "Cancel" : "Nullañ",
     "Deselect all" : "Diziuzañ pep tra",

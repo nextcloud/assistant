@@ -41,6 +41,7 @@ OC.L10N.register(
     "Getting results…" : "Consiguiendo los resultaos…",
     "Close" : "Zarrar",
     "Close Nextcloud Assistant" : "Zarrar l'asistente de Nextcloud",
+    "Details" : "Detalles",
     "Group" : "Grupu",
     "More information" : "Más información",
     "Cancel" : "Encaboxar",

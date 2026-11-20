@@ -295,6 +295,8 @@ OC.L10N.register(
     "Cancel task" : "Aufgabe abbrechen",
     "Close" : "Schließen",
     "Close Nextcloud Assistant" : "Nextcloud Assistant schließen",
+    "Details" : "Details",
+    "_+%n more parameter_::_+%n more parameters_" : ["+%n weiterer Parameter","+%n weitere Parameter"],
     "Self" : "Selbst",
     "These actions only affect you." : "Diese Aktionen betreffen ausschließlich dich.",
     "Individuals" : "Einzelpersonen",
