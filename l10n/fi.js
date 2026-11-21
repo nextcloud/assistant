@@ -66,6 +66,7 @@ OC.L10N.register(
     "Describe the image you want to generate" : "Kuvaile luotava kuva",
     "Generate image" : "Luo kuva",
     "Folder name" : "Kansion nimi",
+    "No memories yet" : "Ei muistoja vielä",
     "This may take a few seconds…" : "Tämä saattaa kestää muutaman sekunnin",
     "Nothing yet" : "Ei vielä mitään",
     "Cancelled" : "Peruttu",

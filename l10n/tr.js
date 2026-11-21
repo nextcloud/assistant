@@ -461,6 +461,7 @@ OC.L10N.register(
     "Custom instructions" : "Özel yönergeler",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Yardımcının sizin için oluşturduğu içerikleri kaydettiği konum. Yöneticinizin belirlediği adın kullanılması için boş bırakın. Değiştirildiğinde, orada var olan dosyaların taşınmayacağını unutmayın.",
     "Folder name" : "Klasör adı",
+    "No memories yet" : "Henüz bir anı yok",
     "Remembered conversations" : "Anımsanan görüşmeler",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Buradaki görüşmeler Yardımcı sohbeti tarafından anımsanır ve her yeni görüşme için dikkate alınır:",
     "This may take a few seconds…" : "Bu işlem bir kaç saniye sürebilir…",

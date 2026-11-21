@@ -462,6 +462,7 @@ OC.L10N.register(
     "Custom instructions" : "Benutzerdefinierte Anweisungen",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Hier speichert der Assistent die für dich generierten Inhalte. Lasse dieses Feld leer, um den von deiner Administration festgelegten Namen zu verwenden. Bereits vorhandene Dateien werden durch eine Änderung dieses Feldes nicht verschoben.",
     "Folder name" : "Ordnername",
+    "No memories yet" : "Bislang keine Memories",
     "Remembered conversations" : "Gespeicherte Unterhaltung",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Folgende Unterhaltungen werden vom Assistant-Chat gespeichert und bei jeder neuen Unterhaltung berücksichtigt:",
     "This may take a few seconds…" : "Das kann einige Sekunden dauern …",

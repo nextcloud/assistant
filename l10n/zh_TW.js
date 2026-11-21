@@ -462,6 +462,7 @@ OC.L10N.register(
     "Custom instructions" : "自訂指示",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "小幫手將為您產生的內容儲存於此處。若留空，則會使用管理員所設定的名稱。變更此設定並不會移動現有的檔案。",
     "Folder name" : "資料夾名稱",
+    "No memories yet" : "尚無回憶",
     "Remembered conversations" : "記得的對話",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "以下對話將由小幫手聊天記憶，並在每次新對話中予以考量：",
     "This may take a few seconds…" : "這可能需要幾秒鐘……",

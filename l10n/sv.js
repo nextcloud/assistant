@@ -451,6 +451,7 @@ OC.L10N.register(
     "Custom instructions" : "Egna instruktioner",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Där assistenten lagrar innehåll som den skapar åt dig. Lämna tomt om du vill använda namnet som din administratör har angett. Om du ändrar det flyttas inte filer som redan finns där.",
     "Folder name" : "Mappnamn",
+    "No memories yet" : "Inga minnen ännu",
     "Remembered conversations" : "Ihågkomna konversationer",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Följande konversationer har sparats i minnet av Assistant-chatten och beaktas i varje ny konversation:",
     "This may take a few seconds…" : "Detta kan ta några sekunder …",

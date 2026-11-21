@@ -440,6 +440,7 @@
     "The following services are used as backends for Nextcloud Assistant:" : "Järgmised teenused on kasutusel Nextcloudi Abilise taustateenustena:",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Koht, kuhu abiline salvestab sinu jaoks loodud sisu. Jäta väli tühjaks, et kasutada peakasutaja määratud nime. Selle muutmine ei mõjuta seal juba olevaid faile.",
     "Folder name" : "Kausta nimi",
+    "No memories yet" : "Mälestusi veel pole",
     "Remembered conversations" : "Meeldejäetud vestlused",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Järgmised vestlused on jäetud Abilise vestluses meelde ja ta arvestab nendega iga uue vestluse puhul:",
     "This may take a few seconds…" : "Selleks võib kuluda mõni sekund…",

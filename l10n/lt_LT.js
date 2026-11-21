@@ -410,6 +410,7 @@ OC.L10N.register(
     "Configured backends" : "Konfigūruotos posistemės",
     "The following services are used as backends for Nextcloud Assistant:" : "Šios paslaugos naudojamos kaip „Nextcloud Asistentas“ posistemės:",
     "Folder name" : "Aplanko pavadinimas",
+    "No memories yet" : "Dar nėra prisiminimų",
     "Remembered conversations" : "Prisiminti pokalbiai",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "„Asistento Pokalbiai“ įsimena šiuos pokalbius ir į juos atsižvelgs kiekvieno naujo pokalbio metu:",
     "This may take a few seconds…" : "Tai gali užtrukti keletą sekundžių…",

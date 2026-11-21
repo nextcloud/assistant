@@ -444,6 +444,7 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "Les services suivants sont utilisés comme backends pour Nextcloud Assistant :",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Endroit où l'assistant stocke le contenu qu'il génère pour vous. Laissez vide pour utiliser le nom que votre administrateur a défini. Le modifier ne déplace pas les fichiers qui y sont déjà.",
     "Folder name" : "Nom du dossier",
+    "No memories yet" : "Aucun souvenir pour le moment",
     "Remembered conversations" : "Conversations mémorisées",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Les conversations suivantes sont mémorisées par le chat de l'Assistant et seront prises en compte pour chaque nouvelle conversation :",
     "This may take a few seconds…" : "Cela ne devrait durer que quelques secondes…",

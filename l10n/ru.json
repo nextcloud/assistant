@@ -460,6 +460,7 @@
     "Custom instructions" : "Свои инструкции",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Место, где Помощник хранит созданное для вас содержимое. Оставьте пустым, чтобы использовать имя, заданное администратором. Изменение не перемещает уже существующие файлы.",
     "Folder name" : "Имя папки",
+    "No memories yet" : "Пока нет ни одного воспоминания",
     "Remembered conversations" : "Запомненные сеансы чата",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Следующие сеансы чата запоминаются чатом Помощника и учитываются в каждом новом сеансе:",
     "This may take a few seconds…" : "Это может занять несколько секунд…",
