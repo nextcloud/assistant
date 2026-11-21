@@ -297,6 +297,7 @@ OC.L10N.register(
     "Configured backends" : "Backend yang dikonfigurasi",
     "The following services are used as backends for Nextcloud Assistant:" : "Layanan berikut digunakan sebagai backend untuk Asisten Nextcloud:",
     "Folder name" : "Nama folder",
+    "No memories yet" : "Belum ada kenangan",
     "Remembered conversations" : "Percakapan yang diingat",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Percakapan berikut diingat oleh Chat Asisten dan akan diperhitungkan untuk setiap percakapan baru:",
     "This may take a few seconds…" : "Ini mungkin memerlukan beberapa detik…",

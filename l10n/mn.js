@@ -294,6 +294,7 @@ OC.L10N.register(
     "Configured backends" : "Тохируулсан backend-үүд",
     "The following services are used as backends for Nextcloud Assistant:" : "Дараах үйлчилгээнүүдийг Nextcloud туслахын backend болгон ашиглаж байна:",
     "Folder name" : "–•–∞–≤—Ç–∞—Å–Ω—ã –Ω—ç—Ä",
+    "No memories yet" : "Одоогоор дурсамж алга",
     "Remembered conversations" : "Санасан яриануд",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Дараах яриануудыг Assistant Chat санаж байгаа бөгөөд шинэ яриа бүрт харгалзах болно:",
     "This may take a few seconds…" : "Энэ хэдэн секунд шаардаж магадгүй…",

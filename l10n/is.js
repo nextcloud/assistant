@@ -66,6 +66,7 @@ OC.L10N.register(
     "Delete message" : "Eyða skilaboðum",
     "Generate image" : "Útbúa mynd",
     "Folder name" : "Nafn möppu",
+    "No memories yet" : "Engar minningar ennþá",
     "This may take a few seconds…" : "Þetta gæti tekið örfáar sekúndur…",
     "Nothing yet" : "Ekkert ennþá",
     "Cancelled" : "Hætt við",

@@ -268,6 +268,7 @@ OC.L10N.register(
     "Configured backends" : "Backends configurados",
     "The following services are used as backends for Nextcloud Assistant:" : "Los siguientes servicios se utilizan como backends para el Asistente de Nextcloud:",
     "Folder name" : "Nombre de la carpeta",
+    "No memories yet" : "No hay memorias aún",
     "This may take a few seconds…" : "Esto puede tardar unos segundos…",
     "This may take a few minutes…" : "Esto podría tomar unos pocos minutos…",
     "This task is taking longer to start running than expected. Please contact your administrator to ensure that Assistant is correctly configured." : "Esta tarea está tomando más tiempo del esperado en iniciar. Por favor, contacte a su administrador para asegurarse de que el Asistente está configurado correctamente.",

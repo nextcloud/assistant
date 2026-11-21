@@ -461,6 +461,7 @@ OC.L10N.register(
     "Custom instructions" : "Vlastné pokyny",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Kde asistent ukladá obsah, ktorý pre vás vygeneruje. Ponechajte prázdne, ak chcete použiť názov nastavený správcom. Zmena nepresunie súbory, ktoré sa tam už nachádzajú.",
     "Folder name" : "Názov priečinka",
+    "No memories yet" : "Zatiaľ žiadne spomienky",
     "Remembered conversations" : "Zapamätané konverzácie",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Nasledujúce konverzácie si pamätá Asistent a budú zohľadnené pri každej novej konverzácii:",
     "This may take a few seconds…" : "Toto zaberie pár sekúnd…",

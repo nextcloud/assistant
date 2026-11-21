@@ -459,6 +459,7 @@
     "Custom instructions" : "Instruções personalizadas",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Local onde o assistente armazena o conteúdo que gera para você. Deixe em branco para usar o nome definido pelo seu administrador. Alterar esse nome não move os arquivos que já estão lá.",
     "Folder name" : "Nome da pasta",
+    "No memories yet" : "Ainda sem memorias",
     "Remembered conversations" : "Conversas lembradas",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "As seguintes conversas são lembradas pelo bate-papo com o assistente e serão levadas em consideração em todas as novas conversas:",
     "This may take a few seconds…" : "Isso pode demorar alguns segundos…",

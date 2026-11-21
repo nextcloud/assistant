@@ -449,6 +449,7 @@ OC.L10N.register(
     "Custom instructions" : "Treoracha saincheaptha",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "An áit a stórálann an cúntóir ábhar a ghineann sé duit. Fág folamh chun an t-ainm atá socraithe ag do riarthóir a úsáid. Ní bhogtar comhaid atá ann cheana féin mar gheall ar athrú a dhéanamh air.",
     "Folder name" : "Ainm fillteáin",
+    "No memories yet" : "Gan aon chuimhní fós",
     "Remembered conversations" : "Comhráite cuimhne",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Cuimhníonn Comhrá an Chúnta na comhráite seo a leanas agus cuirfear san áireamh iad i ngach comhrá nua:",
     "This may take a few seconds…" : "D’fhéadfadh sé seo cúpla soicind a thógáil…",

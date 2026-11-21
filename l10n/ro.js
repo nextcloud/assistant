@@ -439,6 +439,7 @@ OC.L10N.register(
     "The following services are used as backends for Nextcloud Assistant:" : "Următoarele servicii sunt folosite ca backenduri pentru Nextcloud Assistant:",
     "Where the assistant stores content it generates for you. Leave empty to use the name your administrator has set. Changing it does not move files that are already there." : "Locul în care asistentul stochează conținutul pe care îl generează pentru tine. Lasă gol pentru a folosi numele setat de administrator. Schimbarea lui nu mută fișierele care există deja.",
     "Folder name" : "Numele dosarului",
+    "No memories yet" : "Încă nu există amintiri",
     "Remembered conversations" : "Conversații memorate",
     "The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:" : "Următoarele conversații sunt memorate de chatul asistentului și vor fi luate în considerare la fiecare conversație nouă:",
     "This may take a few seconds…" : "Poate dura câteva secunde…",
