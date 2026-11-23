@@ -289,6 +289,7 @@ OC.L10N.register(
     "Close" : "Fermer",
     "Close Nextcloud Assistant" : "Fermer l'assistant Nextcloud",
     "Details" : "Détails",
+    "_+%n more parameter_::_+%n more parameters_" : ["+%n paramètre supplémentaire","+%n paramètres supplémentaires","+%n paramètres supplémentaires"],
     "Self" : "Vous-même",
     "These actions only affect you." : "Ces actions ne concernent que vous.",
     "Individuals" : "Personnes",
