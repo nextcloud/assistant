@@ -167,20 +167,13 @@ class ChatService {
 	}
 
 	/**
+	 * Delete a session of the user and its messages, a session of another user is left alone
+	 *
 	 * @throws InternalException
 	 * @throws UnauthorizedException
 	 */
 	public function deleteSession(?string $userId, int $sessionId): void {
-		if ($userId === null) {
-			throw new UnauthorizedException($this->l10n->t('Unauthorized'));
-		}
-
-		try {
-			$this->sessionMapper->deleteSession($userId, $sessionId);
-			$this->messageMapper->deleteMessagesBySession($sessionId);
-		} catch (Exception|\RuntimeException $e) {
-			throw new InternalException(previous: $e);
-		}
+		$this->deleteSessions($userId, [$sessionId]);
 	}
 
 	/**
