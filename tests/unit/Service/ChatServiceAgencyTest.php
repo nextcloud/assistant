@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Assistant\Tests\Unit\Service;
 
+use OCA\Assistant\Db\AssignmentMapper;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
@@ -76,6 +77,7 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->createMock(IL10N::class),
 			$sessionMapper,
 			$this->messageMapper,
+			$this->createMock(AssignmentMapper::class),
 			$this->createMock(IDBConnection::class),
 			$this->createMock(SessionSummaryService::class),
 			$this->taskProcessingManager,

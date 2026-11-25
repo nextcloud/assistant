@@ -83,6 +83,20 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * Turn the sessions of an assignment into normal chat sessions
+	 *
+	 * @throws Exception
+	 */
+	public function detachAssignment(string $userId, int $assignmentId): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->update($this->getTableName())
+			->set('assignment_id', $qb->createNamedParameter(null, IQueryBuilder::PARAM_NULL))
+			->where($qb->expr()->eq('assignment_id', $qb->createNamedParameter($assignmentId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)));
+		$qb->executeStatement();
+	}
+
+	/**
 	 * @return \Generator<array-key, Session>
 	 * @throws \OCP\DB\Exception
 	 */

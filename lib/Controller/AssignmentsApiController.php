@@ -214,7 +214,7 @@ class AssignmentsApiController extends OCSController {
 		if ($this->userId !== null) {
 			try {
 				$assignment = $this->assignmentMapper->find($this->userId, $id);
-				$this->assignmentMapper->delete($assignment);
+				$this->assignmentsService->deleteAssignment($assignment);
 				return new DataResponse('', Http::STATUS_OK);
 			} catch (Exception $e) {
 				$this->logger->error('Error while fetching assignment for user ' . $this->userId, ['exception' => $e]);
