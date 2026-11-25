@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Service;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Db\AssignmentMapper;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
@@ -41,6 +42,7 @@ class ChatService {
 		private readonly IL10N $l10n,
 		private readonly SessionMapper $sessionMapper,
 		private readonly MessageMapper $messageMapper,
+		private readonly AssignmentMapper $assignmentMapper,
 		private readonly IDBConnection $db,
 		private readonly SessionSummaryService $sessionSummaryService,
 		private readonly IManager $taskProcessingManager,
@@ -188,6 +190,7 @@ class ChatService {
 		}
 
 		try {
+			$this->deleteAssignmentsOfSessions($userId, $this->sessionMapper->getUserSessionsByIds($userId, [$sessionId]));
 			$this->sessionMapper->deleteSession($userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
 		} catch (Exception|\RuntimeException $e) {
@@ -225,6 +228,7 @@ class ChatService {
 			}
 
 			$this->db->beginTransaction();
+			$this->deleteAssignmentsOfSessions($userId, $ownedSessions);
 			$this->sessionMapper->deleteSessionsByUser($userId, $ownedSessionIds);
 			$this->messageMapper->deleteMessagesBySessions($ownedSessionIds);
 			$this->db->commit();
@@ -234,6 +238,17 @@ class ChatService {
 			}
 			throw new InternalException(previous: $e);
 		}
+	}
+
+	/**
+	 * A scheduled task without its session has nowhere to post its runs
+	 *
+	 * @param list<Session> $sessions
+	 * @throws Exception
+	 */
+	private function deleteAssignmentsOfSessions(string $userId, array $sessions): void {
+		$assignmentIds = array_values(array_filter(array_map(static fn (Session $session) => $session->getAssignmentId(), $sessions)));
+		$this->assignmentMapper->deleteByIds($userId, $assignmentIds);
 	}
 
 	/**

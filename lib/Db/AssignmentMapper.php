@@ -88,6 +88,21 @@ class AssignmentMapper extends QBMapper {
 	}
 
 	/**
+	 * @param list<int> $assignmentIds
+	 * @throws \OCP\DB\Exception
+	 */
+	public function deleteByIds(string $userId, array $assignmentIds): void {
+		if ($assignmentIds === []) {
+			return;
+		}
+		$qb = $this->db->getQueryBuilder();
+		$qb->delete($this->getTableName())
+			->where($qb->expr()->in('id', $qb->createNamedParameter($assignmentIds, IQueryBuilder::PARAM_INT_ARRAY)))
+			->andWhere($qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR)));
+		$qb->executeStatement();
+	}
+
+	/**
 	 * @throws \OCP\DB\Exception
 	 */
 	public function deleteAllForUser(string $userId): void {

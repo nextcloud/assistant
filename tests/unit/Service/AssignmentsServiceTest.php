@@ -28,6 +28,7 @@ use Test\TestCase;
 class AssignmentsServiceTest extends TestCase {
 
 	private const TEST_USER = 'assignments_service_test_user';
+	private const OTHER_USER = 'assignments_service_other_user';
 
 	private AssignmentsService $service;
 	private AssignmentMapper $assignmentMapper;
@@ -75,6 +76,29 @@ class AssignmentsServiceTest extends TestCase {
 		$this->assertNotContains($session->getId(), $this->sessionIds(true));
 		$this->assertContains($session->getId(), $this->sessionIds(false));
 		$this->assertSame('Daily digest', $this->sessionMapper->getUserSession(self::TEST_USER, $session->getId())->getTitle());
+	}
+
+	public function testDeleteSessionsDeletesTheirAssignments(): void {
+		$deleted = $this->service->createAssignment(self::TEST_USER, 'Deleted', 'Prompt', time(), 'FREQ=DAILY', 'UTC');
+		$kept = $this->service->createAssignment(self::TEST_USER, 'Kept', 'Prompt', time(), 'FREQ=DAILY', 'UTC');
+		$session = $this->sessionMapper->getUserSessionForAssignment(self::TEST_USER, $deleted->getId());
+
+		Server::get(ChatService::class)->deleteSessions(self::TEST_USER, [$session->getId()]);
+
+		$this->assertFalse($this->assignmentMapper->exists(self::TEST_USER, $deleted->getId()));
+		$this->assertTrue($this->assignmentMapper->exists(self::TEST_USER, $kept->getId()));
+	}
+
+	public function testDeleteSessionDeletesOnlyTheOwnersAssignment(): void {
+		$assignment = $this->service->createAssignment(self::TEST_USER, 'Daily digest', 'Prompt', time(), 'FREQ=DAILY', 'UTC');
+		$session = $this->sessionMapper->getUserSessionForAssignment(self::TEST_USER, $assignment->getId());
+		$chatService = Server::get(ChatService::class);
+
+		$chatService->deleteSession(self::OTHER_USER, $session->getId());
+		$this->assertTrue($this->assignmentMapper->exists(self::TEST_USER, $assignment->getId()));
+
+		$chatService->deleteSession(self::TEST_USER, $session->getId());
+		$this->assertFalse($this->assignmentMapper->exists(self::TEST_USER, $assignment->getId()));
 	}
 
 	public function testRepairDetachesOnlySessionsOfDeletedAssignments(): void {
