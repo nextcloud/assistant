@@ -88,6 +88,17 @@ class AssignmentsService {
 	}
 
 	/**
+	 * Delete an assignment and keep its run history as a normal chat session
+	 *
+	 * @throws Exception
+	 */
+	public function deleteAssignment(Assignment $assignment): void {
+		// detach first: if the delete fails, the next run finds no session and deletes the assignment
+		$this->sessionMapper->detachAssignment($assignment->getUserId(), $assignment->getId());
+		$this->assignmentMapper->delete($assignment);
+	}
+
+	/**
 	 * @throws InternalException
 	 */
 	public function deleteAllForUser(string $userId): void {
