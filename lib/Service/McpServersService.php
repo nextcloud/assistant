@@ -34,6 +34,8 @@ class McpServersService {
 	public const ADMIN_ENABLED_KEY = 'mcp_user_servers_enabled';
 	public const MAX_SERVERS = 5;
 	public const MAX_NAME_LENGTH = 64;
+	// The key goes in front of the names of a server's tools, which may be 64 characters long in total
+	public const MAX_KEY_LENGTH = 12;
 	public const MAX_URL_LENGTH = 2048;
 	public const MAX_HEADERS = 10;
 	public const MAX_HEADER_VALUE_LENGTH = 8192;
@@ -191,7 +193,7 @@ class McpServersService {
 	 */
 	public static function serverKey(string $name): string {
 		$key = trim((string)preg_replace('/[^a-z0-9]+/', '_', strtolower($name)), '_');
-		return trim(substr($key, 0, 20), '_');
+		return trim(substr($key, 0, self::MAX_KEY_LENGTH), '_');
 	}
 
 	/**

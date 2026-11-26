@@ -206,6 +206,6 @@ class McpServersServiceTest extends TestCase {
 		$this->assertSame('my_weather', McpServersService::serverKey('My Weather!'));
 		$this->assertSame('wea_ther', McpServersService::serverKey('Wea-ther'));
 		$this->assertSame('', McpServersService::serverKey('!!!'));
-		$this->assertSame('a_very_long_server_n', McpServersService::serverKey('A very long server name indeed'));
+		$this->assertSame('a_very_long', McpServersService::serverKey('A very long server name indeed'));
 	}
 }
