@@ -350,6 +350,9 @@ class ChattyLLMController extends OCSController {
 		}
 
 		try {
+			if (!$this->sessionMapper->exists($this->userId, $sessionId)) {
+				return new JSONResponse();
+			}
 			// we don't delete the tasks
 			$this->sessionMapper->deleteSession($this->userId, $sessionId);
 			$this->messageMapper->deleteMessagesBySession($sessionId);
