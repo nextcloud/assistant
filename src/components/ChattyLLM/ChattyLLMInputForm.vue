@@ -1179,7 +1179,7 @@ export default {
 		 */
 		async fetchSessionsAndRestoreLast(preferredSessionId = null) {
 			const isAssignment = this.isAssignment
-			const [lastSessionId] = await Promise.all([
+			const [lastSessionId, sessionsFetched] = await Promise.all([
 				this.fetchLastSessionId(isAssignment),
 				this.fetchSessions(),
 			])
@@ -1188,8 +1188,14 @@ export default {
 				return
 			}
 			this.lastSessionId = lastSessionId
-			const session = this.sessions?.find(s => s.id === preferredSessionId)
-				?? this.sessions?.find(s => s.id === lastSessionId)
+			// forget the last session if it does not exist anymore
+			if (sessionsFetched && lastSessionId !== null && !this.sessions.some(s => s.id === lastSessionId)) {
+				this.saveLastSessionId(null)
+			}
+			// only fall back to the last session if no specific session was requested
+			const session = preferredSessionId !== null
+				? this.sessions?.find(s => s.id === preferredSessionId)
+				: this.sessions?.find(s => s.id === lastSessionId)
 			if (session) {
 				this.onSessionSelect(session)
 			}
@@ -1228,11 +1234,13 @@ export default {
 				const response = await axios.get(getChatURL('/sessions'), { params: { isAssignment: this.isAssignment } })
 				console.debug('fetchSessions response:', response)
 				this.sessions = response.data
+				return true
 			} catch (error) {
 				this.sessions = []
 				console.error('fetchSessions error:', error)
 				const fallbackError = this.isAssignment ? t('assistant', 'Error fetching assignments') : t('assistant', 'Error fetching conversations')
 				showError(error?.response?.data?.error ?? fallbackError)
+				return false
 			}
 		},
 
