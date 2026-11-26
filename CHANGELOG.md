@@ -10,6 +10,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 4.2.0 - 2026-11-26
+
+### Added
+- Add a task output file info endpoint and show names of input and output files in the result view and task list @WSHAPER [#721](https://github.com/nextcloud/assistant/pull/721)
+- Add audit logs when admin settings are changed @julien-nc [#727](https://github.com/nextcloud/assistant/pull/727)
+- Show the item count and reversibility of pending agent actions in the confirmation dialog @marcelklehr [#732](https://github.com/nextcloud/assistant/pull/732)
+- Add a custom per-user system prompt setting, which admins can turn off @marcelklehr [#733](https://github.com/nextcloud/assistant/pull/733)
+- Show buttons to open the skills and memory folders in the chat view @marcelklehr [#734](https://github.com/nextcloud/assistant/pull/734)
+- Automatically generate chat session titles @marcelklehr [#740](https://github.com/nextcloud/assistant/pull/740)
+- Show agent action details in a pop-up instead of an expanding card @danafon [#745](https://github.com/nextcloud/assistant/pull/745)
+- Expose the user's agent memory and skills in the user settings in the Assistant tab @danafon [#748](https://github.com/nextcloud/assistant/pull/748)
+- Add assignment-specific prompt instruction admin and user settings and write assignment output in the user-configured language @marcelklehr [#750](https://github.com/nextcloud/assistant/pull/750)
+- Remember the last chat and scheduled tasks session @marcelklehr [#753](https://github.com/nextcloud/assistant/pull/753)
+- Allow custom user-defined MCP servers gated by an admin setting @marcelklehr [#757](https://github.com/nextcloud/assistant/pull/757)
+
+### Changed
+- Update the display names of agent information sources @marcelklehr [#739](https://github.com/nextcloud/assistant/pull/739)
+- Capitalize "Nextcloud" and add translator context @rakekniven [#749](https://github.com/nextcloud/assistant/pull/749)
+
+### Fixed
+- Don't say there are no scheduled tasks when there are some @marcelklehr [#736](https://github.com/nextcloud/assistant/pull/736)
+- Validate assignment recurrence rules on save and explain 400 errors @vyacheslavhulyaev-glitch [#741](https://github.com/nextcloud/assistant/pull/741)
+- Keep the file extension derived from the mimetype in the task output download filename @julien-nc [#747](https://github.com/nextcloud/assistant/pull/747)
+- Scope chat session access and task results to the session owner @funana777 @julien-nc [#754](https://github.com/nextcloud/assistant/pull/754)
+
 ## 4.1.0 - 2026-10-26
 
 ### Added
