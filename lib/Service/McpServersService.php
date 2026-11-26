@@ -41,7 +41,8 @@ class McpServersService {
 	// Not settable through ConfigController::setConfig, which would skip the checks below
 	public const USER_CONFIG_KEY = 'mcp_servers';
 
-	private const HEADER_NAME_PATTERN = '/^[!#$%&\'*+.^_`|~0-9A-Za-z-]{1,256}$/';
+	// D, so that $ does not also match before a trailing line feed
+	private const HEADER_NAME_PATTERN = '/^[!#$%&\'*+.^_`|~0-9A-Za-z-]{1,256}$/D';
 	// Headers that would change how the request is framed or routed, not just authorize it
 	private const FORBIDDEN_HEADERS = ['host', 'content-length', 'transfer-encoding', 'connection', 'upgrade', 'te', 'trailer'];
 
@@ -81,7 +82,8 @@ class McpServersService {
 			}
 			try {
 				$headers = array_map(fn (string $value) => $this->crypto->decrypt($value), $server['headers']);
-			} catch (\Exception $e) {
+			} catch (\Throwable $e) {
+				// \Throwable, as a hand-edited record can have header values that are not strings
 				$this->logger->warning('Could not decrypt the headers of an MCP server, skipping it', ['exception' => $e, 'userId' => $userId]);
 				continue;
 			}
@@ -118,6 +120,8 @@ class McpServersService {
 	 * The browser never sees the header values, so a header whose value is null keeps
 	 * the value stored for it, and a stored header missing from $headers is removed.
 	 * Names with a null value are matched case-insensitively and must be stored already.
+	 * Stored values are never kept when the URL moves to another host, so they are not
+	 * sent somewhere the user did not enter them for.
 	 *
 	 * @param array<string, ?string>|null $headers
 	 * @return AssistantMcpServer
@@ -135,6 +139,10 @@ class McpServersService {
 		if ($url !== null) {
 			$server['url'] = $this->validateUrl($url);
 		}
+		$originChanged = self::origin($server['url']) !== self::origin($servers[$index]['url']);
+		if ($originChanged && $headers === null && $server['headers'] !== []) {
+			throw new BadRequestException($this->l10n->t('Enter the header values again when you move the server to another host'));
+		}
 		if ($headers !== null) {
 			$stored = [];
 			foreach ($server['headers'] as $storedName => $value) {
@@ -146,6 +154,9 @@ class McpServersService {
 				if ($value !== null) {
 					$new[$headerName] = $value;
 					continue;
+				}
+				if ($originChanged) {
+					throw new BadRequestException($this->l10n->t('Enter the header values again when you move the server to another host'));
 				}
 				// header names are case-insensitive, so match the stored one regardless of case
 				$storedName = $stored[strtolower((string)$headerName)] ?? null;
@@ -181,6 +192,13 @@ class McpServersService {
 	public static function serverKey(string $name): string {
 		$key = trim((string)preg_replace('/[^a-z0-9]+/', '_', strtolower($name)), '_');
 		return trim(substr($key, 0, 20), '_');
+	}
+
+	/**
+	 * The host and port of a URL, the parts that decide who receives the headers
+	 */
+	private static function origin(string $url): string {
+		return strtolower((string)parse_url($url, PHP_URL_HOST)) . ':' . (parse_url($url, PHP_URL_PORT) ?? 443);
 	}
 
 	/**

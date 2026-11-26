@@ -104,6 +104,49 @@ class McpServersServiceTest extends TestCase {
 		$this->service->updateServer('alice', $server['id'], null, null, ['X-Missing' => null], null);
 	}
 
+	public function testUpdateKeepsStoredHeaderValuesWhenTheUrlStaysOnTheSameHost(): void {
+		$server = $this->service->createServer('alice', 'Weather', 'https://weather.example/mcp', ['Authorization' => 'Bearer secret'], true);
+
+		$this->service->updateServer('alice', $server['id'], null, 'https://WEATHER.example:443/v2/mcp', ['Authorization' => null], null);
+
+		$this->assertSame(['Authorization' => 'Bearer secret'], $this->service->getConnections('alice')[0]['headers']);
+	}
+
+	public static function dataUpdatesMovingStoredHeadersToAnotherHost(): array {
+		return [
+			'other host, headers kept' => ['https://other.example/mcp', ['Authorization' => null]],
+			'other host, headers not sent' => ['https://other.example/mcp', null],
+			'other port' => ['https://weather.example:8443/mcp', ['Authorization' => null]],
+		];
+	}
+
+	/**
+	 * @dataProvider dataUpdatesMovingStoredHeadersToAnotherHost
+	 */
+	public function testUpdateRefusesToMoveStoredHeaderValuesToAnotherHost(string $url, ?array $headers): void {
+		$server = $this->service->createServer('alice', 'Weather', 'https://weather.example/mcp', ['Authorization' => 'Bearer secret'], true);
+
+		$this->expectException(BadRequestException::class);
+		$this->service->updateServer('alice', $server['id'], null, $url, $headers, null);
+	}
+
+	public function testUpdateAcceptsNewHeaderValuesForAnotherHost(): void {
+		$server = $this->service->createServer('alice', 'Weather', 'https://weather.example/mcp', ['Authorization' => 'Bearer secret'], true);
+
+		$this->service->updateServer('alice', $server['id'], null, 'https://other.example/mcp', ['Authorization' => 'Bearer other'], null);
+
+		$this->assertSame(['Authorization' => 'Bearer other'], $this->service->getConnections('alice')[0]['headers']);
+	}
+
+	public function testUndecryptableServersAreSkipped(): void {
+		$this->userConfig[McpServersService::USER_CONFIG_KEY] = json_encode([
+			['id' => 'a', 'name' => 'Broken', 'url' => 'https://broken.example/mcp', 'enabled' => true, 'headers' => ['X-A' => ['not a string']]],
+		]);
+		$this->service->createServer('alice', 'Weather', 'https://weather.example/mcp', [], true);
+
+		$this->assertSame(['Weather'], array_column($this->service->getConnections('alice'), 'name'));
+	}
+
 	public function testDelete(): void {
 		$server = $this->service->createServer('alice', 'Weather', 'https://weather.example/mcp', [], true);
 		$this->service->deleteServer('alice', $server['id']);
@@ -124,6 +167,7 @@ class McpServersServiceTest extends TestCase {
 			'host header' => ['Weather', 'https://weather.example/mcp', ['Host' => 'internal']],
 			'header injection' => ['Weather', 'https://weather.example/mcp', ['X-A' => "b\r\nX-B: c"]],
 			'invalid header name' => ['Weather', 'https://weather.example/mcp', ['Bad Name' => 'b']],
+			'header name with trailing line feed' => ['Weather', 'https://weather.example/mcp', ["X-Trace\n" => 'b']],
 			'empty header value' => ['Weather', 'https://weather.example/mcp', ['X-A' => '']],
 		];
 	}

@@ -47,11 +47,13 @@
 			<h4>{{ editing.id === null ? t('assistant', 'Add MCP server') : t('assistant', 'Edit MCP server') }}</h4>
 			<NcTextField v-model="editing.name"
 				:label="t('assistant', 'Name')"
+				:disabled="saving"
 				:maxlength="64"
 				required />
 			<NcTextField v-model="editing.url"
 				type="url"
 				:label="t('assistant', 'URL')"
+				:disabled="saving"
 				placeholder="https://example.com/mcp"
 				required />
 			<p class="mcp-servers__hint">
@@ -59,25 +61,28 @@
 			</p>
 			<h5>{{ t('assistant', 'Headers') }}</h5>
 			<p class="mcp-servers__hint">
-				{{ t('assistant', 'For example "Authorization" with "Bearer" followed by your token. Header values are stored encrypted and cannot be viewed again; leave a stored value empty to keep it.') }}
+				{{ t('assistant', 'For example "Authorization" with "Bearer" followed by your token. Header values are stored encrypted and cannot be viewed again; leave a stored value empty to keep it, unless you move the server to another host.') }}
 			</p>
 			<div v-for="(header, index) in editing.headers" :key="index" class="mcp-servers__header">
 				<NcTextField v-model="header.name"
 					:label="t('assistant', 'Header name')"
-					:readonly="header.stored" />
+					:readonly="header.stored"
+					:disabled="saving" />
 				<NcPasswordField v-model="header.value"
 					:label="t('assistant', 'Value')"
 					:placeholder="header.stored ? t('assistant', 'Stored, leave empty to keep') : ''"
+					:disabled="saving"
 					autocomplete="off" />
 				<NcButton variant="tertiary"
 					:aria-label="t('assistant', 'Remove header')"
+					:disabled="saving"
 					@click="editing.headers.splice(index, 1)">
 					<template #icon>
 						<CloseIcon :size="20" />
 					</template>
 				</NcButton>
 			</div>
-			<NcButton variant="tertiary" @click="editing.headers.push({ name: '', value: '', stored: false })">
+			<NcButton variant="tertiary" :disabled="saving" @click="editing.headers.push({ name: '', value: '', stored: false })">
 				<template #icon>
 					<PlusIcon :size="20" />
 				</template>
@@ -166,7 +171,8 @@ export default {
 					}
 		},
 		async onSave() {
-			const headers = {}
+			// no prototype, so that a header named __proto__ is a plain key
+			const headers = Object.create(null)
 			for (const header of this.editing.headers) {
 				const name = header.name.trim()
 				if (name === '') {
