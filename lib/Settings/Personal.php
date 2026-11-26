@@ -56,7 +56,6 @@ class Personal implements ISettings {
 			|| (class_exists('OCP\\TaskProcessing\\TaskTypes\\ContextAgentAudioInteraction') && array_key_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction::ID, $availableTaskTypes));
 		$autoplayAudioChat = $this->config->getUserValue($this->userId, Application::APP_ID, 'autoplay_audio_chat', '1') === '1';
 		$chatPersonalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
-		$chatPersonalInstructions = $this->config->getUserValue($this->userId, Application::APP_ID, 'chat_personal_instructions', '');
 		$dataFolder = $this->config->getUserValue($this->userId, Application::APP_ID, 'data_folder', '');
 		$defaultDataFolder = $this->appConfig->getValueString(Application::APP_ID, 'default_data_folder', Application::ASSISTANT_DATA_FOLDER_NAME, lazy: true);
 		if ($defaultDataFolder === '') {
@@ -93,11 +92,13 @@ class Personal implements ISettings {
 			'audio_chat_available' => $audioChatAvailable,
 			'autoplay_audio_chat' => $autoplayAudioChat,
 			'chat_personal_instructions_enabled' => $chatPersonalInstructionsEnabled,
-			'chat_personal_instructions' => $chatPersonalInstructions,
-			'chat_personal_instructions_max_length' => Application::MAX_CHAT_PERSONAL_INSTRUCTIONS_LENGTH,
+			'personal_instructions_max_length' => Application::MAX_PERSONAL_INSTRUCTIONS_LENGTH,
 			'data_folder' => $dataFolder,
 			'default_data_folder' => $defaultDataFolder,
 		];
+		foreach (Application::PERSONAL_INSTRUCTIONS_KEYS as $instructionsKey) {
+			$userConfig[$instructionsKey] = $this->config->getUserValue($this->userId, Application::APP_ID, $instructionsKey, '');
+		}
 		$this->initialStateService->provideInitialState('config', $userConfig);
 
 		$availableProviders = [];

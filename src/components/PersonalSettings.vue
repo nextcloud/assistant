@@ -59,15 +59,29 @@
 				</div>
 			</div>
 			<div v-if="state.assistant_available && state.chat_personal_instructions_enabled" class="chat-instructions">
-				<h3>{{ t('assistant', 'Custom chat instructions') }}</h3>
-				<p>{{ t('assistant', 'Tell the assistant how to respond to you in chat, for example which tone to use or what to know about you. These instructions are added to the instructions set by your administrator. They apply to new conversations.') }}</p>
+				<h3>{{ t('assistant', 'Custom instructions') }}</h3>
+				<p>{{ t('assistant', 'Tell the assistant how to respond to you, for example which tone to use or what to know about you. These instructions are added to the instructions set by your administrator. Changes apply to new conversations and to the next run of your scheduled tasks.') }}</p>
+				<NcTextArea id="common_personal_instructions"
+					v-model="state.common_personal_instructions"
+					class="chat-instructions__field"
+					:label="t('assistant', 'Instructions for chat and scheduled tasks')"
+					:maxlength="state.personal_instructions_max_length"
+					resize="vertical"
+					@update:model-value="delayedValueUpdate(state.common_personal_instructions, 'common_personal_instructions')" />
 				<NcTextArea id="chat_personal_instructions"
 					v-model="state.chat_personal_instructions"
 					class="chat-instructions__field"
-					:label="t('assistant', 'Custom instructions')"
-					:maxlength="state.chat_personal_instructions_max_length"
+					:label="t('assistant', 'Instructions for chat only')"
+					:maxlength="state.personal_instructions_max_length"
 					resize="vertical"
 					@update:model-value="delayedValueUpdate(state.chat_personal_instructions, 'chat_personal_instructions')" />
+				<NcTextArea id="assignment_personal_instructions"
+					v-model="state.assignment_personal_instructions"
+					class="chat-instructions__field"
+					:label="t('assistant', 'Instructions for scheduled tasks only')"
+					:maxlength="state.personal_instructions_max_length"
+					resize="vertical"
+					@update:model-value="delayedValueUpdate(state.assignment_personal_instructions, 'assignment_personal_instructions')" />
 			</div>
 			<div class="data-folder">
 				<h3>{{ t('assistant', 'Data folder') }}</h3>
@@ -308,6 +322,7 @@ export default {
 	.chat-instructions__field,
 	.agent-content {
 		max-width: 800px;
+		margin-top: 12px;
 	}
 
 	.agent-content__empty {

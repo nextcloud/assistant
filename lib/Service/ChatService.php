@@ -21,7 +21,9 @@ use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
+use OCP\IUser;
 use OCP\IUserManager;
+use OCP\L10N\IFactory;
 use OCP\TaskProcessing\Exception\PreConditionNotMetException;
 use OCP\TaskProcessing\Exception\ValidationException;
 use OCP\TaskProcessing\IManager;
@@ -46,6 +48,7 @@ class ChatService {
 		private readonly IManager $taskProcessingManager,
 		private readonly LoggerInterface $logger,
 		private readonly ITimeFactory $timeFactory,
+		private readonly IFactory $l10nFactory,
 	) {
 	}
 
@@ -68,22 +71,7 @@ class ChatService {
 			$timestamp = intdiv($timestamp, 1000);
 		}
 
-		$userInstructions = $this->appConfig->getValueString(
-			Application::APP_ID,
-			'chat_user_instructions',
-			Application::CHAT_USER_INSTRUCTIONS,
-			lazy: true,
-		) ?: Application::CHAT_USER_INSTRUCTIONS;
-		$userInstructions = str_replace('{user}', $user->getDisplayName(), $userInstructions);
-
-		// the user's personal instructions come after the admin's and must not override them
-		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
-		$personalInstructions = $personalInstructionsEnabled
-			? trim($this->config->getUserValue($userId, Application::APP_ID, 'chat_personal_instructions', ''))
-			: '';
-		if ($personalInstructions !== '') {
-			$userInstructions .= "\n\n" . Application::CHAT_PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions;
-		}
+		$userInstructions = $this->getInstructions($userId, $user, 'chat');
 
 		$session = new Session();
 		$session->setUserId($userId);
@@ -609,9 +597,12 @@ class ChatService {
 
 		// classic agency
 		// The chat user instructions are meant for interactive chats (e.g. asking for clarification),
-		// an assignment runs unattended with its own prompt
+		// an assignment runs unattended with its own prompt and gets the scheduled task instructions instead.
+		// They are built at every run so that changes to the settings apply to existing assignments.
 		$prompt = $lastUserMessage->getContent();
-		$taskId = $this->scheduleAgencyTask($userId, $prompt, 0, $lastConversationToken, $sessionId, withUserInstructions: false);
+		$user = $this->userManager->get($userId);
+		$assignmentInstructions = $this->getInstructions($userId, $user, 'assignment');
+		$taskId = $this->scheduleAgencyTask($userId, $prompt, 0, $lastConversationToken, $sessionId, userInstructions: $assignmentInstructions);
 		return $taskId;
 	}
 
@@ -728,6 +719,67 @@ class ChatService {
 			return false;
 		}
 		return in_array(\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID, $this->taskProcessingManager->getAvailableTaskTypeIds());
+	}
+
+	/**
+	 * Build the instructions for chat or for scheduled tasks (assignments):
+	 * the admin's instructions for both, then the admin's instructions for this scope,
+	 * then (if allowed by the admin) the user's own instructions for both and for this scope.
+	 * The user's instructions come last and must not override the admin's.
+	 *
+	 * Scheduled tasks additionally end with a hardcoded instruction to write in the user's UI language,
+	 * since there is no user message in the conversation whose language could be detected.
+	 * It comes last and only applies if no other language was requested, so that it does not override
+	 * a language asked for by the admin's or the user's instructions.
+	 *
+	 * @param 'chat'|'assignment' $scope
+	 */
+	private function getInstructions(string $userId, ?IUser $user, string $scope): string {
+		if ($scope === 'chat') {
+			$adminScopeInstructions = ($this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS);
+		} else {
+			$adminScopeInstructions = ($this->appConfig->getValueString(Application::APP_ID, 'assignment_user_instructions', Application::ASSIGNMENT_USER_INSTRUCTIONS, lazy: true) ?: Application::ASSIGNMENT_USER_INSTRUCTIONS);
+		}
+		$adminInstructions = self::joinInstructions([
+			$this->appConfig->getValueString(Application::APP_ID, 'common_user_instructions', '', lazy: true),
+			$adminScopeInstructions,
+		]);
+		$adminInstructions = str_replace('{user}', $user?->getDisplayName() ?? $userId, $adminInstructions);
+
+		$personalInstructions = '';
+		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
+		if ($personalInstructionsEnabled) {
+			$personalInstructions = self::joinInstructions([
+				$this->config->getUserValue($userId, Application::APP_ID, 'common_personal_instructions', ''),
+				$this->config->getUserValue($userId, Application::APP_ID, $scope . '_personal_instructions', ''),
+			]);
+		}
+
+		return self::joinInstructions([
+			$adminInstructions,
+			$personalInstructions !== '' ? Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions : '',
+			$scope === 'assignment' ? $this->getUserLanguageInstructions($user) : '',
+		]);
+	}
+
+	/**
+	 * Instruct the model to write in the language the user has configured for the Nextcloud UI
+	 */
+	private function getUserLanguageInstructions(?IUser $user): string {
+		$languageCode = $this->l10nFactory->getUserLanguage($user);
+		// e.g. "German (de)", or just the code if the intl extension is missing or does not know it
+		$languageName = class_exists(\Locale::class) ? \Locale::getDisplayLanguage($languageCode, 'en') : '';
+		$language = $languageName !== '' && $languageName !== $languageCode
+			? $languageName . ' (' . $languageCode . ')'
+			: $languageCode;
+		return 'If no output language has been requested in the task or in the instructions above, write your output in ' . $language . ', which is the language the user has set for their user interface.';
+	}
+
+	/**
+	 * @param list<string> $parts
+	 */
+	private static function joinInstructions(array $parts): string {
+		return implode("\n\n", array_filter(array_map('trim', $parts), static fn (string $part): bool => $part !== ''));
 	}
 
 	/**
@@ -928,6 +980,7 @@ class ChatService {
 	/**
 	 * Schedule an agency chat task
 	 *
+	 * @param string|null $userInstructions Instructions to pass to the agent, null to use the ones stored in the session
 	 * @throws BadRequestException
 	 * @throws InternalException
 	 */
@@ -937,7 +990,7 @@ class ChatService {
 		int $confirmation,
 		string $conversationToken,
 		int $sessionId,
-		bool $withUserInstructions = true,
+		?string $userInstructions = null,
 	): int {
 		$customId = 'chatty-llm:' . $sessionId;
 		$this->checkIfSessionIsThinking($userId, $customId);
@@ -951,8 +1004,11 @@ class ChatService {
 		if (isset($optionalInputShape['memories'])) {
 			$taskInput['memories'] = $this->sessionSummaryService->getMemories($userId);
 		}
-		if ($withUserInstructions) {
+		if ($userInstructions === null) {
+			// use the instructions stored in the session
 			$this->addAgencyUserInstructions($taskInput, $optionalInputShape, $sessionId);
+		} elseif ($userInstructions !== '' && isset($optionalInputShape['user_instructions'])) {
+			$taskInput['user_instructions'] = $userInstructions;
 		}
 		/** @psalm-suppress UndefinedClass */
 		$task = new Task(
