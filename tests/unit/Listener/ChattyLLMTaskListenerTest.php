@@ -86,6 +86,9 @@ class ChattyLLMTaskListenerTest extends TestCase {
 	}
 
 	public function testAudioMessageOfAnotherUsersSessionIsNotRewritten(): void {
+		if (!class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
+			$this->markTestSkipped('AudioToAudioChat task type requires Nextcloud 32+');
+		}
 		$this->messageMapper->method('getMessageByTaskId')
 			->willThrowException(new DoesNotExistException('Message not found'));
 		$this->messageMapper->expects($this->never())->method('getMessageById');
@@ -112,6 +115,9 @@ class ChattyLLMTaskListenerTest extends TestCase {
 	 * The event is dispatched in the task processing worker, which stops if the listener throws
 	 */
 	public function testErrorsDoNotLeaveTheListener(): void {
+		if (!class_exists('OCP\\TaskProcessing\\TaskTypes\\AudioToAudioChat')) {
+			$this->markTestSkipped('AudioToAudioChat task type requires Nextcloud 32+');
+		}
 		$this->messageMapper->method('getMessageByTaskId')
 			->willThrowException(new DoesNotExistException('Message not found'));
 		$this->messageMapper->method('getMessageById')
