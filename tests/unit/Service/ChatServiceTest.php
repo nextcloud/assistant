@@ -14,13 +14,15 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Service\ChatService;
+use OCA\Assistant\Service\NotFoundException;
 use OCA\Assistant\Service\UnauthorizedException;
 use OCP\IUserManager;
 use OCP\Server;
 use Test\TestCase;
 
 /**
- * Integration tests for the ChatService chat session deletion methods.
+ * Integration tests for the ChatService chat session deletion methods
+ * and for the methods that take the ID of a session of another user.
  *
  * Runs against a real Nextcloud test server with a real database.
  * Creates dedicated test users and cleans up all chat data in tearDown.
@@ -60,10 +62,7 @@ class ChatServiceTest extends TestCase {
 	protected function tearDown(): void {
 		// only remove what this test created, the instance is not always in a clean state in CI
 		foreach ($this->createdSessionIds as $uid => $sessionIds) {
-			foreach ($sessionIds as $sessionId) {
-				$this->sessionMapper->deleteSession($uid, $sessionId);
-				$this->messageMapper->deleteMessagesBySession($sessionId);
-			}
+			$this->service->deleteSessions($uid, $sessionIds);
 		}
 		$userManager = Server::get(IUserManager::class);
 		foreach ($this->createdUsers as $uid) {
@@ -155,5 +154,79 @@ class ChatServiceTest extends TestCase {
 	public function testDeleteSessionsWithoutUser(): void {
 		$this->expectException(UnauthorizedException::class);
 		$this->service->deleteSessions(null, [1, 2]);
+	}
+
+	public function testDeleteSession(): void {
+		$session = $this->createSession(self::TEST_USER);
+		$this->createMessage($session->getId());
+
+		$this->service->deleteSession(self::TEST_USER, $session->getId());
+
+		$remainingIds = array_map(static function (Session $session) {
+			return $session->getId();
+		}, $this->sessionMapper->getUserSessions(self::TEST_USER, false));
+		$this->assertNotContains($session->getId(), $remainingIds);
+		$this->assertCount(0, $this->messageMapper->getMessages($session->getId(), 0, 100));
+	}
+
+	public function testDeleteSessionLeavesOtherUsersDataAlone(): void {
+		$otherSession = $this->createSession(self::OTHER_USER);
+		$this->createMessage($otherSession->getId());
+
+		$this->service->deleteSession(self::TEST_USER, $otherSession->getId());
+
+		$this->assertSame(self::OTHER_USER, $this->sessionMapper->getUserSession(self::OTHER_USER, $otherSession->getId())->getUserId());
+		$this->assertCount(1, $this->messageMapper->getMessages($otherSession->getId(), 0, 100));
+	}
+
+	/**
+	 * Every public method that takes a session ID must leave a session of another user alone.
+	 * The list of calls is compared with the class, so a new method has to be added here.
+	 */
+	public function testSessionIdMethodsLeaveOtherUsersSessionsAlone(): void {
+		$otherSession = $this->createSession(self::OTHER_USER);
+		$otherMessage = $this->createMessage($otherSession->getId());
+		$sessionId = $otherSession->getId();
+		$messageId = $otherMessage->getId();
+
+		$calls = [
+			'createMessage' => fn () => $this->service->createMessage(self::TEST_USER, $sessionId, Message::ROLE_ASSISTANT, 'planted'),
+			'deleteSession' => fn () => $this->service->deleteSession(self::TEST_USER, $sessionId),
+			'deleteSessionMessage' => fn () => $this->service->deleteSessionMessage(self::TEST_USER, $sessionId, $messageId),
+			'getSessionMessage' => fn () => $this->service->getSessionMessage(self::TEST_USER, $sessionId, $messageId),
+			'getSessionMessages' => fn () => $this->service->getSessionMessages(self::TEST_USER, $sessionId),
+			'scheduleAssignmentMessageGeneration' => fn () => $this->service->scheduleAssignmentMessageGeneration(self::TEST_USER, $sessionId),
+			'scheduleMessageGeneration' => fn () => $this->service->scheduleMessageGeneration(self::TEST_USER, $sessionId),
+			'scheduleTitleGeneration' => fn () => $this->service->scheduleTitleGeneration(self::TEST_USER, $sessionId),
+			'updateSession' => fn () => $this->service->updateSession(self::TEST_USER, $sessionId, 'renamed', true),
+		];
+
+		$methodsWithSessionId = [];
+		foreach ((new \ReflectionClass(ChatService::class))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+			foreach ($method->getParameters() as $parameter) {
+				if ($parameter->getName() === 'sessionId') {
+					$methodsWithSessionId[] = $method->getName();
+				}
+			}
+		}
+		$checkedMethods = array_keys($calls);
+		sort($methodsWithSessionId);
+		sort($checkedMethods);
+		$this->assertSame($methodsWithSessionId, $checkedMethods, 'A ChatService method takes a session ID but is not checked here');
+
+		foreach ($calls as $name => $call) {
+			try {
+				$result = $call();
+				$this->assertNull($result, $name . ' returned data of another user');
+			} catch (NotFoundException) {
+				// refused
+			}
+			$session = $this->sessionMapper->getUserSession(self::OTHER_USER, $sessionId);
+			$this->assertNull($session->getTitle(), $name . ' changed the title');
+			$this->assertFalse((bool)$session->getIsRemembered(), $name . ' changed the session');
+			$messages = $this->messageMapper->getMessages($sessionId, 0, 100);
+			$this->assertCount(1, $messages, $name . ' changed the messages');
+			$this->assertSame($otherMessage->getContent(), $messages[0]->getContent(), $name . ' changed a message');
+		}
 	}
 }

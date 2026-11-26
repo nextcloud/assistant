@@ -205,21 +205,6 @@ class SessionMapper extends QBMapper {
 
 	/**
 	 * @param string $userId
-	 * @param integer $sessionId
-	 * @throws \OCP\DB\Exception
-	 * @throws \RuntimeException
-	 */
-	public function deleteSession(string $userId, int $sessionId) {
-		$qb = $this->db->getQueryBuilder();
-		$qb->delete($this->getTableName())
-			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)));
-
-		$qb->executeStatement();
-	}
-
-	/**
-	 * @param string $userId
 	 * @param list<int> $sessionIds
 	 * @return list<Session>
 	 * @throws \OCP\DB\Exception

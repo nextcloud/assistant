@@ -12,11 +12,13 @@ namespace OCA\Assistant\Listener;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
+use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
@@ -40,14 +42,46 @@ class ChattyLLMTaskListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
+		// the event is dispatched in the task processing worker, an exception here would stop the worker
+		try {
+			$this->handleTaskEvent($event);
+		} catch (\Exception $e) {
+			$this->logger->error('Failed to handle the result of a chat task', ['exception' => $e]);
+		}
+	}
+
+	/**
+	 * Get the chat session a task writes to, null if it does not belong to the user of the task.
+	 * The app ID and the custom ID of a task are chosen by whoever schedules it.
+	 */
+	private function getTaskSession(Task $task, int $sessionId): ?Session {
+		$userId = $task->getUserId();
+		if ($userId === null) {
+			return null;
+		}
+		try {
+			return $this->sessionMapper->getUserSession($userId, $sessionId);
+		} catch (DoesNotExistException|MultipleObjectsReturnedException) {
+			// also when the user deleted the session while the task was running
+			$this->logger->info('Ignoring a chat task for a session that does not belong to its user', [
+				'taskId' => $task->getId(),
+				'userId' => $userId,
+				'sessionId' => $sessionId,
+			]);
+			return null;
+		}
+	}
+
+	private function handleTaskEvent(Event $event): void {
 		if ($event instanceof TaskFailedEvent) {
 			$task = $event->getTask();
 			$customId = $task->getCustomId();
+			if ($customId === null || $task->getAppId() !== (Application::APP_ID . ':chatty-llm')) {
+				return;
+			}
 			if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
-				$sessionId = (int)$matches[1];
-				$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
-				$assignmentId = $session->getAssignmentId();
-				if ($assignmentId !== null) {
+				$session = $this->getTaskSession($task, (int)$matches[1]);
+				if ($session !== null && $session->getAssignmentId() !== null) {
 					$this->notificationService->sendAssignmentNotification(
 						$task->getUserId(), $task, $session
 					);
@@ -71,6 +105,9 @@ class ChattyLLMTaskListener implements IEventListener {
 		// title generation
 		if (preg_match('/^chatty-title:(\d+)$/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
+			if ($this->getTaskSession($task, $sessionId) === null) {
+				return;
+			}
 			$title = $this->chatService->cleanGeneratedTitle($task->getUserId(), $task->getOutput()['output'] ?? '');
 			// keep the current title if nothing usable was generated
 			if ($title !== '') {
@@ -81,6 +118,10 @@ class ChattyLLMTaskListener implements IEventListener {
 		// message generation
 		if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 			$sessionId = (int)$matches[1];
+			$session = $this->getTaskSession($task, $sessionId);
+			if ($session === null) {
+				return;
+			}
 
 			// concurrent task processing executors can process the same task twice and
 			// dispatch this event twice, in which case the message was already stored
@@ -137,6 +178,7 @@ class ChattyLLMTaskListener implements IEventListener {
 					// and the user did not set a title manually while the response was generated:
 					// the title of an audio-first session stays empty until we have the transcript
 					$isFirstHumanMessage = !$this->messageMapper->hasHumanMessagesBefore($sessionId, $queryMessageId);
+					// read the title from the database, the user may have set one while the task was running
 					$currentTitle = $isFirstHumanMessage
 						? $this->sessionMapper->getUserSession($task->getUserId(), $sessionId)->getTitle()
 						: null;
@@ -174,6 +216,7 @@ class ChattyLLMTaskListener implements IEventListener {
 				$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
 			}
 
+			// re-read the session, the user may have changed it while this task was handled
 			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 
 			// store the conversation token and the actions if we are using the agency feature
