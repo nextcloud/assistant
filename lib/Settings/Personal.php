@@ -12,6 +12,7 @@ use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Service\AgentMemoriesService;
 use OCA\Assistant\Service\AgentSkillsService;
 use OCA\Assistant\Service\ChatService;
+use OCA\Assistant\Service\McpServersService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IAppConfig;
@@ -36,6 +37,7 @@ class Personal implements ISettings {
 		private AgentSkillsService $agentSkillsService,
 		private AgentMemoriesService $agentMemoriesService,
 		private ChatService $chatService,
+		private McpServersService $mcpServersService,
 		private LoggerInterface $logger,
 	) {
 	}
@@ -127,6 +129,7 @@ class Personal implements ISettings {
 		$this->initialStateService->provideInitialState('rememberedSessions', $rememberedSessionsShort);
 
 		$this->initialStateService->provideInitialState('agentContent', $this->chatService->isContextAgentAvailable() ? $this->getAgentContent() : false);
+		$this->initialStateService->provideInitialState('mcpServers', $this->chatService->isContextAgentAvailable() ? $this->getMcpServers() : false);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 
@@ -150,6 +153,22 @@ class Personal implements ISettings {
 			$this->logger->warning('Failed to list the agent memories', ['exception' => $e]);
 		}
 		return $content;
+	}
+
+	/**
+	 * The MCP servers of the current user, or false if there is nothing to show
+	 *
+	 * Servers stay listed after the administrator disallows them, so they can be removed.
+	 *
+	 * @return false|array{enabled: bool, servers: list<array{id: string, name: string, url: string, enabled: bool, headers: list<string>}>, maxServers: int}
+	 */
+	private function getMcpServers(): false|array {
+		$enabled = $this->mcpServersService->isEnabled();
+		$servers = $this->mcpServersService->listServers($this->userId);
+		if (!$enabled && $servers === []) {
+			return false;
+		}
+		return ['enabled' => $enabled, 'servers' => $servers, 'maxServers' => McpServersService::MAX_SERVERS];
 	}
 
 	public function getSection(): string {

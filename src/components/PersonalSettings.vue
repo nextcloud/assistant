@@ -161,6 +161,7 @@
 					</NcButton>
 				</div>
 			</template>
+			<McpServersSettings v-if="mcpServers" :initial-state="mcpServers" />
 			<div v-if="rememberedConversations.length > 0">
 				<h3>{{ t('assistant', 'Remembered conversations') }}</h3>
 				<p>{{ t('assistant', 'The following conversations are remembered by the Assistant Chat and will be taken into account for every new conversation:') }}</p>
@@ -181,6 +182,7 @@
 
 <script>
 import AssistantIcon from './icons/AssistantIcon.vue'
+import McpServersSettings from './McpServersSettings.vue'
 
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcFormGroup from '@nextcloud/vue/components/NcFormGroup'
@@ -205,6 +207,7 @@ export default {
 
 	components: {
 		AssistantIcon,
+		McpServersSettings,
 		NcButton,
 		NcFormGroup,
 		NcFormBox,
@@ -225,6 +228,7 @@ export default {
 			providers: loadState('assistant', 'availableProviders'),
 			rememberedConversations: loadState('assistant', 'rememberedSessions'),
 			agentContent: loadState('assistant', 'agentContent', false),
+			mcpServers: loadState('assistant', 'mcpServers', false),
 			optionsToSave: {},
 		}
 	},

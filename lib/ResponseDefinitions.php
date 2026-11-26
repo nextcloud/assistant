@@ -98,6 +98,20 @@ use OCP\TaskProcessing\ShapeDescriptor;
  *      last_run_at: int,
  *      timezone: string,
  *  }
+ *
+ * @psalm-type AssistantMcpServer = array{
+ *     id: string,
+ *     name: string,
+ *     url: string,
+ *     enabled: bool,
+ *     headers: list<string>,
+ * }
+ *
+ * @psalm-type AssistantMcpConnection = array{
+ *     name: string,
+ *     url: string,
+ *     headers: array<string, string>,
+ * }
  */
 class ResponseDefinitions {
 }

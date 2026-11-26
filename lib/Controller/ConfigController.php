@@ -9,6 +9,7 @@ namespace OCA\Assistant\Controller;
 
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\AgentSkillsService;
+use OCA\Assistant\Service\McpServersService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -49,6 +50,10 @@ class ConfigController extends Controller {
 			&& mb_strlen((string)$values['chat_personal_instructions']) > Application::MAX_CHAT_PERSONAL_INSTRUCTIONS_LENGTH) {
 			return new DataResponse('Custom chat instructions are too long', Http::STATUS_BAD_REQUEST);
 		}
+		// managed by McpServersService, which validates them and encrypts their secrets
+		if (array_key_exists(McpServersService::USER_CONFIG_KEY, $values)) {
+			return new DataResponse('MCP servers cannot be set here', Http::STATUS_BAD_REQUEST);
+		}
 		foreach ($values as $key => $value) {
 			$this->config->setUserValue($this->userId, Application::APP_ID, $key, $value);
 		}
@@ -61,6 +66,9 @@ class ConfigController extends Controller {
 	 */
 	#[NoAdminRequired]
 	public function getConfigValue(string $key): DataResponse {
+		if ($key === McpServersService::USER_CONFIG_KEY) {
+			return new DataResponse('MCP servers cannot be read here', Http::STATUS_BAD_REQUEST);
+		}
 		$value = $this->config->getUserValue($this->userId, Application::APP_ID, $key);
 		return new DataResponse($value);
 	}
