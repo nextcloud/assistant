@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 3.5.2 - 2026-11-26
+
+### Changed
+- Add a release relay job to CI @AndyScherzinger [#725](https://github.com/nextcloud/assistant/pull/725)
+
+### Fixed
+- Scope chat session access and task results to the session owner @funana777 @julien-nc [#754](https://github.com/nextcloud/assistant/pull/754)
+- Guard agency_conversation_token on its own column name in migrations @julien-nc [#717](https://github.com/nextcloud/assistant/pull/717)
+
 ## 3.5.1 - 2026-10-23
 
 ### Fixed
