@@ -22,6 +22,8 @@ use OCP\BackgroundJob\IJobList;
 use OCP\DB\Exception;
 use OCP\IDateTimeZone;
 use OCP\IUserManager;
+use OCP\TaskProcessing\Exception\Exception as TaskProcessingException;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
 use Psr\Log\LoggerInterface;
 
 class AssignmentsService {
@@ -35,15 +37,21 @@ class AssignmentsService {
 		private IJobList $jobList,
 		private IDateTimeZone $dateTimeZone,
 		private IUserManager $userManager,
+		private ITaskProcessingManager $taskProcessingManager,
 	) {
 	}
 
 	/**
+	 * Create a new assignment
+	 *
+	 * @param int|null $originTaskId The id of the TaskProcessing task during which the
+	 *                               assignment is created by an agent; null when the
+	 *                               assignment is created directly by a human
 	 * @throws InternalException
 	 * @throws UnauthorizedException
 	 * @throws BadRequestException
 	 */
-	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone): Assignment {
+	public function createAssignment(?string $userId, string $title, string $prompt, int $startsAt, string $recurrence, ?string $timezone, ?int $originTaskId = null): Assignment {
 		if ($userId === null) {
 			throw new UnauthorizedException();
 		}
@@ -55,6 +63,24 @@ class AssignmentsService {
 		$assignment->setLastRunAt(0);
 		$assignment->setCreatedAt($now);
 		$assignment->setUpdatedAt($now);
+		if ($originTaskId !== null) {
+			$agentSession = $this->getAgentSessionForOriginTask($userId, $originTaskId);
+			if ($agentSession !== null) {
+				// the assignment was ordered through the agent in Talk: record the
+				// requester right away, so that the run results are delivered in
+				// the requester's Talk thread even if the creating run dies before
+				// finishing. The assignment keeps being owned and run by the agent
+				// user; the task's Talk thread itself is opened by its first run.
+				$assignment->setRequesterUserId($agentSession->getRequesterUserId());
+			} else {
+				// without the requester, the task silently degrades to the
+				// previous state: the results only reach the agent's web UI
+				$this->logger->warning('Could not resolve the requester of a scheduled task created by an agent', [
+					'originTaskId' => $originTaskId,
+					'agentUserId' => $userId,
+				]);
+			}
+		}
 		if ($timezone === null) {
 			$timezone = $this->dateTimeZone->getTimeZone(userId: $userId)->getName();
 		}
@@ -207,41 +233,95 @@ class AssignmentsService {
 	}
 
 	/**
-	 * The agent session of the requester has just created scheduled task(s)
-	 * (the agent run output carried their ids): record the requester on each
-	 * assignment, so that the run results are delivered in the Talk thread of
-	 * the human. The assignment keeps being owned and run by the agent user;
-	 * the task's Talk thread itself is opened by its first run.
+	 * Get the agent session in which the given TaskProcessing task runs, when
+	 * the task is an agency interaction task of the given agent user with a
+	 * requester. Used to find the requester of scheduled tasks created by an
+	 * agent run: the run passes the id of the task it runs in as originTaskId.
 	 *
-	 * @param Session $session The agent session in which the tasks were created,
-	 *                         with the requester user id set
-	 * @param list<int> $scheduledTaskIds
-	 * @return void
-	 * @throws InternalException
+	 * The session is resolved from the task itself, so no identity crosses the
+	 * API boundary: the task custom id of chat interactions carries the session
+	 * id, and the input of voice interaction sub-tasks carries the conversation
+	 * token stored on the agent session when they were scheduled.
+	 *
+	 * @param string $userId The user creating the assignment: the agent user that runs the task
+	 * @param int $originTaskId The id of the TaskProcessing task the agent run executes
+	 * @return Session|null The agent session with the requester user id set,
+	 *                      null when the task cannot be trusted or linked to a requester
 	 */
-	public function linkRequesterToCreatedScheduledTasks(Session $session, array $scheduledTaskIds): void {
-		foreach ($scheduledTaskIds as $scheduledTaskId) {
-			try {
-				$assignment = $this->assignmentMapper->find($session->getUserId(), $scheduledTaskId);
-			} catch (Exception|DoesNotExistException|MultipleObjectsReturnedException $e) {
-				$this->logger->warning('Could not link the requester to a scheduled task created by an agent session', [
-					'assignmentId' => $scheduledTaskId,
-					'exception' => $e,
-				]);
-				continue;
-			}
-			$assignment->setRequesterUserId($session->getRequesterUserId());
-			try {
-				$this->assignmentMapper->update($assignment);
-			} catch (Exception $e) {
-				// without the requester, the task silently degrades to the
-				// previous state: the results only reach the agent's web UI
-				$this->logger->error('Could not store the requester of a scheduled task created by an agent session', [
-					'assignmentId' => $scheduledTaskId,
-					'exception' => $e,
-				]);
+	private function getAgentSessionForOriginTask(string $userId, int $originTaskId): ?Session {
+		try {
+			$task = $this->taskProcessingManager->getTask($originTaskId);
+		} catch (TaskProcessingException $e) {
+			$this->logger->warning('Could not find the origin task of a scheduled task created by an agent', [
+				'originTaskId' => $originTaskId,
+				'exception' => $e,
+			]);
+			return null;
+		}
+		if ($task->getUserId() !== $userId) {
+			$this->logger->warning('Ignoring an origin task that does not belong to the user creating a scheduled task', [
+				'originTaskId' => $originTaskId,
+				'agentUserId' => $userId,
+				'taskUserId' => $task->getUserId(),
+			]);
+			return null;
+		}
+		if (!$this->isAgencyInteractionTaskType($task->getTaskTypeId())) {
+			return null;
+		}
+
+		$sessionId = null;
+		if (preg_match('/^chatty-llm:(\d+)$/', (string)$task->getCustomId(), $matches)) {
+			$sessionId = (int)$matches[1];
+		} else {
+			// voice interactions run as an agency sub-task without a custom id
+			$conversationToken = $task->getInput()['conversation_token'] ?? null;
+			if (is_string($conversationToken) && $conversationToken !== '') {
+				try {
+					$sessionId = $this->sessionMapper->getAgentSessionByAgencyConversationToken($userId, $conversationToken)->getId();
+				} catch (Exception|DoesNotExistException|MultipleObjectsReturnedException $e) {
+					$this->logger->warning('Could not find the agent session of a voice interaction that created a scheduled task', [
+						'originTaskId' => $originTaskId,
+						'exception' => $e,
+					]);
+					return null;
+				}
 			}
 		}
+		if ($sessionId === null) {
+			return null;
+		}
+		try {
+			$session = $this->sessionMapper->getUserSession($userId, $sessionId);
+		} catch (DoesNotExistException|MultipleObjectsReturnedException) {
+			$this->logger->warning('Ignoring an origin task of a session that does not belong to its user', [
+				'originTaskId' => $originTaskId,
+				'agentUserId' => $userId,
+				'sessionId' => $sessionId,
+			]);
+			return null;
+		}
+		if ($session->getRequesterUserId() === null) {
+			// a regular chat session without a requester: nothing to link
+			return null;
+		}
+		return $session;
+	}
+
+	/**
+	 * @param string $taskTypeId
+	 * @return bool Whether the task type is one of the agency interaction task types
+	 */
+	private function isAgencyInteractionTaskType(string $taskTypeId): bool {
+		$agencyTaskTypeIds = [
+			class_exists(\OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::class)
+				? \OCP\TaskProcessing\TaskTypes\ContextAgentInteraction::ID
+				: null,
+			class_exists(\OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::class)
+				? \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID
+				: null,
+		];
+		return in_array($taskTypeId, array_filter($agencyTaskTypeIds), true);
 	}
 
 	/**

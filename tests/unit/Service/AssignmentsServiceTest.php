@@ -22,14 +22,20 @@ use OCP\BackgroundJob\IJobList;
 use OCP\IDateTimeZone;
 use OCP\IL10N;
 use OCP\IUserManager;
+use OCP\TaskProcessing\Exception\NotFoundException as TaskNotFoundException;
+use OCP\TaskProcessing\IManager as ITaskProcessingManager;
+use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\ContextAgentInteraction;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 /**
  * The requester of scheduled tasks ordered through an agent in Talk is
- * recorded on the assignments (option B of the assignments plan), together
- * with the Talk thread that carries the run results.
+ * recorded on the assignments at creation time: the agent run passes the id
+ * of the TaskProcessing task it runs in as originTaskId and the requester is
+ * resolved from the matching agent session, together with the Talk thread
+ * that carries the run results.
  */
 class AssignmentsServiceTest extends TestCase {
 
@@ -37,10 +43,13 @@ class AssignmentsServiceTest extends TestCase {
 	private const REQUESTER_USER_ID = 'alice';
 	private const ROOM_TOKEN = 'room-token';
 	private const THREAD_ID = 777;
+	private const SESSION_ID = 42;
 
 	private AssignmentMapper&MockObject $assignmentMapper;
 	private SessionMapper&MockObject $sessionMapper;
 	private AgentTalkService&MockObject $agentTalkService;
+	private ChatService&MockObject $chatService;
+	private ITaskProcessingManager&MockObject $taskProcessingManager;
 	private AssignmentsService $service;
 
 	protected function setUp(): void {
@@ -49,6 +58,8 @@ class AssignmentsServiceTest extends TestCase {
 		$this->assignmentMapper = $this->createMock(AssignmentMapper::class);
 		$this->sessionMapper = $this->createMock(SessionMapper::class);
 		$this->agentTalkService = $this->createMock(AgentTalkService::class);
+		$this->chatService = $this->createMock(ChatService::class);
+		$this->taskProcessingManager = $this->createMock(ITaskProcessingManager::class);
 
 		$l10n = $this->createMock(IL10N::class);
 		$l10n->method('t')->willReturnCallback(
@@ -56,22 +67,26 @@ class AssignmentsServiceTest extends TestCase {
 		);
 		$this->agentTalkService->method('getUserL10n')->willReturn($l10n);
 
+		$timeFactory = $this->createMock(ITimeFactory::class);
+		$timeFactory->method('now')->willReturn(new \DateTimeImmutable());
+
 		$this->service = new AssignmentsService(
 			$this->assignmentMapper,
 			$this->sessionMapper,
-			$this->createMock(ChatService::class),
+			$this->chatService,
 			$this->agentTalkService,
-			$this->createMock(ITimeFactory::class),
+			$timeFactory,
 			$this->createMock(LoggerInterface::class),
 			$this->createMock(IJobList::class),
 			$this->createMock(IDateTimeZone::class),
 			$this->createMock(IUserManager::class),
+			$this->taskProcessingManager,
 		);
 	}
 
 	private function makeSession(): Session {
 		$session = new Session();
-		$session->setId(42);
+		$session->setId(self::SESSION_ID);
 		$session->setUserId(self::AGENT_USER_ID);
 		$session->setRequesterUserId(self::REQUESTER_USER_ID);
 		$session->setRoomToken(self::ROOM_TOKEN);
@@ -88,36 +103,158 @@ class AssignmentsServiceTest extends TestCase {
 		return $assignment;
 	}
 
-	public function testLinkRequesterStoresTheRequesterAndTheRoom(): void {
-		$session = $this->makeSession();
-		$assignment = $this->makeAssignment(5);
-		$this->assignmentMapper->method('find')
-			->with(self::AGENT_USER_ID, 5)
-			->willReturn($assignment);
-
-		$updated = null;
-		$this->assignmentMapper->expects($this->once())
-			->method('update')
-			->willReturnCallback(static function (Assignment $assignment) use (&$updated): Assignment {
-				$updated = $assignment;
-				return $assignment;
-			});
-
-		$this->service->linkRequesterToCreatedScheduledTasks($session, [5]);
-
-		$this->assertNotNull($updated);
-		$this->assertSame(self::REQUESTER_USER_ID, $updated->getRequesterUserId());
+	private function makeOriginTask(string $userId, ?string $customId, array $input = []): Task {
+		$task = new Task(
+			ContextAgentInteraction::ID,
+			$input,
+			'assistant:chatty-llm',
+			$userId,
+			$customId,
+		);
+		$task->setId(1234);
+		return $task;
 	}
 
-	public function testLinkRequesterIgnoresAssignmentsOfOtherUsers(): void {
-		$session = $this->makeSession();
-		// find() is scoped by the agent user id: assignments of other users
-		// are not returned at all
-		$this->assignmentMapper->method('find')
-			->willThrowException(new DoesNotExistException('assignment belongs to another user'));
-		$this->assignmentMapper->expects($this->never())->method('update');
+	/**
+	 * The origin task of a chat interaction carries the session id in its
+	 * custom id: the requester of the matching agent session is stamped on the
+	 * new assignment.
+	 */
+	public function testCreateAssignmentWithOriginTaskStoresTheRequester(): void {
+		$this->taskProcessingManager->method('getTask')
+			->with(1234)
+			->willReturn($this->makeOriginTask(self::AGENT_USER_ID, 'chatty-llm:' . self::SESSION_ID));
+		$this->sessionMapper->method('getUserSession')
+			->with(self::AGENT_USER_ID, self::SESSION_ID)
+			->willReturn($this->makeSession());
 
-		$this->service->linkRequesterToCreatedScheduledTasks($session, [5]);
+		$inserted = null;
+		$this->assignmentMapper->expects($this->once())
+			->method('insert')
+			->willReturnCallback(static function (Assignment $assignment) use (&$inserted): Assignment {
+				$assignment->setId(5);
+				$inserted = $assignment;
+				return $assignment;
+			});
+		$this->chatService->method('createChatSession')->willReturn(new Session());
+
+		$this->service->createAssignment(self::AGENT_USER_ID, 'title', 'prompt', 1730000000, '', 'UTC', 1234);
+
+		$this->assertNotNull($inserted);
+		$this->assertSame(self::REQUESTER_USER_ID, $inserted->getRequesterUserId());
+	}
+
+	/**
+	 * Voice interactions run as an agency sub-task without a custom id: the
+	 * conversation token in its input identifies the agent session.
+	 */
+	public function testCreateAssignmentWithVoiceOriginTaskResolvesTheSessionByToken(): void {
+		$conversationToken = 'the-conversation-token';
+		$this->taskProcessingManager->method('getTask')
+			->with(1234)
+			->willReturn($this->makeOriginTask(self::AGENT_USER_ID, null, ['conversation_token' => $conversationToken]));
+		$this->sessionMapper->method('getAgentSessionByAgencyConversationToken')
+			->with(self::AGENT_USER_ID, $conversationToken)
+			->willReturn($this->makeSession());
+		$this->sessionMapper->method('getUserSession')
+			->with(self::AGENT_USER_ID, self::SESSION_ID)
+			->willReturn($this->makeSession());
+
+		$inserted = null;
+		$this->assignmentMapper->expects($this->once())
+			->method('insert')
+			->willReturnCallback(static function (Assignment $assignment) use (&$inserted): Assignment {
+				$assignment->setId(5);
+				$inserted = $assignment;
+				return $assignment;
+			});
+		$this->chatService->method('createChatSession')->willReturn(new Session());
+
+		$this->service->createAssignment(self::AGENT_USER_ID, 'title', 'prompt', 1730000000, '', 'UTC', 1234);
+
+		$this->assertNotNull($inserted);
+		$this->assertSame(self::REQUESTER_USER_ID, $inserted->getRequesterUserId());
+	}
+
+	/**
+	 * An origin task of another user must not leak a requester: the requester
+	 * is only resolved from tasks of the agent user creating the assignment.
+	 */
+	public function testCreateAssignmentWithOriginTaskOfAnotherUserIsNotLinked(): void {
+		$this->taskProcessingManager->method('getTask')
+			->with(1234)
+			->willReturn($this->makeOriginTask('mallory', 'chatty-llm:' . self::SESSION_ID));
+		$this->sessionMapper->expects($this->never())->method('getUserSession');
+
+		$inserted = null;
+		$this->assignmentMapper->expects($this->once())
+			->method('insert')
+			->willReturnCallback(static function (Assignment $assignment) use (&$inserted): Assignment {
+				$assignment->setId(5);
+				$inserted = $assignment;
+				return $assignment;
+			});
+		$this->chatService->method('createChatSession')->willReturn(new Session());
+
+		$this->service->createAssignment(self::AGENT_USER_ID, 'title', 'prompt', 1730000000, '', 'UTC', 1234);
+
+		$this->assertNotNull($inserted);
+		$this->assertNull($inserted->getRequesterUserId());
+	}
+
+	/**
+	 * Tasks that are no agency interaction tasks (e.g. a title generation task)
+	 * are not accepted as origin tasks.
+	 */
+	public function testCreateAssignmentWithNonAgencyOriginTaskIsNotLinked(): void {
+		$task = new Task(
+			'core:text2text:summary',
+			['input' => 'text'],
+			'assistant:chatty-llm',
+			self::AGENT_USER_ID,
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(1234);
+		$this->taskProcessingManager->method('getTask')
+			->with(1234)
+			->willReturn($task);
+		$this->sessionMapper->expects($this->never())->method('getUserSession');
+
+		$inserted = null;
+		$this->assignmentMapper->expects($this->once())
+			->method('insert')
+			->willReturnCallback(static function (Assignment $assignment) use (&$inserted): Assignment {
+				$assignment->setId(5);
+				$inserted = $assignment;
+				return $assignment;
+			});
+		$this->chatService->method('createChatSession')->willReturn(new Session());
+
+		$this->service->createAssignment(self::AGENT_USER_ID, 'title', 'prompt', 1730000000, '', 'UTC', 1234);
+
+		$this->assertNotNull($inserted);
+		$this->assertNull($inserted->getRequesterUserId());
+	}
+
+	public function testCreateAssignmentWithUnknownOriginTaskIsNotLinked(): void {
+		$this->taskProcessingManager->method('getTask')
+			->with(1234)
+			->willThrowException(new TaskNotFoundException('task not found'));
+
+		$inserted = null;
+		$this->assignmentMapper->expects($this->once())
+			->method('insert')
+			->willReturnCallback(static function (Assignment $assignment) use (&$inserted): Assignment {
+				$assignment->setId(5);
+				$inserted = $assignment;
+				return $assignment;
+			});
+		$this->chatService->method('createChatSession')->willReturn(new Session());
+
+		$this->service->createAssignment(self::AGENT_USER_ID, 'title', 'prompt', 1730000000, '', 'UTC', 1234);
+
+		$this->assertNotNull($inserted);
+		$this->assertNull($inserted->getRequesterUserId());
 	}
 
 	/**

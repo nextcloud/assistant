@@ -129,6 +129,33 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * Get the agent session owned by the given agent user that currently holds
+	 * the given agency conversation token.
+	 *
+	 * The tasks of a voice interaction carry the conversation token that was
+	 * stored on the agent session when they were scheduled, so the token
+	 * identifies the session they run in.
+	 *
+	 * @param string $userId The agent user id (owner of the session)
+	 * @param string $conversationToken The agency conversation token of the session
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSessionByAgencyConversationToken(string $userId, string $conversationToken): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('agency_conversation_token', $qb->createPositionalParameter($conversationToken, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->isNotNull('requester_user_id'))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * Get the agent session whose currently seen Talk message is the given one.
 	 *
 	 * The agent session marks the human message it is handling as read in the

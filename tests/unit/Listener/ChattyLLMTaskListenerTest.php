@@ -347,54 +347,6 @@ class ChattyLLMTaskListenerTest extends TestCase {
 	}
 
 	/**
-	 * The structured output of an agency turn that created scheduled task(s)
-	 * links the requester and the 1-1 room on the assignments; the reply stays
-	 * a plain message of the 1-1 conversation and no thread is created yet:
-	 * the task's thread is opened by its first run.
-	 */
-	public function testScheduledTaskCreationLinksTheRequesterAndStaysPlain(): void {
-		$sessionMapper = $this->createMock(SessionMapper::class);
-		$session = new Session();
-		$session->setAssignmentId(null);
-		$session->setRequesterUserId('alice');
-		$this->givenAgentSession($sessionMapper, $session);
-		$this->givenUnstoredMessage();
-
-		/** @var AssignmentsService&MockObject $assignmentsService */
-		$assignmentsService = $this->createMock(AssignmentsService::class);
-		$assignmentsService->expects($this->once())
-			->method('linkRequesterToCreatedScheduledTasks')
-			->with($session, [5, 6]);
-		$assignmentsService->expects($this->never())
-			->method('storeScheduledTaskThread');
-
-		/** @var AgentTalkService&MockObject $agentTalkService */
-		$agentTalkService = $this->createMock(AgentTalkService::class);
-		$agentTalkService->expects($this->once())
-			->method('postAgentTalkReply')
-			->with(
-				$session,
-				'The task is created.',
-				'',
-				null,
-				null,
-				[],
-			);
-		$this->rebuildListener($agentTalkService, $sessionMapper, null, $assignmentsService);
-
-		$task = $this->makeAgencyTask(
-			['input' => 'Create a weekly report task', 'confirmation' => 1, 'conversation_token' => 'token'],
-			[
-				'output' => 'The task is created.',
-				'actions' => '',
-				'conversation_token' => 'new-token',
-				'scheduled_task_ids' => [5, 6],
-			],
-		);
-		$this->listener->handle(new TaskSuccessfulEvent($task));
-	}
-
-	/**
 	 * Each run message of a recurring task carries the time of the run, and
 	 * the thread it is posted in is stored on the task (also when the run had
 	 * to recreate a deleted thread).
@@ -411,7 +363,6 @@ class ChattyLLMTaskListenerTest extends TestCase {
 
 		/** @var AssignmentsService&MockObject $assignmentsService */
 		$assignmentsService = $this->createMock(AssignmentsService::class);
-		$assignmentsService->expects($this->never())->method('linkRequesterToCreatedScheduledTasks');
 		$assignmentsService->expects($this->once())
 			->method('storeScheduledTaskThread')
 			->with($session, [9]);

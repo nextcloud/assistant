@@ -283,27 +283,11 @@ class ChattyLLMTaskListener implements IEventListener {
 				return;
 			}
 
-			// ids of the scheduled tasks created by this agent turn, carried by
-			// the structured task output; their presence means the turn has just
-			// been approved and the tasks were created
-			$scheduledTaskIds = [];
-			if ($isAgency || $isAgencyAudioChat || $isMultimodalAgencyChat) {
-				$outputScheduledTaskIds = $taskOutput['scheduled_task_ids'] ?? null;
-				if (is_array($outputScheduledTaskIds)) {
-					foreach ($outputScheduledTaskIds as $outputScheduledTaskId) {
-						if (is_numeric($outputScheduledTaskId)) {
-							$scheduledTaskIds[] = (int)$outputScheduledTaskId;
-						}
-					}
-				}
-			}
-
-			// the requester and the 1-1 room are recorded on the created tasks;
-			// the task's Talk thread itself is opened by its first run
+			// the requester of tasks created by this agent turn was recorded on
+			// the assignment at creation time (the agent run passes the id of the
+			// task it runs in to the assignment creation endpoint); the task's
+			// Talk thread itself is opened by its first run
 			$isAssignmentRun = $assignmentId !== null;
-			if ($scheduledTaskIds !== []) {
-				$this->assignmentsService->linkRequesterToCreatedScheduledTasks($session, $scheduledTaskIds);
-			}
 
 			$replyContent = $message->getContent();
 			if ($isAssignmentRun

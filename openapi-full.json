@@ -9117,6 +9117,13 @@
                                         "type": "string",
                                         "nullable": true,
                                         "description": "The timezone for this assignment (either the timezone name or a timezone offset, e.g. \"Europe/Berlin\" or \"+0100\" for UTC+1). Defaults to the user's current timezone"
+                                    },
+                                    "originTaskId": {
+                                        "type": "integer",
+                                        "format": "int64",
+                                        "nullable": true,
+                                        "default": null,
+                                        "description": "The id of the TaskProcessing task during which the assignment is created by an agent. The requester is resolved from that task and run results are delivered in the requester's Talk thread. Omit when the assignment is created directly by a human"
                                     }
                                 }
                             }

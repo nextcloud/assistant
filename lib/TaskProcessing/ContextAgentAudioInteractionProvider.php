@@ -89,13 +89,7 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 	}
 
 	public function getOptionalOutputShape(): array {
-		return [
-			'scheduled_task_ids' => new ShapeDescriptor(
-				$this->l->t('Created scheduled tasks'),
-				$this->l->t('Ids of the assistant scheduled tasks created by the agent.'),
-				EShapeType::ListOfNumbers
-			),
-		];
+		return [];
 	}
 
 	public function getOptionalOutputShapeEnumValues(): array {
@@ -193,24 +187,12 @@ class ContextAgentAudioInteractionProvider implements ISynchronousProvider {
 			$outputAudioFileContent = '';
 		}
 
-		$output = [
+		return [
 			'output' => $outputAudioFileContent,
 			'output_transcript' => $agencyTaskOutput['output'],
 			'input_transcript' => $inputTranscription,
 			'conversation_token' => $agencyTaskOutput['conversation_token'],
 			'actions' => $agencyTaskOutput['actions'],
 		];
-		// ids of the scheduled tasks the agent turn created, so that the
-		// listener can deliver the run results to the requester
-		$scheduledTaskIds = [];
-		foreach ($agencyTaskOutput['scheduled_task_ids'] ?? [] as $scheduledTaskId) {
-			if (is_numeric($scheduledTaskId)) {
-				$scheduledTaskIds[] = (int)$scheduledTaskId;
-			}
-		}
-		if ($scheduledTaskIds !== []) {
-			$output['scheduled_task_ids'] = $scheduledTaskIds;
-		}
-		return $output;
 	}
 }
