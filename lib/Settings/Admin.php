@@ -9,6 +9,7 @@ namespace OCA\Assistant\Settings;
 
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Service\AgentSkillsService;
+use OCA\Assistant\Service\McpServersService;
 use OCA\Assistant\TaskProcessing\TextToStickerTaskType;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -26,6 +27,7 @@ class Admin implements ISettings {
 		private IInitialState $initialStateService,
 		private ITaskProcessingManager $taskProcessingManager,
 		private AgentSkillsService $agentSkillsService,
+		private McpServersService $mcpServersService,
 	) {
 	}
 
@@ -89,6 +91,7 @@ class Admin implements ISettings {
 			'context_agent_available' => $contextAgentAvailable,
 			'global_skills_admin_uid' => $globalSkillsConfig['admin_uid'],
 			'global_skills_path' => $globalSkillsConfig['path'],
+			'mcp_user_servers_enabled' => $this->mcpServersService->isEnabled(),
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 

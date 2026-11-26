@@ -43,6 +43,12 @@ return [
 		['name' => 'agentSkillsApi#storeSkill', 'url' => '/api/{apiVersion}/skills', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'agentSkillsApi#loadSkill', 'url' => '/api/{apiVersion}/skills/{skillName}', 'verb' => 'GET', 'requirements' => $requirements],
 
+		['name' => 'mcpServersApi#listServers', 'url' => '/api/{apiVersion}/mcp-servers', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'mcpServersApi#createServer', 'url' => '/api/{apiVersion}/mcp-servers', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'mcpServersApi#getConnections', 'url' => '/api/{apiVersion}/mcp-servers/connections', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'mcpServersApi#updateServer', 'url' => '/api/{apiVersion}/mcp-servers/{serverId}', 'verb' => 'PUT', 'requirements' => $requirements],
+		['name' => 'mcpServersApi#deleteServer', 'url' => '/api/{apiVersion}/mcp-servers/{serverId}', 'verb' => 'DELETE', 'requirements' => $requirements],
+
 		['name' => 'chattyLLM#newSession', 'url' => '/chat/sessions', 'verb' => 'POST', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#updateChatSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'PUT', 'postfix' => 'restful'],
 		['name' => 'chattyLLM#deleteSession', 'url' => '/chat/sessions/{sessionId}', 'verb' => 'DELETE', 'postfix' => 'restful'],

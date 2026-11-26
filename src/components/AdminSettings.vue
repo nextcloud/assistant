@@ -291,6 +291,20 @@
 					<span>{{ t('assistant', 'No global skills folder configured') }}</span>
 				</div>
 			</div>
+			<div v-if="state.context_agent_available" class="mcp-user-servers">
+				<h4>
+					{{ t('assistant', 'MCP servers of users') }}
+				</h4>
+				<NcFormBox>
+					<NcFormBoxSwitch :model-value="state.mcp_user_servers_enabled"
+						@update:model-value="onCheckboxChanged($event, 'mcp_user_servers_enabled')">
+						{{ t('assistant', 'Allow users to connect their own MCP servers to "Chat with AI" in their personal settings') }}
+					</NcFormBoxSwitch>
+				</NcFormBox>
+				<NcNoteCard type="warning">
+					{{ t('assistant', 'The tools of these servers act with the user\'s access to Nextcloud and can see what the user shares with the agent. Every call to them needs the user\'s confirmation, whatever the tools claim about themselves. Only servers on the internet that use https are allowed, and the Context Agent connects to them directly, without the proxy configured for it. This requires Context Agent 2.12.0 or later.') }}
+				</NcNoteCard>
+			</div>
 		</div>
 	</div>
 </template>
@@ -497,6 +511,11 @@ export default {
 			max-width: 900px;
 			margin-top: 12px;
 		}
+	}
+
+	.mcp-user-servers {
+		margin-top: 16px;
+		max-width: 800px;
 	}
 
 	.global-skills {

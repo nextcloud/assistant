@@ -12,6 +12,8 @@ namespace OCA\Assistant\Tests\Unit\Controller;
 use OCA\Assistant\AppInfo\Application;
 use OCA\Assistant\Controller\ConfigController;
 use OCA\Assistant\Service\AgentSkillsService;
+use OCA\Assistant\Service\McpServersService;
+use OCP\AppFramework\Http;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IAppConfig;
 use OCP\IConfig;
@@ -192,5 +194,16 @@ class ConfigControllerTest extends TestCase {
 		$this->controller->setGlobalSkillsFolder('skills');
 
 		self::assertCount(0, $this->auditEvents);
+	}
+
+	public function testMcpServersCannotBeSetOrReadAsPlainConfig(): void {
+		$this->config->expects(self::never())->method('setUserValue');
+		$this->config->expects(self::never())->method('getUserValue');
+
+		self::assertSame(Http::STATUS_BAD_REQUEST, $this->controller->setConfig([
+			'autoplay_audio_chat' => '1',
+			McpServersService::USER_CONFIG_KEY => '[{"url": "https://127.0.0.1"}]',
+		])->getStatus());
+		self::assertSame(Http::STATUS_BAD_REQUEST, $this->controller->getConfigValue(McpServersService::USER_CONFIG_KEY)->getStatus());
 	}
 }
