@@ -9,6 +9,9 @@
 		<NcNoteCard v-if="!enabled" type="warning">
 			{{ t('assistant', 'Your administrator no longer allows MCP servers. The assistant does not use the servers below; you can still remove them.') }}
 		</NcNoteCard>
+		<NcNoteCard v-else-if="!agentAvailable" type="warning">
+			{{ t('assistant', 'The Context Agent is not available at the moment, so the assistant cannot use the servers below. You can still remove them.') }}
+		</NcNoteCard>
 		<p v-if="servers.length === 0 && editing === null" class="mcp-servers__empty">
 			{{ t('assistant', 'No MCP servers yet') }}
 		</p>
@@ -20,10 +23,10 @@
 				</div>
 				<NcCheckboxRadioSwitch type="switch"
 					:model-value="server.enabled"
-					:disabled="!enabled || saving"
+					:disabled="!canEdit || saving"
 					:aria-label="t('assistant', 'Use {name}', { name: server.name })"
 					@update:model-value="onToggle(server, $event)" />
-				<NcButton v-if="enabled"
+				<NcButton v-if="canEdit"
 					variant="tertiary"
 					:aria-label="t('assistant', 'Edit {name}', { name: server.name })"
 					:disabled="saving || editing !== null"
@@ -97,7 +100,7 @@
 				</NcButton>
 			</div>
 		</form>
-		<NcButton v-else-if="enabled && servers.length < maxServers"
+		<NcButton v-else-if="canEdit && servers.length < maxServers"
 			variant="secondary"
 			@click="startEdit(null)">
 			<template #icon>
@@ -151,12 +154,24 @@ export default {
 	data() {
 		return {
 			enabled: this.initialState.enabled,
+			agentAvailable: this.initialState.agentAvailable,
 			servers: this.initialState.servers,
 			maxServers: this.initialState.maxServers,
 			// the server being added (id null) or edited, or null
 			editing: null,
 			saving: false,
 		}
+	},
+
+	computed: {
+		/**
+		 * Whether servers can be added, changed and used right now; removing them is always possible
+		 *
+		 * @return {boolean}
+		 */
+		canEdit() {
+			return this.enabled && this.agentAvailable
+		},
 	},
 
 	methods: {

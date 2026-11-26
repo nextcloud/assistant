@@ -31,6 +31,7 @@ class PersonalTest extends TestCase {
 	private AgentSkillsService&MockObject $agentSkillsService;
 	private AgentMemoriesService&MockObject $agentMemoriesService;
 	private ChatService&MockObject $chatService;
+	private McpServersService&MockObject $mcpServersService;
 	/** @var array<string, mixed> */
 	private array $initialState = [];
 	private Personal $personal;
@@ -41,6 +42,7 @@ class PersonalTest extends TestCase {
 		$this->agentSkillsService = $this->createMock(AgentSkillsService::class);
 		$this->agentMemoriesService = $this->createMock(AgentMemoriesService::class);
 		$this->chatService = $this->createMock(ChatService::class);
+		$this->mcpServersService = $this->createMock(McpServersService::class);
 
 		$initialStateService = $this->createMock(IInitialState::class);
 		$initialStateService->method('provideInitialState')
@@ -58,7 +60,7 @@ class PersonalTest extends TestCase {
 			$this->agentSkillsService,
 			$this->agentMemoriesService,
 			$this->chatService,
-			$this->createMock(McpServersService::class),
+			$this->mcpServersService,
 			$this->createMock(LoggerInterface::class),
 		);
 	}
@@ -136,5 +138,59 @@ class PersonalTest extends TestCase {
 			'memories' => null,
 			'memoriesFolderId' => null,
 		], $this->initialState['agentContent']);
+	}
+
+	public function testMcpServersAreFalseWithoutContextAgentAndServers(): void {
+		$this->chatService->method('isContextAgentAvailable')->willReturn(false);
+		$this->mcpServersService->method('isEnabled')->willReturn(true);
+		$this->mcpServersService->method('listServers')->with(self::USER_ID)->willReturn([]);
+
+		$this->personal->getForm();
+
+		$this->assertFalse($this->initialState['mcpServers']);
+	}
+
+	public function testMcpServersAreFalseWhenDisabledWithoutServers(): void {
+		$this->chatService->method('isContextAgentAvailable')->willReturn(true);
+		$this->mcpServersService->method('isEnabled')->willReturn(false);
+		$this->mcpServersService->method('listServers')->with(self::USER_ID)->willReturn([]);
+
+		$this->personal->getForm();
+
+		$this->assertFalse($this->initialState['mcpServers']);
+	}
+
+	public function testMcpServersAreListedWithoutContextAgent(): void {
+		$servers = [['id' => 'abc', 'name' => 'GitHub', 'url' => 'https://api.githubcopilot.com/mcp/', 'enabled' => true, 'headers' => ['Authorization']]];
+
+		$this->chatService->method('isContextAgentAvailable')->willReturn(false);
+		$this->mcpServersService->method('isEnabled')->willReturn(true);
+		$this->mcpServersService->method('listServers')->with(self::USER_ID)->willReturn($servers);
+
+		$this->personal->getForm();
+
+		$this->assertSame([
+			'enabled' => true,
+			'agentAvailable' => false,
+			'servers' => $servers,
+			'maxServers' => McpServersService::MAX_SERVERS,
+		], $this->initialState['mcpServers']);
+	}
+
+	public function testMcpServersAreListedWhenDisabled(): void {
+		$servers = [['id' => 'abc', 'name' => 'GitHub', 'url' => 'https://api.githubcopilot.com/mcp/', 'enabled' => true, 'headers' => []]];
+
+		$this->chatService->method('isContextAgentAvailable')->willReturn(true);
+		$this->mcpServersService->method('isEnabled')->willReturn(false);
+		$this->mcpServersService->method('listServers')->with(self::USER_ID)->willReturn($servers);
+
+		$this->personal->getForm();
+
+		$this->assertSame([
+			'enabled' => false,
+			'agentAvailable' => true,
+			'servers' => $servers,
+			'maxServers' => McpServersService::MAX_SERVERS,
+		], $this->initialState['mcpServers']);
 	}
 }

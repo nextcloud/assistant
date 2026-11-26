@@ -106,7 +106,7 @@ class McpServersApiController extends OCSController {
 	 * 200: Server changed
 	 * 400: Invalid server
 	 * 401: User is not authenticated
-	 * 403: The administrator does not allow users to add MCP servers
+	 * 403: The administrator does not allow users to use MCP servers
 	 * 404: Server not found
 	 */
 	#[NoAdminRequired]
@@ -116,7 +116,7 @@ class McpServersApiController extends OCSController {
 			return new DataResponse(['error' => $this->l10n->t('Unknown user')], Http::STATUS_UNAUTHORIZED);
 		}
 		if (!$this->mcpServersService->isEnabled()) {
-			return new DataResponse(['error' => $this->l10n->t('Adding MCP servers is not allowed')], Http::STATUS_FORBIDDEN);
+			return new DataResponse(['error' => $this->l10n->t('Your administrator no longer allows MCP servers, you can only remove them')], Http::STATUS_FORBIDDEN);
 		}
 		try {
 			$server = $this->mcpServersService->updateServer($this->userId, $serverId, $name, $url, $headers, $enabled);
@@ -157,7 +157,8 @@ class McpServersApiController extends OCSController {
 	/**
 	 * Get the enabled MCP servers of the current user, with their header values
 	 *
-	 * Only external apps (the Context Agent) acting for the user can call this.
+	 * Only external apps acting for the user can call this. It is meant for the Context Agent, but any external app
+	 * installed by the administrator can call it, as external apps are not told apart here.
 	 *
 	 * @return DataResponse<Http::STATUS_OK, array{enabled: bool, servers: list<AssistantMcpConnection>}, array{}>|DataResponse<Http::STATUS_UNAUTHORIZED, array{error: string}, array{}>
 	 *

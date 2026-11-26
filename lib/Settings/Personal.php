@@ -129,7 +129,7 @@ class Personal implements ISettings {
 		$this->initialStateService->provideInitialState('rememberedSessions', $rememberedSessionsShort);
 
 		$this->initialStateService->provideInitialState('agentContent', $this->chatService->isContextAgentAvailable() ? $this->getAgentContent() : false);
-		$this->initialStateService->provideInitialState('mcpServers', $this->chatService->isContextAgentAvailable() ? $this->getMcpServers() : false);
+		$this->initialStateService->provideInitialState('mcpServers', $this->getMcpServers());
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 
@@ -158,17 +158,24 @@ class Personal implements ISettings {
 	/**
 	 * The MCP servers of the current user, or false if there is nothing to show
 	 *
-	 * Servers stay listed after the administrator disallows them, so they can be removed.
+	 * Servers stay listed after the administrator disallows them or the Context Agent
+	 * is gone, so they can be removed.
 	 *
-	 * @return false|array{enabled: bool, servers: list<array{id: string, name: string, url: string, enabled: bool, headers: list<string>}>, maxServers: int}
+	 * @return false|array{enabled: bool, agentAvailable: bool, servers: list<array{id: string, name: string, url: string, enabled: bool, headers: list<string>}>, maxServers: int}
 	 */
 	private function getMcpServers(): false|array {
 		$enabled = $this->mcpServersService->isEnabled();
+		$agentAvailable = $this->chatService->isContextAgentAvailable();
 		$servers = $this->mcpServersService->listServers($this->userId);
-		if (!$enabled && $servers === []) {
+		if (!($enabled && $agentAvailable) && $servers === []) {
 			return false;
 		}
-		return ['enabled' => $enabled, 'servers' => $servers, 'maxServers' => McpServersService::MAX_SERVERS];
+		return [
+			'enabled' => $enabled,
+			'agentAvailable' => $agentAvailable,
+			'servers' => $servers,
+			'maxServers' => McpServersService::MAX_SERVERS,
+		];
 	}
 
 	public function getSection(): string {

@@ -4554,7 +4554,7 @@
                         }
                     },
                     "403": {
-                        "description": "The administrator does not allow users to add MCP servers",
+                        "description": "The administrator does not allow users to use MCP servers",
                         "content": {
                             "application/json": {
                                 "schema": {

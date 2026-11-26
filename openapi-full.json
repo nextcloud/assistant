@@ -4576,7 +4576,7 @@
                         }
                     },
                     "403": {
-                        "description": "The administrator does not allow users to add MCP servers",
+                        "description": "The administrator does not allow users to use MCP servers",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8863,7 +8863,7 @@
             "get": {
                 "operationId": "mcp_servers_api-get-connections",
                 "summary": "Get the enabled MCP servers of the current user, with their header values",
-                "description": "Only external apps (the Context Agent) acting for the user can call this.",
+                "description": "Only external apps acting for the user can call this. It is meant for the Context Agent, but any external app installed by the administrator can call it, as external apps are not told apart here.",
                 "tags": [
                     "mcp_servers"
                 ],
