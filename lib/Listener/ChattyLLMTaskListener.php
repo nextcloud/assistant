@@ -40,7 +40,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		// the event is dispatched in the task processing worker, an exception here would stop the worker
 		try {
 			$this->handleTaskEvent($event);
-		} catch (\Throwable $e) {
+		} catch (\Exception $e) {
 			$this->logger->error('Failed to handle the result of a chat task', ['exception' => $e]);
 		}
 	}
@@ -164,6 +164,9 @@ class ChattyLLMTaskListener implements IEventListener {
 			} catch (\OCP\DB\Exception $e) {
 				$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
 			}
+
+			// re-read the session, the user may have changed it while this task was handled
+			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 
 			// store the conversation token and the actions if we are using the agency feature
 			if ($isAgency || $isAgencyAudioChat) {

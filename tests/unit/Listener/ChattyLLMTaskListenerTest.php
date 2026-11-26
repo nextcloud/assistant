@@ -204,7 +204,12 @@ class ChattyLLMTaskListenerTest extends TestCase {
 			->willThrowException(new DoesNotExistException('Message not found'));
 		$this->messageMapper->method('getMessageById')
 			->willThrowException(new DoesNotExistException('Message not found'));
-		$this->logger->expects($this->once())->method('error');
+		$loggedException = null;
+		$this->logger->expects($this->once())
+			->method('error')
+			->willReturnCallback(static function (string $message, array $context) use (&$loggedException): void {
+				$loggedException = $context['exception'] ?? null;
+			});
 
 		$task = new Task(
 			\OCP\TaskProcessing\TaskTypes\AudioToAudioChat::ID,
@@ -216,5 +221,7 @@ class ChattyLLMTaskListenerTest extends TestCase {
 		$task->setId(self::TASK_ID);
 		$task->setOutput(['output' => 1, 'output_transcript' => 'reply', 'input_transcript' => 'question']);
 		$this->listener->handle(new TaskSuccessfulEvent($task));
+
+		$this->assertInstanceOf(DoesNotExistException::class, $loggedException);
 	}
 }
