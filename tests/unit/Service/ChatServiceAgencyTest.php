@@ -40,8 +40,6 @@ class ChatServiceAgencyTest extends TestCase {
 	private const USER_ID = 'agency_test_user';
 	private const SESSION_ID = 42;
 	private const USER_INSTRUCTIONS = 'Always answer like a pirate.';
-	// the user's UI language is mocked as "de"
-	private const LANGUAGE_INSTRUCTIONS = 'Write your output in German (de), which is the language the user has set for their user interface, unless the task explicitly asks for a different language.';
 
 	private ChatService $service;
 	private MessageMapper&MockObject $messageMapper;
@@ -49,6 +47,8 @@ class ChatServiceAgencyTest extends TestCase {
 	private IAppConfig&MockObject $appConfig;
 	private IConfig&MockObject $config;
 	private ?Task $scheduledTask = null;
+	// the user's UI language
+	private string $userLanguage = 'de';
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -79,7 +79,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->config = $this->createMock(IConfig::class);
 
 		$l10nFactory = $this->createMock(IFactory::class);
-		$l10nFactory->method('getUserLanguage')->willReturn('de');
+		$l10nFactory->method('getUserLanguage')->willReturnCallback(fn (): string => $this->userLanguage);
 
 		$this->service = new ChatService(
 			$this->createMock(IUserManager::class),
@@ -95,6 +95,17 @@ class ChatServiceAgencyTest extends TestCase {
 			$this->createMock(ITimeFactory::class),
 			$l10nFactory,
 		);
+	}
+
+	/**
+	 * The expected language instruction, e.g. "German (de)" with the intl extension or just "de" without it
+	 */
+	private static function languageInstructions(string $languageCode): string {
+		$languageName = class_exists(\Locale::class) ? \Locale::getDisplayLanguage($languageCode, 'en') : '';
+		$language = $languageName !== '' && $languageName !== $languageCode
+			? $languageName . ' (' . $languageCode . ')'
+			: $languageCode;
+		return 'Write your output in ' . $language . ', which is the language the user has set for their user interface, unless the task explicitly asks for a different language.';
 	}
 
 	private function setAgentOptionalInputs(array $optionalInputShape): void {
@@ -166,7 +177,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
 		// only the language instruction and the default scheduled task instructions
 		$this->assertSame(
-			[self::LANGUAGE_INSTRUCTIONS, Application::ASSIGNMENT_USER_INSTRUCTIONS],
+			[self::languageInstructions('de'), Application::ASSIGNMENT_USER_INSTRUCTIONS],
 			explode("\n\n", $this->scheduledTask->getInput()['user_instructions'] ?? ''),
 		);
 	}
@@ -200,7 +211,7 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(
-			self::LANGUAGE_INSTRUCTIONS . "\n\nAdmin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.",
+			self::languageInstructions('de') . "\n\nAdmin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.",
 			$this->scheduledTask->getInput()['user_instructions'] ?? null,
 		);
 	}
@@ -218,7 +229,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
 
 		$this->assertNotNull($this->scheduledTask);
-		$this->assertSame(self::LANGUAGE_INSTRUCTIONS . "\n\nAdmin assignment.", $this->scheduledTask->getInput()['user_instructions'] ?? null);
+		$this->assertSame(self::languageInstructions('de') . "\n\nAdmin assignment.", $this->scheduledTask->getInput()['user_instructions'] ?? null);
 	}
 
 	public function testAssignmentInstructionsAreNotSentWhenTheAgentDoesNotSupportThem(): void {
@@ -229,5 +240,20 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
+	}
+
+	public function testLanguageInstructionsFallBackToTheLanguageCode(): void {
+		// a code that intl does not know, so there is no language name to show
+		$this->userLanguage = 'xx';
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->setInstructionSettings(['assignment_user_instructions' => 'Admin assignment.'], []);
+
+		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(
+			'Write your output in xx, which is the language the user has set for their user interface, unless the task explicitly asks for a different language.' . "\n\nAdmin assignment.",
+			$this->scheduledTask->getInput()['user_instructions'] ?? null,
+		);
 	}
 }

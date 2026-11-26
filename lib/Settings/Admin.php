@@ -55,7 +55,7 @@ class Admin implements ISettings {
 		$speechToTextEnabled = $this->appConfig->getValueString(Application::APP_ID, 'speech_to_text_picker_enabled', '1', lazy: true) === '1';
 		$chattyLLMUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions', Application::CHAT_USER_INSTRUCTIONS, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS;
 		$commonUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'common_user_instructions', '', lazy: true);
-		$assignmentUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'assignment_user_instructions', '', lazy: true);
+		$assignmentUserInstructions = $this->appConfig->getValueString(Application::APP_ID, 'assignment_user_instructions', Application::ASSIGNMENT_USER_INSTRUCTIONS, lazy: true) ?: Application::ASSIGNMENT_USER_INSTRUCTIONS;
 		$chattyLLMUserInstructionsTitle = $this->appConfig->getValueString(Application::APP_ID, 'chat_user_instructions_title', Application::CHAT_USER_INSTRUCTIONS_TITLE, lazy: true) ?: Application::CHAT_USER_INSTRUCTIONS_TITLE;
 		$chatAutoTitleEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_auto_title_enabled', '1', lazy: true) === '1';
 		$chatPersonalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
