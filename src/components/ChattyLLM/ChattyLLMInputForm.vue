@@ -347,6 +347,8 @@ import { requestBrowserNotificationPermission } from '../../utils.js'
 // future: type (text, image, file, etc), attachments, etc support
 
 const getChatURL = (endpoint) => generateOcsUrl('/apps/assistant/chat' + endpoint)
+// user config keys storing the last opened session, per mode
+const lastSessionConfigKey = (isAssignment) => isAssignment ? 'last_assignment_session_id' : 'last_chat_session_id'
 const Roles = {
 	HUMAN: 'human',
 	ASSISTANT: 'assistant',
@@ -403,6 +405,12 @@ export default {
 		return {
 			// { id: number, title: string, user_id: string, timestamp: number }
 			active: null,
+			// ID of the last opened session as stored in the user config
+			lastSessionId: null,
+			// config key -> latest session ID to store, while a write for that key is running
+			lastSessionIdWrites: new Map(),
+			// bumped on each sessions fetch, to discard responses of superseded fetches
+			fetchSessionsRequestId: 0,
 			sessionIdsToDelete: null,
 			deletionDialogKey: 0,
 			deletionMode: false,
@@ -598,6 +606,10 @@ export default {
 				this.$refs.inputComponent.focus()
 			}
 
+			if (this.active !== null) {
+				this.saveLastSessionId(this.active.id)
+			}
+
 			if (this.active === null || this.loading.newSession) {
 				this.allMessagesLoaded = true
 				this.loading.newSession = false
@@ -610,10 +622,10 @@ export default {
 			// start polling in case a message is currently being generated
 			this.checkSession(this.active.id, this.isAssignment)
 		},
-		isAssignment() {
-			this.fetchSessions()
+		async isAssignment() {
 			this.active = null
 			clearTimeout(this.pollCheckSessionTimeout)
+			await this.fetchSessionsAndRestoreLast()
 		},
 		deletionMode(enabled) {
 			if (enabled) {
@@ -642,14 +654,8 @@ export default {
 	},
 
 	async mounted() {
-		await this.fetchSessions()
 		const urlSessionId = parseInt(new URLSearchParams(window.location.search).get('sessionId'), 10)
-		if (Number.isFinite(urlSessionId)) {
-			const session = this.sessions?.find(s => s.id === urlSessionId)
-			if (session) {
-				this.onSessionSelect(session)
-			}
-		}
+		await this.fetchSessionsAndRestoreLast(Number.isFinite(urlSessionId) ? urlSessionId : null)
 	},
 
 	methods: {
@@ -1155,6 +1161,9 @@ export default {
 				if (this.active !== null && sessionIds.includes(this.active.id)) {
 					this.active = null
 				}
+				if (sessionIds.includes(this.lastSessionId)) {
+					this.saveLastSessionId(null)
+				}
 				if (this.deletionMode) {
 					this.exitDeletionMode()
 				}
@@ -1167,17 +1176,107 @@ export default {
 			}
 		},
 
+		/**
+		 * Fetch the sessions and open the given one, or the last opened one of the current mode
+		 *
+		 * @param {number|null} preferredSessionId Session to open instead of the last opened one
+		 */
+		async fetchSessionsAndRestoreLast(preferredSessionId = null) {
+			const isAssignment = this.isAssignment
+			const chatContent = this.chatContent
+			const [lastSessionId, sessions] = await Promise.all([
+				this.fetchLastSessionId(isAssignment),
+				this.fetchSessions(),
+			])
+			// the fetch failed or got superseded
+			if (sessions === null) {
+				return
+			}
+			// a session got opened or created in the meantime, it is the last session now
+			if (this.active !== null || this.loading.newSession) {
+				return
+			}
+			this.lastSessionId = lastSessionId
+			// forget the last session if it does not exist anymore
+			if (lastSessionId !== null && !sessions.some(s => s.id === lastSessionId)) {
+				this.saveLastSessionId(null)
+			}
+			// the user started typing in the meantime, opening a session would clear the draft
+			if (this.chatContent !== chatContent) {
+				return
+			}
+			// only fall back to the last session if no specific session was requested
+			const session = preferredSessionId !== null
+				? sessions.find(s => s.id === preferredSessionId)
+				: sessions.find(s => s.id === lastSessionId)
+			if (session) {
+				this.onSessionSelect(session)
+			}
+		},
+
+		async fetchLastSessionId(isAssignment) {
+			try {
+				const response = await axios.get(generateUrl('/apps/assistant/config'), {
+					params: { key: lastSessionConfigKey(isAssignment) },
+				})
+				const sessionId = parseInt(response.data, 10)
+				return Number.isFinite(sessionId) ? sessionId : null
+			} catch (error) {
+				console.error('fetchLastSessionId error:', error)
+				return null
+			}
+		},
+
+		async saveLastSessionId(sessionId) {
+			if (this.lastSessionId === sessionId) {
+				return
+			}
+			this.lastSessionId = sessionId
+			const key = lastSessionConfigKey(this.isAssignment)
+			const writeRunning = this.lastSessionIdWrites.has(key)
+			this.lastSessionIdWrites.set(key, sessionId)
+			// one write per key at a time so they cannot be applied out of order,
+			// the running one writes the latest value once its request is done
+			if (writeRunning) {
+				return
+			}
+			let writtenSessionId
+			do {
+				writtenSessionId = this.lastSessionIdWrites.get(key)
+				try {
+					await axios.put(generateUrl('/apps/assistant/config'), {
+						values: { [key]: writtenSessionId === null ? '' : String(writtenSessionId) },
+					})
+				} catch (error) {
+					console.error('saveLastSessionId error:', error)
+				}
+			} while (this.lastSessionIdWrites.get(key) !== writtenSessionId)
+			this.lastSessionIdWrites.delete(key)
+		},
+
+		/**
+		 * @return {Promise<Array|null>} The fetched sessions, null if the fetch failed or got superseded
+		 */
 		async fetchSessions() {
+			const requestId = ++this.fetchSessionsRequestId
 			try {
 				this.sessions = null
 				const response = await axios.get(getChatURL('/sessions'), { params: { isAssignment: this.isAssignment } })
 				console.debug('fetchSessions response:', response)
+				if (requestId !== this.fetchSessionsRequestId) {
+					return null
+				}
 				this.sessions = response.data
+				return response.data
 			} catch (error) {
+				if (requestId !== this.fetchSessionsRequestId) {
+					return null
+				}
 				this.sessions = []
 				console.error('fetchSessions error:', error)
 				const fallbackError = this.isAssignment ? t('assistant', 'Error fetching assignments') : t('assistant', 'Error fetching conversations')
 				showError(error?.response?.data?.error ?? fallbackError)
+				return null
 			}
 		},
 
