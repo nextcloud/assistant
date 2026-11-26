@@ -45,7 +45,7 @@ class ChattyLLMTaskListener implements IEventListener {
 		// the event is dispatched in the task processing worker, an exception here would stop the worker
 		try {
 			$this->handleTaskEvent($event);
-		} catch (\Throwable $e) {
+		} catch (\Exception $e) {
 			$this->logger->error('Failed to handle the result of a chat task', ['exception' => $e]);
 		}
 	}
@@ -76,6 +76,9 @@ class ChattyLLMTaskListener implements IEventListener {
 		if ($event instanceof TaskFailedEvent) {
 			$task = $event->getTask();
 			$customId = $task->getCustomId();
+			if ($customId === null || $task->getAppId() !== (Application::APP_ID . ':chatty-llm')) {
+				return;
+			}
 			if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
 				$session = $this->getTaskSession($task, (int)$matches[1]);
 				if ($session !== null && $session->getAssignmentId() !== null) {
@@ -175,7 +178,10 @@ class ChattyLLMTaskListener implements IEventListener {
 					// and the user did not set a title manually while the response was generated:
 					// the title of an audio-first session stays empty until we have the transcript
 					$isFirstHumanMessage = !$this->messageMapper->hasHumanMessagesBefore($sessionId, $queryMessageId);
-					$currentTitle = $isFirstHumanMessage ? $session->getTitle() : null;
+					// read the title from the database, the user may have set one while the task was running
+					$currentTitle = $isFirstHumanMessage
+						? $this->sessionMapper->getUserSession($task->getUserId(), $sessionId)->getTitle()
+						: null;
 					if ($isFirstHumanMessage && trim($currentTitle ?? '') === '') {
 						$this->sessionMapper->updateSessionTitle($task->getUserId(), $sessionId, $this->chatService->truncateTitle($queryMessageContent));
 						// the frontend can only generate a title from a text message, generate it now that we have the transcript
@@ -209,6 +215,9 @@ class ChattyLLMTaskListener implements IEventListener {
 			} catch (\OCP\DB\Exception $e) {
 				$this->logger->error('Message insertion error in chattyllm task listener', ['exception' => $e]);
 			}
+
+			// re-read the session, the user may have changed it while this task was handled
+			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 
 			// store the conversation token and the actions if we are using the agency feature
 			if ($isAgency || $isAgencyAudioChat || $isMultimodalAgencyChat) {
