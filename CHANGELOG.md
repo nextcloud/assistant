@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 2.14.0 – 2026-11-26
+
+### Changed
+
+- Add release relay job to the CI @AndyScherzinger [#729](https://github.com/nextcloud/assistant/pull/729)
+
+### Fixed
+
+- Extend the list of translated tool labels and associated icons @marcelklehr [#515](https://github.com/nextcloud/assistant/pull/515)
+- Use "teams" instead of the old "circles" @marcelklehr [#516](https://github.com/nextcloud/assistant/pull/516)
+- Remove duplicate DuckDuckGo tool @marcelklehr [#517](https://github.com/nextcloud/assistant/pull/517)
+- Scope chat session access to the session owner: store chat task results only in sessions of the task's user and delete chat messages only together with an own session @julien-nc [#756](https://github.com/nextcloud/assistant/pull/756)
+
 ## 2.13.0 – 2026-02-19
 
 ### Changed
