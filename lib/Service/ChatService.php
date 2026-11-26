@@ -727,8 +727,10 @@ class ChatService {
 	 * then (if allowed by the admin) the user's own instructions for both and for this scope.
 	 * The user's instructions come last and must not override the admin's.
 	 *
-	 * Scheduled tasks additionally start with a hardcoded instruction to write in the user's UI language,
+	 * Scheduled tasks additionally end with a hardcoded instruction to write in the user's UI language,
 	 * since there is no user message in the conversation whose language could be detected.
+	 * It comes last and only applies if no other language was requested, so that it does not override
+	 * a language asked for by the admin's or the user's instructions.
 	 *
 	 * @param 'chat'|'assignment' $scope
 	 */
@@ -739,26 +741,24 @@ class ChatService {
 			$adminScopeInstructions = ($this->appConfig->getValueString(Application::APP_ID, 'assignment_user_instructions', Application::ASSIGNMENT_USER_INSTRUCTIONS, lazy: true) ?: Application::ASSIGNMENT_USER_INSTRUCTIONS);
 		}
 		$adminInstructions = self::joinInstructions([
-			$scope === 'assignment' ? $this->getUserLanguageInstructions($user) : '',
 			$this->appConfig->getValueString(Application::APP_ID, 'common_user_instructions', '', lazy: true),
 			$adminScopeInstructions,
 		]);
 		$adminInstructions = str_replace('{user}', $user?->getDisplayName() ?? $userId, $adminInstructions);
 
+		$personalInstructions = '';
 		$personalInstructionsEnabled = $this->appConfig->getValueString(Application::APP_ID, 'chat_personal_instructions_enabled', '0', lazy: true) === '1';
-		if (!$personalInstructionsEnabled) {
-			return $adminInstructions;
+		if ($personalInstructionsEnabled) {
+			$personalInstructions = self::joinInstructions([
+				$this->config->getUserValue($userId, Application::APP_ID, 'common_personal_instructions', ''),
+				$this->config->getUserValue($userId, Application::APP_ID, $scope . '_personal_instructions', ''),
+			]);
 		}
-		$personalInstructions = self::joinInstructions([
-			$this->config->getUserValue($userId, Application::APP_ID, 'common_personal_instructions', ''),
-			$this->config->getUserValue($userId, Application::APP_ID, $scope . '_personal_instructions', ''),
-		]);
-		if ($personalInstructions === '') {
-			return $adminInstructions;
-		}
+
 		return self::joinInstructions([
 			$adminInstructions,
-			Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions,
+			$personalInstructions !== '' ? Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\n" . $personalInstructions : '',
+			$scope === 'assignment' ? $this->getUserLanguageInstructions($user) : '',
 		]);
 	}
 
@@ -772,7 +772,7 @@ class ChatService {
 		$language = $languageName !== '' && $languageName !== $languageCode
 			? $languageName . ' (' . $languageCode . ')'
 			: $languageCode;
-		return 'Write your output in ' . $language . ', which is the language the user has set for their user interface, unless the task explicitly asks for a different language.';
+		return 'If no output language has been requested in the task or in the instructions above, write your output in ' . $language . ', which is the language the user has set for their user interface.';
 	}
 
 	/**

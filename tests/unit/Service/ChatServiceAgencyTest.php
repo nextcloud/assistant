@@ -105,7 +105,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$language = $languageName !== '' && $languageName !== $languageCode
 			? $languageName . ' (' . $languageCode . ')'
 			: $languageCode;
-		return 'Write your output in ' . $language . ', which is the language the user has set for their user interface, unless the task explicitly asks for a different language.';
+		return 'If no output language has been requested in the task or in the instructions above, write your output in ' . $language . ', which is the language the user has set for their user interface.';
 	}
 
 	private function setAgentOptionalInputs(array $optionalInputShape): void {
@@ -175,9 +175,9 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(ContextAgentInteraction::ID, $this->scheduledTask->getTaskTypeId());
-		// only the language instruction and the default scheduled task instructions
+		// only the default scheduled task instructions and the language instruction
 		$this->assertSame(
-			[self::languageInstructions('de'), Application::ASSIGNMENT_USER_INSTRUCTIONS],
+			[Application::ASSIGNMENT_USER_INSTRUCTIONS, self::languageInstructions('de')],
 			explode("\n\n", $this->scheduledTask->getInput()['user_instructions'] ?? ''),
 		);
 	}
@@ -211,7 +211,7 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(
-			self::languageInstructions('de') . "\n\nAdmin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.",
+			"Admin common.\n\nAdmin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nUser common.\n\nUser assignment.\n\n" . self::languageInstructions('de'),
 			$this->scheduledTask->getInput()['user_instructions'] ?? null,
 		);
 	}
@@ -229,7 +229,7 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
 
 		$this->assertNotNull($this->scheduledTask);
-		$this->assertSame(self::languageInstructions('de') . "\n\nAdmin assignment.", $this->scheduledTask->getInput()['user_instructions'] ?? null);
+		$this->assertSame("Admin assignment.\n\n" . self::languageInstructions('de'), $this->scheduledTask->getInput()['user_instructions'] ?? null);
 	}
 
 	public function testAssignmentInstructionsAreNotSentWhenTheAgentDoesNotSupportThem(): void {
@@ -242,6 +242,26 @@ class ChatServiceAgencyTest extends TestCase {
 		$this->assertArrayNotHasKey('user_instructions', $this->scheduledTask->getInput());
 	}
 
+	public function testLanguageInstructionsDoNotOverrideALanguageRequestedByTheUser(): void {
+		// the UI language is only a fallback, so it comes after the user's instructions
+		// instead of being one of the admin instructions that take precedence over them
+		$this->setAgentOptionalInputs(['user_instructions' => 'shape']);
+		$this->setInstructionSettings([
+			'assignment_user_instructions' => 'Admin assignment.',
+			'chat_personal_instructions_enabled' => '1',
+		], [
+			'assignment_personal_instructions' => 'Always answer in French.',
+		]);
+
+		$this->service->scheduleAssignmentMessageGeneration(self::USER_ID, self::SESSION_ID);
+
+		$this->assertNotNull($this->scheduledTask);
+		$this->assertSame(
+			"Admin assignment.\n\n" . Application::PERSONAL_INSTRUCTIONS_PREAMBLE . "\n\nAlways answer in French.\n\n" . self::languageInstructions('de'),
+			$this->scheduledTask->getInput()['user_instructions'] ?? null,
+		);
+	}
+
 	public function testLanguageInstructionsFallBackToTheLanguageCode(): void {
 		// a code that intl does not know, so there is no language name to show
 		$this->userLanguage = 'xx';
@@ -252,7 +272,7 @@ class ChatServiceAgencyTest extends TestCase {
 
 		$this->assertNotNull($this->scheduledTask);
 		$this->assertSame(
-			'Write your output in xx, which is the language the user has set for their user interface, unless the task explicitly asks for a different language.' . "\n\nAdmin assignment.",
+			"Admin assignment.\n\n" . 'If no output language has been requested in the task or in the instructions above, write your output in xx, which is the language the user has set for their user interface.',
 			$this->scheduledTask->getInput()['user_instructions'] ?? null,
 		);
 	}
