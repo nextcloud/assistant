@@ -312,6 +312,6 @@ class McpServersService {
 	 * @param list<StoredMcpServer> $servers
 	 */
 	private function save(string $userId, array $servers): void {
-		$this->config->setUserValue($userId, Application::APP_ID, self::USER_CONFIG_KEY, json_encode(array_values($servers), JSON_THROW_ON_ERROR));
+		$this->config->setUserValue($userId, Application::APP_ID, self::USER_CONFIG_KEY, json_encode($servers, JSON_THROW_ON_ERROR));
 	}
 }

@@ -13,6 +13,7 @@ use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Service\AgentMemoriesService;
 use OCA\Assistant\Service\AgentSkillsService;
 use OCA\Assistant\Service\ChatService;
+use OCA\Assistant\Service\McpServersService;
 use OCA\Assistant\Settings\Personal;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Files\Folder;
@@ -57,6 +58,7 @@ class PersonalTest extends TestCase {
 			$this->agentSkillsService,
 			$this->agentMemoriesService,
 			$this->chatService,
+			$this->createMock(McpServersService::class),
 			$this->createMock(LoggerInterface::class),
 		);
 	}
