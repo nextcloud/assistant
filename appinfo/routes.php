@@ -43,6 +43,11 @@ return [
 		['name' => 'agentSkillsApi#storeSkill', 'url' => '/api/{apiVersion}/skills', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'agentSkillsApi#loadSkill', 'url' => '/api/{apiVersion}/skills/{skillName}', 'verb' => 'GET', 'requirements' => $requirements],
 
+		['name' => 'agentsApi#listAgents', 'url' => '/api/{apiVersion}/agents', 'verb' => 'GET', 'requirements' => $requirements],
+		['name' => 'agentsApi#createAgent', 'url' => '/api/{apiVersion}/agents', 'verb' => 'POST', 'requirements' => $requirements],
+		['name' => 'agentsApi#updateAgent', 'url' => '/api/{apiVersion}/agents/{id}', 'verb' => 'PUT', 'requirements' => $requirements],
+		['name' => 'agentsApi#deleteAgent', 'url' => '/api/{apiVersion}/agents/{id}', 'verb' => 'DELETE', 'requirements' => $requirements],
+
 		['name' => 'mcpServersApi#listServers', 'url' => '/api/{apiVersion}/mcp-servers', 'verb' => 'GET', 'requirements' => $requirements],
 		['name' => 'mcpServersApi#createServer', 'url' => '/api/{apiVersion}/mcp-servers', 'verb' => 'POST', 'requirements' => $requirements],
 		['name' => 'mcpServersApi#getConnections', 'url' => '/api/{apiVersion}/mcp-servers/connections', 'verb' => 'GET', 'requirements' => $requirements],

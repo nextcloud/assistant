@@ -29,6 +29,10 @@ use function OCP\Log\logger;
  * @method \void setLastRunAt(int $lastRunAt)
  * @method \int getLastRunAt()
  * @method \string getTimezone()
+ * @method \string|null getRequesterUserId()
+ * @method \void setRequesterUserId(?string $requesterUserId)
+ * @method \int|null getTalkThreadId()
+ * @method \void setTalkThreadId(?int $talkThreadId)
  */
 class Assignment extends Entity implements \JsonSerializable {
 	private const MAX_COUNT = 10000;
@@ -51,6 +55,22 @@ class Assignment extends Entity implements \JsonSerializable {
 	/** @var string */
 	protected $timezone;
 
+	/**
+	 * When the assignment was ordered by a human through an agent in Talk:
+	 * the NC user id of that human. The assignment is still owned (and run)
+	 * by the agent user; the run results are delivered in the human's Talk
+	 * thread.
+	 * @var ?string
+	 */
+	protected $requesterUserId;
+
+	/**
+	 * The Talk thread of the agent's 1-1 conversation in which the run
+	 * results of the assignment are delivered
+	 * @var ?int
+	 */
+	protected $talkThreadId;
+
 	public static $columns = [
 		'id',
 		'user_id',
@@ -60,7 +80,9 @@ class Assignment extends Entity implements \JsonSerializable {
 		'created_at',
 		'updated_at',
 		'last_run_at',
-		'timezone'
+		'timezone',
+		'requester_user_id',
+		'talk_thread_id'
 	];
 	public static $fields = [
 		'id',
@@ -71,7 +93,9 @@ class Assignment extends Entity implements \JsonSerializable {
 		'createdAt',
 		'updatedAt',
 		'lastRunAt',
-		'timezone'
+		'timezone',
+		'requesterUserId',
+		'talkThreadId'
 	];
 
 	public function __construct() {
@@ -83,6 +107,8 @@ class Assignment extends Entity implements \JsonSerializable {
 		$this->addType('updatedAt', Types::BIGINT);
 		$this->addType('lastRunAt', Types::BIGINT);
 		$this->addType('timezone', Types::STRING);
+		$this->addType('requesterUserId', Types::STRING);
+		$this->addType('talkThreadId', Types::BIGINT);
 	}
 
 	#[\ReturnTypeWillChange]

@@ -14,6 +14,8 @@ use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
 use OCA\Assistant\Listener\ChattyLLMTaskListener;
+use OCA\Assistant\Service\AgentTalkService;
+use OCA\Assistant\Service\AssignmentsService;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
@@ -21,6 +23,9 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 use OCP\TaskProcessing\Events\TaskSuccessfulEvent;
 use OCP\TaskProcessing\Task;
+use OCP\TaskProcessing\TaskTypes\ContextAgentAudioInteraction;
+use OCP\TaskProcessing\TaskTypes\ContextAgentInteraction;
+use OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction;
 use OCP\TaskProcessing\TaskTypes\TextToTextChat;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -66,12 +71,23 @@ class ChattyLLMTaskListenerTest extends TestCase {
 				return $session;
 			});
 
+		$this->rebuildListener($this->createMock(AgentTalkService::class));
+	}
+
+	private function rebuildListener(
+		AgentTalkService $agentTalkService,
+		?SessionMapper $sessionMapper = null,
+		?NotificationService $notificationService = null,
+		?AssignmentsService $assignmentsService = null,
+	): void {
 		$this->listener = new ChattyLLMTaskListener(
 			$this->messageMapper,
-			$this->sessionMapper,
+			$sessionMapper ?? $this->sessionMapper,
 			$this->createMock(TaskProcessingService::class),
+			$agentTalkService,
+			$assignmentsService ?? $this->createMock(AssignmentsService::class),
 			$this->logger,
-			$this->notificationService,
+			$notificationService ?? $this->notificationService,
 			$this->chatService,
 		);
 	}
@@ -163,11 +179,366 @@ class ChattyLLMTaskListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
+	private function makeAudioTask(array $input, array $output): Task {
+		$task = new Task(
+			ContextAgentAudioInteraction::ID,
+			$input,
+			'assistant:chatty-llm',
+			'admin',
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(self::TASK_ID);
+		$task->setOutput($output);
+		return $task;
+	}
+
 	private function makeOtherUsersTask(string $taskTypeId, string $customId, array $output): Task {
 		$task = new Task($taskTypeId, ['input' => 'anything'], 'assistant:chatty-llm', 'attacker', $customId);
 		$task->setId(self::TASK_ID);
 		$task->setOutput($output);
 		return $task;
+	}
+
+	private function givenUnstoredMessage(): void {
+		$this->messageMapper->method('getMessageByTaskId')
+			->with(self::SESSION_ID, self::TASK_ID)
+			->willThrowException(new DoesNotExistException('Message not found'));
+		$this->messageMapper->method('insert')
+			->willReturnCallback(static function (Message $message): Message {
+				$message->setId(3);
+				return $message;
+			});
+	}
+
+	private function givenAgentSession(SessionMapper&MockObject $sessionMapper, Session $session): void {
+		$sessionMapper->method('getUserSession')->willReturn($session);
+		$sessionMapper->method('update');
+	}
+
+	public function testAgentReplyReceivesTheAudioTranscript(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'The agent answer',
+				null,
+				'Hello agent, what do you hear?',
+				456,
+				[],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = $this->makeAudioTask(
+			['input' => 123, 'confirmation' => 0, 'conversation_token' => ''],
+			[
+				'output' => 456,
+				'output_transcript' => 'The agent answer',
+				'input_transcript' => 'Hello agent, what do you hear?',
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	public function testAgentReplyReceivesNoTranscriptOnConfirmationFollowUp(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'The agent answer',
+				null,
+				null,
+				456,
+				[],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = $this->makeAudioTask(
+			['input' => 123, 'confirmation' => 1, 'conversation_token' => 'token'],
+			[
+				'output' => 456,
+				'output_transcript' => 'The agent answer',
+				'input_transcript' => 'Hello agent, what do you hear?',
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	public function testAgentReplyReceivesTheMultimodalOutputFiles(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+
+		$this->givenUnstoredMessage();
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'Here is your image.',
+				null,
+				null,
+				null,
+				[789, 790],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = new Task(
+			MultimodalContextAgentInteraction::ID,
+			[
+				'input' => 'Generate an image of a cat',
+				'confirmation' => 0,
+				'conversation_token' => '',
+				'input_attachments' => [],
+			],
+			'assistant:chatty-llm',
+			'admin',
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(self::TASK_ID);
+		$task->setOutput([
+			'output' => 'Here is your image.',
+			'output_attachments' => [789, 790],
+		]);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	private function makeAgencyTask(array $input, array $output): Task {
+		$task = new Task(
+			ContextAgentInteraction::ID,
+			$input,
+			'assistant:chatty-llm',
+			'admin',
+			'chatty-llm:' . self::SESSION_ID,
+		);
+		$task->setId(self::TASK_ID);
+		$task->setOutput($output);
+		return $task;
+	}
+
+	private function makeRunSession(): Session {
+		$session = new Session();
+		$session->setAssignmentId(9);
+		$session->setRequesterUserId('alice');
+		return $session;
+	}
+
+	/**
+	 * The structured output of an agency turn that created scheduled task(s)
+	 * links the requester and the 1-1 room on the assignments; the reply stays
+	 * a plain message of the 1-1 conversation and no thread is created yet:
+	 * the task's thread is opened by its first run.
+	 */
+	public function testScheduledTaskCreationLinksTheRequesterAndStaysPlain(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(null);
+		$session->setRequesterUserId('alice');
+		$this->givenAgentSession($sessionMapper, $session);
+		$this->givenUnstoredMessage();
+
+		/** @var AssignmentsService&MockObject $assignmentsService */
+		$assignmentsService = $this->createMock(AssignmentsService::class);
+		$assignmentsService->expects($this->once())
+			->method('linkRequesterToCreatedScheduledTasks')
+			->with($session, [5, 6]);
+		$assignmentsService->expects($this->never())
+			->method('storeScheduledTaskThread');
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'The task is created.',
+				'',
+				null,
+				null,
+				[],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper, null, $assignmentsService);
+
+		$task = $this->makeAgencyTask(
+			['input' => 'Create a weekly report task', 'confirmation' => 1, 'conversation_token' => 'token'],
+			[
+				'output' => 'The task is created.',
+				'actions' => '',
+				'conversation_token' => 'new-token',
+				'scheduled_task_ids' => [5, 6],
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	/**
+	 * Each run message of a recurring task carries the time of the run, and
+	 * the thread it is posted in is stored on the task (also when the run had
+	 * to recreate a deleted thread).
+	 */
+	public function testAssignmentRunOutputCarriesTheRunHeader(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = $this->makeRunSession();
+		$this->givenAgentSession($sessionMapper, $session);
+		$this->givenUnstoredMessage();
+
+		$promptMessage = new Message();
+		$promptMessage->setTimestamp(1730000000);
+		$this->messageMapper->method('getLastHumanMessage')->willReturn($promptMessage);
+
+		/** @var AssignmentsService&MockObject $assignmentsService */
+		$assignmentsService = $this->createMock(AssignmentsService::class);
+		$assignmentsService->expects($this->never())->method('linkRequesterToCreatedScheduledTasks');
+		$assignmentsService->expects($this->once())
+			->method('storeScheduledTaskThread')
+			->with($session, [9]);
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->once())
+			->method('getAssignmentRunHeader')
+			->with(1730000000, 'alice')
+			->willReturn('**Run of Mon 24 Nov 2026, 09:00**');
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				"**Run of Mon 24 Nov 2026, 09:00**\n\nThe result",
+				null,
+				null,
+				null,
+				[],
+			)
+			->willReturnCallback(static function () use ($session): void {
+				$session->setThreadId(777);
+			});
+		$this->rebuildListener($agentTalkService, $sessionMapper, null, $assignmentsService);
+
+		$task = $this->makeAgencyTask(
+			['input' => 'Make the weekly report', 'confirmation' => 0, 'conversation_token' => ''],
+			[
+				'output' => 'The result',
+				'actions' => '',
+				'conversation_token' => 'new-token',
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	/**
+	 * The follow-up of a confirmation inside a run continues the same run
+	 * turn: it carries no run header.
+	 */
+	public function testAssignmentRunConfirmationFollowUpHasNoRunHeader(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = $this->makeRunSession();
+		$this->givenAgentSession($sessionMapper, $session);
+		$this->givenUnstoredMessage();
+
+		/** @var AssignmentsService&MockObject $assignmentsService */
+		$assignmentsService = $this->createMock(AssignmentsService::class);
+		$assignmentsService->expects($this->never())->method('storeScheduledTaskThread');
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->never())->method('getAssignmentRunHeader');
+		$agentTalkService->expects($this->once())
+			->method('postAgentTalkReply')
+			->with(
+				$session,
+				'The follow-up answer',
+				'',
+				null,
+				null,
+				[],
+			);
+		$this->rebuildListener($agentTalkService, $sessionMapper);
+
+		$task = $this->makeAgencyTask(
+			['input' => 'Go ahead', 'confirmation' => 1, 'conversation_token' => 'token'],
+			[
+				'output' => 'The follow-up answer',
+				'actions' => '',
+				'conversation_token' => 'new-token',
+			],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	/**
+	 * Assignments ordered through an agent in Talk are not notified: their run
+	 * output is delivered in the task's Talk thread instead.
+	 */
+	public function testTalkDeliveredAssignmentRunIsNotNotified(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = $this->makeRunSession();
+		$this->givenAgentSession($sessionMapper, $session);
+		$this->givenUnstoredMessage();
+
+		/** @var NotificationService&MockObject $notificationService */
+		$notificationService = $this->createMock(NotificationService::class);
+		$notificationService->expects($this->never())->method('sendAssignmentNotification');
+
+		$this->rebuildListener($this->createMock(AgentTalkService::class), $sessionMapper, $notificationService);
+
+		$task = $this->makeAgencyTask(
+			['input' => 'Make the weekly report', 'confirmation' => 0, 'conversation_token' => ''],
+			['output' => 'The result', 'actions' => '', 'conversation_token' => 'new-token'],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
+	}
+
+	/**
+	 * Web-created assignments keep being notified: their runs have no Talk
+	 * delivery path.
+	 */
+	public function testWebCreatedAssignmentRunIsNotified(): void {
+		$sessionMapper = $this->createMock(SessionMapper::class);
+		$session = new Session();
+		$session->setAssignmentId(9);
+		$session->setRequesterUserId(null);
+		$this->givenAgentSession($sessionMapper, $session);
+		$this->givenUnstoredMessage();
+
+		/** @var NotificationService&MockObject $notificationService */
+		$notificationService = $this->createMock(NotificationService::class);
+		$notificationService->expects($this->once())
+			->method('sendAssignmentNotification');
+
+		/** @var AgentTalkService&MockObject $agentTalkService */
+		$agentTalkService = $this->createMock(AgentTalkService::class);
+		$agentTalkService->expects($this->never())->method('postAgentTalkReply');
+
+		$this->rebuildListener($agentTalkService, $sessionMapper, $notificationService);
+
+		$task = $this->makeAgencyTask(
+			['input' => 'Make the weekly report', 'confirmation' => 0, 'conversation_token' => ''],
+			['output' => 'The result', 'actions' => '', 'conversation_token' => 'new-token'],
+		);
+		$this->listener->handle(new TaskSuccessfulEvent($task));
 	}
 
 	public function testMessageForAnotherUsersSessionIsNotStored(): void {

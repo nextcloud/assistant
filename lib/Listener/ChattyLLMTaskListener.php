@@ -14,6 +14,8 @@ use OCA\Assistant\Db\ChattyLLM\Message;
 use OCA\Assistant\Db\ChattyLLM\MessageMapper;
 use OCA\Assistant\Db\ChattyLLM\Session;
 use OCA\Assistant\Db\ChattyLLM\SessionMapper;
+use OCA\Assistant\Service\AgentTalkService;
+use OCA\Assistant\Service\AssignmentsService;
 use OCA\Assistant\Service\ChatService;
 use OCA\Assistant\Service\NotificationService;
 use OCA\Assistant\Service\TaskProcessingService;
@@ -35,6 +37,8 @@ class ChattyLLMTaskListener implements IEventListener {
 		private MessageMapper $messageMapper,
 		private SessionMapper $sessionMapper,
 		private TaskProcessingService $taskProcessingService,
+		private AgentTalkService $agentTalkService,
+		private AssignmentsService $assignmentsService,
 		private LoggerInterface $logger,
 		private NotificationService $notificationService,
 		private ChatService $chatService,
@@ -80,11 +84,21 @@ class ChattyLLMTaskListener implements IEventListener {
 				return;
 			}
 			if (preg_match('/^chatty-llm:(\d+)/', $customId, $matches)) {
-				$session = $this->getTaskSession($task, (int)$matches[1]);
-				if ($session !== null && $session->getAssignmentId() !== null) {
+				$sessionId = (int)$matches[1];
+				$session = $this->getTaskSession($task, $sessionId);
+				if ($session !== null && $session->getAssignmentId() !== null && $session->getRequesterUserId() === null) {
+					// assignments ordered through an agent in Talk are not
+					// notified: the failure is posted in the task's Talk thread
 					$this->notificationService->sendAssignmentNotification(
 						$task->getUserId(), $task, $session
 					);
+				}
+				// in the agent-as-a-user feature, a failure notice is posted
+				// in the agent 1-1 conversation when the generation failed
+				try {
+					$this->agentTalkService->markGenerationFailed($task->getUserId(), $sessionId);
+				} catch (\Throwable $e) {
+					$this->logger->error('Failed to mark the agent message as failed in Talk', ['exception' => $e]);
 				}
 			}
 			return;
@@ -144,6 +158,30 @@ class ChattyLLMTaskListener implements IEventListener {
 				&& $taskTypeId === \OCP\TaskProcessing\TaskTypes\MultimodalContextAgentInteraction::ID;
 
 			$taskOutput = $task->getOutput();
+
+			// the transcript of the human's audio input, posted in Talk for agent
+			// sessions; not on confirmation follow-ups, where the same audio was
+			// already transcribed when it was first sent. The generated speech
+			// audio of the answer is posted as a Talk voice message in any case.
+			$inputTranscript = null;
+			$audioFileId = null;
+			if ($isAudioChat || $isAgencyAudioChat) {
+				$isConfirmation = $this->isConfirmationFollowUp($task);
+				$inputTranscript = $isConfirmation ? null : trim($taskOutput['input_transcript'] ?? '');
+				if (trim($taskOutput['output_transcript'] ?? '') !== '' && is_numeric($taskOutput['output'] ?? null)) {
+					$audioFileId = (int)$taskOutput['output'];
+				}
+			}
+			// the generated files of a multimodal answer, posted as Talk file shares
+			$outputFileIds = [];
+			if ($isMultimodalChat || $isMultimodalAgencyChat) {
+				$outputAttachments = $taskOutput['output_attachments'] ?? [];
+				foreach (is_array($outputAttachments) ? $outputAttachments : [] as $outputAttachment) {
+					if (is_numeric($outputAttachment)) {
+						$outputFileIds[] = (int)$outputAttachment;
+					}
+				}
+			}
 
 			$message = new Message();
 			$message->setSessionId($sessionId);
@@ -220,6 +258,7 @@ class ChattyLLMTaskListener implements IEventListener {
 			$session = $this->sessionMapper->getUserSession($task->getUserId(), $sessionId);
 
 			// store the conversation token and the actions if we are using the agency feature
+			$pendingActions = null;
 			if ($isAgency || $isAgencyAudioChat || $isMultimodalAgencyChat) {
 				$conversationToken = ($taskOutput['conversation_token'] ?? null) ?: null;
 				$pendingActions = ($taskOutput['actions'] ?? null) ?: null;
@@ -230,13 +269,94 @@ class ChattyLLMTaskListener implements IEventListener {
 			$session->setIsSummaryUpToDate(false);
 
 			$assignmentId = $session->getAssignmentId();
-			if ($assignmentId !== null) {
+			if ($assignmentId !== null && $session->getRequesterUserId() === null) {
+				// assignments ordered through an agent in Talk are not
+				// notified: the run output is posted in the task's Talk thread
 				$this->notificationService->sendAssignmentNotification(
 					$task->getUserId(), $task, $session
 				);
 			}
 
 			$this->sessionMapper->update($session);
+
+			if ($session->getRequesterUserId() === null) {
+				return;
+			}
+
+			// ids of the scheduled tasks created by this agent turn, carried by
+			// the structured task output; their presence means the turn has just
+			// been approved and the tasks were created
+			$scheduledTaskIds = [];
+			if ($isAgency || $isAgencyAudioChat || $isMultimodalAgencyChat) {
+				$outputScheduledTaskIds = $taskOutput['scheduled_task_ids'] ?? null;
+				if (is_array($outputScheduledTaskIds)) {
+					foreach ($outputScheduledTaskIds as $outputScheduledTaskId) {
+						if (is_numeric($outputScheduledTaskId)) {
+							$scheduledTaskIds[] = (int)$outputScheduledTaskId;
+						}
+					}
+				}
+			}
+
+			// the requester and the 1-1 room are recorded on the created tasks;
+			// the task's Talk thread itself is opened by its first run
+			$isAssignmentRun = $assignmentId !== null;
+			if ($scheduledTaskIds !== []) {
+				$this->assignmentsService->linkRequesterToCreatedScheduledTasks($session, $scheduledTaskIds);
+			}
+
+			$replyContent = $message->getContent();
+			if ($isAssignmentRun
+				&& !$this->isConfirmationFollowUp($task)
+				&& ($runTimestamp = $this->getAssignmentRunTimestamp($sessionId)) !== null) {
+				// each run message of the task thread carries the time of the run
+				$replyContent = $this->agentTalkService->getAssignmentRunHeader($runTimestamp, (string)$session->getRequesterUserId())
+					. "\n\n" . $replyContent;
+			}
+
+			// in the agent-as-a-user feature, the generated message is posted
+			// in the 1-1 Talk conversation with the human user
+			$this->agentTalkService->postAgentTalkReply(
+				$session,
+				$replyContent,
+				$pendingActions,
+				$inputTranscript !== '' ? $inputTranscript : null,
+				$audioFileId,
+				$outputFileIds,
+			);
+
+			if ($isAssignmentRun && $session->getThreadId() !== null) {
+				// the run marker (or the reply itself) opened or recreated the
+				// task's Talk thread: store it as the delivery surface
+				$this->assignmentsService->storeScheduledTaskThread($session, [$assignmentId]);
+			}
+		}
+	}
+
+	/**
+	 * Whether the task is the follow-up of an agency confirmation (the
+	 * sensitive actions were approved or rejected in the same session) rather
+	 * than a fresh generation: the follow-up continues the same turn, it
+	 * carries no run header.
+	 */
+	private function isConfirmationFollowUp(Task $task): bool {
+		$taskInput = $task->getInput();
+		return isset($taskInput['confirmation']) && (int)$taskInput['confirmation'] !== 0;
+	}
+
+	/**
+	 * The start time of the assignment run whose output is being handled: the
+	 * timestamp of the run prompt message, created when the run was scheduled.
+	 */
+	private function getAssignmentRunTimestamp(int $sessionId): ?int {
+		try {
+			return $this->messageMapper->getLastHumanMessage($sessionId)->getTimestamp();
+		} catch (\Throwable $e) {
+			$this->logger->warning('Could not find the prompt message of an assignment run', [
+				'exception' => $e,
+				'sessionId' => $sessionId,
+			]);
+			return null;
 		}
 	}
 

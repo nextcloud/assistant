@@ -190,6 +190,7 @@ class ChatServiceTest extends TestCase {
 		$messageId = $otherMessage->getId();
 
 		$calls = [
+			'cancelPendingGenerationTasks' => fn () => $this->service->cancelPendingGenerationTasks(self::TEST_USER, $sessionId),
 			'createMessage' => fn () => $this->service->createMessage(self::TEST_USER, $sessionId, Message::ROLE_ASSISTANT, 'planted'),
 			'deleteSession' => fn () => $this->service->deleteSession(self::TEST_USER, $sessionId),
 			'deleteSessionMessage' => fn () => $this->service->deleteSessionMessage(self::TEST_USER, $sessionId, $messageId),
@@ -217,7 +218,9 @@ class ChatServiceTest extends TestCase {
 		foreach ($calls as $name => $call) {
 			try {
 				$result = $call();
-				$this->assertNull($result, $name . ' returned data of another user');
+				// cancelPendingGenerationTasks returns the number of cancelled tasks,
+				// a non-zero count would mean it cancelled another user's tasks
+				$this->assertTrue($result === null || (is_int($result) && $result === 0), $name . ' returned data of another user');
 			} catch (NotFoundException) {
 				// refused
 			}
