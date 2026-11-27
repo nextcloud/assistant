@@ -83,6 +83,120 @@ class SessionMapper extends QBMapper {
 	}
 
 	/**
+	 * Get the agent session owned by the given agent user for the requester
+	 * in the origin Talk room.
+	 *
+	 * @param string $userId The agent user id (owner of the session)
+	 * @param string $requesterUserId
+	 * @param string $roomToken
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSession(string $userId, string $requesterUserId, string $roomToken): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('requester_user_id', $qb->createPositionalParameter($requesterUserId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('room_token', $qb->createPositionalParameter($roomToken, IQueryBuilder::PARAM_STR)))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * Get the agent session owned by the given agent user that posts in the given Talk thread.
+	 *
+	 * @param string $userId The agent user id (owner of the session)
+	 * @param int $threadId The Talk thread id (same as the id of the thread starter Talk comment)
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSessionByThread(string $userId, int $threadId): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('thread_id', $qb->createPositionalParameter($threadId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->isNotNull('requester_user_id'))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * Get the agent session owned by the given agent user that currently holds
+	 * the given agency conversation token.
+	 *
+	 * The tasks of a voice interaction carry the conversation token that was
+	 * stored on the agent session when they were scheduled, so the token
+	 * identifies the session they run in.
+	 *
+	 * @param string $userId The agent user id (owner of the session)
+	 * @param string $conversationToken The agency conversation token of the session
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSessionByAgencyConversationToken(string $userId, string $conversationToken): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createPositionalParameter($userId, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('agency_conversation_token', $qb->createPositionalParameter($conversationToken, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->isNotNull('requester_user_id'))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * Get the agent session whose currently seen Talk message is the given one.
+	 *
+	 * The agent session marks the human message it is handling as read in the
+	 * origin room of that message, so the room token and the comment id identify
+	 * the session that is currently handling that message.
+	 *
+	 * @param string $roomToken The Talk room token of the seen message
+	 * @param int $commentId The Talk comment id of the seen message
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getAgentSessionByExplanationMessage(string $roomToken, int $commentId): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('agent_explanation_room_token', $qb->createPositionalParameter($roomToken, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('agent_explanation_message_id', $qb->createPositionalParameter($commentId, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->isNotNull('requester_user_id'))
+			->orderBy('timestamp', 'DESC')
+			->setMaxResults(1);
+		return $this->findEntity($qb);
+	}
+
+	/**
+	 * @param int $sessionId
+	 * @return Session
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 * @throws Exception
+	 */
+	public function getSessionById(int $sessionId): Session {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select(Session::$columns)
+			->from($this->getTableName())
+			->where($qb->expr()->eq('id', $qb->createPositionalParameter($sessionId, IQueryBuilder::PARAM_INT)));
+		return $this->findEntity($qb);
+	}
+
+	/**
 	 * @return \Generator<array-key, Session>
 	 * @throws \OCP\DB\Exception
 	 */

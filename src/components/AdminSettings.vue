@@ -291,6 +291,16 @@
 					<span>{{ t('assistant', 'No global skills folder configured') }}</span>
 				</div>
 			</div>
+			<div class="agents">
+				<h4>
+					{{ t('assistant', 'Talk agents') }}
+				</h4>
+				<TalkAgentUsers :agents="state.agents"
+					:default-status="state.default_status"
+					@agent-created="onAgentCreated"
+					@agent-updated="onAgentUpdated"
+					@agent-deleted="onAgentDeleted" />
+			</div>
 			<div v-if="state.context_agent_available" class="mcp-user-servers">
 				<h4>
 					{{ t('assistant', 'MCP servers of users') }}
@@ -332,6 +342,8 @@ import { generateUrl } from '@nextcloud/router'
 
 import { delay } from '../utils.js'
 
+import TalkAgentUsers from './TalkAgentUsers.vue'
+
 export default {
 	name: 'AdminSettings',
 
@@ -347,6 +359,7 @@ export default {
 		NcFormBox,
 		NcFormBoxSwitch,
 		OpenInNewIcon,
+		TalkAgentUsers,
 	},
 
 	data() {
@@ -362,6 +375,18 @@ export default {
 	},
 
 	methods: {
+		onAgentCreated(agent) {
+			this.state.agents.push(agent)
+		},
+		onAgentUpdated(agent) {
+			const index = this.state.agents.findIndex((a) => a.id === agent.id)
+			if (index !== -1) {
+				this.state.agents.splice(index, 1, agent)
+			}
+		},
+		onAgentDeleted(agent) {
+			this.state.agents = this.state.agents.filter((a) => a.id !== agent.id)
+		},
 		isUnsignedIntStr(value) {
 			return /^\d+$/.test(value)
 		},
@@ -542,6 +567,10 @@ export default {
 		&__set-by {
 			color: var(--color-text-maxcontrast);
 		}
+	}
+
+	.agents {
+		margin-top: 16px;
 	}
 }
 </style>

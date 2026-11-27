@@ -290,5 +290,10 @@
             }
         }
     },
-    "tags": []
+    "tags": [
+        {
+            "name": "agents_api",
+            "description": "CRUD access to the agents of the \"agent as a user\" feature (admin only)"
+        }
+    ]
 }
