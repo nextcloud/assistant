@@ -24,6 +24,7 @@ OC.L10N.register(
     "Choose a file" : "Selecciona un archivo",
     "Choose" : "Seleccionar",
     "No file selected" : "No se ha seleccionado algún archivo",
+    "Save" : "Save",
     "Folder name" : "Nombre de la carpeta",
     "Cancelled" : "Cancelado",
     "Advanced" : "Avanzado",

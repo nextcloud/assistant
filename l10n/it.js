@@ -91,6 +91,8 @@ OC.L10N.register(
     "Clear Selection" : "Cancella selezione",
     "Describe the image you want to generate" : "Descrivi l'immagine che desideri generare",
     "Generate image" : "Genera immagine",
+    "Name" : "Nome",
+    "Save" : "Save",
     "Folder name" : "Nome della cartella",
     "This may take a few seconds…" : "Potrebbe richiedere alcuni secondi...",
     "Nothing yet" : "Ancora niente",

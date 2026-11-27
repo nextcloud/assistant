@@ -65,6 +65,7 @@ OC.L10N.register(
     "Delete message" : "Poista viesti",
     "Describe the image you want to generate" : "Kuvaile luotava kuva",
     "Generate image" : "Luo kuva",
+    "Save" : "Save",
     "Folder name" : "Kansion nimi",
     "No memories yet" : "Ei muistoja vielä",
     "This may take a few seconds…" : "Tämä saattaa kestää muutaman sekunnin",
