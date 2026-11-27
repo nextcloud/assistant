@@ -8,6 +8,7 @@
 namespace OCA\Assistant\Listener;
 
 use OCA\Assistant\AppInfo\Application;
+use OCA\Assistant\Service\AttachmentService;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\EventDispatcher\Event;
@@ -28,6 +29,7 @@ class LoadAdditionalScriptsListener implements IEventListener {
 		private IAppConfig $appConfig,
 		private IInitialState $initialStateService,
 		private ITaskProcessingManager $taskProcessingManager,
+		private AttachmentService $attachmentService,
 	) {
 	}
 
@@ -46,6 +48,12 @@ class LoadAdditionalScriptsListener implements IEventListener {
 		$this->initialStateService->provideInitialState('stt-available', $sttAvailable);
 		$this->initialStateService->provideInitialState('tts-available', $ttsAvailable);
 		$this->initialStateService->provideInitialState('summarize-available', $summarizeAvailable);
+		// extra mime types the summarize action can handle by sending the file to the provider,
+		// on top of the ones we can extract text from ourselves
+		$this->initialStateService->provideInitialState(
+			'summarize-attachment-mime-types',
+			$summarizeAvailable ? $this->attachmentService->getAttachableMimeTypes(TextToTextSummary::ID) : [],
+		);
 		Util::addInitScript(Application::APP_ID, Application::APP_ID . '-fileActions');
 
 		// New file menu to generate images

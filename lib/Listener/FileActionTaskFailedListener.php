@@ -14,6 +14,7 @@ use OCA\Assistant\Service\TaskProcessingService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\IRootFolder;
+use OCP\Files\Node;
 use OCP\TaskProcessing\Events\TaskFailedEvent;
 use Psr\Log\LoggerInterface;
 
@@ -52,6 +53,13 @@ class FileActionTaskFailedListener implements IEventListener {
 			$this->logger->debug('FileActionTaskListener', ['source_file_id' => $sourceFileId]);
 			$userFolder = $this->rootFolder->getUserFolder($task->getUserId());
 			$sourceFile = $userFolder->getFirstNodeById($sourceFileId);
+			if (!$sourceFile instanceof Node) {
+				// the source file was removed while the task was running, there is nothing to point the user at
+				$this->logger->warning('FileActionTaskListener task failed and the source file is gone', [
+					'source_file_id' => $sourceFileId,
+				]);
+				return;
+			}
 			$this->notificationService->sendFileActionNotification(
 				$task->getUserId(), $taskTypeId, $task->getId(),
 				$sourceFileId, $sourceFile->getName(), $userFolder->getRelativePath($sourceFile->getPath()),
