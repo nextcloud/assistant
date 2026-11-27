@@ -112,6 +112,7 @@ OC.L10N.register(
     "Selective context" : "Testuinguru selektiboa",
     "Describe the image you want to generate" : "Deskribatu sortu nahi duzun irudia",
     "Generate image" : "Sortu irudia",
+    "Save" : "Save",
     "tool" : "tresna",
     "integration" : "integrazioa",
     "No provider found" : "Ez da hornitzailerik aurkitu",

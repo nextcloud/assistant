@@ -34,6 +34,8 @@ OC.L10N.register(
     "Choose a file" : "נא לבחור קובץ",
     "Choose" : "בחר",
     "No file selected" : "לא נבחר קובץ",
+    "Header name" : "שם כותרת",
+    "Save" : "Save",
     "Folder name" : "שם התיקייה",
     "This may take a few seconds…" : "פעולה זו עשויה לארוך מספר שניות…",
     "Cancelled" : "בוטל",

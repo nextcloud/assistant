@@ -80,6 +80,7 @@ OC.L10N.register(
     "Clear Selection" : "Clear Selection",
     "Describe the image you want to generate" : "Opišite sliku koju želite generirati",
     "Generate image" : "Generiraj sliku",
+    "Save" : "Spremi",
     "Folder name" : "Naziv mape",
     "This may take a few seconds…" : "To može potrajati nekoliko sekundi...",
     "Cancelled" : "Otkazano",

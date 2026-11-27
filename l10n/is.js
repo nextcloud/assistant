@@ -65,6 +65,8 @@ OC.L10N.register(
     "No file selected" : "Engin skrá valin",
     "Delete message" : "Eyða skilaboðum",
     "Generate image" : "Útbúa mynd",
+    "Name" : "Heiti",
+    "Save" : "Vista",
     "Folder name" : "Nafn möppu",
     "No memories yet" : "Engar minningar ennþá",
     "This may take a few seconds…" : "Þetta gæti tekið örfáar sekúndur…",

@@ -103,6 +103,8 @@ OC.L10N.register(
     "Clear Selection" : "Kiválasztás törlése",
     "Describe the image you want to generate" : "Írja le az előállítandó képet",
     "Generate image" : "Kép előállítása",
+    "Name" : "Név",
+    "Save" : "Mentés",
     "Assistant options saved" : "Asszisztens beállítások elmentve",
     "Failed to save assistant options" : "Nem sikerült az asszisztens beállításainak mentése",
     "Folder name" : "Mappanév",

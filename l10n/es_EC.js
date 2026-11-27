@@ -48,6 +48,7 @@ OC.L10N.register(
     "Choose" : "Seleccionar",
     "No file selected" : "No se ha seleccionado algún archivo",
     "Delete message" : "Eliminar mensaje",
+    "Header name" : "Nombre del encabezado",
     "Folder name" : "Nombre de la carpeta",
     "Cancelled" : "Cancelado",
     "Failed" : "Error",
