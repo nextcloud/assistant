@@ -29,6 +29,7 @@ OC.L10N.register(
     "Dismiss" : "Rad etish",
     "Upload from device" : "Qurilmadan yuklash",
     "Choose" : "Choose",
+    "Remove {name}" : " {name} ni o'chirish",
     "Name" : "Nomi",
     "URL" : "URL",
     "Value" : "Qiymati",

@@ -280,6 +280,7 @@ OC.L10N.register(
     "No providers found" : "Hakuna watoa huduma waliopatikana",
     "Image generation is not available." : "Uzalishaji wa picha haupo",
     "Generate image" : "Zalisha picha",
+    "Remove {name}" : "Ondoa {name}",
     "Name" : "Jina",
     "URL" : "URL",
     "Header name" : "Jina la kichwa",

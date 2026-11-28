@@ -27,6 +27,7 @@ OC.L10N.register(
     "Dismiss" : "ยกเลิก",
     "Choose" : "เลือก",
     "No file selected" : "ไม่ได้เลือกไฟล์",
+    "Remove {name}" : "ลบ {name} ออก",
     "Name" : "ชื่อ",
     "URL" : "URL",
     "Save" : "Save",

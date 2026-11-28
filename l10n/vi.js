@@ -33,6 +33,7 @@ OC.L10N.register(
     "Dismiss" : "Bỏ qua",
     "Choose" : "Chọn",
     "No file selected" : "Không có tập tin nào được chọn",
+    "Remove {name}" : "Xoá {name}",
     "Name" : "Tên",
     "URL" : "URL",
     "Value" : "Giá trị",

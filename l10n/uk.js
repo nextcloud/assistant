@@ -253,6 +253,7 @@ OC.L10N.register(
     "No providers found" : "Не знайдено постачальників",
     "Image generation is not available." : "Створення зображень недоступне.",
     "Generate image" : "Зґенерувати зображення",
+    "Remove {name}" : "Вилучити {name}",
     "Name" : "Ім'я",
     "URL" : "URL",
     "Value" : "Значення",

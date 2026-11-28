@@ -39,6 +39,7 @@ OC.L10N.register(
     "Delete message" : "Kkes izen",
     "Name" : "Isem",
     "URL" : "URL",
+    "Value" : "Azal",
     "Save" : "Sekles",
     "Folder name" : "Isem n ukaram",
     "Cancelled" : "Ittwasefsex",

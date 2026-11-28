@@ -272,6 +272,7 @@ OC.L10N.register(
     "No providers found" : "تەمىنلىگۈچىلەر تېپىلمىدى",
     "Image generation is not available." : "رەسىم ھاسىل قىلىش مۇمكىن ئەمەس.",
     "Generate image" : "رەسىم ھاسىل قىلىش",
+    "Remove {name}" : "Remove {name}",
     "Name" : "ئاتى",
     "URL" : "URL",
     "Header name" : "ماۋزۇ نامى",

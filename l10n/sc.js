@@ -38,6 +38,7 @@ OC.L10N.register(
     "Choose" : "Sèbera",
     "No file selected" : "Perunu documentu seletzionadu",
     "Delete message" : "Cantzella messàgiu",
+    "Remove {name}" : "Boga•nche {name}",
     "Name" : "Nùmene",
     "URL" : "URL",
     "Save" : "Save",
