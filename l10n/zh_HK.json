@@ -436,6 +436,7 @@
     "No providers found" : "找不到提供者",
     "Image generation is not available." : "圖像產生不可用。",
     "Generate image" : "産生圖像",
+    "Remove {name}" : "移除 {name}",
     "Name" : "名字",
     "URL" : "URL",
     "Header name" : "標題列名稱",

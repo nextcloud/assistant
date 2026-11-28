@@ -23,6 +23,7 @@ OC.L10N.register(
     "Choose" : "Auswielen",
     "Name" : "Numm",
     "URL" : "URL",
+    "Value" : "Wäert",
     "Save" : "Save",
     "Folder name" : "Dossiers Numm:",
     "Cancelled" : "Ofgebrach",

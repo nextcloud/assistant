@@ -438,6 +438,7 @@ OC.L10N.register(
     "No providers found" : "Herhangi bir hizmet sağlayıcı bulunamadı",
     "Image generation is not available." : "Görsel oluşturma kullanılamıyor.",
     "Generate image" : "Görsel oluştur",
+    "Remove {name}" : "{name} sil",
     "Name" : "Ad",
     "URL" : "Adres",
     "Header name" : "Üst bilgi adı",

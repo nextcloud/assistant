@@ -427,6 +427,7 @@ OC.L10N.register(
     "No providers found" : "Inga leverantörer hittades",
     "Image generation is not available." : "Bildgenerering är inte tillgänglig.",
     "Generate image" : "Skapa bild",
+    "Remove {name}" : "Ta bort {name}",
     "Name" : "Namn",
     "URL" : "URL",
     "Header name" : "Rubriknamn",
